@@ -8,26 +8,26 @@ $container = require '../../Bootstrap.php';
 
 use DateTime;
 use FKSDB\Components\EntityForms\EventFormComponent;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\OrgService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class EventPresenterTest extends AbstractOrgPresenterTestCase
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
-        $this->event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel([
+        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
@@ -80,7 +80,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         ]);
 
         $html = $this->assertPageDisplay($response);
-        Assert::contains('SQLSTATE[23000]:', $html);
+        Assert::contains('Error', $html);
         $after = $this->countEvents();
         Assert::equal($init, $after);
     }
@@ -101,10 +101,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         $event = $this->getContainer()
-            ->getByType(ServiceEvent::class)
-            ->getTable()
-            ->where(['event_id' => $this->event->event_id])
-            ->fetch();
+            ->getByType(EventService::class)
+            ->findByPrimary($this->event->event_id);
 
         Assert::equal('Dummy Event edited', $event->name);
     }
@@ -116,7 +114,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
 
     private function countEvents(): int
     {
-        return $this->getContainer()->getByType(ServiceEvent::class)->getTable()->count('*');
+        return $this->getContainer()->getByType(EventService::class)->getTable()->count('*');
     }
 }
 

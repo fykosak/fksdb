@@ -45,7 +45,7 @@
         {/foreach}
     {else}
         <div class="card-body">
-            {control noRecords}
+            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
         </div>
     {/if}
 {/block}

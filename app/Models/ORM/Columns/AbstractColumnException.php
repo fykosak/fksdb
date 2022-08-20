@@ -8,5 +8,4 @@ use Nette\Application\BadRequestException;
 
 class AbstractColumnException extends BadRequestException
 {
-
 }

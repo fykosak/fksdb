@@ -7,12 +7,12 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\OrgService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -23,10 +23,10 @@ use Tester\Assert;
 
 class Authorization extends FyziklaniTestCase
 {
-    private ModelPerson $perPerson;
-    private ModelPerson $perOrg;
-    private ModelPerson $perOrgOther;
-    private ModelPerson $perContestant;
+    private PersonModel $perPerson;
+    private PersonModel $perOrg;
+    private PersonModel $perOrgOther;
+    private PersonModel $perContestant;
     private SubmitModel $submit;
 
     protected function setUp(): void
@@ -42,7 +42,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
@@ -50,7 +50,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
@@ -58,24 +58,24 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka4@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceContestant::class)->createNewModel(
+        $this->getContainer()->getByType(ContestantService::class)->storeModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
         );
 
         $this->event = $this->createEvent([]);
-        $task = $this->getContainer()->getByType(TaskService::class)->createNewModel([
+        $task = $this->getContainer()->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
 
-        $team = $this->getContainer()->getByType(TeamService2::class)->createNewModel([
+        $team = $this->getContainer()->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submit = $this->getContainer()->getByType(SubmitService::class)->createNewModel([
+        $this->submit = $this->getContainer()->getByType(SubmitService::class)->storeModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
             'points' => 5,

@@ -7,12 +7,12 @@ namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
@@ -20,25 +20,25 @@ use Tester\Assert;
 
 class Extrapolate extends DatabaseTestCase
 {
-    private ServicePersonHistory $service;
-    private ModelPerson $person;
-    private ModelSchool $school;
+    private PersonHistoryService $service;
+    private PersonModel $person;
+    private SchoolModel $school;
 
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->service = $container->getByType(ServicePersonHistory::class);
+        $this->service = $container->getByType(PersonHistoryService::class);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
+        $this->person = $this->getContainer()->getByType(PersonService::class)->storeModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'gender' => 'M',
         ]);
-        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
@@ -46,7 +46,7 @@ class Extrapolate extends DatabaseTestCase
             'postal_code' => '02001',
             'region_id' => '1',
         ]);
-        $this->school = $this->getContainer()->getByType(ServiceSchool::class)->createNewModel([
+        $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'name_full' => 'GPU',
             'name' => 'GPU',
             'name_abbrev' => 'GPU',
@@ -60,7 +60,7 @@ class Extrapolate extends DatabaseTestCase
 
     public function testSimple(): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
@@ -77,7 +77,7 @@ class Extrapolate extends DatabaseTestCase
 
     public function testNull(): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
@@ -97,7 +97,7 @@ class Extrapolate extends DatabaseTestCase
      */
     public function testStudyYear(int $from, int $step, ?int $to): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,

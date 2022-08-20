@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 
 abstract class TsafTestCase extends DsefTestCase
 {
-    protected ModelEvent $dsefEvent;
-    protected ModelEvent $tsafEvent;
+    protected EventModel $dsefEvent;
+    protected EventModel $tsafEvent;
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         return $this->event;
     }

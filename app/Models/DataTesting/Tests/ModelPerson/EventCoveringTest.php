@@ -6,12 +6,12 @@ namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Models\DataTesting\TestLog;
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\Logging\Message;
 
 class EventCoveringTest extends PersonTest
@@ -22,26 +22,26 @@ class EventCoveringTest extends PersonTest
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void
+    public function run(Logger $logger, PersonModel $person): void
     {
         $contestantYears = [
-            ModelContest::ID_FYKOS => [],
-            ModelContest::ID_VYFUK => [],
+            ContestModel::ID_FYKOS => [],
+            ContestModel::ID_VYFUK => [],
         ];
         $participantsYears = [
-            ModelContest::ID_FYKOS => [],
-            ModelContest::ID_VYFUK => [],
+            ContestModel::ID_FYKOS => [],
+            ContestModel::ID_VYFUK => [],
         ];
-        foreach ($person->getEventParticipants() as $row) {
-            $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
-            $year = $eventParticipant->getEvent()->year;
-            $contestId = $eventParticipant->getEvent()->getContest()->contest_id;
+        /** @var EventParticipantModel $eventParticipant */
+        foreach ($person->getEventParticipants() as $eventParticipant) {
+            $year = $eventParticipant->event->year;
+            $contestId = $eventParticipant->event->event_type->contest_id;
             if (!\in_array($year, $participantsYears[$contestId])) {
                 $participantsYears[$contestId][] = $year;
             }
         }
-        foreach ($person->getContestants() as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
+        /** @var ContestantModel $contestant */
+        foreach ($person->getContestants() as $contestant) {
             $year = $contestant->year;
             $contestId = $contestant->contest_id;
             if (!\in_array($year, $contestantYears[$contestId])) {
@@ -54,7 +54,7 @@ class EventCoveringTest extends PersonTest
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
-    private function check(Logger $logger, array $data, array $organisers, string $type, ModelPerson $person): void
+    private function check(Logger $logger, array $data, array $organisers, string $type, PersonModel $person): void
     {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
@@ -62,8 +62,8 @@ class EventCoveringTest extends PersonTest
                     $logger->log($this->createLog($year, $contestId, $type, 'eventOrg'));
                 }
                 $query = $person->getOrgs($contestId);
-                foreach ($query as $row) {
-                    $org = ModelOrg::createFromActiveRow($row);
+                /** @var OrgModel $org */
+                foreach ($query as $org) {
                     if ($org->until) {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
@@ -91,16 +91,16 @@ class EventCoveringTest extends PersonTest
         );
     }
 
-    private function getEventOrgYears(ModelPerson $person): array
+    private function getEventOrgYears(PersonModel $person): array
     {
         $eventOrgYears = [
-            ModelContest::ID_FYKOS => [],
-            ModelContest::ID_VYFUK => [],
+            ContestModel::ID_FYKOS => [],
+            ContestModel::ID_VYFUK => [],
         ];
-        foreach ($person->getEventOrgs() as $row) {
-            $eventOrg = ModelEventOrg::createFromActiveRow($row);
-            $year = $eventOrg->getEvent()->year;
-            $contestId = $eventOrg->getEvent()->getContest()->contest_id;
+        /** @var EventOrgModel $eventOrg */
+        foreach ($person->getEventOrgs() as $eventOrg) {
+            $year = $eventOrg->event->year;
+            $contestId = $eventOrg->event->event_type->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {
                 $eventOrgYears[$contestId][] = $year;
             }

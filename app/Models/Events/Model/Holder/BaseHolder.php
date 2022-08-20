@@ -8,18 +8,15 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
-use FKSDB\Models\ORM\ReferencedAccessor;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
@@ -34,7 +31,7 @@ class BaseHolder
     public DataValidator $validator;
     /** Relation to the primary holder's event.     */
     private ?EventRelation $eventRelation;
-    public ModelEvent $event;
+    public EventModel $event;
     public string $label;
     /** @var Service|ServiceMulti */
     private $service;
@@ -44,8 +41,7 @@ class BaseHolder
     public Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    /** @var ActiveRow|null|Model|ModelMulti */
-    private ?ActiveRow $model;
+    private ?Model $model;
     public array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
@@ -104,7 +100,7 @@ class BaseHolder
     /**
      * @throws NeonSchemaException
      */
-    private function setEvent(ModelEvent $event): void
+    private function setEvent(EventModel $event): void
     {
         $this->event = $event;
         $this->data[self::EVENT_COLUMN] = $this->event->getPrimary();
@@ -114,7 +110,7 @@ class BaseHolder
     /**
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): void
+    public function inferEvent(EventModel $event): void
     {
         if ($this->eventRelation instanceof EventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
@@ -149,14 +145,14 @@ class BaseHolder
     }
 
     /**
-     * @return ActiveRow|ModelMFyziklaniParticipant|ModelEventParticipant
+     * @return ModelMFyziklaniParticipant|EventParticipantModel
      */
-    public function getModel2(): ?ActiveRow
+    public function getModel2(): ?Model
     {
         return $this->model ?? null;
     }
 
-    public function setModel(?ActiveRow $model): void
+    public function setModel(?Model $model): void
     {
         $this->model = $model;
     }
@@ -166,7 +162,7 @@ class BaseHolder
         if ($this->getModelState() == AbstractMachine::STATE_TERMINATED) {
             $model = $this->getModel2();
             if ($model) {
-                $this->service->dispose($model);
+                $this->service->disposeModel($model);
             }
         } elseif ($this->getModelState() != AbstractMachine::STATE_INIT) {
             $this->model = $this->service->storeModel($this->data, $this->getModel2());
@@ -272,16 +268,18 @@ class BaseHolder
         return $container;
     }
 
-    public function getPerson(): ?ModelPerson
+    /**
+     * @throws \ReflectionException
+     */
+    public function getPerson(): ?PersonModel
     {
-        /** @var ModelPerson $model */
+        /** @var PersonModel $model */
         try {
             $app = $this->getModel2();
             if (!$app) {
                 return null;
             }
-            $model = ReferencedAccessor::accessModel($app, ModelPerson::class);
-            return $model;
+            return $app->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException $exception) {
             return null;
         }

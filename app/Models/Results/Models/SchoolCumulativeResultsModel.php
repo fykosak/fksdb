@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
@@ -28,11 +28,11 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
 
     public function __construct(
         CumulativeResultsModel $cumulativeResultsModel,
-        ModelContestYear $contestYear,
-        ServiceTask $serviceTask,
+        ContestYearModel $contestYear,
+        TaskService $taskService,
         Connection $connection
     ) {
-        parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
+        parent::__construct($contestYear, $taskService, $connection, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
@@ -44,7 +44,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
-        if (!isset($this->dataColumns[$category->id])) {
+        if (!isset($this->dataColumns[$category->value])) {
             $dataColumns = [];
             foreach ($this->getSeries() as $series) {
                 $dataColumns[] = [
@@ -73,9 +73,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->id] = $dataColumns;
+            $this->dataColumns[$category->value] = $dataColumns;
         }
-        return $this->dataColumns[$category->id];
+        return $this->dataColumns[$category->value];
     }
 
     public function getSeries(): array
@@ -101,7 +101,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL),
+            ModelCategory::tryFrom(ModelCategory::ALL),
         ];
     }
 
@@ -116,7 +116,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function getData(ModelCategory $category): array
     {
         $categories = [];
-        if ($category->id == ModelCategory::CAT_ALL) {
+        if ($category->value == ModelCategory::ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
         } else {
             $categories[] = $category;

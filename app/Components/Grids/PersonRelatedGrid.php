@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -19,13 +20,11 @@ use NiftyGrid\DuplicateGlobalButtonException;
 class PersonRelatedGrid extends BaseGrid
 {
 
-    protected ModelPerson $person;
-
+    protected PersonModel $person;
     protected array $definition;
-
     protected int $userPermissions;
 
-    public function __construct(string $section, ModelPerson $person, int $userPermissions, Container $container)
+    public function __construct(string $section, PersonModel $person, int $userPermissions, Container $container)
     {
         $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
@@ -33,9 +32,16 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
+    /**
+     * @return IDataSource
+     * @throws BadTypeException
+     */
     protected function getData(): IDataSource
     {
         $query = $this->person->related($this->definition['table']);
+        if (!$query instanceof TypedGroupedSelection) {
+            throw new BadTypeException(TypedGroupedSelection::class, $query);
+        }
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
@@ -59,10 +65,5 @@ class PersonRelatedGrid extends BaseGrid
             $this->addLink($link);
         }
         $this->addCSVDownloadButton();
-    }
-
-    protected function getModelClassName(): string
-    {
-        return $this->definition['model'];
     }
 }

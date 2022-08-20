@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
+use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Fykosak\NetteORM\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
 
     private const DESCRIPTION = 'description';
-    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
+    private TagTypeService $storedQueryTagTypeService;
     private TypedSelection $searchTable;
 
-    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType)
+    public function __construct(TagTypeService $storedQueryTagTypeService)
     {
-        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
-        $this->searchTable = $this->serviceStoredQueryTagType->getTable();
+        $this->storedQueryTagTypeService = $storedQueryTagTypeService;
+        $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
     /**
@@ -35,13 +35,13 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var ModelStoredQueryTagType $tagType */
-        $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
+        /** @var TagTypeModel $tagType */
+        $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
         return $tagType->name;
     }
 
     /**
-     * @return ModelStoredQueryTagType[]
+     * @return TagTypeModel[]
      */
     public function getItems(): array
     {
@@ -49,7 +49,7 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
             ->order('name');
 
         $result = [];
-        /** @var ModelStoredQueryTagType $tagType */
+        /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
                 self::LABEL => $tagType->name,

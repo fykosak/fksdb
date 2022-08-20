@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
@@ -18,24 +18,24 @@ class ScheduleField extends TextInput
 {
     use FrontEndComponentTrait;
 
-    private ModelEvent $event;
+    private EventModel $event;
     private string $type;
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
 
     /**
      * @throws BadRequestException
      * @throws NotImplementedException
      */
     public function __construct(
-        ModelEvent $event,
+        EventModel $event,
         string $type,
-        ServiceScheduleItem $serviceScheduleItem,
+        ScheduleItemService $scheduleItemService,
         ?string $label
     ) {
         parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
         $this->registerFrontend('event.schedule');
         $this->appendProperty();
     }
@@ -73,8 +73,8 @@ class ScheduleField extends TextInput
     {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
-        foreach ($groups as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row);
+        /** @var ScheduleGroupModel $group */
+        foreach ($groups as $group) {
             $groupList[] = $this->serializeGroup($group);
         }
         return ['groups' => $groupList, 'options' => $this->getRenderOptions()];
@@ -112,12 +112,12 @@ class ScheduleField extends TextInput
         return $params;
     }
 
-    private function serializeGroup(ModelScheduleGroup $group): array
+    private function serializeGroup(ScheduleGroupModel $group): array
     {
         $groupArray = $group->__toArray();
         $itemList = [];
-        foreach ($group->getItems() as $row) {
-            $item = ModelScheduleItem::createFromActiveRow($row);
+        /** @var ScheduleItemModel $item */
+        foreach ($group->getItems() as $item) {
             $itemList[] = $item->__toArray();
         }
 

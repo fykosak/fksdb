@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
 
@@ -17,30 +17,30 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_ES_6),
-            new ModelCategory(ModelCategory::CAT_ES_7),
-            new ModelCategory(ModelCategory::CAT_ES_8),
-            new ModelCategory(ModelCategory::CAT_ES_9),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_6),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_7),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_8),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_9),
         ];
     }
 
     public function categoryToStudyYears(ModelCategory $category): array
     {
-        switch ($category->id) {
-            case ModelCategory::CAT_ES_6:
+        switch ($category->value) {
+            case ModelCategory::VYFUK_6:
                 return [6];
-            case ModelCategory::CAT_ES_7:
+            case ModelCategory::VYFUK_7:
                 return [7];
-            case ModelCategory::CAT_ES_8:
+            case ModelCategory::VYFUK_8:
                 return [8];
-            case ModelCategory::CAT_ES_9:
+            case ModelCategory::VYFUK_9:
                 return [null, 9];
             default:
-                throw new InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1') {
             return 'IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)';
@@ -58,13 +58,13 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
     {
         if ($task->label == '1' && $task->series < 7) {
             if (
-                in_array($category->id, [
-                    ModelCategory::CAT_ES_6,
-                    ModelCategory::CAT_ES_7,
+                in_array($category->value, [
+                    ModelCategory::VYFUK_6,
+                    ModelCategory::VYFUK_7,
                 ])
             ) {
                 return $task->points;
@@ -78,9 +78,9 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
 
     public function getTaskPointsColumn(ModelCategory $category): string
     {
-        switch ($category->id) {
-            case ModelCategory::CAT_ES_6:
-            case ModelCategory::CAT_ES_7:
+        switch ($category->value) {
+            case ModelCategory::VYFUK_6:
+            case ModelCategory::VYFUK_7:
                 return 'IF (s.raw_points IS NOT NULL, t.points, NULL)';
             default:
                 return "IF (s.raw_points IS NOT NULL,

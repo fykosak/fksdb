@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Inbox\PointsForm;
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -19,7 +19,7 @@ class PointsFormComponent extends SeriesTableFormComponent
     /** @var callable */
     private $invalidCacheCallback;
 
-    private ServiceSubmit $serviceSubmit;
+    private SubmitService $submitService;
 
     public function __construct(
         callable $invalidCacheCallback,
@@ -31,9 +31,9 @@ class PointsFormComponent extends SeriesTableFormComponent
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
-    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void
+    final public function injectServiceSubmit(SubmitService $submitService): void
     {
-        $this->serviceSubmit = $serviceSubmit;
+        $this->submitService = $submitService;
     }
 
     /**
@@ -47,11 +47,11 @@ class PointsFormComponent extends SeriesTableFormComponent
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();
             }
-            $submit = $this->serviceSubmit->findByPrimary($submitId);
+            $submit = $this->submitService->findByPrimary($submitId);
             if ($points !== '' && $points !== $submit->raw_points) {
-                $this->serviceSubmit->updateModel($submit, ['raw_points' => +$points]);
+                $this->submitService->storeModel(['raw_points' => +$points], $submit);
             } elseif (!is_null($submit->raw_points) && $points === '') {
-                $this->serviceSubmit->updateModel($submit, ['raw_points' => null]);
+                $this->submitService->storeModel(['raw_points' => null], $submit);
             }
         }
         ($this->invalidCacheCallback)();

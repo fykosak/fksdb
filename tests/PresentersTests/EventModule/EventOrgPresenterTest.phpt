@@ -8,12 +8,12 @@ $container = require '../../Bootstrap.php';
 
 use DateTime;
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventOrg;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\EventOrgService;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -22,19 +22,19 @@ use Tester\Assert;
 class EventOrgPresenterTest extends EntityPresenterTestCase
 {
 
-    private ModelPerson $person;
-    private ModelPerson $eventOrgPerson;
-    private ModelEventOrg $eventOrg;
-    private ModelEvent $event;
+    private PersonModel $person;
+    private PersonModel $eventOrgPerson;
+    private EventOrgModel $eventOrg;
+    private EventModel $event;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel([
+        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
@@ -43,7 +43,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->eventOrg = $this->getContainer()->getByType(ServiceEventOrg::class)->createNewModel([
+        $this->eventOrg = $this->getContainer()->getByType(EventOrgService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'person_id' => $this->eventOrgPerson->person_id,
             'note' => 'note-original',
@@ -104,10 +104,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->getContainer()
-            ->getByType(ServiceEventOrg::class)
-            ->getTable()
-            ->where(['e_org_id' => $this->eventOrg->e_org_id])
-            ->fetch();
+            ->getByType(EventOrgService::class)->findByPrimary($this->eventOrg->e_org_id);
         Assert::equal('note-edited', $org->note);
     }
 
@@ -141,7 +138,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     private function countEventOrgs(): int
     {
         return $this->getContainer()
-            ->getByType(ServiceEventOrg::class)
+            ->getByType(EventOrgService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');

@@ -65,8 +65,8 @@ class MultiResourceAvailability extends AbstractAdjustment
             'service' => $holder->primaryHolder->getService(),
             'holders' => [$holder->primaryHolder],
         ];
-        /** @var BaseHolder[][]|Field[][]|Service[]|ServiceMulti[] $services */
-        $services = [];
+        /** @var BaseHolder[][]|Field[][]|Service[]|ServiceMulti[] $sService */
+        $sService = [];
         $controls = [];
         foreach ($groups as $group) {
             $holders = [];
@@ -91,7 +91,7 @@ class MultiResourceAvailability extends AbstractAdjustment
                 }
             }
             if ($holders) {
-                $services[] = [
+                $sService[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
@@ -100,11 +100,11 @@ class MultiResourceAvailability extends AbstractAdjustment
         }
 
         $usage = [];
-        foreach ($services as $serviceData) {
+        foreach ($sService as $dataService) {
             /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($serviceData['holders']);
+            $firstHolder = reset($dataService['holders']);
             $event = $firstHolder->event;
-            $tableName = $serviceData['service']->getTable()->getName();
+            $tableName = $dataService['service']->getTable()->getName();
             $table = $this->database->table($tableName);
 
             $table->where($firstHolder->eventIdColumn, $event->getPrimary());
@@ -120,10 +120,10 @@ class MultiResourceAvailability extends AbstractAdjustment
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 $model = $baseHolder->getModel2();
                 return $model ? $model->getPrimary(false) : null;
-            }, $serviceData['holders']);
+            }, $dataService['holders']);
             $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
-            $column = BaseHolder::getBareColumn($serviceData['field']);
+            $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($primaries) {
                 $table->where("NOT $pk IN", $primaries);
@@ -140,7 +140,7 @@ class MultiResourceAvailability extends AbstractAdjustment
         }
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
-        foreach ($o as $key => $option) {
+        foreach ($o as $option) {
             if (is_array($option)) {
                 $capacities[$option['value']] = $option['capacity'];
             }

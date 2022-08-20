@@ -8,17 +8,17 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\DI\Container;
 use FKSDB\Components\Controls\Stalking\Components;
 
 class StalkingContainer extends BaseComponent
 {
 
-    private ModelPerson $person;
+    private PersonModel $person;
     private int $userPermission;
 
-    public function __construct(Container $container, ModelPerson $person, int $userPermission)
+    public function __construct(Container $container, PersonModel $person, int $userPermission)
     {
         parent::__construct($container);
         $this->person = $person;
@@ -49,7 +49,7 @@ class StalkingContainer extends BaseComponent
 
     protected function createComponentContestantBasesGrid(): PersonRelatedGrid
     {
-        return new PersonRelatedGrid('contestant_base', $this->person, $this->userPermission, $this->getContext());
+        return new PersonRelatedGrid('contestant', $this->person, $this->userPermission, $this->getContext());
     }
 
     protected function createComponentTaskContributionsGrid(): PersonRelatedGrid
@@ -65,6 +65,16 @@ class StalkingContainer extends BaseComponent
     protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
+    }
+
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
+            $this->person,
+            $this->userPermission,
+            $this->getContext()
+        );
     }
 
     protected function createComponentEventScheduleGrid(): PersonRelatedGrid

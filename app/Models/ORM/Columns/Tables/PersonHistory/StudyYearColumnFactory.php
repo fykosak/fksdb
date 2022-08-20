@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\YearCalculator;
@@ -32,7 +32,7 @@ class StudyYearColumnFactory extends ColumnFactory
         return $control;
     }
 
-    private function createOptions(ModelContestYear $contestYear): array
+    private function createOptions(ContestYearModel $contestYear): array
     {
         $hsYears = [];
         foreach (range(1, 4) as $studyYear) {

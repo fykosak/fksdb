@@ -8,7 +8,8 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Security\User;
@@ -35,13 +36,14 @@ class RelatedPersonAuthorizator
         if ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
             return true;
         }
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         // further on only logged users can be related person
         if (!$login) {
             return false;
         }
 
-        $person = $login->getPerson();
+        $person = $login->person;
         if (!$person) {
             return false;
         }
@@ -53,14 +55,14 @@ class RelatedPersonAuthorizator
                     return true;
                 }
             } elseif ($model instanceof TeamModel2) {
-                foreach ($model->getTeachers() as $teacherRow) {
-                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
+                /** @var TeamTeacherModel $teacher */
+                foreach ($model->getTeachers() as $teacher) {
                     if ($teacher->person_id == $person->person_id) {
                         return true;
                     }
                 }
             } elseif (
-                $model instanceof ModelEventParticipant
+                $model instanceof EventParticipantModel
                 || $model instanceof ModelMFyziklaniParticipant
             ) {
                 if ($model->person_id == $person->person_id) {

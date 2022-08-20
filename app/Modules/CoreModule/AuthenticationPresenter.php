@@ -14,8 +14,8 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\AuthTokenService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
@@ -34,20 +34,20 @@ final class AuthenticationPresenter extends BasePresenter
     public const PARAM_REASON = 'reason';
     /** @persistent */
     public ?string $backlink = '';
-    private ServiceAuthToken $serviceAuthToken;
+    private AuthTokenService $authTokenService;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
-        ServiceAuthToken $serviceAuthToken,
+        AuthTokenService $authTokenService,
         PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
         GoogleProvider $googleProvider
     ): void {
-        $this->serviceAuthToken = $serviceAuthToken;
+        $this->authTokenService = $authTokenService;
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
@@ -221,7 +221,7 @@ final class AuthenticationPresenter extends BasePresenter
         $values = $form->getValues();
         try {
             $this->getUser()->login($values['id'], $values['password']);
-            /** @var ModelLogin $login */
+            /** @var LoginModel $login */
             $this->initialRedirect();
         } catch (AuthenticationException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
@@ -251,7 +251,7 @@ final class AuthenticationPresenter extends BasePresenter
      */
     private function recoverFormSubmitted(Form $form): void
     {
-        $connection = $this->serviceAuthToken->explorer->getConnection();
+        $connection = $this->authTokenService->explorer->getConnection();
         try {
             $values = $form->getValues();
 
@@ -263,8 +263,8 @@ final class AuthenticationPresenter extends BasePresenter
                 $login = $this->accountManager->createLogin($person);
             }
 
-            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
-            $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
+            $this->accountManager->sendRecovery($login, $login->person->getPreferredLang() ?? $this->getLang());
+            $email = Utils::cryptEmail($login->person->getInfo()->email);
             $this->flashMessage(
                 sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
                 Message::LVL_SUCCESS

@@ -13,9 +13,9 @@ use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -39,7 +39,7 @@ class ApplicationHandlerTest extends EventTestCase
         $this->serviceTeam = $this->getContainer()->getByType(TeamService::class);
     }
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         throw new BadRequestException();
     }
@@ -47,7 +47,7 @@ class ApplicationHandlerTest extends EventTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel([
+        $event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,

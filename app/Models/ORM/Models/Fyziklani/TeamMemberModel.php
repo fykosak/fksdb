@@ -4,42 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_team_member_id
- * @property-read ActiveRow person
  * @property-read int person_id
+ * @property-read PersonModel person
  * @property-read int fyziklani_team_id
- * @property-read ActiveRow fyziklani_team
+ * @property-read TeamModel2 fyziklani_team
  */
 class TeamMemberModel extends Model
 {
 
-    public function getPerson(): ModelPerson
+    public function getPersonHistory(): ?PersonHistoryModel
     {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
-    public function getFyziklaniTeam(): TeamModel2
-    {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team);
-    }
-
-    public function getPersonHistory(): ?ModelPersonHistory
-    {
-        return $this->getPerson()->getHistoryByContestYear($this->getFyziklaniTeam()->getEvent()->getContestYear());
-    }
-
-    public function getSchool(): ?ModelSchool
-    {
-        $history = $this->getPersonHistory();
-        return $history ? $history->getSchool() : null;
+        return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
     }
 
     public function __toArray(): array

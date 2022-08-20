@@ -22,7 +22,7 @@ class AggregatedSeriesChart extends AbstractPerSeriesChart
             'select ts.year,
        ts.series,
        (
-           select COUNT(DISTINCT ct_id) as count
+           select COUNT(DISTINCT contestant_id) as count
            from submit s
                     join task t on t.task_id = s.task_id
            where ts.series >= t.series

@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -27,7 +27,7 @@ class HealthInsuranceColumnFactory extends ColumnFactory
     ];
 
     /**
-     * @param ModelPersonInfo $model
+     * @param PersonInfoModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

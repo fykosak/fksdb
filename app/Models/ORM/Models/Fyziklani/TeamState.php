@@ -7,9 +7,10 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 // TODO to enum
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TeamState implements EnumColumn
+class TeamState extends FakeStringEnum implements EnumColumn
 {
     public const APPLIED = 'applied';
     public const PENDING = 'pending';
@@ -20,18 +21,9 @@ class TeamState implements EnumColumn
     public const DISQUALIFIED = 'disqualified';
     public const CANCELLED = 'cancelled';
 
-    public string $value;
-
-    public function __construct(string $status)
-    {
-        $this->value = $status;
-    }
-
-    public static function tryFrom(?string $status): ?self
-    {
-        return $status ? new self($status) : null;
-    }
-
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         $badge = '';

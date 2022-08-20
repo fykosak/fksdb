@@ -6,10 +6,9 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -17,7 +16,7 @@ use NiftyGrid\DuplicateColumnException;
 class GroupsGrid extends RelatedGrid
 {
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container, $event, 'schedule_group');
     }
@@ -40,25 +39,23 @@ class GroupsGrid extends RelatedGrid
             'schedule_group.start',
             'schedule_group.end',
         ]);
-        $this->addColumn('items_count', _('Items count'))->setRenderer(function (ActiveRow $row): int {
-            $model = ModelScheduleGroup::createFromActiveRow($row);
-            return $model->getItems()->count();
-        });
+        $this->addColumn('items_count', _('Items count'))->setRenderer(
+            fn(ScheduleGroupModel $model): int => $model->getItems()->count()
+        );
 
         $this->addButton('detail')->setText(_('Detail'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
-            });
+            ->setLink(
+                fn(ScheduleGroupModel $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:detail',
+                    ['id' => $row->schedule_group_id]
+                )
+            );
         $this->addButton('edit')->setText(_('Edit'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
-            });
-    }
-
-    protected function getModelClassName(): string
-    {
-        return ModelScheduleGroup::class;
+            ->setLink(
+                fn(ScheduleGroupModel $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:edit',
+                    ['id' => $row->schedule_group_id]
+                )
+            );
     }
 }

@@ -1,11 +1,11 @@
 {layout '../@layout.latte'}
 {block content}
-    {varType Nette\Database\Table\GroupedSelection|\Nette\Database\Table\ActiveRow[] $postContacts}
+    {varType Fykosak\NetteORM\TypedGroupedSelection|\Fykosak\NetteORM\Model[] $postContacts}
     {varType int $personId}
     {if count($postContacts)}
-        {foreach $postContacts as $row}
-            {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
-            {var $address = $postContact->getAddress()}
+        {foreach $postContacts as $postContact}
+            {varType FKSDB\Models\ORM\Models\PostContactModel $postContact}
+            {var $address = $postContact->address}
             <h3 class="card-header">
                 {if $postContact->type == 'P'}
                     {_'Permanent address'}
@@ -30,7 +30,7 @@
                     <div>{$address->postal_code}</div>
                 {/if}
                 {if isset($address->region_id)}
-                    <div>{$address->getRegion()->name}</div>
+                    <div>{$address->region->name}</div>
                 {/if}
             </div>
 
@@ -41,6 +41,6 @@
                href="{plink :Org:Envelope:output personIds=>[$personId]}">{_'Create envelope'}</a>
         </div>
     {else}
-        {control noRecords}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
     {/if}
 {/block}

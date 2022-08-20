@@ -8,5 +8,4 @@ use Fykosak\NetteORM\Service;
 
 class SeatService extends Service
 {
-
 }

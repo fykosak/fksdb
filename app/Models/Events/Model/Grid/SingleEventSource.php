@@ -7,14 +7,13 @@ namespace FKSDB\Models\Events\Model\Grid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -30,14 +29,14 @@ class SingleEventSource implements HolderSource
 {
     use SmartObject;
 
-    private ModelEvent $event;
+    private EventModel $event;
     private Container $container;
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private Holder $dummyHolder;
-    /** @var ActiveRow[] */
+    /** @var Model[] */
     private ?array $primaryModels = null;
-    /** @var ActiveRow[][] */
+    /** @var Model[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
     private array $holders = [];
@@ -47,7 +46,7 @@ class SingleEventSource implements HolderSource
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory)
+    public function __construct(EventModel $event, Container $container, EventDispatchFactory $eventDispatchFactory)
     {
         $this->event = $event;
         $this->container = $container;
@@ -59,7 +58,7 @@ class SingleEventSource implements HolderSource
             ->where($this->dummyHolder->primaryHolder->eventIdColumn, $this->event->getPrimary());
     }
 
-    public function getEvent(): ModelEvent
+    public function getEvent(): EventModel
     {
         return $this->event;
     }
@@ -72,7 +71,7 @@ class SingleEventSource implements HolderSource
     private function loadData(): void
     {
         $joinToCheck = null;
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $group) {
             if (!isset($joinToCheck)) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
@@ -98,7 +97,7 @@ class SingleEventSource implements HolderSource
             /** @var TypedSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
-                /** @var ModelEvent $event */
+                /** @var EventModel $event */
                 $event = reset($group['holders'])->getEvent();
                 $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
@@ -122,7 +121,7 @@ class SingleEventSource implements HolderSource
     {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
+            foreach ($this->secondaryModels[$key] as $secondaryModel) {
                 $primaryPK = $secondaryModel[$group['joinOn']];
                 if (!isset($cache[$primaryPK])) {
                     $cache[$primaryPK] = [];

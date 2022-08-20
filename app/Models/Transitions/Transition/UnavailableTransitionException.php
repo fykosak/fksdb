@@ -6,26 +6,28 @@ namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Machine\Transition as EventTransition;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 class UnavailableTransitionException extends InvalidStateException
 {
     /**
-     * @param ActiveRow|ModelHolder|null $holder
+     * @param Model|ModelHolder|null $holder
      */
     public function __construct(Transition $transition, $holder)
     {
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
+            $target = $transition->target;
         } else {
-            $source = $transition->sourceState;
+            $source = $transition->sourceStateEnum->value;
+            $target = $transition->targetStateEnum->value;
         }
         parent::__construct(
             sprintf(
                 _('Transition from %s to %s is unavailable for %s'),
                 $source,
-                $transition->targetState,
+                $target,
                 $holder instanceof ModelHolder ? $holder->getModel() : $holder
             )
         );

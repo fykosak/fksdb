@@ -7,8 +7,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -18,10 +17,10 @@ use NiftyGrid\DuplicateColumnException;
 class ResultsCategoryGrid extends BaseGrid
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
     private TeamCategory $category;
 
-    public function __construct(ModelEvent $event, TeamCategory $category, Container $container)
+    public function __construct(EventModel $event, TeamCategory $category, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -51,10 +50,5 @@ class ResultsCategoryGrid extends BaseGrid
             'fyziklani_team.name',
             'fyziklani_team.rank_category',
         ]);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return TeamModel2::class;
     }
 }

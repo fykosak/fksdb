@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
 {
 
-    protected ModelEvent $event;
+    protected EventModel $event;
 
-    public function __construct(Container $context, ModelEvent $event)
+    public function __construct(Container $context, EventModel $event)
     {
         parent::__construct($context, 'chart.events.participants.time-geo');
         $this->event = $event;
@@ -29,9 +29,9 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
     protected function getData(): array
     {
         $rawData = [];
-        foreach ($this->event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
-            $iso = $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso3;
+        /** @var EventParticipantModel $participant */
+        foreach ($this->event->getParticipants() as $participant) {
+            $iso = $participant->getPersonHistory()->school->address->region->country_iso3;
             $rawData[] = [
                 'country' => $iso,
                 'created' => $participant->created->format('c'),

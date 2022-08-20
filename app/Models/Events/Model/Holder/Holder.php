@@ -12,9 +12,9 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStra
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -104,7 +104,7 @@ class Holder
      * @return static
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): self
+    public function inferEvent(EventModel $event): self
     {
         foreach ($this->getBaseHolders() as $baseHolder) {
             $baseHolder->inferEvent($event);
@@ -112,7 +112,7 @@ class Holder
         return $this;
     }
 
-    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void
+    public function setModel(?Model $primaryModel = null, ?array $secondaryModels = null): void
     {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
@@ -178,7 +178,7 @@ class Holder
     ): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->targetState;
+            $newStates[$name] = $transition->target;
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);

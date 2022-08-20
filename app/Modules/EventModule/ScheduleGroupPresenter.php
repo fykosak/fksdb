@@ -12,8 +12,8 @@ use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -21,17 +21,17 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelScheduleGroup getEntity()
+ * @method ScheduleGroupModel getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private ServiceScheduleGroup $serviceScheduleGroup;
+    private ScheduleGroupService $scheduleGroupService;
 
-    final public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void
+    final public function injectServiceScheduleGroup(ScheduleGroupService $scheduleGroupService): void
     {
-        $this->serviceScheduleGroup = $serviceScheduleGroup;
+        $this->scheduleGroupService = $scheduleGroupService;
     }
 
     public function titleList(): PageTitle
@@ -55,6 +55,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -75,6 +76,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleGroupFormComponent
     {
@@ -103,15 +105,16 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentItemsGrid(): ItemsGrid
     {
         return new ItemsGrid($this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceScheduleGroup
+    protected function getORMService(): ScheduleGroupService
     {
-        return $this->serviceScheduleGroup;
+        return $this->scheduleGroupService;
     }
 
     /**

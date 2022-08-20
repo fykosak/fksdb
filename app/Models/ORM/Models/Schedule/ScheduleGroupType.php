@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class ScheduleGroupType implements EnumColumn
+class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 {
     public const ACCOMMODATION = 'accommodation';
     public const ACCOMMODATION_GENDER = 'accommodation_gender';
@@ -24,18 +25,12 @@ class ScheduleGroupType implements EnumColumn
     public const DSEF_MORNING = 'dsef_morning';
     public const DSEF_AFTERNOON = 'dsef_afternoon';
 
+    public const T_SHIRT_SIZE = 't-shirt_size';
+    public const T_SHIRT_COLOR = 't-shirt_color';
+    public const JUMPER_SIZE = 'jumper_size';
 
-    public string $value;
-
-    public function __construct(string $type)
-    {
-        $this->value = $type;
-    }
-
-    public static function tryFrom(?string $type): ?self
-    {
-        return $type ? new self($type) : null;
-    }
+    public const ARRIVAL_DESTINATION = 'arrival_destination';
+    public const DEPARTURE_DESTINATION = 'departure_destination';
 
     /**
      * @return self[]
@@ -53,9 +48,17 @@ class ScheduleGroupType implements EnumColumn
             new self(self::WEEKEND),
             new self(self::DSEF_MORNING),
             new self(self::DSEF_AFTERNOON),
+            new self(self::T_SHIRT_COLOR),
+            new self(self::T_SHIRT_SIZE),
+            new self(self::JUMPER_SIZE),
+            new self(self::ARRIVAL_DESTINATION),
+            new self(self::DEPARTURE_DESTINATION),
         ];
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         $badge = '';
@@ -78,16 +81,21 @@ class ScheduleGroupType implements EnumColumn
             case self::VACCINATION_COVID:
                 $badge = 'badge bg-color-6';
                 break;
+            case self::WEEKEND:
             case self::WEEKEND_INFO:
                 $badge = 'badge bg-color-7';
                 break;
-            case self::WEEKEND:
+            case self::DSEF_AFTERNOON:
+            case self::DSEF_MORNING:
                 $badge = 'badge bg-color-8';
                 break;
-            case self::DSEF_MORNING:
+            case self::T_SHIRT_SIZE:
+            case self::T_SHIRT_COLOR:
+            case self::JUMPER_SIZE:
                 $badge = 'badge bg-color-9';
                 break;
-            case self::DSEF_AFTERNOON:
+            case self::ARRIVAL_DESTINATION:
+            case self::DEPARTURE_DESTINATION:
                 $badge = 'badge bg-color-10';
                 break;
         }
@@ -120,6 +128,16 @@ class ScheduleGroupType implements EnumColumn
                 return _('DSEF morning');
             case self::DSEF_AFTERNOON:
                 return _('DSEF afternoon');
+            case self::T_SHIRT_COLOR:
+                return _('T-shirt color');
+            case self::T_SHIRT_SIZE:
+                return _('T-shirt size');
+            case self::JUMPER_SIZE:
+                return _('Jumper size');
+            case self::ARRIVAL_DESTINATION:
+                return _('Arrival destination');
+            case self::DEPARTURE_DESTINATION:
+                return _('Departure destination');
         }
         throw new NotImplementedException();
     }

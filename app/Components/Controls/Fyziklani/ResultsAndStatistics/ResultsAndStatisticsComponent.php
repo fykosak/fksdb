@@ -6,9 +6,10 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
@@ -18,31 +19,24 @@ use Nette\Utils\DateTime;
 
 class ResultsAndStatisticsComponent extends AjaxComponent
 {
-    private TeamService2 $teamService;
-    private TaskService $taskService;
     private SubmitService $submitService;
-    private ModelEvent $event;
+    private EventModel $event;
     private ?string $lastUpdated = null;
 
-    public function __construct(Container $container, ModelEvent $event, string $reactId)
+    public function __construct(Container $container, EventModel $event, string $reactId)
     {
         parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    final protected function getEvent(): ModelEvent
+    final protected function getEvent(): EventModel
     {
         return $this->event;
     }
 
-    final public function injectPrimary(
-        SubmitService $submitService,
-        TaskService $taskService,
-        TeamService2 $teamService
-    ): void {
+    final public function injectPrimary(SubmitService $submitService): void
+    {
         $this->submitService = $submitService;
-        $this->taskService = $taskService;
-        $this->teamService = $teamService;
     }
 
     public function handleRefresh(string $lastUpdated): void
@@ -85,9 +79,12 @@ class ResultsAndStatisticsComponent extends AjaxComponent
 
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
-        $result['teams'] = $this->teamService->serialiseTeams($this->getEvent());
-        $result['tasks'] = $this->taskService->serialiseTasks($this->getEvent());
-        $result['categories'] = ['A', 'B', 'C'];
+        $result['teams'] = TeamService2::serialiseTeams($this->getEvent());
+        $result['tasks'] = TaskService::serialiseTasks($this->getEvent());
+        $result['categories'] = array_map(
+            fn(TeamCategory $category): string => $category->value,
+            TeamCategory::casesForEvent($this->getEvent())
+        );
         //  }
         return $result;
     }

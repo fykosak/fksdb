@@ -48,10 +48,6 @@ class ResultsGrid extends BaseGrid
         } catch (\PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
-
-        //
-        // operations
-        //
         if (!$this->storedQuery->hasQueryPattern()) {
             $qid = $this->storedQuery->getQId();
             if ($qid) {

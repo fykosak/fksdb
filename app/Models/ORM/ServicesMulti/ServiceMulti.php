@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\ServicesMulti;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Services\OldServiceSingle;
@@ -37,32 +36,10 @@ abstract class ServiceMulti
         $this->joiningColumn = $joiningColumn;
     }
 
-    /**
-     * Use this method to create new models!
-     * @throws ModelException
-     */
-    public function createNewModel(array $data): ModelMulti
-    {
-        $mainModel = $this->mainService->createNewModel($data);
-        $data[$this->joiningColumn] = $mainModel->{$this->joiningColumn};
-        $joinedModel = $this->joinedService->createNewModel($data);
-        return $this->composeModel($mainModel, $joinedModel);
-    }
-
     public function composeModel(Model $mainModel, Model $joinedModel): ModelMulti
     {
         $className = $this->getModelClassName();
         return new $className($mainModel, $joinedModel);
-    }
-
-    /**
-     * @throws ModelException
-     */
-    public function updateModel(ModelMulti $model, array $data): bool
-    {
-        $this->checkType($model);
-        $this->mainService->updateModel($model->mainModel, $data);
-        return $this->joinedService->updateModel($model->joinedModel, $data);
     }
 
     /**
@@ -99,10 +76,10 @@ abstract class ServiceMulti
      * Use this method to delete a model!
      * @throws \InvalidArgumentException
      */
-    public function dispose(ModelMulti $model): void
+    public function disposeModel(ModelMulti $model): void
     {
         $this->checkType($model);
-        $this->joinedService->dispose($model->joinedModel);
+        $this->joinedService->disposeModel($model->joinedModel);
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
@@ -136,7 +113,7 @@ abstract class ServiceMulti
         );
         // $selection->joinWhere($mainTable, "$joinedTable.{$mainTable}_id = $mainTable.{$mainTable}_id");
         // $selection->select("$joinedTable.*");
-         $selection->select("$mainTable.*");
+        $selection->select("$mainTable.*");
 
         return $selection;
     }

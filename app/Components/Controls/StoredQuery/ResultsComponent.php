@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -11,7 +12,7 @@ use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
@@ -119,7 +120,7 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @param ModelStoredQueryParameter[] $queryParameters
+     * @param ParameterModel[] $queryParameters
      * TODO
      */
     private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer
@@ -133,18 +134,18 @@ class ResultsComponent extends BaseComponent
             $container->addComponent($subContainer, $name);
             // $subcontainer = $container->addContainer($name);
 
-            switch ($parameter->type) {
-                case ModelStoredQueryParameter::TYPE_INT:
-                case ModelStoredQueryParameter::TYPE_STRING:
+            switch ($parameter->type->value) {
+                case ParameterType::INT:
+                case ParameterType::STRING:
                     $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
-                    if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
+                    if ($parameter->type->value == ParameterType::INT) {
                         $valueElement->addRule(Form::INTEGER, _('Parameter %label is numeric.'));
                     }
 
                     $valueElement->setDefaultValue($parameter->getDefaultValue());
                     break;
-                case ModelStoredQueryParameter::TYPE_BOOL:
+                case ParameterType::BOOL:
                     $valueElement = $subContainer->addCheckbox('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     $valueElement->setDefaultValue((bool)$parameter->getDefaultValue());

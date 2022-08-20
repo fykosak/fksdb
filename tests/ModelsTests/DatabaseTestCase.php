@@ -7,19 +7,19 @@ namespace FKSDB\Tests\ModelsTests;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceContestYear;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
@@ -37,7 +37,7 @@ abstract class DatabaseTestCase extends TestCase
     private Container $container;
     protected Explorer $explorer;
     private int $instanceNo;
-    protected ModelSchool $genericSchool;
+    protected SchoolModel $genericSchool;
 
     public function __construct(Container $container)
     {
@@ -56,20 +56,20 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel(
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
         );
-        $this->genericSchool = $this->getContainer()->getByType(ServiceSchool::class)->createNewModel(
+        $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->storeModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
-        $serviceContestYear = $this->getContainer()->getByType(ServiceContestYear::class);
+        $serviceContestYear = $this->getContainer()->getByType(ContestYearService::class);
         $fykosData = [
-            'contest_id' => ModelContest::ID_FYKOS,
+            'contest_id' => ContestModel::ID_FYKOS,
             'year' => 1,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
         ];
         $vyfukData = [
-            'contest_id' => ModelContest::ID_VYFUK,
+            'contest_id' => ContestModel::ID_VYFUK,
             'year' => 1,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
         ];
@@ -109,7 +109,7 @@ abstract class DatabaseTestCase extends TestCase
 
             DbNames::TAB_ORG,
             DbNames::TAB_PERSON_HISTORY,
-            DbNames::TAB_CONTESTANT_BASE,
+            DbNames::TAB_CONTESTANT,
             DbNames::TAB_CONTEST_YEAR,
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
@@ -127,14 +127,14 @@ abstract class DatabaseTestCase extends TestCase
         string $surname,
         ?array $info = null,
         ?array $loginData = null
-    ): ModelPerson {
-        $person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel(
+    ): PersonModel {
+        $person = $this->getContainer()->getByType(PersonService::class)->storeModel(
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
         if ($info) {
             $info['person_id'] = $person->person_id;
-            $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel($info);
+            $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
 
         if (!is_null($loginData)) {
@@ -145,7 +145,7 @@ abstract class DatabaseTestCase extends TestCase
             ];
             $loginData = array_merge($data, $loginData);
 
-            $pseudoLogin = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel($loginData);
+            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel($loginData);
 
             if (isset($pseudoLogin->hash)) {
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
@@ -156,19 +156,19 @@ abstract class DatabaseTestCase extends TestCase
         return $person;
     }
 
-    protected function assertPersonInfo(ModelPerson $person): ModelPersonInfo
+    protected function assertPersonInfo(PersonModel $person): PersonInfoModel
     {
         return $person->getInfo();
     }
 
     protected function createPersonHistory(
-        ModelPerson $person,
+        PersonModel $person,
         int $acYear,
-        ?ModelSchool $school = null,
+        ?SchoolModel $school = null,
         ?int $studyYear = null,
         ?string $class = null
-    ): ModelPersonHistory {
-        return $this->getContainer()->getByType(ServicePersonHistory::class)->createNewModel([
+    ): PersonHistoryModel {
+        return $this->getContainer()->getByType(PersonHistoryService::class)->storeModel([
             'person_id' => $person->person_id,
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,
@@ -199,7 +199,7 @@ abstract class DatabaseTestCase extends TestCase
         $section->$key = $token;
     }
 
-    protected function authenticateLogin(ModelLogin $login, ?Presenter $presenter = null): void
+    protected function authenticateLogin(LoginModel $login, ?Presenter $presenter = null): void
     {
         /** @var UserStorage $storage */
         $storage = $this->getContainer()->getByType(UserStorage::class);
@@ -210,7 +210,7 @@ abstract class DatabaseTestCase extends TestCase
         }
     }
 
-    protected function authenticatePerson(ModelPerson $person, ?Presenter $presenter = null): void
+    protected function authenticatePerson(PersonModel $person, ?Presenter $presenter = null): void
     {
         $this->authenticateLogin($person->getLogin(), $presenter);
     }

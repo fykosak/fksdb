@@ -6,15 +6,14 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\NetteORM\ReferencedAccessor;
 
 class MailCallback implements TransitionCallback
 {
 
-    protected ServiceEmailMessage $serviceEmailMessage;
+    protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
     protected string $templateFile;
     protected array $emailData;
@@ -22,24 +21,25 @@ class MailCallback implements TransitionCallback
     public function __construct(
         string $templateFile,
         array $emailData,
-        ServiceEmailMessage $serviceEmailMessage,
+        EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory
     ) {
         $this->templateFile = $templateFile;
         $this->emailData = $emailData;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
-        /** @var ModelPerson|null $person */
-        $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
+        /** @var PersonModel|null $person */
+        $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {
-            throw new BadTypeException(ModelPerson::class, $person);
+            throw new BadTypeException(PersonModel::class, $person);
         }
         $data = $this->emailData;
         $data['recipient'] = $person->getInfo()->email;
@@ -49,6 +49,6 @@ class MailCallback implements TransitionCallback
             $person->getPreferredLang(),
             ['model' => $holder->getModel()]
         );
-        $this->serviceEmailMessage->addMessageToSend($data);
+        $this->emailMessageService->addMessageToSend($data);
     }
 }

@@ -17,32 +17,29 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 class ApplicationPresenter extends BasePresenter
 {
 
     public const PARAM_AFTER = 'a';
-    private ?ModelEvent $event;
-    private ?ActiveRow $eventApplication = null;
+    private ?EventModel $event;
+    private ?Model $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -52,11 +49,11 @@ class ApplicationPresenter extends BasePresenter
     }
 
     final public function injectTernary(
-        ServiceEvent $serviceEvent,
+        EventService $eventService,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
         EventDispatchFactory $eventDispatchFactory
     ): void {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -66,7 +63,7 @@ class ApplicationPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         $event = $this->getEvent();
         if (
             $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
@@ -105,10 +102,10 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelMulti|Model|ActiveRow|TeamModel|ModelEventParticipant|null
+     * @return TeamModel|EventParticipantModel|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?ActiveRow
+    private function getEventApplication(): ?Model
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
@@ -142,6 +139,7 @@ class ApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
+     * @throws \ReflectionException
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
@@ -154,8 +152,8 @@ class ApplicationPresenter extends BasePresenter
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            /** @var ModelEvent $event */
-            $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
+            /** @var EventModel $event */
+            $event = $eventApplication->getReferencedModel(EventModel::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }
@@ -163,7 +161,7 @@ class ApplicationPresenter extends BasePresenter
 
         $this->initializeMachine();
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
             $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
                 $this->tokenAuthenticator->disposeTokenData();
@@ -237,7 +235,7 @@ class ApplicationPresenter extends BasePresenter
                         array_merge(
                             $this->getParameters(),
                             [
-                                'contestId' => $this->getEvent()->getContest()->contest_id,
+                                'contestId' => $this->getEvent()->event_type->contest_id,
                                 'year' => $this->getEvent()->year,
                             ]
                         )
@@ -248,11 +246,11 @@ class ApplicationPresenter extends BasePresenter
         parent::startup();
     }
 
-    private function getEvent(): ?ModelEvent
+    private function getEvent(): ?EventModel
     {
         if (!isset($this->event)) {
             $eventId = null;
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
                     $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
@@ -260,7 +258,7 @@ class ApplicationPresenter extends BasePresenter
                 }
             }
             $eventId = $eventId ?? $this->getParameter('eventId');
-            $this->event = $this->serviceEvent->findByPrimary($eventId);
+            $this->event = $this->eventService->findByPrimary($eventId);
         }
 
         return $this->event;
@@ -350,7 +348,7 @@ class ApplicationPresenter extends BasePresenter
                     break;
                 default:
                     $this->getPageStyleContainer()->setNavBarClassName(
-                        'navbar-dark bg-' . $event->getContest()->getContestSymbol()
+                        'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
                     );
             }
         }

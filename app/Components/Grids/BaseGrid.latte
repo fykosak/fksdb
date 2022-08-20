@@ -7,14 +7,14 @@
     {varType int $viewedTo}
     {varType array $flashes}
     {varType iterable $rows}
-    {varType Nette\ComponentModel\RecursiveComponentIterator|NiftyGrid\Components\Column[] $columns}
-    {varType Nette\ComponentModel\RecursiveComponentIterator|NiftyGrid\Components\GlobalButton[] $globalButtons}
-    {varType Nette\ComponentModel\RecursiveComponentIterator|NiftyGrid\Components\Button[] $buttons}
+    {varType NiftyGrid\Components\Column[] $columns}
+    {varType NiftyGrid\Components\GlobalButton[] $globalButtons}
+    {varType NiftyGrid\Components\Button[] $buttons}
     <div class="row mb-3">
         <div class="col-8">
             <div class="btn-toolbar" n:if="$control->hasGlobalButtons()">
                 {foreach $globalButtons as $globalButton}
-                    {control $globalButton}&nbsp;{*TODO why EOL doesn't separate*}
+                    {control $globalButton}&nbsp;
                 {/foreach}
             </div>
         </div>

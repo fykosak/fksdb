@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Service;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
@@ -58,7 +58,7 @@ class ResourceAvailability extends AbstractAdjustment
             'holders' => [$holder->primaryHolder],
         ];
 
-        $services = [];
+        $sService = [];
         $controls = [];
 
         foreach ($groups as $group) {
@@ -84,7 +84,7 @@ class ResourceAvailability extends AbstractAdjustment
                 }
             }
             if ($holders) {
-                $services[] = [
+                $sService[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
@@ -93,13 +93,13 @@ class ResourceAvailability extends AbstractAdjustment
         }
 
         $usage = 0;
-        /** @var Service|ServiceMulti[]|BaseHolder[][] $serviceData */
-        foreach ($services as $serviceData) {
+        /** @var Service|ServiceMulti[]|BaseHolder[][] $dataService */
+        foreach ($sService as $dataService) {
             /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($serviceData['holders']);
+            $firstHolder = reset($dataService['holders']);
             $event = $firstHolder->event;
-            /** @var GroupedSelection $table */
-            $table = $serviceData['service']->getTable();
+            /** @var TypedGroupedSelection $table */
+            $table = $dataService['service']->getTable();
             $table->where($firstHolder->eventIdColumn, $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
@@ -113,10 +113,10 @@ class ResourceAvailability extends AbstractAdjustment
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 $model = $baseHolder->getModel2();
                 return $model ? $model->getPrimary(false) : null;
-            }, $serviceData['holders']);
+            }, $dataService['holders']);
             $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
-            $column = BaseHolder::getBareColumn($serviceData['field']);
+            $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($primaries) {
                 $table->where("NOT $pk IN", $primaries);

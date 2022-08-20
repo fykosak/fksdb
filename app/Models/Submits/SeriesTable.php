@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\{
-    ModelContestant,
-    ModelContestYear,
-    ModelSubmit,
+    ContestantModel,
+    ContestYearModel,
+    SubmitModel,
 };
 use FKSDB\Models\ORM\Services\{
-    ServiceContestant,
-    ServiceSubmit,
-    ServiceTask,
+    ContestantService,
+    SubmitService,
+    TaskService,
 };
 use Fykosak\NetteORM\TypedSelection;
 
@@ -22,11 +22,11 @@ class SeriesTable
     public const FORM_SUBMIT = 'submit';
     public const FORM_CONTESTANT = 'contestant';
 
-    private ServiceContestant $serviceContestant;
-    private ServiceTask $serviceTask;
-    private ServiceSubmit $serviceSubmit;
+    private ContestantService $contestantService;
+    private TaskService $taskService;
+    private SubmitService $submitService;
 
-    public ModelContestYear $contestYear;
+    public ContestYearModel $contestYear;
     public int $series;
 
     /**
@@ -36,18 +36,18 @@ class SeriesTable
     public ?array $taskFilter = null;
 
     public function __construct(
-        ServiceContestant $serviceContestant,
-        ServiceTask $serviceTask,
-        ServiceSubmit $serviceSubmit
+        ContestantService $contestantService,
+        TaskService $taskService,
+        SubmitService $submitService
     ) {
-        $this->serviceContestant = $serviceContestant;
-        $this->serviceTask = $serviceTask;
-        $this->serviceSubmit = $serviceSubmit;
+        $this->contestantService = $contestantService;
+        $this->taskService = $taskService;
+        $this->submitService = $submitService;
     }
 
     public function getContestants(): TypedSelection
     {
-        return $this->serviceContestant->getTable()->where([
+        return $this->contestantService->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
             'year' => $this->contestYear->year,
         ])->order('person.family_name, person.other_name, person.person_id');
@@ -55,7 +55,7 @@ class SeriesTable
 
     public function getTasks(): TypedSelection
     {
-        $tasks = $this->serviceTask->getTable()->where([
+        $tasks = $this->taskService->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
             'year' => $this->contestYear->year,
             'series' => $this->series,
@@ -69,8 +69,8 @@ class SeriesTable
 
     public function getSubmits(): TypedSelection
     {
-        return $this->serviceSubmit->getTable()
-            ->where('ct_id', $this->getContestants())
+        return $this->submitService->getTable()
+            ->where('contestant_id', $this->getContestants())
             ->where('task_id', $this->getTasks());
     }
 
@@ -78,10 +78,10 @@ class SeriesTable
     {
         // store submits in 2D hash for better access
         $submitsTable = [];
-        /** @var ModelSubmit $submit */
+        /** @var SubmitModel $submit */
         foreach ($this->getSubmits() as $submit) {
-            $submitsTable[$submit->ct_id] = $submitsTable[$submit->ct_id] ?? [];
-            $submitsTable[$submit->ct_id][$submit->task_id] = $submit;
+            $submitsTable[$submit->contestant_id] = $submitsTable[$submit->contestant_id] ?? [];
+            $submitsTable[$submit->contestant_id][$submit->task_id] = $submit;
         }
         return $submitsTable;
     }
@@ -91,9 +91,11 @@ class SeriesTable
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
-        /** @var ModelContestant $contestant */
+        /** @var ContestantModel $contestant */
         foreach ($contestants as $contestant) {
-            $result[$contestant->ct_id] = [self::FORM_SUBMIT => $submitsTable[$contestant->ct_id] ?? null];
+            $result[$contestant->contestant_id] = [
+                self::FORM_SUBMIT => $submitsTable[$contestant->contestant_id] ?? null,
+            ];
         }
         return [
             self::FORM_CONTESTANT => $result,
@@ -105,7 +107,7 @@ class SeriesTable
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
-                /** @var ModelSubmit $submit */
+                /** @var SubmitModel $submit */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

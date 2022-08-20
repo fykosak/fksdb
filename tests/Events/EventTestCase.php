@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Database\Row;
@@ -18,7 +17,7 @@ use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
-    protected function createEvent(array $data): ModelEvent
+    protected function createEvent(array $data): EventModel
     {
         if (!isset($data['year'])) {
             $data['year'] = 1;
@@ -32,7 +31,7 @@ abstract class EventTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        return $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($data);
+        return $this->getContainer()->getByType(EventService::class)->storeModel($data);
     }
 
     protected function createPostRequest(array $formData, array $params = []): Request
@@ -53,13 +52,13 @@ abstract class EventTestCase extends DatabaseTestCase
         );
     }
 
-    abstract protected function getEvent(): ModelEvent;
+    abstract protected function getEvent(): EventModel;
 
-    protected function assertApplication(ModelEvent $event, string $email): ModelEventParticipant
+    protected function assertApplication(EventModel $event, string $email): EventParticipantModel
     {
-        $person = $this->getContainer()->getByType(ServicePerson::class)->findByEmail($email);
+        $person = $this->getContainer()->getByType(PersonService::class)->findByEmail($email);
         Assert::notEqual(null, $person);
-        $application = $this->getContainer()->getByType(ServiceEventParticipant::class)->getTable()->where([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->getTable()->where([
             'event_id' => $event->event_id,
             'person_id' => $person->person_id,
         ])->fetch();
@@ -67,7 +66,7 @@ abstract class EventTestCase extends DatabaseTestCase
         return $application;
     }
 
-    protected function assertExtendedApplication(ModelEventParticipant $application, string $table): Row
+    protected function assertExtendedApplication(EventParticipantModel $application, string $table): Row
     {
         $application = $this->explorer->fetch(
             'SELECT * FROM `' . $table . '` WHERE event_participant_id = ?',
@@ -76,14 +75,4 @@ abstract class EventTestCase extends DatabaseTestCase
         Assert::notEqual(null, $application);
         return $application;
     }
-
-//    protected function assertApplicationSchedule(ModelEventParticipant $application, string $table): Row
-//    {
-//        $application = $this->explorer->fetch(
-//            'SELECT * FROM `' . $table . '` WHERE person_id = ?',
-//            $application->person_id
-//        );
-//        Assert::notEqual(null, $application);
-//        return $application;
-//    }
 }

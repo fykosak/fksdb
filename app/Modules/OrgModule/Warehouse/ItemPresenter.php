@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
+use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceItem;
+use FKSDB\Models\ORM\Services\Warehouse\ItemService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
@@ -16,11 +17,11 @@ class ItemPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceItem $serviceItem;
+    private ItemService $itemService;
 
-    public function injectService(ServiceItem $serviceItem): void
+    public function injectService(ItemService $itemService): void
     {
-        $this->serviceItem = $serviceItem;
+        $this->itemService = $itemService;
     }
 
     public function titleList(): PageTitle
@@ -40,12 +41,12 @@ class ItemPresenter extends BasePresenter
 
     protected function createComponentCreateForm(): Control
     {
-        throw new NotImplementedException();
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
 
     protected function createComponentEditForm(): Control
     {
-        throw new NotImplementedException();
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
     protected function createComponentGrid(): ItemsGrid
@@ -53,9 +54,9 @@ class ItemPresenter extends BasePresenter
         return new ItemsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-    protected function getORMService(): ServiceItem
+    protected function getORMService(): ItemService
     {
-        return $this->serviceItem;
+        return $this->itemService;
     }
 
     /**

@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Tests\ORM\ParticipantModel;
 use Nette\InvalidStateException;
 
 abstract class SecondaryModelStrategy
 {
-
     /**
      * @param BaseHolder[] $holders
-     * @param ActiveRow[] $models
+     * @param Model[] $models
      */
     public function setSecondaryModels(array $holders, iterable $models): void
     {
@@ -43,16 +43,15 @@ abstract class SecondaryModelStrategy
         ?string $joinOn,
         ?string $joinTo,
         array $holders,
-        ?ActiveRow $primaryModel = null
+        ?Model $primaryModel = null
     ): void {
         $secondary = [];
         if ($primaryModel) {
             if ($primaryModel instanceof TeamModel) {
-                /** @var ServiceMFyziklaniParticipant $service */
-                foreach ($primaryModel->getFyziklaniParticipants() as $row) {
-                    $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row);
+                /** @var ParticipantModel $fyziklaniParticipant */
+                foreach ($primaryModel->getFyziklaniParticipants() as $fyziklaniParticipant) {
                     $secondary[] = $service->composeModel(
-                        $fyziklaniParticipant->getEventParticipant(),
+                        $fyziklaniParticipant->event_participant,
                         $fyziklaniParticipant
                     );
                 }
@@ -77,7 +76,7 @@ abstract class SecondaryModelStrategy
         ?string $joinOn,
         ?string $joinTo,
         array $holders,
-        ActiveRow $primaryModel
+        Model $primaryModel
     ): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {

@@ -48,14 +48,14 @@ class DiplomasPresenter extends BasePresenter
     final public function renderDefault(): void
     {
         $items = [];
-        foreach (['A', 'B', 'C'] as $category) {
-            $items[$category] = [
+        foreach (TeamCategory::casesForEvent($this->getEvent()) as $category) {
+            $items[$category->value] = [
                 'closed' => $this->getEvent()->getParticipatingFyziklaniTeams()
-                    ->where('category', $category)
+                    ->where('category', $category->value)
                     ->where('points IS NOT NULL')
                     ->count(),
                 'opened' => $this->getEvent()->getParticipatingFyziklaniTeams()
-                    ->where('category', $category)
+                    ->where('category', $category->value)
                     ->where('points IS NULL')
                     ->count(),
             ];

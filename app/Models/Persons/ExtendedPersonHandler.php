@@ -7,17 +7,16 @@ namespace FKSDB\Models\Persons;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -34,23 +33,23 @@ class ExtendedPersonHandler
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
     protected Service $service;
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
     private Connection $connection;
     private AccountManager $accountManager;
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
     private string $invitationLang;
-    private ?ModelPerson $person = null;
+    private ?PersonModel $person = null;
 
     public function __construct(
         Service $service,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         Connection $connection,
         AccountManager $accountManager,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
         $this->contestYear = $contestYear;
@@ -62,15 +61,15 @@ class ExtendedPersonHandler
         return $this->invitationLang;
     }
 
-    public function getPerson(): ModelPerson
+    public function getPerson(): PersonModel
     {
         return $this->person;
     }
 
     /**
-     * @return ModelPerson|null|Model|ActiveRow
+     * @return PersonModel|null|Model
      */
-    final protected function getReferencedPerson(Form $form): ?ActiveRow
+    final protected function getReferencedPerson(Form $form): ?Model
     {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
@@ -102,7 +101,7 @@ class ExtendedPersonHandler
                 }
             }
 // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $this->person = $this->personService->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize
@@ -142,19 +141,19 @@ class ExtendedPersonHandler
     }
 
     protected function storeExtendedModel(
-        ModelPerson $person,
+        PersonModel $person,
         iterable $values,
         ExtendedPersonPresenter $presenter
     ): void {
-        if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
+        if ($this->contestYear->contest === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
         $model = $presenter->getModel();
 
         if (!$model) {
-            $model = $this->service->createNewModel([
-                'contest_id' => $this->contestYear->getContest(),
+            $model = $this->service->storeModel([
+                'contest_id' => $this->contestYear->contest,
                 'person_id' => $person->getPrimary(),
                 'year' => $this->contestYear->year,
             ]);
@@ -162,8 +161,8 @@ class ExtendedPersonHandler
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
-            $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, (array)$data);
+            $data = FormUtils::emptyStrToNull2($values[self::CONT_MODEL]);
+            $this->service->storeModel($data, $model);
         }
     }
 }

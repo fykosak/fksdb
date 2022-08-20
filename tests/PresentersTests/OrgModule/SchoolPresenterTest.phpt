@@ -7,26 +7,26 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\EntityForms\SchoolFormComponent;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 class SchoolPresenterTest extends AbstractOrgPresenterTestCase
 {
-    private ModelSchool $school;
+    private SchoolModel $school;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
@@ -34,7 +34,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
             'postal_code' => '02001',
             'region_id' => '1',
         ]);
-        $this->school = $this->getContainer()->getByType(ServiceSchool::class)->createNewModel([
+        $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'address_id' => $address->address_id,
             'name' => 'Test school',
             'name_abbrev' => 'T school',
@@ -101,17 +101,15 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init, $after);
-        $school = $this->getContainer()->getByType(ServiceSchool::class)
-            ->getTable()
-            ->where(['school_id' => $this->school->school_id])
-            ->fetch();
+
+        $school = $this->getContainer()
+            ->getByType(SchoolService::class)
+            ->findByPrimary($this->school->school_id);
 
         Assert::equal('Test school edited', $school->name);
         $address = $this->getContainer()
-            ->getByType(ServiceAddress::class)
-            ->getTable()
-            ->where(['address_id' => $school->address_id])
-            ->fetch();
+            ->getByType(AddressService::class)
+            ->findByPrimary($school->address_id);
 
         Assert::equal('PU edited', $address->city);
     }
@@ -123,7 +121,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
 
     private function countSchools(): int
     {
-        return $this->getContainer()->getByType(ServiceSchool::class)->getTable()->count('*');
+        return $this->getContainer()->getByType(SchoolService::class)->getTable()->count('*');
     }
 }
 

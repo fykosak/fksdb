@@ -264,7 +264,7 @@ class BreadcrumbsComponent extends BaseComponent
             return;
         }
         $this->storedRequest = true;
-
+        /** @var BasePresenter $presenter */
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 

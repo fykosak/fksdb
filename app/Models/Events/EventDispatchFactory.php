@@ -8,7 +8,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 
@@ -44,7 +44,7 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(ModelEvent $event): Machine
+    public function getEventMachine(EventModel $event): Machine
     {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
@@ -53,7 +53,7 @@ class EventDispatchFactory
     /**
      * @throws ConfigurationNotFoundException
      */
-    public function getFormLayout(ModelEvent $event): string
+    public function getFormLayout(EventModel $event): string
     {
         $definition = $this->findDefinition($event);
         return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
@@ -62,7 +62,7 @@ class EventDispatchFactory
     /**
      * @throws ConfigurationNotFoundException
      */
-    private function findDefinition(ModelEvent $event): array
+    private function findDefinition(EventModel $event): array
     {
         $key = $this->createKey($event);
         foreach ($this->definitions as $definition) {
@@ -82,7 +82,7 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */
-    public function getDummyHolder(ModelEvent $event): Holder
+    public function getDummyHolder(EventModel $event): Holder
     {
         $definition = $this->findDefinition($event);
         /** @var Holder $holder */
@@ -91,7 +91,7 @@ class EventDispatchFactory
         return $holder;
     }
 
-    private function createKey(ModelEvent $event): string
+    private function createKey(EventModel $event): string
     {
         return $event->event_type_id . '-' . $event->event_year;
     }

@@ -8,12 +8,12 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
@@ -22,12 +22,12 @@ class AccountManager
 {
     use SmartObject;
 
-    private ServiceLogin $serviceLogin;
-    private ServiceAuthToken $serviceAuthToken;
+    private LoginService $loginService;
+    private AuthTokenService $authTokenService;
     private string $invitationExpiration;
     private string $recoveryExpiration;
     private string $emailFrom;
-    private ServiceEmailMessage $serviceEmailMessage;
+    private EmailMessageService $emailMessageService;
     private MailTemplateFactory $mailTemplateFactory;
 
     public function __construct(
@@ -35,16 +35,16 @@ class AccountManager
         string $recoveryExpiration,
         string $emailFrom,
         MailTemplateFactory $mailTemplateFactory,
-        ServiceLogin $serviceLogin,
-        ServiceAuthToken $serviceAuthToken,
-        ServiceEmailMessage $serviceEmailMessage
+        LoginService $loginService,
+        AuthTokenService $authTokenService,
+        EmailMessageService $emailMessageService
     ) {
         $this->invitationExpiration = $invitationExpiration;
         $this->recoveryExpiration = $recoveryExpiration;
         $this->emailFrom = $emailFrom;
-        $this->serviceLogin = $serviceLogin;
-        $this->serviceAuthToken = $serviceAuthToken;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->loginService = $loginService;
+        $this->authTokenService = $authTokenService;
+        $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
@@ -53,12 +53,12 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin
+    public function createLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
     {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
+        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
 
         $templateParams = [
             'token' => $token->token,
@@ -74,7 +74,7 @@ class AccountManager
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;
-        $this->serviceEmailMessage->addMessageToSend($data);
+        $this->emailMessageService->addMessageToSend($data);
         return $login;
     }
 
@@ -82,22 +82,22 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, string $lang): void
+    public function sendRecovery(LoginModel $login, string $lang): void
     {
-        $person = $login->getPerson();
+        $person = $login->person;
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
         $token = $login->related(DbNames::TAB_AUTH_TOKEN)
-            ->where('type', ModelAuthToken::TYPE_RECOVERY)
+            ->where('type', AuthTokenModel::TYPE_RECOVERY)
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
             throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->recoveryExpiration);
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
+        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $templateParams = [
             'token' => $token->token,
             'login' => $login,
@@ -109,20 +109,20 @@ class AccountManager
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $recoveryAddress;
 
-        $this->serviceEmailMessage->addMessageToSend($data);
+        $this->emailMessageService->addMessageToSend($data);
     }
 
-    public function cancelRecovery(ModelLogin $login): void
+    public function cancelRecovery(LoginModel $login): void
     {
         $login->related(DbNames::TAB_AUTH_TOKEN)->where([
-            'type' => ModelAuthToken::TYPE_RECOVERY,
+            'type' => AuthTokenModel::TYPE_RECOVERY,
         ])->delete();
     }
 
-    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin
+    final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel
     {
-        /** @var ModelLogin $login */
-        $login = $this->serviceLogin->createNewModel([
+        /** @var LoginModel $login */
+        $login = $this->loginService->storeModel([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
@@ -131,7 +131,7 @@ class AccountManager
         /* Must be done after login_id is allocated. */
         if ($password) {
             $hash = $login->createHash($password);
-            $this->serviceLogin->updateModel($login, ['hash' => $hash]);
+            $this->loginService->storeModel(['hash' => $hash], $login);
         }
         return $login;
     }

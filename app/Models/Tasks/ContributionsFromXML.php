@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskContributionType;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Pipeline\Stage;
 
 /**
@@ -15,18 +17,15 @@ use FKSDB\Models\Pipeline\Stage;
  */
 class ContributionsFromXML extends Stage
 {
-
-    private SeriesData $data;
-
     /** @var array   contribution type => xml element */
     private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
 
-    private ServiceTaskContribution $taskContributionService;
+    private TaskContributionService $taskContributionService;
 
-    public function __construct(ServiceTaskContribution $taskContributionService)
+    public function __construct(TaskContributionService $taskContributionService)
     {
         $this->taskContributionService = $taskContributionService;
     }
@@ -34,35 +33,26 @@ class ContributionsFromXML extends Stage
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void
+    public function __invoke(MemoryLogger $logger, $data): SeriesData
     {
-        $this->data = $data;
-    }
-
-    public function process(): void
-    {
-        $xml = $this->data->getData();
+        $xml = $data->getData();
         foreach ($xml->problems[0]->problem as $task) {
-            $this->processTask($task);
+            $this->processTask($task, $logger, $data);
         }
+        return $data;
     }
 
-    public function getOutput(): SeriesData
+    private function processTask(\SimpleXMLElement $xMLTask, MemoryLogger $logger, SeriesData $data): void
     {
-        return $this->data;
-    }
-
-    private function processTask(\SimpleXMLElement $XMLTask): void
-    {
-        $tasks = $this->data->getTasks();
-        $tasknr = (int)(string)$XMLTask->number;
+        $tasks = $data->getTasks();
+        $tasknr = (int)(string)$xMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->taskContributionService->explorer->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
             [$parent, $child] = explode('/', $xmlElement);
-            $parentEl = $XMLTask->{$parent}[0];
+            $parentEl = $xMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
             if (!$parentEl || !isset($parentEl->{$child})) {
@@ -75,26 +65,27 @@ class ContributionsFromXML extends Stage
                     continue;
                 }
 
-                $row = $this->data->getContestYear()->getContest()
+                $row = $data->getContestYear()->contest
                     ->related(DbNames::TAB_ORG)
                     ->where('tex_signature', $signature)
                     ->fetch();
 
                 if (!$row) {
-                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
+                    $logger->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
                     continue;
                 }
-                $contributors[] = ModelOrg::createFromActiveRow($row);
+                $contributors[] = $row;
             }
 
             // delete old contributions
-            foreach ($task->getContributions($type) as $contribution) {
-                $this->taskContributionService->dispose($contribution);
+            foreach ($task->getContributions(TaskContributionType::tryFrom($type)) as $contribution) {
+                $this->taskContributionService->disposeModel($contribution);
             }
 
             // store new contributions
+            /** @var OrgModel $contributor */
             foreach ($contributors as $contributor) {
-                $this->taskContributionService->createNewModel([
+                $this->taskContributionService->storeModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,

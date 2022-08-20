@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -24,7 +24,7 @@ class FullNameColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelPerson $model
+     * @param PersonModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

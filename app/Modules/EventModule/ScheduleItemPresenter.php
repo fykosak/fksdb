@@ -9,10 +9,11 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -20,19 +21,19 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelScheduleItem getEntity()
+ * @method ScheduleItemModel getEntity()
  */
 class ScheduleItemPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private ModelScheduleGroup $group;
+    private ScheduleGroupModel $group;
 
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
 
-    final public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void
+    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
     {
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -40,7 +41,8 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -56,7 +58,8 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -77,7 +80,8 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -97,7 +101,8 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleItemFormContainer
     {
@@ -109,16 +114,17 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentPersonsGrid(): PersonsGrid
     {
         return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceScheduleItem
+    protected function getORMService(): ScheduleItemService
     {
-        return $this->serviceScheduleItem;
+        return $this->scheduleItemService;
     }
 
     /**

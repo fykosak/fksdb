@@ -7,21 +7,21 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEventType;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 class EventTypeColumnFactory extends ColumnFactory
 {
-    private ServiceEventType $serviceEventType;
+    private EventTypeService $eventTypeService;
 
-    public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory)
+    public function __construct(EventTypeService $eventTypeService, MetaDataFactory $metaDataFactory)
     {
         parent::__construct($metaDataFactory);
-        $this->serviceEventType = $serviceEventType;
+        $this->eventTypeService = $eventTypeService;
     }
 
     /**
@@ -30,13 +30,13 @@ class EventTypeColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         [$contest] = $args;
-        if (!$contest instanceof ModelContest) {
+        if (!$contest instanceof ContestModel) {
             throw new \InvalidArgumentException();
         }
 
         $element = new SelectBox($this->getTitle());
 
-        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
+        $types = $this->eventTypeService->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
             'event_type_id',
             'name'
         );
@@ -47,10 +47,10 @@ class EventTypeColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelEvent $model
+     * @param EventModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText($model->getEventType()->name);
+        return Html::el('span')->addText($model->event_type->name);
     }
 }

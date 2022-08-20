@@ -7,21 +7,21 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase
 {
-    protected ModelEvent $event;
-    protected ModelPerson $userPerson;
+    protected EventModel $event;
+    protected PersonModel $userPerson;
 
     protected function setUp(): void
     {
@@ -33,12 +33,12 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
     }
 
-    protected function createEvent(array $data): ModelEvent
+    protected function createEvent(array $data): EventModel
     {
         if (!isset($data['event_type_id'])) {
             $data['event_type_id'] = 1;
@@ -58,8 +58,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        $event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($data);
-        $this->getContainer()->getByType(GameSetupService::class)->createNewModel([
+        $event = $this->getContainer()->getByType(EventService::class)->storeModel($data);
+        $this->getContainer()->getByType(GameSetupService::class)->storeModel([
             'event_id' => $event->event_id,
             'game_start' => new \DateTime('2016-01-01T10:00:00'),
             'game_end' => new \DateTime('2016-01-01T10:00:00'),
@@ -90,7 +90,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['room'])) {
             $data['room'] = '101';
         }
-        return $this->getContainer()->getByType(TeamService2::class)->createNewModel($data);
+        return $this->getContainer()->getByType(TeamService2::class)->storeModel($data);
     }
 
     protected function createTask(array $data): TaskModel
@@ -101,11 +101,11 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy úloha';
         }
-        return $this->getContainer()->getByType(TaskService::class)->createNewModel($data);
+        return $this->getContainer()->getByType(TaskService::class)->storeModel($data);
     }
 
     protected function createSubmit(array $data): SubmitModel
     {
-        return $this->getContainer()->getByType(SubmitService::class)->createNewModel($data);
+        return $this->getContainer()->getByType(SubmitService::class)->storeModel($data);
     }
 }

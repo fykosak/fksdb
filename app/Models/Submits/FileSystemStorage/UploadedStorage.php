@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageProcessing;
 use FKSDB\Models\Submits\SubmitStorage;
 use FKSDB\Models\Submits\ProcessingException;
@@ -126,7 +126,7 @@ class UploadedStorage implements SubmitStorage
         $this->todo = null;
     }
 
-    public function storeFile(string $filename, ModelSubmit $submit): void
+    public function storeFile(string $filename, SubmitModel $submit): void
     {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
@@ -138,7 +138,7 @@ class UploadedStorage implements SubmitStorage
         ];
     }
 
-    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string
+    public function retrieveFile(SubmitModel $submit, int $type = self::TYPE_PROCESSED): ?string
     {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
@@ -167,12 +167,12 @@ class UploadedStorage implements SubmitStorage
     /**
      * Checks whether there exists valid file for the submit.
      */
-    public function fileExists(ModelSubmit $submit): bool
+    public function fileExists(SubmitModel $submit): bool
     {
         return (bool)$this->retrieveFile($submit);
     }
 
-    public function deleteFile(ModelSubmit $submit): void
+    public function deleteFile(SubmitModel $submit): void
     {
         $fails = [];
         $files = $this->retrieveFiles($submit);
@@ -190,7 +190,7 @@ class UploadedStorage implements SubmitStorage
     /**
      * @return \SplFileInfo[]
      */
-    private function retrieveFiles(ModelSubmit $submit): array
+    private function retrieveFiles(SubmitModel $submit): array
     {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
@@ -205,30 +205,30 @@ class UploadedStorage implements SubmitStorage
     /**
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
-    private function createDirname(ModelSubmit $submit): string
+    private function createDirname(SubmitModel $submit): string
     {
-        $task = $submit->getTask();
+        $task = $submit->task;
         return sprintf(
             $this->directoryMask,
-            $task->getContest()->getContestSymbol(),
+            $task->contest->getContestSymbol(),
             $task->year,
             $task->series,
             $task->webalizeLabel()
         );
     }
 
-    private function createFilename(ModelSubmit $submit): string
+    private function createFilename(SubmitModel $submit): string
     {
-        $task = $submit->getTask();
+        $task = $submit->task;
 
-        $contestantName = $submit->getContestant()->getPerson()->getFullName();
+        $contestantName = $submit->contestant->person->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 
         $filename = sprintf(
             $this->filenameMask,
             $contestantName,
-            $task->getContest()->getContestSymbol(),
+            $task->contest->getContestSymbol(),
             $task->year,
             $task->series,
             $task->webalizeLabel()

@@ -13,12 +13,11 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -30,9 +29,9 @@ use NiftyGrid\DuplicateColumnException;
 class AllSubmitsGrid extends SubmitsGrid
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -147,14 +146,14 @@ class AllSubmitsGrid extends SubmitsGrid
 
         $rows = $this->event->getPossiblyAttendingFyziklaniTeams();
         $teams = [];
-        /** @var TeamModel2|ActiveRow $team */
+        /** @var TeamModel2 $team */
         foreach ($rows as $team) {
             $teams[$team->fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->event->getFyziklaniTasks();
         $tasks = [];
-        /** @var TaskModel|ActiveRow $task */
+        /** @var TaskModel $task */
         foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }

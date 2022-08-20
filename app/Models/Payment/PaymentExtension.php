@@ -6,7 +6,7 @@ namespace FKSDB\Models\Payment;
 
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\CompilerExtension;
 
 class PaymentExtension extends CompilerExtension
@@ -17,7 +17,7 @@ class PaymentExtension extends CompilerExtension
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->config as $item) {
-            $symbolGenerator = $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
+            $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
                 ->setFactory(DefaultGenerator::class)->addSetup('setUp', [
                     $item['symbolGenerator']['variableSymbolStart'],
                     $item['symbolGenerator']['variableSymbolEnd'],

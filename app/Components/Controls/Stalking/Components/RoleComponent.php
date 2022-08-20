@@ -8,22 +8,21 @@ use FKSDB\Models\Authorization\Grant;
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelGrant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\GrantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 
 class RoleComponent extends BaseStalkingComponent
 {
 
-    final public function render(ModelPerson $person, int $userPermissions): void
+    final public function render(PersonModel $person, int $userPermissions): void
     {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $login = $person->getLogin();
         $roles = [];
         if ($login) {
-            /** @var ModelGrant $grant */
-            foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = ModelGrant::createFromActiveRow($row);
-                $roles[] = new Grant($grant->getRole()->name, $grant->getContest());
+            /** @var GrantModel $grant */
+            foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
+                $roles[] = new Grant($grant->role->name, $grant->contest);
             }
         }
         $this->template->roles = $roles;

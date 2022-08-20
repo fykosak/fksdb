@@ -7,28 +7,27 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @method SubmitModel createNewModel(array $data)
+ * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
 class SubmitService extends Service
 {
 
     public function findByTaskAndTeam(TaskModel $task, TeamModel2 $team): ?SubmitModel
     {
-        $row = $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
-        return $row ? SubmitModel::createFromActiveRow($row) : null;
+        return $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
     }
 
-    public function findAll(ModelEvent $event): TypedSelection
+    public function findAll(EventModel $event): TypedSelection
     {
-        return $this->getTable()->where('fyziklani_team_id.event_id', $event->event_id);
+        return $this->getTable()->where('fyziklani_team.event_id', $event->event_id);
     }
 
-    public function serialiseSubmits(ModelEvent $event, ?string $lastUpdated): array
+    public function serialiseSubmits(EventModel $event, ?string $lastUpdated): array
     {
         // TODO to related
         $query = $this->findAll($event);
@@ -36,8 +35,8 @@ class SubmitService extends Service
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);
         }
-        foreach ($query as $row) {
-            $submit = SubmitModel::createFromActiveRow($row);
+        /** @var SubmitModel $submit */
+        foreach ($query as $submit) {
             $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;

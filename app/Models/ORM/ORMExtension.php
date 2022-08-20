@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     EmailColumnFactory,
     EnumColumnFactory,
     IntColumnFactory,
+    FloatColumnFactory,
     LogicColumnFactory,
     PrimaryKeyColumnFactory,
     StateColumnFactory,
@@ -31,23 +32,14 @@ class ORMExtension extends Extension
      */
     public function loadConfiguration(): void
     {
+        parent::loadConfiguration();
         foreach ($this->config as $tableName => $fieldDefinitions) {
-            $this->tryRegisterORMService($tableName, $fieldDefinitions);
             foreach ($fieldDefinitions['columnFactories'] as $fieldName => $field) {
                 $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
             foreach ($fieldDefinitions['linkFactories'] as $fieldName => $field) {
                 $this->createLinkFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
-        }
-    }
-
-    private function tryRegisterORMService(string $tableName, array $fieldDefinitions): void
-    {
-        if (isset($fieldDefinitions['service'])) {
-            $builder = $this->getContainerBuilder();
-            $factory = $builder->addDefinition($this->prefix($tableName . '.service'));
-            $factory->setFactory($fieldDefinitions['service'], [$tableName, $fieldDefinitions['model']]);
         }
     }
 
@@ -114,6 +106,9 @@ class ORMExtension extends Extension
                 case 'int':
                     $this->registerIntRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
+                case 'float':
+                    $this->registerFloatRow($factory, $tableName, $modelClassName, $fieldName, $field);
+                    break;
                 case 'logic':
                     $this->registerLogicRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
@@ -179,6 +174,33 @@ class ORMExtension extends Extension
         array $field
     ): void {
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, IntColumnFactory::class, $field);
+        if (isset($field['nullValueFormat'])) {
+            $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
+        }
+        if (isset($field['prefix'])) {
+            $factory->addSetup('setPrefix', [$field['prefix']]);
+        }
+        if (isset($field['suffix'])) {
+            $factory->addSetup('setSuffix', [$field['suffix']]);
+        }
+    }
+
+    private function registerFloatRow(
+        ServiceDefinition $factory,
+        string $tableName,
+        string $modelClassName,
+        string $fieldName,
+        array $field
+    ): void {
+        $this->setUpDefaultFactory(
+            $factory,
+            $tableName,
+            $modelClassName,
+            $fieldName,
+            FloatColumnFactory::class,
+            $field
+        );
+        $factory->addSetup('setDecimalDigitsCount', [$field['decimalDigitsCount']]);
         if (isset($field['nullValueFormat'])) {
             $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
         }

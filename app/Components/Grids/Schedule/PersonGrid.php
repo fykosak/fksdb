@@ -6,9 +6,8 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -17,7 +16,7 @@ use NiftyGrid\GridException;
 class PersonGrid extends BaseGrid
 {
 
-    public function setData(ModelEvent $event, ModelPerson $person): void
+    public function setData(EventModel $event, PersonModel $person): void
     {
         $query = $person->getScheduleForEvent($event);
         $dataSource = new NDataSource($query);
@@ -28,7 +27,7 @@ class PersonGrid extends BaseGrid
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void
+    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
     {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
@@ -54,10 +53,5 @@ class PersonGrid extends BaseGrid
             'schedule_item.price_eur',
             'payment.payment',
         ]);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return ModelPersonSchedule::class;
     }
 }

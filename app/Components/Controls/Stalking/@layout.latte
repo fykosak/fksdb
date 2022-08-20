@@ -1,4 +1,6 @@
-<div class="{($gender=='F'?'border-pink':'border-primary').' card mb-3'}">
-    <h4 class="{($gender=='F'?'bg-pink':'bg-primary').' card-header text-white'}">{$headline}</h4>
+{varType FKSDB\Models\ORM\Models\PersonGender $gender}
+{varType string $headline}
+<div class="{($gender->value == 'F'?'border-pink':'border-primary') . ' card mb-3'}">
+    <h4 class="{($gender->value == 'F'?'bg-pink':'bg-primary') . ' card-header text-white'}">{$headline}</h4>
     {include content}
 </div>

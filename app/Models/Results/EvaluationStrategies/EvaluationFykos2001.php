@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
 
@@ -20,10 +20,10 @@ class EvaluationFykos2001 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_HS_1),
-            new ModelCategory(ModelCategory::CAT_HS_2),
-            new ModelCategory(ModelCategory::CAT_HS_3),
-            new ModelCategory(ModelCategory::CAT_HS_4),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_1),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_2),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_3),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_4),
         ];
     }
 
@@ -32,21 +32,21 @@ class EvaluationFykos2001 implements EvaluationStrategy
      */
     public function categoryToStudyYears(ModelCategory $category): array
     {
-        switch ($category->id) {
-            case ModelCategory::CAT_HS_1:
+        switch ($category->value) {
+            case ModelCategory::FYKOS_1:
                 return [6, 7, 8, 9, 1];
-            case ModelCategory::CAT_HS_2:
+            case ModelCategory::FYKOS_2:
                 return [2];
-            case ModelCategory::CAT_HS_3:
+            case ModelCategory::FYKOS_3:
                 return [3];
-            case ModelCategory::CAT_HS_4:
+            case ModelCategory::FYKOS_4:
                 return [null, 4];
             default:
-                throw new InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         return 's.raw_points';
     }
@@ -56,7 +56,7 @@ class EvaluationFykos2001 implements EvaluationStrategy
         return 's.raw_points';
     }
 
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
     {
         return $task->points;
     }

@@ -8,34 +8,33 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 class TagsColumnFactory extends ColumnFactory
 {
-    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
+    private TagTypeService $storedQueryTagTypeService;
 
-    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, MetaDataFactory $metaDataFactory)
+    public function __construct(TagTypeService $storedQueryTagTypeService, MetaDataFactory $metaDataFactory)
     {
         parent::__construct($metaDataFactory);
-        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
+        $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 
     /**
-     * @param ModelStoredQuery $model
+     * @param QueryModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
         $baseEl = Html::el('div');
-        /** @var ModelStoredQueryTag $tagRow */
+        /** @var TagModel $tagRow */
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
-            $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
+            $tag = $tagRow->tag_type;
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([
@@ -51,7 +50,7 @@ class TagsColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $select = new AutocompleteSelectBox(true, $this->getTitle(), 'tags');
-        $select->setDataProvider(new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType));
+        $select->setDataProvider(new StoredQueryTagTypeProvider($this->storedQueryTagTypeService));
         $select->setMultiSelect(true);
         return $select;
     }

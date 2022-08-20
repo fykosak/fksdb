@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\DataTesting\TestLog;
 use Fykosak\Utils\Logging\Message;
 
@@ -15,8 +15,8 @@ class ParticipantsDurationTest extends PersonTest
 {
 
     private const CONTESTS = [
-        ModelContest::ID_FYKOS => ['thresholds' => [5, 6]],
-        ModelContest::ID_VYFUK => ['thresholds' => [5, 6]],
+        ContestModel::ID_FYKOS => ['thresholds' => [5, 6]],
+        ContestModel::ID_VYFUK => ['thresholds' => [5, 6]],
     ];
 
     public function __construct()
@@ -24,15 +24,15 @@ class ParticipantsDurationTest extends PersonTest
         parent::__construct('participants_duration', _('Participate events'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void
+    public function run(Logger $logger, PersonModel $person): void
     {
         foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;
-            foreach ($person->getEventParticipants() as $row) {
-                $model = ModelEventParticipant::createFromActiveRow($row);
-                $event = $model->getEvent();
-                if ($event->getEventType()->contest_id !== $contestId) {
+            /** @var EventParticipantModel $model */
+            foreach ($person->getEventParticipants() as $model) {
+                $event = $model->event;
+                if ($event->event_type->contest_id !== $contestId) {
                     continue;
                 }
                 $year = $event->year;

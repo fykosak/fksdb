@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -17,7 +17,7 @@ class ProductsGrid extends EntityGrid
 
     public function __construct(Container $container)
     {
-        parent::__construct($container, ServiceProduct::class, [
+        parent::__construct($container, ProductService::class, [
             'warehouse_product.product_id',
             'warehouse_product.name_cs',
             'warehouse_product.name_en',

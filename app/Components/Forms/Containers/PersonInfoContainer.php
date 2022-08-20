@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers;
 
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 
 class PersonInfoContainer extends ModelContainer
 {
@@ -15,7 +15,7 @@ class PersonInfoContainer extends ModelContainer
      */
     public function setValues($data, bool $erase = false): self
     {
-        if ($data instanceof ActiveRow) { //assert its from person info table
+        if ($data instanceof Model) { //assert its from person info table
             $data['agreed'] = (bool)$data['agreed'];
         }
 

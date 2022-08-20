@@ -139,8 +139,6 @@ class TasksPresenter extends BasePresenter
         /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
-        $file = null;
-
         switch ($values['source']) {
             case self::SOURCE_ASTRID:
                 $file = $this->downloader->downloadSeriesTasks($this->getSelectedContestYear(), $series);
@@ -163,9 +161,8 @@ class TasksPresenter extends BasePresenter
             } else {
                 $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
                 $pipeline = $this->pipelineFactory->create();
-                $pipeline->setInput($data);
-                $pipeline->run();
-                FlashMessageDump::dump($pipeline->getLogger(), $this);
+                $pipeline($data);
+                FlashMessageDump::dump($pipeline->logger, $this);
                 $this->flashMessage(_('Tasks successfully imported.'), Message::LVL_SUCCESS);
             }
         } catch (PipelineException $exception) {
