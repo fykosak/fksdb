@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ContestModel;
+use Fykosak\Utils\Price\Currency;
 use Nette\Security\Resource;
 
 /**
@@ -34,5 +35,29 @@ class ItemModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getCurrency(): Currency
+    {
+        return Currency::from($this->purchase_currency);
+    }
+
+    /**
+     * @param string $key
+     * @return ItemState|mixed
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = ItemState::tryFrom($value);
+                break;
+        }
+        return $value;
     }
 }

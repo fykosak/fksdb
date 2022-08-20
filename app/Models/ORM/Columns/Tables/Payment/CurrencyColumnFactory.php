@@ -26,7 +26,7 @@ class CurrencyColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param PaymentModel $model
+     * @param PaymentModel|ItemModel $model
      * @throws \Exception
      */
     protected function createHtmlValue(Model $model): Html
