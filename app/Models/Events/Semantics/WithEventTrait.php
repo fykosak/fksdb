@@ -1,42 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-trait WithEventTrait {
+trait WithEventTrait
+{
 
     /**
-     * @param object $obj
-     * @return ModelEvent
      * @throws \InvalidArgumentException
      */
-    protected function getEvent(object $obj): ModelEvent {
-        return $this->getHolder($obj)->getPrimaryHolder()->getEvent();
+    protected function getEvent(object $obj): EventModel
+    {
+        return $this->getHolder($obj)->primaryHolder->event;
     }
 
     /**
-     * @param object $obj
-     * @return Holder
      * @throws \InvalidArgumentException
      */
-    protected function getHolder(object $obj): Holder {
+    protected function getHolder(object $obj): Holder
+    {
         if ($obj instanceof Holder) {
             return $obj;
         }
         if ($obj instanceof Field) {
-            return $obj->getBaseHolder()->getHolder();
+            return $obj->getBaseHolder()->holder;
         }
         if ($obj instanceof BaseHolder) {
-            return $obj->getHolder();
+            return $obj->holder;
         }
         throw new \InvalidArgumentException();
     }

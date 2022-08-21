@@ -1,6 +1,10 @@
+{varType bool $hasTasks}
+{varType bool $canRegister}
+{varType bool $hasForward}
+{varType FKSDB\Modules\PublicModule\SubmitPresenter $presenter}
 {block content}
-    <a class="btn btn-success" href="{plink ajax}">{_'New submit system'}</a>
-    <a class="btn btn-info" href="{plink list}">{_'Submitted solutions'}</a>
+    <a class="btn btn-outline-success" href="{plink ajax}">{_'New submit system'}</a>
+    <a class="btn btn-outline-info" href="{plink list}">{_'Submitted solutions'}</a>
     <hr/>
     {if $hasTasks}
         {control uploadForm}
@@ -10,11 +14,11 @@
         </p>
         {if $canRegister}
             <p>
-                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Register for the next year'}</a>
+                <a class="btn btn-outline-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Register for the next year'}</a>
             </p>
         {elseif $hasForward}
             <p>
-                <a class="btn btn-primary" n:href="this, year => $presenter->year + 1">{_'Next year'}</a>
+                <a class="btn btn-outline-primary" n:href="this, year => $presenter->year + 1">{_'Next year'}</a>
             </p>
         {/if}
     {/if}

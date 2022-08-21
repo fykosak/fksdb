@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use Exception;
+use Nette\InvalidStateException;
 
-class FullCapacityException extends Exception {
-
+class FullCapacityException extends InvalidStateException
+{
 }

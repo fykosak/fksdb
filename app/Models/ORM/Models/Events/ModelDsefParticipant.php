@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Events;
 
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
+use Fykosak\NetteORM\Model;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
-class ModelDsefParticipant extends OldAbstractModelSingle {
-
+class ModelDsefParticipant extends Model
+{
 }

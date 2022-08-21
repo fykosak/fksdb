@@ -1,49 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\ORM\Models\EventTypeModel;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
-use FKSDB\Components\Controls\Choosers\FyziklaniChooserComponent;
-use FKSDB\Models\ORM\Models\ModelEventType;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
-abstract class BasePresenter extends EventBasePresenter {
+abstract class BasePresenter extends EventBasePresenter
+{
 
-    protected ServiceFyziklaniTeam $serviceFyziklaniTeam;
-    protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+    protected TeamService2 $teamService;
+    protected SubmitService $submitService;
 
-    final public function injectFyziklaniBase(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    final public function injectFyziklaniBase(
+        SubmitService $submitService,
+        TeamService2 $teamService
+    ): void {
+        $this->submitService = $submitService;
+        $this->teamService = $teamService;
     }
 
     /**
-     * @return FyziklaniChooserComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent {
-        return new FyziklaniChooserComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function isEnabled(): bool {
-        return $this->getEvent()->event_type_id === ModelEventType::FYZIKLANI;
+    protected function isEnabled(): bool
+    {
+        return $this->getEvent()->event_type_id === EventTypeModel::FYZIKLANI;
     }
 
     /**
      * @return string[]
      */
-    protected function getNavRoots(): array {
-        return ['Fyziklani.Dashboard.default'];
+    protected function getNavRoots(): array
+    {
+        return ['Fyziklani.Dashboard.default', 'Fyziklani.Statistics.table'];
     }
 }

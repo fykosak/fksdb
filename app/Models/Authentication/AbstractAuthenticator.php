@@ -1,32 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\LoginService;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note IAuthenticator interface is not explicitly implemented due to 'array'
  * type hint at authenticate method.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
-    protected ServiceLogin $serviceLogin;
 
-    public function __construct(ServiceLogin $serviceLogin) {
-        $this->serviceLogin = $serviceLogin;
+    protected LoginService $loginService;
+
+    public function __construct(LoginService $loginService)
+    {
+        $this->loginService = $loginService;
     }
 
     /**
-     * @param ModelLogin $login
      * @throws \Exception
      */
-    protected function logAuthentication(ModelLogin $login): void {
-        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
+    protected function logAuthentication(LoginModel $login): void
+    {
+        Debugger::log(
+            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),
+            'auth-log'
+        );
+        $this->loginService->storeModel(['last_login' => DateTime::from(time())], $login);
     }
 }

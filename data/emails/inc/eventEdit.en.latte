@@ -1,6 +1,9 @@
+{varType mixed[] $linkArgs}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 <p>
-    Changes are possible until {$event->registration_end|date:'%B %e, %Y %k:%M %Z'} after <a n:href="//:Authentication:login">sign in</a>
-    or by accessing via the private link below:<br/>
-    {var $link= $control->link(...$linkArgs)}
+    Changes are possible until {$event->registration_end|date:'%B %e, %Y %k:%M %Z'} after
+    <a n:href="//:Core:Authentication:login">sign in</a>
+or by accessing via the private link below:<br/>
+    {var $link = $control->link(...$linkArgs)}
     <a href="{$link}">{$link}</a>
 </p>

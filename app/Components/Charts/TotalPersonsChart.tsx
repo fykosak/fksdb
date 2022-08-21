@@ -19,15 +19,15 @@ interface OwnProps {
     data: Data[];
 }
 
-export default class TotalPersonsChart extends React.Component<OwnProps, {}> {
+export default class TotalPersonsChart extends React.Component<OwnProps> {
 
     public render() {
         const {data} = this.props;
-        const lineChartData: LineChartData = [];
-        const pointsAll: PointData[] = [];
-        const pointsMale: PointData[] = [];
-        const pointsFemale: PointData[] = [];
-        const pointsPersonId: PointData[] = [];
+        const lineChartData: LineChartData<Date> = [];
+        const pointsAll: PointData<Date>[] = [];
+        const pointsMale: PointData<Date>[] = [];
+        const pointsFemale: PointData<Date>[] = [];
+        const pointsPersonId: PointData<Date>[] = [];
 
         let maleIndex = 0;
         let femaleIndex = 0;

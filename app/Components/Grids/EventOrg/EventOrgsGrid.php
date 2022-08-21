@@ -1,41 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\EventOrg;
 
-use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\IPresenter;
-use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\ORM\Models\EventModel;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class EventOrgsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class EventOrgsGrid extends EntityGrid {
+class EventOrgsGrid extends RelatedGrid
+{
 
-    public function __construct(ModelEvent $event, Container $container) {
-        parent::__construct($container, ServiceEventOrg::class, [
-            'person.full_name',
-            'event_org.note',
-        ], [
-            'event_id' => $event->event_id,
-        ]);
+    public function __construct(EventModel $event, Container $container)
+    {
+        parent::__construct($container, $event, 'event_org');
     }
 
     /**
-     * @param IPresenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
-
+        $this->addColumns([
+            'person.full_name',
+            'event_org.note',
+        ]);
         $this->addLink('event_org.edit');
         //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
         // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);

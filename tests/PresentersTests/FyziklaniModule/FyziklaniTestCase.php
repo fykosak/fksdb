@@ -1,43 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\Database\Row;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-abstract class FyziklaniTestCase extends DatabaseTestCase {
+abstract class FyziklaniTestCase extends DatabaseTestCase
+{
+    protected EventModel $event;
+    protected PersonModel $userPerson;
 
-    use MockApplicationTrait;
-
-    protected int $eventId;
-    protected int $userPersonId;
-
-    /**
-     * FyziklaniTestCase constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
+        $this->userPerson = $this->createPerson(
+            'Paní',
+            'Černá',
+            ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
+            ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
+        );
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables(['fyziklani_submit', 'fyziklani_task', DbNames::TAB_E_FYZIKLANI_TEAM, 'fyziklani_game_setup', 'event']);
-        parent::tearDown();
-    }
-
-    protected function createEvent(array $data): int {
+    protected function createEvent(array $data): EventModel
+    {
         if (!isset($data['event_type_id'])) {
             $data['event_type_id'] = 1;
         }
@@ -56,24 +58,25 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        $eventId = $this->insert(DbNames::TAB_EVENT, $data);
-        $this->insert(DbNames::TAB_FYZIKLANI_GAME_SETUP, [
-            'event_id' => $eventId,
-            'game_start' => new DateTime('2016-01-01T10:00:00'),
-            'game_end' => new DateTime('2016-01-01T10:00:00'),
-            'result_display' => new DateTime('2016-01-01T10:00:00'),
-            'result_hide' => new DateTime('2016-01-01T10:00:00'),
+        $event = $this->getContainer()->getByType(EventService::class)->storeModel($data);
+        $this->getContainer()->getByType(GameSetupService::class)->storeModel([
+            'event_id' => $event->event_id,
+            'game_start' => new \DateTime('2016-01-01T10:00:00'),
+            'game_end' => new \DateTime('2016-01-01T10:00:00'),
+            'result_display' => new \DateTime('2016-01-01T10:00:00'),
+            'result_hide' => new \DateTime('2016-01-01T10:00:00'),
             'refresh_delay' => 30000,
             'result_hard_display' => 1,
             'tasks_on_board' => 7,
             'available_points' => '5,3,2,1',
         ]);
-        return $eventId;
+        return $event;
     }
 
-    protected function createTeam(array $data): int {
+    protected function createTeam(array $data): TeamModel2
+    {
         if (!isset($data['event_id'])) {
-            $data['event_id'] = $this->eventId;
+            $data['event_id'] = $this->event->event_id;
         }
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy tým';
@@ -87,30 +90,22 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         if (!isset($data['room'])) {
             $data['room'] = '101';
         }
-        return $this->insert(DbNames::TAB_E_FYZIKLANI_TEAM, $data);
+        return $this->getContainer()->getByType(TeamService2::class)->storeModel($data);
     }
 
-    protected function createTask(array $data): int {
+    protected function createTask(array $data): TaskModel
+    {
         if (!isset($data['event_id'])) {
-            $data['event_id'] = $this->eventId;
+            $data['event_id'] = $this->event->event_id;
         }
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy úloha';
         }
-        return $this->insert(DbNames::TAB_FYZIKLANI_TASK, $data);
+        return $this->getContainer()->getByType(TaskService::class)->storeModel($data);
     }
 
-    protected function createSubmit(array $data): int {
-        return $this->insert(DbNames::TAB_FYZIKLANI_SUBMIT, $data);
-    }
-
-    protected function findSubmit(int $taskId, int $teamId): ?Row {
-        return $this->explorer->fetch(
-            'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
-    }
-
-    protected function findTeam(int $teamId): ?Row {
-        return $this->explorer->fetch(
-            'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
+    protected function createSubmit(array $data): SubmitModel
+    {
+        return $this->getContainer()->getByType(SubmitService::class)->storeModel($data);
     }
 }

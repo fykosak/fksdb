@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\TaskService;
+use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
@@ -12,10 +14,9 @@ use Nette\Database\Row;
 
 /**
  * General results sheet with contestants and their ranks.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractResultsModel {
+abstract class AbstractResultsModel
+{
 
     public const COL_DEF_LABEL = 'label';
     public const COL_DEF_LIMIT = 'limit';
@@ -36,26 +37,29 @@ abstract class AbstractResultsModel {
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected int $year;
-    protected ModelContest $contest;
-    protected ServiceTask $serviceTask;
+    protected ContestYearModel $contestYear;
+    protected TaskService $taskService;
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
-    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
-        $this->contest = $contest;
-        $this->serviceTask = $serviceTask;
+    public function __construct(
+        ContestYearModel $contestYear,
+        TaskService $taskService,
+        Connection $connection,
+        EvaluationStrategy $evaluationStrategy
+    ) {
+        $this->contestYear = $contestYear;
+        $this->taskService = $taskService;
         $this->connection = $connection;
-        $this->year = $year;
         $this->evaluationStrategy = $evaluationStrategy;
     }
 
     /**
-     * @param ModelCategory $category
      * @return Row[]
      * @throws \PDOException
      */
-    public function getData(ModelCategory $category): array {
+    public function getData(ModelCategory $category): array
+    {
         $sql = $this->composeQuery($category);
 
         $stmt = $this->connection->query($sql);
@@ -75,27 +79,13 @@ abstract class AbstractResultsModel {
         return $result;
     }
 
-    /**
-     * Unused?
-     * @return array
-     */
-    public function getMetaColumns(): array {
-        return [
-            self::DATA_NAME,
-            self::DATA_SCHOOL,
-            self::DATA_RANK_FROM,
-            self::DATA_RANK_TO,
-        ];
-    }
-
     abstract protected function composeQuery(ModelCategory $category): string;
 
     /**
      * @note Work only with numeric types.
-     * @param iterable $conditions
-     * @return string
      */
-    protected function conditionsToWhere(iterable $conditions): string {
+    protected function conditionsToWhere(iterable $conditions): string
+    {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
@@ -123,12 +113,13 @@ abstract class AbstractResultsModel {
         return '(' . implode(') and (', $where) . ')';
     }
 
-    protected function getTasks(int $series): TypedTableSelection {
-        return $this->serviceTask->getTable()
+    protected function getTasks(int $series): TypedSelection
+    {
+        return $this->taskService->getTable()
             ->select('task_id, label, points,series')
             ->where([
-                'contest_id' => $this->contest->contest_id,
-                'year' => $this->year,
+                'contest_id' => $this->contestYear->contest_id,
+                'year' => $this->contestYear->year,
                 'series' => $series,
             ])
             ->order('tasknr');
@@ -138,18 +129,6 @@ abstract class AbstractResultsModel {
      * @return ModelCategory[]
      */
     abstract public function getCategories(): array;
-
-    /**
-     * Single series number or array of them.
-     * @param int[]|int $series
-     * TODO int[] OR int
-     */
-    abstract public function setSeries($series): void;
-
-    /**
-     * @return int[]|int (see setSeries)
-     */
-    abstract public function getSeries();
 
     abstract public function getDataColumns(ModelCategory $category): array;
 }

@@ -1,141 +1,140 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Transitions\Machine\Machine;
 
-/**
- * Class Transition
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class Transition {
-
+class Transition
+{
     use SmartObject;
 
-    public const TYPE_SUCCESS = Logger::SUCCESS;
-    public const TYPE_WARNING = Logger::WARNING;
-    public const TYPE_DANGEROUS = Logger::ERROR;
-    public const TYPE_PRIMARY = Logger::PRIMARY;
-    public const TYPE_DEFAULT = 'secondary';
-
-    protected const AVAILABLE_BEHAVIOR_TYPE = [
-        self::TYPE_SUCCESS,
-        self::TYPE_WARNING,
-        self::TYPE_DANGEROUS,
-        self::TYPE_DEFAULT,
-        self::TYPE_PRIMARY,
-    ];
     /** @var callable|bool */
     protected $condition;
-    private string $behaviorType = self::TYPE_DEFAULT;
+    private ?BehaviorType $behaviorType = null;
     private string $label;
-    /** @var callable[] */
-    public array $beforeExecuteCallbacks = [];
-    /** @var callable[] */
-    public array $afterExecuteCallbacks = [];
-    protected string $sourceState;
-    protected string $targetState;
+    /** @var TransitionCallback[] */
+    public array $beforeExecute = [];
+    /** @var TransitionCallback[] */
+    public array $afterExecute = [];
+
+    public ?EnumColumn $sourceStateEnum; // null for INIT
+    public ?EnumColumn $targetStateEnum; // null for TERMINATED
     protected ExpressionEvaluator $evaluator;
 
-    public function setSourceState(string $sourceState): void {
-        $this->sourceState = $sourceState;
+    public function setSourceStateEnum(?EnumColumn $sourceState): void
+    {
+        $this->sourceStateEnum = $sourceState;
     }
 
-    public function getSourceState(): string {
-        return $this->sourceState;
+    public function setTargetStateEnum(?EnumColumn $targetState): void
+    {
+        $this->targetStateEnum = $targetState;
     }
 
-    public function matchSource(string $source): bool {
-        return $this->getSourceState() === $source || $this->getSourceState() === Machine::STATE_ANY;
+    final public function matchSource(?EnumColumn $source): bool
+    {
+        if (is_null($source) && is_null($this->sourceStateEnum)) {
+            return true;
+        }
+        if ($source->value === $this->sourceStateEnum->value) {
+            return true;
+        }
+        return false;
     }
 
-    public function setTargetState(string $targetState): void {
-        $this->targetState = $targetState;
+    public function isCreating(): bool
+    {
+        return is_null($this->sourceStateEnum);
     }
 
-    public function getTargetState(): string {
-        return $this->targetState;
+    public function isTerminating(): bool
+    {
+        return is_null($this->sourceStateEnum);
     }
 
-    public function isCreating(): bool {
-        return $this->sourceState === Machine::STATE_INIT;
+    public function getId(): string
+    {
+        return static::createId($this->sourceStateEnum, $this->targetStateEnum);
     }
 
-    public function isTerminating(): bool {
-        return $this->getTargetState() === Machine::STATE_TERMINATED;
+    public static function createId(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    {
+        return ($sourceState ? $sourceState->value : 'init') . '__' .
+            ($targetState ? $targetState->value : 'terminated');
     }
 
-    public function getId(): string {
-        return static::createId($this->sourceState, $this->targetState);
-    }
-
-    public static function createId(string $sourceState, string $targetState): string {
-        return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
-    }
-
-    public function getBehaviorType(): string {
+    public function getBehaviorType(): BehaviorType
+    {
+        if ($this->isTerminating()) {
+            return new BehaviorType(BehaviorType::DANGEROUS);
+        }
+        if ($this->isCreating()) {
+            return new BehaviorType(BehaviorType::SUCCESS);
+        }
         return $this->behaviorType;
     }
 
-    public function setBehaviorType(string $behaviorType): void {
-        if (!in_array($behaviorType, static::AVAILABLE_BEHAVIOR_TYPE)) {
-            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $behaviorType));
-        }
-        $this->behaviorType = $behaviorType;
+    public function setBehaviorType(string $behaviorType): void
+    {
+        $this->behaviorType = new BehaviorType($behaviorType);
     }
 
-    protected function getEvaluator(): ExpressionEvaluator {
-        return $this->evaluator;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void
+    {
         $this->evaluator = $evaluator;
     }
 
-    public function getLabel(): string {
+    public function getLabel(): string
+    {
         return _($this->label);
     }
 
-    public function setLabel(string $label): void {
+    public function setLabel(string $label): void
+    {
         $this->label = $label;
     }
 
-    /**
-     * @param callable|bool $callback
-     */
-    public function setCondition($callback): void {
+    public function setCondition(?callable $callback): void
+    {
         $this->condition = $callback;
     }
 
-    protected function isConditionFulfilled(...$args): bool {
-        return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
+    protected function isConditionFulfilled(...$args): bool
+    {
+        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, ...$args);
     }
 
-    public function canExecute2(ModelHolder $model): bool {
-        return $this->isConditionFulfilled($model);
+    public function canExecute2(ModelHolder $holder): bool
+    {
+        return $this->isConditionFulfilled($holder);
     }
 
-    public function addBeforeExecute(callable $callBack): void {
-        $this->beforeExecuteCallbacks[] = $callBack;
+    public function addBeforeExecute(callable $callBack): void
+    {
+        $this->beforeExecute[] = $callBack;
     }
 
-    public function addAfterExecute(callable $callBack): void {
-        $this->afterExecuteCallbacks[] = $callBack;
+    public function addAfterExecute(callable $callBack): void
+    {
+        $this->afterExecute[] = $callBack;
     }
 
-    final public function callBeforeExecute(...$args): void {
-        foreach ($this->beforeExecuteCallbacks as $callback) {
-            $callback(...$args);
+    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
+    {
+        foreach ($this->beforeExecute as $callback) {
+            $callback($holder, ...$args);
         }
     }
 
-    final public function callAfterExecute(...$args): void {
-        foreach ($this->afterExecuteCallbacks as $callback) {
+    final public function callAfterExecute(...$args): void
+    {
+        foreach ($this->afterExecute as $callback) {
             $callback(...$args);
         }
     }

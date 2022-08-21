@@ -3,13 +3,12 @@ import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import { timeMinute } from 'd3-time';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
-import { Store } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
+import './timeline.scss';
 
 interface StateProps {
     activePoints: number;
@@ -28,9 +27,9 @@ interface OwnProps {
     teamId: number;
 }
 
-class Timeline extends ChartComponent<StateProps & OwnProps, {}> {
+class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
 
-    private xAxis: SVGElement;
+    private xAxis: SVGGElement;
     private ySize: number;
 
     private xScale: ScaleTime<number, number>;
@@ -64,8 +63,6 @@ class Timeline extends ChartComponent<StateProps & OwnProps, {}> {
             const fromCoordinates = this.xScale(from);
             const toCoordinates = this.xScale(to);
             const yCoordinates = this.yScale(index);
-
-            const color = getColorByPoints(submit ? submit.points : null);
             let active = true;
             if (activePoints) {
                 active = false;
@@ -74,43 +71,36 @@ class Timeline extends ChartComponent<StateProps & OwnProps, {}> {
                 }
             }
             return (
-                <g style={{opacity: (active) ? 1 : 0.1}} key={index}>
+                <g key={index} className={active ? 'active' : 'inactive'}>
                     <polyline
                         points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        stroke={color}
+                        data-points={submit ? submit.points : null}
                     />
                     <text
                         x={(fromCoordinates + toCoordinates) / 2}
                         y={yCoordinates - 1}
-                        fontSize="10"
-                        textAnchor="middle"
                     >
-                        {task.label}
+                        <tspan>{task.label}</tspan>
                     </text>
                 </g>
             );
         });
 
-        return (
-            <div className="col-lg-12">
-                <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize} className="chart time-line">
-                    <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
-                       ref={(xAxis) => this.xAxis = xAxis}/>
-                    {dots}
-                </svg>
-            </div>
-        );
+        return <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize}
+                    className="chart chart-fyziklani-team-timeline">
+            <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
+               ref={(xAxis) => this.xAxis = xAxis}/>
+            {dots}
+        </svg>;
     }
 
     private getAxis() {
         const xAxis = axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([timeMinute.every(30)]);
-        select(this.xAxis).call(xAxis);
+        select<SVGGElement, null>(this.xAxis).call(xAxis);
     }
 }
 
-const mapStateToProps = (state: Store): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

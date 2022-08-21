@@ -1,58 +1,58 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 
 /**
  * "POD" to hold series pipeline processing data.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class SeriesData {
-
-    private ModelContest $contest;
-    private int $year;
+class SeriesData
+{
+    private ContestYearModel $contestYear;
     private int $series;
     private \SimpleXMLElement $data;
 
     /**
-     * @var ModelTask[]
+     * @var TaskModel[]
      */
     private array $tasks = [];
 
-    public function __construct(ModelContest $contest, int $year, int $series, \SimpleXMLElement $data) {
-        $this->contest = $contest;
-        $this->year = $year;
+    public function __construct(ContestYearModel $contestYear, int $series, \SimpleXMLElement $data)
+    {
+        $this->contestYear = $contestYear;
         $this->series = $series;
         $this->data = $data;
     }
 
-    public function getContest(): ModelContest {
-        return $this->contest;
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->contestYear;
     }
 
-    public function getYear(): int {
-        return $this->year;
-    }
-
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
-    public function getData(): \SimpleXMLElement {
+    public function getData(): \SimpleXMLElement
+    {
         return $this->data;
     }
 
     /**
-     * @return ModelTask[]
+     * @return TaskModel[]
      */
-    public function getTasks(): array {
+    public function getTasks(): array
+    {
         return $this->tasks;
     }
 
-    public function addTask(int $taskNr, ModelTask $task): void {
+    public function addTask(int $taskNr, TaskModel $task): void
+    {
         $this->tasks[$taskNr] = $task;
     }
 }

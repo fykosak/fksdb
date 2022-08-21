@@ -1,17 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IModel;
-use Nette\Utils\ArrayHash;
+use Fykosak\NetteORM\Model;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-interface ReferencedHandler {
+interface ReferencedHandler
+{
 
     public const RESOLUTION_OVERWRITE = 'overwrite';
     public const RESOLUTION_KEEP = 'keep';
@@ -21,11 +17,9 @@ interface ReferencedHandler {
 
     public function setResolution(string $resolution): void;
 
-    public function update(IModel $model, ArrayHash $values): void;
+    public function update(Model $model, array $values): void;
 
-    public function createFromValues(ArrayHash $values): AbstractModel;
+    public function createFromValues(array $values): Model;
 
-    public function isSecondaryKey(string $field): bool;
-
-    public function findBySecondaryKey(string $field, string $key): ?AbstractModel;
+    public function findBySecondaryKey(string $key): ?Model;
 }

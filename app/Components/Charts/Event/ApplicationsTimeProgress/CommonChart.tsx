@@ -9,6 +9,7 @@ import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { ModelEvent } from 'FKSDB/Models/ORM/Models/modelEvent';
 import * as React from 'react';
+import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 
 export interface Data {
     events: {
@@ -31,14 +32,14 @@ interface OwnProps {
     accessKey: 'participants' | 'teams';
 }
 
-export default class CommonChart extends React.Component<OwnProps, {}> {
+export default class CommonChart extends React.Component<OwnProps> {
 
     public render() {
         const {data, accessKey} = this.props;
 
         let minTime = 0;
         let max = 0;
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
 
         const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {
@@ -83,17 +84,6 @@ export default class CommonChart extends React.Component<OwnProps, {}> {
         const yScale = scaleLinear<number, number>().domain([0, max]);
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        const legend = () => {
-            return <div className={'list-group'}>
-                {lineChartData.map((datum, key) => {
-                    return <div
-                        key={key}
-                        className={'list-group-item'}
-                        style={{color: datum.color}}>{datum.name}</div>;
-                })}
-            </div>;
-        };
-
         return <ChartContainer
             chart={LineChart}
             chartProps={{
@@ -106,7 +96,8 @@ export default class CommonChart extends React.Component<OwnProps, {}> {
                 yScale,
 
             }}
-            legendComponent={legend}
+            legendProps={{data: lineChartData}}
+            legendComponent={LineChartLegend}
             headline={translator.getText('Time progress')}
         />;
     }

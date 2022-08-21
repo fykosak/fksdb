@@ -1,62 +1,73 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
 $container = require '../../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Models\AddressModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class WriteOnlyTraitTest extends DsefTestCase {
-    /** @var int */
-    private $dsefAppId;
+class WriteOnlyTraitTest extends DsefTestCase
+{
+    private EventParticipantModel $dsefApp;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         // create address for person
-        $addressId = $this->insert('address', [
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'target' => 'PomaláUlice',
             'city' => 'SinCity',
             'postal_code' => '67401',
             'region_id' => '3',
         ]);
-        $this->insert('post_contact', [
-            'person_id' => $this->personId,
-            'address_id' => $addressId,
-            'type' => ModelPostContact::TYPE_DELIVERY,
+        $this->getContainer()->getByType(PostContactService::class)->storeModel([
+            'person_id' => $this->person->person_id,
+            'address_id' => $address->address_id,
+            'type' => PostContactType::DELIVERY,
         ]);
 
         // apply person
-        $this->dsefAppId = $this->insert('event_participant', [
-            'person_id' => $this->personId,
-            'event_id' => $this->eventId,
+        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
+            'person_id' => $this->person->person_id,
+            'event_id' => $this->event->event_id,
             'status' => 'applied',
             'lunch_count' => 3,
         ]);
 
-        $this->insert('e_dsef_participant', [
-            'event_participant_id' => $this->dsefAppId,
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
+            'event_participant_id' => $this->dsefApp->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
 
         // create admin
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
-        $this->insert('grant', [
-            'login_id' => $adminId,
+        $admin = $this->createPerson('Admin', 'Adminovič', null, []);
+        $this->getContainer()->getByType(GrantService::class)->storeModel([
+            'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId, $this->fixture);
+        $this->authenticatePerson($admin, $this->fixture);
     }
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
@@ -64,15 +75,15 @@ class WriteOnlyTraitTest extends DsefTestCase {
             'lang' => 'cs',
             'contestId' => '1',
             'year' => '1',
-            'eventId' => (string)$this->eventId,
-            'id' => (string)$this->dsefAppId,
+            'eventId' => (string)$this->event->event_id,
+            'id' => (string)$this->dsefApp->event_participant_id,
         ]);
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);
@@ -83,13 +94,14 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::notContains('SinCity', $html);
     }
 
-    public function testSave(): void {
+    public function testSave(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
             'participant' =>
                 [
-                    'person_id' => (string)$this->personId,
+                    'person_id' => (string)$this->person->person_id,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Paní Bílá',
@@ -121,7 +133,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
                 ],
             'save' => 'Uložit',
         ], [
-            'id' => (string)$this->dsefAppId,
+            'id' => (string)$this->dsefApp->event_participant_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -129,11 +141,11 @@ class WriteOnlyTraitTest extends DsefTestCase {
         //Assert::same('fsafs', (string) $response->getSource());
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->event, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int)$this->personId, $application->person_id);
+        Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->personId);
+        $info = $this->assertPersonInfo($this->person);
         Assert::equal(null, $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 
@@ -141,10 +153,19 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $application->lunch_count);
 
-        $addressId = $this->explorer->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
-        Assert::notEqual(null, $addressId);
+        $address = $this->getContainer()
+            ->getByType(PostContactService::class)
+            ->getTable()
+            ->where(['person_id' => $this->person->person_id, 'type' => PostContactType::PERMANENT])
+            ->fetch();
 
-        $address = $this->explorer->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
+        Assert::notEqual(null, $address);
+        /** @var AddressModel $address */
+        $address = $this->getContainer()
+            ->getByType(AddressService::class)
+            ->getTable()
+            ->where(['address_id' => $address->address_id])
+            ->fetch();
         Assert::notEqual(null, $address);
         Assert::equal('PomaláUlice', $address->target);
         Assert::equal('SinCity', $address->city);

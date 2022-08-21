@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
-/**
- * Class DashboardPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class DashboardPresenter extends BasePresenter {
+class DashboardPresenter extends BasePresenter
+{
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Warehouse'), 'fa fa-warehouse'));
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Warehouse'), 'fa fa-warehouse');
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -14,13 +16,8 @@ use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ImportHandler {
-
+class ImportHandler
+{
     use SmartObject;
 
     public const STATELESS_IGNORE = 'ignore';
@@ -34,27 +31,25 @@ class ImportHandler {
 
     private CSVParser $parser;
 
-    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source)
+    {
         $this->container = $container;
         $this->parser = $parser;
         $this->source = $source;
     }
 
     /**
-     * @param ApplicationHandler $handler
-     * @param string $errorMode
-     * @param string $stateless
-     * @return bool
      * @throws ImportHandlerException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool
+    {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $baseHolderName = $primaryBaseHolder->getName();
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
+        $baseHolderName = $primaryBaseHolder->name;
 
         $handler->setErrorMode($errorMode);
         $handler->beginTransaction();
@@ -62,7 +57,10 @@ class ImportHandler {
         foreach ($this->parser as $row) {
             $values = ArrayHash::from($this->rowToValues($row));
             $keyValue = $values[$baseHolderName][self::KEY_NAME];
-            if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
+            if (
+                !isset($values[$baseHolderName][BaseHolder::STATE_COLUMN])
+                || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]
+            ) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } elseif ($stateless == self::STATELESS_KEEP) {
@@ -71,7 +69,7 @@ class ImportHandler {
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -85,22 +83,22 @@ class ImportHandler {
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
+    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
+    {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
-            return [$baseHolder->getName(), $parts[0]];
+            return [$baseHolder->name, $parts[0]];
         } else {
             return $parts;
         }
     }
 
     /**
-     * @param iterable $row
-     * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues(iterable $row): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+    private function rowToValues(iterable $row): array
+    {
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
         $values = [];
         $fieldExists = false;
         $fieldNames = array_keys($primaryBaseHolder->getFields());
@@ -128,8 +126,9 @@ class ImportHandler {
      * @return Holder[]
      * @throws NeonSchemaException
      */
-    private function createHoldersMap(): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+    private function createHoldersMap(): array
+    {
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 
         $result = [];
@@ -137,7 +136,7 @@ class ImportHandler {
             if (self::KEY_NAME == $pkName) {
                 $keyValue = $pkValue;
             } else {
-                $fields = $holder->getPrimaryHolder()->getFields();
+                $fields = $holder->primaryHolder->getFields();
                 $keyValue = $fields[self::KEY_NAME]->getValue();
             }
             $result[$keyValue] = $holder;

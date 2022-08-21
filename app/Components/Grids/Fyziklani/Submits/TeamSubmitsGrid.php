@@ -1,44 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\IPresenter;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class TeamSubmitsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- * @author Lukáš Timko
- */
-class TeamSubmitsGrid extends SubmitsGrid {
+class TeamSubmitsGrid extends SubmitsGrid
+{
 
-    private ModelFyziklaniTeam $team;
+    private TeamModel2 $team;
 
-    public function __construct(ModelFyziklaniTeam $team, Container $container) {
+    public function __construct(TeamModel2 $team, Container $container)
+    {
         $this->team = $team;
         parent::__construct($container);
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
         return new NDataSource($submits);
     }
 
     /**
-     * @param IPresenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumnTask();

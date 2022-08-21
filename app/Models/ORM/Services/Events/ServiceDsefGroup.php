@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\Events;
 
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
-class ServiceDsefGroup extends AbstractService {
+class ServiceDsefGroup extends Service
+{
 }

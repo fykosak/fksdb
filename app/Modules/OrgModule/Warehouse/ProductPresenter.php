@@ -1,62 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
+use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
-use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Class ProductPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ProductPresenter extends BasePresenter {
+class ProductPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
-    private ServiceProduct $serviceProduct;
+    private ProductService $productService;
 
-    public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Products'), 'fas fa-clipboard-list'));
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Products'), 'fas fa-dolly');
     }
 
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit product'), 'fas fa-clipboard-list'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Edit product'), 'fas fa-pen');
     }
 
-    public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create product'), 'fas fa-clipboard-list'));
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create product'), 'fa fa-plus');
     }
 
-    public function injectService(ServiceProduct $serviceProduct): void {
-        $this->serviceProduct = $serviceProduct;
+    public function injectService(ProductService $productService): void
+    {
+        $this->productService = $productService;
     }
 
-    protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentCreateForm(): Control
+    {
+        return new ProductFormComponent($this->getContext(), null);
     }
 
-    protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+    /**
+     * @return Control
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        return new ProductFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentGrid(): ProductsGrid {
+    protected function createComponentGrid(): ProductsGrid
+    {
         return new ProductsGrid($this->getContext());
     }
 
-    protected function getORMService(): ServiceProduct {
-        return $this->serviceProduct;
+    protected function getORMService(): ProductService
+    {
+        return $this->productService;
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAllowed($resource, $privilege);
     }
 }

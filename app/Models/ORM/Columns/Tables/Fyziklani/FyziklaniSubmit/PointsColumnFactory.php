@@ -1,27 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Nette\Utils\Html;
 
-/**
- * Class PointsRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class PointsColumnFactory extends ColumnFactory {
-
+class PointsColumnFactory extends ColumnFactory
+{
     /**
-     * @param AbstractModel|ModelFyziklaniSubmit $model
-     * @return Html
+     * @param SubmitModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         $el = Html::el('span');
         if (!\is_null($model->points)) {
             return $el->addText($model->points);
         }
-        return $el->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
+        return $el->addAttributes(['class' => 'badge bg-warning'])->addText(_('revoked'));
     }
 }

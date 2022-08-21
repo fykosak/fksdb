@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageProcessing;
 use FKSDB\Models\Submits\SubmitStorage;
 use FKSDB\Models\Submits\ProcessingException;
@@ -11,14 +13,9 @@ use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
-use UnexpectedValueException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class UploadedStorage implements SubmitStorage {
+class UploadedStorage implements SubmitStorage
+{
 
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
@@ -45,30 +42,31 @@ class UploadedStorage implements SubmitStorage {
      * @var string
      */
     private string $filenameMask;
-    /** @var array   contestId => contest name */
-    private array $contestMap;
     /** @var StorageProcessing[] */
     private array $processings = [];
 
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask)
+    {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
-    public function addProcessing(StorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void
+    {
         $this->processings[] = $processing;
     }
 
-    public function beginTransaction(): void {
+    public function beginTransaction(): void
+    {
         $this->todo = [];
     }
 
     /**
      * @throws StorageException for unsuccessful commit
      */
-    public function commit(): void {
+    public function commit(): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot commit out of transaction.');
         }
@@ -84,7 +82,9 @@ class UploadedStorage implements SubmitStorage {
 
                 $filename = $todo['file'];
 
-                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
+                $dest = $this->root
+                    . DIRECTORY_SEPARATOR . $this->createDirname($submit)
+                    . DIRECTORY_SEPARATOR . $this->createFilename($submit);
                 mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {
@@ -117,7 +117,8 @@ class UploadedStorage implements SubmitStorage {
         $this->todo = null;
     }
 
-    public function rollback(): void {
+    public function rollback(): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
         }
@@ -125,7 +126,8 @@ class UploadedStorage implements SubmitStorage {
         $this->todo = null;
     }
 
-    public function storeFile(string $filename, ModelSubmit $submit): void {
+    public function storeFile(string $filename, SubmitModel $submit): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
@@ -136,23 +138,26 @@ class UploadedStorage implements SubmitStorage {
         ];
     }
 
-    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string {
+    public function retrieveFile(SubmitModel $submit, int $type = self::TYPE_PROCESSED): ?string
+    {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
-            $files = array_filter($files, function (\SplFileInfo $file): bool {
-                return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
-            });
+            $files = array_filter(
+                $files,
+                fn(\SplFileInfo $file): bool => Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT)
+            );
         } else {
-            $files = array_filter($files, function (\SplFileInfo $file): bool {
-                return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
-                    !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
-            });
+            $files = array_filter(
+                $files,
+                fn(\SplFileInfo $file): bool => !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                    !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT)
+            );
         }
 
         if (count($files) == 0) {
             return null;
         } elseif (count($files) > 1) {
-            throw new InvalidStateException("Ambiguity in file database for submit #{$submit->submit_id}.");
+            throw new InvalidStateException("Ambiguity in file database for submit #$submit->submit_id.");
         } else {
             $file = array_pop($files);
             return $file->getRealPath();
@@ -161,15 +166,14 @@ class UploadedStorage implements SubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     *
-     * @param ModelSubmit $submit
-     * @return bool
      */
-    public function fileExists(ModelSubmit $submit): bool {
+    public function fileExists(SubmitModel $submit): bool
+    {
         return (bool)$this->retrieveFile($submit);
     }
 
-    public function deleteFile(ModelSubmit $submit): void {
+    public function deleteFile(SubmitModel $submit): void
+    {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
@@ -184,37 +188,51 @@ class UploadedStorage implements SubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return \SplFileInfo[]
      */
-    private function retrieveFiles(ModelSubmit $submit): array {
+    private function retrieveFiles(SubmitModel $submit): array
+    {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             return iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return [];
         }
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
-    private function createDirname(ModelSubmit $submit): string {
-        $task = $submit->getTask();
-        return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
+    private function createDirname(SubmitModel $submit): string
+    {
+        $task = $submit->task;
+        return sprintf(
+            $this->directoryMask,
+            $task->contest->getContestSymbol(),
+            $task->year,
+            $task->series,
+            $task->webalizeLabel()
+        );
     }
 
-    private function createFilename(ModelSubmit $submit): string {
-        $task = $submit->getTask();
+    private function createFilename(SubmitModel $submit): string
+    {
+        $task = $submit->task;
 
-        $contestantName = $submit->getContestant()->getPerson()->getFullName();
+        $contestantName = $submit->contestant->person->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 
-        $filename = sprintf($this->filenameMask, $contestantName, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
+        $filename = sprintf(
+            $this->filenameMask,
+            $contestantName,
+            $task->contest->getContestSymbol(),
+            $task->year,
+            $task->series,
+            $task->webalizeLabel()
+        );
 
         // append metadata
         return $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;

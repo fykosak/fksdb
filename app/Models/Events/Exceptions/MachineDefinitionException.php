@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Exceptions;
 
 use Nette\InvalidStateException;
 
-/**
- * Class MachineDefinitionException
- * @package Events
- */
-class MachineDefinitionException extends InvalidStateException {
-
+class MachineDefinitionException extends InvalidStateException
+{
 }

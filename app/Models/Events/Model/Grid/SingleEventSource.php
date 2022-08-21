@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Grid;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Database\Table\Selection;
@@ -17,65 +20,69 @@ use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- *
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count()
+ * @method int count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
-class SingleEventSource implements HolderSource {
-
+class SingleEventSource implements HolderSource
+{
     use SmartObject;
 
-    private ModelEvent $event;
+    private EventModel $event;
     private Container $container;
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private Holder $dummyHolder;
-    /** @var IModel[] */
+    /** @var Model[] */
     private ?array $primaryModels = null;
-    /** @var IModel[][] */
+    /** @var Model[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
-    private ?array $holders = [];
+    private array $holders = [];
 
     /**
      * SingleEventSource constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
+    public function __construct(EventModel $event, Container $container, EventDispatchFactory $eventDispatchFactory)
+    {
         $this->event = $event;
         $this->container = $container;
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
-        $this->primarySelection = $this->dummyHolder->getPrimaryHolder()
+        $this->primarySelection = $this->dummyHolder->primaryHolder
             ->getService()
             ->getTable()
-            ->where($this->dummyHolder->getPrimaryHolder()->getEventIdColumn(), $this->event->getPrimary());
+            ->where($this->dummyHolder->primaryHolder->eventIdColumn, $this->event->getPrimary());
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): EventModel
+    {
         return $this->event;
     }
 
-    public function getDummyHolder(): Holder {
+    public function getDummyHolder(): Holder
+    {
         return $this->dummyHolder;
     }
 
-    private function loadData(): void {
-        $joinToCheck = false;
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            if ($joinToCheck === false) {
+    private function loadData(): void
+    {
+        $joinToCheck = null;
+        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $group) {
+            if (!isset($joinToCheck)) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
-                throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
+                throw new InvalidStateException(
+                    sprintf(
+                        "SingleEventSource needs all secondary holders to be joined to the same column.
+                               Conflict '%s' and '%s'.",
+                        $group['joinTo'],
+                        $joinToCheck
+                    )
+                );
             }
         }
         // load primaries
@@ -85,12 +92,12 @@ class SingleEventSource implements HolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[][] $group */
+        /** @var Service|ServiceMulti[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            /** @var TypedTableSelection $secondarySelection */
+            /** @var TypedSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
-                /** @var ModelEvent $event */
+                /** @var EventModel $event */
                 $event = reset($group['holders'])->getEvent();
                 $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
@@ -107,14 +114,14 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @return void
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    private function createHolders(): void {
+    private function createHolders(): void
+    {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
+            foreach ($this->secondaryModels[$key] as $secondaryModel) {
                 $primaryPK = $secondaryModel[$group['joinOn']];
                 if (!isset($cache[$primaryPK])) {
                     $cache[$primaryPK] = [];
@@ -127,7 +134,7 @@ class SingleEventSource implements HolderSource {
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
+            $holder->setModel($primaryModel, $cache[$primaryPK] ?? []);
             $this->holders[$primaryPK] = $holder;
         }
     }
@@ -136,11 +143,10 @@ class SingleEventSource implements HolderSource {
      * Method propagates selected calls to internal primary models selection.
      *
      * @staticvar array $delegated
-     * @param string $name
-     * @param array $args
      * @return SingleEventSource|int
      */
-    public function __call($name, $args) {
+    public function __call(string $name, array $args)
+    {
         static $delegated = [
             'where' => false,
             'order' => false,
@@ -162,7 +168,8 @@ class SingleEventSource implements HolderSource {
      * @return Holder[]
      * @throws NeonSchemaException
      */
-    public function getHolders(): array {
+    public function getHolders(): array
+    {
         if (!isset($this->primaryModels)) {
             $this->loadData();
             $this->createHolders();
@@ -171,22 +178,12 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @param int $primaryKey
-     * @return Holder
      * @throws NeonSchemaException
      */
-    public function getHolder(int $primaryKey): Holder {
-        $primaryModel = $this->dummyHolder->getPrimaryHolder()->getService()->findByPrimary($primaryKey);
-
-        $cache = [];
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            $secondaryModel = $group['service']->findByPrimary($primaryModel->{$group['joinOn']});
-            $cache[$key] = $cache[$key] ?? [];
-            $cache[$key][] = $secondaryModel;
-        }
-
+    public function getHolder(Model $primaryModel): Holder
+    {
         $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-        $holder->setModel($primaryModel, $cache);
+        $holder->setModel($primaryModel);
         return $holder;
     }
 }

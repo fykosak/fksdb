@@ -1,30 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ReferencedPersonHandlerFactory {
-
+class ReferencedPersonHandlerFactory
+{
     use SmartObject;
 
     private Container $container;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
-    public function create(int $acYear, ?string $resolution, ?ModelEvent $event = null): ReferencedPersonHandler {
+    public function create(
+        ContestYearModel $contestYear,
+        ?string $resolution,
+        ?EventModel $event = null
+    ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
-            $acYear,
-            $resolution??ReferencedPersonHandler::RESOLUTION_EXCEPTION
+            $contestYear,
+            $resolution ?? ReferencedHandler::RESOLUTION_EXCEPTION
         );
         if ($event) {
             $handler->setEvent($event);
@@ -32,5 +35,4 @@ class ReferencedPersonHandlerFactory {
         $this->container->callInjects($handler);
         return $handler;
     }
-
 }

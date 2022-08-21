@@ -1,22 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Holder;
 
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DataValidator {
-
+class DataValidator
+{
     use SmartObject;
 
     /** @var string[] */
     private array $validationErrors;
 
-    public function validate(BaseHolder $baseHolder): void {
+    public function validate(BaseHolder $baseHolder): void
+    {
         // validate
         $this->validateFields($baseHolder);
     }
@@ -24,17 +22,20 @@ class DataValidator {
     /**
      * @return null|string[]
      */
-    public function getValidationResult(): ?array {
+    public function getValidationResult(): ?array
+    {
         return $this->validationErrors ?? null;
     }
 
-    private function validateFields(BaseHolder $baseHolder): void {
+    private function validateFields(BaseHolder $baseHolder): void
+    {
         foreach ($baseHolder->getFields() as $field) {
             $field->validate($this);
         }
     }
 
-    public function addError(string $error): void {
+    public function addError(string $error): void
+    {
         if (!isset($this->validationErrors)) {
             $this->validationErrors = [];
         }

@@ -1,15 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Models\Logging\Logger;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\Logger;
 
-/**
- * Interface ITestedRowFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
-interface TestedColumnFactory {
-
-    public function runTest(Logger $logger, AbstractModel $model): void;
+interface TestedColumnFactory
+{
+    public function runTest(Logger $logger, Model $model): void;
 }

@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\IService;
-use FKSDB\Models\Transitions\Machine\Machine;
-use Nette\Database\Table\GroupedSelection;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated use person_schedule UC
  */
-class ResourceAvailability extends AbstractAdjustment {
+class ResourceAvailability extends AbstractAdjustment
+{
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
@@ -35,7 +36,13 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(
+        array $fields,
+        string $paramCapacity,
+        string $message,
+        array $includeStates = [AbstractMachine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -43,14 +50,15 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
-            'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => [$holder->getPrimaryHolder()],
+            'service' => $holder->primaryHolder->getService(),
+            'holders' => [$holder->primaryHolder],
         ];
 
-        $services = [];
+        $sService = [];
         $controls = [];
 
         foreach ($groups as $group) {
@@ -58,7 +66,7 @@ class ResourceAvailability extends AbstractAdjustment {
             $field = null;
             /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->getName();
+                $name = $baseHolder->name;
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
                     if (!$foundControls) {
@@ -76,7 +84,7 @@ class ResourceAvailability extends AbstractAdjustment {
                 }
             }
             if ($holders) {
-                $services[] = [
+                $sService[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
@@ -85,31 +93,30 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[]|BaseHolder[][] $serviceData */
-        foreach ($services as $serviceData) {
+        /** @var Service|ServiceMulti[]|BaseHolder[][] $dataService */
+        foreach ($sService as $dataService) {
             /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($serviceData['holders']);
-            $event = $firstHolder->getEvent();
-            /** @var GroupedSelection $table */
-            $table = $serviceData['service']->getTable();
-            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
+            $firstHolder = reset($dataService['holders']);
+            $event = $firstHolder->event;
+            /** @var TypedGroupedSelection $table */
+            $table = $dataService['service']->getTable();
+            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
+            if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');
             }
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
-                return $baseHolder->getModel()->getPrimary(false);
-            }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+                $model = $baseHolder->getModel2();
+                return $model ? $model->getPrimary(false) : null;
+            }, $dataService['holders']);
+            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
-            $column = BaseHolder::getBareColumn($serviceData['field']);
+            $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($primaries) {
                 $table->where("NOT $pk IN", $primaries);

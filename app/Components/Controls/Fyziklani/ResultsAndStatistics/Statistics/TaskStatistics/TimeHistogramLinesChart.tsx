@@ -5,12 +5,11 @@ import {
 import { curveMonotoneX } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { submitsByTask } from '../Middleware/submitsByTask';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -27,7 +26,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}> {
+class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {
@@ -88,11 +87,11 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}>
                 });
             }
         }
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<Date> = [];
         availablePoints.forEach((points) => {
             if (!activePoints || activePoints === points) {
                 lineChartData.push({
-                    color: getColorByPoints(points),
+                    color: 'var(--color-fof-points-' + points + ')',
                     curveFactory: curveMonotoneX,
                     display: {
                         area: true,
@@ -117,15 +116,15 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}>
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,
-        fromDate: state.statistics.fromDate,
-        gameEnd: new Date(state.timer.gameEnd),
-        gameStart: new Date(state.timer.gameStart),
+        fromDate: state.timer.gameStart,
+        gameEnd: state.timer.gameEnd,
+        gameStart: state.timer.gameStart,
         submits: state.data.submits,
-        toDate: state.statistics.toDate,
+        toDate: state.timer.gameEnd,
     };
 };
 

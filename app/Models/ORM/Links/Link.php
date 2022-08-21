@@ -1,36 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Links;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
-/**
- * Class Link
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class Link extends LinkFactory {
+class Link extends LinkFactory
+{
 
     private string $destination;
     private array $params;
     private string $title;
 
-
-    public function __construct(string $destination, array $params, string $title, string $modelClassName) {
+    public function __construct(string $destination, array $params, string $title, string $modelClassName)
+    {
         parent::__construct($modelClassName);
         $this->destination = $destination;
         $this->params = $params;
         $this->title = $title;
     }
 
-    public function getText(): string {
+    public function getText(): string
+    {
         return _($this->title);
     }
 
-    protected function getDestination(AbstractModel $model): string {
+    protected function getDestination(Model $model): string
+    {
         return $this->destination;
     }
 
-    protected function prepareParams(AbstractModel $model): array {
+    protected function prepareParams(Model $model): array
+    {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

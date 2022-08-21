@@ -4,7 +4,7 @@
         {foreach $models as $model}
             <h3 class="card-header">
                 {control valuePrinter:onlyValue $itemHeadline, $model}
-                <div class="btn-group float-right" role="group" aria-label="Basic example" class="">
+                <div class="btn-group float-end" role="group" aria-label="Basic example" class="">
                     {foreach $links as $link}
                         {control linkPrinter $link, $model}
                     {/foreach}
@@ -18,7 +18,7 @@
         {/foreach}
     {else}
         <div class="card-body">
-            {control noRecords}
+            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
         </div>
     {/if}
 {/block}

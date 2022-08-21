@@ -1,46 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class SelfResolver implements VisibilityResolver, ModifiabilityResolver {
+class SelfResolver implements VisibilityResolver, ModifiabilityResolver
+{
     use SmartObject;
 
     private User $user;
 
-    public function __construct(User $user) {
+    public function __construct(User $user)
+    {
         $this->user = $user;
     }
 
-    public function isVisible(ModelPerson $person): bool {
-        return $person->isNew() || $this->isSelf($person);
+    public function isVisible(?PersonModel $person): bool
+    {
+        return !$person || $this->isSelf($person);
     }
 
-    public function getResolutionMode(ModelPerson $person): string {
-        return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+    public function getResolutionMode(?PersonModel $person): string
+    {
+        if (!$person) {
+            return ReferencedHandler::RESOLUTION_EXCEPTION;
+        }
+        return $this->isSelf($person) ? ReferencedHandler::RESOLUTION_OVERWRITE
+            : ReferencedHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
-        return $person->isNew() || $this->isSelf($person);
+    public function isModifiable(?PersonModel $person): bool
+    {
+        return !$person || $this->isSelf($person);
     }
 
-    protected function isSelf(ModelPerson $person): bool {
+    protected function isSelf(PersonModel $person): bool
+    {
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->user->getIdentity();
-        $loggedPerson = $login->getPerson();
+        $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;
     }
-
 }

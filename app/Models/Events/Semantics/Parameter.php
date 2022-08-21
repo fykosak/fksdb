@@ -1,38 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Semantics;
 
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class Parameter {
+class Parameter
+{
     use SmartObject;
     use WithEventTrait;
 
     private string $parameter;
 
-    /**
-     * Parameter constructor.
-     * @param string $parameter
-     */
-    public function __construct(string $parameter) {
+    public function __construct(string $parameter)
+    {
         $this->parameter = $parameter;
     }
 
     /**
-     * @param ...$args
      * @return mixed
      */
-    public function __invoke(...$args) {
+    public function __invoke(...$args)
+    {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
-    public function __toString(): string {
-        return "param({$this->parameter})";
+    public function __toString(): string
+    {
+        return "param($this->parameter)";
     }
-
 }

@@ -1,0 +1,83 @@
+parameters:
+    events:
+        dsef27:
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    id_number:
+                        required: true
+                    born:
+                        required: true
+                person_schedule:
+                    dsef_morning:
+                        required: true
+                    dsef_afternoon:
+                        required: true
+            transitions:
+                __init->applied:
+                    condition: role('admin')
+                    label: _('Přihlásit účastníka')
+                    onExecuted:
+                        - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                applied->participated:
+                    condition: and(role('admin'),eventWas())
+                    label: _('Prezentovat')
+                applied->missed:
+                    condition: and(role('admin'),eventWas())
+                    label: _('Nepřijel')
+                    behaviorType: danger
+                applied->cancelled:
+                    condition: role('admin')
+                    label: _('Zrušit přihlášku')
+                    behaviorType: danger
+                cancelled->__terminated:
+                    condition: role('admin')
+                    label: _('Smazat přihlášku')
+            paramScheme:
+                 notifyBcc:
+                     default: dsef@fykos.cz
+                 notifyFrom:
+                     default: Den s experimentální fyzikou <dsef@fykos.cz>
+
+events:
+    dsef27:
+        event_type_id: 2
+        eventYears: [27]
+        formLayout: dsef.form
+        paramScheme: %events.defaultDsef.paramScheme%
+
+        baseMachines:
+            PARTICIPANT_DSEF:
+                service: @orm.event_participant.service
+                states: %events.defaultDsef.states%
+                transitions: %events.dsef27.transitions%
+                fields:
+                    person_id:
+                        label: _('Person')
+                        required: true
+                        modifiable: %events.defaultDsef.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.dsef27.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    lunch_count:
+                        modifiable: %events.defaultDsef.appCond%
+                        description: _('Počet "obědů" (bageta za 30 Kč)')
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT_DSEF
+                    label: _('Účastník')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                - @events.captcha
+
+            processings:
+                - @events.privacyPolicy

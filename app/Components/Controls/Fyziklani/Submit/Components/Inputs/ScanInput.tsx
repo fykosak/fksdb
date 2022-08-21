@@ -1,22 +1,23 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
+import { Html5Qrcode } from 'html5-qrcode';
+import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 
-export default class ScanInput extends React.Component<WrappedFieldProps & {}, { processing: boolean; messages: string[] }> {
+export default class ScanInput extends React.Component<WrappedFieldProps & Record<string, never>, { processing: boolean; error: Html5QrcodeError }> {
     constructor(props) {
         super(props);
-        this.state = {processing: false, messages: []};
+        this.state = {processing: false, error: null};
     }
 
     public render() {
         return <>
             <h3>{translator.getText('Scan QR-code')}</h3>
-            {this.state.messages.map((text, index) => {
-                return <p key={index} className="alert alert-danger">{text}</p>;
-            })}
+            {this.state.error && <p className="alert alert-danger">{this.state.error.toString()}</p>}
+            <div id="reader" style={{display: 'none'}}/>
             <div className="text-center">
                 <label
-                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-secondary' : 'btn-primary')}>
+                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-outline-secondary' : 'btn-outline-primary')}>
                     <span className="h3">
                         {this.state.processing ?
                             <i className="fa fa-spinner fa-spin" aria-hidden="true"/>
@@ -41,42 +42,22 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
         </>;
     }
 
-    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>): void {
         event.persist();
-        this.setState({processing: true, messages: []});
-        this.preprocessImage(event).then((code) => {
-            this.props.input.onChange(code);
-            this.setState({processing: false});
-        }).catch((e) => {
-            this.setState({processing: false, messages: [e]});
-        });
-    }
-
-    private preprocessImage(event: React.ChangeEvent<HTMLInputElement>) {
-        return new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                event.target.value = '';
-                // @ts-ignore
-                window.qrcode.callback = (e) => {
-                    if (e instanceof Error) {
-                        reject('Failed to read QR-code: ' + e.message);
-                    } else {
-                        resolve(this.parseURL(e, reject));
-                    }
-                };
-                // @ts-ignore
-                window.qrcode.decode(reader.result);
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
-    }
-
-    private parseURL(url: string, reject: (e) => void): string {
-        const match = /[0-9]{6}[A-Za-z]{2}[0-9]$/.exec(url);
-        if (match[0]) {
-            return match[0];
+        const html5QrCode = new Html5Qrcode('reader', {verbose: true});
+        if (event.target.files.length == 0) {
+            return;
         }
-        reject('Failed to parse link.');
+        const imageFile = event.target.files[0];
+        this.setState({processing: true, error: null});
+
+        html5QrCode.scanFile(imageFile, true)
+            .then(decodedText => {
+                this.props.input.onChange(decodedText);
+                this.setState({processing: false});
+            })
+            .catch((err: Html5QrcodeError) => {
+                this.setState({processing: false, error: err});
+            });
     }
 }

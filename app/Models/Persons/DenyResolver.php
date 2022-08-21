@@ -1,27 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DenyResolver implements VisibilityResolver, ModifiabilityResolver {
+class DenyResolver implements VisibilityResolver, ModifiabilityResolver
+{
     use SmartObject;
 
-    public function isVisible(ModelPerson $person): bool {
+    public function isVisible(?PersonModel $person): bool
+    {
         return false;
     }
 
-    public function getResolutionMode(ModelPerson $person): string {
-        return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+    public function getResolutionMode(?PersonModel $person): string
+    {
+        return ReferencedHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
+    public function isModifiable(?PersonModel $person): bool
+    {
         return false;
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 
 /**
@@ -13,10 +15,9 @@ use Nette\Application\UI\Form;
  *   - check ACL
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class EntityPresenter extends BasePresenter {
+abstract class EntityPresenter extends BasePresenter
+{
 
     public const COMP_EDIT_FORM = 'editComponent';
     public const COMP_CREATE_FORM = 'createComponent';
@@ -24,73 +25,84 @@ abstract class EntityPresenter extends BasePresenter {
      * @persistent
      */
     public ?int $id = null;
-    private ?AbstractModel $model;
+    private ?Model $model;
 
-    public function authorizedCreate(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
+    public function authorizedCreate(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest())
+        );
     }
 
-    public function authorizedEdit(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
-    }
+    abstract protected function getModelResource(): string;
 
-    public function authorizedList(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
-    }
-
-    /**
-     * @param int $id
-     */
-    public function authorizedDelete($id): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
+    public function authorizedEdit(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest())
+        );
     }
 
     /**
-     * @param int $id
-     * @throws BadTypeException
-     */
-    public function renderEdit($id): void {
-        /** @var FormControl $component */
-        $component = $this->getComponent(self::COMP_EDIT_FORM);
-        $form = $component->getForm();
-        $this->setDefaults($this->getModel(), $form);
-    }
-
-    /**
-     * @throws BadTypeException
-     */
-    public function renderCreate(): void {
-        /** @var FormControl $component */
-        $component = $this->getComponent(self::COMP_CREATE_FORM);
-        $form = $component->getForm();
-        $this->setDefaults($this->getModel(), $form);
-    }
-
-    /**
-     * @return AbstractModel|null
      * @deprecated
      */
-    final public function getModel(): ?AbstractModel {
+    final public function getModel(): ?Model
+    {
         if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
     }
 
-    protected function setDefaults(?AbstractModel $model, Form $form): void {
+    abstract protected function loadModel(int $id): ?Model;
+
+    public function authorizedList(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest())
+        );
+    }
+
+    public function authorizedDelete(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest())
+        );
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    final public function renderEdit(): void
+    {
+        /** @var FormControl $component */
+        $component = $this->getComponent(self::COMP_EDIT_FORM);
+        $form = $component->getForm();
+        $this->setDefaults($this->getModel(), $form);
+    }
+
+    protected function setDefaults(?Model $model, Form $form): void
+    {
         if (!$model) {
             return;
         }
         $form->setDefaults($model->toArray());
     }
 
-    abstract protected function loadModel(int $id): ?AbstractModel;
+    /**
+     * @throws BadTypeException
+     */
+    final public function renderCreate(): void
+    {
+        /** @var FormControl $component */
+        $component = $this->getComponent(self::COMP_CREATE_FORM);
+        $form = $component->getForm();
+        $this->setDefaults($this->getModel(), $form);
+    }
 
     abstract protected function createComponentEditComponent(): FormControl;
 
     abstract protected function createComponentCreateComponent(): FormControl;
 
     abstract protected function createComponentGrid(): BaseGrid;
-
-    abstract protected function getModelResource(): string;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooserComponent;
@@ -7,61 +9,66 @@ use FKSDB\Models\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Class SeriesPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-trait SeriesPresenterTrait {
-
+trait SeriesPresenterTrait
+{
     use YearPresenterTrait;
 
     /**
      * @persistent
      */
     public ?int $series = null;
-    private SeriesCalculator $seriesCalculator;
-
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
-        $this->seriesCalculator = $seriesCalculator;
-    }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function seriesTraitStartup(): void {
+    protected function seriesTraitStartup(): void
+    {
         $this->yearTraitStartup();
-        if (!isset($this->series)) {
+        if (!isset($this->series) || !$this->isValidSeries($this->series)) {
             $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
         }
     }
 
+    private function isValidSeries(?int $series): bool
+    {
+        return in_array($series, $this->getAllowedSeries());
+    }
+
+    private function getAllowedSeries(): array
+    {
+        $lastSeries = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
+        $range = range(1, $lastSeries);
+
+        // If the year has holiday series, remove posibility to upload 7th series
+        // (due to Astrid's structure)
+        if (SeriesCalculator::hasHolidaySeries($this->getSelectedContestYear())) {
+            if (($key = array_search('7', $range)) !== false) {
+                unset($range[$key]);
+            }
+        }
+        return $range;
+    }
+
     /**
-     * @return int
      * @throws ForbiddenRequestException
      */
-    private function selectSeries(): int {
-        $candidate = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
+    private function selectSeries(): int
+    {
+        $candidate = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
         if (!$this->isValidSeries($candidate)) {
             throw new ForbiddenRequestException();
         }
         return $candidate;
     }
 
-    private function isValidSeries(?int $series): bool {
-        return in_array($series, $this->getAllowedSeries());
+    protected function createComponentSeriesChooser(): SeriesChooserComponent
+    {
+        return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
 
-    private function getAllowedSeries(): array {
-        return $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
-    }
-
-    public function getSelectedSeries(): ?int {
+    public function getSelectedSeries(): ?int
+    {
         return $this->series;
-    }
-
-    protected function createComponentSeriesChooser(): SeriesChooserComponent {
-        return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
 }

@@ -1,21 +1,24 @@
-import { fyziklaniDownloader, State as DownloaderState } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/reducer';
-import { fyziklaniOptions, State as OptionsState } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/reducer';
-import { fyziklaniTimer, State as TimerState } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/reducer';
-import { fetchApi, FetchApiState } from 'FKSDB/Models/FrontEnd/Fetch/reducer';
+import {
+    fyziklaniDownloader,
+    State as DownloaderState,
+} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/reducer';
+import {
+    fyziklaniTimer,
+    State as TimerState,
+} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Timer/reducer';
+import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import { fyziklaniData, State as DataState } from './data';
 
-export interface FyziklaniResultsCoreStore {
+export interface FyziklaniCoreStore {
     data: DataState;
     timer: TimerState;
-    options: OptionsState;
     downloader: DownloaderState;
-    fetchApi: FetchApiState;
+    fetch: FetchStateMap;
 }
 
 export const coreApp = {
     data: fyziklaniData,
     downloader: fyziklaniDownloader,
-    fetchApi,
-    options: fyziklaniOptions,
+    fetch: fetchReducer,
     timer: fyziklaniTimer,
 };

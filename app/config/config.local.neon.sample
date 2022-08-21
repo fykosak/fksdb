@@ -9,7 +9,6 @@ parameters:
     domain:
         cz: fykos.local
         org: fykos.localen
-        tld: local
 
     email:
         # On debug environment do no send any real e-mails.
@@ -17,13 +16,6 @@ parameters:
 
     astrid:
         host: astrid.fykos.cz
-        user:
-        password:
-    facebook:
-        appId:
-        secret:
-    ro-database:
-        dsn: 'mysql:host=127.0.0.1;dbname=newfks'
         user:
         password:
     github:
@@ -62,9 +54,14 @@ parameters:
 session:
     cookie_secure: true
 database:
-    dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-    user:
-    password:
+    default:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
+        user:
+        password:
+    ro:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
+        user:
+        password:
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
 #fksrouter:

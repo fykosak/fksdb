@@ -10,7 +10,7 @@ interface OwnProps {
 
 export const SCALE_LINEAR = 'linear';
 export const SCALE_LOG = 'log';
-export default abstract class GeoChart extends React.Component<OwnProps, { active?: string }> {
+export default class GeoChart extends React.Component<OwnProps, { active?: string }> {
 
     private countryData = [];
 
@@ -57,7 +57,7 @@ export default abstract class GeoChart extends React.Component<OwnProps, { activ
             countryNodes.push(<path
                 key={key}
                 fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}
-                stroke={'#000'}
+                stroke="#000"
                 strokeWidth={0.5}
                 onMouseOver={() => {
                     this.setState({active: country.id});
@@ -69,7 +69,7 @@ export default abstract class GeoChart extends React.Component<OwnProps, { activ
             ><title>{country.properties.name}: {count}</title>
             </path>);
         });
-        return <svg viewBox={'-500 -300 1000 600'} className="chart geo-chart">
+        return <svg viewBox="-500 -300 1000 600" className="chart geo-chart">
             <g>
                 {countryNodes}
             </g>

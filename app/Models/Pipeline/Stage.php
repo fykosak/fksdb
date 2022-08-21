@@ -1,39 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\MemoryLogger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class Stage {
-
-    private Pipeline $pipeline;
-
+abstract class Stage
+{
     /**
-     * @param mixed $data data to process
+     * @param MemoryLogger $logger
+     * @param mixed $data
+     * @return mixed
      */
-    abstract public function setInput($data): void;
-
-    abstract public function process(): void;
-
-    /**
-     * @return mixed output of the stage
-     */
-    abstract public function getOutput();
-
-    final protected function getPipeline(): Pipeline {
-        return $this->pipeline;
-    }
-
-    final public function setPipeline(Pipeline $pipeline): void {
-        $this->pipeline = $pipeline;
-    }
-
-    final protected function log(Message $message): void {
-        $this->getPipeline()->log($message);
-    }
+    abstract public function __invoke(MemoryLogger $logger, $data);
 }

@@ -1,0 +1,67 @@
+@import "./../../../../../css/colors";
+
+.fyziklani-statistics-table {
+  tbody {
+    counter-reset: results-table;
+
+    tr td {
+      &[data-points="5"] {
+        background-color: var(--color-fof-points-5);
+      }
+
+      &[data-points="3"] {
+        background-color: var(--color-fof-points-3);
+      }
+
+      &[data-points="2"] {
+        background-color: var(--color-fof-points-2);
+      }
+
+      &[data-points="1"] {
+        background-color: var(--color-fof-points-1);
+      }
+
+      text-align: center;
+      border: solid 1px #ccc;
+      font-weight: bold;
+
+      &:first-child::before {
+        counter-increment: results-table;
+        content: counter(results-table) ".";
+      }
+    }
+  }
+
+  thead tr th {
+    &[data-task-label^="A"] {
+      background-color: lighten($fOFMainColor, 30%);
+    }
+
+    &[data-task-label^="B"] {
+      background-color: lighten($fOFMainColor, 20%);
+    }
+
+    &[data-task-label^="C"] {
+      background-color: lighten($fOFMainColor, 10%);
+    }
+
+    &[data-task-label^="D"] {
+      background-color: $fOFMainColor;
+    }
+
+    &[data-task-label^="E"] {
+      background-color: darken($fOFMainColor, 10%);
+      color: white;
+    }
+
+    &[data-task-label^="F"] {
+      background-color: darken($fOFMainColor, 20%);
+      color: white;
+    }
+
+    &[data-task-label^="G"] {
+      background-color: darken($fOFMainColor, 30%);
+      color: white;
+    }
+  }
+}

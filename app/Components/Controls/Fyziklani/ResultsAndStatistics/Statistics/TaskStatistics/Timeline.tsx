@@ -4,13 +4,12 @@ import {
     scaleTime,
 } from 'd3-scale';
 import { select } from 'd3-selection';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
+import './timeline.scss';
 
 interface StateProps {
     submits: Submits;
@@ -27,7 +26,7 @@ interface OwnProps {
     taskId: number;
 }
 
-class Timeline extends React.Component<StateProps & OwnProps, {}> {
+class Timeline extends React.Component<StateProps & OwnProps> {
 
     private xAxis: SVGGElement;
 
@@ -79,7 +78,6 @@ class Timeline extends React.Component<StateProps & OwnProps, {}> {
         }).map((submit, index: number) => {
 
             const submitted = new Date(submit.created);
-            const color = getColorByPoints(submit.points);
 
             return (
                 <g style={{opacity: 1}} key={index}>
@@ -87,9 +85,7 @@ class Timeline extends React.Component<StateProps & OwnProps, {}> {
                         cx={this.xScale(submitted)}
                         cy={50}
                         r={5}
-                        fill={color}
-                        stroke={'white'}
-                        strokeWidth={1}
+                        data-points={submit.points}
                     ><title>
                         {submit.currentTeam.name + '-' + submit.created.toString()}
                     </title>
@@ -99,8 +95,8 @@ class Timeline extends React.Component<StateProps & OwnProps, {}> {
         });
         return (
             <div className="col-lg-12">
-                <svg viewBox={'0 0 600 100'} className="chart time-line">
-                    <g transform={'translate(0,70)'} className="x axis"
+                <svg viewBox="0 0 600 100" className="chart chart-fyziklani-task-timeline">
+                    <g transform="translate(0,70)" className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}
                 </svg>
@@ -114,12 +110,12 @@ class Timeline extends React.Component<StateProps & OwnProps, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
-        fromDate: state.statistics.fromDate,
+        fromDate: state.timer.gameStart,
         submits: state.data.submits,
         teams: state.data.teams,
-        toDate: state.statistics.toDate,
+        toDate: state.timer.gameEnd,
     };
 };
 

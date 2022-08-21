@@ -1,155 +1,168 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsComponent;
+use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Class AbstractApplicationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-abstract class AbstractApplicationPresenter extends BasePresenter {
-
+abstract class AbstractApplicationPresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
-    protected ApplicationHandlerFactory $applicationHandlerFactory;
-    protected ServiceEventParticipant $serviceEventParticipant;
+    protected EventParticipantService $eventParticipantService;
 
-    final public function injectQuarterly(ApplicationHandlerFactory $applicationHandlerFactory, ServiceEventParticipant $serviceEventParticipant): void {
-        $this->applicationHandlerFactory = $applicationHandlerFactory;
-        $this->serviceEventParticipant = $serviceEventParticipant;
+    final public function injectServiceEventParticipant(EventParticipantService $eventParticipantService): void
+    {
+        $this->eventParticipantService = $eventParticipantService;
+    }
+
+    final public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
 
     /**
-     * @throws ForbiddenRequestException
-     */
-    final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-users'));
-    }
-
-    /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws \Throwable
      */
-    final public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
+    final public function titleDetail(): PageTitle
+    {
+        $entity = $this->getEntity();
+        if ($entity instanceof TeamModel2) {
+            return new PageTitle(
+                null,
+                sprintf(_('Application detail "%s"'), $entity->name),
+                'fa fa-user'
+            );
+        }
+        return new PageTitle(
+            null,
+            sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()),
+            'fa fa-user'
+        );
+    }
+
+    final public function titleTransitions(): PageTitle
+    {
+        return new PageTitle(null, _('Group transitions'), 'fa fa-exchange-alt');
     }
 
     /**
-     * @return void
-     * @throws ForbiddenRequestException
-     */
-    final public function titleTransitions(): void {
-        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
-    public function renderDetail(): void {
+    public function renderDetail(): void
+    {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void
+    {
         $this->template->event = $this->getEvent();
     }
 
-    protected function createComponentPersonScheduleGrid(): PersonGrid {
+    /**
+     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isAllowed($resource, $privilege);
+    }
+
+    protected function createComponentPersonScheduleGrid(): PersonGrid
+    {
         return new PersonGrid($this->getContext());
     }
 
     /**
-     * @return ApplicationComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    protected function createComponentApplicationComponent(): ApplicationComponent {
+    protected function createComponentApplicationComponent(): ApplicationComponent
+    {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $source->getHolder($this->getEntity()->getPrimary()));
+        return new ApplicationComponent(
+            $this->getContext(),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $source->getHolder($this->getEntity())
+        );
     }
 
     /**
-     * @return TransitionButtonsComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
+    protected function createComponentApplicationTransitions(): BaseComponent
+    {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $source->getHolder($this->getEntity()->getPrimary()));
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $source->getHolder($this->getEntity())
+        );
     }
 
     /**
-     * @return MassTransitionsComponent
      * @throws EventNotFoundException
      */
-    final protected function createComponentMassTransitions(): MassTransitionsComponent {
+    final protected function createComponentMassTransitions(): MassTransitionsComponent
+    {
         return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @return AbstractApplicationsGrid
-     * @throws AbortException
-     *
-     */
     abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 }

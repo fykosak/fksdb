@@ -1,27 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\ModelsMulti\Events;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use Nette\InvalidStateException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelEventParticipant getMainModel()
+ * @property-read  EventParticipantModel $mainModel
+ * @deprecated
  */
-class ModelMDsefParticipant extends AbstractModelMulti {
+class ModelMDsefParticipant extends ModelMulti
+{
 
-    public function __toString(): string {
-        if (!$this->getMainModel()->getPerson()) {
-            throw new InvalidStateException("Missing person in '" . $this->getMainModel() . "'.");
-        }
-        return $this->getMainModel()->getPerson()->getFullName();
+    public function __toString(): string
+    {
+        return $this->mainModel->person->getFullName();
     }
 
-    public function getEvent(): ModelEvent {
-        return $this->getMainModel()->getEvent();
+    public function getEvent(): EventModel
+    {
+        return $this->mainModel->event;
+    }
+
+    public function getPerson(): PersonModel
+    {
+        return $this->mainModel->person;
     }
 }

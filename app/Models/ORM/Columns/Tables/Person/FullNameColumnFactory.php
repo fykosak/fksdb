@@ -1,36 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class FullNameRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class FullNameColumnFactory extends ColumnFactory {
+class FullNameColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws AbstractColumnException
      */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         throw new AbstractColumnException();
     }
 
     /**
-     * @param AbstractModel|ModelPerson $model
-     * @return Html
+     * @param PersonModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         return (new StringPrinter())($model->getFullName());
     }
-
 }

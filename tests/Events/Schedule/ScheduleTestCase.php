@@ -1,30 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Utils\DateTime;
 
-abstract class ScheduleTestCase extends EventTestCase {
-
-    /** @var int */
-    protected $itemId;
+abstract class ScheduleTestCase extends EventTestCase
+{
+    protected ScheduleItemModel $item;
     protected IPresenter $fixture;
-    protected int $groupId;
+    protected ScheduleGroupModel $group;
     protected array $persons = [];
-    protected int $eventId;
+    protected EventModel $event;
 
-    protected function getEventId(): int {
-        return $this->eventId;
+    protected function getEvent(): EventModel
+    {
+        return $this->event;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->eventId = $this->createEvent([
+        $this->event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 24,
             'parameters' => <<<EOT
@@ -32,24 +42,24 @@ EOT
             ,
         ]);
 
-        $this->groupId = $this->insert('schedule_group', [
-            'event_id' => $this->eventId,
+        $this->group = $this->getContainer()->getByType(ScheduleGroupService::class)->storeModel([
+            'event_id' => $this->event->event_id,
             'schedule_group_type' => 'accommodation',
             'start' => new \DateTime(),
             'end' => new DateTime(),
         ]);
-        $this->itemId = $this->insert('schedule_item', [
+        $this->item = $this->getContainer()->getByType(ScheduleItemService::class)->storeModel([
             'name_cs' => 'Hotel Test',
             'name_en' => 'test hotel',
-            'schedule_group_id' => $this->groupId,
+            'schedule_group_id' => $this->group->schedule_group_id,
             'price_czk' => 20,
             'price_eur' => 30,
             'capacity' => $this->getAccommodationCapacity(),
         ]);
 
-        $this->insert('e_dsef_group', [
+        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
             'e_dsef_group_id' => 2,
-            'event_id' => $this->eventId,
+            'event_id' => $this->event->event_id,
             'name' => 'Alpha',
             'capacity' => 4,
         ]);
@@ -57,38 +67,45 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->persons[] = $this->createPerson('Paní', 'Bílá',
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá',
             [
                 'email' => 'bila-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
-        $this->insert('event_participant', [
+            ]
+        );
+        $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
-            'event_id' => $this->eventId,
+            'event_id' => $this->event->event_id,
             'status' => 'applied',
         ]);
-        $this->insert('person_schedule', [
+        $this->getContainer()->getByType(PersonScheduleService::class)->storeModel([
             'person_id' => end($this->persons),
-            'schedule_item_id' => $this->itemId,
+            'schedule_item_id' => $this->item->schedule_item_id,
         ]);
 
-        $this->persons[] = $this->createPerson('Paní', 'Bílá II.',
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá II.',
             [
                 'email' => 'bila2-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
-        $this->insert('event_participant', [
+            ]
+        );
+        $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
-            'event_id' => $this->eventId,
+            'event_id' => $this->event->event_id,
             'status' => 'applied',
         ]);
-        $this->insert('person_schedule', [
+        $this->getContainer()->getByType(PersonScheduleService::class)->storeModel([
             'person_id' => end($this->persons),
-            'schedule_item_id' => $this->itemId,
+            'schedule_item_id' => $this->item->schedule_item_id,
         ]);
     }
 
-    protected function createAccommodationRequest(): Request {
+    protected function createAccommodationRequest(): Request
+    {
         return $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
@@ -112,7 +129,9 @@ EOT
                         ],
                     ],
                     'person_schedule' => [
-                        'accommodation' => json_encode([$this->groupId => $this->itemId]),
+                        'accommodation' => json_encode(
+                            [$this->group->schedule_group_id => $this->item->schedule_item_id]
+                        ),
                     ],
                 ],
                 'e_dsef_group_id' => (string)2,
@@ -126,9 +145,4 @@ EOT
     }
 
     abstract public function getAccommodationCapacity(): int;
-
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']);
-        parent::tearDown();
-    }
 }

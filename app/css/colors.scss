@@ -1,0 +1,50 @@
+/* general setting */
+@import "/node_modules/bootstrap/scss/mixins/buttons";
+@import "/node_modules/bootstrap/scss/functions";
+@import "./mixins/navigation-item";
+
+$fOFMainColor: #e6060d;
+$fOLMainColor: rgb(0, 174, 107);
+$fykosMainColor: #1175da;
+$vyfukMainColor: #ff4800;
+
+$fyziklaniPoints5: #2d7dd2;
+$fyziklaniPoints3: #98cc04;
+$fyziklaniPoints2: #eeb902;
+$fyziklaniPoints1: #f45d01;
+
+@mixin color-variant($color,$index) {
+  .border-#{$index} {
+    border-color: $color;
+  }
+  .btn-#{$index} {
+    @include button-outline-variant($color);
+  }
+  .bg-#{$index} {
+    color: color-contrast($color);
+    background-color: $color;
+  }
+}
+
+@mixin page-theme($color) {
+  .navigation-item {
+    @include navigation-item($color, white);
+  }
+  .bd-callout {
+    border-left-color: $color;
+
+    h4 {
+      color: $color;
+    }
+  }
+  hr {
+    border-color: $color;
+    background-color: $color;
+  }
+  footer {
+    a {
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
+}

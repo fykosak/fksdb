@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\Utils\Logging\Logger;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\DataTesting\TestLog;
+use Fykosak\Utils\Logging\Message;
 
-/**
- * Class GenderFromBornNumberTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class GenderFromBornNumberTest extends PersonTest {
-
-    public function __construct() {
+class GenderFromBornNumberTest extends PersonTest
+{
+    public function __construct()
+    {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, PersonModel $person): void
+    {
         $info = $person->getInfo();
 
         if (!$info) {
@@ -25,8 +26,8 @@ class GenderFromBornNumberTest extends PersonTest {
             return;
         }
 
-        if (!$person->gender) {
-            $logger->log(new TestLog($this->title, _('Gender is not set'), TestLog::LVL_WARNING));
+        if (!$person->gender->value) {
+            $logger->log(new TestLog($this->title, _('Gender is not set'), Message::LVL_WARNING));
             return;
         }
         if (!$info->born_id) {
@@ -34,10 +35,10 @@ class GenderFromBornNumberTest extends PersonTest {
             return;
         }
 
-        if (BornNumber::getGender($info->born_id) != $person->gender) {
-            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLog::LVL_DANGER));
+        if (BornNumber::getGender($info->born_id)->value != $person->gender->value) {
+            $logger->log(new TestLog($this->title, 'Gender not match born number', Message::LVL_ERROR));
         } else {
-            $logger->log(new TestLog($this->title, 'Gender match born number', TestLog::LVL_SUCCESS));
+            $logger->log(new TestLog($this->title, 'Gender match born number', Message::LVL_SUCCESS));
         }
     }
 }

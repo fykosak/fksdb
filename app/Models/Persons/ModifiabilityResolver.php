@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-interface ModifiabilityResolver {
+interface ModifiabilityResolver
+{
 
-    public function isModifiable(ModelPerson $person): bool;
+    public function isModifiable(?PersonModel $person): bool;
 
-    public function getResolutionMode(ModelPerson $person): string;
+    public function getResolutionMode(?PersonModel $person): string;
 }

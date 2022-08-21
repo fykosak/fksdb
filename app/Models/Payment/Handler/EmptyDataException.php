@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\Handler;
 
-/**
- * Class EmptyDataException
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class EmptyDataException extends \Exception {
+use Nette\InvalidStateException;
 
+class EmptyDataException extends InvalidStateException
+{
 }

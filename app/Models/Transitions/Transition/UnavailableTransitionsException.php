@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Transition;
-/**
- * Class UnavailableTransitionsException
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class UnavailableTransitionsException extends \Exception {
+
+use Nette\InvalidStateException;
+
+class UnavailableTransitionsException extends InvalidStateException
+{
 }

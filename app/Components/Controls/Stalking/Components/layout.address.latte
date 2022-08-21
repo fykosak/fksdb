@@ -1,11 +1,11 @@
 {layout '../@layout.latte'}
 {block content}
-    {varType Nette\Database\Table\GroupedSelection $postContacts}
+    {varType Fykosak\NetteORM\TypedGroupedSelection|\Fykosak\NetteORM\Model[] $postContacts}
+    {varType int $personId}
     {if count($postContacts)}
-        {varType Nette\Database\Table\ActiveRow $row}
-        {foreach $postContacts as $row}
-            {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
-            {var $address = $postContact->getAddress()}
+        {foreach $postContacts as $postContact}
+            {varType FKSDB\Models\ORM\Models\PostContactModel $postContact}
+            {var $address = $postContact->address}
             <h3 class="card-header">
                 {if $postContact->type == 'P'}
                     {_'Permanent address'}
@@ -14,31 +14,33 @@
                 {/if}
             </h3>
             <div class="card-body">
-                {if !is_null($address->first_row)}
+                {if isset($address->first_row)}
                     <div>{$address->first_row}</div>
                 {/if}
-                {if !is_null($address->second_row)}
+                {if isset($address->second_row)}
                     <div>{$address->second_row}</div>
                 {/if}
-
-                {if !is_null($address->target)}
+                {if isset($address->target)}
                     <div>{$address->target}</div>
                 {/if}
-
-                {if !is_null($address->city)}
+                {if isset($address->city)}
                     <div>{$address->city}</div>
                 {/if}
-
-                {if !is_null($address->postal_code)}
+                {if isset($address->postal_code)}
                     <div>{$address->postal_code}</div>
                 {/if}
-                {if !is_null($address->region_id)}
-                    <div>{$address->getRegion()->name}</div>
+                {if isset($address->region_id)}
+                    <div>{$address->region->name}</div>
                 {/if}
             </div>
 
         {/foreach}
+        <hr/>
+        <div class="card-body">
+            <a class="card-link"
+               href="{plink :Org:Envelope:output personIds=>[$personId]}">{_'Create envelope'}</a>
+        </div>
     {else}
-        {control noRecords}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
     {/if}
 {/block}

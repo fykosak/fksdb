@@ -1,39 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
 
 $container = require '../../Bootstrap.php';
 
-class PrimaryLimit extends ResourceAvailabilityTestCase {
+class PrimaryLimit extends ResourceAvailabilityTestCase
+{
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
+            'eventId' => (string)$this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
         Assert::true((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
@@ -70,10 +76,18 @@ class PrimaryLimit extends ResourceAvailabilityTestCase {
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        Assert::equal(2, (int)$this->explorer->fetchField('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId));
+        Assert::equal(
+            2,
+            (int)$this->getContainer()
+                ->getByType(EventParticipantService::class)
+                ->getTable()
+                ->where(['event_id' => $this->event->event_id])
+                ->sum('accomodation')
+        );
     }
 
-    protected function getCapacity(): int {
+    protected function getCapacity(): int
+    {
         return 2;
     }
 }

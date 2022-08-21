@@ -1,87 +1,80 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Model;
 
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\DevNullLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\EventService;
+use Fykosak\Utils\Logging\DevNullLogger;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 
-class ApplicationHandlerTest extends EventTestCase {
-
-    use MockApplicationTrait;
+class ApplicationHandlerTest extends EventTestCase
+{
 
     private ApplicationHandler $fixture;
-
-    private ServiceFyziklaniTeam $serviceTeam;
-
+    private TeamService $serviceTeam;
     private Holder $holder;
 
     /**
      * ApplicationHandlerTest constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
-        $this->setContainer($container);
-        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceTeam = $this->getContainer()->getByType(TeamService::class);
     }
 
-    protected function getEventId(): int {
+    protected function getEvent(): EventModel
+    {
         throw new BadRequestException();
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
+        $event = $this->getContainer()->getByType(EventService::class)->storeModel([
+            'event_type_id' => 1,
+            'year' => 1,
+            'event_year' => 1,
+            'begin' => '2001-01-02',
+            'end' => '2001-01-02',
+            'name' => 'Testovací Fyziklání',
+        ]);
 
-        $this->explorer->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
-            . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
-
-        /** @var ServiceEvent $serviceEvent */
-        $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
-
-        $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
-        /** @var ModelEvent $event */
-        $event = $serviceEvent->findByPrimary(1);
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
         $this->holder = $factory->getDummyHolder($event);
-        $this->fixture = $handlerFactory->create($event, new DevNullLogger());
+        $this->fixture = new ApplicationHandler($event, new DevNullLogger(), $this->getContainer());
 
         $this->mockApplication();
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
-        parent::tearDown();
-    }
-
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws \FKSDB\Models\Events\Model\ApplicationHandlerException
      */
-    public function testNewApplication(): void {
+    public function testNewApplication(): void
+    {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
-        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), 1, 1);
+        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
         $id3 = $this->createPerson('Kristína', 'Nešporová', ['email' => 'kiki@fykos.cz']);
-        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), 1, 1);
+        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 
@@ -91,7 +84,7 @@ class ApplicationHandlerTest extends EventTestCase {
                     'name' => $teamName,
                     'phone' => '+420987654321',
                     'force_a' => false,
-                    'teacher_id' => (string)$id1,
+                    'teacher_id' => (string)$id1->person_id,
                     'teacher_id_1' =>
                         [
                             '_c_compact' => 'Karel Kolář',
@@ -110,7 +103,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p1' =>
                 [
-                    'person_id' => (string)$id2,
+                    'person_id' => (string)$id2->person_id,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Michal Koutný',
@@ -126,7 +119,7 @@ class ApplicationHandlerTest extends EventTestCase {
                                 ],
                             'person_history' =>
                                 [
-                                    'school_id' => 1,
+                                    'school_id' => $this->genericSchool->school_id,
                                     'study_year' => 2,
                                 ],
                         ],
@@ -134,7 +127,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p2' =>
                 [
-                    'person_id' => (string)$id3,
+                    'person_id' => (string)$id3->person_id,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Kristína Nešporová',
@@ -149,7 +142,7 @@ class ApplicationHandlerTest extends EventTestCase {
                                 ],
                             'person_history' =>
                                 [
-                                    'school_id' => 1,
+                                    'school_id' => $this->genericSchool->school_id,
                                     'study_year' => 3,
                                 ],
                         ],
@@ -203,16 +196,20 @@ class ApplicationHandlerTest extends EventTestCase {
             'privacy' => true,
         ];
         $data = ArrayHash::from($data);
-        $this->fixture->storeAndExecuteValues($this->holder, $data);
+        Assert::exception(function () use ($data, $teamName) {
+            $this->fixture->storeAndExecuteValues($this->holder, $data);
+            /** @var TeamModel $team */
+            $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
+            Assert::notEqual(false, $team);
 
-        /** @var ModelFyziklaniTeam $team */
-        $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
-        Assert::notEqual(false, $team);
+            Assert::equal($teamName, $team->name);
 
-        Assert::equal($teamName, $team->name);
-
-        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
-        Assert::equal(2, $count);
+            $count = $this->explorer->fetchField(
+                'SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?',
+                $this->holder->primaryHolder->getModel2()->getPrimary()
+            );
+            Assert::equal(2, $count);
+        }, ApplicationHandlerException::class);
     }
 }
 

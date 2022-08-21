@@ -1,40 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Event\ParticipantAcquaintance;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-/**
- * Class ParticipantAcquaintanceChartControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ParticipantAcquaintanceChart extends ReactComponent implements Chart {
+class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
+{
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(Container $context, ModelEvent $event) {
+    public function __construct(Container $context, EventModel $event)
+    {
         parent::__construct($context, 'chart.events.participants.acquaintance');
         $this->event = $event;
     }
 
-    public function getData(): array {
+    public function getData(): array
+    {
         $data = [];
-        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
-
+        /** @var EventParticipantModel $participant */
+        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $participant) {
             $participants = [];
-            foreach ($participant->getPerson()->getEventParticipants()->where('status', ['participated']) as $item) {
-                $personParticipation = ModelEventParticipant::createFromActiveRow($item);
-                $participants[] = $personParticipation->getEvent()->event_id;
+            /** @var EventParticipantModel $personParticipation */
+            $query = $participant->person->getEventParticipants()->where('status', ['participated']);
+            foreach ($query as $personParticipation) {
+                $participants[] = $personParticipation->event->event_id;
             }
             $datum = [
                 'person' => [
-                    'name' => $participant->getPerson()->getFullName(),
-                    'gender' => $participant->getPerson()->gender,
+                    'name' => $participant->person->getFullName(),
+                    'gender' => $participant->person->gender->value,
                 ],
                 'participation' => $participants,
             ];
@@ -43,15 +44,13 @@ class ParticipantAcquaintanceChart extends ReactComponent implements Chart {
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Participant acquaintance');
     }
 
-    public function getControl(): self {
-        return $this;
-    }
-
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

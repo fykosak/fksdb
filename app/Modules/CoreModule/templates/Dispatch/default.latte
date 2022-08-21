@@ -1,12 +1,17 @@
-{block #content}
+{block content}
+    {varType array $contestants}
+    {varType array $contestsProperty}
+    {varType array $orgs}
+    <h2>{_'Fast links'}</h2>
+    {control navigationChooser:board 'Core:Dispatch:default', true}
     <h2>{_'Contestant'}</h2>
     <p>
-        <a href="{plink :Public:Register:contest}" class="btn btn-primary">{_'Register'}</a>
+        <a href="{plink :Public:Register:contest}" class="btn btn-outline-primary">{_'Register'}</a>
     </p>
     <nav class="d-md-flex justify-content-md-around flex-wrap">
-        {foreach $contestants as $contestId=> $contestant}
+        {foreach $contestants as $contestId => $contestant}
             <a href="{$contestant['link']}"
-                    {var $className = 'navigation-item-'.$contestsProperty[$contestId]['symbol'].' mb-3 d-block navigation-item p-2'}
+                    {var $className = 'navigation-item mb-3 d-block p-2'}
                class="{$className}">
                 <div class="icon d-sm-inline-block d-md-block mx-2">
                     <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
@@ -16,7 +21,7 @@
             </a>
         {/foreach}
         <a href="{plink :Core:MyApplications:default}"
-                {var $className = 'navigation-item-fykos mb-3 d-block navigation-item p-2'}
+                {var $className = 'navigation-item mb-3 d-block navigation-item p-2'}
                              class="{$className}">
             <div class="icon d-sm-inline-block d-md-block mx-2">
                 <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
@@ -28,9 +33,9 @@
     {if count($orgs)}
         <h2>{_'Organiser'}</h2>
         <nav class="d-md-flex justify-content-md-around flex-wrap">
-            {foreach $orgs as $contestId=> $org}
+            {foreach $orgs as $contestId => $org}
                 <a href="{$org['link']}"
-                        {var $className = 'navigation-item-'.$contestsProperty[$contestId]['symbol'].' mb-3 d-block navigation-item p-2'}
+                        {var $className = 'mb-3 d-block navigation-item p-2'}
                    class="{$className}">
                     <div class="icon d-sm-inline-block d-md-block mx-2">
                         <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
@@ -40,17 +45,15 @@
                 </a>
             {/foreach}
             <a href="{plink :Event:Dispatch:default}"
-                    {var $className = 'navigation-item-fykos mb-3 d-block navigation-item p-2'}
+                    {var $className = 'navigation-item mb-3 d-block navigation-item p-2'}
                class="{$className}">
                 <div class="icon d-sm-inline-block d-md-block mx-2">
-                    <img n:attr="src => '/images/contests/event.gif'" alt="" class="w-100"/>
+                    <img src="/images/contests/event.gif" alt="" class="w-100"/>
                 </div>
                 <span class="text d-xs-inline-block d-md-block">{_'Events'}</span>
             </a>
         </nav>
         <hr/>
         {*control navigationChooser:board 'Core.Dispatch.default' *}{*for relevant activites*}
-
     {/if}
-
 {/block}

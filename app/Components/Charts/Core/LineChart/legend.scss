@@ -1,0 +1,16 @@
+.chart-legend.chart-legend-line-chart {
+  .chart-legend-item {
+    margin-bottom: 1rem;
+    align-items: center;
+
+    .icon.icon-line {
+      border-width: 1rem;
+      border-radius: 1rem;
+      height: 2px;
+    }
+
+    .legend-item-name {
+      font-weight: bold;
+    }
+  }
+}

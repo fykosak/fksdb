@@ -1,32 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelGrant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\GrantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 
-/**
- * Class Role
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class RoleComponent extends BaseStalkingComponent {
-    public function render(ModelPerson $person, int $userPermissions): void {
+class RoleComponent extends BaseStalkingComponent
+{
+
+    final public function render(PersonModel $person, int $userPermissions): void
+    {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
-        $template = $this->template;
         $login = $person->getLogin();
         $roles = [];
         if ($login) {
-            /** @var ModelGrant $grant */
+            /** @var GrantModel $grant */
             foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                $roles[] = new Grant($grant->role->name, $grant->contest);
             }
         }
         $this->template->roles = $roles;
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
-        $template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
     }
 }

@@ -1,0 +1,10 @@
+services:
+    fyziklaniPayment.priceCalculator:
+        factory: FKSDB\Models\Payment\PriceCalculator\PriceCalculator
+        setup:
+            - addPreprocess(FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice())
+
+includes:
+    - payment13.neon
+    - payment14.neon
+    - payment16.neon

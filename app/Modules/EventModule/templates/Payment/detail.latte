@@ -1,30 +1,36 @@
 {block content}
+    {varType FKSDB\Models\ORM\Models\PaymentModel $model}
+    {varType bool $isOrg}
+    {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
     <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
-    <div class="d-flex justify-content-around mt-3 mb-3 align-items-center state-timeline">
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING,\FKSDB\Models\ORM\Models\ModelPayment::STATE_NEW])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
-             style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
+    {var $progress = 0}
+    {switch $model->state->value}
+        {case FKSDB\Models\ORM\Models\PaymentState::NEW}
+        {php $progress = 1}
+        {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
+        {php $progress = 2}
+        {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+        {php $progress = 3}
+    {/switch}
+    <div class="state-line mt-3 mb-3">
+        <div class="{($progress >= 1?'done':'ongoing') . ' circle'}">
             <span>{_'Select items'}</span>
         </div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary').' line col'}"></div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
-             style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
-            <span>{_'Confirm payment'}</span>
+        <div class="{($progress >= 2?'done':'ongoing') . ' line'}"></div>
+        <div class="{($progress >= 2?'done':'ongoing') . ' circle'}">
+            <span>{_'Generate payment'}</span>
         </div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary').' line col'}"></div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
-             style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
-            <span>{_'Payment recieved'}</span>
+        <div class="{($progress >= 3?'done':'ongoing') . ' line'}"></div>
+        <div class="{($progress >= 3?'done':'ongoing') . ' circle'}">
+            <span>{_'Payment received'}</span>
         </div>
     </div>
     <hr/>
     {if $model->hasGeneratedSymbols()}
         <h2>{_'Payment info'}</h2>
-        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price'] as $field}
+        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price','currency'] as $field}
             {if $model->{$field}}
-                {control valuePrinter:row 'payment.'.$field, $model}
+                {control valuePrinter:row 'payment.' . $field, $model}
             {/if}
         {/foreach}
         <hr/>
@@ -37,7 +43,7 @@
         {else}
             {control valuePrinter:row 'person.full_name', $model}
         {/if}
-        {control valuePrinter:row 'person_info.email', $model->getPerson()->getInfo()}
+        {control valuePrinter:row 'person_info.email', $model->person->getInfo()}
     </div>
     <hr/>
     <h2>{_'Items'}</h2>
@@ -57,14 +63,14 @@
         {/foreach}
         {if !is_null($model->price)}
             <tr class="table-primary">
-                <td>{_'Sum'}</td>
+                <td>{_'Sum in '}{$model->getPrice()->getCurrency()->getLabel()}</td>
                 <td>{$model->getPrice()->__toString()}</td>
             </tr>
         {/if}
         </tbody>
 
     </table>
-    <a class="btn-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+    <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
     <hr/>
 
     {control transitionButtons}

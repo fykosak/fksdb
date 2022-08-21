@@ -1,58 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Messages\Message;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\TaskService;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
-/**
- * Class SubmitContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class SubmitContainer extends BaseComponent {
+class SubmitContainer extends BaseComponent
+{
 
-    private ModelContestant $contestant;
-    private ServiceTask $serviceTask;
+    private ContestantModel $contestant;
+    private TaskService $taskService;
 
-    public function __construct(Container $container, ModelContestant $contestant) {
+    public function __construct(Container $container, ContestantModel $contestant)
+    {
         parent::__construct($container);
         $this->contestant = $contestant;
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $this->addComponent(new AjaxSubmitComponent($this->getContext(), $task, $contestant), 'task_' . $task->task_id);
+            $this->addComponent(
+                new AjaxSubmitComponent($this->getContext(), $task, $contestant),
+                'task_' . $task->task_id
+            );
         }
     }
 
-    protected function createComponent(string $name): ?IComponent {
+    protected function createComponent(string $name): ?IComponent
+    {
         $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
-            $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);
+            $this->flashMessage(_('Task is not available'), Message::LVL_ERROR);
             $this->redirect('this');
         }
         return $component;
     }
 
-    final public function injectPrimary(ServiceTask $serviceTask): void {
-        $this->serviceTask = $serviceTask;
+    final public function injectPrimary(TaskService $taskService): void
+    {
+        $this->taskService = $taskService;
     }
 
-    private function getAvailableTasks(): TypedTableSelection {
-        return $this->serviceTask->getTable()
+    private function getAvailableTasks(): TypedSelection
+    {
+        // TODO related
+        return $this->taskService->getTable()
             ->where('contest_id = ? AND year = ?', $this->contestant->contest_id, $this->contestant->year)
             ->where('submit_start IS NULL OR submit_start < NOW()')
             ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
-    public function render(): void {
+    final public function render(): void
+    {
         $this->template->availableTasks = $this->getAvailableTasks();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 }

@@ -1,64 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
-use Nette;
-use Nette\Database\Table\ActiveRow;
+use Nette\InvalidArgumentException;
 
 /**
  * Introduced in FYKOS 1987?? but data are only from 15 th year (2001).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class EvaluationFykos2001 extends EvaluationStrategy {
+class EvaluationFykos2001 implements EvaluationStrategy
+{
 
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return [
-            new ModelCategory(ModelCategory::CAT_HS_1),
-            new ModelCategory(ModelCategory::CAT_HS_2),
-            new ModelCategory(ModelCategory::CAT_HS_3),
-            new ModelCategory(ModelCategory::CAT_HS_4),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_1),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_2),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_3),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_4),
         ];
     }
 
     /**
-     * @param ModelCategory $category
      * @return int[]
      */
-    public function categoryToStudyYears(ModelCategory $category): array {
-        switch ($category->id) {
-            case ModelCategory::CAT_HS_1:
+    public function categoryToStudyYears(ModelCategory $category): array
+    {
+        switch ($category->value) {
+            case ModelCategory::FYKOS_1:
                 return [6, 7, 8, 9, 1];
-            case ModelCategory::CAT_HS_2:
+            case ModelCategory::FYKOS_2:
                 return [2];
-            case ModelCategory::CAT_HS_3:
+            case ModelCategory::FYKOS_3:
                 return [3];
-            case ModelCategory::CAT_HS_4:
+            case ModelCategory::FYKOS_4:
                 return [null, 4];
             default:
-                throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ActiveRow $task): string {
+    public function getPointsColumn(TaskModel $task): string
+    {
         return 's.raw_points';
     }
 
-    public function getSumColumn(): string {
+    public function getSumColumn(): string
+    {
         return 's.raw_points';
     }
 
-    /**
-     * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
-     * @return int
-     */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
+    {
         return $task->points;
     }
 
@@ -66,8 +65,8 @@ class EvaluationFykos2001 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return int|string
      */
-    public function getTaskPointsColumn(ModelCategory $category): string {
+    public function getTaskPointsColumn(ModelCategory $category): string
+    {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }
-
 }

@@ -1,57 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
-use Nette\Application\IPresenter;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class StoredQueriesGrid extends BaseGrid {
+class StoredQueriesGrid extends BaseGrid
+{
 
     /** @const No. of characters that are showed from query description. */
 
     public const DESCRIPTION_TRUNC = 80;
 
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $storedQueryService;
 
     private array $activeTagIds;
 
-    public function __construct(Container $container, array $activeTagIds) {
+    public function __construct(Container $container, array $activeTagIds)
+    {
         parent::__construct($container);
         $this->activeTagIds = $activeTagIds;
     }
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
-        $this->serviceStoredQuery = $serviceStoredQuery;
+    final public function injectServiceStoredQuery(QueryService $storedQueryService): void
+    {
+        $this->storedQueryService = $storedQueryService;
     }
 
     /**
-     * @param IPresenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
-        if (isset($this->activeTagIds) && count($this->activeTagIds)) {
-            $queries = $this->serviceStoredQuery->findByTagType($this->activeTagIds)->order('name');
-            $this->setDataSource(new NDataSource($queries));
+        if (count($this->activeTagIds)) {
+            $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
         } else {
-            $queries = $this->serviceStoredQuery->getTable()->order('name');
-            $this->setDataSource(new NDataSource($queries));
+            $queries = $this->storedQueryService->getTable()->order('name');
         }
+        $this->setDataSource(new NDataSource($queries));
         $this->addColumns([
             'stored_query.query_id',
             'stored_query.name',
@@ -60,12 +58,11 @@ class StoredQueriesGrid extends BaseGrid {
         ]);
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
 
-        $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id']);
-        $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id']);
-        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id']);
-    }
-
-    protected function getModelClassName(): string {
-        return ModelStoredQuery::class;
+        $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id'])
+            ->setClass('btn btn-sm btn-outline-primary');
+        $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id'])
+            ->setClass('btn btn-sm btn-outline-info');
+        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id'])
+            ->setClass('btn btn-sm btn-outline-success');
     }
 }

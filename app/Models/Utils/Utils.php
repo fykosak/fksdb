@@ -1,17 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Utils;
 
-use DateTimeInterface;
-
-/**
- * Description of Utils
- *
- * @author michal
- */
-class Utils {
-
-    public static function toRoman(int $arabic): string {
+class Utils
+{
+    public static function toRoman(int $arabic): string
+    {
         switch ($arabic) {
             case 1:
                 return 'I';
@@ -96,16 +92,16 @@ class Utils {
      * Uses __toString conversion.
      *
      * @param mixed $object
-     * @return string
      */
-    public static function getFingerprint($object): string {
+    public static function getFingerprint($object): string
+    {
         if (is_iterable($object)) {
             $raw = '';
             foreach ($object as $item) {
                 $raw .= self::getFingerprint($item);
             }
             return md5($raw);
-        } elseif ($object instanceof DateTimeInterface) {
+        } elseif ($object instanceof \DateTimeInterface) {
             return $object->format('c');
         } else {
             try {
@@ -120,16 +116,16 @@ class Utils {
      * Returns string representation of iterable objects.
      *
      * @param mixed $object
-     * @return string
      */
-    public static function getRepresentation($object): string {
+    public static function getRepresentation($object): string
+    {
         if (is_iterable($object)) {
             $items = [];
             foreach ($object as $key => $item) {
                 $items[] = "$key: " . self::getRepresentation($item);
             }
             return '{' . implode(', ', $items) . '}';
-        } elseif ($object instanceof DateTimeInterface) {
+        } elseif ($object instanceof \DateTimeInterface) {
             return $object->format('c');
         } else {
             try {
@@ -142,18 +138,16 @@ class Utils {
 
     /**
      * Tranform an address in order only the owner could recongize it.
-     *
-     * @param string $email
-     * @return string
      */
-    public static function cryptEmail(string $email): string {
+    public static function cryptEmail(string $email): string
+    {
         [$user, $host] = preg_split('/@/', $email);
         if (strlen($user) < 3) {
             return "@$host";
         } else {
             $b = substr($user, 0, 1);
             $e = substr($user, -1);
-            return "{$b}…{$e}@$host";
+            return "{$b}…$e@$host";
         }
     }
 
@@ -161,12 +155,9 @@ class Utils {
      * Converts string to (hopefully) valid XML element name.
      *
      * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
-     *
-     * @param string $string
-     * @param string $prefix
-     * @return string
      */
-    public static function xmlName(string $string, string $prefix = '_'): string {
+    public static function xmlName(string $string, string $prefix = '_'): string
+    {
         if (preg_match('/^[0-9\.-]/', $string)) {
             $string = $prefix . $string;
         }

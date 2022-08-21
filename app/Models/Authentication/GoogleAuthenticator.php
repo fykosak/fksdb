@@ -1,44 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Security\AuthenticationException;
 
-/**
- * Class GoogleAuthenticator
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class GoogleAuthenticator extends AbstractAuthenticator {
+class GoogleAuthenticator extends AbstractAuthenticator
+{
 
-    private ServiceOrg $serviceOrg;
+    private OrgService $orgService;
     private AccountManager $accountManager;
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
-        parent::__construct($serviceLogin);
-        $this->serviceOrg = $serviceOrg;
+    public function __construct(
+        OrgService $orgService,
+        AccountManager $accountManager,
+        LoginService $loginService,
+        PersonService $personService
+    ) {
+        parent::__construct($loginService);
+        $this->orgService = $orgService;
         $this->accountManager = $accountManager;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
     }
 
     /**
-     * @param array $user
-     * @return ModelLogin
      * @throws UnknownLoginException
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
      */
-    public function authenticate(array $user): ModelLogin {
+    public function authenticate(array $user): LoginModel
+    {
         $person = $this->findPerson($user);
 
         if (!$person) {
@@ -57,31 +60,33 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param array $user
-     * @return ModelPerson|null
      * @throws AuthenticationException
      */
-    private function findPerson(array $user): ?ModelPerson {
+    private function findPerson(array $user): ?PersonModel
+    {
         if (!$user['email']) {
             throw new AuthenticationException(_('Email not found in the google account.'));
         }
-        return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
+        return $this->findOrg($user) ?? $this->personService->findByEmail($user['email']);
     }
 
-    private function findOrg(array $user): ?ModelPerson {
+    private function findOrg(array $user): ?PersonModel
+    {
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
             case 'fykos.cz':
-                $contestId = ModelContest::ID_FYKOS;
+                $contestId = ContestModel::ID_FYKOS;
                 break;
             case 'vyfuk.org':
-                $contestId = ModelContest::ID_VYFUK;
+                $contestId = ContestModel::ID_VYFUK;
                 break;
             default:
                 return null;
         }
-        /** @var ModelOrg|null $org */
-        $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
-        return $org ? $org->getPerson() : null;
+        /** @var OrgModel|null $org */
+        $org = $this->orgService->getTable()
+            ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
+            ->fetch();
+        return $org ? $org->person : null;
     }
 }

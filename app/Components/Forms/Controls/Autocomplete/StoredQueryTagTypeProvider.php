@@ -1,36 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
+use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
+use Fykosak\NetteORM\TypedSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- */
-class StoredQueryTagTypeProvider implements FilteredDataProvider {
+class StoredQueryTagTypeProvider implements FilteredDataProvider
+{
 
     private const DESCRIPTION = 'description';
+    private TagTypeService $storedQueryTagTypeService;
+    private TypedSelection $searchTable;
 
-    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
-
-    private TypedTableSelection $searchTable;
-
-    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
-        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
-        $this->searchTable = $this->serviceStoredQueryTagType->getTable();
+    public function __construct(TagTypeService $storedQueryTagTypeService)
+    {
+        $this->storedQueryTagTypeService = $storedQueryTagTypeService;
+        $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
-    public function getFilteredItems(?string $search): array {
+    public function getFilteredItems(?string $search): array
+    {
         $search = trim((string)$search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -38,21 +33,23 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider {
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string {
-        /** @var ModelStoredQueryTagType $tagType */
-        $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
+    public function getItemLabel(int $id): string
+    {
+        /** @var TagTypeModel $tagType */
+        $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
         return $tagType->name;
     }
 
     /**
-     * @return ModelStoredQueryTagType[]
+     * @return TagTypeModel[]
      */
-    public function getItems(): array {
+    public function getItems(): array
+    {
         $tagTypes = $this->searchTable
             ->order('name');
 
         $result = [];
-        /** @var ModelStoredQueryTagType $tagType */
+        /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
                 self::LABEL => $tagType->name,
@@ -65,9 +62,9 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return void
      */
-    public function setDefaultValue($id): void {
+    public function setDefaultValue($id): void
+    {
         /* intentionally blank */
     }
 }

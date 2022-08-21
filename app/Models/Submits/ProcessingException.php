@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
-use RuntimeException;
-
-class ProcessingException extends RuntimeException {
-
+class ProcessingException extends \RuntimeException
+{
 }

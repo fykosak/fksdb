@@ -1,107 +1,107 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
+use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @author Michal Koutný <michal@fykos.cz>
- * @method ModelPerson getEntity()
+ * @method PersonModel getEntity()
  */
-class PersonPresenter extends BasePresenter {
+class PersonPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private PersonFactory $personFactory;
     private int $userPermissions;
 
     final public function injectQuarterly(
-        ServicePerson $servicePerson,
+        PersonService $personService,
         PersonFactory $personFactory
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->personFactory = $personFactory;
     }
 
     /* *********** TITLE ***************/
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     */
-    public function titleSearch(): void {
-        $this->setPageTitle(new PageTitle(_('Find person'), 'fa fa-search'));
+    public function titleSearch(): PageTitle
+    {
+        return new PageTitle(null, _('Find person'), 'fa fa-search');
     }
 
     /**
-     * @return void
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
     }
 
     /**
-     * @return void
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
+            'fa fa-user-edit'
+        );
     }
 
-    public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Create person'), 'fa fa-user-plus');
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create person'), 'fa fa-user-plus');
     }
 
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     */
-    public function titlePizza(): void {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
+    public function titlePizza(): PageTitle
+    {
+        return new PageTitle(null, _('Pizza'), 'fa fa-pizza-slice');
     }
 
     /* *********** AUTH ***************/
-    public function authorizedSearch(): void {
+    public function authorizedSearch(): void
+    {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
-    public function authorizedEdit(): void {
+    public function authorizedEdit(): void
+    {
         $this->setAuthorized($this->isAnyContestAuthorized($this->getEntity(), 'edit'));
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function authorizedDetail(): void {
+    public function authorizedDetail(): void
+    {
         $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
         $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
         $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
@@ -112,85 +112,81 @@ class PersonPresenter extends BasePresenter {
     /* ********************* ACTIONS **************/
 
     /**
-     * @return void
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $person = $this->getEntity();
-        $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
-        /** @var ModelPerson $userPerson */
-        $userPerson = $this->getUser()->getIdentity()->getPerson();
-        Debugger::log(sprintf('%s (%d) stalk %s (%d)',
-            $userPerson->getFullName(), $userPerson->person_id,
-            $person->getFullName(), $person->person_id), 'stalking-log');
+        $this->template->isSelf = $this->getUser()->getIdentity()->person->person_id === $person->person_id;
+        /** @var PersonModel $userPerson */
+        $userPerson = $this->getUser()->getIdentity()->person;
+        Debugger::log(
+            sprintf(
+                '%s (%d) stalk %s (%d)',
+                $userPerson->getFullName(),
+                $userPerson->person_id,
+                $person->getFullName(),
+                $person->person_id
+            ),
+            'stalking-log'
+        );
     }
 
     /* ******************* COMPONENTS *******************/
+
     /**
-     * @return FormControl
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    public function createComponentStalkingContainer(): StalkingContainer
+    {
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+    }
+
+    /**
      * @throws BadTypeException
      */
-    protected function createComponentFormSearch(): FormControl {
+    protected function createComponentFormSearch(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
+        $form->addComponent(
+            $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->personService)),
+            'person_id'
+        );
 
         $form->addSubmit('stalk', _('Let\'s stalk'))
-            ->onClick[] = function (SubmitButton $button) {
-            $values = $button->getForm()->getValues();
-            $this->redirect('detail', ['id' => $values['person_id']]);
-        };
+            ->onClick[] =
+            function (SubmitButton $button) {
+                $values = $button->getForm()->getValues();
+                $this->redirect('detail', ['id' => $values['person_id']]);
+            };
         $form->addSubmit('edit', _('Edit'))
-            ->onClick[] = function (SubmitButton $button) {
-            $values = $button->getForm()->getValues();
-            $this->redirect('edit', ['id' => $values['person_id']]);
-        };
+            ->onClick[] =
+            function (SubmitButton $button) {
+                $values = $button->getForm()->getValues();
+                $this->redirect('edit', ['id' => $values['person_id']]);
+            };
 
         return $control;
     }
 
     /**
-     * @return PersonFormComponent
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentCreateForm(): PersonFormComponent {
+    protected function createComponentCreateForm(): PersonFormComponent
+    {
         return new PersonFormComponent($this->getContext(), $this->getUserPermissions(false), null);
     }
 
     /**
-     * @return PersonFormComponent
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentEditForm(): PersonFormComponent {
-        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
-    }
-
-    protected function createComponentPizzaSelect(): PizzaComponent {
-        return new PizzaComponent($this->getContext());
-    }
-
-    /**
-     * @return BaseGrid
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return StalkingContainer
-     * @throws ModelNotFoundException
-     */
-    public function createComponentStalkingContainer(): StalkingContainer {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
-    }
-
-    /**
-     * @param bool $throw
-     * @return int
-     * @throws ModelNotFoundException
-     */
-    private function getUserPermissions(bool $throw = true): int {
+    private function getUserPermissions(bool $throw = true): int
+    {
         if (!isset($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
@@ -214,16 +210,39 @@ class PersonPresenter extends BasePresenter {
         return $this->userPermissions;
     }
 
-    protected function getORMService(): ServicePerson {
-        return $this->servicePerson;
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    protected function createComponentEditForm(): PersonFormComponent
+    {
+        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
+    }
+
+    protected function createComponentPizzaSelect(): PizzaComponent
+    {
+        return new PizzaComponent($this->getContext());
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function getORMService(): PersonService
+    {
+        return $this->personService;
     }
 
     /**
      * @param Resource|string $resource
-     * @param string|null $privilege
      * all auth method is overwritten
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

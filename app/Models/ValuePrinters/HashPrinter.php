@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
-/**
- * Class HashPrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class HashPrinter extends AbstractValuePrinter {
+class HashPrinter extends ValuePrinter
+{
     /**
      * @param string $value
-     * @return Html
      */
-    protected function getHtml($value): Html {
-        return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Is set'));
+    protected function getHtml($value): Html
+    {
+        return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Is set'));
     }
 }

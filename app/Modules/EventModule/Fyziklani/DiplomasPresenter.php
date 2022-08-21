@@ -1,64 +1,61 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
-/**
- * Class DiplomasPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class DiplomasPresenter extends BasePresenter {
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
-    public function titleResults(): void {
-        $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
+class DiplomasPresenter extends BasePresenter
+{
+
+    public function titleResults(): PageTitle
+    {
+        return new PageTitle(null, _('Results for diplomas'), 'fa fa-trophy');
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Calculate final ranking'), 'fa fa-calculator');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedResults(): void {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
+    public function authorizedResults(): void
+    {
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'results'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizeDefault(): void {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
+    public function authorizeDefault(): void
+    {
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'calculate'));
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         $items = [];
-        foreach (['A', 'B', 'C'] as $category) {
-            $items[$category] = [
-                'closed' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
-                    ->where('category', $category)
+        foreach (TeamCategory::casesForEvent($this->getEvent()) as $category) {
+            $items[$category->value] = [
+                'closed' => $this->getEvent()->getParticipatingFyziklaniTeams()
+                    ->where('category', $category->value)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
-                    ->where('category', $category)
+                'opened' => $this->getEvent()->getParticipatingFyziklaniTeams()
+                    ->where('category', $category->value)
                     ->where('points IS NULL')
                     ->count(),
             ];
@@ -67,32 +64,35 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     /**
-     * @param string|null $category
-     * @throws AbortException
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(string $category = null): void {
-        $closeStrategy = new RankingStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
-        $log = $closeStrategy($category);
-        $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);
+    public function handleCalculate(?TeamCategory $category = null): void
+    {
+        $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
+        $log = $closeStrategy->close($category);
+        $this->flashMessage(
+            Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
+                Html::el('ul')->addHtml($log)
+            ),
+            Message::LVL_SUCCESS
+        );
         $this->redirect('this');
     }
 
     /**
-     * @param string|null $category
-     * @return bool
      * @throws EventNotFoundException
      */
-    public function isReadyAllToCalculate(string $category = null): bool {
-        return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
+    public function isReadyAllToCalculate(?TeamCategory $category = null): bool
+    {
+        return $this->teamService->isReadyForClosing($this->getEvent(), $category);
     }
 
     /**
-     * @return FinalResultsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentResults(): FinalResultsComponent {
+    protected function createComponentResults(): FinalResultsComponent
+    {
         return new FinalResultsComponent($this->getContext(), $this->getEvent());
     }
 }

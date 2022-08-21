@@ -1,57 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\ImportHandler;
 use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Utils\CSVParser;
-use Nette\Application\UI\Form;
+use Fykosak\Utils\Logging\Message;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ImportComponent extends BaseComponent {
-
-    private Machine $machine;
-
+class ImportComponent extends BaseComponent
+{
     private SingleEventSource $source;
-
     private ApplicationHandler $handler;
 
-    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
+    public function __construct(SingleEventSource $source, ApplicationHandler $handler, Container $container)
+    {
         parent::__construct($container);
-        $this->machine = $machine;
         $this->source = $source;
         $this->handler = $handler;
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentFormImport(): FormControl {
+    protected function createComponentFormImport(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addUpload('file', _('File with applications'))
             ->addRule(Form::FILLED)
-            ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(
+                Form::MIME_TYPE,
+                _('Only CSV files are accepted.'),
+                'text/plain'
+            ); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Error mode'))
             ->setItems([
@@ -69,26 +66,23 @@ class ImportComponent extends BaseComponent {
 
         $form->addSubmit('import', _('Import'));
 
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormImport($form);
-        };
-
+        $form->onSuccess[] = fn(Form $form) => $this->handleFormImport($form);
         return $control;
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
-        $this->template->render();
+    final public function render(): void
+    {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
     }
 
     /**
-     * @param Form $form
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    private function handleFormImport(Form $form): void {
-        /** @var FileUpload[] $values */
+    private function handleFormImport(Form $form): void
+    {
+        /** @var FileUpload[]|string[] $values */
         $values = $form->getValues();
         try {
             // process form values
@@ -107,15 +101,21 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Import succesfull (%.2f s).'), $elapsedTime),
+                    Message::LVL_SUCCESS
+                );
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime),
+                    Message::LVL_WARNING
+                );
             }
 
             $this->redirect('this');
         } catch (ImportHandlerException $exception) {
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 }

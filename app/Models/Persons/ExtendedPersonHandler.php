@@ -1,34 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ExtendedPersonHandler {
-
+class ExtendedPersonHandler
+{
     use SmartObject;
 
     public const CONT_AGGR = 'aggr';
@@ -37,68 +32,55 @@ class ExtendedPersonHandler {
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-    protected AbstractService $service;
-    protected ServicePerson $servicePerson;
+    protected Service $service;
+    protected PersonService $personService;
     private Connection $connection;
     private AccountManager $accountManager;
-    private ModelContest $contest;
-    private int $year;
+    private ContestYearModel $contestYear;
     private string $invitationLang;
-    private ?ModelPerson $person = null;
+    private ?PersonModel $person = null;
 
     public function __construct(
-        AbstractService $service,
-        ServicePerson $servicePerson,
+        Service $service,
+        PersonService $personService,
         Connection $connection,
         AccountManager $accountManager,
-        ModelContest $contest,
-        int $year,
+        ContestYearModel $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
-        $this->contest = $contest;
-        $this->year = $year;
+        $this->contestYear = $contestYear;
         $this->invitationLang = $invitationLang;
     }
 
-    public function getContest(): ModelContest {
-        return $this->contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
-    }
-
-    public function getInvitationLang(): string {
+    public function getInvitationLang(): string
+    {
         return $this->invitationLang;
     }
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): PersonModel
+    {
         return $this->person;
     }
 
     /**
-     * @param Form $form
-     * @return ModelPerson|null|AbstractModel
+     * @return PersonModel|null|Model
      */
-    final protected function getReferencedPerson(Form $form) {
+    final protected function getReferencedPerson(Form $form): ?Model
+    {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
         return $input->getModel();
     }
 
     /**
-     * @param Form $form
-     * @param ExtendedPersonPresenter $presenter
-     * @param bool $sendEmail
-     * @return int
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
-    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int {
+    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int
+    {
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -113,20 +95,26 @@ class ExtendedPersonHandler {
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
                 }
             }
-            // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+// reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
+            $this->person = $this->personService->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize
              */
             $this->connection->commit();
 
-            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(
+                sprintf(
+                    $create ? $presenter->messageCreate() : $presenter->messageEdit(),
+                    $this->person->getFullName()
+                ),
+                Message::LVL_SUCCESS
+            );
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -136,10 +124,10 @@ class ExtendedPersonHandler {
         } catch (ModelException $exception) {
             $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), Message::LVL_ERROR);
             } else {
                 Debugger::log($exception, Debugger::ERROR);
-                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageError(), Message::LVL_ERROR);
             }
 
             return self::RESULT_ERROR;
@@ -152,26 +140,29 @@ class ExtendedPersonHandler {
         }
     }
 
-    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
-        if ($this->contest === null || $this->year === null) {
+    protected function storeExtendedModel(
+        PersonModel $person,
+        iterable $values,
+        ExtendedPersonPresenter $presenter
+    ): void {
+        if ($this->contestYear->contest === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
         $model = $presenter->getModel();
 
         if (!$model) {
-            $data = [
-                'contest_id' => $this->contest ? $this->getContest()->contest_id : null,
+            $model = $this->service->storeModel([
+                'contest_id' => $this->contestYear->contest,
                 'person_id' => $person->getPrimary(),
-                'year' => $this->year ? $this->getYear() : null,
-            ];
-            $model = $this->service->createNewModel((array)$data);
+                'year' => $this->contestYear->year,
+            ]);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
-            $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel2($model, (array)$data);
+            $data = FormUtils::emptyStrToNull2($values[self::CONT_MODEL]);
+            $this->service->storeModel($data, $model);
         }
     }
 }

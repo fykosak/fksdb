@@ -1,17 +1,18 @@
 {block content}
-
+    {varType FKSDB\Models\ORM\Models\EventModel $event}
+    {varType string $webUrl}
     <h2>{_'Info'}</h2>
     <p>{$event->report}</p>
-    <ul class="list-group mb-3">
-        {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end'] as $fieldName}
-            {control valuePrinter:listItem $fieldName, $event}
-        {/foreach}
-        <li class="list-group-item">
-            <a class="col-12 row" href="{$webUrl}">{_'Event web-site'}</a>
-        </li>
-    </ul>
-    <a class="btn btn-secondary"
-       href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Edit'}</a>
+    <hr/>
+    {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end','event.registration_begin','event.registration_end'] as $fieldName}
+        {control valuePrinter:row $fieldName, $event}
+    {/foreach}
+    <a class="btn btn-outline-secondary mt-3"
+       href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>
+    <hr/>
+    <p><a class="col-12 row" href="{$webUrl}">{_'Event web-site'}</a></p>
+    <hr/>
+
     <h2>{_'Actions'}</h2>
     {control navigationChooser:board 'Event.Dashboard.default'}
 {/block}

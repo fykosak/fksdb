@@ -12,19 +12,19 @@ parameters:
                 person_info:
                     born_id:
                         required: %events.soustredeni.requiredCond%
-                        description: "For the insurance company."
+                        description: _("For the insurance company.")
                     birthplace:
                         required: state('participated')
                     phone:
                         required: %events.soustredeni.requiredCond%
-                        description: "Telephone number (including state prefix), that you will carry with you."
+                        description: _("Telephone number (including state prefix), that you will carry with you.")
                 post_contact_p:
                     address:
                         required: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:
                         required: state('participated')
-                        description: "If you cannto find your school, email the webmaster."
+                        description: _("If you cannot find your school, e-mail the webmaster.")
             tshirt:
                 M_S: _('S men')
                 M_M: _('M men')
@@ -232,7 +232,7 @@ events:
                     tshirt_size:
                         label: _('What size of T-shirt do you wear?')
                         required: %events.soustredeni.requiredCond%
-                        factory: Chooser("Choose a size", Options(%events.soustredeni.tshirt%))
+                        factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
                     price:
                         label: _('Price of camp (CZK)')
                         modifiable: false

@@ -1,96 +1,112 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
-use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use Fykosak\Utils\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * Class ClosePresenter
  * @property FormControl closeCategoryAForm
- * @method ModelFyziklaniTeam getEntity()
+ * @method TeamModel2 getEntity()
  */
-class ClosePresenter extends BasePresenter {
-
+class ClosePresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
-    public function getTitleList(): PageTitle {
-        return new PageTitle(_('Sealing of the scoring'), 'fas fa-check');
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
-     * @return void
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     */
-    public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-check'));
-    }
-
-    /**
-     * @return void
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleHard(): void {
-        $this->titleTeam();
+    public function titleHard(): PageTitle
+    {
+        return $this->titleTeam();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     */
+    public function titleTeam(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            \sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name),
+            'fas fa-stamp'
+        );
     }
 
     /* ******* authorized methods ***********/
+
     /**
-     * @return void
      * @throws EventNotFoundException
+     * @throws GoneException
      */
-    public function authorizedTeam(): void {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
+    public function authorizedTeam(): void
+    {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
-    public function authorizeHard(): void {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
+    public function authorizeHard(): void
+    {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
+     * @throws GoneException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+    public function authorizeList(): void
+    {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
     /* *********** ACTIONS **************** */
+
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    public function actionTeam(): void {
+    public function actionTeam(): void
+    {
         try {
             $this->getEntity()->canClose();
         } catch (AlreadyClosedException | NotCheckedSubmitsException $exception) {
@@ -100,57 +116,73 @@ class ClosePresenter extends BasePresenter {
     }
 
     /* ********* COMPONENTS ************* */
+
     /**
-     * @return CloseTeamComponent
+     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isAllowed($resource, $privilege);
+    }
+
+    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    protected function createComponentCloseTeamControl(): CloseTeamComponent {
+    protected function createComponentCloseTeamControl(): CloseTeamComponent
+    {
         return new CloseTeamComponent($this->getContext(), $this->getEntity());
     }
 
     /**
-     * @return TeamSubmitsGrid
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
+    {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    protected function getORMService(): ServiceFyziklaniTeam {
-        return $this->serviceFyziklaniTeam;
-    }
-
-    protected function getModelResource(): string {
-        return 'fyziklani.close';
+    protected function getORMService(): TeamService2
+    {
+        return $this->teamService;
     }
 
     /**
-     * @return BaseGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
+    }
+
+    protected function getModelResource(): string
+    {
+        return 'fyziklani.close';
     }
 }

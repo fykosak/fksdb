@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-interface MergeStrategy {
+interface MergeStrategy
+{
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
+     * @template T
+     * @param T $trunk
+     * @param T $merged
      * @throws CannotMergeException
+     * @return T
      */
     public function mergeValues($trunk, $merged);
 }

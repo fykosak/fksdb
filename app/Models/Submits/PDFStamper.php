@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class PDFStamper implements StorageProcessing {
+class PDFStamper implements StorageProcessing
+{
 
     private string $inputFile;
 
@@ -21,44 +19,50 @@ class PDFStamper implements StorageProcessing {
     private int $fontSize;
 
     /**
-     *
      * @var string printf mask for arguments: series, label, contestant's name
      */
     private const STAMP_MASK = 'S%dU%s, %s, %s';
 
-    public function __construct(int $fontSize) {
+    public function __construct(int $fontSize)
+    {
         $this->fontSize = $fontSize;
     }
 
-    public function getInputFile(): string {
+    public function getInputFile(): string
+    {
         return $this->inputFile;
     }
 
-    public function setInputFile(string $filename): void {
+    public function setInputFile(string $filename): void
+    {
         $this->inputFile = $filename;
     }
 
-    public function getOutputFile(): string {
+    public function getOutputFile(): string
+    {
         return $this->outputFile;
     }
 
-    public function setOutputFile(string $filename): void {
+    public function setOutputFile(string $filename): void
+    {
         $this->outputFile = $filename;
     }
 
-    public function getFontSize(): int {
+    public function getFontSize(): int
+    {
         return $this->fontSize;
     }
 
-    public function getStampMask(): string {
+    public function getStampMask(): string
+    {
         return self::STAMP_MASK;
     }
 
     /**
-     * @param ModelSubmit $submit
      * @throws ProcessingException
      */
-    public function process(ModelSubmit $submit): void {
+    public function process(SubmitModel $submit): void
+    {
         if (!$this->getInputFile()) {
             throw new InvalidStateException('Input file not set.');
         }
@@ -67,19 +71,20 @@ class PDFStamper implements StorageProcessing {
             throw new InvalidStateException('Output file not set.');
         }
 
-        $series = $submit->getTask()->series;
-        $label = $submit->getTask()->label;
-        $person = $submit->getContestant()->getPerson();
+        $series = $submit->task->series;
+        $label = $submit->task->label;
+        $person = $submit->contestant->person;
 
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
-        } catch (\Exception $exception) {
-            throw new ProcessingException('Cannot add stamp to the PDF.', null, $exception);
+        } catch (\Throwable $exception) {
+            throw new ProcessingException('Cannot add stamp to the PDF.', 0, $exception);
         }
     }
 
-    private function stampText(string $text): void {
+    private function stampText(string $text): void
+    {
         $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 
@@ -111,5 +116,4 @@ class PDFStamper implements StorageProcessing {
 
         $pdf->Output($this->getOutputFile(), 'F');
     }
-
 }

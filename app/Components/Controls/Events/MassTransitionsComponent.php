@@ -1,76 +1,69 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 
-/**
- * Class MassTransitionsControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class MassTransitionsComponent extends BaseComponent {
-
-    private ModelEvent $event;
-
+class MassTransitionsComponent extends BaseComponent
+{
+    private EventModel $event;
     private EventDispatchFactory $eventDispatchFactory;
 
-    private ApplicationHandlerFactory $applicationHandlerFactory;
-
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, EventModel $event)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory): void
+    {
         $this->eventDispatchFactory = $eventDispatchFactory;
-        $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    public function render(): void {
-        /** @var  $machine */
+    final public function render(): void
+    {
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
     }
 
     /**
-     * @param string $name
-     * @return void
-     * @throws AbortException
-     *
      * @throws NeonSchemaException
      */
-    public function handleTransition(string $name): void {
+    public function handleTransition(string $name): void
+    {
         $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;
-        foreach ($source->getHolders() as $key => $holder) {
-            $handler = $this->applicationHandlerFactory->create($this->event, $logger);
+        foreach ($source->getHolders() as $holder) {
+            $handler = new ApplicationHandler($this->event, $logger, $this->getContext());
             $total++;
             try {
                 $handler->onlyExecute($holder, $name);
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $errored++;
             }
         }
         FlashMessageDump::dump($logger, $this->getPresenter(), true);
-        $this->getPresenter()->flashMessage(sprintf(
-            _('Total %d applications, state changed %d, unavailable %d. '),
-            $total,
-            $total - $errored,
-            $errored
-        ));
+        $this->getPresenter()->flashMessage(
+            sprintf(
+                _('Total %d applications, state changed %d, unavailable %d. '),
+                $total,
+                $total - $errored,
+                $errored
+            )
+        );
         $this->getPresenter()->redirect('this');
     }
 }

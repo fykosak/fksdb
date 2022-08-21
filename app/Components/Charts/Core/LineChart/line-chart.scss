@@ -1,0 +1,11 @@
+.chart-line-chart {
+  circle {
+    &.active {
+      opacity: 1;
+    }
+
+    &.inactive {
+      opacity: 0.1;
+    }
+  }
+}

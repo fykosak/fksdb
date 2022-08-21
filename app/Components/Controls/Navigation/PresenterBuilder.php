@@ -1,38 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class PresenterBuilder {
+class PresenterBuilder
+{
 
     private IPresenterFactory $presenterFactory;
-
     private array $presenterCache = [];
 
-    public function __construct(IPresenterFactory $presenterFactory) {
+    public function __construct(IPresenterFactory $presenterFactory)
+    {
         $this->presenterFactory = $presenterFactory;
     }
 
     /**
      * Provides an instance of a presenter prepared for calling action*, render*, etc. methods.
-     *
-     * @param string $presenterName
-     * @param string $action
-     * @param array|null $params
-     * @param array|null $baseParams
-     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
-     * @return Presenter
+     * @param bool $newInstance when false all instances of the same class
+     * will be the same and only initilization methods are called
      * @throws BadRequestException
      */
-    public function preparePresenter(string $presenterName, string $action, ?array $params = [], ?array $baseParams = [], bool $newInstance = false): Presenter {
+    public function preparePresenter(
+        string $presenterName,
+        string $action,
+        ?array $params = [],
+        ?array $baseParams = [],
+        bool $newInstance = false
+    ): BasePresenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
@@ -49,11 +49,11 @@ class PresenterBuilder {
         return $presenter;
     }
 
-    private function getCachePresenter(string $presenterName): Presenter {
+    private function getCachePresenter(string $presenterName): Presenter
+    {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }
         return $this->presenterCache[$presenterName];
     }
-
 }

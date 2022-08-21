@@ -1,0 +1,183 @@
+$border-radius: 0;
+$btn-border-radius-sm: 0;
+$btn-border-radius-lg: 0;
+$input-border-radius-lg: 0;
+@import "node_modules/bootstrap/scss/bootstrap";
+@import 'node_modules/flag-icon-css/sass/flag-icon';
+@import 'node_modules/codemirror/lib/codemirror.css';
+
+@import "inbox";
+@import "../Modules/CoreModule/templates/Authentication/login";
+@import "../Components/Charts/style";
+@import "../Components/Charts/legend";
+@import "colors";
+@import "points";
+@import "contests";
+@import "callout";
+@import "payment";
+@import "../Components/PDFGenerators/TeamSeating/seating";
+@import "../Components/PDFGenerators/Providers/print";
+
+@include color-variant(#1f77b4, color-1);
+@include color-variant(#ff7f0e, color-2);
+@include color-variant(#2ca02c, color-3);
+@include color-variant(#d62728, color-4);
+@include color-variant(#9467bd, color-5);
+@include color-variant(#8c564b, color-6);
+@include color-variant(#e377c2, color-7);
+@include color-variant(#cccccc, color-8);
+@include color-variant(#bcbd22, color-9);
+@include color-variant(#17becf, color-10);
+@include color-variant(#000000, color-11);
+:root {
+  --color-fof-main: #{$fOFMainColor};
+  --color-fol-main: #{$fOLMainColor};
+  --color-fykos-main: #{$fykosMainColor};
+  --color-vyfuk-main: #{$vyfukMainColor};
+
+  --color-fof-points-5: #{$fyziklaniPoints5};
+  --color-fof-points-3: #{$fyziklaniPoints3};
+  --color-fof-points-2: #{$fyziklaniPoints2};
+  --color-fof-points-1: #{$fyziklaniPoints1};
+
+  --color-variant-color-1: #1f77b4;
+  --color-variant-color-2: #ff7f0e;
+  --color-variant-color-3: #2ca02c;
+  --color-variant-color-4: #d62728;
+  --color-variant-color-5: #9467bd;
+  --color-variant-color-6: #8c564b;
+  --color-variant-color-7: #e377c2;
+  --color-variant-color-8: #cccccc;
+  --color-variant-color-9: #bcbd22;
+  --color-variant-color-10: #17becf;
+  --color-variant-color-11: #000000;
+}
+
+@include color-variant($fykosMainColor, "fykos");
+@include color-variant($vyfukMainColor, "vyfuk");
+
+@include color-variant(deeppink, 'pink');
+@include color-variant(#dc3545, 'error');
+
+@include color-variant($fOLMainColor, "fol");
+@include color-variant($fOFMainColor, "fof");
+
+
+.fyziklani-header {
+  .subheader {
+    color: var(--color-fof-main);
+    font-weight: bold;
+  }
+
+  h1 {
+    font-weight: 600;
+    margin-bottom: 2.1rem;
+  }
+}
+
+.bg-white-container {
+  background-color: rgba(255, 255, 255, .85);
+}
+
+h1 .small {
+  font-weight: 300;
+}
+
+html, body {
+  font-family: 'Inter', sans-serif;
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+$footerHeight: 100px;
+body {
+  margin: 0 auto;
+  padding: $footerHeight 0;
+}
+
+main {
+  min-height: 100%;
+}
+
+.list-piped {
+  & > * {
+    display: inline-block;
+  }
+
+  & > * + *:before {
+    color: #CCCCCC;
+    content: "| ";
+    padding: 0;
+  }
+}
+
+.clear-referenced {
+  position: absolute;
+  right: 1em;
+  z-index: 3;
+}
+
+.right-inner-addon {
+  position: relative;
+
+  input {
+    padding-right: 30px;
+  }
+
+  i {
+    position: absolute;
+    right: 0;
+    padding: 8px 12px;
+    cursor: pointer; /* TODO not general enough, might be a static icon */
+  }
+}
+
+.required .control-label:before {
+  color: #b94a48;
+  content: '* ';
+  display: inline;
+}
+
+.dispatch-logo {
+  height: 10rem;
+}
+
+.image-error {
+  width: 100%;
+  text-align: center;
+
+  img {
+    height: 20rem;
+  }
+
+}
+
+.card-columns {
+  -webkit-column-count: 2;
+  column-count: 2;
+}
+
+@media (max-width: 767px) {
+  .card-columns {
+    -webkit-column-count: 1;
+    column-count: 1;
+  }
+}
+
+.state-timeline .line {
+  height: 1px;
+  border: solid 2px;
+}
+
+.t-shirt-color {
+  height: 1rem;
+  width: 1rem;
+  border-radius: .5rem;
+  display: inline-block;
+  margin-right: .5rem
+}
+
+footer {
+  min-height: $footerHeight;
+  background-color: rgba(255, 255, 255, .7);
+}

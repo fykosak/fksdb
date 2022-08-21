@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -16,24 +18,22 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DBReflectionFactory extends AbstractFactory {
+class DBReflectionFactory extends AbstractFactory
+{
 
     private Connection $connection;
     /** @var array tableName => columnName[] */
     private array $columns = [];
-    private ReflectionFactory $tableReflectionFactory;
+    private ORMFactory $tableReflectionFactory;
 
-    public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory)
+    {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function createComponent(Field $field): BaseControl {
+    public function createComponent(Field $field): BaseControl
+    {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -41,15 +41,15 @@ class DBReflectionFactory extends AbstractFactory {
 
             $service->getTable()->getName();
             $tableName = null;
-            if ($service instanceof AbstractService) {
+            if ($service instanceof Service) {
                 $tableName = $service->getTable()->getName();
-            } elseif ($service instanceof AbstractServiceMulti) {
-                $tableName = $service->getMainService()->getTable()->getName();
+            } elseif ($service instanceof ServiceMulti) {
+                $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
                 $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
@@ -61,12 +61,12 @@ class DBReflectionFactory extends AbstractFactory {
         if (!$element) {
             if ($type == 'TINYINT' && $size == 1) {
                 $element = new Checkbox($field->getLabel());
-            } elseif (substr_compare($type, 'INT', '-3') == 0) {
+            } elseif (substr_compare($type, 'INT', -3) == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label must be an integer.'));
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
@@ -75,7 +75,7 @@ class DBReflectionFactory extends AbstractFactory {
             } else {
                 $element = new TextInput($field->getLabel());
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             }
         }
@@ -87,8 +87,9 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
-        if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
+    protected function setDefaultValue(BaseControl $control, Field $field): void
+    {
+        if ($field->getBaseHolder()->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -97,19 +98,20 @@ class DBReflectionFactory extends AbstractFactory {
         $control->setDefaultValue($default);
     }
 
-    private function resolveColumn(Field $field): ?array {
+    private function resolveColumn(Field $field): ?array
+    {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 
         $column = null;
-        if ($service instanceof AbstractService) {
+        if ($service instanceof Service) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
-        } elseif ($service instanceof AbstractServiceMulti) {
-            $tableName = $service->getMainService()->getTable()->getName();
+        } elseif ($service instanceof ServiceMulti) {
+            $tableName = $service->mainService->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {
-                $tableName = $service->getJoinedService()->getTable()->getName();
+                $tableName = $service->joinedService->getTable()->getName();
                 $column = $this->getColumnMetadata($tableName, $columnName);
             }
         }
@@ -119,7 +121,8 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    private function getColumnMetadata(string $table, string $column): ?array {
+    private function getColumnMetadata(string $table, string $column): ?array
+    {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getDriver()->getColumns($table) as $columnMeta) {
@@ -127,10 +130,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
             $this->columns[$table] = $columns;
         }
-        if (isset($this->columns[$table][$column])) {
-            return $this->columns[$table][$column];
-        } else {
-            return null;
-        }
+        return $this->columns[$table][$column] ?? null;
     }
 }

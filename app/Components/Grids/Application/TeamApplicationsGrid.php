@@ -1,61 +1,84 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\IPresenter;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
+use Nette\Application\UI\Presenter;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- * Class TeamApplicationGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class TeamApplicationsGrid extends AbstractApplicationsGrid {
+class TeamApplicationsGrid extends AbstractApplicationsGrid
+{
 
     /**
-     * @param IPresenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
 
         $this->paginate = false;
 
         $this->addColumns([
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.status',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.state',
         ]);
-        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
-            $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            $position = $model->getPosition();
-            if (is_null($position)) {
-                return NotSetBadge::getHtml();
-            }
-            return $position->getRoom()->name;
-        });
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
         $this->addCSVDownloadButton();
         parent::configure($presenter);
     }
 
-    protected function getSource(): GroupedSelection {
-        return $this->event->getTeams();
+    protected function getSource(): TypedGroupedSelection
+    {
+        return $this->event->getFyziklaniTeams();
     }
 
-    protected function getHoldersColumns(): array {
+    /**
+     * @throws BadTypeException
+     * @throws NotImplementedException
+     */
+    protected function createComponentSearchForm(): FormControl
+    {
+        $control = new FormControl($this->getContext());
+        $form = $control->getForm();
+        $stateContainer = new ContainerWithOptions($this->getContext());
+        $stateContainer->setOption('label', _('States'));
+        foreach (TeamState::cases() as $state) {
+            $label = Html::el('span')
+                ->addHtml(Html::el('b')->addText($state->label()))
+                ->addText(': ');
+            $stateContainer->addCheckbox(str_replace('.', '__', $state->value), $label);
+        }
+        $form->addComponent($stateContainer, 'state');
+        $form->addSubmit('submit', _('Apply filter'));
+        $form->onSuccess[] = function (Form $form): void {
+            $values = $form->getValues('array');
+            $this->searchTerm = $values;
+            $this->dataSource->applyFilter($values);
+            $count = $this->dataSource->getCount();
+            $this->getPaginator()->itemCount = $count;
+        };
+        return $control;
+    }
+
+    protected function getHoldersColumns(): array
+    {
         return [
             'note',
             'game_lang',
@@ -66,11 +89,8 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid {
         ];
     }
 
-    protected function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_E_FYZIKLANI_TEAM;
+    protected function getTableName(): string
+    {
+        return DbNames::TAB_FYZIKLANI_TEAM;
     }
 }

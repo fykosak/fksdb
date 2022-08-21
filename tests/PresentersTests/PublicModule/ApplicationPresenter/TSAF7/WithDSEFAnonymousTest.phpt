@@ -1,43 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
+use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class WithDSEFAnonymousTest extends TsafTestCase {
+class WithDSEFAnonymousTest extends TsafTestCase
+{
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
-        $this->insert('grant', [
-            'login_id' => $adminId,
+        $admin = $this->createPerson('Admin', 'Adminovič', null, []);
+        $this->getContainer()->getByType(GrantService::class)->storeModel([
+            'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId, $this->fixture);
+        $this->authenticatePerson($admin, $this->fixture);
 
-        $dsefAppId = $this->insert('event_participant', [
-            'person_id' => $this->personId,
-            'event_id' => $this->dsefEventId,
+        $dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
+            'person_id' => $this->person->person_id,
+            'event_id' => $this->dsefEvent->event_id,
             'status' => 'applied',
             'lunch_count' => 3,
         ]);
 
-        $this->insert('e_dsef_participant', [
-            'event_participant_id' => $dsefAppId,
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel( [
+            'event_participant_id' => $dsefApp->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
 
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => (string)$this->personId,
+                'person_id' => (string)$this->person->person_id,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -71,19 +79,19 @@ class WithDSEFAnonymousTest extends TsafTestCase {
             'c_a_p_t_cha' => "pqrt",
             '__init__applied' => "Přihlásit účastníka",
         ], [
-            'eventId' => $this->tsafEventId,
+            'eventId' => $this->tsafEvent->event_id,
         ]);
 
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->tsafEvent, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
         Assert::equal('F_M', $application->jumper_size);
 
-        $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->dsefEvent, 'bila@hrad.cz');
         Assert::equal('applied.tsaf', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');

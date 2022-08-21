@@ -1,6 +1,6 @@
 import { ACTION_ADD_ERROR } from 'FKSDB/Components/Controls/AjaxSubmit/actions';
-import { ACTION_FETCH_START } from 'FKSDB/Models/FrontEnd/Fetch/actions';
-import { Message } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import { ACTION_FETCH_START } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
+import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 export interface State {
     errors: Message[];

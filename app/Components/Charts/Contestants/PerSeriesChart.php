@@ -1,26 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Contestants;
 
-use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\SubmitService;
 
-/**
- * Class ContestantsPerSeries
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class PerSeriesChart extends AbstractPerSeriesChart {
+class PerSeriesChart extends AbstractPerSeriesChart
+{
 
-    private ServiceSubmit $serviceSubmit;
+    private SubmitService $submitService;
 
-    public function injectSecondary(ServiceSubmit $serviceSubmit): void {
-        $this->serviceSubmit = $serviceSubmit;
+    public function injectSecondary(SubmitService $submitService): void
+    {
+        $this->submitService = $submitService;
     }
 
-    protected function getData(): array {
-        $query = $this->serviceSubmit->getTable()
+    protected function getData(): array
+    {
+        $query = $this->submitService->getTable()
             ->where('task.contest_id', $this->contest->contest_id)
             ->group('task.series, task.year')
-            ->select('COUNT(DISTINCT ct_id) AS count,task.series, task.year');
+            ->select('COUNT(DISTINCT contestant_id) AS count,task.series, task.year');
         $data = [];
         foreach ($query as $row) {
             $year = $row->year;
@@ -31,11 +32,13 @@ class PerSeriesChart extends AbstractPerSeriesChart {
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Contestants per series');
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

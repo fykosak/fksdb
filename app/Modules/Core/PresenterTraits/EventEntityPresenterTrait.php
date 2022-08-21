@@ -1,35 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\ReferencedAccessor;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Trait EventEntityTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
-trait EventEntityPresenterTrait {
-
+trait EventEntityPresenterTrait
+{
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
 
     /**
-     * @return AbstractModel|null
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
+     * @throws \ReflectionException
      */
-    protected function getEntity(): AbstractModel {
+    protected function getEntity(): Model
+    {
         $model = $this->getBaseEntity();
-        $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
+        /** @var EventModel $event */
+        $event = $model->getReferencedModel(EventModel::class);
         if ($event->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
@@ -39,5 +40,5 @@ trait EventEntityPresenterTrait {
     /**
      * @throws EventNotFoundException
      */
-    abstract protected function getEvent(): ModelEvent;
+    abstract protected function getEvent(): EventModel;
 }

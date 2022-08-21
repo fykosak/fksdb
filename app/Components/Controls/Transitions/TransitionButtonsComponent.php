@@ -1,46 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Transitions;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-/**
- * Class TransitionButtonsControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class TransitionButtonsComponent extends BaseComponent {
+class TransitionButtonsComponent extends BaseComponent
+{
 
     private Machine $machine;
-    private ModelHolder $model;
+    private ModelHolder $holder;
 
-    public function __construct(Machine $machine, Container $container, ModelHolder $model) {
+    public function __construct(Machine $machine, Container $container, ModelHolder $model)
+    {
         parent::__construct($container);
         $this->machine = $machine;
-        $this->model = $model;
+        $this->holder = $model;
     }
 
-    public function render(): void {
-        $this->template->buttons = $this->machine->getAvailableTransitions($this->model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
-        $this->template->render();
+    final public function render(): void
+    {
+        $this->template->transitions = $this->machine->getAvailableTransitions($this->holder);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
     }
 
-    public function handleTransition(string $name): void {
+    /**
+     * @throws AbortException
+     */
+    public function handleTransition(string $name): void
+    {
         try {
-            $this->machine->executeTransitionById($name, $this->model);
+            $this->machine->executeTransitionById($name, $this->holder);
         } catch (ForbiddenRequestException | UnavailableTransitionsException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return;
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage(_('Some error emerged'), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->redirect('this');
     }

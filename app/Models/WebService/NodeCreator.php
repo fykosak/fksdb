@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService;
-/**
- * Interface INodeCreator
- * @author Michal Červeňák <miso@fykos.cz>
- */
-interface NodeCreator {
+
+interface NodeCreator
+{
     public function createXMLNode(\DOMDocument $document): \DOMElement;
 }

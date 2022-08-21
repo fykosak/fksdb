@@ -1,23 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class DbNames {
+
+class DbNames
+{
 
     public const TAB_ADDRESS = 'address';
     public const TAB_AUTH_TOKEN = 'auth_token';
     public const TAB_CONTEST = 'contest';
     public const TAB_CONTEST_YEAR = 'contest_year';
-    public const TAB_CONTESTANT_BASE = 'contestant_base';
+    public const TAB_CONTESTANT = 'contestant';
     public const TAB_EVENT = 'event';
     public const TAB_EVENT_ORG = 'event_org';
     public const TAB_EVENT_PARTICIPANT = 'event_participant';
     public const TAB_EVENT_TYPE = 'event_type';
     public const TAB_FLAG = 'flag';
-    public const TAB_GLOBAL_SESSION = 'global_session';
     public const TAB_GRANT = 'grant';
     public const TAB_LOGIN = 'login';
     public const TAB_ORG = 'org';
@@ -53,13 +52,18 @@ class DbNames {
     public const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     public const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
 
+    public const TAB_FYZIKLANI_TEAM = 'fyziklani_team';
+    public const TAB_FYZIKLANI_TEAM_MEMBER = 'fyziklani_team_member';
+    public const TAB_FYZIKLANI_TEAM_TEACHER = 'fyziklani_team_teacher';
+
     /* For fyziklani */
     public const TAB_FYZIKLANI_TASK = 'fyziklani_task';
     public const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
     public const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
     public const TAB_FYZIKLANI_ROOM = 'fyziklani_room';
-    public const TAB_FYZIKLANI_TEAM_POSITION = 'fyziklani_team_position';
+    public const TAB_FYZIKLANI_SEAT = 'fyziklani_seat';
+    public const TAB_FYZIKLANI_TEAM_SEAT = 'fyziklani_team_seat';
 
     public const TAB_SCHEDULE_GROUP = 'schedule_group';
     public const TAB_SCHEDULE_ITEM = 'schedule_item';
@@ -70,5 +74,4 @@ class DbNames {
     public const TAB_WAREHOUSE_PRODUCER = 'warehouse_producer';
     public const TAB_WAREHOUSE_PRODUCT = 'warehouse_product';
     public const TAB_WAREHOUSE_ITEM = 'warehouse_item';
-
 }

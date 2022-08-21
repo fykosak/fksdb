@@ -1,31 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * Class AgreedField
- * *
- */
-class AgreedColumnFactory extends ColumnFactory {
+class AgreedColumnFactory extends ColumnFactory
+{
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Agreement'));
         $link->addAttributes([
-            'href' => _('http://fykos.cz/doc/souhlas.pdf'),
+            'href' => _('https://fykos.cz/doc/souhlas.pdf'),
             'target' => '_blank',
         ]);
         $control->setOption('description', $link);
@@ -33,10 +29,10 @@ class AgreedColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModel|ModelPersonInfo $model
-     * @return Html
+     * @param PersonInfoModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         return (new DatePrinter())($model->agreed);
     }
 }

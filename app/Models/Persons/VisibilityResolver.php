@@ -1,15 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-interface VisibilityResolver {
-
-    public function isVisible(ModelPerson $person): bool;
+interface VisibilityResolver
+{
+    public function isVisible(?PersonModel $person): bool;
 }

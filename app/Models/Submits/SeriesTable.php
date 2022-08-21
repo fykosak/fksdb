@@ -1,147 +1,113 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\{
+    ContestantModel,
+    ContestYearModel,
+    SubmitModel,
+};
+use FKSDB\Models\ORM\Services\{
+    ContestantService,
+    SubmitService,
+    TaskService,
+};
+use Fykosak\NetteORM\TypedSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @todo Prominent example for necessity of caching.
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class SeriesTable {
+class SeriesTable
+{
 
     public const FORM_SUBMIT = 'submit';
     public const FORM_CONTESTANT = 'contestant';
 
-    private ServiceContestant $serviceContestant;
+    private ContestantService $contestantService;
+    private TaskService $taskService;
+    private SubmitService $submitService;
 
-    private ServiceTask $serviceTask;
-
-    private ServiceSubmit $serviceSubmit;
-
-    private ModelContest $contest;
-
-    private int $year;
-
-    private int $series;
+    public ContestYearModel $contestYear;
+    public int $series;
 
     /**
      *
      * @var null|array of int IDs of allowed tasks or null for unrestricted
      */
-    private ?array $taskFilter = null;
+    public ?array $taskFilter = null;
 
-    public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
-        $this->serviceContestant = $serviceContestant;
-        $this->serviceTask = $serviceTask;
-        $this->serviceSubmit = $serviceSubmit;
+    public function __construct(
+        ContestantService $contestantService,
+        TaskService $taskService,
+        SubmitService $submitService
+    ) {
+        $this->contestantService = $contestantService;
+        $this->taskService = $taskService;
+        $this->submitService = $submitService;
     }
 
-    public function getContest(): ModelContest {
-        return $this->contest;
-    }
-
-    public function setContest(ModelContest $contest): void {
-        $this->contest = $contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
-    }
-
-    public function setYear(int $year): void {
-        $this->year = $year;
-    }
-
-    public function getSeries(): int {
-        return $this->series;
-    }
-
-    public function setSeries(int $series): void {
-        $this->series = $series;
-    }
-
-    public function getTaskFilter(): ?array {
-        return $this->taskFilter;
-    }
-
-    public function setTaskFilter(?array $taskFilter): void {
-        $this->taskFilter = $taskFilter;
-    }
-
-    public function getContestants(): TypedTableSelection {
-        return $this->serviceContestant->getTable()->where([
-            'contest_id' => $this->getContest()->contest_id,
-            'year' => $this->getYear(),
+    public function getContestants(): TypedSelection
+    {
+        return $this->contestantService->getTable()->where([
+            'contest_id' => $this->contestYear->contest_id,
+            'year' => $this->contestYear->year,
         ])->order('person.family_name, person.other_name, person.person_id');
     }
 
-    public function getTasks(): TypedTableSelection {
-        $tasks = $this->serviceTask->getTable()->where([
-            'contest_id' => $this->getContest()->contest_id,
-            'year' => $this->getYear(),
-            'series' => $this->getSeries(),
+    public function getTasks(): TypedSelection
+    {
+        $tasks = $this->taskService->getTable()->where([
+            'contest_id' => $this->contestYear->contest_id,
+            'year' => $this->contestYear->year,
+            'series' => $this->series,
         ]);
 
-        if ($this->getTaskFilter() !== null) {
-            $tasks->where('task_id', $this->getTaskFilter());
+        if (isset($this->taskFilter)) {
+            $tasks->where('task_id', $this->taskFilter);
         }
         return $tasks->order('tasknr');
     }
 
-    public function getSubmits(): TypedTableSelection {
-        return $this->serviceSubmit->getTable()
-            ->where('ct_id', $this->getContestants())
+    public function getSubmits(): TypedSelection
+    {
+        return $this->submitService->getTable()
+            ->where('contestant_id', $this->getContestants())
             ->where('task_id', $this->getTasks());
     }
 
-    public function getSubmitsTable(): array {
-        $submits = $this->getSubmits();
-
+    public function getSubmitsTable(): array
+    {
         // store submits in 2D hash for better access
         $submitsTable = [];
-        /** @var ModelSubmit $submit */
-        foreach ($submits as $submit) {
-            if (!isset($submitsTable[$submit->ct_id])) {
-                $submitsTable[$submit->ct_id] = [];
-            }
-            $submitsTable[$submit->ct_id][$submit->task_id] = $submit;
+        /** @var SubmitModel $submit */
+        foreach ($this->getSubmits() as $submit) {
+            $submitsTable[$submit->contestant_id] = $submitsTable[$submit->contestant_id] ?? [];
+            $submitsTable[$submit->contestant_id][$submit->task_id] = $submit;
         }
         return $submitsTable;
     }
 
-    public function formatAsFormValues(): array {
+    public function formatAsFormValues(): array
+    {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
-        /** @var ModelContestant $contestant */
+        /** @var ContestantModel $contestant */
         foreach ($contestants as $contestant) {
-            $ctId = $contestant->ct_id;
-            if (isset($submitsTable[$ctId])) {
-                $result[$ctId] = [self::FORM_SUBMIT => $submitsTable[$ctId]];
-            } else {
-                $result[$ctId] = [self::FORM_SUBMIT => null];
-            }
+            $result[$contestant->contestant_id] = [
+                self::FORM_SUBMIT => $submitsTable[$contestant->contestant_id] ?? null,
+            ];
         }
         return [
             self::FORM_CONTESTANT => $result,
         ];
     }
 
-    public function getFingerprint(): string {
+    public function getFingerprint(): string
+    {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
-                /** @var ModelSubmit $submit */
+                /** @var SubmitModel $submit */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

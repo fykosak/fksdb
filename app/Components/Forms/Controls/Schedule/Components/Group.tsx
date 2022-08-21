@@ -10,14 +10,14 @@ interface OwnProps {
     params: Params;
 }
 
-export default class Group extends React.Component<OwnProps, {}> {
+export default class Group extends React.Component<OwnProps> {
 
     public render() {
         const {group, params} = this.props;
         return <div className="schedule-container schedule-container-accommodation">
-            {params.display.groupLabel && (<label>{group.label[translator.getCurrentLocale()]}</label>)}
-            {params.display.groupTime && (
-                <small className="ml-3">
+            {params.groupLabel && (<label>{group.label[translator.getCurrentLocale()]}</label>)}
+            {params.groupTime && (
+                <small className="ms-3">
                     <TimeDisplay date={group.start}/>-<TimeDisplay date={group.end}/>
                 </small>)}
             <div className="row">

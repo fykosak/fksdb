@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
-/**
- * Class FieldLevelPermission
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class FieldLevelPermission {
+
+class FieldLevelPermission
+{
 
     public const ALLOW_ANYBODY = 1;
     public const ALLOW_BASIC = 16;
@@ -16,7 +16,8 @@ class FieldLevelPermission {
 
     public int $write;
 
-    public function __construct(int $read, int $write) {
+    public function __construct(int $read, int $write)
+    {
         $this->read = $read;
         $this->write = $write;
     }

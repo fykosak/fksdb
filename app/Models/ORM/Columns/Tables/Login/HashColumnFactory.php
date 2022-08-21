@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Login;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\HashPrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Utils\Html;
 
-/**
- * Class HashRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class HashColumnFactory extends ColumnFactory {
+class HashColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelLogin $model
-     * @return Html
+     * @param LoginModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         return (new HashPrinter())($model->hash);
     }
 }

@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\DataTesting;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use Fykosak\Utils\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
-/**
- * Class PersonTestControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class PersonTestComponent extends BaseComponent {
+class PersonTestComponent extends BaseComponent
+{
 
     /**
      * @persistent
@@ -38,26 +37,27 @@ class PersonTestComponent extends BaseComponent {
      */
     public ?array $levels = [];
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
-        $this->servicePerson = $servicePerson;
+    final public function injectPrimary(PersonService $personService, DataTestingFactory $dataTestingFactory): void
+    {
+        $this->personService = $personService;
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
-            ->addRule(Form::INTEGER)
+            ->addRule(Form::INTEGER, _('Must be a int'))
             ->setDefaultValue($this->startId);
         $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
-            ->addRule(Form::INTEGER)
+            ->addRule(Form::INTEGER, _('Must be a int'))
             ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();
         $levelsContainer->setOption('label', _('Level'));
@@ -73,7 +73,7 @@ class PersonTestComponent extends BaseComponent {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->title);
+            $field = $testsContainer->addCheckbox((string)$key, $test->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -105,18 +105,20 @@ class PersonTestComponent extends BaseComponent {
     /**
      * @return array[]
      */
-    private function calculateProblems(): array {
-        $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
+    private function calculateProblems(): array
+    {
+        $query = $this->personService->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
-        /** @var ModelPerson $model */
+        /** @var PersonModel $model */
         foreach ($query as $model) {
             $logger = new MemoryLogger();
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog): bool {
-                return \in_array($simpleLog->level, $this->levels);
-            });
+            $personLog = \array_filter(
+                $logger->getMessages(),
+                fn(TestLog $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
+            );
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
@@ -125,9 +127,9 @@ class PersonTestComponent extends BaseComponent {
         return $logs;
     }
 
-    public function render(): void {
+    final public function render(): void
+    {
         $this->template->logs = $this->calculateProblems();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

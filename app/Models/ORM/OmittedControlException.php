@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 
-/**
- * Class OmittedControlException
- * @author Michal Červeňák <miso@fykos.cz>
- *
- */
-class OmittedControlException extends NotImplementedException {
+class OmittedControlException extends NotImplementedException
+{
 }

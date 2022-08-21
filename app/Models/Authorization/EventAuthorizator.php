@@ -1,94 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\Authorization\EventRole\EventRole;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Resource;
-use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
+use Nette\Security\User;
 use Nette\SmartObject;
 
-class EventAuthorizator {
-
+class EventAuthorizator
+{
     use SmartObject;
 
-    private IUserStorage $userStorage;
+    private User $user;
     private Permission $permission;
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator)
+    {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->userStorage = $identity;
+        $this->user = $user;
         $this->permission = $acl;
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
-     * @deprecated
      */
-    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
-    }
-
-    /**
-     * @param Resource|string $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
-     */
-    public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
-     */
-    public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->userStorage->isAuthenticated()) {
-            return false;
-        }
-        if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
+    public function isAllowed($resource, ?string $privilege, EventModel $event): bool
+    {
+        if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest)) {
             return true;
         }
-        return $this->isEventOrg($resource, $privilege, $event);
+        foreach ($this->getRolesForEvent($event) as $role) {
+            if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
+     * @return EventRole[]
      */
-    public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->userStorage->isAuthenticated()) {
-            return false;
-        }
-        if (!$this->isEventOrg($resource, $privilege, $event)) {
-            return false;
-        }
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
-    }
-
-    /**
-     * @param Resource|string $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
-     */
-    private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
-        /** @var ModelLogin $identity */
-        $identity = $this->userStorage->getIdentity();
-        $person = $identity ? $identity->getPerson() : null;
-        if (!$person) {
-            return false;
-        }
-        return $event->getEventOrgs()->where('person_id', $person->person_id)->count() > 0;
+    private function getRolesForEvent(EventModel $event): array
+    {
+        $login = $this->user->getIdentity();
+        /** @var LoginModel $login */
+        $person = $login ? $login->person : null;
+        return $person ? $person->getEventRoles($event) : [];
     }
 }

@@ -1,22 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ExpressionPrinter {
+class ExpressionPrinter
+{
     use SmartObject;
 
     /**
-     * @param callable|mixed $expression
-     * @return string
+     * @param mixed $expression
      */
-    public function printExpression($expression): string {
+    public function printExpression($expression): string
+    {
         if (is_scalar($expression)) {
             return (string)$expression;
         } elseif (is_callable($expression)) {

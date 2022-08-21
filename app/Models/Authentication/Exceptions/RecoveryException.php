@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication\Exceptions;
 
-use RuntimeException;
-
-abstract class RecoveryException extends RuntimeException {
-
+abstract class RecoveryException extends \RuntimeException
+{
 }

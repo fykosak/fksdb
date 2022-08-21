@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
@@ -11,14 +13,16 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
@@ -26,38 +30,20 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
-/**
- * Class ReferencedPersonContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ReferencedPersonContainer extends ReferencedContainer {
-
-    public const TARGET_FORM = 0x1;
-    public const TARGET_VALIDATION = 0x2;
-    public const EXTRAPOLATE = 0x4;
-    public const HAS_DELIVERY = 0x8;
+class ReferencedPersonContainer extends ReferencedContainer
+{
 
     public ModifiabilityResolver $modifiabilityResolver;
-
     public VisibilityResolver $visibilityResolver;
-
-    public int $acYear;
-
+    public ContestYearModel $contestYear;
     private array $fieldsDefinition;
-
-    protected ServicePerson $servicePerson;
-
+    protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
     protected FlagFactory $flagFactory;
-
     protected AddressFactory $addressFactory;
-
     private PersonScheduleFactory $personScheduleFactory;
-
-    protected ?ModelEvent $event;
+    protected ?EventModel $event;
 
     private bool $configured = false;
 
@@ -65,15 +51,15 @@ class ReferencedPersonContainer extends ReferencedContainer {
         Container $container,
         ModifiabilityResolver $modifiabilityResolver,
         VisibilityResolver $visibilityResolver,
-        int $acYear,
+        ContestYearModel $contestYear,
         array $fieldsDefinition,
-        ?ModelEvent $event,
+        ?EventModel $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);
         $this->modifiabilityResolver = $modifiabilityResolver;
         $this->visibilityResolver = $visibilityResolver;
-        $this->acYear = $acYear;
+        $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
         $this->monitor(IContainer::class, function (): void {
@@ -86,11 +72,11 @@ class ReferencedPersonContainer extends ReferencedContainer {
     final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;
@@ -98,13 +84,13 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    protected function configure(): void {
+    protected function configure(): void
+    {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -120,26 +106,32 @@ class ReferencedPersonContainer extends ReferencedContainer {
             }
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $metadata);
-                $fullFieldName = "$sub.$fieldName";
-                if ($this->getReferencedId()->getHandler()->isSecondaryKey($fullFieldName)) {
-                    if ($fieldName != 'email') {
-                        throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
-                    }
-
-                    $control->addCondition(function (): bool { // we use this workaround not to call getValue inside validation out of transaction
-                        $personId = $this->getReferencedId()->getValue(false);
-                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
-                    })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName): bool {
+                if ($sub === 'person_info' && $fieldName === 'email') {
+                    $control->addCondition(
+                        function (): bool {
+                            // we use this workaround not to call getValue inside validation out of transaction
                             $personId = $this->getReferencedId()->getValue(false);
+                            return $personId && $personId != ReferencedId::VALUE_PROMISE;
+                        }
+                    )
+                        ->addRule(
+                            function (BaseControl $control): bool {
+                                $personId = $this->getReferencedId()->getValue(false);
 
-                            $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
-                            if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $this->getReferencedId()->setValue($foundPerson, ReferencedId::MODE_FORCE);
-                                return false;
-                            }
-                            return true;
-                        }, _('There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'));
+                                $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
+                                    $control->getValue()
+                                );
+                                if ($foundPerson && $foundPerson->getPrimary() != $personId) {
+                                    $this->getReferencedId()->setValue($foundPerson, (bool)ReferencedId::MODE_FORCE);
+                                    return false;
+                                }
+                                return true;
+                            },
+                            _(
+                                'There is (formally) different person with email %value. 
+                                Probably it is a duplicate so it substituted original data in the form.'
+                            )
+                        );
                 }
 
                 $subContainer->addComponent($control, $fieldName);
@@ -149,14 +141,13 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param IModel|ModelPerson|null $model
-     * @param string $mode
-     * @return void
+     * @param PersonModel|null $model
      */
-    public function setModel(?IModel $model, string $mode): void {
-        $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
-        $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
+    public function setModel(?Model $model, string $mode): void
+    {
+        $resolution = $this->modifiabilityResolver->getResolutionMode($model);
+        $modifiable = $this->modifiabilityResolver->isModifiable($model);
+        $visible = $this->visibilityResolver->isVisible($model);
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
@@ -174,13 +165,20 @@ class ReferencedPersonContainer extends ReferencedContainer {
              * TODO type safe
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $options = self::TARGET_FORM | self::HAS_DELIVERY;
-                } else {
-                    $options = self::TARGET_FORM;
-                }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $options); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $options | self::EXTRAPOLATE);
+                $realValue = $this->getPersonValue(
+                    $model,
+                    $sub,
+                    $fieldName,
+                    false,
+                    isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
+                ); // not extrapolated
+                $value = $this->getPersonValue(
+                    $model,
+                    $sub,
+                    $fieldName,
+                    true,
+                    isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
+                );
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
@@ -201,13 +199,15 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
-                    if ($this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
-                        || ($mode === ReferencedId::MODE_FORCE)) {
+                    if (
+                        $this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
+                        || ($mode === ReferencedId::MODE_FORCE)
+                    ) {
                         $component->setValue($value);
                     } else {
                         $component->setDefaultValue($value);
                     }
-                    if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                    if ($realValue && $resolution == ReferencedHandler::RESOLUTION_EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
@@ -216,42 +216,40 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param string $sub
-     * @param string $fieldName
-     * @param array $metadata
      * @return IComponent|BaseControl
      * @throws BadTypeException
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
      */
-    public function createField(string $sub, string $fieldName, array $metadata): IComponent {
-        $control = null;
+    public function createField(string $sub, string $fieldName, array $metadata): IComponent
+    {
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
                 if ($fieldName == 'address') {
-                    $required = (bool)$metadata['required'] ?? false;
-                    if ($required) {
-                        $options = AddressFactory::REQUIRED;
-                    } else {
-                        $options = 0;
-                    }
-                    return $this->addressFactory->createAddress($options, $this->getReferencedId());
+                    return $this->addressFactory->createAddress(
+                        $this->getReferencedId(),
+                        (bool)$metadata['required'] ?? false
+                    );
                 } else {
                     throw new InvalidArgumentException("Only 'address' field is supported.");
                 }
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
-                $control = $this->personScheduleFactory->createField($fieldName, $this->event, $metadata['label'] ?? null);
+                $control = $this->personScheduleFactory->createField(
+                    $fieldName,
+                    $this->event,
+                    $metadata['label'] ?? null
+                );
                 break;
             case 'person':
             case 'person_info':
                 $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
                 break;
             case 'person_history':
-                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->acYear);
+                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
                 break;
             default:
                 throw new InvalidArgumentException();
@@ -261,14 +259,16 @@ class ReferencedPersonContainer extends ReferencedContainer {
         return $control;
     }
 
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {
+    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void
+    {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
                     if ($value) {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
-                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                        if ($fieldName == 'agreed') {
+                            // NOTE: this may need refactoring when more customization requirements occurre
                             $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                         } else {
                             $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
@@ -288,7 +288,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    protected function setWriteOnly(IComponent $component, bool $value): void {
+    protected function setWriteOnly(IComponent $component, bool $value): void
+    {
         if ($component instanceof WriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {
@@ -298,7 +299,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    protected function isWriteOnly(IComponent $component): bool {
+    protected function isWriteOnly(IComponent $component): bool
+    {
         if ($component instanceof WriteOnly) {
             return true;
         } elseif ($component instanceof IContainer) {
@@ -311,19 +313,26 @@ class ReferencedPersonContainer extends ReferencedContainer {
         return false;
     }
 
-    final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
-        $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
-        return !($value === null || $value === '');
-    }
-
     /**
-     * @param ModelPerson|null $person
-     * @param string $sub
-     * @param string $field
-     * @param int $options
      * @return mixed
      */
-    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, int $options) {
-        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
+    protected function getPersonValue(
+        ?PersonModel $person,
+        string $sub,
+        string $field,
+        bool $extrapolate = false,
+        bool $hasDelivery = false,
+        bool $targetValidation = false
+    ) {
+        return ReferencedPersonFactory::getPersonValue(
+            $person,
+            $sub,
+            $field,
+            $this->contestYear,
+            $extrapolate,
+            $hasDelivery,
+            $targetValidation,
+            $this->event
+        );
     }
 }

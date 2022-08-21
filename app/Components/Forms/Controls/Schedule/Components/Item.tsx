@@ -1,6 +1,6 @@
 import { translator } from '@translator/translator';
 import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { changeData } from 'FKSDB/Models/FrontEnd/InputConnector/actions';
+import { changeData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 import * as React from 'react';
@@ -25,7 +25,7 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
 
     public render() {
         const {item, value, onChange, params} = this.props;
@@ -35,19 +35,19 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
         return <div className="mb-3">
                 <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
                 <span
-                    className={isChecked ? 'fa fa-check-square-o' : 'fa fa-square-o'}
+                    className={isChecked ? 'fas fa-check-circle' : 'far fa-circle'}
                     onClick={() => {
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}
                 />
-                    <span className="ml-3">
+                    <span className="ms-3">
                         {label[translator.getCurrentLocale()]} {
-                        params.display.description && <DescriptionLabel description={description}/>
+                        params.description && <DescriptionLabel description={description}/>
                     }</span>
             </span>
             <span className="text-muted">
-                {params.display.price && <PriceLabel price={price}/>}
-                {params.display.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                {params.price && <PriceLabel price={price}/>}
+                {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
             </span>
         </div>;
     }

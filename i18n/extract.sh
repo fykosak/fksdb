@@ -34,12 +34,12 @@ function neon2php {
 	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
 function tsx2php {
-sed "s/lang.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
+sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
 }
 function ts2php {
-sed "s/lang.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/lang.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
+sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`

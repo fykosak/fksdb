@@ -1,28 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\PricePrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Utils\Html;
 
-/**
- * Class PriceRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class PriceColumnFactory extends ColumnFactory {
-
+class PriceColumnFactory extends ColumnFactory
+{
     /**
-     * @param AbstractModel|ModelPayment $model
-     * @return Html
+     * @param PaymentModel $model
+     * @throws \Exception
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
-        if ($model->price) {
-            return (new PricePrinter())($model->getPrice());
+    protected function createHtmlValue(Model $model): Html
+    {
+        if (\is_null($model->price)) {
+            return NotSetBadge::getHtml();
         }
-        return NotSetBadge::getHtml();
+        return (new PricePrinter())($model->getPrice());
     }
 }

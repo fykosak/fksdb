@@ -1,30 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\Models\ORM\Models\ModelAddress;
-use FKSDB\Models\ORM\Models\ModelPostContact;
-use FKSDB\Models\ORM\Models\ModelRegion;
-use FKSDB\Models\ORM\Services\ServiceRegion;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\AddressModel;
+use FKSDB\Models\ORM\Models\PostContactModel;
+use FKSDB\Models\ORM\Models\RegionModel;
+use FKSDB\Models\ORM\Services\RegionService;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
-use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class AddressContainer extends ModelContainer {
+class AddressContainer extends ModelContainer
+{
+    private RegionService $regionService;
 
-    private ServiceRegion $serviceRegion;
-
-    public function __construct(DIContainer $container) {
+    public function __construct(DIContainer $container)
+    {
         parent::__construct($container);
     }
 
-    final public function injectServiceRegion(ServiceRegion $serviceRegion): void {
-        $this->serviceRegion = $serviceRegion;
+    final public function injectServiceRegion(RegionService $regionService): void
+    {
+        $this->regionService = $regionService;
     }
 
     /**
@@ -32,8 +31,9 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable|null $value
      */
-    public function setValue($value): void {
-        $this->setValues($value === null ? [] : $value);
+    public function setValue($value): void
+    {
+        $this->setValues($value ?? []);
     }
 
     /**
@@ -41,27 +41,28 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setDefaultValue($value): void {
+    public function setDefaultValue($value): void
+    {
         $this->setDefaults($value === null ? [] : $value);
     }
 
     /**
-     * @param ModelPostContact|mixed $data
-     * @param bool $erase
+     * @param PostContactModel|mixed $data
      * @return static
      */
-    public function setValues($data, bool $erase = false): self {
-        if ($data instanceof ActiveRow) { //assert its from address table
-            if ($data instanceof ModelPostContact) {
-                $address = $data->getAddress();
+    public function setValues($data, bool $erase = false): self
+    {
+        if ($data instanceof Model) { //assert its from address table
+            if ($data instanceof PostContactModel) {
+                $address = $data->address;
             } else {
                 $address = $data;
             }
-            /** @var ModelAddress $address */
+            /** @var AddressModel $address */
             $data = $address->toArray();
-            $data['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
+            $data['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         } elseif (is_array($data) && isset($data['region_id'])) {
-            $region = $this->serviceRegion->findByPrimary($data['region_id']);
+            $region = $this->regionService->findByPrimary($data['region_id']);
             $data['country_iso'] = $region->country_iso;
         }
 
@@ -70,17 +71,20 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param null $returnType
-     * @param array|null $controls
-     * @return array|ArrayHash
+     * @return array|object
      */
-    public function getValues($returnType = null, array $controls = null) {
-        $values = parent::getValues($returnType);
+    public function getUnsafeValues($returnType = null, array $controls = null)
+    {
+        $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
-            if (!$this->serviceRegion) {
-                throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');
+            if (!$this->regionService) {
+                throw new InvalidStateException(
+                    'You must set ' . RegionService::class
+                    . ' before getting values from the address container.'
+                );
             }
-            /** @var ModelRegion|false $region */
-            $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
+            /** @var RegionModel|null $region */
+            $region = $this->regionService->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }
         return $values;

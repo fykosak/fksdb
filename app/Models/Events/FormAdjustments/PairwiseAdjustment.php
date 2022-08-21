@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -8,20 +10,18 @@ use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
+abstract class PairwiseAdjustment extends AbstractAdjustment
+{
 
-    private iterable $rules;
+    protected iterable $rules;
 
-    public function __construct(iterable $rules) {
+    public function __construct(iterable $rules)
+    {
         $this->rules = $rules;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         foreach ($this->rules as $target => $prerequisites) {
             if (is_scalar($prerequisites)) {
                 $prerequisites = [$prerequisites];
@@ -51,7 +51,10 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdju
                 } else {
                     $sTarget = count($cTarget);
                     $sPrerequisite = count($cPrerequisite);
-                    throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'.");
+                    throw new InvalidArgumentException(
+                        "Cannot apply 1:1, 1:n, n:1 neither 
+                    matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'."
+                    );
                 }
             }
         }

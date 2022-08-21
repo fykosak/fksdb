@@ -1,105 +1,96 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Controls\Entity\PersonFormComponent;
+use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\IModel;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
-use FKSDB\Models\ORM\Models\ModelPostContact;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceFlag;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHasFlag;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServicePostContact;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Models\PostContactModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\FlagService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonHasFlagService;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use Nette\Utils\ArrayHash;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ReferencedPersonHandler implements ReferencedHandler {
-
+class ReferencedPersonHandler implements ReferencedHandler
+{
     use SmartObject;
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    private ServicePerson $servicePerson;
-    private ServicePersonInfo $servicePersonInfo;
-    private ServicePersonHistory $servicePersonHistory;
+    private PersonService $personService;
+    private PersonInfoService $personInfoService;
+    private PersonHistoryService $personHistoryService;
 
-    private ServiceAddress $serviceAddress;
-    private ServicePostContact $servicePostContact;
+    private AddressService $addressService;
+    private PostContactService $postContactService;
 
-    private ServicePersonHasFlag $servicePersonHasFlag;
-    private int $acYear;
+    private PersonHasFlagService $personHasFlagService;
+    private ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
-    private ServiceFlag $serviceFlag;
+    private FlagService $flagService;
 
-    private ModelEvent $event;
+    private EventModel $event;
 
     private string $resolution;
 
-    /**
-     * ReferencedPersonHandler constructor.
-     * @param int $acYear
-     * @param string $resolution
-     */
     public function __construct(
-        int $acYear,
+        ContestYearModel $contestYear,
         string $resolution
     ) {
-        $this->acYear = $acYear;
+        $this->contestYear = $contestYear;
         $this->resolution = $resolution;
     }
 
     public function inject(
         Handler $eventScheduleHandler,
-        ServicePerson $servicePerson,
-        ServicePersonInfo $servicePersonInfo,
-        ServicePersonHistory $servicePersonHistory,
-        ServicePersonHasFlag $servicePersonHasFlag,
-        ServiceAddress $serviceAddress,
-        ServicePostContact $servicePostContact,
-        ServiceFlag $serviceFlag
+        PersonService $personService,
+        PersonInfoService $personInfoService,
+        PersonHistoryService $personHistoryService,
+        PersonHasFlagService $personHasFlagService,
+        AddressService $addressService,
+        PostContactService $postContactService,
+        FlagService $flagService
     ): void {
         $this->eventScheduleHandler = $eventScheduleHandler;
-        $this->servicePerson = $servicePerson;
-        $this->servicePersonInfo = $servicePersonInfo;
-        $this->servicePersonHistory = $servicePersonHistory;
-        $this->servicePersonHasFlag = $servicePersonHasFlag;
-        $this->serviceAddress = $serviceAddress;
-        $this->servicePostContact = $servicePostContact;
-        $this->serviceFlag = $serviceFlag;
+        $this->personService = $personService;
+        $this->personInfoService = $personInfoService;
+        $this->personHistoryService = $personHistoryService;
+        $this->personHasFlagService = $personHasFlagService;
+        $this->addressService = $addressService;
+        $this->postContactService = $postContactService;
+        $this->flagService = $flagService;
     }
 
-    public function getResolution(): string {
+    public function getResolution(): string
+    {
         return $this->resolution;
     }
 
-    public function setResolution(string $resolution): void {
+    public function setResolution(string $resolution): void
+    {
         $this->resolution = $resolution;
     }
 
     /**
-     * @param ArrayHash $values
-     * @return ModelPerson
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws ModelDataConflictException
@@ -107,18 +98,15 @@ class ReferencedPersonHandler implements ReferencedHandler {
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function createFromValues(ArrayHash $values): ModelPerson {
-        $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
-        $person = $this->servicePerson->findByEmail($email);
-        $person = $this->storePerson($person, (array)$values);
+    public function createFromValues(array $values): PersonModel
+    {
+        $person = $this->findBySecondaryKey($values['person_info']['email'] ?? null);
+        $person = $this->storePerson($person, $values);
         $this->store($person, $values);
         return $person;
     }
 
     /**
-     * @param IModel $model
-     * @param ArrayHash $values
-     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws ModelDataConflictException
@@ -126,19 +114,18 @@ class ReferencedPersonHandler implements ReferencedHandler {
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function update(IModel $model, ArrayHash $values): void {
-        /** @var ModelPerson $model */
+    public function update(Model $model, array $values): void
+    {
+        /** @var PersonModel $model */
         $this->store($model, $values);
     }
 
-    public function setEvent(ModelEvent $event): void {
+    public function setEvent(EventModel $event): void
+    {
         $this->event = $event;
     }
 
     /**
-     * @param ModelPerson $person
-     * @param ArrayHash $data
-     * @return void
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws ExistingPaymentException
@@ -146,7 +133,8 @@ class ReferencedPersonHandler implements ReferencedHandler {
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(ModelPerson &$person, ArrayHash $data): void {
+    private function store(PersonModel &$person, array $data): void
+    {
         /*
          * Process data
          */
@@ -159,20 +147,27 @@ class ReferencedPersonHandler implements ReferencedHandler {
             $models = [
                 'person' => &$person,
                 'person_info' => $person->getInfo(),
-                'person_history' => $person->getHistory($this->acYear),
-                'person_schedule' => ((isset($this->event) && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
-                self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
-                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
+                'person_history' => $person->getHistoryByContestYear($this->contestYear),
+                'person_schedule' => ((
+                    isset($this->event)
+                    && isset($data['person_schedule'])
+                    && $person->getSerializedSchedule(
+                        $this->event,
+                        \array_keys((array)$data['person_schedule'])[0]
+                    )) ?: null),
+                self::POST_CONTACT_DELIVERY => $person->getPostContact(
+                    PostContactType::tryFrom(PostContactType::DELIVERY)
+                ),
+                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(false),
             ];
-            $originalModels = \array_keys(iterator_to_array($data));
+            $originalModels = \array_keys($data);
 
             $this->prepareFlagModels($person, $data, $models);
 
             $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
 
-            $data = FormUtils::emptyStrToNull($data);
-            $data = FormUtils::removeEmptyHashes($data);
+            $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
             $conflicts = $this->getConflicts($models, $data);
             if ($this->resolution === self::RESOLUTION_EXCEPTION) {
                 if (count($conflicts)) {
@@ -183,16 +178,22 @@ class ReferencedPersonHandler implements ReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-            /** @var ModelPostContact|ModelPerson|AbstractModel|ModelPersonInfo|ModelPersonHistory $model */
+            /** @var PostContactModel|PersonModel|Model|PersonInfoModel|PersonHistoryModel $model */
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
-                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
+                    if (
+                        in_array($t, $originalModels)
+                        && in_array(
+                            $t,
+                            [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT]
+                        )
+                    ) {
                         // delete only post contacts, other "children" could be left all-nulls
 
                         if ($model) {
-                            /** @var ModelPostContact $model */
-                            $this->servicePostContact->dispose($model);
-                            $this->serviceAddress->dispose($model->getAddress());
+                            /** @var PostContactModel $model */
+                            $this->postContactService->disposeModel($model);
+                            $this->addressService->disposeModel($model->address);
                         }
                     }
                     continue;
@@ -202,10 +203,19 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->store($person, $model, (array)$data['person_info']);
+                        $this->personInfoService->storeModel(
+                            array_merge((array)$data['person_info'], ['person_id' => $person->person_id]),
+                            $model
+                        );
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
+                        $this->personHistoryService->storeModel(
+                            array_merge((array)$data['person_history'], [
+                                'ac_year' => $this->contestYear->ac_year,
+                                'person_id' => $person->person_id,
+                            ]),
+                            $model
+                        );
                         continue 2;
                     case 'person_schedule':
                         $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
@@ -216,17 +226,12 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         continue 2;
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
-                            $flag = $this->serviceFlag->findByFid($flagId);
-                            $flagData = [
+                            $flag = $this->flagService->findByFid($flagId);
+                            $this->personHasFlagService->storeModel([
                                 'value' => $flagValue,
                                 'flag_id' => $flag->flag_id,
-                            ];
-                            if ($model[$flagId]) {
-                                $this->servicePersonHasFlag->updateModel2($model[$flagId], (array)$flagData);
-                            } else {
-                                $flagData['person_id'] = $person->person_id;
-                                $this->servicePersonHasFlag->createNewModel((array)$flagData);
-                            }
+                                'person_id' => $person->person_id,
+                            ], $model[$flagId]);
                         }
                         continue 2;
                 }
@@ -238,31 +243,33 @@ class ReferencedPersonHandler implements ReferencedHandler {
         }
     }
 
-    private function storePostContact(ModelPerson $person, ?ModelPostContact $model, array $data, string $type): void {
+    private function storePostContact(PersonModel $person, ?PostContactModel $model, array $data, string $type): void
+    {
         if ($model) {
-            $this->serviceAddress->updateModel2($model->getAddress(), $data);
-            $this->servicePostContact->updateModel2($model, $data);
+            $this->addressService->storeModel($data, $model->address);
+            $this->postContactService->storeModel($data, $model);
         } else {
-            $data = array_merge((array)$data, [
+            $data = array_merge($data, [
                 'person_id' => $person->person_id,
-                'type' => PersonFormComponent::mapAddressContainerNameToType($type),
+                'type' => PersonFormComponent::mapAddressContainerNameToType($type)->value,
             ]);
-            $mainModel = $this->serviceAddress->createNewModel($data);
+            $mainModel = $this->addressService->storeModel($data);
             $data['address_id'] = $mainModel->address_id;
-            $this->servicePostContact->createNewModel($data);
+            $this->postContactService->storeModel($data);
         }
     }
 
     private bool $outerTransaction = false;
 
-    private function getConflicts(array $models, ArrayHash $values): array {
+    private function getConflicts(array $models, array $values): array
+    {
         $conflicts = [];
         foreach ($values as $key => $value) {
             if ($key === 'person_has_flag') {
                 continue;
             }
             if (isset($models[$key])) {
-                if ($models[$key] instanceof IModel) {
+                if ($models[$key] instanceof Model) {
                     $subConflicts = $this->getModelConflicts($models[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
@@ -276,7 +283,8 @@ class ReferencedPersonHandler implements ReferencedHandler {
         return $conflicts;
     }
 
-    private function getModelConflicts(IModel $model, array $values): array {
+    private function getModelConflicts(Model $model, array $values): array
+    {
         $conflicts = [];
         foreach ($values as $key => $value) {
             if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
@@ -286,15 +294,17 @@ class ReferencedPersonHandler implements ReferencedHandler {
         return $conflicts;
     }
 
-    private function storePerson(?ModelPerson $person, array $data): ModelPerson {
-        return $this->servicePerson->store($person, (array)$data['person']);
+    private function storePerson(?PersonModel $person, array $data): PersonModel
+    {
+        return $this->personService->storeModel((array)$data['person'], $person);
     }
 
-    private function removeConflicts(iterable $data, iterable $conflicts): iterable {
+    private function removeConflicts(iterable $data, iterable $conflicts): iterable
+    {
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {
-                if ($data[$key] instanceof ArrayHash) {
+                if (is_iterable($data[$key])) {
                     $result[$key] = $this->removeConflicts($data[$key], $value);
                 } else {
                     unset($data[$key]);
@@ -305,32 +315,34 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ModelPostContact[] $models
+     * @param PostContactModel[] $models
      */
-    private function preparePostContactModels(array &$models): void {
+    private function preparePostContactModels(array &$models): void
+    {
         if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
             $data = array_merge(
                 $models[self::POST_CONTACT_DELIVERY]->toArray(),
-                $models[self::POST_CONTACT_DELIVERY]->getAddress()->toArray()
+                $models[self::POST_CONTACT_DELIVERY]->address->toArray()
             );
 
             unset($data['post_contact_id']);
             unset($data['address_id']);
             unset($data['type']);
 
-            $addressModel = $this->serviceAddress->createNewModel($data);
+            $addressModel = $this->addressService->storeModel($data);
             $data['address_id'] = $addressModel->address_id;
-            $joinedModel = $this->servicePostContact->createNewModel($data);
+            $joinedModel = $this->postContactService->storeModel($data);
             $models[self::POST_CONTACT_PERMANENT] = $joinedModel;
         }
     }
 
-    private function resolvePostContacts(ArrayHash $data): void {
+    private function resolvePostContacts(array &$data): void
+    {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             if (!isset($data[$type])) {
                 continue;
             }
-            $cleared = FormUtils::removeEmptyHashes(FormUtils::emptyStrToNull($data[$type]), true);
+            $cleared = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data[$type]), true);
             if (!isset($cleared['address'])) {
                 unset($data[$type]);
                 continue;
@@ -338,22 +350,20 @@ class ReferencedPersonHandler implements ReferencedHandler {
             $data[$type] = $data[$type]['address']; // flatten
             switch ($type) {
                 case self::POST_CONTACT_DELIVERY:
-                    $data[$type]['type'] = ModelPostContact::TYPE_DELIVERY;
+                    $data[$type]['type'] = PostContactType::DELIVERY;
                     break;
                 case self::POST_CONTACT_PERMANENT:
-                    $data[$type]['type'] = ModelPostContact::TYPE_PERMANENT;
+                    $data[$type]['type'] = PostContactType::PERMANENT;
                     break;
             }
         }
     }
 
     /**
-     * @param ModelPerson $person
-     * @param ArrayHash $data
-     * @param array $models
      * @throws ModelException
      */
-    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models): void {
+    private function prepareFlagModels(PersonModel $person, array &$data, array &$models): void
+    {
         if (!isset($data['person_has_flag'])) {
             return;
         }
@@ -363,12 +373,13 @@ class ReferencedPersonHandler implements ReferencedHandler {
                 unset($data['person_has_flag'][$fid]);
                 continue;
             }
-            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid) ?: null;
+            $models['person_has_flag'][$fid] = $person->hasPersonFlag($fid);
         }
     }
 
-    private function beginTransaction(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+    private function beginTransaction(): void
+    {
+        $connection = $this->personService->explorer->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
@@ -376,34 +387,25 @@ class ReferencedPersonHandler implements ReferencedHandler {
         }
     }
 
-    private function commit(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+    private function commit(): void
+    {
+        $connection = $this->personService->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
     }
 
-    private function rollback(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+    private function rollback(): void
+    {
+        $connection = $this->personService->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();
         }
         //else: TODO ? throw an exception?
     }
 
-    public function isSecondaryKey(string $field): bool {
-        return $field == 'person_info.email';
-    }
-
-    /**
-     * @param string $field
-     * @param mixed $key
-     * @return ModelPerson|null|IModel
-     */
-    public function findBySecondaryKey(string $field, string $key): ?ModelPerson {
-        if (!$this->isSecondaryKey($field)) {
-            throw new InvalidArgumentException("'$field' is not a secondary key.");
-        }
-        return $this->servicePerson->findByEmail($key);
+    public function findBySecondaryKey(string $key): ?PersonModel
+    {
+        return $this->personService->findByEmail($key);
     }
 }

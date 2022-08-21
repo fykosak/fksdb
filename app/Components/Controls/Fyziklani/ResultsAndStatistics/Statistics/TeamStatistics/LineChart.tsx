@@ -2,14 +2,12 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -24,7 +22,7 @@ interface OwnProps {
     teamId: number;
 }
 
-class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
+class PointsInTime extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {
@@ -52,7 +50,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
             yValue: number;
             xValue: Date;
         }> = [];
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<Date> = [];
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
@@ -72,7 +70,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
                         maxPoints += +points;
                         teamSubmits.push({
                             active: (!(activePoints && (activePoints !== submit.points))),
-                            color: getColorByPoints(submit.points),
+                            color: 'var(--color-fof-points-' + submit.points + ')',
                             label: currentTask.label,
                             xValue: new Date(submit.created),
                             yValue: maxPoints,
@@ -126,7 +124,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

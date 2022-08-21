@@ -1,26 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-interface ExtendedPersonPresenter {
+interface ExtendedPersonPresenter
+{
 
-    public function getModel(): ?AbstractModel;
+    public function getModel(): ?Model;
 
     /**
      * @note First '%s' is replaced with referenced person's name.
-     * @return string
      */
     public function messageCreate(): string;
 
     /**
      * @note First '%s' is replaced with referenced person's name.
-     * @return string
      */
     public function messageEdit(): string;
 
@@ -30,8 +27,6 @@ interface ExtendedPersonPresenter {
 
     /**
      * @param string $message
-     * @param string $type
-     * @return \stdClass
      */
     public function flashMessage($message, string $type = 'info'): \stdClass;
 }

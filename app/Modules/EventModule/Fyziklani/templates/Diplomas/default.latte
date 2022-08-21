@@ -1,3 +1,5 @@
+{varType FKSDB\Modules\EventModule\Fyziklani\DiplomasPresenter $presenter}
+{varType array $items}
 {block content}
     <div>
         {foreach $items as $category=>$stats}
@@ -7,19 +9,20 @@
                 <span class="text-success">closed: {$stats['closed']}</span>
                 <span>total: {$stats['opened']+$stats['closed']}</span>
             </div>
-            {if $presenter->isReadyAllToCalculate($category)}
-                <a class="btn btn-primary"
-                   href="{link calculate! category=>$category}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
+        {var $teamCategory = FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category)}
+            {if $presenter->isReadyAllToCalculate($teamCategory)}
+                <a class="btn btn-outline-primary"
+                   href="{link calculate! category=>$teamCategory}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
             {else}
-                <span class="btn btn-warnig disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
+                <span class="btn btn-outline-warning disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
             {/if}
         {/foreach}
         <h2>{_'Global'}</h2>
         {if $presenter->isReadyAllToCalculate(null)}
-            <a class="btn btn-primary"
+            <a class="btn btn-outline-primary"
                href="{link calculate! category=>null}">{\sprintf(_('Calculate global results'), $category)}</a>
         {else}
-            <span class="btn btn-primary disabled">{\sprintf(_('Total results are not ready'), $category)}</span>
+            <span class="btn btn-outline-primary disabled">{\sprintf(_('Total results are not ready'), $category)}</span>
         {/if}
     </div>
 

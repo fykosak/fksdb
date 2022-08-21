@@ -1,52 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-/**
- * Class TotalPersonsChartControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class TotalPersonsChart extends ReactComponent implements Chart {
+class TotalPersonsChart extends FrontEndComponent implements Chart
+{
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container, 'chart.total-person');
     }
 
-    final public function injectServicePerson(ServicePerson $servicePerson): void {
-        $this->servicePerson = $servicePerson;
+    final public function injectServicePerson(PersonService $personService): void
+    {
+        $this->personService = $personService;
     }
 
-    public function getData(): array {
-        $query = $this->servicePerson->getTable()->order('created');
+    public function getData(): array
+    {
+        $query = $this->personService->getTable()->order('created');
         $data = [];
-        /** @var ModelPerson $person */
+        /** @var PersonModel $person */
         foreach ($query as $person) {
             $data[] = [
                 'created' => $person->created->format('c'),
-                'gender' => $person->gender,
+                'gender' => $person->gender->value,
                 'personId' => $person->person_id,
             ];
         }
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Total persons in FKSDB');
     }
 
-    public function getControl(): self {
-        return $this;
-    }
-
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return _('Graph shows the progress in the number of people in FKSDB and the number of assigned person_ids.');
     }
 }

@@ -1,38 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\FormComponent;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-/**
- * Class FormComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
-abstract class FormComponent extends BaseComponent {
+abstract class FormComponent extends BaseComponent
+{
 
-    public function render(): void {
-        $this->template->setFile($this->getTemplatePath());
-        $this->template->render();
+    public function render(): void
+    {
+        $this->template->render($this->getTemplatePath());
     }
 
-    protected function getTemplatePath(): string {
+    protected function getTemplatePath(): string
+    {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
-    protected function createFormControl(): FormControl {
+    protected function createFormControl(): FormControl
+    {
         return new FormControl($this->getContext());
     }
 
     /**
-     * @return Form
      * @throws BadTypeException
      */
-    final protected function getForm(): Form {
+    final protected function getForm(): Form
+    {
         $control = $this->getComponent('formControl');
         if (!$control instanceof FormControl) {
             throw new BadTypeException(FormControl::class, $control);
@@ -41,24 +41,17 @@ abstract class FormComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    final protected function createComponentFormControl(): FormControl {
+    final protected function createComponentFormControl(): FormControl
+    {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
         $this->appendSubmitButton($control->getForm())
-            ->onClick[] = function (SubmitButton $button) {
-            $this->handleSuccess($button);
-        };
+            ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
         return $control;
     }
 
-    /**
-     * @param SubmitButton $button
-     * @return void
-     * @throws AbortException
-     */
     abstract protected function handleSuccess(SubmitButton $button): void;
 
     abstract protected function appendSubmitButton(Form $form): SubmitButton;

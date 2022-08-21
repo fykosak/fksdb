@@ -1,25 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\Utils\Html;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated use person_schedule UC
  */
-class MultiResourceAvailability extends AbstractAdjustment {
+class MultiResourceAvailability extends AbstractAdjustment
+{
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
@@ -39,11 +39,17 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array $fields Fields that contain amount of the resource
      * @param array|string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Explorer $explorer
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(
+        array $fields,
+        $paramCapacity,
+        string $message,
+        Explorer $explorer,
+        array $includeStates = [AbstractMachine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
@@ -52,21 +58,22 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
-            'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => [$holder->getPrimaryHolder()],
+            'service' => $holder->primaryHolder->getService(),
+            'holders' => [$holder->primaryHolder],
         ];
-        /** @var BaseHolder[][]|Field[][]|AbstractService[]|AbstractServiceMulti[] $services */
-        $services = [];
+        /** @var BaseHolder[][]|Field[][]|Service[]|ServiceMulti[] $sService */
+        $sService = [];
         $controls = [];
         foreach ($groups as $group) {
             $holders = [];
             $field = null;
             /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->getName();
+                $name = $baseHolder->name;
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
                     if (!$foundControls) {
@@ -84,7 +91,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 }
             }
             if ($holders) {
-                $services[] = [
+                $sService[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
                     'field' => $field,
@@ -93,31 +100,30 @@ class MultiResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = [];
-        foreach ($services as $serviceData) {
+        foreach ($sService as $dataService) {
             /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($serviceData['holders']);
-            $event = $firstHolder->getEvent();
-            $tableName = $serviceData['service']->getTable()->getName();
+            $firstHolder = reset($dataService['holders']);
+            $event = $firstHolder->event;
+            $tableName = $dataService['service']->getTable()->getName();
             $table = $this->database->table($tableName);
 
-            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
+            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
+            if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');
             }
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
-                return $baseHolder->getModel()->getPrimary(false);
-            }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+                $model = $baseHolder->getModel2();
+                return $model ? $model->getPrimary(false) : null;
+            }, $dataService['holders']);
+            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
-            $column = BaseHolder::getBareColumn($serviceData['field']);
+            $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($primaries) {
                 $table->where("NOT $pk IN", $primaries);
@@ -134,7 +140,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         }
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
-        foreach ($o as $key => $option) {
+        foreach ($o as $option) {
             if (is_array($option)) {
                 $capacities[$option['value']] = $option['capacity'];
             }

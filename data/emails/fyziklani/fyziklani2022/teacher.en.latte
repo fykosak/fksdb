@@ -1,0 +1,24 @@
+{layout './layout.latte'}
+{block body}
+    {var $link= $control->link(...$linkArgs)}
+    <p>
+        To whom it may concern,<br/>
+        thank you for your registration into our competition Fyziklani which takes place on 11. 2. 2022 in Prague in the Czech Republic. You can check all the data you have filled in the application in the <a href="https://db.fykos.cz/my-applications/">FKSDB</a> by clicking on the Detail of the application, or edit it using the link <a href="{$link}">here</a>. Data concerning the team composition can be edited anytime before the end of the registration.
+    </p>
+    <p>
+        We would also like to invite you to events that take place around Fyziklani. First, there will be an analysis of the problems' solutions in the evening after the contest. Also you are invited to lectures, excursions and trip through Prague that will take place during the weekend after Fyziklani.
+    </p>
+    <p>
+        You will be sent detailed information on the arrival and final schedule several days before the beginning of Fyziklani. If you have reserved accommodation, please complete the payment via <a href="https://db.fykos.cz/">FKSDB</a> by <strong>Feb 6, 2022</strong>. For accommodation, we do not accept any other payment methods. You can find the instructions on the <a href="https://fyziklani.org/accommodation">Fyziklani website</a>.
+    </p>
+
+    <p>
+        In case you need the invitation letter, do not hesitate to contact us.
+    </p>
+
+    <p>
+        Sincerely,<br/>
+        Fyziklani organisers<br/>
+        <a href="https://fyziklani.org/en">fyziklani.org</a>
+    </p>
+{/block}

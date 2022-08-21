@@ -3,9 +3,6 @@
 #
 
 parameters:
-    # Flag marking the beta version
-    beta: false
-
     # Various logs
     logDir: %appDir%/../log
 
@@ -14,11 +11,6 @@ parameters:
 
     # WDSL file defining provided services.
     wsdlUrl: https://db.fykos.cz/FKSDBWebServices.wsdl
-
-    # URL to the public website of the contests. (Keys are from contestMapping)
-    website:
-        fykos: http://fykos.cz/
-        vyfuk: http://vyfuk.fykos.cz/
 
     # Map: contest_id => contest indentifier
     contestMapping:
@@ -39,30 +31,6 @@ parameters:
     navigation:
         # How long data for navigation tree is held in the session
         expiration: '+30 minutes'
-
-    # Authentication settings
-    authentication:
-        # List of allowed hosts to which backlinking after successful authentization is possible.
-        backlinkHosts:
-            - %domain.cz%
-            - db.%domain.cz%
-            - vyfuk.%domain.cz%
-            - %domain.org%
-            - db.%domain.org%
-            - vyfuk.%domain.org%
-
-        sso:
-            # How ling is valid auth token when redirecting from authenticated domain
-            # to unauthenticated one.
-            tokenExpiration: '+1 minute'
-
-
-    # Settings for global session used for SSO (single sign on)
-    globalSession:
-        # How long inactivity is allowed until globalSession expires.
-        expiration: '+120 minutes'
-
-
     # Submits by contestats
     upload:
         # Path to storage directory
@@ -90,21 +58,6 @@ parameters:
 
     # Transport XML (from Astrid)
     tasks:
-        # Mapping of XML element names to tasks table columns (separate XML for each language).
-        columnMapping:
-            cs:
-                name: name_cs
-                points: points
-                label: label
-            en:
-                name: name_en
-
-        # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be FKSDB\Models\ORM\Models\ModelTaskContribution::TYPE_* constants.
-        contributionMapping:
-            author: authors
-            solution: solution-authors
-
         # List of study years that are used for imported tasks when no explicit
         # study years are specified.
         defaultStudyYears:
@@ -198,7 +151,7 @@ extensions:
     acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    payment: FKSDB\Models\Payment\PaymentExtension
+    #payment: FKSDB\Models\Payment\PaymentExtension
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
@@ -209,6 +162,7 @@ includes:
     - services.neon
     - navigation.neon
     - contests.neon
-    - exports.neon
     - stalking.neon
-    - payment.neon
+    #- payment.neon
+    - payments/common.neon
+    - fyziklani/default.neon

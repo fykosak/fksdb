@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 
-use FKSDB\Models\ORM\Models\ModelPayment;
-use FKSDB\Models\Payment\Price;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use Fykosak\Utils\Price\MultiCurrencyPrice;
 
-/**
- * Interface IPreprocess
- * @author Michal Červeňák <miso@fykos.cz>
- */
-interface Preprocess {
+interface Preprocess
+{
+    public static function calculate(PaymentModel $modelPayment): MultiCurrencyPrice;
 
-    public static function calculate(ModelPayment $modelPayment): Price;
-
-    public static function getGridItems(ModelPayment $modelPayment): array;
+    public static function getGridItems(PaymentModel $modelPayment): array;
 }

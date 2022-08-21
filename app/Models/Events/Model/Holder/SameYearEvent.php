@@ -1,38 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class SameYearEvent implements EventRelation {
-
+class SameYearEvent implements EventRelation
+{
     private int $eventTypeId;
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
 
-    public function __construct(int $eventTypeId, ServiceEvent $serviceEvent) {
+    public function __construct(int $eventTypeId, EventService $eventService)
+    {
         $this->eventTypeId = $eventTypeId;
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
     }
 
-    public function getEvent(ModelEvent $event): ModelEvent {
-        $result = $this->serviceEvent->getTable()->where([
+    public function getEvent(EventModel $event): EventModel
+    {
+        $result = $this->eventService->getTable()->where([
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        /** @var ModelEvent|null $event */
+        /** @var EventModel|null $event */
         $event = $result->fetch();
         if ($event === null) {
-            throw new InvalidArgumentException('No event with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.');
+            throw new InvalidArgumentException(
+                'No event with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.'
+            );
         } elseif ($result->fetch() !== null) {
-            throw new InvalidArgumentException('Ambiguous events with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.');
+            throw new InvalidArgumentException(
+                'Ambiguous events with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.'
+            );
         } else {
             return $event;
         }

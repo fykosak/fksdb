@@ -1,78 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-/**
- * Class ResultsAndStatistics
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ResultsAndStatisticsComponent extends AjaxComponent {
-
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-    private ServiceFyziklaniTask $serviceFyziklaniTask;
-    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-    private EventAuthorizator $eventAuthorizator;
-    private ModelEvent $event;
+class ResultsAndStatisticsComponent extends AjaxComponent
+{
+    private SubmitService $submitService;
+    private EventModel $event;
     private ?string $lastUpdated = null;
 
-    public function __construct(Container $container, ModelEvent $event, string $reactId) {
+    public function __construct(Container $container, EventModel $event, string $reactId)
+    {
         parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    final protected function getEvent(): ModelEvent {
+    final protected function getEvent(): EventModel
+    {
         return $this->event;
     }
 
-    final public function injectPrimary(
-        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        EventAuthorizator $eventAuthorizator
-    ): void {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventAuthorizator = $eventAuthorizator;
+    final public function injectPrimary(SubmitService $submitService): void
+    {
+        $this->submitService = $submitService;
     }
 
-    /**
-     * @param string $lastUpdated
-     * @return void
-     * @throws AbortException
-     */
-    public function handleRefresh(string $lastUpdated): void {
+    public function handleRefresh(string $lastUpdated): void
+    {
         $this->lastUpdated = $lastUpdated;
         $this->sendAjaxResponse();
     }
 
     /**
-     * @return array
      * @throws NotSetGameParametersException
      * @throws BadTypeException
      */
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
 
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
-        $isOrg = $this->eventAuthorizator->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
@@ -80,44 +64,45 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
             'gameStart' => $gameSetup->game_start->format('c'),
             'gameEnd' => $gameSetup->game_end->format('c'),
             'times' => [
-                'toStart' => strtotime($gameSetup->game_start) - time(),
-                'toEnd' => strtotime($gameSetup->game_end) - time(),
+                'toStart' => $gameSetup->game_start->getTimestamp() - time(),
+                'toEnd' => $gameSetup->game_end->getTimestamp() - time(),
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
-            'isOrg' => $isOrg,
+            'isOrg' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
         ];
 
-        if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
-        }
+        $result['submits'] = $this->submitService->serialiseSubmits($this->getEvent(), $this->lastUpdated);
+
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
-        $result['categories'] = ['A', 'B', 'C'];
+        $result['teams'] = TeamService2::serialiseTeams($this->getEvent());
+        $result['tasks'] = TaskService::serialiseTasks($this->getEvent());
+        $result['categories'] = array_map(
+            fn(TeamCategory $category): string => $category->value,
+            TeamCategory::casesForEvent($this->getEvent())
+        );
         //  }
         return $result;
     }
 
     /**
-     * @return array
      * @throws InvalidLinkException
      */
-    protected function getActions(): array {
-        return [
-            'refresh' => $this->link('refresh!', ['lastUpdated' => (new DateTime())->format('c')]),
-        ];
+    protected function configure(): void
+    {
+        $this->addAction('refresh', 'refresh!', ['lastUpdated' => (new DateTime())->format('c')]);
+        parent::configure();
     }
 
     /**
-     * @return bool
      * @throws NotSetGameParametersException
      */
-    private function isResultsVisible(): bool {
+    private function isResultsVisible(): bool
+    {
         return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();
     }
 }

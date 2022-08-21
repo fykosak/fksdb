@@ -1,59 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Models\UI\Title;
-use Nette\Application\UI\InvalidLinkException;
+use Fykosak\Utils\UI\Navigation\NavItem;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-/**
- * Class SeriesChooser
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class SeriesChooserComponent extends ChooserComponent {
+final class SeriesChooserComponent extends ChooserComponent
+{
 
-    private int $year;
     private int $series;
     private array $allowedSeries;
 
-    public function __construct(Container $container, int $year, int $series, array $allowedSeries) {
+    public function __construct(Container $container, int $series, array $allowedSeries)
+    {
         parent::__construct($container);
         $this->series = $series;
-        $this->year = $year;
         $this->allowedSeries = $allowedSeries;
     }
 
-    /* ************ CHOOSER METHODS *************** */
-    protected function getTitle(): Title {
-        return new Title(sprintf(_('Series %d'), $this->series));
-    }
-
-    protected function getItems(): array {
-        return $this->allowedSeries;
-    }
-
-    /**
-     * @param int $item
-     * @return bool
-     */
-    public function isItemActive($item): bool {
-        return $item === $this->series;
-    }
-
-    /**
-     * @param int $item
-     * @return Title
-     */
-    public function getItemTitle($item): Title {
-        return new Title(sprintf(_('Series %d'), $item));
-    }
-
-    /**
-     * @param int $item
-     * @return string
-     * @throws InvalidLinkException
-     */
-    public function getItemLink($item): string {
-        return $this->getPresenter()->link('this', ['series' => $item]);
+    protected function getItem(): NavItem
+    {
+        $items = [];
+        foreach ($this->allowedSeries as $series) {
+            $items[] = new NavItem(
+                new Title(null, sprintf(_('Series %d'), $series)),
+                'this',
+                ['series' => $series],
+                [],
+                $series === $this->series
+            );
+        }
+        return new NavItem(new Title(null, sprintf(_('Series %d'), $this->series)), '#', [], $items);
     }
 }

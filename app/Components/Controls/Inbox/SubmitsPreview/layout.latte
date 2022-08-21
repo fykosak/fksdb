@@ -1,9 +1,12 @@
 {layout '../layout.latte'}
-{define #submit-row}
+{varType FKSDB\Models\ORM\Models\SubmitModel $submit}
+{define submit-row}
     {if $submit}
         <td>
-            {if $submit->source === FKSDB\Models\ORM\Models\ModelSubmit::SOURCE_POST}
+            {if $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::POST}
                 <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
+            {elseif $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::QUIZ}
+                <i class="text-warning fa fa-list-ul" title="#{$submit->submit_id}"></i>
             {else}
                 <a class="text-success"
                    title="{_'Download'}"
@@ -23,10 +26,11 @@
 
             {/if}
             {if is_null($submit->raw_points) }
-                <i class="text-danger fa fa-bar-chart"></i>
+                <i class="text-danger fa fa-chart-bar"
+                   title="{_'Not graded.'}"></i>
             {else}
-                <i class="text-success fa fa-bar-chart"
-                   title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->getTask()->points}"></i>
+                <i class="text-success fa fa-chart-bar"
+                   title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->task->points}"></i>
             {/if}
         </td>
     {else}

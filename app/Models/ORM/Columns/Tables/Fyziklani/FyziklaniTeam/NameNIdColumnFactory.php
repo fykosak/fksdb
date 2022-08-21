@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
-/**
- * Class NameNIdRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class NameNIdColumnFactory extends ColumnFactory {
-
+class NameNIdColumnFactory extends ColumnFactory
+{
     /**
-     * @param AbstractModel|ModelFyziklaniTeam $model
-     * @return Html
+     * @param TeamModel2 $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
-        return Html::el('span')->addText($model->name . ' (' . $model->e_fyziklani_team_id . ')');
+    protected function createHtmlValue(Model $model): Html
+    {
+        return Html::el('span')->addText($model->name . ' (' . $model->fyziklani_team_id . ')');
     }
 }

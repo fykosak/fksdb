@@ -1,100 +1,100 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\SubmitService;
+use FKSDB\Models\ORM\Services\TaskService;
+use FKSDB\Models\ORM\Services\TaskStudyYearService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Database\Row;
-use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
 use Nette\Utils\Finder;
+use SplFileInfo;
 use Tester\Assert;
 use Tester\Environment;
 
-abstract class SubmitTestCase extends DatabaseTestCase {
-
-    use MockApplicationTrait;
-
+abstract class SubmitTestCase extends DatabaseTestCase
+{
     public const TOKEN = 'foo';
     public const FILE_01 = 'file01.pdf';
-    protected int $taskAll;
-    protected int $taskRestricted;
-    protected int $personId;
-    protected int $contestantId;
+    protected TaskModel $taskAll;
+    protected TaskModel $taskRestricted;
+    protected PersonModel $person;
+    protected ContestantModel $contestant;
     protected IPresenter $fixture;
 
-    /**
-     * SubmitTestCase constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
-
-        $this->taskAll = $this->insert('task', [
+        $serviceTask = $this->getContainer()->getByType(TaskService::class);
+        $serviceTaskStudyYear = $this->getContainer()->getByType(TaskStudyYearService::class);
+        $this->taskAll = $serviceTask->storeModel([
             'label' => '1',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '6',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '7',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '8',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '9',
         ]);
 
-        $this->taskRestricted = $this->insert('task', [
+        $this->taskRestricted = $serviceTask->storeModel([
             'label' => '2',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskRestricted,
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskRestricted->task_id,
             'study_year' => '6',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskRestricted,
+        $serviceTaskStudyYear->storeModel([
+            'task_id' => $this->taskRestricted->task_id,
             'study_year' => '7',
         ]);
 
-        $this->personId = $this->createPerson('Matyáš', 'Korvín', [], []);
-        $this->contestantId = $this->insert('contestant_base', [
+        $this->person = $this->createPerson('Matyáš', 'Korvín', null, []);
+        $this->contestant = $this->getContainer()->getByType(ContestantService::class)->storeModel([
             'contest_id' => 1,
             'year' => 1,
-            'person_id' => $this->personId,
+            'person_id' => $this->person->person_id,
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
-        $this->authenticate($this->personId, $this->fixture);
+        $this->authenticatePerson($this->person, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables(['submit', 'task', 'contestant_base']);
+    protected function tearDown(): void
+    {
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
-        /** @var \SplFileInfo $f */
+        /** @var SplFileInfo $f */
         foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
             if ($f->isDir()) {
                 @rmdir($f->getPathname());
@@ -106,7 +106,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest(array $formData): Request {
+    protected function createPostRequest(array $formData): Request
+    {
         $formData = Helpers::merge($formData, [
             '_do' => 'uploadForm-form-submit',
         ]);
@@ -118,7 +119,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         ], $formData);
     }
 
-    protected function createFileUpload(): array {
+    protected function createFileUpload(): array
+    {
         $file = tempnam(TEMP_DIR, 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
@@ -131,31 +133,42 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         ])];
     }
 
-    protected function innerTestSubmit(): void {
+    protected function innerTestSubmit(): void
+    {
         $request = $this->createPostRequest([
             'upload' => 'Odeslat',
-            'tasks' => "{$this->taskAll},{$this->taskRestricted}",
+            'tasks' => $this->taskAll->task_id . ',' . $this->taskRestricted->task_id,
             '_token_' => self::TOKEN,
         ]);
 
         $request->setFiles([
-            "task{$this->taskAll}" => $this->createFileUpload(),
-            "task{$this->taskRestricted}" => $this->createFileUpload(),
+            'task' . $this->taskAll->task_id => $this->createFileUpload(),
+            'task' . $this->taskRestricted->task_id => $this->createFileUpload(),
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $this->assertSubmit($this->contestantId, $this->taskAll);
+        $this->assertSubmit($this->contestant, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): Row {
-        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+    protected function assertSubmit(ContestantModel $contestant, TaskModel $task): SubmitModel
+    {
+        $submit = $this->getContainer()
+            ->getByType(SubmitService::class)
+            ->getTable()
+            ->where(['contestant_id' => $contestant->contestant_id, 'task_id' => $task->task_id])
+            ->fetch();
         Assert::notEqual(null, $submit);
         return $submit;
     }
 
-    protected function assertNotSubmit(int $contestantId, int $taskId): void {
-        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+    protected function assertNotSubmit(ContestantModel $contestant, TaskModel $task): void
+    {
+        $submit = $this->getContainer()
+            ->getByType(SubmitService::class)
+            ->getTable()
+            ->where(['contestant_id' => $contestant->contestant_id, 'task_id' => $task->task_id])
+            ->fetch();
         Assert::equal(null, $submit);
     }
 }

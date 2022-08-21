@@ -1,68 +1,68 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use Nette\ComponentModel\IContainer;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
 
-class PersonPaymentContainer extends ContainerWithOptions {
-
-    private bool $isAttached = false;
-
-    private ServicePersonSchedule $servicePersonSchedule;
-
-    private ModelEvent $event;
-
-    private array $groupTypes;
-
+class PersonPaymentContainer extends ContainerWithOptions
+{
+    private PersonScheduleService $personScheduleService;
+    private PaymentMachine $machine;
     private bool $showAll;
 
-    public function __construct(Container $container, ModelEvent $event, array $groupTypes, bool $showAll = true) {
+    /**
+     * @throws NotImplementedException
+     */
+    public function __construct(Container $container, PaymentMachine $machine, bool $showAll = true)
+    {
         parent::__construct($container);
-        $this->event = $event;
-        $this->groupTypes = $groupTypes;
+        $this->machine = $machine;
         $this->showAll = $showAll;
-
-        $this->monitor(IContainer::class, function () {
-            if (!$this->isAttached) {
-                $this->configure();
-                $this->isAttached = true;
-            }
-        });
+        $this->configure();
     }
 
-    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
-        $this->servicePersonSchedule = $servicePersonSchedule;
+    final public function injectServicePersonSchedule(PersonScheduleService $personScheduleService): void
+    {
+        $this->personScheduleService = $personScheduleService;
     }
 
     /**
-     * @return void
      * @throws NotImplementedException
+     * @throws \Exception
      */
-    protected function configure(): void {
-        $query = $this->servicePersonSchedule->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
-        if (count($this->groupTypes)) {
-            $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->groupTypes);
+    protected function configure(): void
+    {
+        $query = $this->personScheduleService->getTable()
+            ->where('schedule_item.schedule_group.event_id', $this->machine->event->event_id);
+        if (count($this->machine->scheduleGroupTypes)) {
+            $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->machine->scheduleGroupTypes);
         }
         $query->order('person.family_name ,person_id');
         $lastPersonId = null;
         $container = null;
-        /** @var ModelPersonSchedule $model */
+        /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             if ($this->showAll || !$model->hasActivePayment()) {
                 if ($model->person_id !== $lastPersonId) {
                     $container = new ModelContainer();
                     $this->addComponent($container, 'person' . $model->person_id);
-                    $container->setOption('label', $model->getPerson()->getFullName());
+                    $container->setOption('label', $model->person->getFullName());
                     $lastPersonId = $model->person_id;
                 }
-                $container->addCheckbox($model->person_schedule_id, $model->getLabel());
+                $container->addCheckbox(
+                    (string)$model->person_schedule_id,
+                    $model->getLabel()
+                    . ' ('
+                    . $model->schedule_item->getPrice()->__toString()
+                    . ')'
+                );
             }
         }
     }

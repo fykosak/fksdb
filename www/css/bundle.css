@@ -1200,6 +1200,12 @@ main {
   column-count: 2;
 }
 
+@media (max-width: 767px) {
+  .card-columns {
+    -webkit-column-count: 1;
+    column-count: 1;
+}}
+
 .state-timeline .line {
   height: 1px;
   border: solid 2px;

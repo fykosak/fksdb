@@ -1,48 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Security\Resource;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class AclResolver implements VisibilityResolver, ModifiabilityResolver {
+class AclResolver implements VisibilityResolver, ModifiabilityResolver
+{
     use SmartObject;
 
     private ContestAuthorizator $contestAuthorizator;
 
-    private ModelContest $contest;
+    private ContestModel $contest;
 
-    public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
+    public function __construct(ContestAuthorizator $contestAuthorizator, ContestModel $contest)
+    {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->contest = $contest;
     }
 
-    public function isVisible(ModelPerson $person): bool {
-        return $person->isNew() || $this->isAllowed($person, 'edit');
+    public function isVisible(?PersonModel $person): bool
+    {
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
-    public function getResolutionMode(ModelPerson $person): string {
-        return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+    public function getResolutionMode(?PersonModel $person): string
+    {
+        if (!$person) {
+            return ReferencedHandler::RESOLUTION_EXCEPTION;
+        }
+        return $this->isAllowed($person, 'edit') ? ReferencedHandler::RESOLUTION_OVERWRITE
+            : ReferencedHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
-        return $person->isNew() || $this->isAllowed($person, 'edit');
+    public function isModifiable(?PersonModel $person): bool
+    {
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
     /**
-     * @param ModelPerson $person
-     * @param string|Resource $privilege
-     * @return bool
+     * @param string|Resource|null $privilege
      */
-    private function isAllowed(ModelPerson $person, $privilege): bool {
+    private function isAllowed(PersonModel $person, $privilege): bool
+    {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }
 }

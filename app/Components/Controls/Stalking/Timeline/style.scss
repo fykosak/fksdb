@@ -1,4 +1,4 @@
-@import "../www/css/scss/colors";
+@import "../../../../css/colors";
 
 .chart-container.person-detail-timeline svg.chart {
   circle {
@@ -6,19 +6,19 @@
     stroke-width: 1;
 
     &[data-contest-id="2"] {
-      fill: $vyfukMainColor;
+      fill: var(--color-vyfuk-main);
     }
 
     &[data-contest-id="1"] {
-      fill: $fykosMainColor;
+      fill: var(--color-fykos-main);
     }
 
     &[data-event-type-id="1"] {
-      fill: $fyziklaniMainColor;
+      fill: var(--color-fof-main);
     }
 
     &[data-event-type-id="9"] {
-      fill: $folMainColor;
+      fill: var(--color-fol-main);
     }
   }
 
@@ -28,11 +28,11 @@
   }
 
   g[data-contest-id="1"] rect {
-    fill: $fykosMainColor;
+    fill: var(--color-fykos-main);
   }
 
   g[data-contest-id="2"] rect {
-    fill: $vyfukMainColor;
+    fill: var(--color-vyfuk-main);
   }
 
   text {

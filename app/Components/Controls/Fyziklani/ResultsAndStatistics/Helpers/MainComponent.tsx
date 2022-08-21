@@ -1,31 +1,29 @@
 import Downloader, { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import LoadingSwitch from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/LoadingSwitch';
-import ActionsStoreCreator from 'FKSDB/Models/FrontEnd/Fetch/ActionsStoreCreator';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
+import { Action, Reducer } from 'redux';
 
-interface OwnProps {
+interface OwnProps<Store> {
     actions: NetteActions;
     data: ResponseData;
-    children: any;
-    app: any;
+    children: React.ReactNode;
+    app: Reducer<Store, Action<string>>;
 }
 
-export default class MainComponent extends React.Component<OwnProps, {}> {
+export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
     public render() {
-        const storeMap = {
+        const initialData = {
             actions: this.props.actions,
             data: this.props.data,
             messages: [],
         };
         return (
-            <ActionsStoreCreator storeMap={storeMap} app={this.props.app}>
-                <div className={'fyziklani-results'}>
+            <ActionsStoreCreator initialData={initialData} app={this.props.app}>
+                <>
                     <Downloader data={this.props.data}/>
-                    <LoadingSwitch>
-                        {...this.props.children}
-                    </LoadingSwitch>
-                </div>
+                    {this.props.children}
+                </>
             </ActionsStoreCreator>
         );
     }

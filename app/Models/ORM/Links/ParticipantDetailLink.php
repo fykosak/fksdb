@@ -1,27 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Links;
 
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use Nette\Application\BadRequestException;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 
-/**
- * Class ParticipantDetailLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ParticipantDetailLink extends LinkFactory {
+class ParticipantDetailLink extends LinkFactory
+{
 
-    public function getText(): string {
+    public function getText(): string
+    {
         return _('Detail');
     }
 
     /**
-     * @param ModelEventParticipant|AbstractModel $model
-     * @return string
+     * @param EventParticipantModel $model
      */
-    protected function getDestination(AbstractModel $model): string {
-        if ($model->getEvent()->isTeamEvent()) {
+    protected function getDestination(Model $model): string
+    {
+        if ($model->event->isTeamEvent()) {
             return ':Event:TeamApplication:detail';
         } else {
             return ':Event:Application:detail';
@@ -29,12 +28,11 @@ class ParticipantDetailLink extends LinkFactory {
     }
 
     /**
-     * @param AbstractModel|ModelEventParticipant $model
-     * @return array
-     * @throws BadRequestException
+     * @param EventParticipantModel $model
      */
-    protected function prepareParams(AbstractModel $model): array {
-        if ($model->getEvent()->isTeamEvent()) {
+    protected function prepareParams(Model $model): array
+    {
+        if ($model->event->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,
                 'id' => $model->getFyziklaniTeam()->e_fyziklani_team_id,

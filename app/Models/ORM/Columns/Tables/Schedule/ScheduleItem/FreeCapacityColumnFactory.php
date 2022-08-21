@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Utils\Html;
 
-/**
- * Class FreeCapacityRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class FreeCapacityColumnFactory extends ColumnFactory {
+class FreeCapacityColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelScheduleItem $model
-     * @return Html
+     * @param ScheduleItemModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         $capacity = null;
         try {
             $capacity = $model->getAvailableCapacity();

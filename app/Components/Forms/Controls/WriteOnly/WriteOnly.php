@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note This interface may be later used for Containers.
- * @author Michal Koutný <michal@fykos.cz>
  */
-interface WriteOnly {
+interface WriteOnly
+{
 
     public const VALUE_ORIGINAL = '__original';
 

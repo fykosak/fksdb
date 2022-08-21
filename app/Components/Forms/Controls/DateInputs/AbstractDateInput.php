@@ -1,34 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-/**
- * Class AbstractDateInput
- * @author Michal Červeňák <miso@fykos.cz>
- * @property \DateTimeInterface $value
- */
-abstract class AbstractDateInput extends TextInput {
+abstract class AbstractDateInput extends TextInput
+{
 
     protected string $format;
 
     /**
      * AbstractDateInput constructor.
-     * @param string $type
-     * @param string $format
-     * @param null $label
-     * @param null $maxLength
+     * @param string|Html|null $label
      */
-    public function __construct(string $type, string $format, $label = null, $maxLength = null) {
+    public function __construct(string $type, string $format, ?string $label = null)
+    {
         $this->format = $format;
-        parent::__construct($label, $maxLength);
+        parent::__construct($label);
         $this->setHtmlType($type);
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $control = parent::getControl();
         if ($this->value) {
             $control->value = $this->value->format($this->format);
@@ -41,7 +38,8 @@ abstract class AbstractDateInput extends TextInput {
      * @return static
      * @throws \Exception
      */
-    public function setValue($value): self {
+    public function setValue($value): self
+    {
         if ($value instanceof \DateTimeInterface) {
             $this->value = $value;
         } elseif ($value instanceof \DateInterval) {

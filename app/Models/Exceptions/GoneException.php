@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Exceptions;
 
 use Nette\Application\BadRequestException;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 
-/**
- * Class GoneException
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class GoneException extends BadRequestException {
-
-    public function __construct(?string $message = null, ?\Throwable $previous = null) {
-        parent::__construct($message ?: 'Gone', Response::S410_GONE, $previous);
+class GoneException extends BadRequestException
+{
+    public function __construct(?string $message = null, ?\Throwable $previous = null)
+    {
+        parent::__construct($message ?? 'Gone', IResponse::S410_GONE, $previous);
     }
 }

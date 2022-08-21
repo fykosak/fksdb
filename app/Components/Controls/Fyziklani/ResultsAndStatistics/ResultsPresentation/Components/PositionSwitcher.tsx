@@ -5,8 +5,8 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setPosition } from '../actions';
-import { FyziklaniResultsPresentationStore } from '../Reducers';
+import { Params, setParams } from '../actions';
+import { FyziklaniPresentationStore } from '../Reducers';
 
 interface StateProps {
     categories: string[];
@@ -19,10 +19,10 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onSetNewPosition(position: number, category: string): void;
+    onSetParams(data: Params): void;
 }
 
-class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
+class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
     private abortRun = false;
 
     public componentDidMount() {
@@ -39,7 +39,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
 
     private async run(): Promise<void> | never {
 
-        const {cols, rows, position, delay, onSetNewPosition, category, teams} = this.props;
+        const {cols, rows, position, delay, onSetParams, category, teams} = this.props;
         let activeTeams;
         if (category) {
             activeTeams = teams.filter((team) => {
@@ -57,14 +57,14 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
         }
         await new Promise<void>((resolve) => {
             setTimeout(() => {
-                onSetNewPosition(newPosition, newCategory);
+                onSetParams({position: newPosition, category: newCategory});
                 resolve();
             }, delay);
         });
         if (this.abortRun) {
             return;
         }
-        this.run();
+        await this.run();
     }
 
     private getCategory(): string {
@@ -82,10 +82,10 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetNewPosition: (position: number, category: string) => dispatch(setPosition(position, category)),
+        onSetParams: (data) => dispatch(setParams(data)),
     };
 };
-const mapStateToPros = (state: FyziklaniResultsPresentationStore): StateProps => {
+const mapStateToPros = (state: FyziklaniPresentationStore): StateProps => {
     return {
         categories: state.data.categories,
         category: state.presentation.category,

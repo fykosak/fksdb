@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB;
 
 use Nette\Configurator;
 use Nette\Utils\Finder;
 
+// phpcs:disable
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
-
-class Bootstrap {
-    public static function boot(): Configurator {
+// phpcs:enable
+class Bootstrap
+{
+    public static function boot(): Configurator
+    {
         $configurator = new Configurator();
 
         // Enable Nette Debugger for error visualisation & logging

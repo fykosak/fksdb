@@ -1,39 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DuplicateFinder {
-
+class DuplicateFinder
+{
     public const IDX_PERSON = 'person';
     public const IDX_SCORE = 'score';
     public const DIFFERENT_PATTERN = 'not-same';
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     private array $parameters;
 
-    public function __construct(ServicePerson $servicePerson, Container $container) {
-        $this->servicePerson = $servicePerson;
+    public function __construct(PersonService $personService, Container $container)
+    {
+        $this->personService = $personService;
         $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
-    public function getPairs(): array {
+    public function getPairs(): array
+    {
         $buckets = [];
         /* Create buckets for quadratic search. */
-        /** @var ModelPerson $person */
-        foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
+        /** @var PersonModel $person */
+        foreach (
+            $this->personService->getTable()->select(
+                "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
+            ) as $person
+        ) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -46,8 +49,8 @@ class DuplicateFinder {
         foreach ($buckets as $bucket) {
             foreach ($bucket as $personA) {
                 foreach ($bucket as $personB) {
-                    /** @var ModelPerson $personA
-                     * @var ModelPerson $personB
+                    /** @var PersonModel $personA
+                     * @var PersonModel $personB
                      */
                     if ($personA->person_id >= $personB->person_id) {
                         continue;
@@ -58,7 +61,7 @@ class DuplicateFinder {
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
                         ];
-                        continue; // we search only pairs, so each equivalence class is decomposed into pairs
+                        // we search only pairs, so each equivalence class is decomposed into pairs
                     }
                 }
             }
@@ -66,19 +69,20 @@ class DuplicateFinder {
         return $pairs;
     }
 
-    private function getBucketKey(ModelPerson $row): string {
+    private function getBucketKey(PersonModel $row): string
+    {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);
     }
 
     /**
-     * @param ModelPerson|ModelPersonInfo $a
-     * @param ModelPerson|ModelPersonInfo $b
-     * @return float
+     * @param PersonModel|PersonInfoModel $a
+     * @param PersonModel|PersonInfoModel $b
      * @todo Implement more than binary score.
      */
-    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
+    private function getSimilarityScore(PersonModel $a, PersonModel $b): float
+    {
         /*
          * Check explicit difference
          */
@@ -103,14 +107,15 @@ class DuplicateFinder {
         $familyScore = $this->stringScore($a->family_name, $b->family_name);
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
-        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
+        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore +
+            $this->parameters['emailWeight'] * $emailScore;
     }
 
     /**
-     * @param ActiveRow|ModelPersonInfo $person
-     * @return array
+     * @param PersonInfoModel $person
      */
-    private function getDifferentPersons(ActiveRow $person): array {
+    private function getDifferentPersons(Model $person): array
+    {
         if (!isset($person->duplicates)) {
             return [];
         }
@@ -123,16 +128,17 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
-    private function stringScore(string $a, string $b): float {
+    private function stringScore(string $a, string $b): float
+    {
         return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
-    
-    private function relativeDistance(string $a, string $b): float {
+
+    private function relativeDistance(string $a, string $b): float
+    {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
             return 0.0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }
-
 }

@@ -1,50 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Utils\DateTime;
 
-/**
- * Class FKSDB\SeriesCalculator
- */
-class SeriesCalculator {
-
-    private ServiceTask $serviceTask;
-
-    public function __construct(ServiceTask $serviceTask) {
-        $this->serviceTask = $serviceTask;
-    }
-
-    public function getCurrentSeries(ModelContest $contest): int {
-        $year = $contest->getCurrentYear();
-        $currentSeries = $this->serviceTask->getTable()->where([
-            'contest_id' => $contest->contest_id,
+class SeriesCalculator
+{
+    public static function getCurrentSeries(ContestModel $contest): int
+    {
+        $year = $contest->getCurrentContestYear()->year;
+        $currentSeries = $contest->related(DbNames::TAB_TASK)->where([
             'year' => $year,
             '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime(),
         ])->max('series');
         return $currentSeries ?? 1;
     }
 
-    public function getLastSeries(ModelContest $contest, int $year): int {
-        return $this->serviceTask->getTable()->where([
-            'contest_id' => $contest->contest_id,
-            'year' => $year,
-        ])->max('series') ?: 1;
+    public static function getLastSeries(ContestYearModel $contestYear): int
+    {
+        return $contestYear->contest->related(DbNames::TAB_TASK)->where([
+                'year' => $contestYear->year,
+            ])->max('series') ?? 1;
     }
 
-    public function getAllowedSeries(ModelContest $contest, int $year): array {
-        $lastSeries = $this->getLastSeries($contest, $year);
-        return range(1, $lastSeries);
-    }
-
-    public function getTotalSeries(ModelContest $contest, int $year): int {
-        //TODO allow variance?
-        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
+    public static function getTotalSeries(ContestYearModel $contestYear): int
+    {
+        //TODO Think of better way of getting series count (maybe year schema?)
+        if (static::hasHolidaySeries($contestYear)) {
             return 9;
-        } else {
-            return 6;
         }
+        return 6;
+    }
+
+    /**
+     * Check if specific year has a holiday series.
+     * Made primarly for Výfuk contest.
+     */
+    public static function hasHolidaySeries(ContestYearModel $contestYear): bool
+    {
+        if ($contestYear->contest_id === ContestModel::ID_VYFUK && $contestYear->year >= 9) {
+            return true;
+        }
+        return false;
     }
 }

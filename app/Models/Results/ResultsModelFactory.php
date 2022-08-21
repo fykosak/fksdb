@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results;
 
-use DOMDocument;
-use DOMNode;
-use Exception;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
@@ -20,130 +19,118 @@ use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
 use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
+use FKSDB\Models\WebService\XMLNodeSerializer;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use SoapFault;
 use Tracy\Debugger;
-use FKSDB\Models\WebService\XMLNodeSerializer;
 
-/**
- * Description of FKSDB\Results\ResultsModelFactory
- *
- * @author michal
- */
-class ResultsModelFactory implements XMLNodeSerializer {
+class ResultsModelFactory implements XMLNodeSerializer
+{
     use SmartObject;
 
     private Connection $connection;
-    private ServiceTask $serviceTask;
+    private TaskService $taskService;
 
-    public function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, TaskService $taskService)
+    {
         $this->connection = $connection;
-        $this->serviceTask = $serviceTask;
+        $this->taskService = $taskService;
     }
 
     /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return CumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createCumulativeResultsModel(ModelContest $contest, int $year): CumulativeResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createCumulativeResultsModel(ContestYearModel $contestYear): CumulativeResultsModel
+    {
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
+            );
         }
-        return new CumulativeResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new CumulativeResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return DetailResultsModel
      * @throws BadRequestException
      */
-    public function createDetailResultsModel(ModelContest $contest, int $year): DetailResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createDetailResultsModel(ContestYearModel $contestYear): DetailResultsModel
+    {
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
+            );
         }
-        return new DetailResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new DetailResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return BrojureResultsModel
      * @throws BadRequestException
      */
-    public function createBrojureResultsModel(ModelContest $contest, int $year): BrojureResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createBrojureResultsModel(ContestYearModel $contestYear): BrojureResultsModel
+    {
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
+            );
         }
-        return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new BrojureResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return SchoolCumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createSchoolCumulativeResultsModel(ModelContest $contest, int $year): SchoolCumulativeResultsModel {
-        $cumulativeResultsModel = $this->createCumulativeResultsModel($contest, $year);
-        return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contest, $this->serviceTask, $this->connection, $year);
+    public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
+    {
+        $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
+        return new SchoolCumulativeResultsModel(
+            $cumulativeResultsModel,
+            $contestYear,
+            $this->taskService,
+            $this->connection
+        );
     }
 
     /**
-     *
-     * @param ModelContest|int $contest
-     * @param int $year
-     * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    public static function findEvaluationStrategy($contest, int $year): EvaluationStrategy {
-        if ($contest instanceof ModelContest) {
-            $contestId = $contest->contest_id;
-        } else {
-            $contestId = $contest;
+    public static function findEvaluationStrategy(ContestYearModel $contestYear): EvaluationStrategy
+    {
+        switch ($contestYear->contest_id) {
+            case ContestModel::ID_FYKOS:
+                if ($contestYear->year >= 25) {
+                    return new EvaluationFykos2011();
+                } else {
+                    return new EvaluationFykos2001();
+                }
+            case ContestModel::ID_VYFUK:
+                if ($contestYear->year >= 4) {
+                    return new EvaluationVyfuk2014();
+                } elseif ($contestYear->year >= 2) {
+                    return new EvaluationVyfuk2012();
+                } else {
+                    return new EvaluationVyfuk2011();
+                }
         }
-        if ($contestId == ModelContest::ID_FYKOS) {
-            if ($year >= 25) {
-                return new EvaluationFykos2011();
-            } else {
-                return new EvaluationFykos2001();
-            }
-        } elseif ($contestId == ModelContest::ID_VYFUK) {
-            if ($year >= 4) {
-                return new EvaluationVyfuk2014();
-            } elseif ($year >= 2) {
-                return new EvaluationVyfuk2012();
-            } else {
-                return new EvaluationVyfuk2011();
-            }
-        }
-        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contest->name));
+        throw new BadRequestException(
+            \sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->contest->name)
+        );
     }
 
     /**
      * @param AbstractResultsModel $dataSource
-     * @param DOMNode $node
-     * @param DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
-     * @throws SoapFault
+     * @throws \SoapFault
      * @throws BadTypeException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
+    {
         if (!$dataSource instanceof AbstractResultsModel) {
-            throw new BadTypeException(AbstractModel::class, $dataSource);
+            throw new BadTypeException(Model::class, $dataSource);
         }
 
         if ($formatVersion !== self::EXPORT_FORMAT_1) {
@@ -155,7 +142,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->id);
+                $categoryNode->setAttribute('id', $category->value);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);
@@ -165,8 +152,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
                     $columnDefNode = $doc->createElement('column-definition');
                     $columnDefsNode->appendChild($columnDefNode);
 
-                    $columnDefNode->setAttribute('label', $column[AbstractResultsModel::COL_DEF_LABEL]);
-                    $columnDefNode->setAttribute('limit', $column[AbstractResultsModel::COL_DEF_LIMIT]);
+                    $columnDefNode->setAttribute('label', (string)$column[AbstractResultsModel::COL_DEF_LABEL]);
+                    $columnDefNode->setAttribute('limit', (string)$column[AbstractResultsModel::COL_DEF_LIMIT]);
                 }
 
                 // data
@@ -178,26 +165,32 @@ class ResultsModelFactory implements XMLNodeSerializer {
                     $contestantNode = $doc->createElement('contestant');
                     $dataNode->appendChild($contestantNode);
 
-                    $contestantNode->setAttribute('name', $row[AbstractResultsModel::DATA_NAME]);
-                    $contestantNode->setAttribute('school', $row[AbstractResultsModel::DATA_SCHOOL]);
+                    $contestantNode->setAttribute('name', (string)$row[AbstractResultsModel::DATA_NAME]);
+                    $contestantNode->setAttribute('school', (string)$row[AbstractResultsModel::DATA_SCHOOL]);
                     // rank
                     $rankNode = $doc->createElement('rank');
                     $contestantNode->appendChild($rankNode);
-                    $rankNode->setAttribute('from', $row[AbstractResultsModel::DATA_RANK_FROM]);
-                    if (isset($row[AbstractResultsModel::DATA_RANK_TO]) && $row[AbstractResultsModel::DATA_RANK_FROM] != $row[AbstractResultsModel::DATA_RANK_TO]) {
-                        $rankNode->setAttribute('to', $row[AbstractResultsModel::DATA_RANK_TO]);
+                    $rankNode->setAttribute('from', (string)$row[AbstractResultsModel::DATA_RANK_FROM]);
+                    if (
+                        isset($row[AbstractResultsModel::DATA_RANK_TO])
+                        && $row[AbstractResultsModel::DATA_RANK_FROM] != $row[AbstractResultsModel::DATA_RANK_TO]
+                    ) {
+                        $rankNode->setAttribute('to', (string)$row[AbstractResultsModel::DATA_RANK_TO]);
                     }
 
                     // data columns
                     foreach ($dataSource->getDataColumns($category) as $column) {
-                        $columnNode = $doc->createElement('column', $row[$column[AbstractResultsModel::COL_ALIAS]]);
+                        $columnNode = $doc->createElement(
+                            'column',
+                            (string)$row[$column[AbstractResultsModel::COL_ALIAS]]
+                        );
                         $contestantNode->appendChild($columnNode);
                     }
                 }
             }
-        } catch (Exception $exception) {
+        } catch (\Throwable $exception) {
             Debugger::log($exception);
-            throw new SoapFault('Receiver', 'Internal error.');
+            throw new \SoapFault('Receiver', 'Internal error.');
         }
     }
 }

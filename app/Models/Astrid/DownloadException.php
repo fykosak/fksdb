@@ -1,10 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Astrid;
 
-/**
- * Class DownloadException
- * @author Michal Koutný <michal@fykos.cz>
- */
-class DownloadException extends \RuntimeException {
+class DownloadException extends \RuntimeException
+{
 }

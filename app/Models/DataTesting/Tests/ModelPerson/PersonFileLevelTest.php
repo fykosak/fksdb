@@ -1,46 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 
-/**
- * Class PersonFileLevelTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
-abstract class PersonFileLevelTest extends PersonTest {
-
-    private TestedColumnFactory $rowFactory;
+abstract class PersonFileLevelTest extends PersonTest
+{
     private string $fieldName;
     private ORMFactory $tableReflectionFactory;
 
     /**
-     * PersonFileLevelTest constructor.
-     * @param ORMFactory $tableReflectionFactory
-     * @param string $fieldName
      * @throws BadTypeException
      */
-    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName) {
+    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName)
+    {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
         parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
     }
 
     /**
-     * @return TestedColumnFactory|ColumnFactory
      * @throws BadTypeException
      */
-    final protected function getRowFactory(): TestedColumnFactory {
-        if (!isset($this->rowFactory)) {
+    final protected function getRowFactory(): TestedColumnFactory
+    {
+        static $rowFactory;
+        if (!isset($rowFactory)) {
             $rowFactory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $this->fieldName));
             if (!$rowFactory instanceof TestedColumnFactory) {
-                throw new BadTypeException(TestedColumnFactory::class, $this->rowFactory);
+                throw new BadTypeException(TestedColumnFactory::class, $rowFactory);
             }
-            $this->rowFactory = $rowFactory;
         }
-        return $this->rowFactory;
+        return $rowFactory;
     }
 }

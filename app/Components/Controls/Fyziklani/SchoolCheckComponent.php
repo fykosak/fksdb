@@ -1,61 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\DI\Container;
 
-/**
- * Class SchoolCheckComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class SchoolCheckComponent extends BaseComponent {
+class SchoolCheckComponent extends BaseComponent
+{
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(EventModel $event, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function render(ModelFyziklaniTeam $currentTeam): void {
+    final public function render(TeamModel2 $currentTeam): void
+    {
         $schools = [];
         foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
             $schools[$schoolId] = [
                 'school' => $school,
             ];
-            $query = $this->event->getTeams()
-                ->where(':e_fyziklani_participant.event_participant.person:person_history.ac_year', $this->event->getAcYear())
-                ->where(':e_fyziklani_participant.event_participant.person:person_history.school_id', $schoolId);
+            $query = $this->event->getFyziklaniTeams()
+                ->where(
+                    ':fyziklani_team_member.person:person_history.ac_year',
+                    $this->event->getContestYear()->ac_year
+                )
+                ->where(':fyziklani_team_member.person:person_history.school_id', $schoolId);
             foreach ($query as $team) {
-                $schools[$schoolId][] = ModelFyziklaniTeam::createFromActiveRow($team);
+                $schools[$schoolId][] = $team;
             }
         }
         $this->template->schools = $schools;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
-     * @return ModelSchool[]
+     * @return SchoolModel[]
      */
-    private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array {
+    private function getSchoolsFromTeam(TeamModel2 $team): array
+    {
         $schools = [];
-        foreach ($team->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row->event_participant);
-            $history = $participant->getPersonHistory();
-            $schools[$history->school_id] = $history->getSchool();
+        /** @var TeamMemberModel $member */
+        foreach ($team->getMembers() as $member) {
+            $history = $member->getPersonHistory();
+            $schools[$history->school_id] = $history->school;
         }
         return $schools;
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    {
         return new ColumnPrinterComponent($this->getContext());
     }
 }

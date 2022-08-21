@@ -1,37 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
-abstract class DsefTestCase extends EventTestCase {
+abstract class DsefTestCase extends EventTestCase
+{
 
     protected ApplicationPresenter $fixture;
-    protected int $personId;
-    protected int $eventId;
+    protected PersonModel $person;
+    protected EventModel $event;
 
-    protected function getEventId(): int {
-        return $this->eventId;
+    protected function getEvent(): EventModel
+    {
+        return $this->event;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->eventId = $this->createEvent([
+        $this->event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,
-            'registration_end' => new DateTime(date('c', time() + 1000)),
+            'registration_end' => new \DateTime(date('c', time() + 1000)),
             'parameters' => <<<EOT
 EOT
             ,
         ]);
 
-        $this->insert('e_dsef_group', [
+        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
             'e_dsef_group_id' => 1,
-            'event_id' => $this->eventId,
+            'event_id' => $this->event->event_id,
             'name' => 'Alpha',
             'capacity' => 4,
         ]);
@@ -39,11 +46,11 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
-    }
-
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, DbNames::TAB_E_DSEF_GROUP]);
-        parent::tearDown();
+        $this->person = $this->createPerson(
+            'Paní',
+            'Bílá',
+            ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
     }
 }

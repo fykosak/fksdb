@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+namespace NiftyGrid;
+
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
+use Nette\Utils\Paginator;
+
 /**
  * NiftyGrid - DataGrid for Nette
  *
@@ -9,44 +17,36 @@
  * @license    New BSD Licence
  * @link    http://addons.nette.org/cs/niftygrid
  */
+class GridPaginator extends Control
+{
+    /** @persistent */
+    public int $page = 1;
+    public Paginator $paginator;
+    private string $templatePath;
 
-namespace NiftyGrid;
-
-use Nette\Utils\Paginator;
-
-class GridPaginator extends \Nette\Application\UI\Control {
-
-    /** @persistent int */
-    public $page = 1;
-
-    /**
-     * @var Paginator
-     */
-    public $paginator;
-
-    /**
-     * @var str
-     */
-    private $templatePath;
-
-    public function setTemplate($templatePath) {
+    public function setTemplate(string $templatePath)
+    {
         $this->templatePath = $templatePath;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->paginator = new Paginator();
     }
 
-    public function render(): void {
+    public function render(): void
+    {
         $this->template->paginator = $this->paginator;
-        $templatePath = !empty($this->templatePath) ? $this->templatePath : __DIR__ . "/../../templates/paginator.latte";
-        $this->template->setFile($templatePath);
-        $this->template->render();
+        $this->template->render($this->templatePath ?? __DIR__ . '/../../templates/paginator.latte');
     }
 
-    public function loadState(array $params): void {
+    /**
+     * @param array $params
+     * @throws BadRequestException
+     */
+    public function loadState(array $params): void
+    {
         parent::loadState($params);
         $this->paginator->page = $this->page;
     }
-
 }

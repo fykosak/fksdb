@@ -1,48 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedAccessor;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Security\IUserStorage;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\EventModel;
+use Nette\Security\User;
 use Nette\Utils\Html;
 
-/**
- * Class EventRole
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class EventRole extends ColumnFactory {
+class EventRole extends ColumnFactory
+{
+    private User $user;
 
-    private IUserStorage $userStorage;
-
-    public function __construct(IUserStorage $userStorage, MetaDataFactory $metaDataFactory) {
+    public function __construct(User $user, MetaDataFactory $metaDataFactory)
+    {
         parent::__construct($metaDataFactory);
-        $this->userStorage = $userStorage;
+        $this->user = $user;
     }
 
     /**
-     * @param AbstractModel $model
-     * @return Html
      * @throws CannotAccessModelException
+     * @throws NotImplementedException
+     * @throws \ReflectionException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         try {
-            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
+            $person = $model->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException$exception) {
-            $person = $this->userStorage->getIdentity()->getPerson();
+            /** @var LoginModel $login */
+            $login = $this->user->getIdentity();
+            $person = $login->person;
         }
-        /** @var ModelEvent $event */
-        $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
+        /** @var EventModel $event */
+        $event = $model->getReferencedModel(EventModel::class);
         return (new EventRolePrinter())($person, $event);
     }
 
-    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {
+    protected function resolveModel(Model $modelSingle): ?Model
+    {
         return $modelSingle; // need to be original model because of referenced access
     }
 }
