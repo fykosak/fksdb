@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 class EnumColumnFactory extends ColumnFactory
 {
@@ -38,6 +40,9 @@ class EnumColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         $enum = $model->{$this->getModelAccessKey()};
+        if (is_null($enum)) {
+            return NotSetBadge::getHtml();
+        }
         if (!$enum instanceof EnumColumn) {
             throw new BadTypeException(EnumColumn::class, $enum);
         }

@@ -27,15 +27,10 @@ class ReferencedPersonFactory
     use SmartObject;
 
     private PersonService $personService;
-
     private PersonFactory $personFactory;
-
     private ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
-
     private PersonProvider $personProvider;
-
     private PersonScheduleFactory $personScheduleFactory;
-
     private Container $context;
 
     public function __construct(

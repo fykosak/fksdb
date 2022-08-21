@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\TeamApplicationFormComponent;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
+use FKSDB\Components\EntityForms\TeamApplicationFormComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
@@ -93,18 +92,38 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return new SchoolCheckComponent($this->getEvent(), $this->getContext());
     }
 
-    protected function createComponentCreateTeamApplicationForm(): TeamApplicationFormComponent {
-        return new TeamApplicationFormComponent($this->getContext(), null);
+    /**
+     * @return TeamApplicationFormComponent
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCreateForm(): TeamApplicationFormComponent
+    {
+        return new TeamApplicationFormComponent(
+            $this->getMachine(),
+            $this->getEvent(),
+            $this->getContext(),
+            null
+        );
     }
 
     /**
      * @return TeamApplicationFormComponent
+     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws GoneException
      * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
-    protected function createComponentEditTeamApplicationForm(): TeamApplicationFormComponent {
-        return new TeamApplicationFormComponent($this->getContext(), $this->getEntity());
+    protected function createComponentEditForm(): TeamApplicationFormComponent
+    {
+        return new TeamApplicationFormComponent(
+            $this->getMachine(),
+            $this->getEvent(),
+            $this->getContext(),
+            $this->getEntity()
+        );
     }
 
     /**

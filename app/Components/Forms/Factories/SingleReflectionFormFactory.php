@@ -62,12 +62,13 @@ class SingleReflectionFormFactory
     public function createContainerWithMetadata(
         string $table,
         array $fields,
-        FieldLevelPermission $userPermissions
+        FieldLevelPermission $userPermissions,
+        ...$args
     ): ModelContainer {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);
-            $control = $factory->createField();
+            $control = $factory->createField(...$args);
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
             if ($control instanceof WriteOnly) {
