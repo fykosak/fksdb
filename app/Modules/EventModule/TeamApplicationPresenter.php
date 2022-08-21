@@ -7,7 +7,9 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
-use FKSDB\Components\EntityForms\TeamApplicationFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
@@ -22,9 +24,11 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
 /**
  * @method TeamModel2 getEntity()
@@ -93,22 +97,15 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return TeamApplicationFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): TeamApplicationFormComponent
+    protected function createComponentCreateForm(): TeamFormComponent
     {
-        return new TeamApplicationFormComponent(
-            $this->getMachine(),
-            $this->getEvent(),
-            $this->getContext(),
-            null
-        );
+        return $this->createTeamForm(null);
     }
 
     /**
-     * @return TeamApplicationFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -116,14 +113,34 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): TeamApplicationFormComponent
+    protected function createComponentEditForm(): TeamFormComponent
     {
-        return new TeamApplicationFormComponent(
-            $this->getMachine(),
-            $this->getEvent(),
-            $this->getContext(),
-            $this->getEntity()
-        );
+        return $this->createTeamForm($this->getEntity());
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    private function createTeamForm(?Model $model): TeamFormComponent
+    {
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                return new FOFTeamFormComponent(
+                    $this->getMachine(),
+                    $this->getEvent(),
+                    $this->getContext(),
+                    $model
+                );
+            case 9:
+                return new FOLTeamFormComponent(
+                    $this->getMachine(),
+                    $this->getEvent(),
+                    $this->getContext(),
+                    $model
+                );
+        }
+        throw new InvalidStateException(_('Event type is not supported'));
     }
 
     /**
