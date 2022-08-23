@@ -392,6 +392,22 @@ msgstr "Upravit položku"
 msgid "Create item"
 msgstr "Vytvořit položku"
 
+#: ../app/Modules/OrgModule/Warehouse/ItemState.php:42
+msgid "New"
+msgstr "Nové"
+
+#: ../app/Modules/OrgModule/Warehouse/ItemState.php:44
+msgid "Used"
+msgstr "Použité"
+
+#: ../app/Modules/OrgModule/Warehouse/ItemState.php:46
+msgid "Unpacked"
+msgstr "Rozbalené"
+
+#: ../app/Modules/OrgModule/Warehouse/ItemState.php:48
+msgid "Damaged"
+msgstr "Poškozené"
+
 #: ../app/Modules/OrgModule/Warehouse/DashboardPresenter.php:14
 msgid "Warehouse"
 msgstr "Skladiště"
@@ -2518,6 +2534,14 @@ msgstr "Typ dat"
 msgid "Default value"
 msgstr "Výchozí hodnota"
 
+#: ../app/Components/EntityForms/Warehouse/ItemFormComponent.php:129
+msgid "Product"
+msgstr "Produkt"
+
+#: ../app/Components/EntityForms/Warehouse/ItemFormComponent.php:129
+msgid "Edit all items"
+msgstr "Změnit všechny položky"
+
 #: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 msgid "Product has been updated."
 msgstr "Produkt byl aktualizován."
@@ -3923,6 +3947,14 @@ msgstr ""
 #: ../app/config/orm.neon.neon2php:992 ../app/config/orm.neon.neon2php:1027
 msgid "Product Id"
 msgstr "Id produktu"
+
+#: ../app/config/orm.neon.neon2php:1025
+msgid "Item Id"
+msgstr "Id položky"
+
+#: ../app/config/orm.neon.neon2php:1055
+msgid "Placement"
+msgstr "Umístění"
 
 #: ../data/events/council/councilDefault.neon.neon2php:22
 msgid "Program akce"

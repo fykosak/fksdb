@@ -135,7 +135,7 @@ class ItemFormComponent extends EntityFormComponent
         }
         $form->addComponent($container, self::CONTAINER);
         if (!$this->isCreating()) {
-            $form->addSubmit('editAll',_('Edit all'))
+            $form->addSubmit('editAll',_('Edit all items'))
             ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
         }
     }
