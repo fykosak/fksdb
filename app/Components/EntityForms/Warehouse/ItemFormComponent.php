@@ -54,7 +54,14 @@ class ItemFormComponent extends EntityFormComponent
             $data['contest_id'] = $this->contest->contest_id;
         }
 
-        $this->itemService->storeModel($data, $this->model);
+        if (!isset($values['item_count'])) {
+            $values['item_count'] = 1;
+        }
+
+        for ($i = 0; $i < $values['item_count']; $i++) {
+            $this->itemService->storeModel($data, $this->model);
+        }
+
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Item has been updated.') : _('Item has been created.'),
             Message::LVL_SUCCESS
@@ -94,6 +101,12 @@ class ItemFormComponent extends EntityFormComponent
             $products[$product->product_id] = $product->name_cs;
         }
         $container->addComponent(new SelectBox(_('Product'), $products), 'product_id', 'state');
+        if ($this->isCreating()) {
+            $form->addText('item_count', _('Item count'))
+                ->setHtmlType('number')
+                ->setDefaultValue(1)
+                ->addRule(Form::MIN, _('Must be at least 1'), 1);
+        }
         $form->addComponent($container, self::CONTAINER);
     }
 }
