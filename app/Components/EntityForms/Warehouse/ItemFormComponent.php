@@ -51,7 +51,7 @@ class ItemFormComponent extends EntityFormComponent
     */
     protected function isSubmittedByEditAll(Form $form): bool
     {
-        if(!isset($form['editAll'])) {
+        if (!isset($form['editAll'])) {
             return false;
         }
         if (!$form['editAll']->isSubmittedBy()) {
@@ -74,12 +74,16 @@ class ItemFormComponent extends EntityFormComponent
             $data['item_count'] = 1;
         }
 
-        if ($this->isSubmittedByEditAll($form) && !$this->isCreating()) { // if editAll button was selected and the form is updating the model
-            $items = $this->itemService->findByFingerprint($this->model->fingerprint); // select all models with the same fingerprint
+     // if editAll button was selected and the form is updating the model
+        if ($this->isSubmittedByEditAll($form) && !$this->isCreating()) {
+             // select all models with the same fingerprint
+            $items = $this->itemService->findByFingerprint($this->model->fingerprint);
             /** @var ItemModel $item */
             foreach ($items as $item) {
-                $newModelData = $data; // save $data to separate variable
-                $newModelData['item_id'] = $item->item_id; // keep item_id and note from original ItemModel
+                // save $data to separate variable
+                $newModelData = $data;
+                // keep item_id and note from original ItemModel
+                $newModelData['item_id'] = $item->item_id;
                 $newModelData['note'] = $item->note;
                 $this->itemService->storeModel($newModelData, $item);
             }
@@ -135,7 +139,7 @@ class ItemFormComponent extends EntityFormComponent
         }
         $form->addComponent($container, self::CONTAINER);
         if (!$this->isCreating()) {
-            $form->addSubmit('editAll',_('Edit all items'))
+            $form->addSubmit('editAll', _('Edit all items'))
             ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
         }
     }
