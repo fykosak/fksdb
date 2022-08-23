@@ -23,7 +23,7 @@ class NameColumnFactory extends ColumnFactory
                 'Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici
        a ASCII znaky.'
             ),
-            '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u'
+            '^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$'
         );
         return $control;
     }

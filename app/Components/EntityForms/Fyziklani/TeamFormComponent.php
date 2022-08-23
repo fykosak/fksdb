@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\FormAdjustment;
@@ -18,6 +19,7 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Security\User;
+use Tracy\Debugger;
 
 abstract class TeamFormComponent extends EntityFormComponent
 {
@@ -55,42 +57,49 @@ abstract class TeamFormComponent extends EntityFormComponent
 
         $values = array_reduce(
             $this->getProcessing(),
-            fn(array $prevValue, FormProcessing $item): array => $item->process($prevValue, $holder),
+            fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event, $holder),
             $values
         );
         $adjustments = $this->getAdjustments();
         array_walk(
             $adjustments,
-            fn(FormAdjustment $item) => $item->adjust($values, $holder)
+            fn(FormAdjustment $item) => $item($values, $form, $this->event, $holder)
         );
+        for ($member = 0; $member < 5; $member++) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('member_' . $member);
+        }
+        Debugger::barDump($values);
     }
-
 
     protected function setDefaults(): void
     {
-        // TODO: Implement setDefaults() method.
     }
 
     /**
-     * @param Form $form
      * @throws BadTypeException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainer('fyziklani_team', ['name', 'password']);
+        $teamContainer = $this->reflectionFormFactory->createContainer(
+            'fyziklani_team',
+            ['name']
+        );
         $form->addComponent($teamContainer, 'team');
         for ($member = 0; $member < 5; $member++) {
             $memberContainer = $this->referencedPersonFactory->createReferencedPerson(
                 $this->getFieldsDefinition(),
                 $this->event->getContestYear(),
                 'email',
-                $member !== 0,
+                true,
                 new SelfResolver($this->user),
                 new SelfResolver($this->user),
                 $this->event
             );
-            $teamContainer->addComponent($memberContainer, 'member_' . $member);
+            $memberContainer->getSearchContainer()->setOption('label', sprintf(_('Member #%d'), $member + 1));
+            $memberContainer->getReferencedContainer()->setOption('label', sprintf(_('Member #%d'), $member + 1));
+            $form->addComponent($memberContainer, 'member_' . $member);
         }
     }
 

@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Utils\Promise;
 use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Control;
@@ -120,26 +119,23 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @param string|int|Model|PersonModel $value
+     * @param string|int|Model $value
      * @return static
      */
     public function setValue($value, bool $force = false): self
     {
-        if ($value instanceof PersonModel) {
-            $personModel = $value;
+        if ($value instanceof Model) {
+            $this->model = $value;
         } elseif ($value === self::VALUE_PROMISE) {
-            $personModel = null;
+            $this->model = null;
         } else {
-            $personModel = $this->service->findByPrimary($value);
+            $this->model = $this->service->findByPrimary($value);
         }
 
-        if ($personModel) {
-            $this->model = $personModel;
-        }
-        $this->setModel($personModel ?? null, $force ? self::MODE_FORCE : self::MODE_NORMAL);
+        $this->setModel($this->model, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($value instanceof PersonModel) {
-            $value = $personModel->getPrimary();
+        if (isset($this->model)) {
+            $value = $this->model->getPrimary();
         }
         $this->getSearchContainer()->setOption('visible', !$value);
         $this->getReferencedContainer()->setOption('visible', (bool)$value);
@@ -191,7 +187,7 @@ class ReferencedId extends HiddenField
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
                     $model = $this->handler->createFromValues((array)$values);
-                    $this->setValue($model, (bool)self::MODE_FORCE);
+                    $this->setValue($model, true);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {

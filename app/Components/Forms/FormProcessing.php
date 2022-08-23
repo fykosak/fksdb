@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Nette\Forms\Form;
 
 interface FormProcessing
 {
-    public function process(array $values, ModelHolder $holder): array;
+    public function __invoke(array $values, Form $form, EventModel $event, ModelHolder $holder): array;
 }

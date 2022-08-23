@@ -38,18 +38,20 @@ class FOLTeamFormComponent extends TeamFormComponent
                     'description' => _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.'),
                 ],
             ],
-            /*  'person_has_flag' => [
-                  'spam_mff' => [
-                      'required' => false,
-                      'description' => _('Pouze pro české a slovenské studenty.'),
-                  ],
-              ],*/
+            'person_has_flag' => [
+                'spam_mff' => [
+                    'required' => false,
+                    'description' => _('Pouze pro české a slovenské studenty.'),
+                ],
+            ],
         ];
     }
 
     protected function getProcessing(): array
     {
-        return [];
+        return [
+            new FOLCategoryProcessing(),
+        ];
     }
 
     protected function getAdjustments(): array

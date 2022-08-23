@@ -24,7 +24,6 @@ abstract class ReferencedContainer extends ContainerWithOptions
 {
 
     public const ID_MASK = 'frm%s-%s';
-    public const CSS_AJAX = 'ajax';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
 
@@ -103,7 +102,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+       // $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             if ($this->allowClear) {
                 $this->referencedId->setValue(null);

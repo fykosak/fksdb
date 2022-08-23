@@ -99,41 +99,13 @@ class ReferencedPersonContainer extends ReferencedContainer
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subContainer->setOption('showGroup', true);
                 $label = _('Permanent address');
-                if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
+                if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
                 }
                 $subContainer->setOption('label', $label);
             }
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $metadata);
-                if ($sub === 'person_info' && $fieldName === 'email') {
-                    $control->addCondition(
-                        function (): bool {
-                            // we use this workaround not to call getValue inside validation out of transaction
-                            $personId = $this->getReferencedId()->getValue(false);
-                            return $personId && $personId != ReferencedId::VALUE_PROMISE;
-                        }
-                    )
-                        ->addRule(
-                            function (BaseControl $control): bool {
-                                $personId = $this->getReferencedId()->getValue(false);
-
-                                $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
-                                    $control->getValue()
-                                );
-                                if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                    $this->getReferencedId()->setValue($foundPerson, (bool)ReferencedId::MODE_FORCE);
-                                    return false;
-                                }
-                                return true;
-                            },
-                            _(
-                                'There is (formally) different person with email %value. 
-                                Probably it is a duplicate so it substituted original data in the form.'
-                            )
-                        );
-                }
-
                 $subContainer->addComponent($control, $fieldName);
             }
             $this->addComponent($subContainer, $sub);
@@ -179,7 +151,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     true,
                     isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
                 );
-                $controlModifiable = ($realValue !== null) ? $modifiable : true;
+                $controlModifiable = isset($realValue) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
                     $this[$sub]->removeComponent($component);

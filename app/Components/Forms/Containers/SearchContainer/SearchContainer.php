@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Containers\SearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Utils\Html;
 
 abstract class SearchContainer extends ContainerWithOptions
 {
@@ -37,7 +38,12 @@ abstract class SearchContainer extends ContainerWithOptions
 
     protected function createSearchButton(): void
     {
-        $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Find'));
+        $submit = $this->addSubmit(
+            self::SUBMIT_SEARCH,
+            Html::el('span')->addHtml(
+                Html::el('i')->addAttributes(['class' => 'fa fa-search me-3'])
+            )->addText(_('Find'))
+        );
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
