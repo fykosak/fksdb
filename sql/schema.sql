@@ -1389,20 +1389,23 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
     `product_id`        INT(11)                                  NOT NULL,
     `contest_id`        INT(11)                                  NOT NULL,
     `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,                                         # TODO to enum
-    `description_cs`    VARCHAR(250)                             NULL     DEFAULT NULL,
-    `description_en`    VARCHAR(250)                             NULL     DEFAULT NULL,
-    `data`              VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
+    `description_cs`    VARCHAR(255)                             NULL     DEFAULT NULL,
+    `description_en`    VARCHAR(255)                             NULL     DEFAULT NULL,
+    `data`              VARCHAR(255)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
     `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
     `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna', # TODO to enum
     `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
     `available`         BOOLEAN                                  NOT NULL DEFAULT FALSE COMMENT 'available in online store',
-    `placement`         VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
+    `placement`         VARCHAR(255)                             NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
     `price`             DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'price in FYKOS Coins',
     `note`              TEXT(1024)                               NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
-    INDEX `idx_warehouse_item__finger_print` (`contest_id`, `state`, `description_cs`, `description_en`, `price`,
-                                              `shipped`, `data`),
+    `fingerprint`       VARCHAR(64) AS (SHA2(CONCAT_WS(';',product_id,contest_id,state,
+                description_cs,description_en,data,purchase_price,
+                purchase_currency,shipped), 256)) VIRTUAL COMMENT 'fingerprint pro nalezení stejných položek',
+    INDEX `idx_warehouse_item__product_id` (`contest_id`, `state`, `product_id`),
     INDEX `idx_warehouse_item__shipped` (`shipped`),
+    INDEX `idx_warehouse_item__fingerprint` (`fingerprint`),
     CONSTRAINT `fk_warehouse_item__product`
         FOREIGN KEY (`product_id`)
             REFERENCES `warehouse_product` (`product_id`)
