@@ -117,19 +117,9 @@ abstract class Machine extends AbstractMachine
      * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
-    final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void
+    final public function executeImplicitTransition(ModelHolder $holder): void
     {
         $transition = $this->selectTransition($this->getAvailableTransitions($holder));
-        $this->saveAndExecuteTransition($transition, $holder, $data);
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws \Throwable
-     */
-    final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void
-    {
-        $holder->updateData($data);
         $this->execute($transition, $holder);
     }
 

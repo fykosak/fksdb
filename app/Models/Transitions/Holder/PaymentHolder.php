@@ -33,9 +33,4 @@ class PaymentHolder implements ModelHolder
     {
         return $this->model;
     }
-
-    public function updateData(array $data): void
-    {
-        $this->service->storeModel($data, $this->model);
-    }
 }

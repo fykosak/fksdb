@@ -121,13 +121,13 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->paymentService->storeModel($data, $this->model);
                 $model = $this->model;
             } else {
-                $holder = $this->machine->createHolder(null);
-                $this->machine->saveAndExecuteImplicitTransition(
-                    $holder,
+                $model = $this->paymentService->storeModel(
                     array_merge($data, [
                         'event_id' => $this->machine->event->event_id,
                     ])
                 );
+                $holder = $this->machine->createHolder($model);
+                $this->machine->executeImplicitTransition($holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {

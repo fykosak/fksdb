@@ -9,13 +9,13 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         #transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
         transitions:
-            __init->pending:
+            init->pending:
                 #condition: %events.fyziklani16.appCond%
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
+                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
                 label: _('Register team')
-                #onExecuted:
+               # afterExcecute:
                 #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
-                #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
+                   #- FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()

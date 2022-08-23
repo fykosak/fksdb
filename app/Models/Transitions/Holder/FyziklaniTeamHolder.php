@@ -35,9 +35,4 @@ class FyziklaniTeamHolder implements ModelHolder
     {
         return $this->team;
     }
-
-    public function updateData(array $data): void
-    {
-        $this->service->storeModel($data, $this->team);
-    }
 }
