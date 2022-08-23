@@ -17,6 +17,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
+use Nette\Forms\Controls\SubmitButton;
 
 class ItemFormComponent extends EntityFormComponent
 {
@@ -44,6 +45,21 @@ class ItemFormComponent extends EntityFormComponent
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
+    /**
+     * @param Form $form
+     * @return bool
+    */
+    protected function isSubmittedByEditAll(Form $form): bool
+    {
+        if (!isset($form['editAll'])) {
+            return false;
+        }
+        if (!$form['editAll']->isSubmittedBy()) {
+            return false;
+        }
+        return true;
+    }
+
     protected function handleFormSuccess(Form $form): void
     {
         /** @var array $values */
@@ -54,14 +70,35 @@ class ItemFormComponent extends EntityFormComponent
             $data['contest_id'] = $this->contest->contest_id;
         }
 
-        $this->itemService->storeModel($data, $this->model);
+        if (!isset($data['item_count'])) {
+            $data['item_count'] = 1;
+        }
+
+     // if editAll button was selected and the form is updating the model
+        if ($this->isSubmittedByEditAll($form) && !$this->isCreating()) {
+             // select all models with the same fingerprint
+            $items = $this->itemService->findByFingerprint($this->model->fingerprint);
+            /** @var ItemModel $item */
+            foreach ($items as $item) {
+                // save $data to separate variable
+                $newModelData = $data;
+                // keep item_id and note from original ItemModel
+                $newModelData['item_id'] = $item->item_id;
+                $newModelData['note'] = $item->note;
+                $this->itemService->storeModel($newModelData, $item);
+            }
+        } else {
+            for ($i = 0; $i < $data['item_count']; $i++) {
+                $this->itemService->storeModel($data, $this->model);
+            }
+        }
+
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Item has been updated.') : _('Item has been created.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');
     }
-
     /**
      * @throws BadTypeException
      */
@@ -94,6 +131,16 @@ class ItemFormComponent extends EntityFormComponent
             $products[$product->product_id] = $product->name_cs;
         }
         $container->addComponent(new SelectBox(_('Product'), $products), 'product_id', 'state');
+        if ($this->isCreating()) {
+            $container->addText('item_count', _('Item count'))
+                ->setHtmlType('number')
+                ->setDefaultValue(1)
+                ->addRule(Form::MIN, _('Must be at least 1'), 1);
+        }
         $form->addComponent($container, self::CONTAINER);
+        if (!$this->isCreating()) {
+            $form->addSubmit('editAll', _('Edit all items'))
+            ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
+        }
     }
 }

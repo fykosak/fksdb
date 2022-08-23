@@ -27,6 +27,7 @@ use Nette\Security\Resource;
  * @property-read string|null placement kde je uskladnena
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka
+ * @property-read string fingerprint idenfikátor podobných položek
  */
 class ItemModel extends Model implements Resource
 {
