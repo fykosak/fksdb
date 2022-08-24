@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
+use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
@@ -29,7 +31,10 @@ class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
 
-    public function toMessage(): Message
+    /**
+     * @throws UnsubscribedEmailException
+     */
+    public function toMessage(UnsubscribedEmailService $unsubscribedEmailService): Message
     {
         $message = new Message();
         $message->setSubject($this->subject);
@@ -37,12 +42,14 @@ class EmailMessageModel extends Model implements Resource
             if (isset($this->recipient) && $this->person->getInfo()->email !== $this->recipient) {
                 throw new InvalidStateException('Recipient and person\'s email not match');
             }
-            $message->addTo($this->person->getInfo()->email);
+            $mail = $this->person->getInfo()->email;
         } elseif (isset($this->recipient)) {
-            $message->addTo($this->recipient);
+            $mail = $this->recipient;
         } else {
             throw new InvalidStateException('Recipient org person_id is required');
         }
+        $unsubscribedEmailService->checkEmail($mail);
+        $message->addTo($mail);
 
         if (!is_null($this->blind_carbon_copy)) {
             $message->addBcc($this->blind_carbon_copy);
