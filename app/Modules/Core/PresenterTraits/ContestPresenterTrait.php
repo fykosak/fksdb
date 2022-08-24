@@ -6,12 +6,14 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 use Nette\Security\User;
 
 /**
@@ -68,29 +70,29 @@ trait ContestPresenterTrait
 
         switch ($this->getRole()) {
             case YearChooserComponent::ROLE_SELECTED:
-                return $this->contestService->getTable()->where('contest_id', $this->contestId);
             case YearChooserComponent::ROLE_ALL:
                 return $this->contestService->getTable();
             case YearChooserComponent::ROLE_CONTESTANT:
-            default:
                 if (!$login || !$login->person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
-                $person = $login->person;
                 $contestsIds = [];
-                foreach ($person->getActiveContestants() as $contestant) {
-                    $contestsIds[] = $contestant->contest_id;
+                /** @var ContestantModel $contestant */
+                foreach ($login->person->getContestants() as $contestant) {
+                    $contestsIds[$contestant->contest_id] = $contestant->contest_id;
                 }
-                return $this->contestService->getTable()->where('contest_id', $contestsIds);
+                return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
             case YearChooserComponent::ROLE_ORG:
-                if (!$login) {
+                if (!$login || !$login->person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
                 foreach ($login->person->getActiveOrgs() as $org) {
-                    $contestsIds[] = $org->contest;
+                    $contestsIds[] = $org->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', $contestsIds);
+            default:
+                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
     }
 
