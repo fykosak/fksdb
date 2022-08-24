@@ -140,7 +140,9 @@ abstract class Machine extends AbstractMachine
         if (!$this->canExecute($transition, $holder)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
+        $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $outerTransition = false;
             $this->explorer->getConnection()->beginTransaction();
         }
         try {
@@ -149,7 +151,10 @@ abstract class Machine extends AbstractMachine
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
-        $this->explorer->getConnection()->commit();
+        if (!$outerTransition) {
+            $this->explorer->getConnection()->commit();
+        }
+
         $holder->updateState($transition->targetStateEnum);
         $transition->callAfterExecute($holder);
     }
