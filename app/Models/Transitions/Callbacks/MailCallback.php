@@ -36,19 +36,30 @@ class MailCallback implements TransitionCallback
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
-        /** @var PersonModel|null $person */
+        foreach ($this->getPersonFromHolder($holder) as $person) {
+            $data = $this->emailData;
+            $data['recipient'] = $person->getInfo()->email;
+
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
+                $this->templateFile,
+                $person->getPreferredLang(),
+                ['model' => $holder->getModel()]
+            );
+            $this->emailMessageService->addMessageToSend($data);
+        }
+    }
+
+    /**
+     * @return PersonModel[]
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     */
+    protected function getPersonFromHolder(ModelHolder $holder): array
+    {
         $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {
             throw new BadTypeException(PersonModel::class, $person);
         }
-        $data = $this->emailData;
-        $data['recipient'] = $person->getInfo()->email;
-
-        $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
-            $this->templateFile,
-            $person->getPreferredLang(),
-            ['model' => $holder->getModel()]
-        );
-        $this->emailMessageService->addMessageToSend($data);
+        return [$person];
     }
 }

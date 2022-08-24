@@ -8,8 +8,8 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Components\Forms\FormAdjustment;
-use FKSDB\Components\Forms\FormProcessing;
+use FKSDB\Components\Forms\FormAdjustment\FormAdjustment;
+use FKSDB\Components\Forms\FormProcessing\FormProcessing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Security\User;
-use Tracy\Debugger;
 
 abstract class TeamFormComponent extends EntityFormComponent
 {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\Forms\FormProcessing\FOLCategoryProcessing;
+
 class FOLTeamFormComponent extends TeamFormComponent
 {
     protected function getFieldsDefinition(): array
@@ -50,7 +52,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     protected function getProcessing(): array
     {
         return [
-            new FOLCategoryProcessing(),
+            new FOLCategoryProcessing($this->container),
         ];
     }
 

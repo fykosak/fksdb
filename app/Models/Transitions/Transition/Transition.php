@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\SmartObject;
+use Tracy\Debugger;
 
 class Transition
 {
@@ -134,6 +135,7 @@ class Transition
 
     final public function callAfterExecute(...$args): void
     {
+        Debugger::barDump($this);
         foreach ($this->afterExecute as $callback) {
             $callback(...$args);
         }

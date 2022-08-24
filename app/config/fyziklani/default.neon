@@ -13,9 +13,9 @@ transitions:
                 #condition: %events.fyziklani16.appCond%
                 #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
                 label: _('Register team')
-               # afterExcecute:
-                #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
-                   #- FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',]) #TODO
+                    - FKSDB\Models\Transitions\Callbacks\TeamTeacherMailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',]) #TODO
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()

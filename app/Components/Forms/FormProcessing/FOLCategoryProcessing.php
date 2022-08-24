@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\Forms\FormProcessing;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\FormProcessing;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 
-class FOLCategoryProcessing implements FormProcessing
+class FOLCategoryProcessing extends FormProcessing
 {
 
     public function __invoke(array $values, Form $form, EventModel $event, ModelHolder $holder): array
