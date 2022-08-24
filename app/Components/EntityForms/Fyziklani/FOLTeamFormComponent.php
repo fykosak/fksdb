@@ -55,9 +55,4 @@ class FOLTeamFormComponent extends TeamFormComponent
             new FOLCategoryProcessing($this->container),
         ];
     }
-
-    protected function getAdjustments(): array
-    {
-        return [];
-    }
 }

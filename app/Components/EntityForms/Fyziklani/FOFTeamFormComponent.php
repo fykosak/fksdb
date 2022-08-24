@@ -51,9 +51,4 @@ class FOFTeamFormComponent extends TeamFormComponent
     {
         return [];
     }
-
-    protected function getAdjustments(): array
-    {
-        return [];
-    }
 }
