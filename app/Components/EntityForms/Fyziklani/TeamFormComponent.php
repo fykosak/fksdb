@@ -20,7 +20,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\SelfResolver;
 use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Model;
-use Nette\Application\ForbiddenRequestException;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Security\User;
@@ -64,43 +64,57 @@ abstract class TeamFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws ForbiddenRequestException
      * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
         $holder = $this->machine->createHolder($this->model ?? null);
-
-        $values = array_reduce(
-            $this->getProcessing(),
-            fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event, $holder),
-            $values
-        );
-        if (!isset($this->model)) {
+        $this->teamService->explorer->beginTransaction();
+        try {
+            $values = array_reduce(
+                $this->getProcessing(),
+                fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event, $holder),
+                $values
+            );
             $this->checkUniqueTeamName($values['team']['name']);
             $team = $this->teamService->storeModel(
                 array_merge($values['team'], [
                     'event_id' => $this->event->event_id,
-                ])
+                ]),
+                $this->model
             );
-            for ($member = 0; $member < 5; $member++) {
-                /** @var ReferencedId $referencedId */
-                $referencedId = $form->getComponent('member_' . $member);
-                /** @var PersonModel $person */
-                $person = $referencedId->getModel();
-                if ($person) {
-                    $this->checkUniqueMember($team, $person);
-                    $data = [
-                        'person_id' => $person->getPrimary(),
-                        'fyziklani_team_id' => $team->fyziklani_team_id,
-                    ];
-                    $this->teamMemberService->storeModel($data);
+
+            if (!isset($this->model)) {
+                for ($member = 0; $member < 5; $member++) {
+                    /** @var ReferencedId $referencedId */
+                    $referencedId = $form->getComponent('member_' . $member);
+                    /** @var PersonModel $person */
+                    $person = $referencedId->getModel();
+
+                    if ($person) {
+                        $this->checkUniqueMember($team, $person);
+                        $data = [
+                            'person_id' => $person->getPrimary(),
+                            'fyziklani_team_id' => $team->fyziklani_team_id,
+                        ];
+                        $this->teamMemberService->storeModel($data);
+                    }
                 }
+                $holder = $this->machine->createHolder($team);
+                $this->machine->executeImplicitTransition($holder);
             }
-            $holder = $this->machine->createHolder($team);
-            $this->machine->executeImplicitTransition($holder);
+        } catch (\Throwable$exception) {
+            $this->teamService->explorer->rollBack();
+            throw $exception;
         }
+        $this->flashMessage(
+            isset($this->model)
+                ? _('Application has been updated')
+                : _('Application has been create'),
+            Message::LVL_SUCCESS
+        );
+        $this->teamService->explorer->commit();
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void
