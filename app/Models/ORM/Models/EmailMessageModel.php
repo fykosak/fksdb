@@ -40,7 +40,7 @@ class EmailMessageModel extends Model implements Resource
         $message->setSubject($this->subject);
         if (isset($this->recipient_person_id)) {
             if (isset($this->recipient) && $this->person->getInfo()->email !== $this->recipient) {
-                throw new InvalidStateException('Recipient and person\'s email not match');
+                throw new InvalidStateException('Recipient and person\'s email do not match');
             }
             $mail = $this->person->getInfo()->email;
         } elseif (isset($this->recipient)) {
