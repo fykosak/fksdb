@@ -200,6 +200,7 @@ class PersonModel extends Model implements Resource
      * Active contestant := contestant in the highest year but not older than the current year.
      *
      * @return ContestantModel[] indexed by contest_id
+     * TODO definitely piece of shit this method
      */
     public function getActiveContestants(): array
     {
