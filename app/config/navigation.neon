@@ -1,10 +1,10 @@
 navigation:
     structure:
-        #AK hotilinks
-        Core:Dispatch:default:
-            Event:Payment:create:
-                params:
-                    eventId: 165
+        #AK hotlinks
+        #Core:Dispatch:default:
+            #Event:Payment:create:
+                #params:
+                    #eventId: 165
         Org.Dashboard.default:
             Org.Dashboard.default: []
 

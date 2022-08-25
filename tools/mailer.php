@@ -38,8 +38,7 @@ foreach ($query as $model) {
         break;
     }
     try {
-        $message = $model->toMessage();
-        $serviceUnsubscribedEmail->checkEmail($message->getHeader('To')); // TODO hack?
+        $message = $model->toMessage($serviceUnsubscribedEmail);
 
         $mailer->send($message);
         $serviceEmailMessage->storeModel(['state' => EmailMessageState::SENT, 'sent' => new DateTime()], $model);

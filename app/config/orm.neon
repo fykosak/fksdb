@@ -1019,6 +1019,43 @@ orm:
         warehouse_item:
             service: FKSDB\Models\ORM\Services\Warehouse\ItemService
             model: FKSDB\Models\ORM\Models\Warehouse\ItemModel
+            columnFactories:
+                item_id:
+                    type: primaryKey
+                    title: _('Item Id')
+                product_id:
+                    type: int
+                    title: _('Product Id')
+                contest_id:
+                    type: int
+                    title: _('Contest Id')
+                state:
+                    type: enum
+                    title: _('State')
+                    enumClassName: FKSDB\Models\ORM\Models\Warehouse\ItemState
+                description_cs:
+                    type: string
+                    title: _('Description cs')
+                description_en:
+                    type: string
+                    title: _('Description en')
+                data:
+                    type: string
+                    title: _('Data')
+                purchase_price:
+                    type: float
+                    decimalDigitsCount: 2
+                    title: _('Price')
+                purchase_currency:
+                     type: class
+                     class: FKSDB\Models\ORM\Columns\Tables\Payment\CurrencyColumnFactory
+                     title: _('Currency')
+                placement:
+                    type: string
+                    title: _('Placement')
+                note:
+                    type: text
+                    title: _('Note')
 
 
         e_dsef_participant:
