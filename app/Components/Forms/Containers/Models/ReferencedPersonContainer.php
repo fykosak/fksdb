@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -18,9 +19,8 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\ReferencedHandler;
-use FKSDB\Models\Persons\VisibilityResolver;
+use FKSDB\Models\Persons\ResolutionMode;
+use FKSDB\Models\Persons\Resolvers\Resolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
@@ -30,12 +30,12 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {
 
-    public ModifiabilityResolver $modifiabilityResolver;
-    public VisibilityResolver $visibilityResolver;
+    public Resolver $resolver;
     public ContestYearModel $contestYear;
     private array $fieldsDefinition;
     protected PersonService $personService;
@@ -49,16 +49,14 @@ class ReferencedPersonContainer extends ReferencedContainer
 
     public function __construct(
         Container $container,
-        ModifiabilityResolver $modifiabilityResolver,
-        VisibilityResolver $visibilityResolver,
+        Resolver $resolver,
         ContestYearModel $contestYear,
         array $fieldsDefinition,
         ?EventModel $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);
-        $this->modifiabilityResolver = $modifiabilityResolver;
-        $this->visibilityResolver = $visibilityResolver;
+        $this->resolver = $resolver;
         $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
@@ -115,12 +113,12 @@ class ReferencedPersonContainer extends ReferencedContainer
     /**
      * @param PersonModel|null $model
      */
-    public function setModel(?Model $model, string $mode): void
+    public function setModel(?Model $model, ReferencedIdMode $mode): void
     {
-        $resolution = $this->modifiabilityResolver->getResolutionMode($model);
-        $modifiable = $this->modifiabilityResolver->isModifiable($model);
-        $visible = $this->visibilityResolver->isVisible($model);
-        if ($mode === ReferencedId::MODE_ROLLBACK) {
+        $resolution = $this->resolver->getResolutionMode($model);
+        $modifiable = $this->resolver->isModifiable($model);
+        $visible = $this->resolver->isVisible($model);
+        if ($mode->value === ReferencedIdMode::ROLLBACK) {
             $model = null;
         }
         $this->getReferencedId()->getHandler()->setResolution($resolution);
@@ -167,19 +165,19 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
-                if ($mode == ReferencedId::MODE_ROLLBACK) {
+                if ($mode->value == ReferencedIdMode::ROLLBACK) {
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
                     if (
                         $this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
-                        || ($mode === ReferencedId::MODE_FORCE)
+                        || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
                         $component->setValue($value);
                     } else {
                         $component->setDefaultValue($value);
                     }
-                    if ($realValue && $resolution == ReferencedHandler::RESOLUTION_EXCEPTION) {
+                    if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }

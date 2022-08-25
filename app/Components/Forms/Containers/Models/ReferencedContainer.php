@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
@@ -139,5 +140,5 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?Model $model, string $mode): void;
+    abstract public function setModel(?Model $model, ReferencedIdMode $mode): void;
 }

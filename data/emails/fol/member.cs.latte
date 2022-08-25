@@ -1,0 +1,7 @@
+{varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
+{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+<p>
+    Jsi členem týmu <em>{$team->name}</em> pro {$team->event->name}.
+</p>
+{*include '../inc/eventEdit.cs.latte' event => $team->event, token => $token*}
+{*include '../inc/closing.cs.latte'*}

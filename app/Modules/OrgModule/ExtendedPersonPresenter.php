@@ -12,7 +12,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter as IExtendedPersonPresenter;
@@ -81,7 +81,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
             PersonSearchContainer::SEARCH_ID,
             $create,
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
-            new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
         );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));

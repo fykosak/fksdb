@@ -49,12 +49,11 @@ class ReferencedPersonHandler implements ReferencedHandler
     private FlagService $flagService;
 
     private EventModel $event;
-
-    private string $resolution;
+    private ResolutionMode $resolution;
 
     public function __construct(
         ContestYearModel $contestYear,
-        string $resolution
+        ResolutionMode $resolution
     ) {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
@@ -80,12 +79,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         $this->flagService = $flagService;
     }
 
-    public function getResolution(): string
-    {
-        return $this->resolution;
-    }
-
-    public function setResolution(string $resolution): void
+    public function setResolution(ResolutionMode $resolution): void
     {
         $this->resolution = $resolution;
     }
@@ -169,11 +163,11 @@ class ReferencedPersonHandler implements ReferencedHandler
 
             $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
             $conflicts = $this->getConflicts($models, $data);
-            if ($this->resolution === self::RESOLUTION_EXCEPTION) {
+            if ($this->resolution->value === ResolutionMode::EXCEPTION) {
                 if (count($conflicts)) {
                     throw new ModelDataConflictException($conflicts);
                 }
-            } elseif ($this->resolution === self::RESOLUTION_KEEP) {
+            } elseif ($this->resolution->value === ResolutionMode::KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {

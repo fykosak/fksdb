@@ -17,13 +17,12 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Security\User;
 
 /**
  * @property TeamModel2 $model
@@ -34,7 +33,6 @@ abstract class TeamFormComponent extends EntityFormComponent
     private FyziklaniTeamMachine $machine;
     private ReferencedPersonFactory $referencedPersonFactory;
     private EventModel $event;
-    private User $user;
     private TeamService2 $teamService;
     private TeamMemberService $teamMemberService;
 
@@ -53,12 +51,10 @@ abstract class TeamFormComponent extends EntityFormComponent
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
         SingleReflectionFormFactory $reflectionFormFactory,
-        ReferencedPersonFactory $referencedPersonFactory,
-        User $user
+        ReferencedPersonFactory $referencedPersonFactory
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
         $this->referencedPersonFactory = $referencedPersonFactory;
-        $this->user = $user;
         $this->teamService = $teamService;
         $this->teamMemberService = $teamMemberService;
     }
@@ -104,17 +100,20 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);
             }
-        } catch (\Throwable$exception) {
+            $this->flashMessage(
+                isset($this->model)
+                    ? _('Application has been updated')
+                    : _('Application has been create'),
+                Message::LVL_SUCCESS
+            );
+            $this->teamService->explorer->commit();
+        } catch (DuplicateTeamNameException | DuplicateMemberException $exception) {
+            $this->teamService->explorer->rollBack();
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (\Throwable $exception) {
             $this->teamService->explorer->rollBack();
             throw $exception;
         }
-        $this->flashMessage(
-            isset($this->model)
-                ? _('Application has been updated')
-                : _('Application has been create'),
-            Message::LVL_SUCCESS
-        );
-        $this->teamService->explorer->commit();
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void
@@ -125,7 +124,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 continue;
             }
             if ($member->fyziklani_team->event_id === $this->event->event_id) {
-                throw new DuplicateMemberException();
+                throw new DuplicateMemberException($person);
             }
         }
     }
@@ -139,7 +138,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $query->where('fyziklani_team_id IS NOT ?', $this->model->fyziklani_team_id);
         }
         if ($query->fetch()) {
-            throw new DuplicateTeamNameException();
+            throw new DuplicateTeamNameException($name);
         }
     }
 
@@ -164,8 +163,12 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->event->getContestYear(),
                 'email',
                 true,
-                new SelfResolver($this->user),
-                new SelfResolver($this->user),
+                new SelfACLResolver(
+                    'fyziklani.team',
+                    $this->model ? 'org-edit' : 'org-create',
+                    $this->event->event_type->contest,
+                    $this->container
+                ),
                 $this->event
             );
             $memberContainer->getSearchContainer()->setOption('label', sprintf(_('Member #%d'), $member + 1));

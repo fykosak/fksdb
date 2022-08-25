@@ -21,7 +21,6 @@ class FloatColumnFactory extends ColumnFactory
 
     private ?string $suffix = null;
 
-    /** @var FloatColumn|int */
     private int $decimalDigitsCount;
 
     public function setDecimalDigitsCount(int $count): void

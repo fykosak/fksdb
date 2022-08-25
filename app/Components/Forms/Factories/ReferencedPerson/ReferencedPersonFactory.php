@@ -15,12 +15,12 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
+use FKSDB\Models\Persons\ResolutionMode;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\VisibilityResolver;
-use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
+use FKSDB\Models\Persons\Resolvers\Resolver;
 
 class ReferencedPersonFactory
 {
@@ -28,7 +28,6 @@ class ReferencedPersonFactory
 
     private PersonService $personService;
     private PersonFactory $personFactory;
-    private ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
     private PersonProvider $personProvider;
     private PersonScheduleFactory $personScheduleFactory;
     private Container $context;
@@ -36,14 +35,12 @@ class ReferencedPersonFactory
     public function __construct(
         PersonService $personService,
         PersonFactory $personFactory,
-        ReferencedPersonHandlerFactory $referencedPersonHandlerFactory,
         PersonProvider $personProvider,
         PersonScheduleFactory $personScheduleFactory,
         Container $context
     ) {
         $this->personService = $personService;
         $this->personFactory = $personFactory;
-        $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
         $this->personScheduleFactory = $personScheduleFactory;
         $this->context = $context;
@@ -54,17 +51,15 @@ class ReferencedPersonFactory
         ContestYearModel $contestYear,
         string $searchType,
         bool $allowClear,
-        ModifiabilityResolver $modifiabilityResolver,
-        VisibilityResolver $visibilityResolver,
+        Resolver $resolver,
         ?EventModel $event = null
     ): ReferencedId {
-        $handler = $this->referencedPersonHandlerFactory->create($contestYear, null, $event);
+        $handler = $this->createHandler($contestYear, null, $event);
         return new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
             new ReferencedPersonContainer(
                 $this->context,
-                $modifiabilityResolver,
-                $visibilityResolver,
+                $resolver,
                 $contestYear,
                 $fieldsDefinition,
                 $event,
@@ -73,6 +68,22 @@ class ReferencedPersonFactory
             $this->personService,
             $handler
         );
+    }
+
+    protected function createHandler(
+        ContestYearModel $contestYear,
+        ?ResolutionMode $resolution,
+        ?EventModel $event = null
+    ): ReferencedPersonHandler {
+        $handler = new ReferencedPersonHandler(
+            $contestYear,
+            $resolution ?? ResolutionMode::tryFrom(ResolutionMode::EXCEPTION)
+        );
+        if ($event) {
+            $handler->setEvent($event);
+        }
+        $this->context->callInjects($handler);
+        return $handler;
     }
 
     final public static function isFilled(

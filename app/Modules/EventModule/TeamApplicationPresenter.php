@@ -29,6 +29,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
 /**
  * @method TeamModel2 getEntity()
@@ -41,6 +42,37 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     final public function injectServiceFyziklaniTeam(TeamService2 $teamService): void
     {
         $this->teamService = $teamService;
+    }
+
+    public function authorizedEdit(): void
+    {
+        $event = $this->getEvent();
+        if ($this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)) {
+            $this->setAuthorized(true);
+            return;
+        }
+        $this->setAuthorized(
+            $event->isRegistrationOpened()
+            && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
+        );
+    }
+
+    public function authorizedCreate(): void
+    {
+        $event = $this->getEvent();
+        if ($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event)) {
+            $this->setAuthorized(true);
+            return;
+        }
+        $this->setAuthorized(
+            $event->isRegistrationOpened() &&
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+        );
+    }
+
+    public function requiresLogin(): bool
+    {
+        return $this->getAction() !== 'create';
     }
 
     /**

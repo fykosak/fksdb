@@ -14,8 +14,7 @@ transitions:
                 #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',]) #TODO
-                    - FKSDB\Models\Transitions\Callbacks\TeamTeacherMailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',]) #TODO
+                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Application created',]) #TODO
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()

@@ -50,9 +50,7 @@ services:
     #main
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Models\Persons\ReferencedPersonHandlerFactory
     - FKSDB\Models\Persons\ExtendedPersonHandlerFactory
-    - FKSDB\Models\Persons\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory

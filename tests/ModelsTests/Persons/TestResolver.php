@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\ReferencedHandler;
-use FKSDB\Models\Persons\VisibilityResolver;
+use FKSDB\Models\Persons\ResolutionMode;
+use FKSDB\Models\Persons\Resolvers\Resolver;
 
-class TestResolver implements VisibilityResolver, ModifiabilityResolver
+class TestResolver implements Resolver
 {
 
-    public function getResolutionMode(?PersonModel $person): string
+    public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
-        return ReferencedHandler::RESOLUTION_EXCEPTION;
+        return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

@@ -25,9 +25,6 @@ use Nette\Forms\Form;
  */
 class ReferencedId extends HiddenField
 {
-    public const MODE_NORMAL = 'MODE_NORMAL';
-    public const MODE_FORCE = 'MODE_FORCE';
-    public const MODE_ROLLBACK = 'MODE_ROLLBACK';
     public const VALUE_PROMISE = '__promise';
     private const JSON_DATA = 'referencedContainer';
     private ReferencedContainer $referencedContainer;
@@ -132,7 +129,12 @@ class ReferencedId extends HiddenField
             $this->model = $this->service->findByPrimary($value);
         }
 
-        $this->setModel($this->model, $force ? self::MODE_FORCE : self::MODE_NORMAL);
+        $this->setModel(
+            $this->model,
+            $force
+                ? ReferencedIdMode::tryFrom(ReferencedIdMode::FORCE)
+                : ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
+        );
 
         if (isset($this->model)) {
             $value = $this->model->getPrimary();
@@ -160,7 +162,7 @@ class ReferencedId extends HiddenField
     public function rollback(): void
     {
         if ($this->getModelCreated()) {
-            $this->setModel(null, self::MODE_ROLLBACK);
+            $this->setModel(null, ReferencedIdMode::tryFrom(ReferencedIdMode::ROLLBACK));
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }
@@ -195,10 +197,10 @@ class ReferencedId extends HiddenField
                     $this->handler->update($model, (array)$values);
 // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                     $model = $this->service->findByPrimary($model->getPrimary());
-                    $this->setValue($model, (bool)self::MODE_FORCE);
+                    $this->setValue($model, true);
                     return $referencedId;
                 } else {
-                    $this->setValue(null, (bool)self::MODE_FORCE);
+                    $this->setValue(null, true);
                 }
             } catch (ModelDataConflictException $exception) {
                 $exception->setReferencedId($this);
@@ -232,7 +234,7 @@ class ReferencedId extends HiddenField
         }
     }
 
-    protected function setModel(?Model $model, string $mode): void
+    protected function setModel(?Model $model, ReferencedIdMode $mode): void
     {
         $this->getReferencedContainer()->setModel($model, $mode);
     }

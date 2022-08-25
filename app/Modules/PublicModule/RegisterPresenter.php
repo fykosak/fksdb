@@ -20,7 +20,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
-use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
@@ -276,7 +276,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $this->getSelectedContestYear(),
             PersonSearchContainer::SEARCH_NONE,
             false,
-            new SelfResolver($this->getUser()),
             new SelfResolver($this->getUser())
         );
 

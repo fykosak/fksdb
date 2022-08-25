@@ -144,8 +144,12 @@ acl:
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
     - allow(org, webService, ::constant(Nette\Security\Permission::ALL))
+## NEW APPLICATIONS
+    - allow(guest, fyziklani.team, create)
+    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], fyziklani.team, [detail,edit], @ownApplicationAssertion)
+    - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
+    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))# +org-edit org-create
 ## EVENT MODULE
-    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))
@@ -154,9 +158,6 @@ acl:
     - allow(eventManager, event.scheduleItem, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
     - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
-
-    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], fyziklani.team, detail, @ownApplicationAssertion)
-    - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
 ## FYZIKLANI MODULE
     #base for org
 

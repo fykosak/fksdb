@@ -60,10 +60,10 @@ abstract class AuthenticatedPresenter extends BasePresenter
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
-            if ($this->isAuthorized()) { // check authorization
-                $method = $this->formatAuthorizedMethod($this->getAction());
-                $this->tryCall($method, $this->getParameters());
-            }
+            //if ($this->isAuthorized()) { // check authorization
+            $method = $this->formatAuthorizedMethod($this->getAction());
+            $this->tryCall($method, $this->getParameters());
+            //}
         }
     }
 
@@ -93,7 +93,8 @@ abstract class AuthenticatedPresenter extends BasePresenter
         // if token did not succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
-        } elseif (!$this->isAuthorized()) {
+        }
+        if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }

@@ -157,7 +157,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
             $this->contestYear,
             PersonSearchContainer::SEARCH_NONE,
             false,
-            new TestResolver(),
             new TestResolver()
         );
 

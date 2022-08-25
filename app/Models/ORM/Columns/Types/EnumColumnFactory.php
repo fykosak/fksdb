@@ -11,7 +11,6 @@ use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class EnumColumnFactory extends ColumnFactory
 {
