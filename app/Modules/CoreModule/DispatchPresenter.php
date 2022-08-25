@@ -51,7 +51,7 @@ class DispatchPresenter extends BasePresenter
                         'year' => $contestant->year,
                     ]
                 ),
-                'title' => sprintf(_('Contestant %d'), $contestant->year),
+                'title' => sprintf(_('Contestant in %d'), $contestant->year),
 
             ];
         }
