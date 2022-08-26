@@ -80,31 +80,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->model
             );
 
-            $persons = [];
-            for ($member = 0; $member < 5; $member++) {
-                /** @var ReferencedId $referencedId */
-                $referencedId = $form->getComponent('member_' . $member);
-                /** @var PersonModel $person */
-                $person = $referencedId->getModel();
-                if ($person) {
-                    $persons[$person->person_id] = $person;
-                }
-            }
-            /** @var TeamMemberModel $oldMember */
-            foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
-                $this->teamMemberService->disposeModel($oldMember);
-            }
-            foreach ($persons as $person) {
-                $oldTeamMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
-                if (!$oldTeamMember) {
-                    $this->checkUniqueMember($team, $person);
-                    $data = [
-                        'person_id' => $person->getPrimary(),
-                        'fyziklani_team_id' => $team->fyziklani_team_id,
-                    ];
-                    $this->teamMemberService->storeModel($data);
-                }
-            }
+            $this->saveTeamMembers($team, $form);
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
@@ -123,6 +99,35 @@ abstract class TeamFormComponent extends EntityFormComponent
         } catch (\Throwable $exception) {
             $this->teamService->explorer->rollBack();
             throw $exception;
+        }
+    }
+
+    protected function saveTeamMembers(TeamModel2 $team, Form $form): void
+    {
+        $persons = [];
+        for ($member = 0; $member < 5; $member++) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('member_' . $member);
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            if ($person) {
+                $persons[$person->person_id] = $person;
+            }
+        }
+        /** @var TeamMemberModel $oldMember */
+        foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
+            $this->teamMemberService->disposeModel($oldMember);
+        }
+        foreach ($persons as $person) {
+            $oldTeamMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
+            if (!$oldTeamMember) {
+                $this->checkUniqueMember($team, $person);
+                $data = [
+                    'person_id' => $person->getPrimary(),
+                    'fyziklani_team_id' => $team->fyziklani_team_id,
+                ];
+                $this->teamMemberService->storeModel($data);
+            }
         }
     }
 

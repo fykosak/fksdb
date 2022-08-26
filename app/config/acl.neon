@@ -59,7 +59,7 @@ acl:
 
     #applications
     - addResource(event.participant)  # list, detail
-    - addResource(fyziklani.team)     # route, list, detail
+    - addResource(fyziklani.team)     # route, list, detail, org-edit, org-create, org-detail
 
     #fyziklani
     - addResource(fyziklani.dashboard)  # default

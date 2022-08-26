@@ -60,12 +60,12 @@ trait YearPresenterTrait
     protected function getAvailableYears(): TypedGroupedSelection
     {
         $contest = $this->getSelectedContest();
-        switch ($this->getRole()) {
-            case YearChooserComponent::ROLE_ORG:
-            case YearChooserComponent::ROLE_ALL:
-            case YearChooserComponent::ROLE_SELECTED:
+        switch ($this->getRole()->value) {
+            case PresenterRole::ORG:
+            case PresenterRole::ALL:
+            case PresenterRole::SELECTED:
                 return $contest->getContestYears();
-            case YearChooserComponent::ROLE_CONTESTANT:
+            case PresenterRole::CONTESTANT:
                 /** @var LoginModel $login */
                 $login = $this->getUser()->getIdentity();
                 $years = [];
@@ -76,10 +76,12 @@ trait YearPresenterTrait
                         $years[] = $contestant->year;
                     }
                 }
-                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()
-                    ->where('ac_year', YearCalculator::getCurrentAcademicYear());
+                return count($years)
+                    ? $contest->getContestYears()->where('year', $years)
+                    : $contest->getContestYears()
+                        ->where('ac_year', YearCalculator::getCurrentAcademicYear());
             default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
+                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()->value));
         }
     }
 

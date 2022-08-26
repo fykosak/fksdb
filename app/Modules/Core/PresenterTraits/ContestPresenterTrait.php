@@ -66,12 +66,12 @@ trait ContestPresenterTrait
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 
-        switch ($this->getRole()) {
-            case YearChooserComponent::ROLE_SELECTED:
+        switch ($this->getRole()->value) {
+            case PresenterRole::SELECTED:
                 return $this->contestService->getTable()->where('contest_id', $this->contestId);
-            case YearChooserComponent::ROLE_ALL:
+            case PresenterRole::ALL:
                 return $this->contestService->getTable();
-            case YearChooserComponent::ROLE_CONTESTANT:
+            case PresenterRole::CONTESTANT:
             default:
                 if (!$login || !$login->person) {
                     return $this->contestService->getTable()->where('1=0');
@@ -82,7 +82,7 @@ trait ContestPresenterTrait
                     $contestsIds[] = $contestant->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', $contestsIds);
-            case YearChooserComponent::ROLE_ORG:
+            case PresenterRole::ORG:
                 if (!$login) {
                     return $this->contestService->getTable()->where('1=0');
                 }
@@ -94,7 +94,7 @@ trait ContestPresenterTrait
         }
     }
 
-    abstract protected function getRole(): string;
+    abstract protected function getRole(): PresenterRole;
 
     /**
      * @throws BadRequestException

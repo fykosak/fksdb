@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 
 abstract class BasePresenter extends AuthenticatedPresenter
@@ -58,8 +59,8 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return sprintf(_('%d. year'), $this->year);
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
-        return 'contestant';
+        return PresenterRole::tryFrom(PresenterRole::CONTESTANT);
     }
 }

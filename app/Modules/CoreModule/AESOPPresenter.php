@@ -10,6 +10,7 @@ use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
 
@@ -73,8 +74,8 @@ class AESOPPresenter extends AuthenticatedPresenter
         $this->yearTraitStartup();
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
-        return YearChooserComponent::ROLE_SELECTED;
+        return PresenterRole::tryFrom(PresenterRole::SELECTED);
     }
 }

@@ -91,6 +91,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
         }
+        $this->template->isOrg = $this->eventAuthorizator->isAllowed(
+            $this->getEntity(),
+            'org-detail',
+            $this->getEvent()
+        );
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
     }
