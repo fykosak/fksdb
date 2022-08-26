@@ -32,7 +32,7 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
         transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani14Payment()
         transitions:
-            __init->new:
+            init->new:
                 label: _('Create')
                     #condition: FKSDB\Transitions\Statements\Conditions\DateBetween('2019-01-21', '2019-02-15')
             new->waiting:

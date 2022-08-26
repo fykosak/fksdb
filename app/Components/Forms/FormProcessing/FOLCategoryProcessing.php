@@ -8,13 +8,12 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 
 class FOLCategoryProcessing extends FormProcessing
 {
 
-    public function __invoke(array $values, Form $form, EventModel $event, ModelHolder $holder): array
+    public function __invoke(array $values, Form $form, EventModel $event): array
     {
         $members = [];
         for ($member = 0; $member < 5; $member++) {
@@ -25,7 +24,7 @@ class FOLCategoryProcessing extends FormProcessing
                 $members[] = $person;
             }
         }
-        $values['team']['category'] = $this->getCategory2($members, $event)->value;
+        $values['team']['category'] = $this->getCategory($members, $event)->value;
         return $values;
     }
 
@@ -37,7 +36,7 @@ class FOLCategoryProcessing extends FormProcessing
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @param PersonModel[] $members
      */
-    protected function getCategory2(array $members, EventModel $event): ?TeamCategory
+    protected function getCategory(array $members, EventModel $event): TeamCategory
     {
         // init stats
         $olds = 0;

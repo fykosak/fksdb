@@ -7,6 +7,7 @@ namespace FKSDB\Models\Authorization\Assertions;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 use Nette\Security\Permission;
@@ -26,6 +27,7 @@ class SelfAssertion implements Assertion
      * Check that the person is the person of logged user.
      *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
+     * @throws \ReflectionException
      */
     public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
@@ -34,10 +36,10 @@ class SelfAssertion implements Assertion
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
+        /** @var Model $model */
         $model = $acl->getQueriedResource();
         try {
-            /** @var ContestModel $contest */
-            $contest = $model->getModel(ContestModel::class);
+            $contest = $model->getReferencedModel(ContestModel::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContest()->contest_id) {
                 return false;
             }
@@ -46,7 +48,7 @@ class SelfAssertion implements Assertion
 
         $person = null;
         try {
-            $person = $model->getModel(PersonModel::class);
+            $person = $model->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException $exception) {
         }
 

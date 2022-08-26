@@ -12,10 +12,10 @@ use Fykosak\NetteORM\Model;
 
 class FyziklaniTeamHolder implements ModelHolder
 {
-    private ?TeamModel2 $team;
+    private TeamModel2 $team;
     private TeamService2 $service;
 
-    public function __construct(?TeamModel2 $team, TeamService2 $service)
+    public function __construct(TeamModel2 $team, TeamService2 $service)
     {
         $this->team = $team;
         $this->service = $service;
@@ -26,12 +26,12 @@ class FyziklaniTeamHolder implements ModelHolder
         $this->service->storeModel(['state' => $newState->value], $this->team);
     }
 
-    public function getState(): ?TeamState
+    public function getState(): TeamState
     {
-        return isset($this->team) ? $this->team->state : null;
+        return $this->team->state;
     }
 
-    public function getModel(): ?Model
+    public function getModel(): Model
     {
         return $this->team;
     }

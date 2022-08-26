@@ -57,7 +57,7 @@ abstract class Machine extends AbstractMachine
         return $this->selectTransition($transitions);
     }
 
-    public function getTransitionByStates(?EnumColumn $source, ?EnumColumn $target): ?Transition
+    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
     {
         $transitions = \array_filter(
             $this->getTransitions(),
@@ -159,5 +159,5 @@ abstract class Machine extends AbstractMachine
         $transition->callAfterExecute($holder);
     }
 
-    abstract public function createHolder(?Model $model): ModelHolder;
+    abstract public function createHolder(Model $model): ModelHolder;
 }

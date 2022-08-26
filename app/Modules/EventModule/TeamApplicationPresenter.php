@@ -29,7 +29,6 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * @method TeamModel2 getEntity()

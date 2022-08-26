@@ -65,12 +65,11 @@ abstract class TeamFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        $holder = $this->machine->createHolder($this->model ?? null);
         $this->teamService->explorer->beginTransaction();
         try {
             $values = array_reduce(
                 $this->getProcessing(),
-                fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event, $holder),
+                fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event),
                 $values
             );
             $this->checkUniqueTeamName($values['team']['name']);
@@ -81,22 +80,33 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->model
             );
 
-            if (!isset($this->model)) {
-                for ($member = 0; $member < 5; $member++) {
-                    /** @var ReferencedId $referencedId */
-                    $referencedId = $form->getComponent('member_' . $member);
-                    /** @var PersonModel $person */
-                    $person = $referencedId->getModel();
-
-                    if ($person) {
-                        $this->checkUniqueMember($team, $person);
-                        $data = [
-                            'person_id' => $person->getPrimary(),
-                            'fyziklani_team_id' => $team->fyziklani_team_id,
-                        ];
-                        $this->teamMemberService->storeModel($data);
-                    }
+            $persons = [];
+            for ($member = 0; $member < 5; $member++) {
+                /** @var ReferencedId $referencedId */
+                $referencedId = $form->getComponent('member_' . $member);
+                /** @var PersonModel $person */
+                $person = $referencedId->getModel();
+                if ($person) {
+                    $persons[$person->person_id] = $person;
                 }
+            }
+            /** @var TeamMemberModel $oldMember */
+            foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
+                $this->teamMemberService->disposeModel($oldMember);
+            }
+            foreach ($persons as $person) {
+                $oldTeamMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
+                if (!$oldTeamMember) {
+                    $this->checkUniqueMember($team, $person);
+                    $data = [
+                        'person_id' => $person->getPrimary(),
+                        'fyziklani_team_id' => $team->fyziklani_team_id,
+                    ];
+                    $this->teamMemberService->storeModel($data);
+                }
+            }
+
+            if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);
             }
@@ -135,7 +145,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             ->where('event_id', $this->event->event_id)
             ->where('name', $name);
         if (isset($this->model)) {
-            $query->where('fyziklani_team_id IS NOT ?', $this->model->fyziklani_team_id);
+            $query->where('fyziklani_team_id != ?', $this->model->fyziklani_team_id);
         }
         if ($query->fetch()) {
             throw new DuplicateTeamNameException($name);
@@ -144,6 +154,16 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     protected function setDefaults(): void
     {
+        if (isset($this->model)) {
+            $this->getForm()->setDefaults(['team' => $this->model->toArray()]);
+            /** @var TeamMemberModel $member */
+            $index = 0;
+            foreach ($this->model->getMembers() as $member) {
+                /** @var ReferencedId $referencedId */
+                $referencedId = $this->getForm()->getComponent('member_' . $index);
+                $referencedId->setDefaultValue($member->person);
+            }
+        }
     }
 
     /**
@@ -164,7 +184,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 'email',
                 true,
                 new SelfACLResolver(
-                    'fyziklani.team',
+                    $this->model ?? TeamModel2::RESOURCE_ID,
                     $this->model ? 'org-edit' : 'org-create',
                     $this->event->event_type->contest,
                     $this->container

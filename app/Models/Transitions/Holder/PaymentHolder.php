@@ -10,10 +10,10 @@ use FKSDB\Models\ORM\Services\PaymentService;
 
 class PaymentHolder implements ModelHolder
 {
-    private ?PaymentModel $model;
+    private PaymentModel $model;
     private PaymentService $service;
 
-    public function __construct(?PaymentModel $model, PaymentService $paymentService)
+    public function __construct(PaymentModel $model, PaymentService $paymentService)
     {
         $this->model = $model;
         $this->service = $paymentService;
@@ -24,12 +24,12 @@ class PaymentHolder implements ModelHolder
         $this->service->storeModel(['state' => $newState->value], $this->model);
     }
 
-    public function getState(): ?EnumColumn
+    public function getState(): EnumColumn
     {
-        return isset($this->model) ? $this->model->state : null;
+        return $this->model->state;
     }
 
-    public function getModel(): ?PaymentModel
+    public function getModel(): PaymentModel
     {
         return $this->model;
     }

@@ -55,16 +55,16 @@ class TransitionsExtension extends CompilerExtension
 
     private function createTransition(
         string $machineName,
-        ?EnumColumn $source,
-        ?EnumColumn $target,
+        EnumColumn $source,
+        EnumColumn $target,
         array $transitionConfig
     ): void {
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition(
             $this->prefix(
                 $machineName . '.' .
-                ($source ? $source->value : 'INIT') . '.' .
-                ($target ? $target->value : 'TERMINATED')
+                ($source->value) . '.' .
+                ($target->value)
             )
         )
             ->addTag($machineName)
@@ -91,25 +91,17 @@ class TransitionsExtension extends CompilerExtension
 
     /**
      * @param EnumColumn|string $enumClassName
-     * @return ?EnumColumn[][]|?EnumColumn[]
+     * @return EnumColumn[][]|EnumColumn[]
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {
         [$sources, $target] = explode('->', $mask);
-        /*  if ($source === AbstractMachine::STATE_ANY) {
-              return [
-                  array_filter($enumClassName::cases(), fn(EnumColumn $case): bool => $case->value !== $target),
-                  new $enumClassName($target),
-              ];
-          }*/
         return [
             array_map(
-                fn(string $state): ?EnumColumn => $state !== AbstractMachine::STATE_INIT
-                    ? $enumClassName::tryFrom($state)
-                    : null,
+                fn(string $state): ?EnumColumn => $enumClassName::tryFrom($state),
                 explode('|', $sources)
             ),
-            $target !== AbstractMachine::STATE_TERMINATED ? $enumClassName::tryFrom($target) : null,
+            $enumClassName::tryFrom($target),
         ];
     }
 }

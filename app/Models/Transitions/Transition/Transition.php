@@ -24,25 +24,22 @@ class Transition
     /** @var TransitionCallback[] */
     public array $afterExecute = [];
 
-    public ?EnumColumn $sourceStateEnum; // null for INIT
-    public ?EnumColumn $targetStateEnum; // null for TERMINATED
+    public EnumColumn $sourceStateEnum;
+    public EnumColumn $targetStateEnum;
     protected ExpressionEvaluator $evaluator;
 
-    public function setSourceStateEnum(?EnumColumn $sourceState): void
+    public function setSourceStateEnum(EnumColumn $sourceState): void
     {
         $this->sourceStateEnum = $sourceState;
     }
 
-    public function setTargetStateEnum(?EnumColumn $targetState): void
+    public function setTargetStateEnum(EnumColumn $targetState): void
     {
         $this->targetStateEnum = $targetState;
     }
 
-    final public function matchSource(?EnumColumn $source): bool
+    final public function matchSource(EnumColumn $source): bool
     {
-        if (is_null($source) && is_null($this->sourceStateEnum)) {
-            return true;
-        }
         if ($source->value === $this->sourceStateEnum->value) {
             return true;
         }
@@ -64,10 +61,9 @@ class Transition
         return static::createId($this->sourceStateEnum, $this->targetStateEnum);
     }
 
-    public static function createId(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    public static function createId(EnumColumn $sourceState, EnumColumn $targetState): string
     {
-        return ($sourceState ? $sourceState->value : 'init') . '__' .
-            ($targetState ? $targetState->value : 'terminated');
+        return $sourceState->value . '__' . $targetState->value;
     }
 
     public function getBehaviorType(): BehaviorType

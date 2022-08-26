@@ -10,19 +10,23 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use Nette\DI\Container;
+use Nette\Security\Resource;
 use Nette\Security\User;
 
 class SelfACLResolver implements Resolver
 {
-
-    private string $resource;
+    /** @var Resource|string */
+    private $resource;
     private string $privilege;
     private ContestModel $contest;
     private User $user;
 
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(string $resource, string $privilege, ContestModel $contest, Container $container)
+    /**
+     * @param string|Resource $resource
+     */
+    public function __construct($resource, string $privilege, ContestModel $contest, Container $container)
     {
         $this->contest = $contest;
         $this->resource = $resource;

@@ -48,7 +48,7 @@ class PaymentMachine extends Machine
     /**
      * @param PaymentModel|null $model
      */
-    public function createHolder(?Model $model): PaymentHolder
+    public function createHolder(Model $model): PaymentHolder
     {
         return new PaymentHolder($model, $this->paymentService);
     }
