@@ -36,8 +36,6 @@ class BaseHolder
     public string $label;
     /** @var Service|ServiceMulti */
     private $service;
-    public ?string $joinOn = null;
-    public ?string $joinTo = null;
     public string $eventIdColumn;
     public Holder $holder;
     /** @var Field[] */
@@ -212,16 +210,6 @@ class BaseHolder
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function setJoinOn(?string $joinOn): void
-    {
-        $this->joinOn = $joinOn;
-    }
-
-    public function setJoinTo(?string $joinTo): void
-    {
-        $this->joinTo = $joinTo;
     }
 
     public function setEventIdColumn(string $eventId): void

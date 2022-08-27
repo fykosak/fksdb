@@ -159,7 +159,6 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            secondaryModelStrategy: FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
             baseMachines:
                 participant:
                     bmName: PARTICIPANT

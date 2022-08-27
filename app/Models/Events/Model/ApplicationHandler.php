@@ -13,7 +13,6 @@ use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -100,14 +99,14 @@ class ApplicationHandler
 
         try {
             $this->beginTransaction();
-            $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
+            $transition = $this->machine->primaryMachine->getTransition($explicitTransitionName);
             if (!$transition->matches($holder->primaryHolder->getModelState())) {
                 throw new UnavailableTransitionException($transition, $holder->primaryHolder->getModel2());
             }
 
             $transition->execute($holder);
             $holder->saveModels();
-            $transition->executed($holder, []);
+            $transition->executed($holder);
 
             $this->commit();
 
@@ -141,21 +140,13 @@ class ApplicationHandler
             );
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
-        } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(
-                _('Data in group "%s" collide with an existing application.'),
-                $exception->getBaseHolder()->label
-            );
-            Debugger::log($exception, 'app-conflict');
-            $this->logger->log(new Message($message, Message::LVL_ERROR));
-            $this->reRaise($exception);
         } catch (
-            DuplicateApplicationException
-            | MachineExecutionException
-            | SubmitProcessingException
-            | FullCapacityException
-            | ExistingPaymentException
-            | UnavailableTransitionException $exception
+        DuplicateApplicationException
+        | MachineExecutionException
+        | SubmitProcessingException
+        | FullCapacityException
+        | ExistingPaymentException
+        | UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -172,37 +163,37 @@ class ApplicationHandler
         $this->initializeMachine();
 
         try {
-            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
+            $explicitMachineName = $this->machine->primaryMachine->name;
 
             $this->beginTransaction();
             /** @var Transition[] $transitions */
             $transitions = [];
             // saved transition of baseModel/baseMachine/baseHolder/baseShit/base*
             if ($explicitTransitionName) {
-                $transitions[$explicitMachineName] = $this->machine->getBaseMachine(
-                    $explicitMachineName
-                )->getTransition($explicitTransitionName);
+                $transitions[$explicitMachineName] = $this->machine->primaryMachine->getTransition(
+                    $explicitTransitionName
+                );
             }
 
             $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
 
             if ($execute === self::STATE_OVERWRITE) {
-                foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-                    if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
-                        $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
-                    }
+                if (isset($data[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
+                    $holder->primaryHolder->setModelState(
+                        $data[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN]
+                    );
                 }
             }
 
-            $induced = []; // cache induced transition as they won't match after execution
+            // cache induced transition as they won't match after execution
             foreach ($transitions as $key => $transition) {
-                $induced[$key] = $transition->execute($holder);
+                $transition->execute($holder);
             }
 
             $holder->saveModels();
 
             foreach ($transitions as $key => $transition) {
-                $transition->executed($holder, $induced[$key]); //note the 'd', it only triggers onExecuted event
+                $transition->executed($holder); //note the 'd', it only triggers onExecuted event
             }
 
             $this->commit();
@@ -250,21 +241,12 @@ class ApplicationHandler
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
-        } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(
-                _('Data in group "%s" collide with an existing application.'),
-                $exception->getBaseHolder()->label
-            );
-            Debugger::log($exception, 'app-conflict');
-            $this->logger->log(new Message($message, Message::LVL_ERROR));
-            $this->formRollback($form);
-            $this->reRaise($exception);
         } catch (
-            DuplicateApplicationException
-            | MachineExecutionException
-            | SubmitProcessingException
-            | FullCapacityException
-            | ExistingPaymentException $exception
+        DuplicateApplicationException
+        | MachineExecutionException
+        | SubmitProcessingException
+        | FullCapacityException
+        | ExistingPaymentException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
@@ -298,8 +280,8 @@ class ApplicationHandler
 
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
-                $state = $holder->getBaseHolder((string)$name)->getModelState();
-                $transition = $this->machine->getBaseMachine((string)$name)->getTransitionByTarget($state, $newState);
+                $state = $holder->primaryHolder->getModelState();
+                $transition = $this->machine->primaryMachine->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (
@@ -310,19 +292,17 @@ class ApplicationHandler
                     throw new MachineExecutionException(
                         sprintf(
                             $msg,
-                            $this->machine->getBaseMachine((string)$name)->getStateName($state),
-                            $holder->getBaseHolder((string)$name)->label,
-                            $this->machine->getBaseMachine((string)$name)->getStateName($newState)
+                            $this->machine->primaryMachine->getStateName($state),
+                            $holder->primaryHolder->label,
+                            $this->machine->primaryMachine->getStateName($newState)
                         )
                     );
                 }
             }
         }
 
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if (isset($values[$name])) {
-                $baseHolder->data += (array)$values[$name];
-            }
+        if (isset($values[$holder->primaryHolder->name])) {
+            $holder->primaryHolder->data += (array)$values[$holder->primaryHolder->name];
         }
 
         return $transitions;

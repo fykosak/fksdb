@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -140,15 +141,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    final protected function createComponentMassTransitions(): MassTransitionsComponent
-    {
-        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
-    }
-
-    abstract protected function createComponentGrid(): AbstractApplicationsGrid;
+    abstract protected function createComponentGrid(): BaseGrid;
 
     /**
      * @throws NotImplementedException

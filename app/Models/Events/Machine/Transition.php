@@ -11,13 +11,11 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
-use Nette\InvalidArgumentException;
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 {
 
-    private BaseMachine $baseMachine;
-    private array $inducedTransitions = [];
+    public BaseMachine $baseMachine;
     private string $mask;
     private string $name;
     private string $source;
@@ -61,11 +59,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->setName($mask);
     }
 
-    public function getBaseMachine(): BaseMachine
-    {
-        return $this->baseMachine;
-    }
-
     public function setBaseMachine(BaseMachine $baseMachine): void
     {
         $this->baseMachine = $baseMachine;
@@ -101,63 +94,18 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->visible = $visible;
     }
 
-    public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void
-    {
-        if ($targetMachine === $this->getBaseMachine()) {
-            throw new InvalidArgumentException('Cannot induce transition in the same machine.');
-        }
-        $targetName = $targetMachine->getName();
-        if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException(
-                "Induced transition for machine $targetName already defined in " . $this->getName() . '.'
-            );
-        }
-        $this->inducedTransitions[$targetName] = $targetState;
-    }
-
-    /**
-     * @return Transition[]
-     */
-    private function getInducedTransitions(Holder $holder): array
-    {
-        $result = [];
-        foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
-            $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $oldState = $holder->getBaseHolder((string)$baseMachineName)->getModelState();
-            $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
-            if ($inducedTransition) {
-                $result[$baseMachineName] = $inducedTransition;
-            }
-        }
-        return $result;
-    }
-
     private function getBlockingTransition(Holder $holder): ?Transition
     {
-        foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
-            if ($inducedTransition->getBlockingTransition($holder)) {
-                return $inducedTransition;
-            }
-        }
         if (!$this->isConditionFulfilled($holder)) {
             return $this;
         }
         return null;
     }
 
-    /**
-     * @param Transition[] $inducedTransitions
-     */
-    private function validateTarget(Holder $holder, array $inducedTransitions): ?array
+    private function validateTarget(Holder $holder): ?array
     {
-        foreach ($inducedTransitions as $inducedTransition) {
-            $result = $inducedTransition->validateTarget($holder, []);
-            if (!is_null($result)) {
-                return $result;
-            }
-        }
 
-        $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
+        $baseHolder = $holder->primaryHolder;
         $validator = $baseHolder->validator;
         $validator->validate($baseHolder);
         return $validator->getValidationResult();
@@ -182,40 +130,28 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
      */
-    final public function execute(Holder $holder): array
+    final public function execute(Holder $holder): void
     {
         $blockingTransition = $this->getBlockingTransition($holder);
         if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
-        $inducedTransitions = [];
-        foreach ($this->getInducedTransitions($holder) as $holderName => $inducedTransition) {
-            $inducedTransition->changeState($holder->getBaseHolder($holderName));
-            $inducedTransitions[] = $inducedTransition;
-        }
+        $this->changeState($holder->primaryHolder);
 
-        $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
-
-        $validationResult = $this->validateTarget($holder, $inducedTransitions);
+        $validationResult = $this->validateTarget($holder);
         if (!is_null($validationResult)) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
-
-        return $inducedTransitions;
     }
 
     /**
      * Triggers onExecuted event.
      *
-     * @param Transition[] $inducedTransitions
      * @throws TransitionOnExecutedException
      */
-    final public function executed(Holder $holder, array $inducedTransitions): void
+    final public function executed(Holder $holder): void
     {
-        foreach ($inducedTransitions as $inducedTransition) {
-            $inducedTransition->executed($holder, []);
-        }
         try {
             $this->callAfterExecute($this, $holder);
         } catch (\Throwable $exception) {

@@ -31,14 +31,14 @@ class UniqueCheck extends AbstractAdjustment
         }
 
         foreach ($controls as $name => $control) {
-            $name = $holder->hasBaseHolder((string)$name)
+            $name = $holder->primaryHolder->name === $name
                 ? $name
                 : substr(
                     $this->field,
                     0,
                     strpos($this->field, self::DELIMITER)
                 );
-            $baseHolder = $holder->getBaseHolder((string)$name);
+            $baseHolder = $holder->primaryHolder;
             $control->addRule(function (Control $control) use ($baseHolder): bool {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);

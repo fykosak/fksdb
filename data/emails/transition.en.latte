@@ -5,7 +5,7 @@
 {var $state = $holder->primaryHolder->getModelState()}
 <p>
     {$person->getFullName()}'s application for <em>{$event}</em> state updated.
-    New state <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
+    New state <em>{$machine->primaryMachine->getStateName($state)}</em>.
 </p>
 {include 'inc/eventEdit.en.latte' event => $event, token => $token}
 {include 'inc/closing.en.latte'}

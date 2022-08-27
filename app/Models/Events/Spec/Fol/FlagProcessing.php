@@ -27,41 +27,38 @@ class FlagProcessing extends WithSchoolProcessing
         if (!isset($values['team'])) {
             return;
         }
+        if ($holder->primaryHolder->name == 'team') {
+            return;
+        }
+        $formValues = [
+            'school_id' => $this->getSchoolValue($holder->primaryHolder->name),
+            'study_year' => $this->getStudyYearValue($holder->primaryHolder->name),
+        ];
 
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if ($name == 'team') {
-                continue;
+        if (!$formValues['school_id']) {
+            if ($this->isBaseReallyEmpty($holder->primaryHolder->name)) {
+                return;
             }
-            $formValues = [
-                'school_id' => $this->getSchoolValue($name),
-                'study_year' => $this->getStudyYearValue($name),
+
+            $history = $holder->primaryHolder->getModel2()->mainModel->getPersonHistory();
+            $participantData = [
+                'school_id' => $history->school_id,
+                'study_year' => $history->study_year,
             ];
-
-            if (!$formValues['school_id']) {
-                if ($this->isBaseReallyEmpty($name)) {
-                    continue;
-                }
-
-                $history = $baseHolder->getModel2()->mainModel->getPersonHistory();
-                $participantData = [
-                    'school_id' => $history->school_id,
-                    'study_year' => $history->study_year,
-                ];
-            } else {
-                $participantData = $formValues;
-            }
-            if (
-                !($this->schoolService->isCzSkSchool($participantData['school_id'])
-                    && $this->isStudent($participantData['study_year']))
-            ) {
-                /** @var PersonHasFlagModel $personHasFlag */
-                $personHasFlag = $values[$name]['person_id_container']['person_has_flag'];
-                $personHasFlag->offsetUnset('spam_mff');
+        } else {
+            $participantData = $formValues;
+        }
+        if (
+            !($this->schoolService->isCzSkSchool($participantData['school_id'])
+                && $this->isStudent($participantData['study_year']))
+        ) {
+            /** @var PersonHasFlagModel $personHasFlag */
+            $personHasFlag = $values[$holder->primaryHolder->name]['person_id_container']['person_has_flag'];
+            $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
 //                $values[$name]['person_id_1']['person_has_flag']['spam_mff'] = null;
 //                $a=$c;
-                //unset($values[$name]['person_id_1']['person_has_flag']);
-            }
+            //unset($values[$name]['person_id_1']['person_has_flag']);
         }
     }
 

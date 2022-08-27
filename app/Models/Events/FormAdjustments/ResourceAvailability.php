@@ -52,7 +52,7 @@ class ResourceAvailability extends AbstractAdjustment
 
     protected function innerAdjust(Form $form, Holder $holder): void
     {
-        $groups = $holder->getGroupedSecondaryHolders();
+        $groups = [];
         $groups[] = [
             'service' => $holder->primaryHolder->getService(),
             'holders' => [$holder->primaryHolder],

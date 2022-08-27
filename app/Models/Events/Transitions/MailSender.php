@@ -23,6 +23,7 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model;
+use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 
@@ -109,8 +110,8 @@ class MailSender
         foreach ($logins as $login) {
             $this->createMessage(
                 $login,
-                $transition->getBaseMachine(),
-                $holder->getBaseHolder($transition->getBaseMachine()->getName())
+                $transition->baseMachine,
+                $holder->primaryHolder
             );
         }
     }
@@ -215,23 +216,14 @@ class MailSender
             }
             switch ($addressees) {
                 case self::ADDR_SELF:
-                    $names = [$transition->getBaseMachine()->getName()];
+                    $names = [$transition->baseMachine->name];
                     break;
                 case self::ADDR_PRIMARY:
+                case self::ADDR_ALL:
                     $names = [$holder->primaryHolder->name];
                     break;
                 case self::ADDR_SECONDARY:
-                    $names = [];
-                    foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge(
-                            $names,
-                            array_map(fn(BaseHolder $it): string => $it->name, $group['holders'])
-                        );
-                    }
-                    break;
-                case self::ADDR_ALL:
-                    $names = array_keys($holder->getBaseHolders());
-                    break;
+                    throw new InvalidStateException();
                 default:
                     $names = [];
             }
@@ -239,7 +231,7 @@ class MailSender
 
         $persons = [];
         foreach ($names as $name) {
-            $person = $holder->getBaseHolder((string)$name)->getPerson();
+            $person = $holder->primaryHolder->getPerson();
             if ($person) {
                 $persons[] = $person->person_id;
             }

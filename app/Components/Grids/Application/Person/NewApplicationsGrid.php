@@ -57,7 +57,7 @@ class NewApplicationsGrid extends BaseGrid
             ->setShow(function (EventModel $modelEvent): bool {
                 $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
                 $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
-                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions(
+                $transitions = $machine->primaryMachine->getAvailableTransitions(
                     $holder,
                     AbstractMachine::STATE_INIT,
                     true,

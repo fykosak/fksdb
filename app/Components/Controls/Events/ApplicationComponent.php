@@ -84,7 +84,7 @@ class ApplicationComponent extends BaseComponent
 
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->primaryHolder->event;
-        $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
+        $this->template->primaryMachine = $this->handler->getMachine()->primaryMachine;
         $this->template->render($this->templateFile);
     }
 
@@ -96,17 +96,10 @@ class ApplicationComponent extends BaseComponent
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        /*
-         * Create containers
-         */
-        foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            if (!$baseHolder->isVisible()) {
-                continue;
-            }
-            $container = $baseHolder->createFormContainer();
-            $form->addComponent($container, $name);
+        if ($this->holder->primaryHolder->isVisible()) {
+            $container = $this->holder->primaryHolder->createFormContainer();
+            $form->addComponent($container, $this->holder->primaryHolder->name);
         }
-
         /*
          * Create save (no transition) button
          */
@@ -121,7 +114,7 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
+        $primaryMachine = $this->handler->getMachine()->primaryMachine;
         $transitionSubmit = null;
 
         foreach (

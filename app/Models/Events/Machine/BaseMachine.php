@@ -15,7 +15,7 @@ use Nette\InvalidArgumentException;
 class BaseMachine extends AbstractMachine
 {
 
-    private string $name;
+    public string $name;
     private array $states;
     private Machine $machine;
 
@@ -64,16 +64,6 @@ class BaseMachine extends AbstractMachine
     public function getTransition(string $name): Transition
     {
         return $this->transitions[$name];
-    }
-
-    public function addInducedTransition(string $transitionMask, array $induced): void
-    {
-        foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
-            foreach ($induced as $machineName => $state) {
-                $targetMachine = $this->getMachine()->getBaseMachine($machineName);
-                $transition->addInducedTransition($targetMachine, $state);
-            }
-        }
     }
 
     public function getStateName(string $state): string

@@ -3,7 +3,7 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel $application}
 {var $state = $holder->primaryHolder->getModelState()}
 <p>
-    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
+    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->primaryMachine->getStateName($state)}</em>.
 </p>
 {include 'inc/eventEdit.cs.latte' event => $event, token => $token}
 {include 'inc/closing.cs.latte'}

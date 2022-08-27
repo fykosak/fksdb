@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
+use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -83,6 +84,14 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     protected function createComponentGrid(): AbstractApplicationsGrid
     {
         return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    final protected function createComponentMassTransitions(): MassTransitionsComponent
+    {
+        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
     /**

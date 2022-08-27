@@ -71,43 +71,9 @@ class SingleEventSource implements HolderSource
     private function loadData(): void
     {
         $joinToCheck = null;
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $group) {
-            if (!isset($joinToCheck)) {
-                $joinToCheck = $group['joinTo'];
-            } elseif ($group['joinTo'] !== $joinToCheck) {
-                throw new InvalidStateException(
-                    sprintf(
-                        "SingleEventSource needs all secondary holders to be joined to the same column.
-                               Conflict '%s' and '%s'.",
-                        $group['joinTo'],
-                        $joinToCheck
-                    )
-                );
-            }
-        }
         // load primaries
         $joinTo = $joinToCheck ?: $this->primarySelection->getPrimary();
         $this->primaryModels = $this->primarySelection->fetchPairs($joinTo);
-
-        $joinValues = array_keys($this->primaryModels);
-
-        // load secondaries
-        /** @var Service|ServiceMulti[]|BaseHolder[][] $group */
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            /** @var TypedSelection $secondarySelection */
-            $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
-            if ($joinToCheck) {
-                /** @var EventModel $event */
-                $event = reset($group['holders'])->getEvent();
-                $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
-            }
-
-            $secondaryPK = $secondarySelection->getPrimary();
-            if (!isset($this->secondaryModels[$key])) {
-                $this->secondaryModels[$key] = [];
-            }
-            $this->secondaryModels[$key] = $secondarySelection->fetchPairs($secondaryPK);
-        }
 
         // invalidate holders
         $this->holders = [];
@@ -119,22 +85,9 @@ class SingleEventSource implements HolderSource
      */
     private function createHolders(): void
     {
-        $cache = [];
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            foreach ($this->secondaryModels[$key] as $secondaryModel) {
-                $primaryPK = $secondaryModel[$group['joinOn']];
-                if (!isset($cache[$primaryPK])) {
-                    $cache[$primaryPK] = [];
-                }
-                if (!isset($cache[$primaryPK][$key])) {
-                    $cache[$primaryPK][$key] = [];
-                }
-                $cache[$primaryPK][$key][] = $secondaryModel;
-            }
-        }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($primaryModel, $cache[$primaryPK] ?? []);
+            $holder->setModel($primaryModel);
             $this->holders[$primaryPK] = $holder;
         }
     }

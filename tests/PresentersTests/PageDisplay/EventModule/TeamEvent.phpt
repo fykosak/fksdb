@@ -29,13 +29,13 @@ class TeamEvent extends EventModuleTestCase
             ['Event:Chart', 'participantAcquaintance'],
             ['Event:Chart', 'singleApplicationProgress'],
             ['Event:Chart', 'teamApplicationProgress'],
-            ['Event:Chart', 'model'],
+            /*  ['Event:Chart', 'model'],*/
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
             ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'transitions'],
+            /* ['Event:TeamApplication', 'transitions'],*/
         ];
     }
 }

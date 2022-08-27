@@ -66,10 +66,10 @@ class ChartPresenter extends BasePresenter
             'teamsPerCountry' => new TeamsGeoChart($this->getContext(), $this->getEvent()),
             'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
             'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
-            'model' => new GraphComponent(
+          /*  'model' => new GraphComponent(
                 $this->getContext(),
                 $this->eventDispatchFactory->getEventMachine($this->getEvent())->getPrimaryMachine()
-            ),
+            ),*/
         ];
     }
 }

@@ -281,24 +281,6 @@ class EventsExtension extends CompilerExtension
             $baseMachineFactory = $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName);
             $factory->addSetup('addBaseMachine', [$baseMachineFactory]);
         }
-        if (!$primaryName) {
-            throw new MachineDefinitionException('No primary machine defined.');
-        }
-        $factory->addSetup('setPrimaryMachine', [$primaryName]);
-
-        /*
-         * Set other attributes of the machine.
-         */
-        foreach (array_keys($machinesDef['baseMachines']) as $instanceName) {
-            $joins = $machinesDef['joins'][$instanceName] ?? [];
-
-            foreach ($joins as $mask => $induced) {
-                $factory->addSetup(
-                    "\$service->getBaseMachine(?)->addInducedTransition(?, ?)",
-                    [$instanceName, $mask, $induced]
-                );
-            }
-        }
         return $factory;
     }
 
@@ -388,8 +370,6 @@ class EventsExtension extends CompilerExtension
         if (!$primaryName) {
             throw new MachineDefinitionException('No primary machine defined.');
         }
-        $factory->addSetup('setPrimaryHolder', [$primaryName]);
-        $factory->addSetup('setSecondaryModelStrategy', [$machineDef['secondaryModelStrategy']]);
 
         foreach ($machineDef['processings'] as $processing) {
             $factory->addSetup('addProcessing', [$processing]);
@@ -433,8 +413,6 @@ class EventsExtension extends CompilerExtension
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
 
         $factory->addSetup('setService', [$definition['service']]);
-        $factory->addSetup('setJoinOn', [$definition['joinOn']]);
-        $factory->addSetup('setJoinTo', [$definition['joinTo']]);
         $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);

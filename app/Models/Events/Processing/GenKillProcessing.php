@@ -34,43 +34,51 @@ class GenKillProcessing implements Processing
         ?Form $form = null
     ): array {
         $result = [];
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if (!isset($values[$name])) { // whole machine unmodofiable/invisible
-                continue;
+
+        if (!isset($values[$holder->primaryHolder->name])) { // whole machine unmodofiable/invisible
+            return $result;
+        }
+        if (!$holder->primaryHolder->getDeterminingFields()) {
+            // no way how to determine (non)existence of secondary models
+            return $result;
+        }
+        $isFilled = true;
+        foreach ($holder->primaryHolder->getDeterminingFields() as $field) {
+            if (
+                !isset($values[$holder->primaryHolder->name][$field->getName()]) ||
+                !$values[$holder->primaryHolder->name][$field->getName()]
+            ) {
+                $isFilled = false;
+                break;
             }
-            if (!$baseHolder->getDeterminingFields()) { // no way how to determine (non)existence of secondary models
-                continue;
-            }
-            $isFilled = true;
-            foreach ($baseHolder->getDeterminingFields() as $field) {
-                if (!isset($values[$name][$field->getName()]) || !$values[$name][$field->getName()]) {
-                    $isFilled = false;
-                    break;
+        }
+        $baseMachine = $machine->primaryMachine;
+        if (!$isFilled) {
+            $result[$holder->primaryHolder->name] = AbstractMachine::STATE_TERMINATED;
+        } elseif ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
+            if (isset($values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
+                $result[$holder->primaryHolder->name] =
+                    $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
+            } else {
+                $transitions = $baseMachine->getAvailableTransitions(
+                    $holder,
+                    $holder->primaryHolder->getModelState()
+                );
+                if (count($transitions) == 0) {
+                    throw new SubmitProcessingException(
+                        _("$holder->primaryHolder->name: Není definován přechod z počátečního stavu.")
+                    );
+                } elseif (isset($states[$holder->primaryHolder->name])) {
+                    $result[$holder->primaryHolder->name] = $states[$holder->primaryHolder->name]; // propagate already set state
+                } elseif (count($transitions) > 1) {
+                    throw new SubmitProcessingException(
+                        _("$holder->primaryHolder->name: Přechod z počátečního stavu není jednoznačný.")
+                    );
+                } else {
+                    $result[$holder->primaryHolder->name] = reset($transitions)->target;
                 }
             }
 
-            $baseMachine = $machine->getBaseMachine($name);
-            if (!$isFilled) {
-                $result[$name] = AbstractMachine::STATE_TERMINATED;
-            } elseif ($holder->getBaseHolder((string)$name)->getModelState() == AbstractMachine::STATE_INIT) {
-                if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
-                    $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
-                } else {
-                    $transitions = $baseMachine->getAvailableTransitions(
-                        $holder,
-                        $holder->getBaseHolder((string)$name)->getModelState()
-                    );
-                    if (count($transitions) == 0) {
-                        throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
-                    } elseif (isset($states[$name])) {
-                        $result[$name] = $states[$name]; // propagate already set state
-                    } elseif (count($transitions) > 1) {
-                        throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
-                    } else {
-                        $result[$name] = reset($transitions)->target;
-                    }
-                }
-            }
         }
         return $result;
     }

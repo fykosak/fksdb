@@ -63,34 +63,6 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
 
     abstract protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory;
 
-    protected function extractValues(Holder $holder): array
-    {
-        $participants = [];
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if ($name == 'team') {
-                continue;
-            }
-
-            $schoolValue = $this->getSchoolValue($name);
-            $studyYearValue = $this->getStudyYearValue($name);
-
-            if (!$schoolValue && !$studyYearValue) {
-                if ($this->isBaseReallyEmpty($name)) {
-                    continue;
-                }
-                $history = $this->getPersonHistory($baseHolder);
-                $schoolValue = $history->school_id;
-                $studyYearValue = $history->study_year;
-            }
-
-            $participants[] = [
-                'school_id' => $schoolValue,
-                'study_year' => $studyYearValue,
-            ];
-        }
-        return $participants;
-    }
-
     protected function isBaseReallyEmpty(string $name): bool
     {
         $personIdControls = $this->getControl("$name.person_id");

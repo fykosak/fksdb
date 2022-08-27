@@ -170,7 +170,7 @@ class ApplicationPresenter extends BasePresenter
 
         if (
             !$this->getMachine()
-                ->getPrimaryMachine()
+                ->primaryMachine
                 ->getAvailableTransitions($this->holder, $this->getHolder()->primaryHolder->getModelState())
         ) {
             if (

@@ -102,7 +102,7 @@ abstract class AbstractProcessing implements Processing
      */
     protected function isBaseReallyEmpty(string $name): bool
     {
-        $baseHolder = $this->holder->getBaseHolder($name);
+        $baseHolder = $this->holder->primaryHolder;
         if ($baseHolder->getModelState() == AbstractMachine::STATE_INIT) {
             return true; // it was empty since beginning
         }

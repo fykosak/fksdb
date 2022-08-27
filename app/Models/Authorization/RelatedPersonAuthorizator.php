@@ -49,32 +49,20 @@ class RelatedPersonAuthorizator
             return false;
         }
 
-        foreach ($holder->getBaseHolders() as $baseHolder) {
-            $model = $baseHolder->getModel2();
-            if ($model instanceof TeamModel) {
-                if ($model->teacher_id == $person->person_id) {
-                    return true;
-                }
-            } elseif ($model instanceof TeamModel2) {
-                /** @var TeamTeacherModel $teacher */
-                foreach ($model->getTeachers() as $teacher) {
-                    if ($teacher->person_id == $person->person_id) {
-                        return true;
-                    }
-                }
-            } elseif (
-                $model instanceof EventParticipantModel
-                || $model instanceof ModelMFyziklaniParticipant
-                || $model instanceof ModelMDsefParticipant
-            ) {
-                if ($model->person_id == $person->person_id) {
-                    return true;
-                }
+        $model = $holder->primaryHolder->getModel2();
+        if (
+            $model instanceof EventParticipantModel
+            || $model instanceof ModelMFyziklaniParticipant
+            || $model instanceof ModelMDsefParticipant
+        ) {
+            if ($model->person_id == $person->person_id) {
+                return true;
             }
-            /* if ($baseHolder->getPerson()->person_id == $person->person_id) {
-                 return true;
-             }*/
         }
+        /* if ($baseHolder->getPerson()->person_id == $person->person_id) {
+             return true;
+         }*/
+
         return false;
     }
 }

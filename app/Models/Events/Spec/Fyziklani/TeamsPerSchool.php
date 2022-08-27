@@ -85,11 +85,7 @@ class TeamsPerSchool extends SchoolCheck
     {
         $team = $this->getHolder()->primaryHolder->getModel2();
         $event = $this->getHolder()->primaryHolder->event;
-        $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
-        $group = reset($secondaryGroups);
-        $baseHolders = $group['holders'];
         /** @var BaseHolder $baseHolder */
-        $baseHolder = reset($baseHolders);
 
         if (!isset($this->cache) || $first) {
             /*
