@@ -2,27 +2,31 @@
     {varType array $contestants}
     {varType array $contestsProperty}
     {varType array $orgs}
-    <h2>{_'Fast links'}</h2>
-    {control navigationChooser:board 'Core:Dispatch:default', true}
+{*    <h2>{_'Fast links'}</h2>
+    {control navigationChooser:board 'Core:Dispatch:default', true}*}
     <h2>{_'Contestant'}</h2>
     <p>
         <a href="{plink :Public:Register:contest}" class="btn btn-outline-primary">{_'Register'}</a>
     </p>
     <nav class="d-md-flex justify-content-md-around flex-wrap">
-        {foreach $contestants as $contestId => $contestant}
-            <a href="{$contestant['link']}"
-                    {var $className = 'navigation-item mb-3 d-block p-2'}
-               class="{$className}">
+        {foreach $contestants as $contestId => $contestantsForContest}
+            <div class="navigation-item mb-3 d-block p-2">
                 <div class="icon d-sm-inline-block d-md-block mx-2">
-                    <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
-                            alt=""/>
+                    <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
+                            alt=""
+                    />
                 </div>
-                <span class="text d-xs-inline-block d-md-block">{$contestant['title']}</span>
-            </a>
+                <div class="list-group">
+                    {foreach $contestantsForContest as $contestant}
+                        <a class="list-group-item-action list-group-item"
+                           href="{$contestant['link']}">{$contestant['title']}</a>
+                    {/foreach}
+                </div>
+            </div>
         {/foreach}
         <a href="{plink :Core:MyApplications:default}"
                 {var $className = 'navigation-item mb-3 d-block navigation-item p-2'}
-                             class="{$className}">
+           class="{$className}">
             <div class="icon d-sm-inline-block d-md-block mx-2">
                 <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
             </div>
@@ -38,7 +42,7 @@
                         {var $className = 'mb-3 d-block navigation-item p-2'}
                    class="{$className}">
                     <div class="icon d-sm-inline-block d-md-block mx-2">
-                        <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
+                        <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
                                 alt=""/>
                     </div>
                     <span class="text d-xs-inline-block d-md-block">{$org['title']}</span>
