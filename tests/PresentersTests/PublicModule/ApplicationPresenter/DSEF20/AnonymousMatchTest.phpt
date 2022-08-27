@@ -21,7 +21,7 @@ class AnonymousMatchTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Paní',
@@ -57,7 +57,7 @@ class AnonymousMatchTest extends DsefTestCase
         Assert::equal('applied', $application->status);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 

@@ -83,7 +83,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
         );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
-        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
+        $referencedId->referencedContainer->setOption('label', _('Person'));
 
         $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 

@@ -121,7 +121,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         if ($mode->value === ReferencedIdMode::ROLLBACK) {
             $model = null;
         }
-        $this->getReferencedId()->getHandler()->setResolution($resolution);
+        $this->getReferencedId()->handler->setResolution($resolution);
 
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
 
@@ -170,7 +170,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, false);
                 } else {
                     if (
-                        $this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
+                        $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
                         $component->setValue($value);

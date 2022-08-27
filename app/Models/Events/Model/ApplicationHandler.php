@@ -132,7 +132,7 @@ class ApplicationHandler
                 );
             }
         } catch (ModelDataConflictException $exception) {
-            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container = $exception->getReferencedId()->referencedContainer;
             $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(
@@ -241,7 +241,7 @@ class ApplicationHandler
                 );
             }
         } catch (ModelDataConflictException $exception) {
-            $container = $exception->getReferencedId()->getReferencedContainer();
+            $container = $exception->getReferencedId()->referencedContainer;
             $container->setConflicts($exception->getConflicts());
             $message = sprintf(
                 _('Some fields of group "%s" don\'t match an existing record.'),

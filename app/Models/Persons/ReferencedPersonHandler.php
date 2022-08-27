@@ -127,7 +127,7 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(PersonModel &$person, array $data): void
+    private function store(PersonModel $person, array $data): void
     {
         /*
          * Process data
@@ -139,7 +139,7 @@ class ReferencedPersonHandler implements ReferencedHandler
              */
 
             $models = [
-                'person' => &$person,
+                'person' => $person,
                 'person_info' => $person->getInfo(),
                 'person_history' => $person->getHistoryByContestYear($this->contestYear),
                 'person_schedule' => ((

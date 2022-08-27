@@ -96,7 +96,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
             [
                 ExtendedPersonHandler::CONT_AGGR => [
                     ExtendedPersonHandler::EL_PERSON => "__promise",
-                    ExtendedPersonHandler::EL_PERSON . '_1' => [
+                    ExtendedPersonHandler::EL_PERSON . '_container' => [
                         '_c_compact' => " ",
                         'person' => [
                             'other_name' => "Jana",

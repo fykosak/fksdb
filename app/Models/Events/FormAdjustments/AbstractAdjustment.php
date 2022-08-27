@@ -64,7 +64,7 @@ abstract class AbstractAdjustment implements FormAdjustment
         // TODO not type safe
         foreach ($form->getComponents(true, FormControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
-            $path = str_replace('_1', '', $path);
+            $path = str_replace('_container', '', $path);
             $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->pathCache[$path] = $control;
         }

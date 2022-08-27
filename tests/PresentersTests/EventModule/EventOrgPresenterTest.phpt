@@ -6,7 +6,6 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../Bootstrap.php';
 
-use DateTime;
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
@@ -38,8 +37,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');

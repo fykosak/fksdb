@@ -66,7 +66,7 @@ class DeleteTest extends ScheduleTestCase
         $formData = [
             'participant' => [
                 'person_id' => (string)$this->lastPerson->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Pani',

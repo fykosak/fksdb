@@ -23,7 +23,7 @@ class AnonymousMissMatchTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Paní',
@@ -60,11 +60,11 @@ class AnonymousMissMatchTest extends DsefTestCase
 
         $html = (string)$source;
         Assert::contains(
-            '<div class="form-group mb-3 has-error " id="frm-application-form-form-participant-person_id_1-person_info-born-pair">',
+            '<div class="form-group mb-3 has-error " id="frm-application-form-form-participant-person_id_container-person_info-born-pair">',
             $html
         );
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal(null, $info->id_number); // shouldn't be rewritten
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
     }

@@ -133,7 +133,7 @@ class ExtendedPersonHandler
             return self::RESULT_ERROR;
         } catch (ModelDataConflictException $exception) {
             $form->addError(_('Data don\'t match already stored data.'));
-            $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
+            $exception->getReferencedId()->referencedContainer->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
             $this->connection->rollBack();
             return self::RESULT_ERROR;

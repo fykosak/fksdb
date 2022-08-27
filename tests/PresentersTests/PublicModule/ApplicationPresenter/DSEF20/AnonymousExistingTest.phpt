@@ -21,7 +21,7 @@ class AnonymousExistingTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Paní',
@@ -56,7 +56,7 @@ class AnonymousExistingTest extends DsefTestCase
         Assert::equal('applied', $application->status);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal(
             '1231354',
             $info->id_number

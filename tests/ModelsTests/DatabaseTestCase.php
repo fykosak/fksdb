@@ -138,29 +138,30 @@ abstract class DatabaseTestCase extends TestCase
             $info['person_id'] = $person->person_id;
             $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
-
-        if (!is_null($loginData)) {
-            $data = [
-                'login_id' => $person->person_id,
-                'person_id' => $person->person_id,
-                'active' => 1,
-            ];
-            $loginData = array_merge($data, $loginData);
-
-            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel($loginData);
-
-            if (isset($pseudoLogin->hash)) {
-                $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
-                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
-            }
+        if ($loginData) {
+            $this->createLogin($person, $loginData);
         }
 
         return $person;
     }
 
-    protected function assertPersonInfo(PersonModel $person): PersonInfoModel
+    protected function createLogin(PersonModel $person, array $loginData): LoginModel
     {
-        return $person->getInfo();
+        $data = [
+            'login_id' => $person->person_id,
+            'person_id' => $person->person_id,
+            'active' => 1,
+        ];
+
+        $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
+            array_merge($data, $loginData)
+        );
+
+        if (isset($pseudoLogin->hash)) {
+            $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
+            $this->getContainer()->getByType(LoginService::class)->storeModel(['hash' => $hash], $pseudoLogin);
+        }
+        return $pseudoLogin;
     }
 
     protected function createPersonHistory(
@@ -188,11 +189,7 @@ abstract class DatabaseTestCase extends TestCase
         $mailFactory->injectApplication($application);
     }
 
-    /**
-     * @param $token
-     * @param null $timeout
-     */
-    protected function fakeProtection($token, $timeout = null): void
+    protected function fakeProtection(string $token, int $timeout = null): void
     {
         /** @var Session $session */
         $session = $this->getContainer()->getService('session');

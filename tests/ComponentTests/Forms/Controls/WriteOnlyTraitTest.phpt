@@ -102,7 +102,7 @@ class WriteOnlyTraitTest extends DsefTestCase
             'participant' =>
                 [
                     'person_id' => (string)$this->person->person_id,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_compact' => 'Paní Bílá',
                             'person' =>
@@ -145,7 +145,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         Assert::equal('applied', $application->status);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal(null, $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 

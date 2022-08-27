@@ -43,7 +43,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "František",

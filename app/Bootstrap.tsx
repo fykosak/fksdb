@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import PerSeriesChart from './Components/Charts/Contestants/PerSeriesChart';
 import PerYearsChart from './Components/Charts/Contestants/PerYearsChart';
 import ApplicationRationGeoChart from './Components/Charts/Event/Applications/ApplicationRationGeoChart';
@@ -157,14 +157,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 this.options.refId = elRefId;
             }
 
-            function decompactifyContainer() {
+            function decompactifyContainer(): void {
                 if (compacted !== null) {
                     compacted.hide();
                 }
                 container.show();
             }
 
-            function createCompactField(label: string, value) {
+            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLElement> {
                 const compactGroup = document.createElement('div');
                 const ReEl = () => {
                     return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
@@ -222,11 +222,11 @@ window.addEventListener('DOMContentLoaded', () => {
             const hasErrors = container.find('.has-error');
 
             if ($searchInput.length) {
-               // searchifyContainer();
+                // searchifyContainer();
             } else if ($clearButton.length && !(hasAnyFields.length || hasErrors.length)) {
                 compactifyContainer();
             } else if ($clearButton.length && (hasAnyFields.length || hasErrors.length)) {
-               // decorateClearButton();
+                // decorateClearButton();
             }
         },
     });
@@ -241,27 +241,6 @@ window.addEventListener('DOMContentLoaded', () => {
             field.value = el.querySelector('.value').innerText;
         });
     });
-
-    // @ts-ignore
-    $.widget('fks.enterSubmitForm', {
-        _create: function () {
-            this.update();
-        },
-        update: function () {
-            const elForm = $(this.element);
-            const elSubmit = elForm.find('input[data-submit-on=\'this\']');
-            elForm.find('input').not(':data(submit-on-handled)')
-                .data('submit-on-handled', true)
-                .keypress((e) => {
-                    if (e.which == 13) {
-                        elSubmit.click();
-                        return false;
-                    }
-                });
-        },
-    });
-// @ts-ignore
-    $('form[data-submit-on=\'enter\']').enterSubmitForm();
     document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
         el.addEventListener('click', () => {
             if (window.confirm('O RLY?')) {

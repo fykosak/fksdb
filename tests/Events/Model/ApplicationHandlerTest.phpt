@@ -85,7 +85,7 @@ class ApplicationHandlerTest extends EventTestCase
                     'phone' => '+420987654321',
                     'force_a' => false,
                     'teacher_id' => (string)$id1->person_id,
-                    'teacher_id_1' =>
+                    'teacher_id_container' =>
                         [
                             '_c_compact' => 'Karel Kolář',
                             'person' =>
@@ -104,7 +104,7 @@ class ApplicationHandlerTest extends EventTestCase
             'p1' =>
                 [
                     'person_id' => (string)$id2->person_id,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_compact' => 'Michal Koutný',
                             'person' =>
@@ -128,7 +128,7 @@ class ApplicationHandlerTest extends EventTestCase
             'p2' =>
                 [
                     'person_id' => (string)$id3->person_id,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_compact' => 'Kristína Nešporová',
                             'person' =>
@@ -151,7 +151,7 @@ class ApplicationHandlerTest extends EventTestCase
             'p3' =>
                 [
                     'person_id' => null,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_search' => '',
                             'person' =>
@@ -166,7 +166,7 @@ class ApplicationHandlerTest extends EventTestCase
             'p4' =>
                 [
                     'person_id' => null,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_search' => '',
                             'person' =>
@@ -181,7 +181,7 @@ class ApplicationHandlerTest extends EventTestCase
             'p5' =>
                 [
                     'person_id' => null,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_search' => '',
                             'person' =>

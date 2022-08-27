@@ -58,7 +58,7 @@ abstract class SearchContainer extends ContainerWithOptions
                 $values = ($this->getTermToValuesCallback())($term);
             }
             $this->referencedId->setValue($model);
-            $this->referencedId->getReferencedContainer()->setValues($values);
+            $this->referencedId->referencedContainer->setValues($values);
             $this->referencedId->invalidateFormGroup();
         };
     }

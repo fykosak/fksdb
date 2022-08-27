@@ -21,8 +21,10 @@ use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -65,6 +67,7 @@ abstract class TeamFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
+        Debugger::barDump($values);
         $this->teamService->explorer->beginTransaction();
         try {
             $values = array_reduce(
@@ -86,13 +89,16 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);
             }
+            $this->teamService->explorer->commit();
             $this->flashMessage(
                 isset($this->model)
                     ? _('Application has been updated')
                     : _('Application has been create'),
                 Message::LVL_SUCCESS
             );
-            $this->teamService->explorer->commit();
+            $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
+        } catch (AbortException $exception) {
+            throw $exception;
         } catch (DuplicateTeamNameException | DuplicateMemberException $exception) {
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
@@ -196,8 +202,8 @@ abstract class TeamFormComponent extends EntityFormComponent
                 ),
                 $this->event
             );
-            $memberContainer->getSearchContainer()->setOption('label', sprintf(_('Member #%d'), $member + 1));
-            $memberContainer->getReferencedContainer()->setOption('label', sprintf(_('Member #%d'), $member + 1));
+            $memberContainer->searchContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
+            $memberContainer->referencedContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
             $form->addComponent($memberContainer, 'member_' . $member);
         }
     }

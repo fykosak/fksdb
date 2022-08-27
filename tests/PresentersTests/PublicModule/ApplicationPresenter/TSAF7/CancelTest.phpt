@@ -55,7 +55,7 @@ class CancelTest extends TsafTestCase
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Paní",
