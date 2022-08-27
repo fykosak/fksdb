@@ -134,11 +134,11 @@ abstract class DatabaseTestCase extends TestCase
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
-        if ($info) {
+        if (!is_null($info)) {
             $info['person_id'] = $person->person_id;
             $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
-        if ($loginData) {
+        if (!is_null($loginData)) {
             $this->createLogin($person, $loginData);
         }
 
@@ -206,6 +206,15 @@ abstract class DatabaseTestCase extends TestCase
 
         if ($presenter) {
             $presenter->getUser()->login($login);
+        }
+    }
+
+    protected function logOut(?Presenter $presenter = null): void
+    {
+        $storage = $this->getContainer()->getByType(UserStorage::class);
+        $storage->clearAuthentication(true);
+        if ($presenter) {
+            $presenter->getUser()->logout(true);
         }
     }
 

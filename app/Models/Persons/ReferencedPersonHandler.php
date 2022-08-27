@@ -28,6 +28,7 @@ use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\SmartObject;
+use Tracy\Debugger;
 
 class ReferencedPersonHandler implements ReferencedHandler
 {
@@ -281,7 +282,7 @@ class ReferencedPersonHandler implements ReferencedHandler
     {
         $conflicts = [];
         foreach ($values as $key => $value) {
-            if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
+            if (isset($model[$key]) && $model[$key] != $value) {
                 $conflicts[$key] = $value;
             }
         }

@@ -10,10 +10,12 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
@@ -24,6 +26,9 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
     private PersonModel $personA;
     private PersonModel $personB;
     private PersonModel $personC;
+    private PersonModel $personD;
+    private PersonModel $personE;
+
     private EventModel $event;
 
     protected function setUp(): void
@@ -36,10 +41,17 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
         $this->createPersonHistory($this->personA, YearCalculator::getCurrentAcademicYear(), $school, 1, '1A');
 
         $this->personB = $this->createPerson('B', 'B', ['email' => 'b@b.b'], ['login' => 'BBBBBB', 'hash' => 'BBBBBB']);
-        $this->createPersonHistory($this->personB, YearCalculator::getCurrentAcademicYear(), $school, 3, '3A');
+        $this->createPersonHistory($this->personB, YearCalculator::getCurrentAcademicYear(), $school, 2, '2A');
 
         $this->personC = $this->createPerson('C', 'C', ['email' => 'c@c.c'], ['login' => 'CCCCCC', 'hash' => 'CCCCCC']);
-        $this->createPersonHistory($this->personC, YearCalculator::getCurrentAcademicYear(), $school, 4, '4C');
+        $this->createPersonHistory($this->personC, YearCalculator::getCurrentAcademicYear(), $school, 3, '3C');
+
+        $this->personD = $this->createPerson('D', 'D', ['email' => 'd@d.d'], ['login' => 'DDDDDD', 'hash' => 'DDDDDD']);
+        $this->createPersonHistory($this->personD, YearCalculator::getCurrentAcademicYear(), $school, 4, '4D');
+
+        $this->personE = $this->createPerson('E', 'E', ['email' => 'e@e.e'], ['login' => 'EEEEEE', 'hash' => 'EEEEEE']);
+        $this->createPersonHistory($this->personE, YearCalculator::getCurrentAcademicYear(), $school, 9, '9D');
+
         $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 9,
             'year' => 1,
@@ -54,6 +66,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
 
     public function testCreateAnonymous(): void
     {
+        $this->logOut($this->fixture);
         $data = [
             'team' => [
                 'name' => 'test team A',
@@ -64,7 +77,6 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_3' => null,
             'member_4' => null,
         ];
-        /** @var TextResponse $response */
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
         /** @var TeamModel2 $team */
@@ -78,8 +90,58 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
         Assert::same($this->personA->person_id, $team->getMembers()->fetch()->person_id);
     }
 
+    public function testCreateSelf(): void
+    {
+        $this->authenticateLogin($this->personA->getLogin(), $this->fixture);
+        $data = [
+            'team' => [
+                'name' => 'test team A',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(RedirectResponse::class, $response);
+    }
+
     public function testCreateOrg(): void
     {
+        $this->loginUser(5);
+        $data = [
+            'team' => [
+                'name' => 'test team A',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => (string)$this->personB->person_id,
+            'member_1_container' => $this->personToValues($this->personB),
+            'member_2' => (string)$this->personC->person_id,
+            'member_2_container' => $this->personToValues($this->personC),
+            'member_3' => (string)$this->personD->person_id,
+            'member_3_container' => $this->personToValues($this->personD),
+            'member_4' => (string)$this->personE->person_id,
+            'member_4_container' => $this->personToValues($this->personE),
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(RedirectResponse::class, $response);
+        /** @var TeamModel2 $team */
+        $team = $this->getContainer()->getByType(TeamService2::class)->getTable()
+            ->where('event_id', $this->event->event_id)
+            ->where('name', 'test team A')
+            ->fetch();
+        Assert::type(TeamModel2::class, $team);
+        Assert::same('B', $team->category->value);
+        Assert::same(5, $team->getMembers()->count('*'));
+    }
+
+    public function testCreateAnonymousOutDate(): void
+    {
+        $this->logOut($this->fixture);
+        $this->outDateEvent();
         $data = [
             'team' => [
                 'name' => 'test team A',
@@ -90,87 +152,301 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_3' => null,
             'member_4' => null,
         ];
-        /** @var TextResponse $response */
-        $response = $this->createFormRequest('create', $data);
-        Assert::type(RedirectResponse::class, $response);
-        /** @var TeamModel2 $team */
-        $team = $this->getContainer()->getByType(TeamService2::class)->getTable()
-            ->where('event_id', $this->event->event_id)
-            ->where('name', 'test team A')
-            ->fetch();
-        Assert::type(TeamModel2::class, $team);
-        Assert::same('B', $team->category->value);
-        Assert::same(3, $team->getMembers()->count('*'));
-    }
-
-    public function testCreateAnonymousOutDate(): void
-    {
-        // TODO FAIL
+        Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
 
     public function testCreateLoggedInOutDate(): void
     {
-        // TODO FAIL
+        $this->outDateEvent();
+        $this->authenticatePerson($this->personA, $this->fixture);
+        $data = [
+            'team' => [
+                'name' => 'test team A',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
 
     public function testCreateOrgOutDate(): void
     {
-        // TODO OK
+        $this->outDateEvent();
+        $this->loginUser(5);
+        $data = [
+            'team' => [
+                'name' => 'test team B',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(RedirectResponse::class, $response);
     }
 
     public function testEditAnonymous(): void
     {
-        // TODO FAIL
+        $this->logOut($this->fixture);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        /** @var RedirectResponse $response */
+        $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
+        Assert::type(RedirectResponse::class, $response);
+        Assert::contains('/auth/login', $response->getUrl());
+        Assert::same(
+            'Original',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditLoggedInOwnTeam(): void
     {
-        // TODO OK
+        $this->authenticateLogin($this->personA->getLogin(), $this->fixture);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        /** @var RedirectResponse $response */
+        $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
+        Assert::type(RedirectResponse::class, $response);
+        Assert::contains('detail', $response->getUrl());
+        Assert::same(
+            'Edited',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditLoggedInForeignTeam(): void
     {
-        // TODO FAIL
+        $this->authenticateLogin($this->personB->getLogin(), $this->fixture);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        Assert::exception(
+            fn() => $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]),
+            ForbiddenRequestException::class
+        );
+        Assert::same(
+            'Original',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditOrg(): void
     {
-        // TODO OK
-    }
-
-    public function testEditAnonymousOutDate(): void
-    {
-        // TODO FAIL
+        $this->loginUser(5);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        /** @var RedirectResponse $response */
+        $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
+        Assert::type(RedirectResponse::class, $response);
+        Assert::contains('detail', $response->getUrl());
+        Assert::same(
+            'Edited',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditLoggedInOutDate(): void
     {
-        // TODO FAIL
+        $this->outDateEvent();
+        $this->authenticateLogin($this->personA->getLogin(), $this->fixture);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        Assert::exception(
+            fn() => $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]),
+            ForbiddenRequestException::class
+        );
+        Assert::same(
+            'Original',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditOrgOutDate(): void
     {
-        // TODO OK
+        $this->outDateEvent();
+        $this->loginUser(5);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => $this->personToValues($this->personA),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        /** @var RedirectResponse $response */
+        $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
+        Assert::type(RedirectResponse::class, $response);
+        Assert::contains('detail', $response->getUrl());
+        Assert::same(
+            'Edited',
+            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+        );
     }
 
     public function testEditReplaceMember(): void
     {
-        // TODO OK
+        $this->loginUser(5);
+        $team = $this->createTeam('Original', [$this->personA]);
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personB->person_id,
+            'member_0_container' => $this->personToValues($this->personB),
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
+        Assert::type(RedirectResponse::class, $response);
+        $newTeam = $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
+        Assert::same(1, $newTeam->getMembers()->count('*'));
+        Assert::same($this->personB->person_id, $newTeam->getMembers()->fetch()->person_id);
     }
 
-    public function testEditDuplicateMember(): void
+    public function testCreateDuplicateMember(): void
     {
-        // TODO OK
+        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => (string)$this->personA->person_id,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(TextResponse::class, $response);
+        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        Assert::same($before, $after);
+    }
+
+    public function testCreateDuplicateMember2(): void
+    {
+        $this->createTeam('Unique', [$this->personA]);
+        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+
+        $data = [
+            'team' => [
+                'name' => 'Edited',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(TextResponse::class, $response);
+        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        Assert::same($before, $after);
     }
 
     public function testEditDuplicateTeamName(): void
     {
-        // TODO OK
+        $this->createTeam('Unique', [$this->personB]);
+        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+
+        $data = [
+            'team' => [
+                'name' => 'Unique',
+            ],
+            'member_0' => (string)$this->personA->person_id,
+            'member_1' => null,
+            'member_2' => null,
+            'member_3' => null,
+            'member_4' => null,
+        ];
+        $response = $this->createFormRequest('create', $data);
+        Assert::type(TextResponse::class, $response);
+        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        Assert::same($before, $after);
     }
 
-    public function testEditCategoryProcessing(): void
+    protected function createTeam(string $name, array $persons): TeamModel2
     {
-        // TODO OK
+        $team = $this->getContainer()->getByType(TeamService2::class)->storeModel([
+            'name' => $name,
+            'category' => 'B',
+            'event_id' => $this->event->event_id,
+        ]);
+        /** @var PersonModel $person */
+        foreach ($persons as $person) {
+            $this->getContainer()->getByType(TeamMemberService::class)->storeModel([
+                'person_id' => $person->person_id,
+                'fyziklani_team_id' => $team->fyziklani_team_id,
+            ]);
+        }
+        return $team;
+    }
+
+    public function outDateEvent(): void
+    {
+        $this->getContainer()->getByType(EventService::class)->storeModel([
+            'registration_begin' => (new \DateTime())->sub(new \DateInterval('P2D')),
+            'registration_end' => (new \DateTime())->sub(new \DateInterval('P1D')),
+        ], $this->event);
     }
 
     protected function createPostRequest(string $action, array $params, array $postData = []): Request
@@ -183,6 +459,29 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
     {
         $params['eventId'] = $this->event->event_id;
         return parent::createGetRequest($action, $params, $postData);
+    }
+
+    protected function personToValues(PersonModel $person): array
+    {
+        return [
+            '_c_compact' => $person->getFullName(),
+            'person' => [
+                'other_name' => $person->other_name,
+                'family_name' => $person->family_name,
+            ],
+            'person_info' => [
+                'email' => $person->getInfo()->email,
+                'born' => $person->getInfo()->born,
+            ],
+            'person_history' => [
+                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
+            ],
+            'person_has_flag' => [
+                'spam_mff' => '1',
+            ],
+        ];
     }
 
     protected function getPresenterName(): string
