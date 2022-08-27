@@ -7,6 +7,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Tests\Events\EventTestCase;
@@ -52,7 +53,8 @@ class ApplicationPresenterTest extends EventTestCase
         $event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 19,
-            'registration_begin' => DateTime::from(time() + DateTime::DAY),
+            'registration_begin' => DateTime::from(time() - DateTime::DAY),
+            'registration_end' => DateTime::from(time() + DateTime::DAY),
         ]);
         Assert::exception(function () use ($event): void {
             $request = new Request('Public:Register', 'GET', [
@@ -73,6 +75,7 @@ class ApplicationPresenterTest extends EventTestCase
         $event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,
+            'registration_end' => DateTime::from(time() + DateTime::DAY),
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
         ]);
 
@@ -83,15 +86,7 @@ class ApplicationPresenterTest extends EventTestCase
             'year' => 1,
             'eventId' => $event->event_id,
         ]);
-
-        $response = $this->fixture->run($request);
-        Assert::type(TextResponse::class, $response);
-        /** @var TextResponse $response */
-        $source = $response->getSource();
-        Assert::type(Template::class, $source);
-
-        $html = (string)$source;
-        Assert::contains('Registration is not open.', $html);
+        Assert::exception(fn() => $this->fixture->run($request), GoneException::class);
     }
 }
 
