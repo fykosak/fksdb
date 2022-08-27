@@ -6,7 +6,6 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -30,7 +29,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {

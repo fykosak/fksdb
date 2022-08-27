@@ -20,7 +20,7 @@ class ExplicitEventRole extends EventRole
         EventModel $event,
         string $resource
     ) {
-        parent::__construct($eventAuthorizator, $privilege);
+        parent::__construct($privilege, $eventAuthorizator);
         $this->event = $event;
         $this->resource = $resource;
     }

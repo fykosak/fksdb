@@ -53,8 +53,6 @@ abstract class EntityFormComponent extends FormComponent
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
-            Debugger::dump($exception->getMessage());
-            Debugger::dump(get_class($exception));
             $this->flashMessage(_('Error') . $exception->getMessage(), Message::LVL_ERROR);
         }
     }

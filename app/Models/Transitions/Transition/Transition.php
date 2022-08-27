@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\SmartObject;
-use Tracy\Debugger;
 
 class Transition
 {
@@ -17,7 +16,7 @@ class Transition
 
     /** @var callable|bool */
     protected $condition;
-    private ?BehaviorType $behaviorType = null;
+    public ?BehaviorType $behaviorType = null;
     private string $label;
     /** @var TransitionCallback[] */
     public array $beforeExecute = [];
@@ -64,17 +63,6 @@ class Transition
     public static function createId(EnumColumn $sourceState, EnumColumn $targetState): string
     {
         return $sourceState->value . '__' . $targetState->value;
-    }
-
-    public function getBehaviorType(): BehaviorType
-    {
-        if ($this->isTerminating()) {
-            return new BehaviorType(BehaviorType::DANGEROUS);
-        }
-        if ($this->isCreating()) {
-            return new BehaviorType(BehaviorType::SUCCESS);
-        }
-        return $this->behaviorType;
     }
 
     public function setBehaviorType(string $behaviorType): void
@@ -131,7 +119,6 @@ class Transition
 
     final public function callAfterExecute(...$args): void
     {
-        Debugger::barDump($this);
         foreach ($this->afterExecute as $callback) {
             $callback(...$args);
         }

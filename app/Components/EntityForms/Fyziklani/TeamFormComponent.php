@@ -163,6 +163,9 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @throws BadTypeException
+     */
     protected function setDefaults(): void
     {
         if (isset($this->model)) {

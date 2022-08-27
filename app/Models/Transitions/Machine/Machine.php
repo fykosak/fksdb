@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -25,6 +26,11 @@ abstract class Machine extends AbstractMachine
     public function __construct(Explorer $explorer)
     {
         $this->explorer = $explorer;
+    }
+
+    final public function decorateTransitions(TransitionsDecorator $decorator): void
+    {
+        $decorator->decorate($this);
     }
 
     final public function setImplicitCondition(callable $implicitCondition): void

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;

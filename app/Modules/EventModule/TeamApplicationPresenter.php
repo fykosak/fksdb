@@ -208,11 +208,17 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         static $machine;
         if (!isset($machine)) {
             try {
-                $machine = $this->getContext()->getService(
-                    sprintf('fyziklani%dteam.machine', $this->getEvent()->event_year)
-                );
+                switch ($this->getEvent()->event_type_id) {
+                    case 1:
+                        $machine = $this->getContext()->getService('fof.default.machine');
+                        break;
+                    case 9:
+                        $machine = $this->getContext()->getService('fol.default.machine');
+                        break;
+                    default:
+                        throw new InvalidStateException();
+                }
             } catch (MissingServiceException $exception) {
-                $machine = $this->getContext()->getService('fyziklani.default.machine');
             }
             if (!$machine instanceof FyziklaniTeamMachine) {
                 throw new BadTypeException(FyziklaniTeamMachine::class, $machine);

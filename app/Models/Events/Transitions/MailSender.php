@@ -78,6 +78,7 @@ class MailSender
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __invoke(Transition $transition, Holder $holder): void
     {
@@ -86,6 +87,7 @@ class MailSender
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     private function send(Transition $transition, Holder $holder): void
     {

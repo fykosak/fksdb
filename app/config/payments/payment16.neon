@@ -30,7 +30,7 @@ transitions:
     fyziklani16payment:
         machine: fyziklani16payment.machine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani16Payment()
+        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani16Payment()
         transitions:
             init->new:
                 label: _('Create')

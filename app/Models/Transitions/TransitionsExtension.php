@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 
@@ -48,8 +47,8 @@ class TransitionsExtension extends CompilerExtension
         foreach ($builder->findByTag($machineName) as $name => $transition) {
             $machineDefinition->addSetup('addTransition', [$builder->getDefinition($name)]);
         }
-        if (isset($machineConfig['transitionsDecorator'])) {
-            $machineDefinition->addSetup('decorateTransitions', [$machineConfig['transitionsDecorator']]);
+        if (isset($machineConfig['decorator'])) {
+            $machineDefinition->addSetup('decorateTransitions', [$machineConfig['decorator']]);
         }
     }
 
@@ -74,9 +73,9 @@ class TransitionsExtension extends CompilerExtension
             ->addSetup('setSourceStateEnum', [$source])
             ->addSetup('setTargetStateEnum', [$target])
             ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
-        if (isset($transitionConfig['behaviorType'])) {
-            $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType']]);
-        }
+
+        $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType'] ?? 'secondary']);
+
         if (isset($transitionConfig['beforeExecute'])) {
             foreach ($transitionConfig['beforeExecute'] as $callback) {
                 $factory->addSetup('addBeforeExecute', [$callback]);

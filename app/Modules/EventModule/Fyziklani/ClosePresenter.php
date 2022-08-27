@@ -44,6 +44,7 @@ class ClosePresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleHard(): PageTitle
     {
