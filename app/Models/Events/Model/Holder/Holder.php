@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
-use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -58,50 +55,27 @@ class Holder
     }
 
     /**
-     * @return static
-     * @throws NeonSchemaException
-     */
-    public function inferEvent(EventModel $event): self
-    {
-        $this->primaryHolder->inferEvent($event);
-        return $this;
-    }
-
-    public function setModel(?Model $primaryModel = null): void
-    {
-        $this->primaryHolder->setModel($primaryModel);
-    }
-
-    public function saveModels(): void
-    {
-        $this->primaryHolder->saveModel();
-    }
-
-    /**
      * Apply processings to the values and sets them to the ORM model.
-     *
-     * @param Transition[] $transitions
-     * @return string[] machineName => new state
      */
     public function processFormValues(
         ArrayHash $values,
         Machine $machine,
-        array $transitions,
+        ?Transition $transition,
         Logger $logger,
         ?Form $form
-    ): array {
-        $newStates = [];
-        foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->target;
+    ): ?string {
+        $newState = null;
+        if ($transition) {
+            $newState = $transition->target;
         }
         foreach ($this->processings as $processing) {
-            $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
+            $result = $processing->process($newState, $values, $machine, $this, $logger, $form);
             if ($result) {
-                $newStates = array_merge($newStates, $result);
+                $newState = $result;
             }
         }
 
-        return $newStates;
+        return $newState;
     }
 
     public function adjustForm(Form $form): void
@@ -110,10 +84,6 @@ class Holder
             $adjustment->adjust($form, $this);
         }
     }
-
-    /*
-     * Parameters
-     */
 
     /**
      * @return mixed

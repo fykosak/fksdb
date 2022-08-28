@@ -87,7 +87,7 @@ class EventDispatchFactory
         $definition = $this->findDefinition($event);
         /** @var Holder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
-        $holder->inferEvent($event);
+        $holder->primaryHolder->inferEvent($event);
         return $holder;
     }
 

@@ -26,21 +26,20 @@ class GenKillProcessing implements Processing
     use SmartObject;
 
     public function process(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Machine $machine,
         Holder $holder,
         Logger $logger,
         ?Form $form = null
-    ): array {
-        $result = [];
+    ): ?string {
 
         if (!isset($values[$holder->primaryHolder->name])) { // whole machine unmodofiable/invisible
-            return $result;
+            return null;
         }
         if (!$holder->primaryHolder->getDeterminingFields()) {
             // no way how to determine (non)existence of secondary models
-            return $result;
+            return null;
         }
         $isFilled = true;
         foreach ($holder->primaryHolder->getDeterminingFields() as $field) {
@@ -54,11 +53,10 @@ class GenKillProcessing implements Processing
         }
         $baseMachine = $machine->primaryMachine;
         if (!$isFilled) {
-            $result[$holder->primaryHolder->name] = AbstractMachine::STATE_TERMINATED;
+            return AbstractMachine::STATE_TERMINATED;
         } elseif ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
             if (isset($values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
-                $result[$holder->primaryHolder->name] =
-                    $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
+                return $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
             } else {
                 $transitions = $baseMachine->getAvailableTransitions(
                     $holder,
@@ -68,18 +66,17 @@ class GenKillProcessing implements Processing
                     throw new SubmitProcessingException(
                         _("$holder->primaryHolder->name: Není definován přechod z počátečního stavu.")
                     );
-                } elseif (isset($states[$holder->primaryHolder->name])) {
-                    $result[$holder->primaryHolder->name] = $states[$holder->primaryHolder->name]; // propagate already set state
+                } elseif (isset($state)) {
+                    return $state; // propagate already set state
                 } elseif (count($transitions) > 1) {
                     throw new SubmitProcessingException(
                         _("$holder->primaryHolder->name: Přechod z počátečního stavu není jednoznačný.")
                     );
                 } else {
-                    $result[$holder->primaryHolder->name] = reset($transitions)->target;
+                    return reset($transitions)->target;
                 }
             }
-
         }
-        return $result;
+        return null;
     }
 }

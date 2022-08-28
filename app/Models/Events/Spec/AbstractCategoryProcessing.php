@@ -48,7 +48,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     }
 
     final protected function innerProcess(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Holder $holder,
         Logger $logger,

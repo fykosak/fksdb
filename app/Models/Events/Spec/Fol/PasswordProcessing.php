@@ -15,8 +15,13 @@ use Nette\Utils\ArrayHash;
 class PasswordProcessing extends AbstractProcessing
 {
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
-    {
+    protected function innerProcess(
+        ?string $state,
+        ArrayHash $values,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form
+    ): void {
         if (!isset($values['team'])) {
             return;
         }

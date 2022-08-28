@@ -24,27 +24,27 @@ abstract class AbstractProcessing implements Processing
     public const WILD_CART = '*';
     private array $valuesPathCache;
     private array $formPathCache;
-    private array $states;
+    private ?string $state;
     private Holder $holder;
 
     final public function process(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Machine $machine,
         Holder $holder,
         Logger $logger,
         ?Form $form = null
-    ): ?array {
-        $this->states = $states;
+    ): ?string {
+        $this->state = $state;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->innerProcess($states, $values, $holder, $logger, $form);
+        $this->innerProcess($state, $values, $holder, $logger, $form);
         return null;
     }
 
     abstract protected function innerProcess(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Holder $holder,
         Logger $logger,

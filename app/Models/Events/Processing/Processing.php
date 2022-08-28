@@ -13,11 +13,11 @@ use Nette\Utils\ArrayHash;
 interface Processing
 {
     public function process(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Machine $machine,
         Holder $holder,
         Logger $logger,
         ?Form $form = null
-    ): ?array;
+    ): ?string;
 }

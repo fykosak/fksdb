@@ -56,13 +56,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     public function process(
-        array $states,
+        ?string $state,
         ArrayHash $values,
         Machine $machine,
         Holder $holder,
         Logger $logger,
         ?Form $form = null
-    ): ?array {
+    ): ?string {
         $this->trySetAgreed($values);
         return null;
     }

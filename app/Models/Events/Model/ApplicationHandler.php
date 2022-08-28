@@ -16,7 +16,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -104,32 +103,7 @@ class ApplicationHandler
                 throw new UnavailableTransitionException($transition, $holder->primaryHolder->getModel2());
             }
 
-            $transition->execute($holder);
-            $holder->saveModels();
-            $transition->executed($holder);
-
-            $this->commit();
-
-            if ($transition->isCreating()) {
-                $this->logger->log(
-                    new Message(
-                        sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
-                        Message::LVL_SUCCESS
-                    )
-                );
-            } elseif ($transition->isTerminating()) {
-                $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
-            } else {
-                $this->logger->log(
-                    new Message(
-                        sprintf(
-                            _('State of application "%s" changed.'),
-                            (string)$holder->primaryHolder->getModel2()
-                        ),
-                        Message::LVL_INFO
-                    )
-                );
-            }
+            $this->saveAndExecute($transition, $holder);
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->referencedContainer;
             $container->setConflicts($exception->getConflicts());
@@ -161,21 +135,18 @@ class ApplicationHandler
         ?string $execute
     ): void {
         $this->initializeMachine();
-
         try {
-            $explicitMachineName = $this->machine->primaryMachine->name;
-
             $this->beginTransaction();
-            /** @var Transition[] $transitions */
-            $transitions = [];
-            // saved transition of baseModel/baseMachine/baseHolder/baseShit/base*
-            if ($explicitTransitionName) {
-                $transitions[$explicitMachineName] = $this->machine->primaryMachine->getTransition(
-                    $explicitTransitionName
-                );
-            }
 
-            $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
+            $transition = $this->processData(
+                $data,
+                $form,
+                $explicitTransitionName
+                    ? $this->machine->primaryMachine->getTransition($explicitTransitionName)
+                    : null,
+                $holder,
+                $execute
+            );
 
             if ($execute === self::STATE_OVERWRITE) {
                 if (isset($data[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
@@ -185,45 +156,9 @@ class ApplicationHandler
                 }
             }
 
-            // cache induced transition as they won't match after execution
-            foreach ($transitions as $key => $transition) {
-                $transition->execute($holder);
-            }
+            $this->saveAndExecute($transition, $holder);
 
-            $holder->saveModels();
-
-            foreach ($transitions as $key => $transition) {
-                $transition->executed($holder); //note the 'd', it only triggers onExecuted event
-            }
-
-            $this->commit();
-            if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(
-                    new Message(
-                        sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
-                        Message::LVL_SUCCESS
-                    )
-                );
-            } elseif (
-                isset($transitions[$explicitMachineName])
-                && $transitions[$explicitMachineName]->isTerminating()
-            ) {
-                $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
-            } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(
-                    new Message(
-                        sprintf(
-                            _('State of application "%s" changed.'),
-                            (string)$holder->primaryHolder->getModel2()
-                        ),
-                        Message::LVL_INFO
-                    )
-                );
-            }
-            if (
-                ($data || $form)
-                && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())
-            ) {
+            if (($data || $form) && (!$transition || !$transition->isTerminating())) {
                 $this->logger->log(
                     new Message(
                         sprintf(_('Application "%s" saved.'), (string)$holder->primaryHolder->getModel2()),
@@ -254,44 +189,72 @@ class ApplicationHandler
         }
     }
 
+    private function saveAndExecute(?Transition $transition, Holder $holder)
+    {
+        if ($transition) {
+            $transition->execute($holder);
+        }
+        $holder->primaryHolder->saveModel();
+        if ($transition) {
+            $transition->executed($holder);
+        }
+        $this->commit();
+
+        if ($transition && $transition->isCreating()) {
+            $this->logger->log(
+                new Message(
+                    sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
+                    Message::LVL_SUCCESS
+                )
+            );
+        } elseif ($transition && $transition->isTerminating()) {
+            $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
+        } elseif ($transition) {
+            $this->logger->log(
+                new Message(
+                    sprintf(
+                        _('State of application "%s" changed.'),
+                        (string)$holder->primaryHolder->getModel2()
+                    ),
+                    Message::LVL_INFO
+                )
+            );
+        }
+    }
+
     private function processData(
         ?ArrayHash $data,
         ?Form $form,
-        array $transitions,
+        ?Transition $transition,
         Holder $holder,
         ?string $execute
-    ): array {
+    ): ?Transition {
         if ($form) {
             $values = FormUtils::emptyStrToNull($form->getValues());
         } else {
             $values = $data;
         }
         Debugger::log(json_encode((array)$values), 'app-form');
-        $primaryName = $holder->primaryHolder->name;
-        $newStates = [];
-        if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
-            $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
+        $newState = null;
+        if (isset($values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
+            $newState = $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
         }
-        // Find out transitions
-        $newStates = array_merge(
-            $newStates,
-            $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form)
-        );
+
+        $processState = $holder->processFormValues($values, $this->machine, $transition, $this->logger, $form);
+
+        $newState = $newState ?: $processState;
 
         if ($execute == self::STATE_TRANSITION) {
-            foreach ($newStates as $name => $newState) {
+            if ($newState) {
                 $state = $holder->primaryHolder->getModelState();
-                $transition = $this->machine->primaryMachine->getTransitionByTarget($state, $newState);
-                if ($transition) {
-                    $transitions[$name] = $transition;
-                } elseif (
-                    !($state == AbstractMachine::STATE_INIT
-                        && $newState == AbstractMachine::STATE_TERMINATED)
-                ) {
-                    $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
+                $transition = $this->machine->primaryMachine->getTransitionByTarget(
+                    $state,
+                    $newState
+                );
+                if (!$transition) {
                     throw new MachineExecutionException(
                         sprintf(
-                            $msg,
+                            _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
                             $this->machine->primaryMachine->getStateName($state),
                             $holder->primaryHolder->label,
                             $this->machine->primaryMachine->getStateName($newState)
@@ -305,7 +268,7 @@ class ApplicationHandler
             $holder->primaryHolder->data += (array)$values[$holder->primaryHolder->name];
         }
 
-        return $transitions;
+        return $transition;
     }
 
     private function initializeMachine(): void
