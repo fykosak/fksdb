@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -42,9 +42,9 @@ class PrivacyPolicy implements Processing, FormAdjustment
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function adjust(Form $form, Holder $holder): void
+    public function adjust(Form $form, BaseHolder $holder): void
     {
-        if ($holder->primaryHolder->getModelState() != AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() != AbstractMachine::STATE_INIT) {
             return;
         }
 
@@ -58,8 +58,8 @@ class PrivacyPolicy implements Processing, FormAdjustment
     public function process(
         ?string $state,
         ArrayHash $values,
-        Machine $machine,
-        Holder $holder,
+        BaseMachine $primaryMachine,
+        BaseHolder $holder,
         Logger $logger,
         ?Form $form = null
     ): ?string {

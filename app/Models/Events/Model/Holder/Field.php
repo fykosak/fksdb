@@ -11,11 +11,11 @@ use Nette\Forms\Controls\BaseControl;
 class Field
 {
 
-    private string $name;
-    private bool $determining;
-    private ?string $label;
-    private ?string $description;
-    private BaseHolder $baseHolder;
+    public string $name;
+    public bool $determining;
+    public ?string $label;
+    public ?string $description;
+    public BaseHolder $baseHolder;
     private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
     /** @var mixed */
@@ -33,39 +33,9 @@ class Field
         $this->label = $label;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function getBaseHolder(): BaseHolder
-    {
-        return $this->baseHolder;
-    }
-
-    public function setBaseHolder(BaseHolder $baseHolder): void
-    {
-        $this->baseHolder = $baseHolder;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function isDetermining(): bool
-    {
-        return $this->determining;
     }
 
     public function setDetermining(bool $determining): void
@@ -114,7 +84,7 @@ class Field
 
     public function isRequired(): bool
     {
-        return $this->evaluator->evaluate($this->required, $this);
+        return $this->evaluator->evaluate($this->required, $this->baseHolder);
     }
 
     /** @param bool|callable $required */
@@ -127,7 +97,7 @@ class Field
 
     public function isModifiable(): bool
     {
-        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+        return $this->baseHolder->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this->baseHolder);
     }
 
     /** @param bool|callable $modifiable */
@@ -140,7 +110,7 @@ class Field
 
     public function isVisible(): bool
     {
-        return (bool)$this->evaluator->evaluate($this->visible, $this);
+        return (bool)$this->evaluator->evaluate($this->visible, $this->baseHolder);
     }
 
     /**
@@ -161,7 +131,7 @@ class Field
      */
     public function getValue()
     {
-        $model = $this->getBaseHolder()->getModel2();
+        $model = $this->baseHolder->getModel();
         if (isset($this->baseHolder->data[$this->name])) {
             return $this->baseHolder->data[$this->name];
         }

@@ -43,7 +43,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     private function getAllStates(): array
     {
         return array_merge(
-            $this->baseMachine->getStates(),
+            $this->baseMachine->states,
             [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]
         );
     }

@@ -9,9 +9,9 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -20,7 +20,6 @@ use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -38,8 +37,6 @@ class ApplicationPresenter extends BasePresenter
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
     private ?Model $eventApplication = null;
-    private Holder $holder;
-    private Machine $machine;
     private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
@@ -102,7 +99,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return TeamModel|EventParticipantModel|null
+     * @return EventParticipantModel|null
      * @throws NeonSchemaException
      * @throws EventNotFoundException
      */
@@ -110,7 +107,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
-            $service = $this->getHolder()->primaryHolder->getService();
+            $service = $this->getHolder()->service;
 
             $this->eventApplication = $service->findByPrimary($id);
         }
@@ -123,12 +120,13 @@ class ApplicationPresenter extends BasePresenter
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
      */
-    private function getHolder(): Holder
+    private function getHolder(): BaseHolder
     {
-        if (!isset($this->holder)) {
-            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
+        static $holder;
+        if (!isset($holder)) {
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
-        return $this->holder;
+        return $holder;
     }
 
     public function requiresLogin(): bool
@@ -170,11 +168,13 @@ class ApplicationPresenter extends BasePresenter
 
         if (
             !$this->getMachine()
-                ->primaryMachine
-                ->getAvailableTransitions($this->holder, $this->getHolder()->primaryHolder->getModelState())
+                ->getAvailableTransitions(
+                    $this->getHolder(),
+                    $this->getHolder()->getModelState()
+                )
         ) {
             if (
-                $this->getHolder()->primaryHolder->getModelState() == AbstractMachine::STATE_INIT
+                $this->getHolder()->getModelState() == AbstractMachine::STATE_INIT
             ) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
@@ -184,9 +184,8 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-            !$this->relatedPersonAuthorizator->isRelatedPerson(
-                $this->getHolder()
-            ) && !$this->eventAuthorizator->isAllowed(
+            !$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) &&
+            !$this->eventAuthorizator->isAllowed(
                 $this->getEvent(),
                 'application',
                 $this->getEvent()
@@ -209,12 +208,13 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    private function getMachine(): Machine
+    private function getMachine(): BaseMachine
     {
-        if (!isset($this->machine)) {
-            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        static $primaryMachine;
+        if (!isset($primaryMachine)) {
+            $primaryMachine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
-        return $this->machine;
+        return $primaryMachine;
     }
 
     protected function startup(): void
@@ -291,7 +291,7 @@ class ApplicationPresenter extends BasePresenter
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if (
-                $this->getHolder()->primaryHolder->getModelState() == AbstractMachine::STATE_INIT
+                $this->getHolder()->getModelState() == AbstractMachine::STATE_INIT
             ) {
                 return;
             }
@@ -306,7 +306,7 @@ class ApplicationPresenter extends BasePresenter
      */
     private function initializeMachine(): void
     {
-        $this->getHolder()->primaryHolder->setModel($this->getEventApplication());
+        $this->getHolder()->setModel($this->getEventApplication());
     }
 
     /**

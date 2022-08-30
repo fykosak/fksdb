@@ -61,10 +61,10 @@ class AccountManager
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
 
         $templateParams = [
-            'token' => $token->token,
+            'tokenModel' => $token,
             'person' => $person,
             'email' => $email,
-            'until' => $until,
+
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
@@ -99,9 +99,8 @@ class AccountManager
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $templateParams = [
-            'token' => $token->token,
+            'tokenModel' => $token,
             'login' => $login,
-            'until' => $until,
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);

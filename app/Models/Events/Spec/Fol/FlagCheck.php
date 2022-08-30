@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
@@ -19,7 +19,7 @@ class FlagCheck extends AbstractAdjustment
 
     private SchoolService $schoolService;
     private PersonHistoryService $personHistoryService;
-    private Holder $holder;
+    protected BaseHolder $holder;
 
     public function __construct(SchoolService $schoolService, PersonHistoryService $personHistoryService)
     {
@@ -27,19 +27,9 @@ class FlagCheck extends AbstractAdjustment
         $this->personHistoryService = $personHistoryService;
     }
 
-    public function getHolder(): Holder
-    {
-        return $this->holder;
-    }
-
-    public function setHolder(Holder $holder): void
+    protected function innerAdjust(Form $form, BaseHolder $holder): void
     {
         $this->holder = $holder;
-    }
-
-    protected function innerAdjust(Form $form, Holder $holder): void
-    {
-        $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl('p*.person_id.person_history.study_year');
         $personControls = $this->getControl('p*.person_id');
@@ -97,7 +87,7 @@ class FlagCheck extends AbstractAdjustment
         /** @var PersonHistoryModel $personHistory */
         $personHistory = $this->personHistoryService->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)
+            ->where('ac_year', $this->holder->event->getContestYear()->ac_year)
             ->fetch();
         return $personHistory->study_year;
     }
@@ -112,7 +102,7 @@ class FlagCheck extends AbstractAdjustment
         /** @var SchoolModel|null $school */
         $school = $this->personHistoryService->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)->fetch();
+            ->where('ac_year', $this->holder->event->getContestYear()->ac_year)->fetch();
         return $school->school_id;
     }
 

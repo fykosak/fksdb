@@ -11,6 +11,5 @@ class Machine
     public function addBaseMachine(BaseMachine $baseMachine): void
     {
         $this->primaryMachine = $baseMachine;
-        $this->primaryMachine->setMachine($this);
     }
 }

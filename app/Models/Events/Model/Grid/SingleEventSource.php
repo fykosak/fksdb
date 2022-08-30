@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Grid;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\TypedSelection;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
@@ -33,12 +28,12 @@ class SingleEventSource implements HolderSource
     private Container $container;
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
-    private Holder $dummyHolder;
+    private BaseHolder $dummyHolder;
     /** @var Model[] */
     private ?array $primaryModels = null;
     /** @var Model[][] */
     private ?array $secondaryModels = null;
-    /** @var Holder[] */
+    /** @var BaseHolder[] */
     private array $holders = [];
 
     /**
@@ -52,10 +47,10 @@ class SingleEventSource implements HolderSource
         $this->container = $container;
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
-        $this->primarySelection = $this->dummyHolder->primaryHolder
-            ->getService()
+        $this->primarySelection = $this->dummyHolder
+            ->service
             ->getTable()
-            ->where($this->dummyHolder->primaryHolder->eventIdColumn, $this->event->getPrimary());
+            ->where($this->dummyHolder->eventIdColumn, $this->event->getPrimary());
     }
 
     public function getEvent(): EventModel
@@ -63,7 +58,7 @@ class SingleEventSource implements HolderSource
         return $this->event;
     }
 
-    public function getDummyHolder(): Holder
+    public function getDummyHolder(): BaseHolder
     {
         return $this->dummyHolder;
     }
@@ -87,7 +82,7 @@ class SingleEventSource implements HolderSource
     {
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->primaryHolder->setModel($primaryModel);
+            $holder->setModel($primaryModel);
             $this->holders[$primaryPK] = $holder;
         }
     }
@@ -118,7 +113,7 @@ class SingleEventSource implements HolderSource
     }
 
     /**
-     * @return Holder[]
+     * @return BaseHolder[]
      * @throws NeonSchemaException
      */
     public function getHolders(): array
@@ -133,10 +128,10 @@ class SingleEventSource implements HolderSource
     /**
      * @throws NeonSchemaException
      */
-    public function getHolder(Model $primaryModel): Holder
+    public function getHolder(Model $primaryModel): BaseHolder
     {
         $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-        $holder->primaryHolder->setModel($primaryModel);
+        $holder->setModel($primaryModel);
         return $holder;
     }
 }

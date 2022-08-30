@@ -10,7 +10,6 @@ use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
 use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
-use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;

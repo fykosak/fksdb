@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Machine;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\InvalidArgumentException;
@@ -16,37 +16,16 @@ class BaseMachine extends AbstractMachine
 {
 
     public string $name;
-    private array $states;
-    private Machine $machine;
+    public array $states;
 
     public function __construct(string $name)
     {
         $this->name = $name;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
     public function addState(string $state): void
     {
         $this->states[] = $state;
-    }
-
-    public function getStates(): array
-    {
-        return $this->states;
-    }
-
-    public function getMachine(): Machine
-    {
-        return $this->machine;
-    }
-
-    public function setMachine(Machine $machine): void
-    {
-        $this->machine = $machine;
     }
 
     /**
@@ -66,7 +45,7 @@ class BaseMachine extends AbstractMachine
         return $this->transitions[$name];
     }
 
-    public function getStateName(string $state): string
+    public static function getStateName(string $state): string
     {
         switch ($state) {
             case static::STATE_INIT:
@@ -82,7 +61,7 @@ class BaseMachine extends AbstractMachine
      * @return Transition[]
      */
     public function getAvailableTransitions(
-        Holder $holder,
+        BaseHolder $holder,
         string $sourceState,
         bool $visible = false,
         bool $executable = true

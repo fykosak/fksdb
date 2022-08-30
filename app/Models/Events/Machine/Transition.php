@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 
@@ -94,26 +93,10 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->visible = $visible;
     }
 
-    private function getBlockingTransition(Holder $holder): ?Transition
+    private function validateTarget(BaseHolder $primaryHolder): ?array
     {
-        if (!$this->isConditionFulfilled($holder)) {
-            return $this;
-        }
-        return null;
-    }
-
-    private function validateTarget(Holder $holder): ?array
-    {
-
-        $baseHolder = $holder->primaryHolder;
-        $validator = $baseHolder->validator;
-        $validator->validate($baseHolder);
-        return $validator->getValidationResult();
-    }
-
-    final public function canExecute(Holder $holder): bool
-    {
-        return !$this->getBlockingTransition($holder);
+        $primaryHolder->validator->validate($primaryHolder);
+        return $primaryHolder->validator->getValidationResult();
     }
 
     /**
@@ -130,14 +113,13 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
      */
-    final public function execute(Holder $holder): void
+    final public function execute(BaseHolder $holder): void
     {
-        $blockingTransition = $this->getBlockingTransition($holder);
-        if ($blockingTransition) {
-            throw new TransitionConditionFailedException($blockingTransition);
+        if (!$this->isConditionFulfilled($holder)) {
+            throw new TransitionConditionFailedException($this);
         }
 
-        $this->changeState($holder->primaryHolder);
+        $this->changeState($holder);
 
         $validationResult = $this->validateTarget($holder);
         if (!is_null($validationResult)) {
@@ -150,10 +132,10 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      *
      * @throws TransitionOnExecutedException
      */
-    final public function executed(Holder $holder): void
+    final public function executed(BaseHolder $holder): void
     {
         try {
-            $this->callAfterExecute($this, $holder);
+            $this->callAfterExecute($holder, $this);
         } catch (\Throwable $exception) {
             throw new TransitionOnExecutedException($this->getName(), 0, $exception);
         }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Processing;
 
-use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
@@ -25,13 +25,13 @@ abstract class AbstractProcessing implements Processing
     private array $valuesPathCache;
     private array $formPathCache;
     private ?string $state;
-    private Holder $holder;
+    private BaseHolder $holder;
 
     final public function process(
         ?string $state,
         ArrayHash $values,
-        Machine $machine,
-        Holder $holder,
+        BaseMachine $primaryMachine,
+        BaseHolder $holder,
         Logger $logger,
         ?Form $form = null
     ): ?string {
@@ -39,16 +39,14 @@ abstract class AbstractProcessing implements Processing
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->innerProcess($state, $values, $holder, $logger, $form);
+        $this->innerProcess($values, $holder, $logger);
         return null;
     }
 
     abstract protected function innerProcess(
-        ?string $state,
         ArrayHash $values,
-        Holder $holder,
-        Logger $logger,
-        ?Form $form
+        BaseHolder $holder,
+        Logger $logger
     ): void;
 
     final protected function hasWildCart(string $mask): bool
@@ -102,8 +100,7 @@ abstract class AbstractProcessing implements Processing
      */
     protected function isBaseReallyEmpty(string $name): bool
     {
-        $baseHolder = $this->holder->primaryHolder;
-        if ($baseHolder->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($this->holder->getModelState() == AbstractMachine::STATE_INIT) {
             return true; // it was empty since beginning
         }
         if (

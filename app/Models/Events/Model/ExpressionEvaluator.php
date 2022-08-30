@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -13,10 +14,9 @@ class ExpressionEvaluator
 
     /**
      * @param callable|mixed $condition
-     * @param mixed $context
      * @return mixed
      */
-    public function evaluate($condition, $context)
+    public function evaluate($condition, ModelHolder $context)
     {
         if (is_scalar($condition)) {
             return $condition;

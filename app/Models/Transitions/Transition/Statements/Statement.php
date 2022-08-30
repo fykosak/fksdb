@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements;
 
-abstract class Statement
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+
+interface Statement
 {
-
-    abstract protected function evaluate(...$args): bool;
-
-    final public function __invoke(...$args): bool
-    {
-        return $this->evaluate(...$args);
-    }
+    public function __invoke(ModelHolder $holder);
 }

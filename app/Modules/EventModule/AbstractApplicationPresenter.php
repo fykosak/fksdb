@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;

@@ -772,19 +772,6 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
-        e_fyziklani_team:
-            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel
-            linkFactories:
-                detail:
-                    destination: ':Event:TeamApplication:detail'
-                    params:
-                        eventId: event_id
-                        id: e_fyziklani_team_id
-                    title: Detail
-        e_fyziklani_participant:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
-            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
         fyziklani_team:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamService2
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
@@ -1069,6 +1056,4 @@ orm:
             service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
 
 services:
-    event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
-
-    event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    event.ServiceMDsefParticipant: FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant

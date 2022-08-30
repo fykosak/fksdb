@@ -8,11 +8,10 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -40,7 +39,6 @@ class ApplicationHandler
 
     private string $errorMode = self::ERROR_ROLLBACK;
     private Connection $connection;
-    private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(EventModel $event, Logger $logger, Container $container)
@@ -56,20 +54,18 @@ class ApplicationHandler
         $this->connection = $connection;
     }
 
-    public function getErrorMode(): string
-    {
-        return $this->errorMode;
-    }
-
     public function setErrorMode(string $errorMode): void
     {
         $this->errorMode = $errorMode;
     }
 
-    public function getMachine(): Machine
+    public function getMachine(): BaseMachine
     {
-        $this->initializeMachine();
-        return $this->machine;
+        static $machine;
+        if (!isset($machine)) {
+            $machine = $this->eventDispatchFactory->getEventMachine($this->event);
+        }
+        return $machine;
     }
 
     public function getLogger(): Logger
@@ -77,30 +73,31 @@ class ApplicationHandler
         return $this->logger;
     }
 
-    final public function store(Holder $holder, ArrayHash $data): void
+    final public function store(BaseHolder $holder, ArrayHash $data): void
     {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
-    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void
+    final public function storeAndExecuteValues(BaseHolder $holder, ArrayHash $data): void
     {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
-    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void
-    {
+    final public function storeAndExecuteForm(
+        BaseHolder $holder,
+        Form $form,
+        ?string $explicitTransitionName = null
+    ): void {
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
-    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void
+    final public function onlyExecute(BaseHolder $holder, string $explicitTransitionName): void
     {
-        $this->initializeMachine();
-
         try {
             $this->beginTransaction();
-            $transition = $this->machine->primaryMachine->getTransition($explicitTransitionName);
-            if (!$transition->matches($holder->primaryHolder->getModelState())) {
-                throw new UnavailableTransitionException($transition, $holder->primaryHolder->getModel2());
+            $transition = $this->getMachine()->getTransition($explicitTransitionName);
+            if (!$transition->matches($holder->getModelState())) {
+                throw new UnavailableTransitionException($transition, $holder->getModel());
             }
 
             $this->saveAndExecute($transition, $holder);
@@ -128,13 +125,12 @@ class ApplicationHandler
     }
 
     private function innerStoreAndExecute(
-        Holder $holder,
+        BaseHolder $holder,
         ?ArrayHash $data,
         ?Form $form,
         ?string $explicitTransitionName,
         ?string $execute
     ): void {
-        $this->initializeMachine();
         try {
             $this->beginTransaction();
 
@@ -142,16 +138,16 @@ class ApplicationHandler
                 $data,
                 $form,
                 $explicitTransitionName
-                    ? $this->machine->primaryMachine->getTransition($explicitTransitionName)
+                    ? $this->getMachine()->getTransition($explicitTransitionName)
                     : null,
                 $holder,
                 $execute
             );
 
             if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
-                    $holder->primaryHolder->setModelState(
-                        $data[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN]
+                if (isset($data[$holder->name][BaseHolder::STATE_COLUMN])) {
+                    $holder->setModelState(
+                        $data[$holder->name][BaseHolder::STATE_COLUMN]
                     );
                 }
             }
@@ -161,7 +157,7 @@ class ApplicationHandler
             if (($data || $form) && (!$transition || !$transition->isTerminating())) {
                 $this->logger->log(
                     new Message(
-                        sprintf(_('Application "%s" saved.'), (string)$holder->primaryHolder->getModel2()),
+                        sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
                         Message::LVL_SUCCESS
                     )
                 );
@@ -189,12 +185,12 @@ class ApplicationHandler
         }
     }
 
-    private function saveAndExecute(?Transition $transition, Holder $holder)
+    private function saveAndExecute(?Transition $transition, BaseHolder $holder)
     {
         if ($transition) {
             $transition->execute($holder);
         }
-        $holder->primaryHolder->saveModel();
+        $holder->saveModel();
         if ($transition) {
             $transition->executed($holder);
         }
@@ -203,7 +199,7 @@ class ApplicationHandler
         if ($transition && $transition->isCreating()) {
             $this->logger->log(
                 new Message(
-                    sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
+                    sprintf(_('Application "%s" created.'), (string)$holder->getModel()),
                     Message::LVL_SUCCESS
                 )
             );
@@ -214,7 +210,7 @@ class ApplicationHandler
                 new Message(
                     sprintf(
                         _('State of application "%s" changed.'),
-                        (string)$holder->primaryHolder->getModel2()
+                        (string)$holder->getModel()
                     ),
                     Message::LVL_INFO
                 )
@@ -226,7 +222,7 @@ class ApplicationHandler
         ?ArrayHash $data,
         ?Form $form,
         ?Transition $transition,
-        Holder $holder,
+        BaseHolder $holder,
         ?string $execute
     ): ?Transition {
         if ($form) {
@@ -236,18 +232,24 @@ class ApplicationHandler
         }
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
-        if (isset($values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
-            $newState = $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
+        if (isset($values[$holder->name][BaseHolder::STATE_COLUMN])) {
+            $newState = $values[$holder->name][BaseHolder::STATE_COLUMN];
         }
 
-        $processState = $holder->processFormValues($values, $this->machine, $transition, $this->logger, $form);
+        $processState = $holder->holder->processFormValues(
+            $values,
+            $this->getMachine(),
+            $transition,
+            $this->logger,
+            $form
+        );
 
         $newState = $newState ?: $processState;
 
         if ($execute == self::STATE_TRANSITION) {
             if ($newState) {
-                $state = $holder->primaryHolder->getModelState();
-                $transition = $this->machine->primaryMachine->getTransitionByTarget(
+                $state = $holder->getModelState();
+                $transition = $this->getMachine()->getTransitionByTarget(
                     $state,
                     $newState
                 );
@@ -255,27 +257,20 @@ class ApplicationHandler
                     throw new MachineExecutionException(
                         sprintf(
                             _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
-                            $this->machine->primaryMachine->getStateName($state),
-                            $holder->primaryHolder->label,
-                            $this->machine->primaryMachine->getStateName($newState)
+                            $this->getMachine()->getStateName($state),
+                            $holder->label,
+                            $this->getMachine()->getStateName($newState)
                         )
                     );
                 }
             }
         }
 
-        if (isset($values[$holder->primaryHolder->name])) {
-            $holder->primaryHolder->data += (array)$values[$holder->primaryHolder->name];
+        if (isset($values[$holder->name])) {
+            $holder->data += (array)$values[$holder->name];
         }
 
         return $transition;
-    }
-
-    private function initializeMachine(): void
-    {
-        if (!isset($this->machine)) {
-            $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
-        }
     }
 
     private function formRollback(?Form $form): void
@@ -298,7 +293,7 @@ class ApplicationHandler
 
     private function rollback(): void
     {
-        if ($this->errorMode == self::ERROR_ROLLBACK) {
+        if ($this->errorMode === self::ERROR_ROLLBACK) {
             $this->connection->rollBack();
         }
     }

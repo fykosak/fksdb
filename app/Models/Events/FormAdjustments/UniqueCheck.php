@@ -6,7 +6,6 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
@@ -23,24 +22,16 @@ class UniqueCheck extends AbstractAdjustment
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, BaseHolder $holder): void
     {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
 
-        foreach ($controls as $name => $control) {
-            $name = $holder->primaryHolder->name === $name
-                ? $name
-                : substr(
-                    $this->field,
-                    0,
-                    strpos($this->field, self::DELIMITER)
-                );
-            $baseHolder = $holder->primaryHolder;
-            $control->addRule(function (Control $control) use ($baseHolder): bool {
-                $table = $baseHolder->getService()->getTable();
+        foreach ($controls as $control) {
+            $control->addRule(function (Control $control) use ($holder): bool {
+                $table = $holder->service->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
                     /* We don't want to fulfill potential promise
@@ -50,13 +41,13 @@ class UniqueCheck extends AbstractAdjustment
                 } else {
                     $value = $control->getValue();
                 }
-                $model = $baseHolder->getModel2();
+                $model = $holder->getModel();
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
                 $table->where(
-                    $baseHolder->eventIdColumn,
-                    $baseHolder->holder->primaryHolder->event->getPrimary()
+                    $holder->eventIdColumn,
+                    $holder->event->getPrimary()
                 );
                 if ($model) {
                     $table->where("NOT $pk = ?", $model->getPrimary());

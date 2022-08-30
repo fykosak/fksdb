@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
@@ -96,7 +96,7 @@ class EventFormComponent extends EntityFormComponent
             $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $paramControl->setOption('description', $this->createParamDescription($holder));
             $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
-                $scheme = $holder->primaryHolder->paramScheme;
+                $scheme = $holder->paramScheme;
                 $parameters = $control->getValue();
                 try {
                     if ($parameters) {
@@ -133,9 +133,9 @@ class EventFormComponent extends EntityFormComponent
         ], $this->contestYear->contest);
     }
 
-    private function createParamDescription(Holder $holder): Html
+    private function createParamDescription(BaseHolder $holder): Html
     {
-        $scheme = $holder->primaryHolder->paramScheme;
+        $scheme = $holder->paramScheme;
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
             $item = Html::el('li');

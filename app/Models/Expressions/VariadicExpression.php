@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Expressions;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+
 abstract class VariadicExpression extends EvaluatedExpression
 {
 
@@ -17,15 +19,15 @@ abstract class VariadicExpression extends EvaluatedExpression
     /**
      * @return mixed
      */
-    final public function __invoke(...$args)
+    final public function __invoke(ModelHolder $holder)
     {
-        return $this->evaluate(...$args);
+        return $this->evaluate($holder);
     }
 
     /**
      * @return mixed
      */
-    abstract protected function evaluate(...$args);
+    abstract protected function evaluate(ModelHolder $holder);
 
     abstract protected function getInfix(): string;
 

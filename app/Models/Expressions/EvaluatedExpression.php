@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Expressions;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Transition\Statements\Statement;
 use Nette\SmartObject;
 
-abstract class EvaluatedExpression
+abstract class EvaluatedExpression implements Statement
 {
     use SmartObject;
 
@@ -14,17 +16,12 @@ abstract class EvaluatedExpression
      * @param mixed $evaluated
      * @return mixed
      */
-    final protected function evaluateArgument($evaluated, ...$args)
+    final protected function evaluateArgument($evaluated, ModelHolder $holder)
     {
         if (is_callable($evaluated)) {
-            return $evaluated(...$args);
+            return $evaluated($holder);
         } else {
             return $evaluated;
         }
     }
-
-    /**
-     * @return mixed
-     */
-    abstract public function __invoke(...$args);
 }

@@ -26,8 +26,8 @@ class ChooserFactory extends AbstractFactory
     public function createComponent(Field $field): SelectBox
     {
 
-        $component = new SelectBox($field->getLabel());
-        $component->setOption('description', $field->getDescription());
+        $component = new SelectBox($field->label);
+        $component->setOption('description', $field->description);
 
         $component->setPrompt($this->prompt);
 

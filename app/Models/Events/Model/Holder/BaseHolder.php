@@ -5,23 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
-class BaseHolder
+class BaseHolder implements ModelHolder
 {
 
     public const STATE_COLUMN = 'status';
@@ -35,7 +37,7 @@ class BaseHolder
     public EventModel $event;
     public string $label;
     /** @var Service|ServiceMulti */
-    private $service;
+    public $service;
     public string $eventIdColumn;
     public Holder $holder;
     /** @var Field[] */
@@ -57,9 +59,8 @@ class BaseHolder
 
     public function addField(Field $field): void
     {
-        $field->setBaseHolder($this);
-        $name = $field->getName();
-        $this->fields[$name] = $field;
+        $field->baseHolder = $this;
+        $this->fields[$field->name] = $field;
     }
 
     /**
@@ -144,9 +145,9 @@ class BaseHolder
     }
 
     /**
-     * @return ModelMDsefParticipant|ModelMFyziklaniParticipant|EventParticipantModel
+     * @return ModelMDsefParticipant|EventParticipantModel
      */
-    public function getModel2(): ?Model
+    public function getModel(): ?Model
     {
         return $this->model ?? null;
     }
@@ -159,18 +160,18 @@ class BaseHolder
     public function saveModel(): void
     {
         if ($this->getModelState() == AbstractMachine::STATE_TERMINATED) {
-            $model = $this->getModel2();
+            $model = $this->getModel();
             if ($model) {
                 $this->service->disposeModel($model);
             }
         } elseif ($this->getModelState() != AbstractMachine::STATE_INIT) {
-            $this->model = $this->service->storeModel($this->data, $this->getModel2());
+            $this->model = $this->service->storeModel($this->data, $this->getModel());
         }
     }
 
     public function getModelState(): string
     {
-        $model = $this->getModel2();
+        $model = $this->getModel();
         if (isset($this->data[self::STATE_COLUMN])) {
             return $this->data[self::STATE_COLUMN];
         }
@@ -184,14 +185,6 @@ class BaseHolder
     public function setModelState(string $state): void
     {
         $this->data[self::STATE_COLUMN] = $state;
-    }
-
-    /**
-     * @return Service|ServiceMulti
-     */
-    public function getService()
-    {
-        return $this->service;
     }
 
     /**
@@ -220,7 +213,7 @@ class BaseHolder
     private function resolveColumnJoins(string $column): string
     {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
-            $column = $this->getService()->getTable()->getName() . '.' . $column;
+            $column = $this->service->getTable()->getName() . '.' . $column;
         }
         return $column;
     }
@@ -237,7 +230,7 @@ class BaseHolder
      */
     public function getDeterminingFields(): array
     {
-        return array_filter($this->fields, fn(Field $field): bool => $field->isDetermining());
+        return array_filter($this->fields, fn(Field $field): bool => $field->determining);
     }
 
     public function createFormContainer(): ContainerWithOptions
@@ -264,7 +257,7 @@ class BaseHolder
     {
         /** @var PersonModel $model */
         try {
-            $app = $this->getModel2();
+            $app = $this->getModel();
             if (!$app) {
                 return null;
             }
@@ -311,5 +304,15 @@ class BaseHolder
                 $exception
             );
         }
+    }
+
+    public function updateState(EnumColumn $newState): void
+    {
+        throw new NotImplementedException();
+    }
+
+    public function getState(): EnumColumn
+    {
+        throw new NotImplementedException();
     }
 }

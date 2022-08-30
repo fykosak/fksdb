@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
-use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -59,7 +58,7 @@ class Holder
      */
     public function processFormValues(
         ArrayHash $values,
-        Machine $machine,
+        BaseMachine $primaryMachine,
         ?Transition $transition,
         Logger $logger,
         ?Form $form
@@ -69,7 +68,7 @@ class Holder
             $newState = $transition->target;
         }
         foreach ($this->processings as $processing) {
-            $result = $processing->process($newState, $values, $machine, $this, $logger, $form);
+            $result = $processing->process($newState, $values, $primaryMachine, $this->primaryHolder, $logger, $form);
             if ($result) {
                 $newState = $result;
             }
@@ -81,20 +80,7 @@ class Holder
     public function adjustForm(Form $form): void
     {
         foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $this);
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameter(string $name)
-    {
-        $parts = explode('.', $name, 2);
-        if (count($parts) == 1) {
-            return $this->primaryHolder->getParameter($name);
-        } else {
-            throw new InvalidArgumentException("Invalid parameter '$name' from a base holder.");
+            $adjustment->adjust($form, $this->primaryHolder);
         }
     }
 }

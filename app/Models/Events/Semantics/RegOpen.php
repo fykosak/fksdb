@@ -4,19 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\SmartObject;
 
 class RegOpen extends EvaluatedExpression
 {
     use SmartObject;
-    use WithEventTrait;
 
-    public function __invoke(...$args): bool
+    /**
+     * @param BaseHolder $holder
+     */
+    public function __invoke(ModelHolder $holder): bool
     {
-        $event = $this->getEvent($args[0]);
-        return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time())
-            && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
+        return (!$holder->event->registration_begin || $holder->event->registration_begin->getTimestamp() <= time())
+            && (!$holder->event->registration_end || $holder->event->registration_end->getTimestamp() >= time());
     }
 
     public function __toString(): string

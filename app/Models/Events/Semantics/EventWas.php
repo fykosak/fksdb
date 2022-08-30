@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\SmartObject;
 
 class EventWas extends EvaluatedExpression
 {
     use SmartObject;
-    use WithEventTrait;
 
-    public function __invoke(...$args): bool
+    /**
+     * @param BaseHolder $holder
+     */
+    public function __invoke(ModelHolder $holder): bool
     {
-        $event = $this->getEvent($args[0]);
-        return $event->begin->getTimestamp() <= time();
+        return $holder->event->begin->getTimestamp() <= time();
     }
 
     public function __toString(): string

@@ -32,6 +32,6 @@ class ModelPresenter extends BasePresenter
     protected function createComponentGraphComponent(): GraphComponent
     {
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        return new GraphComponent($this->getContext(), $machine->primaryMachine);
+        return new GraphComponent($this->getContext(), $machine);
     }
 }

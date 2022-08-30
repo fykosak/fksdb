@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\SmartObject;
 
 class Count
 {
     use SmartObject;
-    use WithEventTrait;
 
     private string $state;
 
@@ -19,11 +19,13 @@ class Count
         $this->state = $state;
     }
 
-    public function __invoke(...$args): int
+    /**
+     * @param BaseHolder $holder
+     */
+    public function __invoke(ModelHolder $holder): int
     {
-        $baseHolder = $this->getHolder($args[0])->primaryHolder;
-        $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->eventIdColumn, $this->getEvent($args[0])->getPrimary());
+        $table = $holder->service->getTable();
+        $table->where($holder->eventIdColumn, $holder->event->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }

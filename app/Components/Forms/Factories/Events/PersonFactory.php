@@ -75,10 +75,10 @@ class PersonFactory extends AbstractFactory
      */
     public function createComponent(Field $field): ReferencedId
     {
-        $searchType = $this->evaluator->evaluate($this->searchType, $field);
-        $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
+        $searchType = $this->evaluator->evaluate($this->searchType, $field->baseHolder);
+        $allowClear = $this->evaluator->evaluate($this->allowClear, $field->baseHolder);
 
-        $event = $field->getBaseHolder()->event;
+        $event = $field->baseHolder->event;
 
         $resolver = new PersonContainerResolver(
             $field,
@@ -96,10 +96,10 @@ class PersonFactory extends AbstractFactory
             $resolver,
             $event
         );
-        $referencedId->searchContainer->setOption('label', $field->getLabel());
-        $referencedId->searchContainer->setOption('description', $field->getDescription());
-        $referencedId->referencedContainer->setOption('label', $field->getLabel());
-        $referencedId->referencedContainer->setOption('description', $field->getDescription());
+        $referencedId->searchContainer->setOption('label', $field->label);
+        $referencedId->searchContainer->setOption('description', $field->description);
+        $referencedId->referencedContainer->setOption('label', $field->label);
+        $referencedId->referencedContainer->setOption('description', $field->description);
         return $referencedId;
     }
 
@@ -125,7 +125,7 @@ class PersonFactory extends AbstractFactory
         parent::validate($field, $validator);
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->getBaseHolder()->event;
+        $event = $field->baseHolder->event;
         $contestYear = $event->getContestYear();
         $personId = $field->getValue();
         $person = $personId ? $this->personService->findByPrimary($personId) : null;
@@ -152,8 +152,8 @@ class PersonFactory extends AbstractFactory
                     $validator->addError(
                         sprintf(
                             _('%s: %s is a required field.'),
-                            $field->getBaseHolder()->label,
-                            $field->getLabel() . '.' . $subName . '.' . $fieldName
+                            $field->baseHolder->label,
+                            $field->label . '.' . $subName . '.' . $fieldName
                         )
                     ); //TODO better GUI name than DB identifier
                 }
@@ -175,7 +175,7 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = $this->evaluator->evaluate($value, $field);
+                    $value = $this->evaluator->evaluate($value, $field->baseHolder);
                 }
             }
         }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -35,7 +35,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      */
-    protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory
+    protected function getCategory(BaseHolder $holder, ArrayHash $values): ?TeamCategory
     {
         $members = $this->extractValues($holder);
         // init stats

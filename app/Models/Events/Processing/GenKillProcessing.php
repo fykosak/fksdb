@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
@@ -28,49 +27,47 @@ class GenKillProcessing implements Processing
     public function process(
         ?string $state,
         ArrayHash $values,
-        Machine $machine,
-        Holder $holder,
+        BaseMachine $primaryMachine,
+        BaseHolder $holder,
         Logger $logger,
         ?Form $form = null
     ): ?string {
-
-        if (!isset($values[$holder->primaryHolder->name])) { // whole machine unmodofiable/invisible
+        if (!isset($values[$holder->name])) { // whole machine unmodofiable/invisible
             return null;
         }
-        if (!$holder->primaryHolder->getDeterminingFields()) {
+        if (!$holder->getDeterminingFields()) {
             // no way how to determine (non)existence of secondary models
             return null;
         }
         $isFilled = true;
-        foreach ($holder->primaryHolder->getDeterminingFields() as $field) {
+        foreach ($holder->getDeterminingFields() as $field) {
             if (
-                !isset($values[$holder->primaryHolder->name][$field->getName()]) ||
-                !$values[$holder->primaryHolder->name][$field->getName()]
+                !isset($values[$holder->name][$field->name]) ||
+                !$values[$holder->name][$field->name]
             ) {
                 $isFilled = false;
                 break;
             }
         }
-        $baseMachine = $machine->primaryMachine;
         if (!$isFilled) {
             return AbstractMachine::STATE_TERMINATED;
-        } elseif ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
-            if (isset($values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN])) {
-                return $values[$holder->primaryHolder->name][BaseHolder::STATE_COLUMN];
+        } elseif ($holder->getModelState() == AbstractMachine::STATE_INIT) {
+            if (isset($values[$holder->name][BaseHolder::STATE_COLUMN])) {
+                return $values[$holder->name][BaseHolder::STATE_COLUMN];
             } else {
-                $transitions = $baseMachine->getAvailableTransitions(
+                $transitions = $primaryMachine->getAvailableTransitions(
                     $holder,
-                    $holder->primaryHolder->getModelState()
+                    $holder->getModelState()
                 );
                 if (count($transitions) == 0) {
                     throw new SubmitProcessingException(
-                        _("$holder->primaryHolder->name: Není definován přechod z počátečního stavu.")
+                        _("$holder->name: Není definován přechod z počátečního stavu.")
                     );
                 } elseif (isset($state)) {
                     return $state; // propagate already set state
                 } elseif (count($transitions) > 1) {
                     throw new SubmitProcessingException(
-                        _("$holder->primaryHolder->name: Přechod z počátečního stavu není jednoznačný.")
+                        _("$holder->name: Přechod z počátečního stavu není jednoznačný.")
                     );
                 } else {
                     return reset($transitions)->target;

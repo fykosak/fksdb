@@ -12,8 +12,8 @@ class CheckboxFactory extends AbstractFactory
 
     public function createComponent(Field $field): Checkbox
     {
-        $component = new Checkbox($field->getLabel());
-        $component->setOption('description', $field->getDescription());
+        $component = new Checkbox($field->label);
+        $component->setOption('description', $field->description);
         return $component;
     }
 }

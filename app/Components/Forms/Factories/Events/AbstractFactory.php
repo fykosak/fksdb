@@ -26,7 +26,7 @@ abstract class AbstractFactory implements FieldFactory
         $container = $control->getParent();
         if ($field->isRequired()) {
             $conditioned = $control;
-            foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
+            foreach ($field->baseHolder->getDeterminingFields() as $name => $determiningField) {
                 if ($determiningField === $field) {
                     $conditioned = $control;
                     break;
@@ -38,14 +38,14 @@ abstract class AbstractFactory implements FieldFactory
                     $conditioned = $conditioned->addConditionOn($container[$name], Form::FILLED);
                 }
             }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
+            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
         }
     }
 
     public function validate(Field $field, DataValidator $validator): void
     {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
+            $validator->addError(sprintf(_('%s is required'), $field->label));
         }
     }
 

@@ -7,15 +7,12 @@ namespace FKSDB\Models\Events\Spec;
 use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider
@@ -28,14 +25,18 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $this->personService = $personService;
     }
 
-    protected function saveCategory(?TeamCategory $category, ArrayHash $values, Holder $holder, Logger $logger): void
-    {
+    protected function saveCategory(
+        ?TeamCategory $category,
+        ArrayHash $values,
+        BaseHolder $holder,
+        Logger $logger
+    ): void {
         if (is_null($category)) {
             return;
         }
         $values['team']['category'] = $category->value;
-        /** @var TeamModel|TeamModel2 $model */
-        $model = $holder->primaryHolder->getModel2();
+        /** @var TeamModel2 $model */
+        $model = $holder->getModel();
         $original = $model ? $model->category : null;
         if ($original != $category->value) {
             $logger->log(
@@ -48,11 +49,9 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     }
 
     final protected function innerProcess(
-        ?string $state,
         ArrayHash $values,
-        Holder $holder,
-        Logger $logger,
-        ?Form $form
+        BaseHolder $holder,
+        Logger $logger
     ): void {
         if (!isset($values['team'])) {
             return;
@@ -61,7 +60,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $this->saveCategory($result, $values, $holder, $logger);
     }
 
-    abstract protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory;
+    abstract protected function getCategory(BaseHolder $holder, ArrayHash $values): ?TeamCategory;
 
     protected function isBaseReallyEmpty(string $name): bool
     {
@@ -78,13 +77,13 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $personControls = $this->getControl("$baseHolder->name.person_id");
         $value = reset($personControls)->getValue(false);
         $person = $this->personService->findByPrimary($value);
-        return $person->getHistoryByContestYear($baseHolder->holder->primaryHolder->event->getContestYear());
+        return $person->getHistoryByContestYear($baseHolder->event->getContestYear());
     }
 
     public function getOptions(Field $field): array
     {
         $results = [];
-        foreach (TeamCategory::casesForEvent($field->getBaseHolder()->holder->primaryHolder->event) as $category) {
+        foreach (TeamCategory::casesForEvent($field->baseHolder->event) as $category) {
             $results[$category->value] = $category->label();
         }
         return $results;

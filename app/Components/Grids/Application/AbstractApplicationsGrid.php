@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
@@ -19,9 +19,9 @@ abstract class AbstractApplicationsGrid extends BaseGrid
 {
 
     protected EventModel $event;
-    private Holder $holder;
+    private BaseHolder $holder;
 
-    public function __construct(EventModel $event, Holder $holder, Container $container)
+    public function __construct(EventModel $event, BaseHolder $holder, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -72,7 +72,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid
      */
     protected function addHolderColumns(): void
     {
-        $holderFields = $this->holder->primaryHolder->getFields();
+        $holderFields = $this->holder->getFields();
         $fields = [];
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {

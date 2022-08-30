@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -31,10 +27,10 @@ class RelatedPersonAuthorizator
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
      */
-    public function isRelatedPerson(Holder $holder): bool
+    public function isRelatedPerson(BaseHolder $holder): bool
     {
         // everyone is related
-        if ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() == AbstractMachine::STATE_INIT) {
             return true;
         }
         /** @var LoginModel|null $login */
@@ -49,20 +45,12 @@ class RelatedPersonAuthorizator
             return false;
         }
 
-        $model = $holder->primaryHolder->getModel2();
-        if (
-            $model instanceof EventParticipantModel
-            || $model instanceof ModelMFyziklaniParticipant
-            || $model instanceof ModelMDsefParticipant
-        ) {
+        $model = $holder->getModel();
+        if ($model instanceof EventParticipantModel || $model instanceof ModelMDsefParticipant) {
             if ($model->person_id == $person->person_id) {
                 return true;
             }
         }
-        /* if ($baseHolder->getPerson()->person_id == $person->person_id) {
-             return true;
-         }*/
-
         return false;
     }
 }

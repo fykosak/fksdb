@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Service;
@@ -50,12 +49,12 @@ class ResourceAvailability extends AbstractAdjustment
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, BaseHolder $holder): void
     {
         $groups = [];
         $groups[] = [
-            'service' => $holder->primaryHolder->getService(),
-            'holders' => [$holder->primaryHolder],
+            'service' => $holder->service,
+            'holders' => [$holder],
         ];
 
         $sService = [];
@@ -111,7 +110,7 @@ class ResourceAvailability extends AbstractAdjustment
             }
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
-                $model = $baseHolder->getModel2();
+                $model = $baseHolder->getModel();
                 return $model ? $model->getPrimary(false) : null;
             }, $dataService['holders']);
             $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);

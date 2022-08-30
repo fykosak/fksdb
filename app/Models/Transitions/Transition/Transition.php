@@ -6,8 +6,8 @@ namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Transition\Statements\Statement;
 use Nette\SmartObject;
 
 class Transition
@@ -18,9 +18,9 @@ class Transition
     protected $condition;
     public ?BehaviorType $behaviorType = null;
     private string $label;
-    /** @var TransitionCallback[] */
+    /** @var Statement[] */
     public array $beforeExecute = [];
-    /** @var TransitionCallback[] */
+    /** @var Statement[] */
     public array $afterExecute = [];
 
     public EnumColumn $sourceStateEnum;
@@ -90,12 +90,12 @@ class Transition
         $this->condition = $callback;
     }
 
-    protected function isConditionFulfilled(...$args): bool
+    protected function isConditionFulfilled(ModelHolder $holder): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, ...$args);
+        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
     }
 
-    public function canExecute2(ModelHolder $holder): bool
+    public function canExecute(ModelHolder $holder): bool
     {
         return $this->isConditionFulfilled($holder);
     }
@@ -110,17 +110,17 @@ class Transition
         $this->afterExecute[] = $callBack;
     }
 
-    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
+    final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder, ...$args);
+            $callback($holder);
         }
     }
 
-    final public function callAfterExecute(...$args): void
+    final public function callAfterExecute(ModelHolder $holder, ...$args): void
     {
         foreach ($this->afterExecute as $callback) {
-            $callback(...$args);
+            $callback($holder);
         }
     }
 }

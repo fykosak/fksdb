@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -27,13 +27,13 @@ class ApplicationComponent extends BaseComponent
 {
 
     private ApplicationHandler $handler;
-    private Holder $holder;
+    private BaseHolder $holder;
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
     private string $templateFile;
     private EventAuthorizator $eventAuthorizator;
 
-    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
+    public function __construct(Container $container, ApplicationHandler $handler, BaseHolder $holder)
     {
         parent::__construct($container);
         $this->handler = $handler;
@@ -67,7 +67,7 @@ class ApplicationComponent extends BaseComponent
      */
     public function isEventAdmin(): bool
     {
-        $event = $this->holder->primaryHolder->event;
+        $event = $this->holder->event;
         return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
@@ -83,8 +83,8 @@ class ApplicationComponent extends BaseComponent
         }
 
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->primaryHolder->event;
-        $this->template->primaryMachine = $this->handler->getMachine()->primaryMachine;
+        $this->template->event = $this->holder->event;
+        $this->template->primaryMachine = $this->handler->getMachine();
         $this->template->render($this->templateFile);
     }
 
@@ -96,9 +96,9 @@ class ApplicationComponent extends BaseComponent
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        if ($this->holder->primaryHolder->isVisible()) {
-            $container = $this->holder->primaryHolder->createFormContainer();
-            $form->addComponent($container, $this->holder->primaryHolder->name);
+        if ($this->holder->isVisible()) {
+            $container = $this->holder->createFormContainer();
+            $form->addComponent($container, $this->holder->name);
         }
         /*
          * Create save (no transition) button
@@ -114,13 +114,13 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine()->primaryMachine;
+        $primaryMachine = $this->handler->getMachine();
         $transitionSubmit = null;
 
         foreach (
             $primaryMachine->getAvailableTransitions(
                 $this->holder,
-                $this->holder->primaryHolder->getModelState(),
+                $this->holder->getModelState(),
                 true,
                 true
             ) as $transition
@@ -150,7 +150,7 @@ class ApplicationComponent extends BaseComponent
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form);
+        $this->holder->holder->adjustForm($form);
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
@@ -175,16 +175,16 @@ class ApplicationComponent extends BaseComponent
 
     private function canEdit(): bool
     {
-        return $this->holder->primaryHolder->getModelState()
-            != AbstractMachine::STATE_INIT && $this->holder->primaryHolder->isModifiable();
+        return $this->holder->getModelState()
+            != AbstractMachine::STATE_INIT && $this->holder->isModifiable();
     }
 
     private function finalRedirect(): void
     {
         if ($this->redirectCallback) {
-            $model = $this->holder->primaryHolder->getModel2();
+            $model = $this->holder->getModel();
             $id = $model ? $model->getPrimary(false) : null;
-            ($this->redirectCallback)($id, $this->holder->primaryHolder->event->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->event->getPrimary());
         } else {
             $this->redirect('this');
         }

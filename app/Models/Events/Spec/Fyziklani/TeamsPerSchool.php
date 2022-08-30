@@ -6,7 +6,6 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use Nette\Database\Explorer;
@@ -41,7 +40,10 @@ class TeamsPerSchool extends SchoolCheck
     public function getTeamsPerSchool(): int
     {
         if (!isset($this->teamsPerSchoolValue)) {
-            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
+            $this->teamsPerSchoolValue = $this->evaluator->evaluate(
+                $this->teamsPerSchool,
+                $this->holder
+            );
         }
         return $this->teamsPerSchoolValue;
     }
@@ -54,9 +56,9 @@ class TeamsPerSchool extends SchoolCheck
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, BaseHolder $holder): void
     {
-        $this->setHolder($holder);
+        $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
@@ -83,8 +85,8 @@ class TeamsPerSchool extends SchoolCheck
 
     private function checkMulti(bool $first, ?Control $control, array $schools): bool
     {
-        $team = $this->getHolder()->primaryHolder->getModel2();
-        $event = $this->getHolder()->primaryHolder->event;
+        $team = $this->holder->getModel();
+        $event = $this->holder->event;
         /** @var BaseHolder $baseHolder */
 
         if (!isset($this->cache) || $first) {

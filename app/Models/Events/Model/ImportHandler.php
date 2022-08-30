@@ -9,7 +9,6 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -48,7 +47,7 @@ class ImportHandler
     {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
+        $primaryBaseHolder = $this->source->getDummyHolder();
         $baseHolderName = $primaryBaseHolder->name;
 
         $handler->setErrorMode($errorMode);
@@ -98,7 +97,7 @@ class ImportHandler
      */
     private function rowToValues(iterable $row): array
     {
-        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
+        $primaryBaseHolder = $this->source->getDummyHolder();
         $values = [];
         $fieldExists = false;
         $fieldNames = array_keys($primaryBaseHolder->getFields());
@@ -123,20 +122,20 @@ class ImportHandler
     }
 
     /**
-     * @return Holder[]
+     * @return BaseHolder[]
      * @throws NeonSchemaException
      */
     private function createHoldersMap(): array
     {
-        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
-        $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
+        $primaryBaseHolder = $this->source->getDummyHolder();
+        $pkName = $primaryBaseHolder->service->getTable()->getPrimary();
 
         $result = [];
         foreach ($this->source->getHolders() as $pkValue => $holder) {
             if (self::KEY_NAME == $pkName) {
                 $keyValue = $pkValue;
             } else {
-                $fields = $holder->primaryHolder->getFields();
+                $fields = $holder->getFields();
                 $keyValue = $fields[self::KEY_NAME]->getValue();
             }
             $result[$keyValue] = $holder;

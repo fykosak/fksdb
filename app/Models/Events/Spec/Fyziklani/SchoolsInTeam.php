@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use Nette\Forms\Form;
 
@@ -33,7 +33,10 @@ class SchoolsInTeam extends SchoolCheck
     public function getSchoolsInTeam(): int
     {
         if (!isset($this->schoolsInTeamValue)) {
-            $this->schoolsInTeamValue = $this->evaluator->evaluate($this->schoolsInTeam, $this->getHolder());
+            $this->schoolsInTeamValue = $this->evaluator->evaluate(
+                $this->schoolsInTeam,
+                $this->holder
+            );
         }
         return $this->schoolsInTeamValue;
     }
@@ -46,9 +49,9 @@ class SchoolsInTeam extends SchoolCheck
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, BaseHolder $holder): void
     {
-        $this->setHolder($holder);
+        $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 

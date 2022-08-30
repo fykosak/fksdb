@@ -67,15 +67,8 @@ abstract class Machine extends AbstractMachine
     {
         $transitions = \array_filter(
             $this->getTransitions(),
-            function (Transition $transition) use ($target, $source): bool {
-                $matchSource = is_null($source) && is_null($transition->sourceStateEnum) ||
-                    ($source && $transition->sourceStateEnum &&
-                        ($source->value === $transition->sourceStateEnum->value));
-                $matchTarget = is_null($target) && is_null($transition->targetStateEnum) ||
-                    ($target && $transition->targetStateEnum &&
-                        ($target->value === $transition->targetStateEnum->value));
-                return $matchSource && $matchTarget;
-            }
+            fn(Transition $transition): bool => ($source->value === $transition->sourceStateEnum->value) &&
+                ($target->value === $transition->targetStateEnum->value)
         );
         return $this->selectTransition($transitions);
     }
@@ -134,7 +127,7 @@ abstract class Machine extends AbstractMachine
         if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
             return true;
         }
-        return $transition->canExecute2($holder);
+        return $transition->canExecute($holder);
     }
 
     /**

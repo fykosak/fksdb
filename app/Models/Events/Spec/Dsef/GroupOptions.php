@@ -71,10 +71,10 @@ class GroupOptions implements OptionsProvider
 
     public function getOptions(Field $field): array
     {
-        $baseHolder = $field->getBaseHolder();
+        $baseHolder = $field->baseHolder;
         $event = $baseHolder->event;
         /** @var ModelDsefParticipant $model */
-        $model = $baseHolder->getModel2();
+        $model = $baseHolder->getModel();
         $groups = $this->getGroups($event);
 
         $selection = $this->mParticipantService->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
