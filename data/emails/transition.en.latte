@@ -1,11 +1,8 @@
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType FKSDB\Models\Events\Machine\Machine $machine}
-{var $state = $holder->primaryHolder->getModelState()}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{var $state = $holder->getModelState()}
 <p>
-    {$person->getFullName()}'s application for <em>{$event}</em> state updated.
-    New state <em>{$machine->primaryMachine->getStateName($state)}</em>.
+    {$holder->getPerson()->getFullName()}'s application for <em>{$holder->holder}</em> state updated.
+    New state <em>{FKSDB\Models\Events\Machine\BaseMachine::getStateName($state)}</em>.
 </p>
-{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/eventEdit.en.latte'}
 {include 'inc/closing.en.latte'}

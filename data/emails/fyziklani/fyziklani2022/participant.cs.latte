@@ -1,9 +1,10 @@
 {layout './layout.latte'}
+{varType string[]|string[][] $linkArgs}
 {block body}
     {var $link= $control->link(...$linkArgs)}
     <p>
         Ahoj,<br/>
-        Tvůj tým byl úspěšně zaregistrován do soutěže Fyziklání, která se bude konat 11. 2. 2022 na pražském PVA Letňany. 
+        Tvůj tým byl úspěšně zaregistrován do soutěže Fyziklání, která se bude konat 11. 2. 2022 na pražském PVA Letňany.
         Všechny údaje, které jste zadali do přihlášky, si můžeš zkontrolovat ve <a href="https://db.fykos.cz/my-applications/">FKSDB</a> po kliknutí na Detail příslušné přihlášky, případně upravit pomocí odkazu
          <a href="{$link}">zde</a>. Údaje o složení týmu můžeš změnit kdykoliv před uzavřením registrace.
     </p>

@@ -1,11 +1,12 @@
 {layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $tokenModel}
 {block body}
     <p>
         Dobrý den,<br/>
         děkujeme za registraci týmu do soutěže Fyziklání, která se bude konat 14. 2. 2020 v Pražském Top Hotelu.
         Všechny údaje, které jste zadali do přihlášky, si můžete zkontrolovat a upravit ve FKSDB po
         <a n:href="//:Authentication:login">přihlášení</a>, nebo s pomocí jednorázového odkazu
-        <a n:href="//:Public:Application:, at => $token">zde</a>. Údaje o složení týmu můžete kdykoliv změnit před
+        <a n:href="//:Public:Application:, at => $tokenModel->token">zde</a>. Údaje o složení týmu můžete kdykoliv změnit před
         uzavřením registrace.
     </p>
 

@@ -1,9 +1,10 @@
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $tokenModel}
 {layout './layout.latte'}
 {block body}
     <p>
         Dear contestant,<br/>
         Thank you for your registration into our competition Fyziklani 2021, which takes place in an online form on <b>12 Feb 2021</b>.
-        You can check and edit all the data you have provided to us <a n:href="//:Public:Application:, at => $token">here</a>.
+        You can check and edit all the data you have provided to us <a n:href="//:Public:Application:, at => $tokenModel->token">here</a>.
         You can edit all the data concerning team composition anytime before the end of the registration.
     </p>
 

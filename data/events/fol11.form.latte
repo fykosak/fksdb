@@ -1,8 +1,10 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Components\Controls\Events\ApplicationComponent $control}
+{varType FKSDB\Modules\Core\BasePresenter $presenter}
 {block content}
 <ul>
-    {if $holder->primaryHolder->getModelState() == '__init' && !$control->isEventAdmin()}
+    {if $holder->getModelState() == '__init' && !$control->isEventAdmin()}
         {if $presenter->getLang() == 'cs'}
             <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání Online.
                 Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.
@@ -15,11 +17,11 @@
                         href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>.
             </li>
             <li>
-                Další informace a pravidla naleznente na stránce <a href="http://online.fyziklani.cz/">Fyziklání
+                Další informace a pravidla naleznente na stránce <a href="https://online.fyziklani.cz/">Fyziklání
                     Online</a>.
             </li>
             <li>
-                Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+                Registrace končí <strong>{$holder->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
             </li>
         {else}
             <li>You can apply a team for <strong>Online Physics Brawl</strong> using this form.
@@ -33,11 +35,11 @@
                         href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>, we will add it.
             </li>
             <li>
-                Further information and rules are on the web <a href="http://physicsbrawl.org/">Online Physics
+                Further information and rules are on the web <a href="https://physicsbrawl.org/">Online Physics
                     Brawl</a>.
             </li>
             <li>
-                Registration is open until <strong>{$event->registration_end|date:'r'}</strong>.
+                Registration is open until <strong>{$holder->event->registration_end|date:'r'}</strong>.
             </li>
         {/if}
     {else}

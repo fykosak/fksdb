@@ -1,6 +1,7 @@
-﻿<p>Hi,<br/>
+﻿{varType FKSDB\Models\ORM\Models\AuthTokenModel $tokenModel}
+<p>Hi,<br/>
 an account has been made for you on fykos.cz. To login for the first time and to set up your password use the following link:<br/>
-<a n:href="//:Core:Settings:, at => $token">{link //:Core:Settings:, at => $token}</a>
+<a n:href="//:Core:Settings:, at => $tokenModel->token">{link //:Core:Settings:, at => $tokenModel->token}</a>
 </p>
 
 {include 'inc/closing.en.latte'}

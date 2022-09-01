@@ -1,4 +1,5 @@
 {layout './layout.latte'}
+{varType string[]|string[][] $linkArgs}
 {block body}
     {var $link= $control->link(...$linkArgs)}
     <p>
