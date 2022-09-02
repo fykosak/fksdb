@@ -44,7 +44,6 @@ class BaseHolder implements ModelHolder
     public string $label;
     /** @var Service|ServiceMulti */
     public $service;
-    public string $eventIdColumn;
     /** @var Field[] */
     private array $fields = [];
     private ?Model $model;
@@ -246,19 +245,6 @@ class BaseHolder implements ModelHolder
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function setEventIdColumn(string $eventId): void
-    {
-        $this->eventIdColumn = $this->resolveColumnJoins($eventId);
-    }
-
-    private function resolveColumnJoins(string $column): string
-    {
-        if (strpos($column, '.') === false && strpos($column, ':') === false) {
-            $column = $this->service->getTable()->getName() . '.' . $column;
-        }
-        return $column;
     }
 
     public static function getBareColumn(string $column): ?string

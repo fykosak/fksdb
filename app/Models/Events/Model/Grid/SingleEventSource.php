@@ -50,7 +50,7 @@ class SingleEventSource implements HolderSource
         $this->primarySelection = $this->dummyHolder
             ->service
             ->getTable()
-            ->where($this->dummyHolder->eventIdColumn, $this->event->getPrimary());
+            ->where('event_participant.event_id', $this->event->getPrimary());
     }
 
     public function getEvent(): EventModel

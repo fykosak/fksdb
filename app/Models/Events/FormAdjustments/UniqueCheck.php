@@ -46,7 +46,7 @@ class UniqueCheck extends AbstractAdjustment
 
                 $table->where($column, $value);
                 $table->where(
-                    $holder->eventIdColumn,
+                    'event_participant.event_id',
                     $holder->event->getPrimary()
                 );
                 if ($model) {

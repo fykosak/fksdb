@@ -385,7 +385,6 @@ class EventsExtension extends CompilerExtension
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
 
         $factory->addSetup('setService', [$definition['service']]);
-        $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
 

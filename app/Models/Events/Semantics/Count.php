@@ -25,7 +25,7 @@ class Count
     public function __invoke(ModelHolder $holder): int
     {
         $table = $holder->service->getTable();
-        $table->where($holder->eventIdColumn, $holder->event->getPrimary());
+        $table->where('event_participant.event_id', $holder->event->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }

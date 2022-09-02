@@ -99,7 +99,7 @@ class ResourceAvailability extends AbstractAdjustment
             $event = $firstHolder->event;
             /** @var TypedGroupedSelection $table */
             $table = $dataService['service']->getTable();
-            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
+            $table->where('event_participant.event_id', $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
