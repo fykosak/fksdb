@@ -14,7 +14,7 @@ abstract class Badge extends BaseComponent
 
     final public function render(...$args): void
     {
-        $this->template->html = static::getHtml(...$args);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->getTemplate()->html = static::getHtml(...$args);
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

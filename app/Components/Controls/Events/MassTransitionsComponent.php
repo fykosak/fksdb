@@ -33,8 +33,8 @@ class MassTransitionsComponent extends BaseComponent
     final public function render(): void
     {
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
-        $this->template->transitions = $machine->getTransitions();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
+        $this->getTemplate()->transitions = $machine->getTransitions();
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
     }
 
     /**

@@ -22,7 +22,7 @@ class UniqueCheck extends AbstractAdjustment
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, BaseHolder $holder): void
+    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
     {
         $controls = $this->getControl($this->field);
         if (!$controls) {

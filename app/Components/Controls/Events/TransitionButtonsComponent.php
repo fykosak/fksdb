@@ -26,14 +26,13 @@ class TransitionButtonsComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->transitions = $this->handler->getMachine()->getAvailableTransitions(
+        $this->getTemplate()->transitions = $this->handler->getMachine()->getAvailableTransitions(
             $this->holder,
             $this->holder->getModelState(),
-            true,
             true
         );
-        $this->template->holder = $this->holder;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
+        $this->getTemplate()->holder = $this->holder;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
 
     public function handleTransition(string $transitionName): void

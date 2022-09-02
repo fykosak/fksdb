@@ -28,7 +28,7 @@ class Captcha implements FormAdjustment
         $this->user = $user;
     }
 
-    public function adjust(Form $form, BaseHolder $holder): void
+    public function adjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
     {
         if ($holder->getModelState() != AbstractMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;

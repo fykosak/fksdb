@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -49,46 +50,39 @@ class ResourceAvailability extends AbstractAdjustment
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, BaseHolder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
-        $groups = [];
-        $groups[] = [
-            'service' => $holder->service,
-            'holders' => [$holder],
-        ];
-
         $sService = [];
         $controls = [];
 
-        foreach ($groups as $group) {
-            $holders = [];
-            $field = null;
-            /** @var BaseHolder $baseHolder */
-            foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->name;
-                foreach ($this->fields as $fieldMask) {
-                    $foundControls = $this->getControl($fieldMask);
-                    if (!$foundControls) {
-                        continue;
-                    }
-                    if (isset($foundControls[$name])) {
-                        $holders[] = $baseHolder;
-                        $controls[] = $foundControls[$name];
-                        $field = $fieldMask;
-                    } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
-                        $holders[] = $baseHolder;
-                        $controls[] = reset($foundControls); // assume single result;
-                        $field = $fieldMask;
-                    }
-                }
+        $holders = [];
+        $field = null;
+        $name = $holder->name;
+        foreach ($this->fields as $fieldMask) {
+            $foundControls = $this->getControl($fieldMask);
+            if (!$foundControls) {
+                continue;
             }
-            if ($holders) {
-                $sService[] = [
-                    'service' => $group['service'],
-                    'holders' => $holders,
-                    'field' => $field,
-                ];
+            if (isset($foundControls[$name])) {
+                $holders[] = $holder;
+                $controls[] = $foundControls[$name];
+                $field = $fieldMask;
+            } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+                $holders[] = $holder;
+                $controls[] = reset($foundControls); // assume single result;
+                $field = $fieldMask;
             }
+        }
+
+        if ($holders) {
+            $sService[] = [
+                'service' => $holder->service,
+                'holders' => $holders,
+                'field' => $field,
+            ];
         }
 
         $usage = 0;

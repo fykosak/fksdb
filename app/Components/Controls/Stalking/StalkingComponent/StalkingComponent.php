@@ -19,7 +19,7 @@ class StalkingComponent extends BaseStalkingComponent
     {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
-        $this->template->userPermission = $userPermission;
+        $this->getTemplate()->userPermission = $userPermission;
         switch ($definition['layout']) {
             case 'single':
                 $this->renderSingle($definition, $person);
@@ -51,9 +51,9 @@ class StalkingComponent extends BaseStalkingComponent
                 throw new NotImplementedException();
         }
 
-        $this->template->model = $model;
-        $this->template->rows = $definition['rows'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
+        $this->getTemplate()->model = $model;
+        $this->getTemplate()->rows = $definition['rows'];
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     /**
@@ -61,10 +61,10 @@ class StalkingComponent extends BaseStalkingComponent
      */
     private function renderMulti(array $definition, PersonModel $person): void
     {
-        $this->template->links = $definition['links'];
-        $this->template->rows = $definition['rows'];
-        $this->template->models =  $person->related($definition['table']);
-        $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
+        $this->getTemplate()->links = $definition['links'];
+        $this->getTemplate()->rows = $definition['rows'];
+        $this->getTemplate()->models =  $person->related($definition['table']);
+        $this->getTemplate()->itemHeadline = $definition['itemHeadline'];
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }
 }

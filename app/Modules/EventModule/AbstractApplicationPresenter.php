@@ -75,8 +75,8 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->event = $this->getEvent();
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+        $this->getTemplate()->event = $this->getEvent();
+        $this->getTemplate()->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
 
     /**
@@ -84,7 +84,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     final public function renderList(): void
     {
-        $this->template->event = $this->getEvent();
+        $this->getTemplate()->event = $this->getEvent();
     }
 
     /**

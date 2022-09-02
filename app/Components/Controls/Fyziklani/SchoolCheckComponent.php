@@ -40,8 +40,8 @@ class SchoolCheckComponent extends BaseComponent
                 $schools[$schoolId][] = $team;
             }
         }
-        $this->template->schools = $schools;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
+        $this->getTemplate()->schools = $schools;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
     }
 
     /**

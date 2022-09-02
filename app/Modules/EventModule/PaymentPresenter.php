@@ -141,7 +141,7 @@ class PaymentPresenter extends BasePresenter
      */
     final public function renderEdit(): void
     {
-        $this->template->model = $this->getEntity();
+        $this->getTemplate()->model = $this->getEntity();
     }
 
     /* ********* render *****************/
@@ -157,9 +157,9 @@ class PaymentPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $payment = $this->getEntity();
-        $this->template->items = $this->priceCalculator->getGridItems($payment);
-        $this->template->model = $payment;
-        $this->template->isOrg = $this->isOrg();
+        $this->getTemplate()->items = $this->priceCalculator->getGridItems($payment);
+        $this->getTemplate()->model = $payment;
+        $this->getTemplate()->isOrg = $this->isOrg();
     }
 
     protected function isEnabled(): bool

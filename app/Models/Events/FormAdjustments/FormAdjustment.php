@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 
 /**
@@ -13,6 +13,5 @@ use Nette\Forms\Form;
  */
 interface FormAdjustment
 {
-
-    public function adjust(Form $form, BaseHolder $holder): void;
+    public function adjust(Form $form, ModelHolder $holder): void;
 }

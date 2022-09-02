@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
@@ -25,13 +26,13 @@ abstract class AbstractProcessing implements Processing
     private array $valuesPathCache;
     private array $formPathCache;
     private ?string $state;
-    private BaseHolder $holder;
+    private ModelHolder $holder;
 
     final public function process(
         ?string $state,
         ArrayHash $values,
         BaseMachine $primaryMachine,
-        BaseHolder $holder,
+        ModelHolder $holder,
         Logger $logger,
         ?Form $form = null
     ): ?string {
@@ -45,7 +46,7 @@ abstract class AbstractProcessing implements Processing
 
     abstract protected function innerProcess(
         ArrayHash $values,
-        BaseHolder $holder,
+        ModelHolder $holder,
         Logger $logger
     ): void;
 

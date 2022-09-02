@@ -99,7 +99,7 @@ class HandoutFormComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 
     /**

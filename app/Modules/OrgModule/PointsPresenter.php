@@ -85,11 +85,11 @@ class PointsPresenter extends BasePresenter
 
     final public function renderEntry(): void
     {
-        $this->template->showAll = (bool)$this->all;
+        $this->getTemplate()->showAll = (bool)$this->all;
         if ($this->getSelectedContest()->contest_id === ContestModel::ID_VYFUK && $this->getSelectedSeries() > 6) {
-            $this->template->hasQuizTask = true;
+            $this->getTemplate()->hasQuizTask = true;
         } else {
-            $this->template->hasQuizTask = false;
+            $this->getTemplate()->hasQuizTask = false;
         }
     }
 

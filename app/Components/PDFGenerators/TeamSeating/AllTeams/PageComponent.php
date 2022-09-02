@@ -27,18 +27,18 @@ class PageComponent extends SeatingPageComponent
     final public function render($row, array $params = []): void
     {
         [$mode] = $params;
-        $this->template->room = $this->room;
-        $this->template->event = $this->event;
+        $this->getTemplate()->room = $this->room;
+        $this->getTemplate()->event = $this->event;
         switch ($mode) {
             case 'dev':
-                $this->template->showTeamId = true;
-                $this->template->showSeatId = true;
-                $this->template->showTeamCategory = true;
+                $this->getTemplate()->showTeamId = true;
+                $this->getTemplate()->showSeatId = true;
+                $this->getTemplate()->showTeamCategory = true;
                 break;
             case 'all':
-                $this->template->showTeamId = true;
+                $this->getTemplate()->showTeamId = true;
                 break;
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
     }
 }

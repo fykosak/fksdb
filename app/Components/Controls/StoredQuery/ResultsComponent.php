@@ -94,13 +94,13 @@ class ResultsComponent extends BaseComponent
             $formControl = $this->getComponent('parametrizeForm');
             $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
-        $this->template->error = $this->getSqlError();
-        $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
-        $this->template->showParametrizeForm = $this->showParametrizeForm;
-        $this->template->hasStoredQuery = isset($this->storedQuery);
-        $this->template->storedQuery = $this->storedQuery ?? null;
-        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
+        $this->getTemplate()->error = $this->getSqlError();
+        $this->getTemplate()->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
+        $this->getTemplate()->showParametrizeForm = $this->showParametrizeForm;
+        $this->getTemplate()->hasStoredQuery = isset($this->storedQuery);
+        $this->getTemplate()->storedQuery = $this->storedQuery ?? null;
+        $this->getTemplate()->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 
     /**

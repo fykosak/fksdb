@@ -25,7 +25,7 @@ class RoleComponent extends BaseStalkingComponent
                 $roles[] = new Grant($grant->role->name, $grant->contest);
             }
         }
-        $this->template->roles = $roles;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
+        $this->getTemplate()->roles = $roles;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
     }
 }

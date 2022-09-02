@@ -12,8 +12,8 @@ abstract class ChooserComponent extends BaseComponent
 {
     public function render(): void
     {
-        $this->template->navItem = $this->getItem();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
+        $this->getTemplate()->navItem = $this->getItem();
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
     }
 
     protected function createComponentNav(): NavigationItemComponent

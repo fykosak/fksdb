@@ -73,7 +73,7 @@ class SeatingPresenter extends BasePresenter
 
     final public function renderList(): void
     {
-        $this->template->rooms = $this->roomService->getTable();
+        $this->getTemplate()->rooms = $this->roomService->getTable();
     }
 
     /**

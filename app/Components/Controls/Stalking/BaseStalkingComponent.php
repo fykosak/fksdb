@@ -26,10 +26,10 @@ abstract class BaseStalkingComponent extends BaseComponent
         int $userPermissions,
         int $minimalPermissions
     ): void {
-        $this->template->gender = $person->gender;
-        $this->template->headline = $headline;
+        $this->getTemplate()->gender = $person->gender;
+        $this->getTemplate()->headline = $headline;
         if ($userPermissions < $minimalPermissions) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+            $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
         }
     }
 

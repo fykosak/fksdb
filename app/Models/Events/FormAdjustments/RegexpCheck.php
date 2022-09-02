@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\Utils\Strings;
@@ -23,7 +23,7 @@ class RegexpCheck extends AbstractAdjustment
         $this->pattern = $pattern;
     }
 
-    protected function innerAdjust(Form $form, BaseHolder $holder): void
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $controls = $this->getControl($this->field);
         if (!$controls) {

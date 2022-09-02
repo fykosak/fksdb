@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Utils\ArrayHash;
@@ -15,7 +16,7 @@ class PasswordProcessing extends AbstractProcessing
 
     protected function innerProcess(
         ArrayHash $values,
-        BaseHolder $holder,
+        ModelHolder $holder,
         Logger $logger
     ): void {
         if (!isset($values['team'])) {

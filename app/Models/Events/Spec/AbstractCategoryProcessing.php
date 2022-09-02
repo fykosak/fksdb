@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Utils\ArrayHash;
@@ -50,7 +51,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
 
     final protected function innerProcess(
         ArrayHash $values,
-        BaseHolder $holder,
+        ModelHolder $holder,
         Logger $logger
     ): void {
         if (!isset($values['team'])) {

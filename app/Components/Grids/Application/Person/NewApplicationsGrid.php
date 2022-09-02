@@ -60,7 +60,6 @@ class NewApplicationsGrid extends BaseGrid
                 $transitions = $machine->getAvailableTransitions(
                     $holder,
                     AbstractMachine::STATE_INIT,
-                    true,
                     true
                 );
                 return (bool)count($transitions);

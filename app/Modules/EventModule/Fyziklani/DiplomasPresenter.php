@@ -60,7 +60,7 @@ class DiplomasPresenter extends BasePresenter
                     ->count(),
             ];
         }
-        $this->template->items = $items;
+        $this->getTemplate()->items = $items;
     }
 
     /**

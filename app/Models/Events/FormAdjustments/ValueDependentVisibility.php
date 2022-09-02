@@ -12,7 +12,7 @@ use Nette\InvalidArgumentException;
 
 class ValueDependentVisibility extends PairwiseAdjustment
 {
-    protected function innerAdjust(Form $form, BaseHolder $holder): void
+    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
     {
         foreach ($this->rules as $target => $prerequisite) {
             $cTarget = $this->getControl($target);

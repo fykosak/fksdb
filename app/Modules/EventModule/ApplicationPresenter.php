@@ -58,9 +58,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     final public function renderDetail(): void
     {
         parent::renderDetail();
-        $this->template->fields = $this->getHolder()->primaryHolder->getFields();
-        $this->template->model = $this->getEntity();
-        $this->template->groups = [
+        $this->getTemplate()->fields = $this->getHolder()->primaryHolder->getFields();
+        $this->getTemplate()->model = $this->getEntity();
+        $this->getTemplate()->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],
             _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],

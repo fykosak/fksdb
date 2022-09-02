@@ -52,8 +52,8 @@ class PizzaComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->persons = $this->persons;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->getTemplate()->persons = $this->persons;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     protected function createComponentValuePrinter(): ColumnPrinterComponent

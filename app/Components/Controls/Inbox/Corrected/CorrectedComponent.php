@@ -22,8 +22,8 @@ class CorrectedComponent extends SeriesTableComponent
 
     final public function render(): void
     {
-        $this->template->correctedSubmitStorage = $this->correctedStorage;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->getTemplate()->correctedSubmitStorage = $this->correctedStorage;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     /**

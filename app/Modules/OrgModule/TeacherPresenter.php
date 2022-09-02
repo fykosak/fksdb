@@ -62,7 +62,7 @@ class TeacherPresenter extends BasePresenter
      */
     final public function renderDetail(): void
     {
-        $this->template->model = $this->getEntity();
+        $this->getTemplate()->model = $this->getEntity();
     }
 
     protected function createComponentGrid(): TeachersGrid

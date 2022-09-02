@@ -15,7 +15,7 @@ abstract class FormComponent extends BaseComponent
 
     public function render(): void
     {
-        $this->template->render($this->getTemplatePath());
+        $this->getTemplate()->render($this->getTemplatePath());
     }
 
     protected function getTemplatePath(): string

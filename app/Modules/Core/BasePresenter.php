@@ -267,10 +267,10 @@ abstract class BasePresenter extends Presenter implements
     {
         parent::beforeRender();
 
-        $this->template->pageTitle = $this->getTitle();
-        $this->template->pageStyleContainer = $this->getPageStyleContainer();
-        $this->template->lang = $this->getLang();
-        $this->template->navRoots = $this->getNavRoots();
+        $this->getTemplate()->pageTitle = $this->getTitle();
+        $this->getTemplate()->pageStyleContainer = $this->getPageStyleContainer();
+        $this->getTemplate()->lang = $this->getLang();
+        $this->getTemplate()->navRoots = $this->getNavRoots();
 
         // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
         $this->putIntoBreadcrumbs();

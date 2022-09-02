@@ -182,7 +182,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     final public function renderContest(): void
     {
-        $this->template->contests = $this->contestService->getTable();
+        $this->getTemplate()->contests = $this->contestService->getTable();
     }
 
     final public function renderYear(): void
@@ -195,7 +195,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
                 $contest->getCurrentContestYear()->year + $forward,
             ];
 
-            $this->template->years = $years;
+            $this->getTemplate()->years = $years;
         } else {
             $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year,]);
         }

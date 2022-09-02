@@ -88,19 +88,19 @@ class SubmitPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
-        $this->template->canRegister = false;
-        $this->template->hasForward = false;
-        if (!$this->template->hasTasks) {
+        $this->getTemplate()->hasTasks = count($this->getAvailableTasks()) > 0;
+        $this->getTemplate()->canRegister = false;
+        $this->getTemplate()->hasForward = false;
+        if (!$this->getTemplate()->hasTasks) {
             /** @var PersonModel $person */
             $person = $this->getUser()->getIdentity()->person;
             $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
             $currentContestYear = $this->getSelectedContest()->getCurrentContestYear();
-            $this->template->canRegister = ($contestant->year < $currentContestYear->year
+            $this->getTemplate()->canRegister = ($contestant->year < $currentContestYear->year
                 + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year)
+            $this->getTemplate()->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year)
                 && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
@@ -123,7 +123,7 @@ class SubmitPresenter extends BasePresenter
 
     final public function renderAjax(): void
     {
-        $this->template->availableTasks = $this->getAvailableTasks();
+        $this->getTemplate()->availableTasks = $this->getAvailableTasks();
     }
 
     /**

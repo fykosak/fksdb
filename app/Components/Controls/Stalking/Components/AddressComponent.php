@@ -13,8 +13,8 @@ class AddressComponent extends BaseStalkingComponent
     final public function render(PersonModel $person, int $userPermissions): void
     {
         $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
-        $this->template->postContacts = $person->getPostContacts();
-        $this->template->personId = $person->person_id;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
+        $this->getTemplate()->postContacts = $person->getPostContacts();
+        $this->getTemplate()->personId = $person->person_id;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
     }
 }

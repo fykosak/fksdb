@@ -65,6 +65,6 @@ class PointsFormComponent extends SeriesTableFormComponent
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

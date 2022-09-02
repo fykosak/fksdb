@@ -27,7 +27,7 @@ class ValidationComponent extends BaseStalkingComponent
             $test->run($logger, $person);
         }
 
-        $this->template->logs = $logger->getMessages();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
+        $this->getTemplate()->logs = $logger->getMessages();
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
     }
 }

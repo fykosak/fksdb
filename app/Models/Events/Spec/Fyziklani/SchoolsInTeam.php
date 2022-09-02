@@ -49,7 +49,7 @@ class SchoolsInTeam extends SchoolCheck
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    protected function innerAdjust(Form $form, BaseHolder $holder): void
+    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
     {
         $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');

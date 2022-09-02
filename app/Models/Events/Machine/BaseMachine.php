@@ -63,12 +63,11 @@ class BaseMachine extends AbstractMachine
     public function getAvailableTransitions(
         BaseHolder $holder,
         string $sourceState,
-        bool $visible = false,
-        bool $executable = true
+        bool $visible = false
     ): array {
         return array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => (!$executable || $transition->canExecute($holder))
+            fn(Transition $transition): bool => $transition->canExecute($holder)
                 && (!$visible || $transition->isVisible())
         );
     }

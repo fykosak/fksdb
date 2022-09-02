@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
 use FKSDB\Models\ORM\Services\SchoolService;
@@ -23,7 +23,7 @@ class FlagProcessing extends WithSchoolProcessing
 
     protected function innerProcess(
         ArrayHash $values,
-        BaseHolder $holder,
+        ModelHolder $holder,
         Logger $logger
     ): void {
         if (!isset($values['team'])) {

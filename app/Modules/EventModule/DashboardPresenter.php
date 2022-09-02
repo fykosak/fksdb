@@ -31,8 +31,8 @@ class DashboardPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        $this->template->event = $this->getEvent();
-        $this->template->webUrl = $this->getWebUrl();
+        $this->getTemplate()->event = $this->getEvent();
+        $this->getTemplate()->webUrl = $this->getWebUrl();
     }
 
     /**

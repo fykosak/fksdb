@@ -40,9 +40,9 @@ final class NavigationChooserComponent extends NavigationItemComponent
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
         $structure = $this->navigationFactory->getStructure($root);
-        $this->template->items = $structure['parents'];
-        $this->template->subTitle = $subTitle;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
+        $this->getTemplate()->items = $structure['parents'];
+        $this->getTemplate()->subTitle = $subTitle;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
     /**

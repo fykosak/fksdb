@@ -33,15 +33,15 @@ class StoredQueryTagCloudComponent extends BaseComponent
 
     final public function renderList(): void
     {
-        $this->template->tags = $this->storedQueryTagTypeService->getTable();
-        $this->template->activeTagIds = $this->activeTagIds;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte');
+        $this->getTemplate()->tags = $this->storedQueryTagTypeService->getTable();
+        $this->getTemplate()->activeTagIds = $this->activeTagIds;
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte');
     }
 
     final public function renderDetail(QueryModel $query): void
     {
-        $this->template->tags = $query->getStoredQueryTagTypes();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.detail.latte');
+        $this->getTemplate()->tags = $query->getStoredQueryTagTypes();
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.detail.latte');
     }
 
     public function getActiveTagIds(): array

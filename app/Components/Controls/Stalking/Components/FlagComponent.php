@@ -13,7 +13,7 @@ class FlagComponent extends BaseStalkingComponent
     final public function render(PersonModel $person, int $userPermissions): void
     {
         $this->beforeRender($person, _('Flags'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
-        $this->template->flags = $person->getFlags();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.flag.latte');
+        $this->getTemplate()->flags = $person->getFlags();
+        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.flag.latte');
     }
 }
