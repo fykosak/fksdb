@@ -6,11 +6,9 @@ namespace FKSDB\Models\Events;
 
 use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
 use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Model\Holder\SameYearEvent;
 use FKSDB\Models\Events\Semantics\Count;
 use FKSDB\Models\Events\Semantics\EventWas;
@@ -264,24 +262,12 @@ class EventsExtension extends CompilerExtension
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getMachineName($name);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setFactory(Machine::class);
 
-        // Create and add base machines into the machine (i.e. creating instances).
-        $primaryName = null;
         foreach ($machinesDef['baseMachines'] as $instanceName => $instanceDef) {
             $instanceDef = NeonScheme::readSection($instanceDef, $this->scheme['bmInstance']);
-            if ($instanceDef['primary']) {
-                if (!$primaryName) {
-                    $primaryName = $instanceName;
-                } else {
-                    throw new MachineDefinitionException('Multiple primary machines defined.');
-                }
-            }
-            $baseMachineFactory = $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName);
-            $factory->addSetup('addBaseMachine', [$baseMachineFactory]);
+            return $this->createBaseMachineFactory($name, $instanceDef['bmName'], $instanceName, $factoryName);
         }
-        return $factory;
+        throw new MachineDefinitionException('No machines defined.');
     }
 
     /**
@@ -291,11 +277,11 @@ class EventsExtension extends CompilerExtension
     private function createBaseMachineFactory(
         string $eventName,
         string $baseName,
-        string $instanceName
+        string $instanceName,
+        string $factoryName
     ): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
-        $factoryName = $this->getBaseMachineName($eventName, $baseName);
-        $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
+        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
         $factory->setFactory(BaseMachine::class, [$instanceName]);
         // no parameter must be set
@@ -345,39 +331,25 @@ class EventsExtension extends CompilerExtension
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setFactory(Holder::class);
-
-        // Create and add base machines into the machine (i.e. creating instances).
-        $primaryName = null;
         foreach ($machineDef['baseMachines'] as $instanceName => $instanceDef) {
             $instanceDef = NeonScheme::readSection($instanceDef, $this->scheme['bmInstance']);
-            if ($instanceDef['primary']) {
-                if (!$primaryName) {
-                    $primaryName = $instanceName;
-                } else {
-                    throw new MachineDefinitionException('Multiple primary machines defined.');
-                }
-            }
-            $baseHolderFactory = $this->createBaseHolderFactory(
+            $factory = $this->createBaseHolderFactory(
                 $name,
                 $instanceDef['bmName'],
                 $instanceName,
+                $factoryName,
                 $instanceDef
             );
-            $factory->addSetup('addBaseHolder', [new Statement($baseHolderFactory)]);
-        }
-        if (!$primaryName) {
-            throw new MachineDefinitionException('No primary machine defined.');
-        }
+            foreach ($machineDef['processings'] as $processing) {
+                $factory->addSetup('addProcessing', [$processing]);
+            }
 
-        foreach ($machineDef['processings'] as $processing) {
-            $factory->addSetup('addProcessing', [$processing]);
+            foreach ($machineDef['formAdjustments'] as $formAdjustment) {
+                $factory->addSetup('addFormAdjustment', [$formAdjustment]);
+            }
+            return;
         }
-
-        foreach ($machineDef['formAdjustments'] as $formAdjustment) {
-            $factory->addSetup('addFormAdjustment', [$formAdjustment]);
-        }
+        throw new MachineDefinitionException('No machine defined.');
     }
 
     /**
@@ -388,11 +360,11 @@ class EventsExtension extends CompilerExtension
         string $eventName,
         string $baseName,
         string $instanceName,
+        string $factoryName,
         array $instanceDefinition
     ): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
-        $factoryName = $this->getBaseHolderName($eventName, $baseName);
-        $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
+        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
         $factory->setFactory(BaseHolder::class, [$instanceName]);
 
         $parameters = array_keys($this->scheme['bmInstance']);
@@ -416,7 +388,6 @@ class EventsExtension extends CompilerExtension
         $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
-        $factory->addSetup('setEventRelation', [$definition['eventRelation']]);
 
         $config = $this->getConfig();
         $paramScheme = $definition['paramScheme'] ?? $config[$eventName]['paramScheme'];

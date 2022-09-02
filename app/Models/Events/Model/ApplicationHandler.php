@@ -236,7 +236,7 @@ class ApplicationHandler
             $newState = $values[$holder->name][BaseHolder::STATE_COLUMN];
         }
 
-        $processState = $holder->holder->processFormValues(
+        $processState = $holder->processFormValues(
             $values,
             $this->getMachine(),
             $transition,

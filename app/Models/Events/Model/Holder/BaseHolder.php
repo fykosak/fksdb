@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\Transition;
+use FKSDB\Models\Events\Processing\GenKillProcessing;
+use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
@@ -20,8 +25,11 @@ use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Logging\Logger;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
+use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
 {
@@ -32,14 +40,11 @@ class BaseHolder implements ModelHolder
     public ?string $description;
     private ExpressionEvaluator $evaluator;
     public DataValidator $validator;
-    /** Relation to the primary holder's event.     */
-    private ?EventRelation $eventRelation;
     public EventModel $event;
     public string $label;
     /** @var Service|ServiceMulti */
     public $service;
     public string $eventIdColumn;
-    public Holder $holder;
     /** @var Field[] */
     private array $fields = [];
     private ?Model $model;
@@ -52,9 +57,61 @@ class BaseHolder implements ModelHolder
 
     public array $data = [];
 
+    /** @var FormAdjustment[] */
+    private array $formAdjustments = [];
+
+    /** @var Processing[] */
+    private array $processings = [];
+
     public function __construct(string $name)
     {
+        /*
+         * This implicit processing is the first. It's not optimal
+         * and it may be subject to change.
+         */
+        $this->processings[] = new GenKillProcessing();
         $this->name = $name;
+    }
+
+    public function addFormAdjustment(FormAdjustment $formAdjustment): void
+    {
+        $this->formAdjustments[] = $formAdjustment;
+    }
+
+    public function addProcessing(Processing $processing): void
+    {
+        $this->processings[] = $processing;
+    }
+
+    /**
+     * Apply processings to the values and sets them to the ORM model.
+     */
+    public function processFormValues(
+        ArrayHash $values,
+        BaseMachine $primaryMachine,
+        ?Transition $transition,
+        Logger $logger,
+        ?Form $form
+    ): ?string {
+        $newState = null;
+        if ($transition) {
+            $newState = $transition->target;
+        }
+        foreach ($this->processings as $processing) {
+            $result = $processing->process($newState, $values, $primaryMachine, $this, $logger, $form);
+            if ($result) {
+                $newState = $result;
+            }
+        }
+
+        return $newState;
+    }
+
+    public function adjustForm(Form $form): void
+    {
+        foreach ($this->formAdjustments as $adjustment) {
+            $adjustment->adjust($form, $this);
+        }
     }
 
     public function addField(Field $field): void
@@ -69,11 +126,6 @@ class BaseHolder implements ModelHolder
     public function getFields(): array
     {
         return $this->fields;
-    }
-
-    public function setHolder(Holder $holder): void
-    {
-        $this->holder = $holder;
     }
 
     /**
@@ -92,11 +144,6 @@ class BaseHolder implements ModelHolder
         $this->visible = $visible;
     }
 
-    public function setEventRelation(?EventRelation $eventRelation): void
-    {
-        $this->eventRelation = $eventRelation;
-    }
-
     /**
      * @throws NeonSchemaException
      */
@@ -112,11 +159,7 @@ class BaseHolder implements ModelHolder
      */
     public function inferEvent(EventModel $event): void
     {
-        if ($this->eventRelation instanceof EventRelation) {
-            $this->setEvent($this->eventRelation->getEvent($event));
-        } else {
-            $this->setEvent($event);
-        }
+        $this->setEvent($event);
     }
 
     public function setParamScheme(array $paramScheme): void

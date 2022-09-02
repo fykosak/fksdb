@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -48,7 +47,7 @@ class EventDispatchFactory
     public function getEventMachine(EventModel $event): BaseMachine
     {
         $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName'])->primaryMachine;
+        return $this->container->getService($definition['machineName']);
     }
 
     /**
@@ -86,10 +85,10 @@ class EventDispatchFactory
     public function getDummyHolder(EventModel $event): BaseHolder
     {
         $definition = $this->findDefinition($event);
-        /** @var Holder $holder */
+        /** @var BaseHolder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
-        $holder->primaryHolder->inferEvent($event);
-        return $holder->primaryHolder;
+        $holder->inferEvent($event);
+        return $holder;
     }
 
     private function createKey(EventModel $event): string

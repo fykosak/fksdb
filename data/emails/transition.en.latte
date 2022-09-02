@@ -1,7 +1,7 @@
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {var $state = $holder->getModelState()}
 <p>
-    {$holder->getPerson()->getFullName()}'s application for <em>{$holder->holder}</em> state updated.
+    {$holder->getPerson()->getFullName()}'s application for <em>{$holder->name}</em> state updated.
     New state <em>{FKSDB\Models\Events\Machine\BaseMachine::getStateName($state)}</em>.
 </p>
 {include 'inc/eventEdit.en.latte'}
