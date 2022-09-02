@@ -123,7 +123,7 @@ class ApplicationPresenter extends BasePresenter
     private function getHolder(): BaseHolder
     {
         static $holder;
-        if (!isset($holder)) {
+        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $holder;
