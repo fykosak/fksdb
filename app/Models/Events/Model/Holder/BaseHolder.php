@@ -38,27 +38,29 @@ class BaseHolder implements ModelHolder
     public const EVENT_COLUMN = 'event_id';
     public string $name;
     public ?string $description;
-    private ExpressionEvaluator $evaluator;
-    public DataValidator $validator;
-    public EventModel $event;
     public string $label;
-    /** @var Service|ServiceMulti */
-    public $service;
-    /** @var Field[] */
-    private array $fields = [];
-    private ?Model $model;
-    public array $paramScheme;
-    private array $parameters;
+
     /** @var bool|callable */
     private $modifiable;
     /** @var bool|callable */
     private $visible;
 
+    private ExpressionEvaluator $evaluator;
+    public DataValidator $validator;
+    public EventModel $event;
+    /** @var Service|ServiceMulti */
+    public $service;
+
+    private ?Model $model;
     public array $data = [];
 
+    public array $paramScheme;
+    private array $parameters;
+
+    /** @var Field[] */
+    private array $fields = [];
     /** @var FormAdjustment[] */
     private array $formAdjustments = [];
-
     /** @var Processing[] */
     private array $processings = [];
 
@@ -318,14 +320,12 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param string|int $name
-     * @param mixed $default
      * @return mixed
      */
-    public function getParameter($name, $default = null)
+    public function getParameter(string $name)
     {
         try {
-            return $this->parameters[$name] ?? $default;
+            return $this->parameters[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException(
                 "No parameter '$name' for event " . $this->event . '.',

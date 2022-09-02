@@ -38,15 +38,6 @@ baseMachine:
     fields:
     service:
         default: FKSDB\Models\ORM\Services\ServiceEventParticipant
-    # Specify columns that store person_id of anyhow involved persons.
-    personIds:
-        default: [event_participant.person_id]
-    # Specify column that stores FK to the event. (For primary models only.)
-    eventId:
-        default: event_participant.event_id
-    # IEventRelation implementation that returns the event for the base holder derived from the event of the primary holder (null is identity.)
-    eventRelation:
-        default: null
     # Parameter (Neon) scheme for the baseHolder
     paramScheme:
         default: null
