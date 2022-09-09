@@ -23,38 +23,38 @@ class Transition
     /** @var Statement[] */
     public array $afterExecute = [];
 
-    public EnumColumn $sourceStateEnum;
-    public EnumColumn $targetStateEnum;
+    public EnumColumn $source;
+    public EnumColumn $target;
     protected ExpressionEvaluator $evaluator;
 
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
-        $this->sourceStateEnum = $sourceState;
+        $this->source = $sourceState;
     }
 
     public function setTargetStateEnum(EnumColumn $targetState): void
     {
-        $this->targetStateEnum = $targetState;
+        $this->target = $targetState;
     }
 
     public function matchSource(EnumColumn $source): bool
     {
-        return $source->value === $this->sourceStateEnum->value;
+        return $source->value === $this->source->value;
     }
 
     public function isCreating(): bool
     {
-        return is_null($this->sourceStateEnum);
+        return is_null($this->source);
     }
 
     public function isTerminating(): bool
     {
-        return is_null($this->sourceStateEnum);
+        return is_null($this->source);
     }
 
     public function getId(): string
     {
-        return static::createId($this->sourceStateEnum, $this->targetStateEnum);
+        return static::createId($this->source, $this->target);
     }
 
     public static function createId(EnumColumn $sourceState, EnumColumn $targetState): string

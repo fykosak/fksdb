@@ -34,15 +34,6 @@ events:
             PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
 
-                states:
-                    - applied
-                    - applied.tsaf
-                    - applied.notsaf
-                    - spare.tsaf
-                    - participated
-                    - missed
-                    - cancelled
-
                 transitions:
                     # to spare
                     __init->spare.tsaf:

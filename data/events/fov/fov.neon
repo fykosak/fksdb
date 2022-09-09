@@ -13,14 +13,6 @@ parameters:
                     school_id:
                         required: state('participated')
                         description: "If you cannot find your school, email the webmaster."
-            states:
-                - invited
-                - auto.invited
-                - applied
-                - participated
-                - rejected
-                - missed
-                - cancelled
 
 events:
     fov:
@@ -45,9 +37,6 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @orm.event_participant.service
-
-                states: %events.fov.states%
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

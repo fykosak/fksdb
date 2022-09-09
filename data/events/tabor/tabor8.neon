@@ -34,20 +34,6 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @orm.event_participant.service
-
-                states:
-                    - invited
-                    - auto.invited
-                    - spare
-                    - auto.spare
-                    - applied
-                    - interested
-                    - participated
-                    - rejected
-                    - missed
-                    - paid
-                    - cancelled
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

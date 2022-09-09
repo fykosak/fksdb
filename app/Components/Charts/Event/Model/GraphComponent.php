@@ -39,13 +39,16 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @return string[]
+     * @return EventParticipantStatus[]
      */
     private function getAllStates(): array
     {
         return array_merge(
-            $this->baseMachine->states,
-            [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]
+            EventParticipantStatus::cases(),
+            [
+                EventParticipantStatus::tryFrom(AbstractMachine::STATE_INIT),
+                EventParticipantStatus::tryFrom(AbstractMachine::STATE_TERMINATED),
+            ]
         );
     }
 
@@ -57,11 +60,11 @@ class GraphComponent extends FrontEndComponent implements Chart
         $states = $this->getAllStates();
         $nodes = [];
         foreach ($states as $state) {
-            $nodes[$state] = [
-                'label' => BaseMachine::getStateName($state),
-                'type' => $state === AbstractMachine::STATE_INIT
+            $nodes[$state->value] = [
+                'label' => $state->value,
+                'type' => $state->value === AbstractMachine::STATE_INIT
                     ? 'init'
-                    : ($state === AbstractMachine::STATE_TERMINATED ? 'terminated'
+                    : ($state->value === AbstractMachine::STATE_TERMINATED ? 'terminated'
                         : 'default'),
             ];
         }
@@ -81,7 +84,7 @@ class GraphComponent extends FrontEndComponent implements Chart
                 if ($transition->matchSource(EventParticipantStatus::tryFrom($state))) {
                     $edges[] = [
                         'from' => $state,
-                        'to' => $transition->targetStateEnum->value,
+                        'to' => $transition->target->value,
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

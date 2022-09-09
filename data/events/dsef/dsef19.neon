@@ -35,11 +35,7 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMDsefParticipant
-
-                states: %events.defaultDsef.states%
-
                 transitions:  %events.defaultDsef.transitions%
-
                 fields:
                     person_id:
                         label: _('Person')

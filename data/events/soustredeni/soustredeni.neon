@@ -66,9 +66,6 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @orm.event_participant.service
-
-                states: %events.defaultSous.states%
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

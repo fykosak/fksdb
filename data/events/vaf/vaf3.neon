@@ -53,13 +53,6 @@ events:
             PARTICIPANT:
                 service: @orm.event_participant.service
 
-                states:
-                    - applied
-                    - spare
-                    - participated
-                    - missed
-                    - cancelled
-
                 transitions:
                     __init->spare:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))

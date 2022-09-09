@@ -53,8 +53,8 @@ abstract class Machine extends AbstractMachine
     {
         $transitions = \array_filter(
             $this->getTransitions(),
-            fn(Transition $transition): bool => ($source->value === $transition->sourceStateEnum->value) &&
-                ($target->value === $transition->targetStateEnum->value)
+            fn(Transition $transition): bool => ($source->value === $transition->source->value) &&
+                ($target->value === $transition->target->value)
         );
         return $this->selectTransition($transitions);
     }
@@ -120,7 +120,7 @@ abstract class Machine extends AbstractMachine
             $this->explorer->getConnection()->commit();
         }
 
-        $holder->updateState($transition->targetStateEnum);
+        $holder->updateState($transition->target);
         $transition->callAfterExecute($holder);
     }
 

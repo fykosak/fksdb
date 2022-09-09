@@ -99,8 +99,6 @@ events:
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
-                states: %events.defaultFyziklani.teamStates%
-
                 transitions:
                     __init->pending:
                         condition: %events.fyziklani14.appCond%

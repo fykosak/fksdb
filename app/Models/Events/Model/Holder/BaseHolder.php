@@ -93,7 +93,7 @@ class BaseHolder implements ModelHolder
     ): ?EventParticipantStatus {
         $newState = null;
         if ($transition) {
-            $newState = $transition->targetStateEnum;
+            $newState = $transition->target;
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newState, $values, $machine, $this, $logger, $form);

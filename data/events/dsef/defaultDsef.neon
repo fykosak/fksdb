@@ -2,11 +2,6 @@ parameters:
     events:
         defaultDsef:
             appCond: or(regOpen(), role('admin'))
-            states:
-                - applied
-                - participated
-                - missed
-                - cancelled
             transitions:
                 __init->applied:
                     condition: %events.defaultDsef.appCond%
@@ -42,9 +37,6 @@ events:
         baseMachines:
             PARTICIPANT:
                 service: @event.ServiceMDsefParticipant
-
-                states:
-                    - participated
                 transitions: [] #not modifable
                 fields: [] #not modifable
         #

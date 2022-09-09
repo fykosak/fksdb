@@ -22,8 +22,6 @@ events:
             PARTICIPANT:
                 service: @orm.event_participant.service
 
-                states: %events.fov.states%
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

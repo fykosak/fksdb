@@ -55,7 +55,6 @@ events:
         baseMachines:
             PARTICIPANT_DSEF:
                 service: @orm.event_participant.service
-                states: %events.defaultDsef.states%
                 transitions: %events.dsef27.transitions%
                 fields:
                     person_id:

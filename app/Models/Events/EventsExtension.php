@@ -25,6 +25,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
+use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -174,45 +175,50 @@ class EventsExtension extends CompilerExtension
 
     private function createTransitionService(
         string $baseName,
-        array $states,
         string $mask,
         array $definition
-    ): ServiceDefinition {
-        if (!Transition::validateTransition($mask, $states)) {
-            throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
-        }
-
-        if (!$definition['label'] && $definition['visible'] !== false) {
-            throw new MachineDefinitionException("Transition $mask with non-false visibility must have label defined.");
-        }
-
-        $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName($baseName, $mask));
-        $factory->setFactory(Transition::class, [$mask, $definition['label']]);
-        $factory->addSetup(
-            'setBehaviorType',
-            [
-                BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? BehaviorType::DEFAULT),
-            ]
-        );
-        $parameters = array_keys($this->scheme['transition']);
-        foreach ($parameters as $parameter) {
-            switch ($parameter) {
-                case 'label':
-                case 'onExecuted':
-                case 'behaviorType':
-                    break;
-                default:
-                    if (isset($definition[$parameter])) {
-                        $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
-                    }
+    ): array {
+        [$sources, $target] = TransitionsExtension::parseMask($mask, EventParticipantStatus::class);
+        $factories = [];
+        foreach ($sources as $source) {
+            if (!$definition['label'] && $definition['visible'] !== false) {
+                throw new MachineDefinitionException(
+                    "Transition $mask with non-false visibility must have label defined."
+                );
             }
-        }
-        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        foreach ($definition['onExecuted'] as $cb) {
-            $factory->addSetup('addAfterExecute', [$cb]);
-        }
 
-        return $factory;
+            $factory = $this->getContainerBuilder()->addDefinition(
+                $this->getTransitionName($baseName, $mask . '__' . $source)
+            );
+            $factory->setFactory(Transition::class, [$definition['label']])
+                ->addSetup('setSourceStateEnum', [$source])
+                ->addSetup('setTargetStateEnum', [$target])
+                ->addSetup(
+                    'setBehaviorType',
+                    [
+                        BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? BehaviorType::DEFAULT),
+                    ]
+                );
+            $parameters = array_keys($this->scheme['transition']);
+            foreach ($parameters as $parameter) {
+                switch ($parameter) {
+                    case 'label':
+                    case 'onExecuted':
+                    case 'behaviorType':
+                        break;
+                    default:
+                        if (isset($definition[$parameter])) {
+                            $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
+                        }
+                }
+            }
+            $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+            foreach ($definition['onExecuted'] as $cb) {
+                $factory->addSetup('addAfterExecute', [$cb]);
+            }
+            $factories[] = $factory;
+        }
+        return $factories;
     }
 
     private function createFieldService(array $fieldDefinition): ServiceDefinition
@@ -292,35 +298,18 @@ class EventsExtension extends CompilerExtension
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
         $factory->setFactory(BaseMachine::class, [$instanceName]);
-        // no parameter must be set
-        /*  $parameters = array_keys($this->scheme['bmInstance']);
-          foreach ($parameters as $parameter) {
-              switch ($parameter) {
-                  case 'label':
-                  case 'name':
-                  case 'bmName':
-                      break;
-                  default:
-                      $factory->addSetup('set' . ucfirst($parameter), $instanceDefinition[$parameter]);
-              }
-          }*/
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
-        foreach ($definition['states'] as $state) {
-            if (strlen($state) > self::STATE_SIZE) {
-                throw new MachineDefinitionException(
-                    "State name '$state' is too long. Use " . self::STATE_SIZE . ' characters at most.'
-                );
-            }
-            $factory->addSetup('addState', [$state]);
-        }
 
         foreach ($definition['transitions'] as $mask => $transitionRawDef) {
             $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
-            $factory->addSetup(
-                'addTransition',
-                [$this->createTransitionService($factoryName, $definition['states'], $mask, $transitionDef)]
-            );
+            $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);
+            foreach ($transitions as $transition) {
+                $factory->addSetup(
+                    'addTransition',
+                    [$transition]
+                );
+            }
         }
 
         return $factory;

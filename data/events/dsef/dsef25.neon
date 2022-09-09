@@ -31,9 +31,6 @@ events:
         baseMachines:
             PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
-
-                states: %events.defaultDsef.states%
-
                 transitions: %events.defaultDsef.transitions%
 
                 fields:

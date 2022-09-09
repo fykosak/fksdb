@@ -49,6 +49,32 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return [];
+        return [
+            new self(self::APPLIED),
+            new self(self::APPLIED_NODSEF),
+            new self(self::APPLIED_NOTSAF),
+            new self(self::APPLIED_TSAF),
+            new self(self::APPROVED),
+            new self(self::AUTO_INVITED),
+            new self(self::AUTO_SPARE),
+            new self(self::CANCELLED),
+            new self(self::DISQUALIFIED),
+            new self(self::INTERESTED),
+            new self(self::INVITED),
+            new self(self::INVITED1),
+            new self(self::INVITED2),
+            new self(self::INVITED3),
+            new self(self::MISSED),
+            new self(self::OUT_OF_DB),
+            new self(self::PAID),
+            new self(self::PARTICIPATED),
+            new self(self::PENDING),
+            new self(self::REJECTED),
+            new self(self::SPARE),
+            new self(self::SPARE_TSAF),
+            new self(self::SPARE1),
+            new self(self::SPARE2),
+            new self(self::SPARE3),
+        ];
     }
 }

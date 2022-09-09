@@ -15,12 +15,6 @@ events:
             PARTICIPANT:
                 service: @orm.event_participant.service
 
-                states:
-                    - applied
-                    - participated
-                    - missed
-                    - cancelled
-
                 transitions:
                     __init->applied:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))

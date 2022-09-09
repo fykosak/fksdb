@@ -45,8 +45,6 @@ events:
                 personIds: []
                 eventId: e_fyziklani_team.event_id
 
-                states: %events.defaultFyziklani.teamStates%
-
                 transitions:
                     __init->pending:
                         condition: %events.fyziklani15.appCond%
@@ -117,11 +115,6 @@ events:
                 service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
-
-                states:
-                    - applied
-                    - participated
-                    - missed
 
                 transitions:
                     __init->applied:

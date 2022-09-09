@@ -16,12 +16,8 @@ class UnavailableTransitionException extends InvalidStateException
      */
     public function __construct(Transition $transition, $holder)
     {
-        if ($transition instanceof EventTransition) {
-            $source = $transition->getSource();
-        } else {
-            $source = $transition->sourceStateEnum->value;
-        }
-        $target = $transition->targetStateEnum->value;
+        $source = $transition->source->value;
+        $target = $transition->target->value;
         parent::__construct(
             sprintf(
                 _('Transition from %s to %s is unavailable for %s'),

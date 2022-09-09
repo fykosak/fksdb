@@ -32,8 +32,6 @@ baseMachine:
     # Reference to base machine from different configuration that is used as pattern for the baseMachine/baseHolder
     prototype:
         default: null
-    states:
-        type: expression array
     transitions:
     fields:
     service:
