@@ -16,7 +16,7 @@ class Transition
 
     /** @var callable|bool */
     protected $condition;
-    public ?BehaviorType $behaviorType = null;
+    public BehaviorType $behaviorType;
     private string $label;
     /** @var Statement[] */
     public array $beforeExecute = [];
@@ -37,12 +37,9 @@ class Transition
         $this->targetStateEnum = $targetState;
     }
 
-    final public function matchSource(EnumColumn $source): bool
+    public function matchSource(EnumColumn $source): bool
     {
-        if ($source->value === $this->sourceStateEnum->value) {
-            return true;
-        }
-        return false;
+        return $source->value === $this->sourceStateEnum->value;
     }
 
     public function isCreating(): bool
@@ -65,9 +62,9 @@ class Transition
         return $sourceState->value . '__' . $targetState->value;
     }
 
-    public function setBehaviorType(string $behaviorType): void
+    public function setBehaviorType(BehaviorType $behaviorType): void
     {
-        $this->behaviorType = new BehaviorType($behaviorType);
+        $this->behaviorType = $behaviorType;
     }
 
     public function setEvaluator(ExpressionEvaluator $evaluator): void

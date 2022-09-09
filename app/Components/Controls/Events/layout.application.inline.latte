@@ -11,7 +11,7 @@
                     <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
                        class="{$className}">{$transition->getLabel()}</a>
                 {else}
-                    <a n:href="transition! $transition->getName()" class="{$className}">{$transition->getLabel()}</a>
+                    <a n:href="transition! $transition->getId()" class="{$className}">{$transition->getLabel()}</a>
                 {/if}
             {/foreach}
         </div>

@@ -13,25 +13,12 @@ class DataValidator
     /** @var string[] */
     private array $validationErrors;
 
-    public function validate(BaseHolder $baseHolder): void
-    {
-        // validate
-        $this->validateFields($baseHolder);
-    }
-
-    /**
-     * @return null|string[]
-     */
-    public function getValidationResult(): ?array
-    {
-        return $this->validationErrors ?? null;
-    }
-
-    private function validateFields(BaseHolder $baseHolder): void
+    public function validate(BaseHolder $baseHolder): ?array
     {
         foreach ($baseHolder->getFields() as $field) {
             $field->validate($this);
         }
+        return $this->validationErrors ?? null;
     }
 
     public function addError(string $error): void

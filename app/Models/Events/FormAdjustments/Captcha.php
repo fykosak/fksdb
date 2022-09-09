@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -28,7 +28,7 @@ class Captcha implements FormAdjustment
         $this->user = $user;
     }
 
-    public function adjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
+    public function adjust(Form $form, ModelHolder $holder): void
     {
         if ($holder->getModelState() != AbstractMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;

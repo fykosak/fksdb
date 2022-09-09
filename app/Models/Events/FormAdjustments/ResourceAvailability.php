@@ -95,10 +95,10 @@ class ResourceAvailability extends AbstractAdjustment
             $table = $dataService['service']->getTable();
             $table->where('event_participant.event_id', $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
-                $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
+                $table->where('status', $this->includeStates);
             }
             if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
-                $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
+                $table->where('NOT ' . 'status', $this->excludeStates);
             } else {
                 $table->where('1=0');
             }

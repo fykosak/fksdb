@@ -7,6 +7,7 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 
 class SchoolsInTeam extends SchoolCheck
@@ -49,7 +50,10 @@ class SchoolsInTeam extends SchoolCheck
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');

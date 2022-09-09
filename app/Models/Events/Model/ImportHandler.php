@@ -10,7 +10,6 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Utils\CSVParser;
-use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -24,17 +23,18 @@ class ImportHandler
 
     public const KEY_NAME = 'person_id';
 
-    private Container $container;
-
     private SingleEventSource $source;
-
     private CSVParser $parser;
+    private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source)
-    {
-        $this->container = $container;
+    public function __construct(
+        CSVParser $parser,
+        SingleEventSource $source,
+        EventDispatchFactory $eventDispatchFactory
+    ) {
         $this->parser = $parser;
         $this->source = $source;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -47,28 +47,25 @@ class ImportHandler
     {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $primaryBaseHolder = $this->source->getDummyHolder();
-        $baseHolderName = $primaryBaseHolder->name;
+        $holder = $this->source->getDummyHolder();
 
         $handler->setErrorMode($errorMode);
         $handler->beginTransaction();
         $hasError = false;
         foreach ($this->parser as $row) {
             $values = ArrayHash::from($this->rowToValues($row));
-            $keyValue = $values[$baseHolderName][self::KEY_NAME];
+            $keyValue = $values[$holder->name][self::KEY_NAME];
             if (
-                !isset($values[$baseHolderName][BaseHolder::STATE_COLUMN])
-                || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]
+                !isset($values[$holder->name]['status'])
+                || !$values[$holder->name]['status']
             ) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } elseif ($stateless == self::STATELESS_KEEP) {
-                    unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
+                    unset($values[$holder->name]['status']);
                 }
             }
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $this->eventDispatchFactory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -97,15 +94,15 @@ class ImportHandler
      */
     private function rowToValues(iterable $row): array
     {
-        $primaryBaseHolder = $this->source->getDummyHolder();
+        $holder = $this->source->getDummyHolder();
         $values = [];
         $fieldExists = false;
-        $fieldNames = array_keys($primaryBaseHolder->getFields());
+        $fieldNames = array_keys($holder->getFields());
         foreach ($row as $columnName => $value) {
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $holder);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];

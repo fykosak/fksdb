@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -95,8 +96,9 @@ class ApplicationHandler
     {
         try {
             $this->beginTransaction();
-            $transition = $this->getMachine()->getTransition($explicitTransitionName);
-            if (!$transition->matches($holder->getModelState())) {
+            /** @var Transition $transition */
+            $transition = $this->getMachine()->getTransitionById($explicitTransitionName);
+            if (!$transition->matchSource($holder->getModelState())) {
                 throw new UnavailableTransitionException($transition, $holder->getModel());
             }
 
@@ -138,16 +140,16 @@ class ApplicationHandler
                 $data,
                 $form,
                 $explicitTransitionName
-                    ? $this->getMachine()->getTransition($explicitTransitionName)
+                    ? $this->getMachine()->getTransitionById($explicitTransitionName)
                     : null,
                 $holder,
                 $execute
             );
 
             if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data[$holder->name][BaseHolder::STATE_COLUMN])) {
+                if (isset($data[$holder->name]['status'])) {
                     $holder->setModelState(
-                        $data[$holder->name][BaseHolder::STATE_COLUMN]
+                        $data[$holder->name]['status']
                     );
                 }
             }
@@ -232,8 +234,8 @@ class ApplicationHandler
         }
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
-        if (isset($values[$holder->name][BaseHolder::STATE_COLUMN])) {
-            $newState = $values[$holder->name][BaseHolder::STATE_COLUMN];
+        if (isset($values[$holder->name]['status'])) {
+            $newState = EventParticipantStatus::tryFrom($values[$holder->name]['status']);
         }
 
         $processState = $holder->processFormValues(
@@ -257,9 +259,9 @@ class ApplicationHandler
                     throw new MachineExecutionException(
                         sprintf(
                             _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
-                            $this->getMachine()->getStateName($state),
+                            $state->label(),
                             $holder->label,
-                            $this->getMachine()->getStateName($newState)
+                            $newState->label()
                         )
                     );
                 }

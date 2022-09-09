@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\InvalidArgumentException;
 
@@ -37,12 +38,7 @@ class BaseMachine extends AbstractMachine
             throw new BadTypeException(Transition::class, $transition);
         }
         $transition->setBaseMachine($this);
-        $this->transitions[$transition->getName()] = $transition;
-    }
-
-    public function getTransition(string $name): Transition
-    {
-        return $this->transitions[$name];
+        $this->transitions[$transition->getId()] = $transition;
     }
 
     public static function getStateName(string $state): string
@@ -62,7 +58,7 @@ class BaseMachine extends AbstractMachine
      */
     public function getAvailableTransitions(
         BaseHolder $holder,
-        string $sourceState,
+        EnumColumn $sourceState,
         bool $visible = false
     ): array {
         return array_filter(
@@ -72,17 +68,21 @@ class BaseMachine extends AbstractMachine
         );
     }
 
-    public function getTransitionByTarget(string $sourceState, string $target): ?Transition
+    public function getTransitionByTarget(EnumColumn $sourceState, EnumColumn $target): ?Transition
     {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => $transition->target == $target
+            fn(Transition $transition): bool => $transition->targetStateEnum->value == $target->value
         );
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
             throw new InvalidArgumentException(
-                sprintf('Target state %s is from state %s reachable via multiple edges.', $target, $sourceState)
+                sprintf(
+                    'Target state %s is from state %s reachable via multiple edges.',
+                    $target->value,
+                    $sourceState->value
+                )
             );
         } else {
             return reset($candidates);
@@ -92,11 +92,11 @@ class BaseMachine extends AbstractMachine
     /**
      * @return Transition[]
      */
-    private function getMatchingTransitions(string $sourceStateMask): array
+    private function getMatchingTransitions(EnumColumn $sourceStateMask): array
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $transition->matches($sourceStateMask)
+            fn(Transition $transition): bool => $transition->matchSource($sourceStateMask)
         );
     }
 }

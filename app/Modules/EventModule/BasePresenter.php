@@ -72,10 +72,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function getHolder(): BaseHolder
+    protected function getDummyHolder(): BaseHolder
     {
         static $holder;
-        if (!isset($holder)) {
+        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $holder;

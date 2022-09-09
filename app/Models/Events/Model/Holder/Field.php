@@ -27,7 +27,7 @@ class Field
     /** @var bool|callable */
     private $visible;
 
-    public function __construct(string $name, ?string $label = null)
+    public function __construct(string $name, ?string $label)
     {
         $this->name = $name;
         $this->label = $label;

@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -56,7 +57,10 @@ class TeamsPerSchool extends SchoolCheck
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
@@ -86,8 +90,6 @@ class TeamsPerSchool extends SchoolCheck
     private function checkMulti(bool $first, ?Control $control, array $schools): bool
     {
         $team = $this->holder->getModel();
-        $event = $this->holder->event;
-        /** @var BaseHolder $baseHolder */
 
         if (!isset($this->cache) || $first) {
             /*
@@ -99,8 +101,8 @@ class TeamsPerSchool extends SchoolCheck
                     "GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name 
                     ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams"
                 )
-                ->where('event_participant.event_id', $event->getPrimary())
-                ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
+                ->where('event_participant.event_id', $this->holder->event->getPrimary())
+                ->where('person.person_history:ac_year', $this->holder->event->getContestYear()->ac_year)
                 ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?

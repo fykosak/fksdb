@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Application\UI\Presenter;
@@ -54,15 +55,12 @@ class NewApplicationsGrid extends BaseGrid
             ->setText(_('Create application'))
             ->setLink(fn(EventModel $row): string => $this->getPresenter()
                 ->link(':Public:Application:default', ['eventId' => $row->event_id]))
-            ->setShow(function (EventModel $modelEvent): bool {
-                $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
-                $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
-                $transitions = $machine->getAvailableTransitions(
-                    $holder,
-                    AbstractMachine::STATE_INIT,
+            ->setShow(fn(EventModel $modelEvent): bool => (bool)count(
+                $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                    $this->eventDispatchFactory->getDummyHolder($modelEvent),
+                    EventParticipantStatus::tryFrom(AbstractMachine::STATE_INIT),
                     true
-                );
-                return (bool)count($transitions);
-            });
+                )
+            ));
     }
 }

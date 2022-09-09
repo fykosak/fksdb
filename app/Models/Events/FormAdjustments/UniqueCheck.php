@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
@@ -22,7 +23,7 @@ class UniqueCheck extends AbstractAdjustment
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $controls = $this->getControl($this->field);
         if (!$controls) {

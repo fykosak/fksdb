@@ -10,13 +10,13 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -33,9 +33,6 @@ use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
 {
-
-    public const STATE_COLUMN = 'status';
-    public const EVENT_COLUMN = 'event_id';
     public string $name;
     public ?string $description;
     public string $label;
@@ -50,7 +47,7 @@ class BaseHolder implements ModelHolder
     public EventModel $event;
     /** @var Service|ServiceMulti */
     public $service;
-
+    /** @var EventParticipantModel|ModelMDsefParticipant|null */
     private ?Model $model;
     public array $data = [];
 
@@ -89,17 +86,17 @@ class BaseHolder implements ModelHolder
      */
     public function processFormValues(
         ArrayHash $values,
-        BaseMachine $primaryMachine,
+        BaseMachine $machine,
         ?Transition $transition,
         Logger $logger,
         ?Form $form
-    ): ?string {
+    ): ?EventParticipantStatus {
         $newState = null;
         if ($transition) {
-            $newState = $transition->target;
+            $newState = $transition->targetStateEnum;
         }
         foreach ($this->processings as $processing) {
-            $result = $processing->process($newState, $values, $primaryMachine, $this, $logger, $form);
+            $result = $processing->process($newState, $values, $machine, $this, $logger, $form);
             if ($result) {
                 $newState = $result;
             }
@@ -151,7 +148,7 @@ class BaseHolder implements ModelHolder
     private function setEvent(EventModel $event): void
     {
         $this->event = $event;
-        $this->data[self::EVENT_COLUMN] = $this->event->getPrimary();
+        $this->data['event_id'] = $this->event->getPrimary();
         $this->cacheParameters();
     }
 
@@ -213,22 +210,22 @@ class BaseHolder implements ModelHolder
         }
     }
 
-    public function getModelState(): string
+    public function getModelState(): EventParticipantStatus
     {
         $model = $this->getModel();
-        if (isset($this->data[self::STATE_COLUMN])) {
-            return $this->data[self::STATE_COLUMN];
+        if (isset($this->data['status'])) {
+            return EventParticipantStatus::tryFrom($this->data['status']);
         }
-        if ($model && $model[self::STATE_COLUMN]) {
-            return $model[self::STATE_COLUMN];
+        if ($model) {
+            return $model->status;
         }
 
-        return AbstractMachine::STATE_INIT;
+        return EventParticipantStatus::tryFrom(AbstractMachine::STATE_INIT);
     }
 
-    public function setModelState(string $state): void
+    public function setModelState(EventParticipantStatus $state): void
     {
-        $this->data[self::STATE_COLUMN] = $state;
+        $this->data['status'] = $state->value;
     }
 
     /**
@@ -337,11 +334,11 @@ class BaseHolder implements ModelHolder
 
     public function updateState(EnumColumn $newState): void
     {
-        throw new NotImplementedException();
+        $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
     public function getState(): EnumColumn
     {
-        throw new NotImplementedException();
+        return $this->model->status;
     }
 }

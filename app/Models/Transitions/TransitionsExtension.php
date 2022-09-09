@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\Transition\BehaviorType;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 
@@ -74,7 +75,12 @@ class TransitionsExtension extends CompilerExtension
             ->addSetup('setTargetStateEnum', [$target])
             ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
 
-        $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType'] ?? 'secondary']);
+        $factory->addSetup(
+            'setBehaviorType',
+            [
+                BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? 'secondary'),
+            ]
+        );
 
         if (isset($transitionConfig['beforeExecute'])) {
             foreach ($transitionConfig['beforeExecute'] as $callback) {

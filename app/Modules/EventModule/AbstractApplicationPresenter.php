@@ -11,7 +11,7 @@ use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
@@ -96,6 +96,21 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     * @throws \ReflectionException
+     */
+    public function getHolder(): BaseHolder
+    {
+        $holder = $this->getDummyHolder();
+        $holder->setModel($this->getEntity());
+        return $holder;
+    }
+
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
@@ -112,11 +127,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         return new ApplicationComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity())
+            $this->getHolder()
         );
     }
 
@@ -131,11 +145,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         return new TransitionButtonsComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity())
+            $this->getHolder()
         );
     }
 

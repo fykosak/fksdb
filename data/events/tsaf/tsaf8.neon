@@ -176,16 +176,4 @@ events:
 
             processings:
                 - @events.privacyPolicy
-#            joins:
-#                participantTsaf:
-#                    *->applied:
-#                        participantDsef: applied.tsaf
-#                    *->spare:
-#                        participantDsef: spare.tsaf
-#                    applied|applied.nodsef->cancelled:
-#                        participantDsef: applied.notsaf
-#                    spare->cancelled:
-#                        participantDsef: cancelled
-#                    *->__terminated:
-#                        participantDsef: __terminated
 

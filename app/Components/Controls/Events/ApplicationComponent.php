@@ -106,10 +106,7 @@ class ApplicationComponent extends BaseComponent
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->onClick[] = function (SubmitButton $button): void {
-                $buttonForm = $button->getForm();
-                $this->handleSubmit($buttonForm);
-            };
+            $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
         /*
          * Create transition buttons
@@ -124,13 +121,10 @@ class ApplicationComponent extends BaseComponent
                 true
             ) as $transition
         ) {
-            $transitionName = $transition->getName();
+            $transitionName = $transition->getId();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function (SubmitButton $button) use ($transitionName): void {
-                $form = $button->getForm();
-                $this->handleSubmit($form, $transitionName);
-            };
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transitionName);
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;

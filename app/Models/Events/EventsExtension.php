@@ -23,6 +23,8 @@ use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Transitions\Transition\BehaviorType;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -185,7 +187,13 @@ class EventsExtension extends CompilerExtension
         }
 
         $factory = $this->getContainerBuilder()->addDefinition($this->getTransitionName($baseName, $mask));
-        $factory->setFactory(Transition::class, [$mask, $definition['label'], $definition['behaviorType']]);
+        $factory->setFactory(Transition::class, [$mask, $definition['label']]);
+        $factory->addSetup(
+            'setBehaviorType',
+            [
+                BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? BehaviorType::DEFAULT),
+            ]
+        );
         $parameters = array_keys($this->scheme['transition']);
         foreach ($parameters as $parameter) {
             switch ($parameter) {
@@ -429,16 +437,6 @@ class EventsExtension extends CompilerExtension
     private function getHolderName(string $name): string
     {
         return $this->prefix(self::HOLDER_PREFIX . $name);
-    }
-
-    private function getBaseMachineName(string $name, string $baseName): string
-    {
-        return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
-    }
-
-    private function getBaseHolderName(string $name, string $baseName): string
-    {
-        return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
     private function getTransitionName(string $baseName, string $mask): string

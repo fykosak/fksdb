@@ -26,7 +26,7 @@ class Count
     {
         $table = $holder->service->getTable();
         $table->where('event_participant.event_id', $holder->event->getPrimary());
-        $table->where(BaseHolder::STATE_COLUMN, $this->state);
+        $table->where('status', $this->state);
         return $table->count('1');
     }
 

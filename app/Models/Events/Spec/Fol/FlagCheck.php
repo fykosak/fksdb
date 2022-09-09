@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\SchoolService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -27,7 +28,10 @@ class FlagCheck extends AbstractAdjustment
         $this->personHistoryService = $personHistoryService;
     }
 
-    protected function innerAdjust(Form $form, \FKSDB\Models\Transitions\Holder\ModelHolder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');

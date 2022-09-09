@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
@@ -58,13 +59,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     public function process(
-        ?string $state,
+        ?EventParticipantStatus $state,
         ArrayHash $values,
-        BaseMachine $primaryMachine,
-        \FKSDB\Models\Transitions\Holder\ModelHolder $holder,
+        AbstractMachine $machine,
+        ModelHolder $holder,
         Logger $logger,
         ?Form $form = null
-    ): ?string {
+    ): ?EventParticipantStatus {
         $this->trySetAgreed($values);
         return null;
     }

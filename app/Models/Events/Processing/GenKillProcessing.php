@@ -7,6 +7,7 @@ namespace FKSDB\Models\Events\Processing;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
@@ -29,13 +30,13 @@ class GenKillProcessing implements Processing
      * @param BaseHolder $holder
      */
     public function process(
-        ?string $state,
+        ?EventParticipantStatus $state,
         ArrayHash $values,
-        BaseMachine $primaryMachine,
+        AbstractMachine $machine,
         ModelHolder $holder,
         Logger $logger,
         ?Form $form = null
-    ): ?string {
+    ): ?EventParticipantStatus {
         if (!isset($values[$holder->name])) { // whole machine unmodofiable/invisible
             return null;
         }
@@ -54,12 +55,12 @@ class GenKillProcessing implements Processing
             }
         }
         if (!$isFilled) {
-            return AbstractMachine::STATE_TERMINATED;
+            return EventParticipantStatus::tryFrom(AbstractMachine::STATE_TERMINATED);
         } elseif ($holder->getModelState() == AbstractMachine::STATE_INIT) {
-            if (isset($values[$holder->name][BaseHolder::STATE_COLUMN])) {
-                return $values[$holder->name][BaseHolder::STATE_COLUMN];
+            if (isset($values[$holder->name]['status'])) {
+                return EventParticipantStatus::tryFrom($values[$holder->name]['status']);
             } else {
-                $transitions = $primaryMachine->getAvailableTransitions(
+                $transitions = $machine->getAvailableTransitions(
                     $holder,
                     $holder->getModelState()
                 );
@@ -74,7 +75,7 @@ class GenKillProcessing implements Processing
                         _("$holder->name: Přechod z počátečního stavu není jednoznačný.")
                     );
                 } else {
-                    return reset($transitions)->target;
+                    return EventParticipantStatus::tryFrom(reset($transitions)->target);
                 }
             }
         }

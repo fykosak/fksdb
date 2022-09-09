@@ -210,11 +210,11 @@ class ApplicationPresenter extends BasePresenter
      */
     private function getMachine(): BaseMachine
     {
-        static $primaryMachine;
-        if (!isset($primaryMachine)) {
-            $primaryMachine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        static $machine;
+        if (!isset($machine)) {
+            $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
-        return $primaryMachine;
+        return $machine;
     }
 
     protected function startup(): void

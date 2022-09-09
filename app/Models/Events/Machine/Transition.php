@@ -8,33 +8,24 @@ use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Models\Transitions\Transition\BehaviorType;
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 {
 
     public BaseMachine $baseMachine;
-    private string $mask;
-    private string $name;
+    private string $id;
     private string $source;
-    public string $target;
+    public EventParticipantStatus $target;
     private bool $visible;
     public array $onExecuted = [];
 
-    public function __construct(string $mask, ?string $label = null, string $type = BehaviorType::DEFAULT)
+    public function __construct(string $mask, ?string $label)
     {
         $this->setMask($mask);
         $this->setLabel($label ?? '');
-        $this->setBehaviorType($type);
-    }
-
-    /**
-     * Meaningless identifier.
-     */
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     private function setName(string $mask): void
@@ -42,30 +33,24 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         // it's used for component naming
         $name = str_replace('*', '_any_', $mask);
         $name = str_replace('|', '_or_', $name);
-        $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
+        $this->id = preg_replace('/[^a-z0-9_]/i', '_', $name);
     }
 
-    public function getMask(): string
+    public function getId(): string
     {
-        return $this->mask;
+        return $this->id;
     }
 
     public function setMask(string $mask): void
     {
-        $this->mask = $mask;
         [$this->source, $target] = self::parseMask($mask);
-        $this->setTargetState($target);
+        $this->setTargetStateEnum(EventParticipantStatus::tryFrom($target));
         $this->setName($mask);
     }
 
     public function setBaseMachine(BaseMachine $baseMachine): void
     {
         $this->baseMachine = $baseMachine;
-    }
-
-    public function setTargetState(string $target): void
-    {
-        $this->target = $target;
     }
 
     public function getSource(): string
@@ -80,7 +65,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 
     public function isTerminating(): bool
     {
-        return $this->target === AbstractMachine::STATE_TERMINATED;
+        return $this->targetStateEnum->value === AbstractMachine::STATE_TERMINATED;
     }
 
     public function isVisible(): bool
@@ -93,10 +78,9 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->visible = $visible;
     }
 
-    private function validateTarget(BaseHolder $primaryHolder): ?array
+    private function validateTarget(BaseHolder $holder): ?array
     {
-        $primaryHolder->validator->validate($primaryHolder);
-        return $primaryHolder->validator->getValidationResult();
+        return $holder->validator->validate($holder);
     }
 
     /**
@@ -137,7 +121,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         try {
             $this->callAfterExecute($holder, $this);
         } catch (\Throwable $exception) {
-            throw new TransitionOnExecutedException($this->getName(), 0, $exception);
+            throw new TransitionOnExecutedException($this->getId(), 0, $exception);
         }
     }
 
@@ -146,33 +130,12 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      */
     private function changeState(BaseHolder $holder): void
     {
-        $holder->setModelState($this->target);
+        $holder->setModelState($this->targetStateEnum);
     }
 
-    /**
-     * @param string $mask It may be either mask of initial state or mask of whole transition.
-     */
-    public function matches(string $mask): bool
+    public function matchSource(EnumColumn $source): bool
     {
-        $parts = self::parseMask($mask);
-
-        if (count($parts) == 2 && $parts[1] != $this->target) {
-            return false;
-        }
-        $stateMask = $parts[0];
-
-        /*
-         * Star matches any state but meta-states (initial and terminal)
-         */
-        if (
-            strpos(AbstractMachine::STATE_ANY, $stateMask) !== false
-            || (strpos(AbstractMachine::STATE_ANY, $this->source) !== false
-                && ($mask != AbstractMachine::STATE_INIT
-                    && $mask != AbstractMachine::STATE_TERMINATED))
-        ) {
-            return true;
-        }
-
+        $stateMask = $source->value;
         return (bool)preg_match("/(^|\\|)$stateMask(\\||\$)/", $this->source);
     }
 

@@ -201,9 +201,7 @@ abstract class BaseGrid extends Grid
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
-            function ($model) use ($factory, $userPermission): Html {
-                return $factory->render($model, $userPermission);
-            }
+            fn(Model $model): Html => $factory->render($model, $userPermission)
         )->setSortable(false);
     }
 
@@ -215,10 +213,7 @@ abstract class BaseGrid extends Grid
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $factoryName));
         return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(
-            function ($row) use ($factory, $accessCallback) {
-                $model = $accessCallback($row);
-                return $factory->render($model, 1);
-            }
+            fn(Model $row) => $factory->render($accessCallback($row), 1)
         );
     }
 
@@ -243,7 +238,7 @@ abstract class BaseGrid extends Grid
         bool $checkACL = true,
         array $params = []
     ): Button {
-        $paramMapCallback = function ($model) use ($params): array {
+        $paramMapCallback = function (Model $model) use ($params): array {
             $hrefParams = [];
             foreach ($params as $key => $value) {
                 $hrefParams[$key] = $model->{$value};

@@ -9,17 +9,12 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-/**
- * @method SingleEventSource order()
- * @method SingleEventSource limit()
- * @method int count()
- * @method SingleEventSource where(string $cond, ...$args)
- */
 class SingleEventSource implements HolderSource
 {
     use SmartObject;
@@ -29,15 +24,11 @@ class SingleEventSource implements HolderSource
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private BaseHolder $dummyHolder;
-    /** @var Model[] */
-    private ?array $primaryModels = null;
-    /** @var Model[][] */
-    private ?array $secondaryModels = null;
+    private ?TypedSelection $primaryModels = null;
     /** @var BaseHolder[] */
     private array $holders = [];
 
     /**
-     * SingleEventSource constructor.
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -65,12 +56,7 @@ class SingleEventSource implements HolderSource
 
     private function loadData(): void
     {
-        $joinToCheck = null;
-        // load primaries
-        $joinTo = $joinToCheck ?: $this->primarySelection->getPrimary();
-        $this->primaryModels = $this->primarySelection->fetchPairs($joinTo);
-
-        // invalidate holders
+        $this->primaryModels = $this->primarySelection;
         $this->holders = [];
     }
 
@@ -80,35 +66,11 @@ class SingleEventSource implements HolderSource
      */
     private function createHolders(): void
     {
-        foreach ($this->primaryModels as $primaryPK => $primaryModel) {
+        /** @var EventParticipantModel $model */
+        foreach ($this->primarySelection as $model) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($primaryModel);
-            $this->holders[$primaryPK] = $holder;
-        }
-    }
-
-    /**
-     * Method propagates selected calls to internal primary models selection.
-     *
-     * @staticvar array $delegated
-     * @return SingleEventSource|int
-     */
-    public function __call(string $name, array $args)
-    {
-        static $delegated = [
-            'where' => false,
-            'order' => false,
-            'limit' => false,
-            'count' => true,
-        ];
-        $result = $this->primarySelection->{$name}(...$args);
-        // $result = call_user_func_array([$this->primarySelection, $name], $args);
-        $this->primaryModels = null;
-
-        if ($delegated[$name]) {
-            return $result;
-        } else {
-            return $this;
+            $holder->setModel($model);
+            $this->holders[$model->getPrimary()] = $holder;
         }
     }
 
@@ -123,15 +85,5 @@ class SingleEventSource implements HolderSource
             $this->createHolders();
         }
         return $this->holders;
-    }
-
-    /**
-     * @throws NeonSchemaException
-     */
-    public function getHolder(Model $primaryModel): BaseHolder
-    {
-        $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-        $holder->setModel($primaryModel);
-        return $holder;
     }
 }
