@@ -96,10 +96,8 @@ class ApplicationComponent extends BaseComponent
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        if ($this->holder->isVisible()) {
-            $container = $this->holder->createFormContainer();
-            $form->addComponent($container, $this->holder->name);
-        }
+        $container = $this->holder->createFormContainer();
+        $form->addComponent($container, $this->holder->name);
         /*
          * Create save (no transition) button
          */

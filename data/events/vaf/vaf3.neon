@@ -38,7 +38,7 @@ parameters:
                 F_XL: XL dámské/female
 events:
     vikend3:
-        event_type_id: 3
+        eventTypeIds: [3]
         eventYears: [3]
         formLayout: vikend.form
         paramScheme:
@@ -49,8 +49,7 @@ events:
             capacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
 
                 transitions:
@@ -101,12 +100,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true
-                    primary: true
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
                 - @events.privacyPolicy

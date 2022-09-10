@@ -15,7 +15,7 @@ class Field
     public bool $determining;
     public ?string $label;
     public ?string $description;
-    public BaseHolder $baseHolder;
+    public BaseHolder $holder;
     private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
     /** @var mixed */
@@ -84,7 +84,7 @@ class Field
 
     public function isRequired(): bool
     {
-        return $this->evaluator->evaluate($this->required, $this->baseHolder);
+        return $this->evaluator->evaluate($this->required, $this->holder);
     }
 
     /** @param bool|callable $required */
@@ -97,7 +97,7 @@ class Field
 
     public function isModifiable(): bool
     {
-        return $this->baseHolder->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this->baseHolder);
+        return $this->holder->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this->holder);
     }
 
     /** @param bool|callable $modifiable */
@@ -110,7 +110,7 @@ class Field
 
     public function isVisible(): bool
     {
-        return (bool)$this->evaluator->evaluate($this->visible, $this->baseHolder);
+        return (bool)$this->evaluator->evaluate($this->visible, $this->holder);
     }
 
     /**
@@ -131,9 +131,9 @@ class Field
      */
     public function getValue()
     {
-        $model = $this->baseHolder->getModel();
-        if (isset($this->baseHolder->data[$this->name])) {
-            return $this->baseHolder->data[$this->name];
+        $model = $this->holder->getModel();
+        if (isset($this->holder->data[$this->name])) {
+            return $this->holder->data[$this->name];
         }
         if ($model) {
             if (isset($model[$this->name])) {
@@ -147,6 +147,6 @@ class Field
 
     public function __toString(): string
     {
-        return "$this->baseHolder.$this->name";
+        return "$this->holder.$this->name";
     }
 }

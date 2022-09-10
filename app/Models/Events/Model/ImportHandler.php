@@ -79,11 +79,11 @@ class ImportHandler
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
+    private function prepareColumnName(string $columnName, BaseHolder $holder): array
     {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
-            return [$baseHolder->name, $parts[0]];
+            return [$holder->name, $parts[0]];
         } else {
             return $parts;
         }

@@ -194,7 +194,7 @@ class ApplicationHandler
         }
         $holder->saveModel();
         if ($transition) {
-            $transition->executed($holder);
+            $transition->callAfterExecute($holder);
         }
         $this->commit();
 

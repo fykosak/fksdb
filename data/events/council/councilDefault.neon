@@ -24,7 +24,7 @@ parameters:
 
 events:
     council:
-        event_type_id: [15]
+        eventTypeIds: [15]
         formLayout: council.form
         paramScheme:
             notifyBcc:
@@ -34,8 +34,7 @@ events:
             capacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
                 transitions:
                     __init->applied:
@@ -69,12 +68,8 @@ events:
 
 
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true
-                    primary: true
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

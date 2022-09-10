@@ -33,14 +33,11 @@ use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
 {
-    public string $name;
-    public ?string $description;
+    public string $name = 'participant';
     public string $label;
 
     /** @var bool|callable */
     private $modifiable;
-    /** @var bool|callable */
-    private $visible;
 
     private ExpressionEvaluator $evaluator;
     public DataValidator $validator;
@@ -61,14 +58,13 @@ class BaseHolder implements ModelHolder
     /** @var Processing[] */
     private array $processings = [];
 
-    public function __construct(string $name)
+    public function __construct()
     {
         /*
          * This implicit processing is the first. It's not optimal
          * and it may be subject to change.
          */
         $this->processings[] = new GenKillProcessing();
-        $this->name = $name;
     }
 
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
@@ -114,7 +110,7 @@ class BaseHolder implements ModelHolder
 
     public function addField(Field $field): void
     {
-        $field->baseHolder = $this;
+        $field->holder = $this;
         $this->fields[$field->name] = $field;
     }
 
@@ -132,14 +128,6 @@ class BaseHolder implements ModelHolder
     public function setModifiable($modifiable): void
     {
         $this->modifiable = $modifiable;
-    }
-
-    /**
-     * @param bool|callable $visible
-     */
-    public function setVisible($visible): void
-    {
-        $this->visible = $visible;
     }
 
     /**
@@ -173,11 +161,6 @@ class BaseHolder implements ModelHolder
     public function setValidator(DataValidator $validator): void
     {
         $this->validator = $validator;
-    }
-
-    public function isVisible(): bool
-    {
-        return $this->evaluator->evaluate($this->visible, $this);
     }
 
     public function isModifiable(): bool
@@ -241,11 +224,6 @@ class BaseHolder implements ModelHolder
         $this->label = $label;
     }
 
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
-    }
-
     public static function getBareColumn(string $column): ?string
     {
         $column = str_replace(':', '.', $column);
@@ -265,7 +243,6 @@ class BaseHolder implements ModelHolder
     {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->label);
-        $container->setOption('description', $this->description);
 
         foreach ($this->fields as $name => $field) {
             if (!$field->isVisible()) {

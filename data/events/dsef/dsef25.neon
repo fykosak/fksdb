@@ -23,13 +23,12 @@ parameters:
 
 events:
     dsef25:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [25]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
 
-        baseMachines:
-            PARTICIPANT_DSEF:
+        baseMachine:
                 service: @event.ServiceMDsefParticipant
                 transitions: %events.defaultDsef.transitions%
 
@@ -55,12 +54,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT_DSEF
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

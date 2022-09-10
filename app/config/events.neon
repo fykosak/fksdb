@@ -4,18 +4,19 @@
 # Fields that do not have default value are required.
 
 definition:
-    event_type_id:
+    eventTypeIds:
+        type: expression array
     eventYears:
         default: true
     formLayout:
         default: application
     paramScheme:
         default: []
-    baseMachines:
+    baseMachine:
     machine:
 
 machine:
-    baseMachines:
+    baseMachine:
     # processing checks invariants/calculates data on edit form submit, before transitions
     processings:
         default: []
@@ -24,19 +25,13 @@ machine:
     formAdjustments:
         default: []
         type: expression array
-    # defines machine transition dependencies (transition invokes another transition)
-    joins:
-        default: []
 
 baseMachine:
-    # Reference to base machine from different configuration that is used as pattern for the baseMachine/baseHolder
-    prototype:
-        default: null
     transitions:
     fields:
     service:
         default: FKSDB\Models\ORM\Services\ServiceEventParticipant
-    # Parameter (Neon) scheme for the baseHolder
+    # Parameter (Neon) scheme for the holder
     paramScheme:
         default: null
 
@@ -85,21 +80,9 @@ field:
         type: expression
 
 bmInstance:
-    bmName:
     label:
         default: null
         type: expression
-    description: # it's show beneatch legend of the form group
-        default: null
-        type: expression
-    primary:
-        default: false
-    required:
-        default: false
-        type: expression
     modifiable:
-        default: true
-        type: expression
-    visible:
         default: true
         type: expression

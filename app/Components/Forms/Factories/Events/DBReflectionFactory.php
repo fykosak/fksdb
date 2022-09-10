@@ -36,7 +36,7 @@ class DBReflectionFactory extends AbstractFactory
     {
         $element = null;
         try {
-            $service = $field->baseHolder->service;
+            $service = $field->holder->service;
 
             $service->getTable()->getName();
             $tableName = null;
@@ -88,7 +88,7 @@ class DBReflectionFactory extends AbstractFactory
 
     protected function setDefaultValue(BaseControl $control, Field $field): void
     {
-        if ($field->baseHolder->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->holder->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -99,7 +99,7 @@ class DBReflectionFactory extends AbstractFactory
 
     private function resolveColumn(Field $field): ?array
     {
-        $service = $field->baseHolder->service;
+        $service = $field->holder->service;
 
         $column = null;
         if ($service instanceof Service) {

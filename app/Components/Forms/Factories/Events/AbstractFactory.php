@@ -26,7 +26,7 @@ abstract class AbstractFactory implements FieldFactory
         $container = $control->getParent();
         if ($field->isRequired()) {
             $conditioned = $control;
-            foreach ($field->baseHolder->getDeterminingFields() as $name => $determiningField) {
+            foreach ($field->holder->getDeterminingFields() as $name => $determiningField) {
                 if ($determiningField === $field) {
                     $conditioned = $control;
                     break;

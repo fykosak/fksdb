@@ -36,7 +36,7 @@ parameters:
                     black: Černá
 events:
     setkani11podzim:
-        event_type_id: [12]
+        eventTypeIds: [12]
         eventYears: [11] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
         paramScheme:
@@ -47,8 +47,7 @@ events:
             capacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
 
                 transitions:
@@ -115,12 +114,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true
-                    primary: true
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

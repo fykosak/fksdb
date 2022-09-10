@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
+use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
@@ -54,12 +55,7 @@ class Transition
 
     public function getId(): string
     {
-        return static::createId($this->source, $this->target);
-    }
-
-    public static function createId(EnumColumn $sourceState, EnumColumn $targetState): string
-    {
-        return $sourceState->value . '__' . $targetState->value;
+        return $this->source->value . '__' . $this->target->value;
     }
 
     public function setBehaviorType(BehaviorType $behaviorType): void
@@ -87,14 +83,9 @@ class Transition
         $this->condition = $callback;
     }
 
-    protected function isConditionFulfilled(ModelHolder $holder): bool
-    {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
-    }
-
     public function canExecute(ModelHolder $holder): bool
     {
-        return $this->isConditionFulfilled($holder);
+        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
     }
 
     public function addBeforeExecute(callable $callBack): void
@@ -114,10 +105,14 @@ class Transition
         }
     }
 
-    final public function callAfterExecute(ModelHolder $holder, ...$args): void
+    final public function callAfterExecute(ModelHolder $holder): void
     {
-        foreach ($this->afterExecute as $callback) {
-            $callback($holder);
+        try {
+            foreach ($this->afterExecute as $callback) {
+                $callback($holder);
+            }
+        } catch (\Throwable $exception) {
+            throw new TransitionOnExecutedException($this->getId(), 0, $exception);
         }
     }
 }

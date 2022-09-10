@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
-use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -67,7 +66,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      */
     final public function execute(BaseHolder $holder): void
     {
-        if (!$this->isConditionFulfilled($holder)) {
+        if (!$this->canExecute($holder)) {
             throw new TransitionConditionFailedException($this);
         }
 
@@ -76,20 +75,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $validationResult = $this->validateTarget($holder);
         if (!is_null($validationResult)) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
-        }
-    }
-
-    /**
-     * Triggers onExecuted event.
-     *
-     * @throws TransitionOnExecutedException
-     */
-    final public function executed(BaseHolder $holder): void
-    {
-        try {
-            $this->callAfterExecute($holder, $this);
-        } catch (\Throwable $exception) {
-            throw new TransitionOnExecutedException($this->getId(), 0, $exception);
         }
     }
 

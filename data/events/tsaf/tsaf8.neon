@@ -40,7 +40,7 @@ parameters:
 
 events:
     tsaf8:
-        event_type_id: 7
+        eventTypeIds: [7]
         #eventYears: [5,6,8]
         formLayout: tsaf.form
         paramScheme:
@@ -53,8 +53,7 @@ events:
             accomodationCapacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
 
                 transitions:
@@ -149,13 +148,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('TSAF')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-
 
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")

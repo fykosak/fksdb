@@ -12,7 +12,7 @@ parameters:
 
 events:
     tabor8:
-        event_type_id: [10]
+        eventTypeIds: [10]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor7.form
         paramScheme:
@@ -31,8 +31,7 @@ events:
                 default: až naprší a uschne
 
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
                 transitions:
                     __init->invited:
@@ -142,12 +141,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")

@@ -47,13 +47,12 @@ parameters:
 
 events:
     dsef27:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [27]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
 
-        baseMachines:
-            PARTICIPANT_DSEF:
+        baseMachine:
                 service: @orm.event_participant.service
                 transitions: %events.dsef27.transitions%
                 fields:
@@ -67,12 +66,8 @@ events:
                         modifiable: %events.defaultDsef.appCond%
                         description: _('Počet "obědů" (bageta za 30 Kč)')
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT_DSEF
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

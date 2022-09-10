@@ -75,10 +75,10 @@ class PersonFactory extends AbstractFactory
      */
     public function createComponent(Field $field): ReferencedId
     {
-        $searchType = $this->evaluator->evaluate($this->searchType, $field->baseHolder);
-        $allowClear = $this->evaluator->evaluate($this->allowClear, $field->baseHolder);
+        $searchType = $this->evaluator->evaluate($this->searchType, $field->holder);
+        $allowClear = $this->evaluator->evaluate($this->allowClear, $field->holder);
 
-        $event = $field->baseHolder->event;
+        $event = $field->holder->event;
 
         $resolver = new PersonContainerResolver(
             $field,
@@ -125,7 +125,7 @@ class PersonFactory extends AbstractFactory
         parent::validate($field, $validator);
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->baseHolder->event;
+        $event = $field->holder->event;
         $contestYear = $event->getContestYear();
         $personId = $field->getValue();
         $person = $personId ? $this->personService->findByPrimary($personId) : null;
@@ -152,7 +152,7 @@ class PersonFactory extends AbstractFactory
                     $validator->addError(
                         sprintf(
                             _('%s: %s is a required field.'),
-                            $field->baseHolder->label,
+                            $field->holder->label,
                             $field->label . '.' . $subName . '.' . $fieldName
                         )
                     ); //TODO better GUI name than DB identifier
@@ -175,7 +175,7 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = $this->evaluator->evaluate($value, $field->baseHolder);
+                    $value = $this->evaluator->evaluate($value, $field->holder);
                 }
             }
         }

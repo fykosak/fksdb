@@ -1,6 +1,6 @@
 events:
     soustredeni34j:
-        event_type_id: [4] # jarní i podzimní sous. nejsou různá
+        eventTypeIds: [4] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
         paramScheme:
@@ -14,8 +14,7 @@ events:
                 default: nikde
             letterSignature:
                 default: Student Pilný
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
 
                 transitions:
@@ -199,12 +198,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")

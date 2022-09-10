@@ -71,16 +71,14 @@ class GroupOptions implements OptionsProvider
 
     public function getOptions(Field $field): array
     {
-        $baseHolder = $field->baseHolder;
-        $event = $baseHolder->event;
         /** @var ModelDsefParticipant $model */
-        $model = $baseHolder->getModel();
-        $groups = $this->getGroups($event);
+        $model = $field->holder->getModel();
+        $groups = $this->getGroups($field->holder->event);
 
         $selection = $this->mParticipantService->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
-            ->where('event_id', $event->event_id)
+            ->where('event_id', $field->holder->event->event_id)
             ->where('NOT event_participant.event_participant_id', $model ? $model->getPrimary(false) : null);
         if ($this->includeStates !== AbstractMachine::STATE_ANY) {
             $selection->where('event_participant.status', $this->includeStates);
@@ -92,7 +90,7 @@ class GroupOptions implements OptionsProvider
         }
         $groupOccupied = $selection->fetchPairs('e_dsef_group_id', 'occupied');
 
-        $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
+        $selfGroup = $model ? $model->e_dsef_group_id : $field->holder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
             $occupied = $groupOccupied[$key] ?? 0;

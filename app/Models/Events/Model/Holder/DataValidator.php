@@ -13,9 +13,9 @@ class DataValidator
     /** @var string[] */
     private array $validationErrors;
 
-    public function validate(BaseHolder $baseHolder): ?array
+    public function validate(BaseHolder $holder): ?array
     {
-        foreach ($baseHolder->getFields() as $field) {
+        foreach ($holder->getFields() as $field) {
             $field->validate($this);
         }
         return $this->validationErrors ?? null;

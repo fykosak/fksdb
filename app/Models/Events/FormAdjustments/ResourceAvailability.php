@@ -103,8 +103,8 @@ class ResourceAvailability extends AbstractAdjustment
                 $table->where('1=0');
             }
 
-            $primaries = array_map(function (BaseHolder $baseHolder) {
-                $model = $baseHolder->getModel();
+            $primaries = array_map(function (BaseHolder $holder) {
+                $model = $holder->getModel();
                 return $model ? $model->getPrimary(false) : null;
             }, $dataService['holders']);
             $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);

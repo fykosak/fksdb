@@ -1,6 +1,6 @@
 events:
     soustredeni35p:
-        event_type_id: [5] # jarní i podzimní sous. nejsou různá
+        eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [35] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
 #        notifyBcc: vercah@fykos.cz
@@ -24,8 +24,7 @@ events:
                 default: 1970-01-01 00:00:00
 
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
 
                 transitions:
@@ -213,12 +212,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")

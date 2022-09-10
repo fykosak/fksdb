@@ -16,12 +16,7 @@ use Nette\InvalidArgumentException;
 class BaseMachine extends AbstractMachine
 {
 
-    public string $name;
-
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
+    public string $name = 'participant';
 
     /**
      * @throws BadTypeException
