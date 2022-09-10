@@ -20,8 +20,6 @@ use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\TransitionsExtension;
@@ -96,7 +94,7 @@ class EventsExtension extends CompilerExtension
                 'baseMachine' => Expect::structure([
                     'transitions' => Expect::arrayOf(
                         Expect::structure([
-                            'condition' => $boolExpressionType(true),
+                            'condition' => $boolExpressionType(true)->default(true),
                             'label' => $translateExpressionType,
                             'afterExecute' => Expect::listOf($expressionType),
                             'beforeExecute' => Expect::listOf($expressionType),
@@ -109,9 +107,9 @@ class EventsExtension extends CompilerExtension
                         Expect::structure([
                             'label' => $translateExpressionType,
                             'description' => $translateExpressionType->default(null),
-                            'required' => $boolExpressionType(false),
-                            'modifiable' => $boolExpressionType(true),
-                            'visible' => $boolExpressionType(true),
+                            'required' => $boolExpressionType(false)->default(false),
+                            'modifiable' => $boolExpressionType(true)->default(true),
+                            'visible' => $boolExpressionType(true)->default(true),
                             'default' => Expect::mixed(),
                             'factory' => $expressionType->default('@event.DBReflectionFactory'),
                         ])->castTo('array'),
@@ -122,7 +120,7 @@ class EventsExtension extends CompilerExtension
                 'machine' => Expect::structure([
                     'baseMachine' => Expect::structure([
                         'label' => $translateExpressionType,
-                        'modifiable' => $boolExpressionType(true),
+                        'modifiable' => $boolExpressionType(true)->default(true),
                     ])->castTo('array'),
                     'formAdjustments' => Expect::listOf(
                         Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
@@ -138,7 +136,6 @@ class EventsExtension extends CompilerExtension
 
     /**
      * @throws MachineDefinitionException
-     * @throws NeonSchemaException
      */
     public function loadConfiguration(): void
     {
@@ -157,7 +154,6 @@ class EventsExtension extends CompilerExtension
         );
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
-            $definition = NeonScheme::readSection($definition, $this->scheme['definition']);
 
             $keys = $this->createAccessKeys($definition);
             $machine = $this->createMachineFactory($definitionName);
@@ -273,7 +269,6 @@ class EventsExtension extends CompilerExtension
 
     /**
      * @throws MachineDefinitionException
-     * @throws NeonSchemaException
      */
     private function createMachineFactory(string $eventName): ServiceDefinition
     {
@@ -283,10 +278,7 @@ class EventsExtension extends CompilerExtension
 
         $factory->setFactory(BaseMachine::class);
 
-        $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
-
-        foreach ($definition['transitions'] as $mask => $transitionRawDef) {
-            $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
+        foreach ($definition['transitions'] as $mask => $transitionDef) {
             $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);
             foreach ($transitions as $transition) {
                 $factory->addSetup(
@@ -304,13 +296,12 @@ class EventsExtension extends CompilerExtension
 
     /**
      * @throws MachineDefinitionException
-     * @throws NeonSchemaException
      */
     private function createHolderFactory(string $eventName, array $definition): ServiceDefinition
     {
-        $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
+        $machineDef = $definition['machine'];
 
-        $instanceDef = NeonScheme::readSection($machineDef['baseMachine'], $this->scheme['bmInstance']);
+        $instanceDef = $machineDef['baseMachine'];
         $factoryName = $this->getHolderName($eventName);
         $definition = $this->getBaseMachineConfig($eventName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
@@ -329,8 +320,6 @@ class EventsExtension extends CompilerExtension
             }
         }
 
-        $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
-
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
@@ -343,7 +332,6 @@ class EventsExtension extends CompilerExtension
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
         foreach ($definition['fields'] as $name => $fieldDef) {
-            $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
         }

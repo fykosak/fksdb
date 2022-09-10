@@ -28,6 +28,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 class BaseHolder implements ModelHolder
 {
