@@ -72,12 +72,15 @@ class EventsExtension extends CompilerExtension
         Helpers::registerSemantic(self::$semanticMap);
     }
 
-    public function getConfigSchema2(): Schema
+    public function getConfigSchema(): Schema
     {
         $expressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
             fn($value) => Helpers::statementFromExpression($value)
         );
-        $boolExpressionType = Expect::anyOf(Expect::bool(), Expect::type(Statement::class))->before(
+        $boolExpressionType = fn(bool $default) => Expect::anyOf(
+            Expect::bool($default),
+            Expect::type(Statement::class)
+        )->before(
             fn($value) => Helpers::statementFromExpression($value)
         );
         $translateExpressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
@@ -89,26 +92,26 @@ class EventsExtension extends CompilerExtension
                 'eventTypeIds' => Expect::listOf('int'),
                 'eventYears' => Expect::listOf('int')->default(null),
                 'formLayout' => Expect::string('application'),
-                'paramScheme' => Expect::array(),
+                'paramScheme' => Expect::array([]),
                 'baseMachine' => Expect::structure([
                     'transitions' => Expect::arrayOf(
                         Expect::structure([
-                            'condition' => $boolExpressionType,
+                            'condition' => $boolExpressionType(true),
                             'label' => $translateExpressionType,
                             'afterExecute' => Expect::listOf($expressionType),
                             'beforeExecute' => Expect::listOf($expressionType),
                             'behaviorType' => Expect::string('secondary'),
-                            'visible' => $boolExpressionType->default(true),
+                            'visible' => $boolExpressionType(true)->default(true),
                         ])->castTo('array'),
                         Expect::string()
                     ),
                     'fields' => Expect::arrayOf(
                         Expect::structure([
                             'label' => $translateExpressionType,
-                            'description' => $translateExpressionType,
-                            'required' => $boolExpressionType->default(false),
-                            'modifiable' => $boolExpressionType->default(true),
-                            'visible' => $boolExpressionType->default(true),
+                            'description' => $translateExpressionType->default(null),
+                            'required' => $boolExpressionType(false),
+                            'modifiable' => $boolExpressionType(true),
+                            'visible' => $boolExpressionType(true),
                             'default' => Expect::mixed(),
                             'factory' => $expressionType->default('@event.DBReflectionFactory'),
                         ])->castTo('array'),
@@ -119,7 +122,7 @@ class EventsExtension extends CompilerExtension
                 'machine' => Expect::structure([
                     'baseMachine' => Expect::structure([
                         'label' => $translateExpressionType,
-                        'modifiable' => $boolExpressionType->default(true),
+                        'modifiable' => $boolExpressionType(true),
                     ])->castTo('array'),
                     'formAdjustments' => Expect::listOf(
                         Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
@@ -231,6 +234,9 @@ class EventsExtension extends CompilerExtension
             ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']])
             ->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($fieldDefinition as $key => $parameter) {
+            if ($key == 'required') {
+                Debugger::barDump($parameter);
+            }
             if (is_numeric($key)) {
                 continue;
             }
