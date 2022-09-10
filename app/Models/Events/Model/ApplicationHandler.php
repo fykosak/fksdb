@@ -240,7 +240,6 @@ class ApplicationHandler
 
         $processState = $holder->processFormValues(
             $values,
-            $this->getMachine(),
             $transition,
             $this->logger,
             $form

@@ -6,7 +6,6 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Expressions\NeonSchemaException;
@@ -72,7 +71,6 @@ class BaseHolder implements ModelHolder
      */
     public function processFormValues(
         ArrayHash $values,
-        BaseMachine $machine,
         ?Transition $transition,
         Logger $logger,
         ?Form $form
@@ -82,10 +80,7 @@ class BaseHolder implements ModelHolder
             $newState = $transition->target;
         }
         foreach ($this->processings as $processing) {
-            $result = $processing->process($newState, $values, $machine, $this, $logger, $form);
-            if ($result) {
-                $newState = $result;
-            }
+            $processing->process($newState, $values, $this, $logger, $form);
         }
 
         return $newState;
