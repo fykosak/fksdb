@@ -56,7 +56,7 @@ events:
                     __init->spare:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit náhradníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: role('admin')

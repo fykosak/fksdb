@@ -31,9 +31,6 @@ baseMachine:
     fields:
     service:
         default: FKSDB\Models\ORM\Services\ServiceEventParticipant
-    # Parameter (Neon) scheme for the holder
-    paramScheme:
-        default: null
 
 
 transition:
@@ -43,13 +40,15 @@ transition:
     label:
         default: null
         type: expression
-    onExecuted:
+    afterExecute:
+        default: []
+        type: expression array
+    beforeExecute:
         default: []
         type: expression array
     # Requires confirmation in the GUI
     behaviorType:
         default: secondary
-        type: expression
     # Cannot be executed from the GUI (event when it's condition == true)
     visible:
         default: true

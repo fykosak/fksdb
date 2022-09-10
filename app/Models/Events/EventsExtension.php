@@ -23,7 +23,7 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\Transitions\Transition\BehaviorType;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
@@ -31,7 +31,9 @@ use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
-use Nette\Utils\Strings;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
+use Tracy\Debugger;
 
 /**
  * It's a f**** magic!
@@ -68,6 +70,67 @@ class EventsExtension extends CompilerExtension
     {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
+    }
+
+    public function getConfigSchema2(): Schema
+    {
+        $expressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
+            fn($value) => Helpers::statementFromExpression($value)
+        );
+        $boolExpressionType = Expect::anyOf(Expect::bool(), Expect::type(Statement::class))->before(
+            fn($value) => Helpers::statementFromExpression($value)
+        );
+        $translateExpressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
+            fn($value) => Helpers::translate($value)
+        );
+
+        return Expect::arrayOf(
+            Expect::structure([
+                'eventTypeIds' => Expect::listOf('int'),
+                'eventYears' => Expect::listOf('int')->default(null),
+                'formLayout' => Expect::string('application'),
+                'paramScheme' => Expect::array(),
+                'baseMachine' => Expect::structure([
+                    'transitions' => Expect::arrayOf(
+                        Expect::structure([
+                            'condition' => $boolExpressionType,
+                            'label' => $translateExpressionType,
+                            'afterExecute' => Expect::listOf($expressionType),
+                            'beforeExecute' => Expect::listOf($expressionType),
+                            'behaviorType' => Expect::string('secondary'),
+                            'visible' => $boolExpressionType->default(true),
+                        ])->castTo('array'),
+                        Expect::string()
+                    ),
+                    'fields' => Expect::arrayOf(
+                        Expect::structure([
+                            'label' => $translateExpressionType,
+                            'description' => $translateExpressionType,
+                            'required' => $boolExpressionType->default(false),
+                            'modifiable' => $boolExpressionType->default(true),
+                            'visible' => $boolExpressionType->default(true),
+                            'default' => Expect::mixed(),
+                            'factory' => $expressionType->default('@event.DBReflectionFactory'),
+                        ])->castTo('array'),
+                        Expect::string()
+                    ),
+                    'service' => Expect::string(EventParticipantService::class),
+                ])->castTo('array'),
+                'machine' => Expect::structure([
+                    'baseMachine' => Expect::structure([
+                        'label' => $translateExpressionType,
+                        'modifiable' => $boolExpressionType->default(true),
+                    ])->castTo('array'),
+                    'formAdjustments' => Expect::listOf(
+                        Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
+                    ),
+                    'processings' => Expect::listOf(
+                        Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
+                    ),
+                ])->castTo('array'),
+            ])->castTo('array'),
+            'string'
+        )->castTo('array');
     }
 
     /**
@@ -132,35 +195,29 @@ class EventsExtension extends CompilerExtension
                     "Transition $mask with non-false visibility must have label defined."
                 );
             }
-
-            $factory = $this->getContainerBuilder()->addDefinition(
-                $this->getTransitionName($baseName, $mask . '__' . $source)
+            $factory = TransitionsExtension::createCommonTransition(
+                $this,
+                $this->getContainerBuilder(),
+                Transition::class,
+                $baseName,
+                $source,
+                $target,
+                $definition
             );
-            $factory->setFactory(Transition::class, [$definition['label']])
-                ->addSetup('setSourceStateEnum', [$source])
-                ->addSetup('setTargetStateEnum', [$target])
-                ->addSetup(
-                    'setBehaviorType',
-                    [
-                        BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? BehaviorType::DEFAULT),
-                    ]
-                );
             $parameters = array_keys($this->scheme['transition']);
             foreach ($parameters as $parameter) {
                 switch ($parameter) {
                     case 'label':
-                    case 'onExecuted':
+                    case 'afterExecute':
+                    case 'beforeExecute':
                     case 'behaviorType':
+                    case 'condition':
                         break;
                     default:
                         if (isset($definition[$parameter])) {
                             $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
                         }
                 }
-            }
-            $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-            foreach ($definition['onExecuted'] as $cb) {
-                $factory->addSetup('addAfterExecute', [$cb]);
             }
             $factories[] = $factory;
         }
@@ -171,9 +228,8 @@ class EventsExtension extends CompilerExtension
     {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->getFieldName())
-            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
-
-        $field->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']])
+            ->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($fieldDefinition as $key => $parameter) {
             if (is_numeric($key)) {
                 continue;
@@ -197,13 +253,13 @@ class EventsExtension extends CompilerExtension
     {
         $keys = [];
         foreach ($definition['eventTypeIds'] as $eventTypeId) {
-            if ($definition['eventYears'] === true) {
-                $keys[] = (string)$eventTypeId;
-            } else {
+            if (isset($definition['eventYears']) && $definition['eventYears'] !== true) {
                 foreach ($definition['eventYears'] as $year) {
                     $key = $eventTypeId . '-' . $year;
                     $keys[] = $key;
                 }
+            } else {
+                $keys[] = (string)$eventTypeId;
             }
         }
         return $keys;
@@ -321,11 +377,6 @@ class EventsExtension extends CompilerExtension
     private function getHolderName(string $name): string
     {
         return $this->prefix(self::HOLDER_PREFIX . $name);
-    }
-
-    private function getTransitionName(string $baseName, string $mask): string
-    {
-        return uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
     private function getFieldName(): string

@@ -61,34 +61,34 @@ events:
                     __init->invited:
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf8.appCond%
                         label: _('Přihlásit náhradníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     # to applied
                     __init->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Přihlásit účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Potvrdit účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(transition, self)
                     invited->applied:
                         condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
                         label: _('Potvrdit účast')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(transition, self)
                     # to end-states
                     applied->participated:

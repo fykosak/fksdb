@@ -15,11 +15,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     public BaseMachine $baseMachine;
     private bool $visible;
 
-    public function __construct(?string $label)
-    {
-        $this->setLabel($label ?? '');
-    }
-
     public function setBaseMachine(BaseMachine $baseMachine): void
     {
         $this->baseMachine = $baseMachine;

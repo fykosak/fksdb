@@ -9,6 +9,8 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
+use Nette\DI\ContainerBuilder;
+use Nette\DI\Definitions\ServiceDefinition;
 
 class TransitionsExtension extends CompilerExtension
 {
@@ -21,7 +23,10 @@ class TransitionsExtension extends CompilerExtension
             foreach ($machine['transitions'] as $mask => $transition) {
                 [$sources, $target] = self::parseMask($mask, $enumClassName);
                 foreach ($sources as $source) {
-                    $this->createTransition(
+                    self::createCommonTransition(
+                        $this,
+                        $this->getContainerBuilder(),
+                        Transition::class,
                         $machineName,
                         $source,
                         $target,
@@ -41,6 +46,49 @@ class TransitionsExtension extends CompilerExtension
         }
     }
 
+    public static function createCommonTransition(
+        CompilerExtension $extension,
+        ContainerBuilder $builder,
+        string $className,
+        string $machineName,
+        EnumColumn $source,
+        EnumColumn $target,
+        array $baseConfig
+    ): ServiceDefinition {
+        $factory = $builder->addDefinition(
+            $extension->prefix(
+                $machineName . '.' .
+                ($source->value) . '.' .
+                ($target->value)
+            )
+        )
+            ->addTag($machineName)
+            ->setType($className)
+            ->addSetup('setEvaluator', ['@events.expressionEvaluator'])
+            ->addSetup('setCondition', [$baseConfig['condition'] ?? null])
+            ->addSetup('setSourceStateEnum', [$source])
+            ->addSetup('setTargetStateEnum', [$target])
+            ->addSetup('setLabel', [Helpers::translate($baseConfig['label'])])
+            ->addSetup(
+                'setBehaviorType',
+                [
+                    BehaviorType::tryFrom($baseConfig['behaviorType'] ?? 'secondary'),
+                ]
+            );
+        if (isset($baseConfig['afterExecute'])) {
+            foreach ($baseConfig['afterExecute'] as $callback) {
+                $factory->addSetup('addAfterExecute', [$callback]);
+            }
+        }
+
+        if (isset($transitionConfig['beforeExecute'])) {
+            foreach ($transitionConfig['beforeExecute'] as $callback) {
+                $factory->addSetup('addBeforeExecute', [$callback]);
+            }
+        }
+        return $factory;
+    }
+
     private function setUpMachine(string $machineName, array $machineConfig): void
     {
         $builder = $this->getContainerBuilder();
@@ -50,47 +98,6 @@ class TransitionsExtension extends CompilerExtension
         }
         if (isset($machineConfig['decorator'])) {
             $machineDefinition->addSetup('decorateTransitions', [$machineConfig['decorator']]);
-        }
-    }
-
-    private function createTransition(
-        string $machineName,
-        EnumColumn $source,
-        EnumColumn $target,
-        array $transitionConfig
-    ): void {
-        $builder = $this->getContainerBuilder();
-        $factory = $builder->addDefinition(
-            $this->prefix(
-                $machineName . '.' .
-                ($source->value) . '.' .
-                ($target->value)
-            )
-        )
-            ->addTag($machineName)
-            ->setType(Transition::class)
-            ->addSetup('setEvaluator', ['@events.expressionEvaluator'])
-            ->addSetup('setCondition', [$transitionConfig['condition'] ?? null])
-            ->addSetup('setSourceStateEnum', [$source])
-            ->addSetup('setTargetStateEnum', [$target])
-            ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
-
-        $factory->addSetup(
-            'setBehaviorType',
-            [
-                BehaviorType::tryFrom($transitionConfig['behaviorType'] ?? 'secondary'),
-            ]
-        );
-
-        if (isset($transitionConfig['beforeExecute'])) {
-            foreach ($transitionConfig['beforeExecute'] as $callback) {
-                $factory->addSetup('addBeforeExecute', [$callback]);
-            }
-        }
-        if (isset($transitionConfig['afterExecute'])) {
-            foreach ($transitionConfig['afterExecute'] as $callback) {
-                $factory->addSetup('addAfterExecute', [$callback]);
-            }
         }
     }
 

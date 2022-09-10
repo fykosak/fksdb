@@ -21,22 +21,22 @@ events:
                     __init->invited:
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     __init->spare:
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(param('deadline')),role('admin'))
@@ -52,57 +52,57 @@ events:
                     spare->spare1:
                         condition: role('admin')
                         label: _('Send first call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited->invited1:
                         condition: role('admin')
                         label: _('Send first call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     spare1->spare2:
                         condition: role('admin')
                         label: _('Send second call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited1->invited2:
                         condition: role('admin')
                         label: _('Send second call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     spare2->spare3:
                         condition: role('admin')
                         label: _('Send last call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited2->invited3:
                         condition: role('admin')
                         label: _('Send last call')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     interested->applied:
                         condition: role('admin')
                         label: _('Validate as a participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied, self)
                     spare->invited:
                         condition: role('admin')
                         label: _('Invite as a participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare1->invited1:
                         condition: role('admin')
                         label: _('Invite as a participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare2->invited2:
                         condition: role('admin')
                         label: _('Invite as a participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare3->invited3:
                         condition: role('admin')
                         label: _('Invite as a participant')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())

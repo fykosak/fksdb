@@ -6,7 +6,7 @@ parameters:
                 __init->applied:
                     condition: %events.defaultDsef.appCond%
                     label: _('Přihlásit účastníka')
-                    onExecuted:
+                    afterExecute:
                         - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                 applied->participated:
                     condition: and(role('admin'),eventWas())

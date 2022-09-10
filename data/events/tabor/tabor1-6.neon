@@ -82,32 +82,32 @@ events:
                     __init->invited:
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
+                        afterExecute:
                            - FKSDB\Models\Events\Transitions\MailSender(tabor/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/invited, .self)
                     __init->spare:
                         condition: role('admin')
                         label: _('Pozvat náhradníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/spare, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Pozvat náhradníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/spare, .self)
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Potrvrdit učast')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-applied, .self)
                     spare->interested:
                         condition: before(param('deadline'))
                         label: _('Chci jet')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-interested, .self)
                     applied->paid:
                         condition: role('admin')

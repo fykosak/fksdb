@@ -73,9 +73,9 @@ class Transition
         return _($this->label);
     }
 
-    public function setLabel(string $label): void
+    public function setLabel(?string $label): void
     {
-        $this->label = $label;
+        $this->label = $label ?? '';
     }
 
     public function setCondition(?callable $callback): void

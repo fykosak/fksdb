@@ -18,7 +18,7 @@ events:
                     __init->applied:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())

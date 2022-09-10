@@ -44,12 +44,12 @@ events:
                     __init->applied:
                         condition: %events.dsef20.appCond%
                         label: _('Přihlásit účastníka')
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef20.appCond%
                         visible: false
-                        onExecuted:
+                        afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
