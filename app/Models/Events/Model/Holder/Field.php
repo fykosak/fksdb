@@ -12,7 +12,6 @@ class Field
 {
 
     public string $name;
-    public bool $determining;
     public ?string $label;
     public ?string $description;
     public BaseHolder $holder;
@@ -36,11 +35,6 @@ class Field
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function setDetermining(bool $determining): void
-    {
-        $this->determining = $determining;
     }
 
     /** @return mixed */

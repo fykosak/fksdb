@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
@@ -57,15 +56,6 @@ class BaseHolder implements ModelHolder
     private array $formAdjustments = [];
     /** @var Processing[] */
     private array $processings = [];
-
-    public function __construct()
-    {
-        /*
-         * This implicit processing is the first. It's not optimal
-         * and it may be subject to change.
-         */
-        $this->processings[] = new GenKillProcessing();
-    }
 
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
@@ -229,14 +219,6 @@ class BaseHolder implements ModelHolder
         $column = str_replace(':', '.', $column);
         $pos = strrpos($column, '.');
         return $pos === false ? $column : substr($column, $pos + 1);
-    }
-
-    /**
-     * @return Field[]
-     */
-    public function getDeterminingFields(): array
-    {
-        return array_filter($this->fields, fn(Field $field): bool => $field->determining);
     }
 
     public function createFormContainer(): ContainerWithOptions

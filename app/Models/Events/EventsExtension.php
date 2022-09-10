@@ -336,24 +336,8 @@ class EventsExtension extends CompilerExtension
         }
         $factory->addSetup('setParamScheme', [$paramScheme]);
 
-        $hasNonDetermining = false;
         foreach ($definition['fields'] as $name => $fieldDef) {
             $fieldDef = NeonScheme::readSection($fieldDef, $this->scheme['field']);
-            if ($fieldDef['determining']) {
-                if ($fieldDef['required']) {
-                    throw new MachineDefinitionException(
-                        "Field '$name' cannot be both required and determining. Set required on the base holder."
-                    );
-                }
-                if ($hasNonDetermining) {
-                    throw new MachineDefinitionException(
-                        "Field '$name' cannot be preceded by non-determining fields. Reorder the fields."
-                    );
-                }
-                $fieldDef['required'] = $instanceDef['required'];
-            } else {
-                $hasNonDetermining = true;
-            }
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
         }

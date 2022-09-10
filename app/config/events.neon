@@ -61,8 +61,6 @@ field:
     description:
         default: null
         type: expression
-    determining:
-        default: false
     required:
         default: false
         type: expression

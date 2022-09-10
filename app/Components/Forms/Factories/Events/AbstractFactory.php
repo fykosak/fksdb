@@ -23,22 +23,8 @@ abstract class AbstractFactory implements FieldFactory
 
     final protected function appendRequiredRule(BaseControl $control, Field $field): void
     {
-        $container = $control->getParent();
         if ($field->isRequired()) {
-            $conditioned = $control;
-            foreach ($field->holder->getDeterminingFields() as $name => $determiningField) {
-                if ($determiningField === $field) {
-                    $conditioned = $control;
-                    break;
-                }
-                /*
-                 * NOTE: If the control doesn't exists, it's hidden and as such cannot condition further requirements.
-                 */
-                if (isset($container[$name])) {
-                    $conditioned = $conditioned->addConditionOn($container[$name], Form::FILLED);
-                }
-            }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
+            $control->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
         }
     }
 
