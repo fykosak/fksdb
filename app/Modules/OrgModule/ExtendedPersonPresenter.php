@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Service;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Control;
-use Nette\Forms\Controls\SubmitButton;
 
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter
 {
@@ -96,10 +95,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
             $this->getContext()->getParameters()['invitation']['defaultLang']
         );
 
-        $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
-
-        $submit->onClick[] = function (SubmitButton $button) use ($handler) {
-            $form = $button->getForm();
+        $form->addSubmit('send', $create ? _('Create') : _('Save'));
+        $form->onSuccess[] = function (Form $form) use ($handler) {
             if ($handler->handleForm($form, $this, $this->sendEmail)) {
                 $this->backLinkRedirect();
                 $this->redirect('list');

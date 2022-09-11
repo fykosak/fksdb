@@ -84,16 +84,6 @@ class ReferencedId extends HiddenField
         return $this->searchContainer;
     }
 
-    protected function getPromise(): ?Promise
-    {
-        return $this->promise;
-    }
-
-    private function setPromise(Promise $promise): void
-    {
-        $this->promise = $promise;
-    }
-
     public function getService(): Service
     {
         return $this->service;
@@ -184,9 +174,7 @@ class ReferencedId extends HiddenField
     private function createPromise(): void
     {
         $values = $this->getReferencedContainer()->getValues();
-
         $referencedId = $this->getValue();
-
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
@@ -214,7 +202,7 @@ class ReferencedId extends HiddenField
         });
         $referencedId = $this->getValue();
         $this->setValue($referencedId);
-        $this->setPromise($promise);
+        $this->promise = $promise;
     }
 
     public function invalidateFormGroup(): void
