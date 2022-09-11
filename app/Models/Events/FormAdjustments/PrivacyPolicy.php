@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -47,7 +46,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
      */
     public function adjust(Form $form, ModelHolder $holder): void
     {
-        if ($holder->getModelState() != AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() != Machine::STATE_INIT) {
             return;
         }
 

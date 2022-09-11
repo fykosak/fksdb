@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
-use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Events\Machine\Transition;
@@ -60,7 +60,7 @@ class ApplicationHandler
         $this->errorMode = $errorMode;
     }
 
-    public function getMachine(): BaseMachine
+    public function getMachine(): EventParticipantMachine
     {
         static $machine;
         if (!isset($machine)) {
@@ -98,7 +98,7 @@ class ApplicationHandler
             $this->beginTransaction();
             /** @var Transition $transition */
             $transition = $this->getMachine()->getTransitionById($explicitTransitionName);
-            if (!$transition->matchSource($holder->getModelState())) {
+            if ($transition->source->value !== $holder->getModelState()->value) {
                 throw new UnavailableTransitionException($transition, $holder->getModel());
             }
 
@@ -156,7 +156,7 @@ class ApplicationHandler
 
             $this->saveAndExecute($transition, $holder);
 
-            if (($data || $form) && (!$transition || !$transition->isTerminating())) {
+            if ($data || $form) {
                 $this->logger->log(
                     new Message(
                         sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
@@ -205,8 +205,6 @@ class ApplicationHandler
                     Message::LVL_SUCCESS
                 )
             );
-        } elseif ($transition && $transition->isTerminating()) {
-            $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
         } elseif ($transition) {
             $this->logger->log(
                 new Message(

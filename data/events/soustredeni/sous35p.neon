@@ -179,11 +179,6 @@ events:
                     out_of_db->cancelled:
                         condition: role('admin')
                         label: _('Return to DB as cancelled')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
                 fields:
                     person_id:
                         label: _('Person')

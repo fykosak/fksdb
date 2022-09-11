@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -44,7 +44,7 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(EventModel $event): BaseMachine
+    public function getEventMachine(EventModel $event): EventParticipantMachine
     {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
@@ -87,7 +87,7 @@ class EventDispatchFactory
         $definition = $this->findDefinition($event);
         /** @var BaseHolder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
-        $holder->inferEvent($event);
+        $holder->setEvent($event);
         return $holder;
     }
 

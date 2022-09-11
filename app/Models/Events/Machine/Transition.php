@@ -7,27 +7,23 @@ namespace FKSDB\Models\Events\Machine;
 use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 {
 
-    public BaseMachine $baseMachine;
+    public EventParticipantMachine $baseMachine;
     private bool $visible;
 
-    public function setBaseMachine(BaseMachine $baseMachine): void
+    public function setBaseMachine(EventParticipantMachine $baseMachine): void
     {
         $this->baseMachine = $baseMachine;
     }
 
     public function isCreating(): bool
     {
-        return $this->source->value === AbstractMachine::STATE_INIT;
-    }
-
-    public function isTerminating(): bool
-    {
-        return $this->target->value === AbstractMachine::STATE_TERMINATED;
+        return $this->source->value === Machine::STATE_INIT;
     }
 
     public function isVisible(): bool

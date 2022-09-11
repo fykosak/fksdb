@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -30,7 +30,7 @@ class RelatedPersonAuthorizator
     public function isRelatedPerson(BaseHolder $holder): bool
     {
         // everyone is related
-        if ($holder->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() == Machine::STATE_INIT) {
             return true;
         }
         /** @var LoginModel|null $login */

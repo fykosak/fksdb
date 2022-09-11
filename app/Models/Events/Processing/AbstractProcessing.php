@@ -6,7 +6,7 @@ namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
@@ -89,11 +89,8 @@ abstract class AbstractProcessing implements Processing
      */
     protected function isBaseReallyEmpty(string $name): bool
     {
-        if ($this->holder->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($this->holder->getModelState() == Machine::STATE_INIT) {
             return true; // it was empty since beginning
-        }
-        if (isset($this->state) && $this->state->value == AbstractMachine::STATE_TERMINATED) {
-            return true; // it has been deleted by user
         }
         return false;
     }

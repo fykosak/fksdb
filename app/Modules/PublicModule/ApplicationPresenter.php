@@ -9,14 +9,14 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -174,7 +174,7 @@ class ApplicationPresenter extends BasePresenter
                 )
         ) {
             if (
-                $this->getHolder()->getModelState() == AbstractMachine::STATE_INIT
+                $this->getHolder()->getModelState() == Machine::STATE_INIT
             ) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
@@ -208,7 +208,7 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    private function getMachine(): BaseMachine
+    private function getMachine(): EventParticipantMachine
     {
         static $machine;
         if (!isset($machine)) {
@@ -291,7 +291,7 @@ class ApplicationPresenter extends BasePresenter
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if (
-                $this->getHolder()->getModelState() == AbstractMachine::STATE_INIT
+                $this->getHolder()->getModelState() == Machine::STATE_INIT
             ) {
                 return;
             }

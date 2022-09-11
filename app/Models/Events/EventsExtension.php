@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events;
 
 use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
-use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
@@ -276,7 +276,7 @@ class EventsExtension extends CompilerExtension
         $definition = $this->getBaseMachineConfig($eventName);
         $factory = $this->getContainerBuilder()->addDefinition($factoryName);
 
-        $factory->setFactory(BaseMachine::class);
+        $factory->setFactory(EventParticipantMachine::class);
 
         foreach ($definition['transitions'] as $mask => $transitionDef) {
             $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);

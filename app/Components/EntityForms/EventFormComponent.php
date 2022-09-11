@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -96,17 +95,13 @@ class EventFormComponent extends EntityFormComponent
             $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $paramControl->setOption('description', $this->createParamDescription($holder));
             $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
-                $scheme = $holder->paramScheme;
                 $parameters = $control->getValue();
                 try {
                     if ($parameters) {
-                        $parameters = Neon::decode($parameters);
-                    } else {
-                        $parameters = [];
+                        Neon::decode($parameters);
                     }
-                    NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonSchemaException $exception) {
+                } catch (\Throwable $exception) {
                     $control->addError($exception->getMessage());
                     return false;
                 }

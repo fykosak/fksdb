@@ -13,9 +13,13 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
-abstract class Machine extends AbstractMachine
+abstract class Machine
 {
+    public const STATE_INIT = '__init';
+    public const STATE_ANY = '*';
 
+    /** @var Transition[] */
+    protected array $transitions = [];
     protected Explorer $explorer;
     /**
      * @var callable|null
@@ -26,6 +30,49 @@ abstract class Machine extends AbstractMachine
     public function __construct(Explorer $explorer)
     {
         $this->explorer = $explorer;
+    }
+
+    public function addTransition(Transition $transition): void
+    {
+        $this->transitions[] = $transition;
+    }
+
+    /**
+     * @return Transition[]
+     */
+    public function getTransitions(): array
+    {
+        return $this->transitions;
+    }
+
+    /**
+     * @throws UnavailableTransitionsException
+     */
+    public function getTransitionById(string $id): Transition
+    {
+        $transitions = \array_filter(
+            $this->getTransitions(),
+            fn(Transition $transition): bool => $transition->getId() === $id
+        );
+        return $this->selectTransition($transitions);
+    }
+
+    /**
+     * @param Transition[] $transitions
+     * @throws \LogicException
+     * @throws UnavailableTransitionsException
+     * Protect more that one transition between nodes
+     */
+    protected function selectTransition(array $transitions): Transition
+    {
+        $length = \count($transitions);
+        if ($length > 1) {
+            throw new UnavailableTransitionsException();
+        }
+        if (!$length) {
+            throw new UnavailableTransitionsException();
+        }
+        return \array_values($transitions)[0];
     }
 
     final public function decorateTransitions(TransitionsDecorator $decorator): void
@@ -68,9 +115,6 @@ abstract class Machine extends AbstractMachine
     final public function executeTransitionById(string $id, ModelHolder $holder): void
     {
         $transition = $this->getTransitionById($id);
-        if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException();
-        }
         $this->execute($transition, $holder);
     }
 
@@ -87,7 +131,7 @@ abstract class Machine extends AbstractMachine
 
     protected function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
-        if (!$transition->matchSource($holder->getState())) {
+        if ($transition->source->value !== $holder->getState()->value) {
             return false;
         }
         if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
@@ -97,13 +141,13 @@ abstract class Machine extends AbstractMachine
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
     private function execute(Transition $transition, ModelHolder $holder): void
     {
         if (!$this->isAvailable($transition, $holder)) {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+            throw new UnavailableTransitionsException(_('Prechod sa nedá vykonať'));
         }
         $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
@@ -112,6 +156,8 @@ abstract class Machine extends AbstractMachine
         }
         try {
             $transition->callBeforeExecute($holder);
+            $holder->updateState($transition->target);
+            $transition->callAfterExecute($holder);
         } catch (\Throwable $exception) {
             $this->explorer->getConnection()->rollBack();
             throw $exception;
@@ -119,9 +165,6 @@ abstract class Machine extends AbstractMachine
         if (!$outerTransition) {
             $this->explorer->getConnection()->commit();
         }
-
-        $holder->updateState($transition->target);
-        $transition->callAfterExecute($holder);
     }
 
     abstract public function createHolder(Model $model): ModelHolder;

@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
@@ -28,7 +28,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 use Nette\Utils\ArrayHash;
-use Tracy\Debugger;
 
 class BaseHolder implements ModelHolder
 {
@@ -76,14 +75,10 @@ class BaseHolder implements ModelHolder
         Logger $logger,
         ?Form $form
     ): ?EventParticipantStatus {
-        $newState = null;
-        if ($transition) {
-            $newState = $transition->target;
-        }
+        $newState = $transition ? $transition->target : null;
         foreach ($this->processings as $processing) {
             $processing->process($newState, $values, $this, $logger, $form);
         }
-
         return $newState;
     }
 
@@ -119,19 +114,11 @@ class BaseHolder implements ModelHolder
     /**
      * @throws NeonSchemaException
      */
-    private function setEvent(EventModel $event): void
+    public function setEvent(EventModel $event): void
     {
         $this->event = $event;
         $this->data['event_id'] = $this->event->getPrimary();
         $this->cacheParameters();
-    }
-
-    /**
-     * @throws NeonSchemaException
-     */
-    public function inferEvent(EventModel $event): void
-    {
-        $this->setEvent($event);
     }
 
     public function setParamScheme(array $paramScheme): void
@@ -169,12 +156,7 @@ class BaseHolder implements ModelHolder
 
     public function saveModel(): void
     {
-        if ($this->getModelState() == AbstractMachine::STATE_TERMINATED) {
-            $model = $this->getModel();
-            if ($model) {
-                $this->service->disposeModel($model);
-            }
-        } elseif ($this->getModelState() != AbstractMachine::STATE_INIT) {
+        if ($this->getModelState() != Machine::STATE_INIT) {
             $this->model = $this->service->storeModel($this->data, $this->getModel());
         }
     }
@@ -189,7 +171,7 @@ class BaseHolder implements ModelHolder
             return $model->status;
         }
 
-        return EventParticipantStatus::tryFrom(AbstractMachine::STATE_INIT);
+        return EventParticipantStatus::tryFrom(Machine::STATE_INIT);
     }
 
     public function setModelState(EventParticipantStatus $state): void
@@ -238,7 +220,6 @@ class BaseHolder implements ModelHolder
      */
     public function getPerson(): ?PersonModel
     {
-        /** @var PersonModel $model */
         try {
             $app = $this->getModel();
             if (!$app) {
@@ -255,9 +236,6 @@ class BaseHolder implements ModelHolder
         return $this->name;
     }
 
-    /*
-     * Parameter handling
-     */
     /**
      * @throws NeonSchemaException
      */

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Connection;
@@ -88,7 +88,7 @@ class DBReflectionFactory extends AbstractFactory
 
     protected function setDefaultValue(BaseControl $control, Field $field): void
     {
-        if ($field->holder->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->holder->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {

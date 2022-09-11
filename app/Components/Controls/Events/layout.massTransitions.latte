@@ -1,7 +1,6 @@
 {varType FKSDB\Models\Events\Machine\Transition[] $transitions}
 {foreach $transitions as $transition}
     {continueIf $transition->isCreating()}
-    {continueIf $transition->isTerminating()}
     <h3>{_($transition->getLabel())}</h3>
     <p>
         <small class="text-muted">{$transition->getLabel()}</small>

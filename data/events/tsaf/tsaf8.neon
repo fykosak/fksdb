@@ -111,10 +111,6 @@ events:
                         condition: role('admin')
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-
                 fields:
                     person_id:
                         label: _('Person')

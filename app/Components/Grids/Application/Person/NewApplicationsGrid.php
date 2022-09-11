@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -58,7 +58,7 @@ class NewApplicationsGrid extends BaseGrid
             ->setShow(fn(EventModel $modelEvent): bool => (bool)count(
                 $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
                     $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                    EventParticipantStatus::tryFrom(AbstractMachine::STATE_INIT),
+                    EventParticipantStatus::tryFrom(Machine::STATE_INIT),
                     true
                 )
             ));

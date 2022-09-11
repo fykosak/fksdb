@@ -68,9 +68,9 @@ class SingleEventSource implements HolderSource
     {
         /** @var EventParticipantModel $model */
         foreach ($this->primarySelection as $model) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($model);
-            $this->holders[$model->getPrimary()] = $holder;
+            $machine = $this->eventDispatchFactory->getEventMachine($this->event);
+            $machine->createHolder($model);
+            $this->holders[$model->getPrimary()] = $machine->createHolder($model);
         }
     }
 

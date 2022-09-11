@@ -75,11 +75,6 @@ class PersonFactory extends AbstractFactory
      */
     public function createComponent(Field $field): ReferencedId
     {
-        $searchType = $this->evaluator->evaluate($this->searchType, $field->holder);
-        $allowClear = $this->evaluator->evaluate($this->allowClear, $field->holder);
-
-        $event = $field->holder->event;
-
         $resolver = new PersonContainerResolver(
             $field,
             $this->modifiable,
@@ -90,11 +85,11 @@ class PersonFactory extends AbstractFactory
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
-            $event->getContestYear(),
-            $searchType,
-            $allowClear,
+            $field->holder->event->getContestYear(),
+            $this->evaluator->evaluate($this->searchType, $field->holder),
+            $this->evaluator->evaluate($this->allowClear, $field->holder),
             $resolver,
-            $event
+            $field->holder->event
         );
         $referencedId->searchContainer->setOption('label', $field->label);
         $referencedId->searchContainer->setOption('description', $field->description);
@@ -125,8 +120,6 @@ class PersonFactory extends AbstractFactory
         parent::validate($field, $validator);
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->holder->event;
-        $contestYear = $event->getContestYear();
         $personId = $field->getValue();
         $person = $personId ? $this->personService->findByPrimary($personId) : null;
 
@@ -145,8 +138,8 @@ class PersonFactory extends AbstractFactory
                         $person,
                         $subName,
                         $fieldName,
-                        $contestYear,
-                        $event
+                        $field->holder->event->getContestYear(),
+                        $field->holder->event
                     )
                 ) {
                     $validator->addError(

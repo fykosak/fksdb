@@ -106,9 +106,8 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     public function getHolder(): BaseHolder
     {
-        $holder = $this->getDummyHolder();
-        $holder->setModel($this->getEntity());
-        return $holder;
+        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        return $machine->createHolder($this->getEntity());
     }
 
     protected function createComponentPersonScheduleGrid(): PersonGrid

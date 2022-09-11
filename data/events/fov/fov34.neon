@@ -49,11 +49,6 @@ events:
                     invited|auto.invited|applied->cancelled:
                         condition: role('admin')
                         label: _('Cancel application')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
                 fields:
                     person_id:
                         label: _('Person')

@@ -38,17 +38,7 @@ class Transition
         $this->target = $targetState;
     }
 
-    public function matchSource(EnumColumn $source): bool
-    {
-        return $source->value === $this->source->value;
-    }
-
     public function isCreating(): bool
-    {
-        return is_null($this->source);
-    }
-
-    public function isTerminating(): bool
     {
         return is_null($this->source);
     }

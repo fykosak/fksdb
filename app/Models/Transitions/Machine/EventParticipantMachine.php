@@ -2,21 +2,35 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Events\Machine;
+namespace FKSDB\Models\Transitions\Machine;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Fykosak\NetteORM\Model;
+use Nette\Database\Explorer;
 use Nette\InvalidArgumentException;
 
 /**
  * @property Transition[] $transitions
  */
-class BaseMachine extends AbstractMachine
+class EventParticipantMachine extends Machine
 {
 
     public string $name = 'participant';
+
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function __construct(EventDispatchFactory $eventDispatchFactory, Explorer $explorer)
+    {
+        parent::__construct($explorer);
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
 
     /**
      * @throws BadTypeException
@@ -34,8 +48,8 @@ class BaseMachine extends AbstractMachine
      * @return Transition[]
      */
     public function getAvailableTransitions(
-        BaseHolder $holder,
-        EnumColumn $sourceState,
+        ModelHolder $holder,
+        ?EnumColumn $sourceState = null,
         bool $visible = false
     ): array {
         return array_filter(
@@ -73,7 +87,18 @@ class BaseMachine extends AbstractMachine
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $transition->matchSource($sourceStateMask)
+            fn(Transition $transition): bool => $sourceStateMask->value === $transition->source->value
         );
+    }
+
+    /**
+     * @param EventParticipantModel $model
+     * @throws NeonSchemaException
+     */
+    public function createHolder(Model $model): ModelHolder
+    {
+        $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
+        $holder->setModel($model);
+        return $holder;
     }
 }

@@ -36,9 +36,6 @@ parameters:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-                cancelled->__terminated:
-                    condition: role('admin')
-                    label: _('Smazat přihlášku')
             paramScheme:
                  notifyBcc:
                      default: dsef@fykos.cz
