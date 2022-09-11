@@ -305,36 +305,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     // @ts-ignore
-    $.widget('fks.enterSubmitForm', {
-        _create: function () {
-            this.update();
-        },
-        update: function () {
-            const elForm = $(this.element);
-            const elSubmit = elForm.find('input[data-submit-on=\'this\']');
-            elForm.find('input').not(':data(submit-on-handled)')
-                .data('submit-on-handled', true)
-                .keypress((e) => {
-                    if (e.which == 13) {
-                        elSubmit.click();
-                        return false;
-                    }
-                });
-        },
-    });
-// @ts-ignore
-    $('form[data-submit-on=\'enter\']').enterSubmitForm();
-    document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
-        el.addEventListener('click', () => {
-            if (window.confirm('O RLY?')) {
-                // @ts-ignore
-                el.trigger('click');
-            }
-        })
-    });
-    // TODO form buttons aren't checked
-
-    // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
 // default options
         options: {
