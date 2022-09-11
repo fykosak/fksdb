@@ -40,7 +40,7 @@ class YearCalculator
         if ($calMonth < self::FIRST_AC_MONTH) {
             $calYear -= 1;
         }
-        return $calYear;
+        return (int)$calYear;
     }
 
     public static function getGraduationYear(int $studyYear, ?ContestYearModel $contestYear): int
