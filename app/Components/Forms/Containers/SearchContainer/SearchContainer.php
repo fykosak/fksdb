@@ -38,7 +38,7 @@ abstract class SearchContainer extends ContainerWithOptions
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Find'));
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);
 
-        $submit->onInvalidClick[] = function (): void {
+        $cb = function (): void {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->getSearchCallback())($term);
 
@@ -51,6 +51,8 @@ abstract class SearchContainer extends ContainerWithOptions
             $this->referencedId->getReferencedContainer()->setValues($values);
             $this->referencedId->invalidateFormGroup();
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     abstract protected function createSearchControl(): ?BaseControl;
