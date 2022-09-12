@@ -66,8 +66,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => (string)$this->person->person_id,
+                'person_id_1' => self::personToValues($this->person),
                 'note' => 'note-c',
             ],
         ]);
@@ -81,7 +81,6 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => null, // empty personId
                 'note' => '',
             ],
@@ -96,7 +95,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         $response = $this->createFormRequest('edit', [
             EventOrgFormComponent::CONTAINER => [
-                'person_id__meta' => (string)$this->eventOrgPerson->person_id,
+                'person_id' => (string)$this->eventOrgPerson->person_id,
+                'person_id_1' => self::personToValues($this->eventOrgPerson),
                 'note' => 'note-edited',
             ],
         ], [

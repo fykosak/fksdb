@@ -61,7 +61,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
                 'domain_alias' => 't',
             ],
         ]);
-       // file_put_contents('r.html', (string)$response->getSource());
         Assert::type(RedirectResponse::class, $response);
 
         $after = $this->countOrgs();
@@ -148,29 +147,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');
-    }
-
-    public static function personToValues(PersonModel $person): array
-    {
-        return [
-            '_c_compact' => $person->getFullName(),
-            'person' => [
-                'other_name' => $person->other_name,
-                'family_name' => $person->family_name,
-            ],
-            'person_info' => [
-                'email' => $person->getInfo()->email,
-                'born' => $person->getInfo()->born,
-            ],
-            'person_history' => [
-                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
-            ],
-            'person_has_flag' => [
-                'spam_mff' => '1',
-            ],
-        ];
     }
 }
 

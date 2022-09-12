@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -29,7 +27,6 @@ class OrgFormComponent extends EntityFormComponent
 
     public const CONTAINER = 'org';
     private ContestYearModel $contestYear;
-    private ReferencedPersonFactory $referencedPersonFactory;
     private ContestAuthorizator $contestAuthorizator;
     private OrgService $orgService;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
@@ -43,12 +40,10 @@ class OrgFormComponent extends EntityFormComponent
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         OrgService $orgService,
-        ReferencedPersonFactory $referencedPersonFactory,
         ContestAuthorizator $contestAuthorizator
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->orgService = $orgService;
-        $this->referencedPersonFactory = $referencedPersonFactory;
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
@@ -59,18 +54,12 @@ class OrgFormComponent extends EntityFormComponent
     protected function configureForm(Form $form): void
     {
         $container = $this->createOrgContainer();
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
-            $this->getContext()->getParameters()[$this->contestYear->contest->getContestSymbol()]['adminOrg'],
+        $referencedId = $this->createPersonId(
             $this->contestYear,
-            PersonSearchContainer::SEARCH_ID,
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest)
         );
-        $referencedId->addRule(Form::FILLED, _('Person is required.'));
-        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
-        $referencedId->getSearchContainer()->setOption('label', _('Person'));
-
         $container->addComponent($referencedId, 'person_id', 'since');
         $form->addComponent($container, self::CONTAINER);
     }
