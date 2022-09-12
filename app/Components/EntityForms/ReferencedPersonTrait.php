@@ -4,25 +4,40 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
+use Nette\Forms\Form;
 
 trait ReferencedPersonTrait
 {
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    protected PersonFactory $personFactory;
-    protected PersonService $personService;
-
-    protected function createPersonSelect(): AutocompleteSelectBox
-    {
-        return $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->personService));
+    protected function createPersonId(
+        ContestYearModel $contestYear,
+        bool $allowClear,
+        VisibilityResolver $visibilityResolver,
+        ModifiabilityResolver $resolver
+    ): ReferencedId {
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getContext()->getParameters()[$contestYear->contest->getContestSymbol()]['adminTeacher'],
+            $contestYear,
+            PersonSearchContainer::SEARCH_ID,
+            $allowClear,
+            $resolver,
+            $visibilityResolver
+        );
+        $referencedId->addRule(Form::FILLED, _('Person is required.'));
+        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
+        $referencedId->getSearchContainer()->setOption('label', _('Person'));
+        return $referencedId;
     }
 
-    final public function injectPersonTrait(PersonFactory $personFactory, PersonService $personService): void
+    final public function injectPersonTrait(ReferencedPersonFactory $referencedPersonFactory): void
     {
-        $this->personFactory = $personFactory;
-        $this->personService = $personService;
+        $this->referencedPersonFactory = $referencedPersonFactory;
     }
 }

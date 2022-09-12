@@ -80,7 +80,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         ]);
 
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('alert-danger', $html);
         $after = $this->countEvents();
         Assert::equal($init, $after);
     }
