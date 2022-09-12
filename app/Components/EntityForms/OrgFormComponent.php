@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\Persons\AclResolver;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\OrgService;
@@ -24,23 +28,28 @@ class OrgFormComponent extends EntityFormComponent
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'org';
-
+    private ContestYearModel $contestYear;
+    private ReferencedPersonFactory $referencedPersonFactory;
+    private ContestAuthorizator $contestAuthorizator;
     private OrgService $orgService;
-    private ContestModel $contest;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(Container $container, ContestModel $contest, ?OrgModel $model)
+    public function __construct(Container $container, ContestYearModel $contestYear, ?OrgModel $model)
     {
         parent::__construct($container, $model);
-        $this->contest = $contest;
+        $this->contestYear = $contestYear;
     }
 
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        OrgService $orgService
+        OrgService $orgService,
+        ReferencedPersonFactory $referencedPersonFactory,
+        ContestAuthorizator $contestAuthorizator
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->orgService = $orgService;
+        $this->referencedPersonFactory = $referencedPersonFactory;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
@@ -50,11 +59,19 @@ class OrgFormComponent extends EntityFormComponent
     protected function configureForm(Form $form): void
     {
         $container = $this->createOrgContainer();
-        $personInput = $this->createPersonSelect();
-        if (!$this->isCreating()) {
-            $personInput->setDisabled(true);
-        }
-        $container->addComponent($personInput, 'person_id', 'since');
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getContext()->getParameters()[$this->contestYear->contest->getContestSymbol()]['adminOrg'],
+            $this->contestYear,
+            PersonSearchContainer::SEARCH_ID,
+            $this->isCreating(),
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest)
+        );
+        $referencedId->addRule(Form::FILLED, _('Person is required.'));
+        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
+        $referencedId->getSearchContainer()->setOption('label', _('Person'));
+
+        $container->addComponent($referencedId, 'person_id', 'since');
         $form->addComponent($container, self::CONTAINER);
     }
 
@@ -62,7 +79,7 @@ class OrgFormComponent extends EntityFormComponent
     {
         $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         if (!isset($data['contest_id'])) {
-            $data['contest_id'] = $this->contest->contest_id;
+            $data['contest_id'] = $this->contestYear->contest_id;
         }
         $this->orgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
@@ -94,8 +111,8 @@ class OrgFormComponent extends EntityFormComponent
             $control = $this->singleReflectionFormFactory->createField(
                 'org',
                 $field,
-                $this->contest->getFirstYear(),
-                $this->contest->getLastYear()
+                $this->contestYear->contest->getFirstYear(),
+                $this->contestYear->contest->getLastYear()
             );
             $container->addComponent($control, $field);
         }

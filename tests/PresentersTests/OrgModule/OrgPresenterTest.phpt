@@ -10,6 +10,7 @@ use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\YearCalculator;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -53,14 +54,16 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => (string)$this->person->person_id,
+                'person_id_1' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
+       // file_put_contents('r.html', (string)$response->getSource());
         Assert::type(RedirectResponse::class, $response);
+
         $after = $this->countOrgs();
         Assert::equal($init + 1, $after);
     }
@@ -70,7 +73,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => (string)$this->person->person_id,
                 'since' => (string)2, // out of range
                 'order' => (string)0,
@@ -88,7 +90,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => null, // empty personId
                 'since' => (string)1,
                 'order' => (string)0,
@@ -96,7 +97,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ],
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('alert-danger', $html);
         $after = $this->countOrgs();
         Assert::equal($init, $after);
     }
@@ -105,7 +106,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => (string)$this->orgPerson->person_id,
+                'person_id' => (string)$this->orgPerson->person_id,
+                'person_id_1' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)2,
                 'domain_alias' => 'b',
@@ -146,6 +148,29 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');
+    }
+
+    public static function personToValues(PersonModel $person): array
+    {
+        return [
+            '_c_compact' => $person->getFullName(),
+            'person' => [
+                'other_name' => $person->other_name,
+                'family_name' => $person->family_name,
+            ],
+            'person_info' => [
+                'email' => $person->getInfo()->email,
+                'born' => $person->getInfo()->born,
+            ],
+            'person_history' => [
+                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
+            ],
+            'person_has_flag' => [
+                'spam_mff' => '1',
+            ],
+        ];
     }
 }
 

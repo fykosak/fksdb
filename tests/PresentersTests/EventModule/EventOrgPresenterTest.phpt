@@ -87,7 +87,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             ],
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('alert-danger', $html);
         $after = $this->countEventOrgs();
         Assert::equal($init, $after);
     }
