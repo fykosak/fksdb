@@ -189,11 +189,10 @@ class ReferencedPersonHandler implements ReferencedHandler
                         )
                     ) {
                         // delete only post contacts, other "children" could be left all-nulls
-
                         if ($model) {
                             /** @var PostContactModel $model */
-                            $this->postContactService->disposeModel($model);
                             $this->addressService->disposeModel($model->address);
+                            $this->postContactService->disposeModel($model);
                         }
                     }
                     continue;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\EntityForms\ContestantEntityForm;
+use FKSDB\Components\EntityForms\ContestantFormComponent;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -77,11 +77,11 @@ class ContestantPresenter extends BasePresenter
 
     protected function createComponentCreateForm(): Control
     {
-        return new ContestantEntityForm($this->getSelectedContestYear(), $this->getContext(), null);
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     protected function createComponentEditForm(): Control
     {
-        return new ContestantEntityForm($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 }
