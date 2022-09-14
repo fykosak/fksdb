@@ -18,7 +18,7 @@ use Nette\Forms\Form;
 /**
  * @property ContestantModel $model
  */
-class ContestantEntityForm extends EntityFormComponent
+class ContestantFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
 
@@ -58,9 +58,7 @@ class ContestantEntityForm extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        if (isset($model)) {
-            // do nothing RP saved model
-        } else {
+        if ($this->isCreating()) {
             $this->service->storeModel([
                 'contest_id' => $this->contestYear->contest_id,
                 'year' => $this->contestYear->year,
