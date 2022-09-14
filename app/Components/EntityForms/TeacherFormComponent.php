@@ -65,7 +65,8 @@ class TeacherFormComponent extends EntityFormComponent
             $this->contestYear,
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest)
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            $this->getContext()->getParameters()['common']['adminTeacher']
         );
         $container->addComponent($referencedId, 'person_id', 'state');
         $form->addComponent($container, self::CONTAINER);

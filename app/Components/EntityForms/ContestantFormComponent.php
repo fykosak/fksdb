@@ -49,7 +49,8 @@ class ContestantFormComponent extends EntityFormComponent
             $this->contestYear,
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest)
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            $this->getContext()->getParameters()['common']['adminContestant']
         );
         $container->addComponent($referencedId, 'person_id');
         $form->addComponent($container, self::CONT_CONTESTANT);

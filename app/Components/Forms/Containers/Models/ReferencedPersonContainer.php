@@ -159,11 +159,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             if (!$subContainer instanceof \Nette\Forms\Container) {
                 continue;
             }
-            /**
-             * @var string $fieldName
-             * @var BaseControl $component
-             * TODO type safe
-             */
+            /** @var BaseControl $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $realValue = $this->getPersonValue(
                     $model,
