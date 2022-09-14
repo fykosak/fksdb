@@ -16,7 +16,6 @@ use FKSDB\Models\Events\Semantics\RegOpen;
 use FKSDB\Models\Events\Semantics\Role;
 use FKSDB\Models\Events\Semantics\State;
 use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
-use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Expressions\Helpers;
@@ -49,7 +48,6 @@ class EventsExtension extends CompilerExtension
     public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
-        'Checkbox' => CheckboxFactory::class,
         'Options' => ArrayOptions::class,
         'role' => Role::class,
         'regOpen' => RegOpen::class,

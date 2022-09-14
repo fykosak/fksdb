@@ -7,12 +7,9 @@ namespace FKSDB\Models\Events\Semantics;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\SmartObject;
 
 class State extends EvaluatedExpression
 {
-    use SmartObject;
-
     private string $state;
 
     public function __construct(string $state)

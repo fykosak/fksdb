@@ -8,7 +8,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 abstract class VariadicExpression extends EvaluatedExpression
 {
-
     protected array $arguments;
 
     public function __construct(...$args)

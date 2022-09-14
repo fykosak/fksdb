@@ -9,10 +9,6 @@ use Nette\Forms\Controls\SelectBox;
 
 class ChooserFactory extends AbstractFactory
 {
-    public const FORMAT_KEY_VALUE = 'key-value';
-    public const FORMAT_VALUE_META = 'value-meta';
-    public const FORMAT_KEY_META = 'key-meta';
-
     private string $prompt;
 
     private OptionsProvider $optionsProvider;
@@ -40,9 +36,7 @@ class ChooserFactory extends AbstractFactory
                 $opts[$key] = $option;
             }
         }
-
         $component->setItems($opts);
-
         return $component;
     }
 }

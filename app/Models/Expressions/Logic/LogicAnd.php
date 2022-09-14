@@ -10,10 +10,10 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 class LogicAnd extends VariadicExpression
 {
 
-    protected function evaluate(ModelHolder $holder, ...$args): bool
+    protected function evaluate(ModelHolder $holder): bool
     {
         foreach ($this->arguments as $argument) {
-            if (!$this->evaluateArgument($argument, $holder, ...$args)) {
+            if (!$this->evaluateArgument($argument, $holder)) {
                 return false;
             }
         }

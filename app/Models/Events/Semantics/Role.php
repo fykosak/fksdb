@@ -8,15 +8,12 @@ use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\SmartObject;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  */
 class Role extends EvaluatedExpression
 {
-    use SmartObject;
-
     public const ADMIN = 'admin';
 
     private string $role;
