@@ -14,6 +14,7 @@ use FKSDB\Models\Persons\AclResolver;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property ContestantModel $model
@@ -45,12 +46,13 @@ class ContestantFormComponent extends EntityFormComponent
     protected function configureForm(Form $form): void
     {
         $container = new ModelContainer($this->container);
+        Debugger::barDump($this->getContext()->getParameters());
         $referencedId = $this->createPersonId(
             $this->contestYear,
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
-            $this->getContext()->getParameters()['common']['adminContestant']
+            $this->getContext()->getParameters()['forms']['adminContestant']
         );
         $container->addComponent($referencedId, 'person_id');
         $form->addComponent($container, self::CONT_CONTESTANT);

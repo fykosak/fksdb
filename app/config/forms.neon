@@ -3,8 +3,8 @@
 #
 
 parameters:
-    fykos:
-        registerContestant:
+    forms:
+        registerContestantFykos:
             person:
                 other_name:
                   required: true
@@ -30,8 +30,7 @@ parameters:
             person_has_flag:
                 spam_mff:
                   required: true
-    vyfuk:
-        registerContestant:
+        registerContestantVyfuk:
             person:
                 other_name:
                   required: true
@@ -61,38 +60,9 @@ parameters:
             person_has_flag:
                 spam_mff:
                   required: true
-    common:
-        editPerson: %common.adminOrg%
-        adminEventOrg: %common.adminOrg%
-        adminTeacher:
-            person:
-                other_name:
-                  required: true
-                family_name:
-                  required: true
-            post_contact_d:
-                address:
-                  required: false
-            post_contact_p:
-                address:
-                  required: false
-            person_info:
-                email:
-                  required: false
-                phone:
-                  required: false
-                career:
-                  required: false
-                note:
-                  required: false
-                born:
-                  required: false
-                born_id:
-                  required: false
-                id_number:
-                  required: false
-                birthplace:
-                  required: false
+        adminOrg: %forms.adminPerson%
+        adminEventOrg: %forms.adminPerson%
+        adminTeacher: %forms.adminPerson%
         adminContestant:
             person:
                 other_name:
@@ -138,7 +108,7 @@ parameters:
             person_has_flag:
                 spam_mff:
                   required: false
-        adminOrg:
+        adminPerson:
             person:
                 other_name:
                   required: true

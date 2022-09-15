@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property TeacherModel|null $model
@@ -66,7 +67,7 @@ class TeacherFormComponent extends EntityFormComponent
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
-            $this->getContext()->getParameters()['common']['adminTeacher']
+            $this->getContext()->getParameters()['forms']['adminTeacher']
         );
         $container->addComponent($referencedId, 'person_id', 'state');
         $form->addComponent($container, self::CONTAINER);

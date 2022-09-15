@@ -51,7 +51,7 @@ class EventOrgFormComponent extends EntityFormComponent
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
-            $this->getContext()->getParameters()['common']['adminEventOrg']
+            $this->getContext()->getParameters()['forms']['adminEventOrg']
         );
         $container->addComponent($referencedId, 'person_id');
         $container->addText('note', _('Note'));

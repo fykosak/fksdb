@@ -324,7 +324,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     {
         $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray(
-            $this->getContext()->getParameters()[$contestName]['registerContestant'],
+            $this->getContext()->getParameters()['forms']['registerContestant' . ucfirst($contestName)],
             $this->getContext()
         );
     }
@@ -335,7 +335,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if (is_null($contest)) {
             return null;
         }
-        return $contest->getContestYears()->where('year', $this->year)->fetch();
+        return $contest->getContestYear($this->year);
     }
 
     /**
