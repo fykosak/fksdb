@@ -249,7 +249,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         })
     });
-    // TODO form buttons aren't checked
 
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {

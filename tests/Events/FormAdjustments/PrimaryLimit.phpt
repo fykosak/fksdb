@@ -12,7 +12,10 @@ use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
+
+// phpcs:enable
 
 class PrimaryLimit extends ResourceAvailabilityTestCase
 {
@@ -92,5 +95,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new PrimaryLimit($container);
 $testCase->run();
+// phpcs:enable

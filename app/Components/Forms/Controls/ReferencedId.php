@@ -144,9 +144,7 @@ class ReferencedId extends HiddenField
     private function createPromise(): void
     {
         $values = $this->referencedContainer->getValues();
-
         $referencedId = $this->getValue();
-
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {

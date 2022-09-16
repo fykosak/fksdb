@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -173,5 +175,7 @@ class WriteOnlyTraitTest extends DsefTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new WriteOnlyTraitTest($container);
 $testCase->run();
+// phpcs:enable

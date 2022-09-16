@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
@@ -24,6 +26,7 @@ class EventOrgFormComponent extends EntityFormComponent
     public const CONTAINER = 'event_org';
 
     private EventOrgService $eventOrgService;
+    private ContestAuthorizator $contestAuthorizator;
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event, ?EventOrgModel $model)
@@ -32,17 +35,23 @@ class EventOrgFormComponent extends EntityFormComponent
         $this->event = $event;
     }
 
-    final public function injectPrimary(EventOrgService $eventOrgService): void
-    {
+    final public function injectPrimary(
+        EventOrgService $eventOrgService,
+        ContestAuthorizator $contestAuthorizator
+    ): void {
         $this->eventOrgService = $eventOrgService;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     protected function configureForm(Form $form): void
     {
         $container = new ModelContainer();
-        $personInput = $this->createPersonSelect();
-        $personInput->setDisabled(isset($this->model));
-        $container->addComponent($personInput, 'person_id');
+        $referencedId = $this->createPersonId(
+            $this->event->getContestYear(),
+            $this->isCreating(),
+            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest)
+        );
+        $container->addComponent($referencedId, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);
     }

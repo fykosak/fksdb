@@ -98,7 +98,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -116,15 +116,15 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => (string)$this->personB->person_id,
-            'member_1_container' => $this->personToValues($this->personB),
+            'member_1_container' => self::personToValues($this->personB),
             'member_2' => (string)$this->personC->person_id,
-            'member_2_container' => $this->personToValues($this->personC),
+            'member_2_container' => self::personToValues($this->personC),
             'member_3' => (string)$this->personD->person_id,
-            'member_3_container' => $this->personToValues($this->personD),
+            'member_3_container' => self::personToValues($this->personD),
             'member_4' => (string)$this->personE->person_id,
-            'member_4_container' => $this->personToValues($this->personE),
+            'member_4_container' => self::personToValues($this->personE),
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
@@ -181,7 +181,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'test team B',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -224,7 +224,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -273,7 +273,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -299,7 +299,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -325,7 +325,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => $this->personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -350,7 +350,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personB->person_id,
-            'member_0_container' => $this->personToValues($this->personB),
+            'member_0_container' => self::personToValues($this->personB),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -459,29 +459,6 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
     {
         $params['eventId'] = $this->event->event_id;
         return parent::createGetRequest($action, $params, $postData);
-    }
-
-    protected function personToValues(PersonModel $person): array
-    {
-        return [
-            '_c_compact' => $person->getFullName(),
-            'person' => [
-                'other_name' => $person->other_name,
-                'family_name' => $person->family_name,
-            ],
-            'person_info' => [
-                'email' => $person->getInfo()->email,
-                'born' => $person->getInfo()->born,
-            ],
-            'person_history' => [
-                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
-            ],
-            'person_has_flag' => [
-                'spam_mff' => '1',
-            ],
-        ];
     }
 
     protected function getPresenterName(): string
