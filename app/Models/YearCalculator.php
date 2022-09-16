@@ -21,7 +21,7 @@ class YearCalculator
     /**
      * @const First month of the academic year (for high schoolers).
      */
-    public const FIRST_AC_MONTH = 10;
+    public const FIRST_AC_MONTH = 9;
 
     private Container $container;
 
