@@ -94,7 +94,7 @@ class TasksFromXML extends Stage
         // obtain FKSDB\Models\ORM\Models\ModelTask
         $task = $this->taskService->findBySeries($datum->getContestYear(), $series, $tasknr);
 
-        $this->taskService->storeModel(
+        $task = $this->taskService->storeModel(
             array_merge($data, [
                 'contest_id' => $datum->getContestYear()->contest_id,
                 'year' => $datum->getContestYear()->year,
