@@ -37,7 +37,7 @@ class SelfAssertion implements Assertion
         $model = $acl->getQueriedResource();
         try {
             /** @var ContestModel $contest */
-            $contest = $model->getModel(ContestModel::class);
+            $contest = $model->getReferencedModel(ContestModel::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContest()->contest_id) {
                 return false;
             }
@@ -46,7 +46,7 @@ class SelfAssertion implements Assertion
 
         $person = null;
         try {
-            $person = $model->getModel(PersonModel::class);
+            $person = $model->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException $exception) {
         }
 

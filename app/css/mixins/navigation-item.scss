@@ -1,5 +1,5 @@
 @mixin navigation-item($color,$background,$apply-hover : true,$apply-border:true) {
-  height: 12rem;
+  min-height: 12rem;
   width: 12rem;
   text-align: center;
   color: $color;

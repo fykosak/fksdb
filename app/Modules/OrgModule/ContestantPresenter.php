@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\EntityForms\ContestantFormComponent;
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Form;
+use Nette\Application\UI\Control;
+use Nette\Security\Resource;
 
 /**
- * @method ContestantModel getModel()
+ * @method ContestantModel getEntity(bool $throw = true)
  */
-class ContestantPresenter extends ExtendedPersonPresenter
+class ContestantPresenter extends BasePresenter
 {
-
-    protected string $fieldsDefinition = 'adminContestant';
+    use EntityPresenterTrait;
 
     private ContestantService $contestantService;
 
@@ -26,43 +29,27 @@ class ContestantPresenter extends ExtendedPersonPresenter
         $this->contestantService = $contestantService;
     }
 
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
-            null,
-            sprintf(_('Edit the contestant %s'), $this->getModel()->person->getFullName()),
+            'contestant-edit',
+            sprintf(_('Edit the contestant %s'), $this->getEntity()->person->getFullName()),
             'fa fa-user-edit'
         );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create contestant'), 'fa fa-user-plus');
+        return new PageTitle('contestant-create', _('Create contestant'), 'fa fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Contestants'), 'fa fa-user-graduate');
-    }
-
-    public function messageCreate(): string
-    {
-        return _('Contestant %s created.');
-    }
-
-    public function messageEdit(): string
-    {
-        return _('Contestant %s modified.');
-    }
-
-    public function messageError(): string
-    {
-        return _('Error while creating the contestant.');
-    }
-
-    public function messageExists(): string
-    {
-        return _('Contestant already exists.');
+        return new PageTitle('contestant-list', _('Contestants'), 'fa fa-user-graduate');
     }
 
     protected function createComponentGrid(): ContestantsGrid
@@ -70,27 +57,31 @@ class ContestantPresenter extends ExtendedPersonPresenter
         return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
-    protected function appendExtendedContainer(Form $form): void
-    {
-        // no container for contestant
-    }
-
     protected function getORMService(): ContestantService
     {
         return $this->contestantService;
     }
 
-    protected function getAcYearFromModel(): ?ContestYearModel
-    {
-        $model = $this->getModel();
-        if (!$model) {
-            return null;
-        }
-        return $model->getContestYear();
-    }
-
     protected function getModelResource(): string
     {
         return ContestantModel::RESOURCE_ID;
+    }
+
+    /**
+     * @param Resource|string $resource
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
+    }
+
+    protected function createComponentCreateForm(): Control
+    {
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
+    }
+
+    protected function createComponentEditForm(): Control
+    {
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 }

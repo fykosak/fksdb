@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Response;
@@ -88,6 +89,29 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         );
 
         return $this->fixture->run($request);
+    }
+
+    public static function personToValues(PersonModel $person): array
+    {
+        return [
+            '_c_compact' => $person->getFullName(),
+            'person' => [
+                'other_name' => $person->other_name,
+                'family_name' => $person->family_name,
+            ],
+            'person_info' => [
+                'email' => $person->getInfo()->email,
+                'born' => $person->getInfo()->born,
+            ],
+            'person_history' => [
+                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
+                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
+            ],
+            'person_has_flag' => [
+                'spam_mff' => '1',
+            ],
+        ];
     }
 
     abstract protected function getPresenterName(): string;

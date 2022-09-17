@@ -68,16 +68,19 @@ trait YearPresenterTrait
             case YearChooserComponent::ROLE_CONTESTANT:
                 /** @var LoginModel $login */
                 $login = $this->getUser()->getIdentity();
-                $years = [];
-                if ($login && $login->person) {
-                    $contestants = $login->person->getContestants($contest);
-                    /** @var ContestantModel $contestant */
-                    foreach ($contestants as $contestant) {
-                        $years[] = $contestant->year;
-                    }
+                if (!$login || !$login->person) {
+                    return $contest->getContestYears()->where('1=0');
                 }
-                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()
-                    ->where('ac_year', YearCalculator::getCurrentAcademicYear());
+                $years = [];
+                $contestants = $login->person->getContestants($contest);
+                /** @var ContestantModel $contestant */
+                foreach ($contestants as $contestant) {
+                    $years[] = $contestant->year;
+                }
+                if (count($years)) {
+                    return $contest->getContestYears()->where('year', $years);
+                }
+                return $contest->getContestYears()->where('1=0');
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
