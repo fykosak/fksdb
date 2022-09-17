@@ -173,7 +173,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     true,
                     isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
                 );
-                $controlModifiable = false;// = ($realValue !== null) ? $modifiable : true;
+                $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
                     $this[$sub]->removeComponent($component);
