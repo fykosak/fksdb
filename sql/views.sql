@@ -13,7 +13,7 @@ create or replace view v_school as
 (
 select s.school_id,
        s.address_id,
-       coalesce(s.name_abbrev, s.name, s.name_full) as name,
+       s.name_abbrev as name,
        s.email,
        s.izo,
        s.ic,
