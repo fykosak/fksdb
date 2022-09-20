@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 22:44+0200\n"
+"POT-Creation-Date: 2022-09-20 22:49+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -3055,10 +3055,8 @@ msgid "Register to Výfuk"
 msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/year.latte.latte2php:8
-#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
-#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
-msgid "Year"
-msgstr ""
+msgid "year-fykos"
+msgstr "Year"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:6
 msgid "New submit system"
@@ -3712,6 +3710,11 @@ msgstr "Delete team"
 
 #: ../app/config/orm.neon.neon2php:52
 msgid "Contestant Id"
+msgstr ""
+
+#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
+#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
+msgid "Year"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:72

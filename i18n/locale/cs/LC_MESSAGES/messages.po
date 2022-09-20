@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 22:44+0200\n"
+"POT-Creation-Date: 2022-09-20 22:49+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3084,10 +3084,8 @@ msgid "Register to Výfuk"
 msgstr "Zaregistrovat se do Výfuku"
 
 #: ../app/Modules/PublicModule/templates/Register/year.latte.latte2php:8
-#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
-#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
-msgid "Year"
-msgstr "Rok"
+msgid "year-fykos"
+msgstr "Ročník"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:6
 msgid "New submit system"
@@ -3745,6 +3743,11 @@ msgstr ""
 #: ../app/config/orm.neon.neon2php:52
 msgid "Contestant Id"
 msgstr "Id soutěžícího"
+
+#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
+#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
+msgid "Year"
+msgstr "Rok"
 
 #: ../app/config/orm.neon.neon2php:72
 msgid "Message Id"

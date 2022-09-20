@@ -5,7 +5,7 @@
         {foreach $years as $year}
             <a href="{link 'email', 'year'=> $year->year}"
                class="col-12 btn btn-outline-primary btn-lg btn-block">
-                {_'Year'} {$year->year} ({$year->ac_year}/{$year->ac_year+1})
+                {_'year-fykos'} {$year->year} ({$year->ac_year}/{$year->ac_year+1})
             </a>
         {/foreach}
     </div>
