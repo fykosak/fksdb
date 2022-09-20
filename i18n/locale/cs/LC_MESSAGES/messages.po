@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-25 23:59+0200\n"
+"POT-Creation-Date: 2022-09-20 22:44+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -93,12 +93,12 @@ msgid "Pizza"
 msgstr ""
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:155
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Grids/EmailsGrid.php:37
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
 #: ../app/Components/EntityForms/PaymentFormComponent.php:82
-#: ../app/Components/EntityForms/ReferencedPersonTrait.php:20
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:35
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:36
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:84
 #: ../app/Components/Controls/Person/layout.latte.latte2php:8
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:5
@@ -314,66 +314,21 @@ msgstr "Učitel"
 msgid "Teacher detail"
 msgstr "Detail učitele"
 
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:86
-msgid "Person is required."
-msgstr "Pole osoba je vyžadováno"
-
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
-#: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/config/payment.neon.neon2php:90
-#: ../app/config/payment.neon.neon2php:116
-#: ../app/config/payment.neon.neon2php:140
-#: ../app/config/payments/payment16.neon.neon2php:36
-#: ../app/config/payments/payment14.neon.neon2php:36
-#: ../app/config/payments/payment13.neon.neon2php:33
-msgid "Create"
-msgstr "Vytvořit"
-
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
-#: ../app/Modules/CoreModule/SettingsPresenter.php:126
-#: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/Components/Controls/PreferredLangFormComponent.php:38
-#: ../app/Components/Controls/Events/ApplicationComponent.php:115
-#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:64
-#: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:37
-#: ../app/Components/Controls/Inbox/SeriesTableFormComponent.php:21
-msgid "Save"
-msgstr "Uložit"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:33
+#: ../app/Modules/OrgModule/ContestantPresenter.php:40
 #, php-format
 msgid "Edit the contestant %s"
 msgstr "Upravit soutěžícího %s"
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:40
+#: ../app/Modules/OrgModule/ContestantPresenter.php:47
 #: ../app/Components/Grids/ContestantsGrid.php:64
 msgid "Create contestant"
 msgstr "Vytvořit soutěžícího"
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:45
+#: ../app/Modules/OrgModule/ContestantPresenter.php:52
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:57
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:46
 msgid "Contestants"
 msgstr "Soutěžící"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:50
-#, php-format
-msgid "Contestant %s created."
-msgstr "Soutěžící %s vytvořen"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:55
-#: ../app/Modules/PublicModule/RegisterPresenter.php:231
-#, php-format
-msgid "Contestant %s modified."
-msgstr "Soutěžící %s upraven."
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:60
-msgid "Error while creating the contestant."
-msgstr "Chyba při vytváření soutěžícího."
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:65
-msgid "Contestant already exists."
-msgstr "Soutěžící již existuje"
 
 #: ../app/Modules/OrgModule/ExportPresenter.php:83
 #, php-format
@@ -600,77 +555,52 @@ msgstr "Úloha %s nahrána."
 msgid "Task storing error."
 msgstr "Error při ukládání úlohy"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:90
-#: ../app/Modules/PublicModule/RegisterPresenter.php:95
-#: ../app/Modules/PublicModule/RegisterPresenter.php:100
-#: ../app/Modules/PublicModule/RegisterPresenter.php:107
-#: ../app/Modules/PublicModule/RegisterPresenter.php:299
+#: ../app/Modules/PublicModule/RegisterPresenter.php:69
+#: ../app/Modules/PublicModule/RegisterPresenter.php:74
+#: ../app/Modules/PublicModule/RegisterPresenter.php:79
+#: ../app/Modules/PublicModule/RegisterPresenter.php:86
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:9
 msgid "Register"
 msgstr "Registrovat se"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:90
+#: ../app/Modules/PublicModule/RegisterPresenter.php:69
 msgid "Select contest"
 msgstr "Vyberte soutěž"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:95
+#: ../app/Modules/PublicModule/RegisterPresenter.php:74
 msgid "Select year"
 msgstr "Vyberte ročník"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:100
+#: ../app/Modules/PublicModule/RegisterPresenter.php:79
 msgid "Type e-mail"
 msgstr "Zadejte e-mailovou adresu"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:110
+#: ../app/Modules/PublicModule/RegisterPresenter.php:89
 #, php-format
 msgid "%s – contestant application (year %s)"
 msgstr "%s – přihlášení do soutěže (%s. ročník)"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:142
-msgid "User must be a person in order to register as a contestant."
-msgstr ""
-"Uživatel musí být osobou v databázi, aby se mohl registrovat jako účastník."
-
-#: ../app/Modules/PublicModule/RegisterPresenter.php:152
+#: ../app/Modules/PublicModule/RegisterPresenter.php:128
 msgid "An existing account found. To continue, please sign in."
 msgstr "Nalezen existující účet. Pro pokračování se prosím přihlaste."
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:167
+#: ../app/Modules/PublicModule/RegisterPresenter.php:140
 #, php-format
 msgid "%s is already contestant in %s."
 msgstr "%s je již účastníkem v %s."
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:226
-#, php-format
-msgid "Contestant %s registered."
-msgstr "Soutěžící %s registrovaný"
-
-#: ../app/Modules/PublicModule/RegisterPresenter.php:236
-msgid "Error while registering."
-msgstr "Chyba při registraci"
-
-#: ../app/Modules/PublicModule/RegisterPresenter.php:241
-msgid "Contestant already registered."
-msgstr "Soutěžící již existuje"
-
-#: ../app/Modules/PublicModule/RegisterPresenter.php:251
+#: ../app/Modules/PublicModule/RegisterPresenter.php:182
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:51
 #: ../app/config/orm.neon.neon2php:467
 msgid "E-mail"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:252
+#: ../app/Modules/PublicModule/RegisterPresenter.php:183
 #: ../app/Components/Grids/BaseGrid.php:158
-#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:40
+#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:38
 msgid "Find"
 msgstr "Najít"
-
-#: ../app/Modules/PublicModule/RegisterPresenter.php:315
-#: ../app/Modules/CoreModule/AuthenticationPresenter.php:210
-#: ../app/Modules/CoreModule/AuthenticationPresenter.php:242
-msgid "The form has expired. Please send it again."
-msgstr "Formulář vypršel, prosím, odešlete jej znovu."
 
 #: ../app/Modules/EventModule/ModelPresenter.php:25
 #: ../app/Components/Charts/Event/Model/GraphComponent.php:95
@@ -890,6 +820,16 @@ msgstr "Přihlášení"
 msgid "Incorrect old password."
 msgstr "Špatně zadané staré heslo."
 
+#: ../app/Modules/CoreModule/SettingsPresenter.php:126
+#: ../app/Components/EntityForms/EntityFormComponent.php:62
+#: ../app/Components/Controls/PreferredLangFormComponent.php:38
+#: ../app/Components/Controls/Events/ApplicationComponent.php:115
+#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:64
+#: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:37
+#: ../app/Components/Controls/Inbox/SeriesTableFormComponent.php:21
+msgid "Save"
+msgstr "Uložit"
+
 #: ../app/Modules/CoreModule/SettingsPresenter.php:141
 msgid "Username"
 msgstr "Přihlašovací jméno"
@@ -956,7 +896,7 @@ msgid "Login"
 msgstr "Přihlašovací jméno"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:64
-#: ../app/Models/Authentication/AccountManager.php:108
+#: ../app/Models/Authentication/AccountManager.php:106
 msgid "Password recovery"
 msgstr "Obnova hesla"
 
@@ -1005,6 +945,12 @@ msgstr "Napište heslo"
 msgid "Log in"
 msgstr "Přihlásit se"
 
+#: ../app/Modules/CoreModule/AuthenticationPresenter.php:210
+#: ../app/Modules/CoreModule/AuthenticationPresenter.php:242
+#: ../app/Components/EntityForms/RegisterContestantFormComponent.php:83
+msgid "The form has expired. Please send it again."
+msgstr "Formulář vypršel, prosím, odešlete jej znovu."
+
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:237
 msgid "Login or e-mail address"
 msgstr "Přihlašovací jméno nebo heslo"
@@ -1032,7 +978,7 @@ msgstr "Soutěžící ročníku %d"
 msgid "Organiser %s"
 msgstr "%s organizátor"
 
-#: ../app/Modules/Core/AuthenticatedPresenter.php:125
+#: ../app/Modules/Core/AuthenticatedPresenter.php:123
 msgid "Successful token authentication."
 msgstr "Úspěšné přihlášení přes token"
 
@@ -1096,7 +1042,7 @@ msgstr "Neaktivní účet."
 msgid "Invalid authentication token."
 msgstr "Neplatný autentizační token"
 
-#: ../app/Models/Authentication/AccountManager.php:74
+#: ../app/Models/Authentication/AccountManager.php:72
 msgid "Create an account"
 msgstr "Vytvořit účet"
 
@@ -1857,7 +1803,7 @@ msgid "Only %d different schools can be represented in the team."
 msgstr "Pouze %d různé školy mohou být součástí daného týmu."
 
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:17
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:274
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:267
 msgid "Field %label is required."
 msgstr "Pole %label je vyžadováno"
 
@@ -1954,18 +1900,6 @@ msgstr "variabilní symbol přetekl"
 #, php-format
 msgid "Currency %s in not supported"
 msgstr "Měna %s není podporována"
-
-#: ../app/Models/Persons/ExtendedPersonHandler.php:98
-msgid "E-mail invitation sent."
-msgstr "E-mailová pozvánka odeslána"
-
-#: ../app/Models/Persons/ExtendedPersonHandler.php:100
-msgid "E-mail invitation failed to sent."
-msgstr "E-mailovou pozvánku se nepodařilo odeslat"
-
-#: ../app/Models/Persons/ExtendedPersonHandler.php:135
-msgid "Data don't match already stored data."
-msgstr "Data neodpovídají předchozím uloženým datům"
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:217
 #, php-format
@@ -2258,22 +2192,22 @@ msgstr "Není to duplicita"
 msgid "There has been a change in the data of this form since it was shown."
 msgstr "Od zobrazení formuláře byla změněna jeho data."
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:98
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:99
 msgid "Deliver address"
 msgstr "Doručovací adresa"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:101
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:102
 #: ../app/Components/Forms/Factories/AddressFactory.php:50
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:11
 msgid "Permanent address"
 msgstr "Trvalá adresa"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:103
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:104
 #: ../app/Components/Forms/Factories/AddressFactory.php:50
 msgid "(when different from delivery address)"
 msgstr "(pokud je odlišná od doručovací)"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:131
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:129
 #, fuzzy
 msgid ""
 "There is (formally) different person with email %value. \n"
@@ -2283,7 +2217,7 @@ msgstr ""
 "Existuje formálně odlišná osoba se stejným mailem %value. Pravděpodobně se "
 "jedná o duplicitu, do dotazníku byla vložena původní data."
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:272
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:265
 msgid "Confirmation is necessary to proceed."
 msgstr "Schválení je nutné pro pokračování"
 
@@ -2471,7 +2405,7 @@ msgid "Active record"
 msgstr "Aktivní záznam"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:56
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:46
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:57
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:52
 #: ../app/config/orm.neon.neon2php:178 ../app/config/orm.neon.neon2php:221
 #: ../app/config/orm.neon.neon2php:686 ../app/config/orm.neon.neon2php:805
@@ -2609,10 +2543,12 @@ msgid "No transitions available"
 msgstr "Žádné dostupné přechody"
 
 #: ../app/Components/Badges/ContestBadge.php:26
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:9
 msgid "FYKOS"
 msgstr "FYKOS"
 
 #: ../app/Components/Badges/ContestBadge.php:28
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:21
 msgid "Výfuk"
 msgstr "Výfuk"
 
@@ -2640,11 +2576,25 @@ msgstr "Platba byla vytvořena."
 msgid "Payment has been updated."
 msgstr "Platba byla úspěšně upravena."
 
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:58
+#: ../app/Components/EntityForms/ContestantFormComponent.php:70
+#, fuzzy
+msgid "Contestant has been updated"
+msgstr "Data byla úspěšně upravena."
+
+#: ../app/Components/EntityForms/ContestantFormComponent.php:70
+#, fuzzy
+msgid "Contestant has been created"
+msgstr "Soutěžící %s vytvořen"
+
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:34
+msgid "Person is required."
+msgstr "Pole osoba je vyžadováno"
+
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:69
 msgid "Event org has been updated"
 msgstr "Org akce byl aktualizován."
 
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:58
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:69
 msgid "Event org has been created"
 msgstr "Akce byla vytvořena"
 
@@ -2667,6 +2617,16 @@ msgstr "Adresa byla vytvořena."
 #: ../app/Components/EntityForms/PersonFormComponent.php:178
 msgid "Address has been deleted"
 msgstr "Adresa byla smazána."
+
+#: ../app/Components/EntityForms/EntityFormComponent.php:62
+#: ../app/config/payment.neon.neon2php:90
+#: ../app/config/payment.neon.neon2php:116
+#: ../app/config/payment.neon.neon2php:140
+#: ../app/config/payments/payment16.neon.neon2php:36
+#: ../app/config/payments/payment14.neon.neon2php:36
+#: ../app/config/payments/payment13.neon.neon2php:33
+msgid "Create"
+msgstr "Vytvořit"
 
 #: ../app/Components/EntityForms/ScheduleGroupFormComponent.php:50
 #, php-format
@@ -2770,11 +2730,11 @@ msgstr "Org byl vytvořen."
 msgid "Product"
 msgstr "Produkty"
 
-#: ../app/Components/EntityForms/TeacherFormComponent.php:62
+#: ../app/Components/EntityForms/TeacherFormComponent.php:81
 msgid "Teacher has been updated"
 msgstr "Učitel byl úspěšně aktualizován"
 
-#: ../app/Components/EntityForms/TeacherFormComponent.php:62
+#: ../app/Components/EntityForms/TeacherFormComponent.php:81
 msgid "Teacher has been created"
 msgstr "Učitel byl vytvořen."
 
@@ -2805,17 +2765,25 @@ msgstr "Škola byla aktualizována."
 msgid "School has been created"
 msgstr "Učitel byl vytvořen."
 
-#: ../app/Components/EntityForms/OrgFormComponent.php:69
+#: ../app/Components/EntityForms/OrgFormComponent.php:76
 msgid "Org has been updated."
 msgstr "Org byl aktualizován."
 
-#: ../app/Components/EntityForms/OrgFormComponent.php:69
+#: ../app/Components/EntityForms/OrgFormComponent.php:76
 msgid "Org has been created."
 msgstr "Org byl vytvořen."
 
 #: ../app/Components/EntityForms/FyziklaniSubmitFormComponent.php:65
 msgid "Number of points"
 msgstr "Počet bodů"
+
+#: ../app/Components/EntityForms/RegisterContestantFormComponent.php:105
+msgid "E-mail invitation sent."
+msgstr "E-mailová pozvánka odeslána"
+
+#: ../app/Components/EntityForms/RegisterContestantFormComponent.php:107
+msgid "E-mail invitation failed to sent."
+msgstr "E-mailovou pozvánku se nepodařilo odeslat"
 
 #: ../app/Components/Controls/DataTesting/PersonTestComponent.php:56
 #, php-format
@@ -3094,6 +3062,33 @@ msgstr ""
 msgid "Others"
 msgstr "Ostatní"
 
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:10
+msgid ""
+"Physics correspondence competition of CUNI MFF for high-school students."
+msgstr ""
+"Fyzikální korespondenční seminář MFF UK určený pro žáky středních škol."
+
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:12
+msgid "Register to FYKOS"
+msgstr "Zaregistrovat se do FYKOSu"
+
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:22
+msgid ""
+"Physics correspondence seminar of CUNI MFF for the students of elementary "
+"schools."
+msgstr ""
+"Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií."
+
+#: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:24
+msgid "Register to Výfuk"
+msgstr "Zaregistrovat se do Výfuku"
+
+#: ../app/Modules/PublicModule/templates/Register/year.latte.latte2php:8
+#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
+#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
+msgid "Year"
+msgstr "Rok"
+
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:6
 msgid "New submit system"
 msgstr "Nový systém nahrávání"
@@ -3113,14 +3108,6 @@ msgstr "Příští rok"
 #: ../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:2
 msgid "Go to the old submit system"
 msgstr "Vrátit se ke starému systému nahrávání"
-
-#: ../app/Modules/PublicModule/templates/Register/contest.latte:13
-msgid "Register to FYKOS"
-msgstr "Zaregistrovat se do FYKOSu"
-
-#: ../app/Modules/PublicModule/templates/Register/contest.latte:22
-msgid "Register to Výfuk"
-msgstr "Zaregistrovat se do Výfuku"
 
 #: ../app/Modules/EventModule/Fyziklani/templates/Diplomas/default.latte.latte2php:20
 msgid "Global"
@@ -3367,7 +3354,6 @@ msgid "Physics correspondence seminar of MFF UK"
 msgstr "Fyzikální korespondenční seminář MFF UK"
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:103
-#: ../app/Modules/PublicModule/templates/Register/contest.latte:23
 msgid ""
 "Physics correspondence seminar of MFF UK for the students of elementary "
 "schools."
@@ -3759,11 +3745,6 @@ msgstr ""
 #: ../app/config/orm.neon.neon2php:52
 msgid "Contestant Id"
 msgstr "Id soutěžícího"
-
-#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:650
-#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
-msgid "Year"
-msgstr "Rok"
 
 #: ../app/config/orm.neon.neon2php:72
 msgid "Message Id"
@@ -5952,6 +5933,32 @@ msgstr "Načítání"
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:41
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
+
+#~ msgid "Contestant %s modified."
+#~ msgstr "Soutěžící %s upraven."
+
+#~ msgid "Error while creating the contestant."
+#~ msgstr "Chyba při vytváření soutěžícího."
+
+#~ msgid "Contestant already exists."
+#~ msgstr "Soutěžící již existuje"
+
+#~ msgid "User must be a person in order to register as a contestant."
+#~ msgstr ""
+#~ "Uživatel musí být osobou v databázi, aby se mohl registrovat jako "
+#~ "účastník."
+
+#~ msgid "Contestant %s registered."
+#~ msgstr "Soutěžící %s registrovaný"
+
+#~ msgid "Error while registering."
+#~ msgstr "Chyba při registraci"
+
+#~ msgid "Contestant already registered."
+#~ msgstr "Soutěžící již existuje"
+
+#~ msgid "Data don't match already stored data."
+#~ msgstr "Data neodpovídají předchozím uloženým datům"
 
 #~ msgid "Authentication failure."
 #~ msgstr "Chyba přihlašování"
