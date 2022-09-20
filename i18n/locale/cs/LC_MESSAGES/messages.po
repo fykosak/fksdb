@@ -3114,6 +3114,14 @@ msgstr "Příští rok"
 msgid "Go to the old submit system"
 msgstr "Vrátit se ke starému systému nahrávání"
 
+#: ../app/Modules/PublicModule/templates/Register/contest.latte:13
+msgid "Register to FYKOS"
+msgstr "Zaregistrovat se do FYKOSu"
+
+#: ../app/Modules/PublicModule/templates/Register/contest.latte:22
+msgid "Register to Výfuk"
+msgstr "Zaregistrovat se do Výfuku"
+
 #: ../app/Modules/EventModule/Fyziklani/templates/Diplomas/default.latte.latte2php:20
 msgid "Global"
 msgstr "Globální"
@@ -3359,6 +3367,7 @@ msgid "Physics correspondence seminar of MFF UK"
 msgstr "Fyzikální korespondenční seminář MFF UK"
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:103
+#: ../app/Modules/PublicModule/templates/Register/contest.latte:23
 msgid ""
 "Physics correspondence seminar of MFF UK for the students of elementary "
 "schools."
