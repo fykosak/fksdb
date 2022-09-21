@@ -12,25 +12,8 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
  */
-class EvaluationNullObject implements EvaluationStrategy
+class EvaluationNullObject extends EvaluationStrategy
 {
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getCategories(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function categoryToStudyYears(ModelCategory $category): array
-    {
-        throw new NotImplementedException();
-    }
-
     /**
      * @throws NotImplementedException
      */
@@ -66,15 +49,12 @@ class EvaluationNullObject implements EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
     {
         throw new NotImplementedException();
     }
 
-    /**
-     * @throws NotImplementedException
-     */
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    protected function getCategoryMap(): array
     {
         throw new NotImplementedException();
     }

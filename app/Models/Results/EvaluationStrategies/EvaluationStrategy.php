@@ -7,8 +7,9 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
+use Nette\InvalidArgumentException;
 
-interface EvaluationStrategy
+abstract class EvaluationStrategy
 {
 
     /**
@@ -16,7 +17,7 @@ interface EvaluationStrategy
      * There are available tables 'contestant' aliased to 'ct' and
      * 'submit' aliased to 's'.
      */
-    public function getPointsColumn(TaskModel $task): string;
+    abstract public function getPointsColumn(TaskModel $task): string;
 
     /**
      * Should return SQL expression with points for given submit.
@@ -24,31 +25,55 @@ interface EvaluationStrategy
      * 'submit' aliased to 's' and 'task' to 't'.
      * The returned expression is summed over group by series and contestant.
      */
-    public function getSumColumn(): string;
+    abstract public function getSumColumn(): string;
 
     /**
      * @return array of int (study years of students with category)
      */
-    public function categoryToStudyYears(ModelCategory $category): array;
+    final public function categoryToStudyYears(ModelCategory $category): array
+    {
+        $map = $this->getCategoryMap();
+        if (isset($map[$category->value])) {
+            return $map[$category->value];
+        }
+        throw new InvalidArgumentException('Invalid category ' . $category->value);
+    }
 
-    public function studyYearsToCategory(?int $studyYear): ModelCategory;
+    final public function studyYearsToCategory(?int $studyYear): ModelCategory
+    {
+        $map = $this->getCategoryMap();
+        foreach ($map as $key => $values) {
+            if (in_array($studyYear, $values, true)) {
+                return ModelCategory::tryFrom($key);
+            }
+        }
+        throw new InvalidArgumentException('Invalid studyYear ' . $studyYear);
+    }
 
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float;
+    abstract public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float;
+
+    abstract protected function getCategoryMap(): array;
 
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array;
+    /**
+     * @return ModelCategory[]
+     */
+    final public function getCategories(): array
+    {
+        return array_map(fn($value) => ModelCategory::tryFrom($value), array_keys($this->getCategoryMap()));
+    }
 
     /**
      * Should return points for correctly solved task (aka Student Pilný) as part
      * of SQL query.
      * For columns available see getSumColumn.
      */
-    public function getTaskPointsColumn(ModelCategory $category): string;
+    abstract public function getTaskPointsColumn(ModelCategory $category): string;
 
     /**
      * Should return points for correctly solved task (aka Student Pilný).
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int;
+    abstract public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int;
 }

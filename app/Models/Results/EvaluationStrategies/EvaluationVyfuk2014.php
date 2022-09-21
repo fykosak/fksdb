@@ -7,40 +7,12 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2014 (4th official year).
  */
-class EvaluationVyfuk2014 implements EvaluationStrategy
+class EvaluationVyfuk2014 extends EvaluationStrategy
 {
-
-    public function getCategories(): array
-    {
-        return [
-            ModelCategory::tryFrom(ModelCategory::VYFUK_6),
-            ModelCategory::tryFrom(ModelCategory::VYFUK_7),
-            ModelCategory::tryFrom(ModelCategory::VYFUK_8),
-            ModelCategory::tryFrom(ModelCategory::VYFUK_9),
-        ];
-    }
-
-    public function categoryToStudyYears(ModelCategory $category): array
-    {
-        switch ($category->value) {
-            case ModelCategory::VYFUK_6:
-                return [6];
-            case ModelCategory::VYFUK_7:
-                return [7];
-            case ModelCategory::VYFUK_8:
-                return [8];
-            case ModelCategory::VYFUK_9:
-                return [null, 9];
-            default:
-                throw new InvalidArgumentException('Invalid category ' . $category->value);
-        }
-    }
-
     public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1') {
@@ -103,20 +75,13 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
         }
     }
 
-    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    protected function getCategoryMap(): array
     {
-        switch ($studyYear) {
-            case null:
-            case 9:
-                return ModelCategory::tryFrom(ModelCategory::VYFUK_9);
-            case 8:
-                return ModelCategory::tryFrom(ModelCategory::VYFUK_8);
-            case 7:
-                return ModelCategory::tryFrom(ModelCategory::VYFUK_7);
-            case 6:
-                return ModelCategory::tryFrom(ModelCategory::VYFUK_6);
-            default:
-                throw new InvalidArgumentException('Invalid studyYear ' . $studyYear);
-        }
+        return [
+            ModelCategory::VYFUK_6 => [6],
+            ModelCategory::VYFUK_7 => [7],
+            ModelCategory::VYFUK_8 => [8],
+            ModelCategory::VYFUK_9 => [null, 9],
+        ];
     }
 }
