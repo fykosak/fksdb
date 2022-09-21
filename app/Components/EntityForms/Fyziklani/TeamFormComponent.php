@@ -24,7 +24,6 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -67,7 +66,6 @@ abstract class TeamFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        Debugger::barDump($values);
         $this->teamService->explorer->beginTransaction();
         try {
             $values = array_reduce(

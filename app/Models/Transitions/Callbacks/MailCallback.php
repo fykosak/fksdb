@@ -39,7 +39,6 @@ class MailCallback implements TransitionCallback
         foreach ($this->getPersonFromHolder($holder) as $person) {
             $data = $this->emailData;
             $data['recipient_person_id'] = $person->person_id;
-
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 $this->templateFile,
                 $person->getPreferredLang(),
