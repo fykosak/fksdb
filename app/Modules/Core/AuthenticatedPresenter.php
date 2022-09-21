@@ -30,7 +30,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     public const AUTH_LOGIN = 'login';
     public const AUTH_HTTP = 'http';
     public const AUTH_TOKEN = 'token';
-    public const AUTH_GITHUB = 'github';
 
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
@@ -101,7 +100,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     public function getAllowedAuthMethods(): array
     {
         return [
-            self::AUTH_GITHUB => false,
             self::AUTH_HTTP => false,
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,
