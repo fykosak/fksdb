@@ -85,7 +85,7 @@ class PersonFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $fields = $this->getContext()->getParameters()['common']['editPerson'];
+        $fields = $this->getContext()->getParameters()['forms']['adminPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:

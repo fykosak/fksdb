@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Services\EventOrgService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @property EventOrgModel|null $model
@@ -51,7 +50,8 @@ class EventOrgFormComponent extends EntityFormComponent
             $this->event->getContestYear(),
             $this->isCreating(),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
-            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest)
+            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
+            $this->getContext()->getParameters()['forms']['adminEventOrg']
         );
         $container->addComponent($referencedId, 'person_id');
         $container->addText('note', _('Note'));

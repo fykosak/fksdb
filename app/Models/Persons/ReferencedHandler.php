@@ -20,6 +20,4 @@ interface ReferencedHandler
     public function update(Model $model, array $values): void;
 
     public function createFromValues(array $values): Model;
-
-    public function findBySecondaryKey(string $key): ?Model;
 }
