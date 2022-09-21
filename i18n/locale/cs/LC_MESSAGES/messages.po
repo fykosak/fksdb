@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-25 23:59+0200\n"
+"POT-Creation-Date: 2022-09-21 16:45+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -93,12 +93,12 @@ msgid "Pizza"
 msgstr ""
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:155
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Grids/EmailsGrid.php:37
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
 #: ../app/Components/EntityForms/PaymentFormComponent.php:82
-#: ../app/Components/EntityForms/ReferencedPersonTrait.php:20
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:31
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:32
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:84
 #: ../app/Components/Controls/Person/layout.latte.latte2php:8
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:5
@@ -119,6 +119,7 @@ msgstr ""
 #: ../data/events/soustredeni/sous34p.neon.neon2php:178
 #: ../data/events/soustredeni/sous34j.neon.neon2php:178
 #: ../data/events/soustredeni/sous35p.neon.neon2php:192
+#: ../data/events/fol/fol12.neon.neon2php:131
 #: ../data/events/fol/fol1.neon.neon2php:139
 #: ../data/events/fol/fol8.neon.neon2php:139
 #: ../data/events/fol/fol11.neon.neon2php:131
@@ -168,6 +169,7 @@ msgstr "Stalkovat"
 #: ../app/Components/Grids/Warehouse/ItemsGrid.php:44
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:37
 #: ../app/Modules/EventModule/Fyziklani/templates/Submit/detail.latte.latte2php:27
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:81
 #: ../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:6
 #: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:11
 msgid "Edit"
@@ -279,7 +281,7 @@ msgstr "Exporty"
 msgid "Detail of the query \"%s\""
 msgstr "Podrobnosti dotazu  \"%s\""
 
-#: ../app/Modules/OrgModule/BasePresenter.php:39
+#: ../app/Modules/OrgModule/BasePresenter.php:40
 #, php-format
 msgid "%d. year, %s. series"
 msgstr "%d. ročník, %s. série"
@@ -314,83 +316,38 @@ msgstr "Učitel"
 msgid "Teacher detail"
 msgstr "Detail učitele"
 
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:86
-msgid "Person is required."
-msgstr "Pole osoba je vyžadováno"
-
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
-#: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/config/payment.neon.neon2php:90
-#: ../app/config/payment.neon.neon2php:116
-#: ../app/config/payment.neon.neon2php:140
-#: ../app/config/payments/payment16.neon.neon2php:36
-#: ../app/config/payments/payment14.neon.neon2php:36
-#: ../app/config/payments/payment13.neon.neon2php:33
-msgid "Create"
-msgstr "Vytvořit"
-
-#: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
-#: ../app/Modules/CoreModule/SettingsPresenter.php:126
-#: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/Components/Controls/PreferredLangFormComponent.php:38
-#: ../app/Components/Controls/Events/ApplicationComponent.php:115
-#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:64
-#: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:37
-#: ../app/Components/Controls/Inbox/SeriesTableFormComponent.php:21
-msgid "Save"
-msgstr "Uložit"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:33
+#: ../app/Modules/OrgModule/ContestantPresenter.php:40
 #, php-format
 msgid "Edit the contestant %s"
 msgstr "Upravit soutěžícího %s"
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:40
+#: ../app/Modules/OrgModule/ContestantPresenter.php:47
 #: ../app/Components/Grids/ContestantsGrid.php:64
 msgid "Create contestant"
 msgstr "Vytvořit soutěžícího"
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:45
+#: ../app/Modules/OrgModule/ContestantPresenter.php:52
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:57
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:46
 msgid "Contestants"
 msgstr "Soutěžící"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:50
-#, php-format
-msgid "Contestant %s created."
-msgstr "Soutěžící %s vytvořen"
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:55
-#: ../app/Modules/PublicModule/RegisterPresenter.php:231
-#, php-format
-msgid "Contestant %s modified."
-msgstr "Soutěžící %s upraven."
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:60
-msgid "Error while creating the contestant."
-msgstr "Chyba při vytváření soutěžícího."
-
-#: ../app/Modules/OrgModule/ContestantPresenter.php:65
-msgid "Contestant already exists."
-msgstr "Soutěžící již existuje"
 
 #: ../app/Modules/OrgModule/ExportPresenter.php:83
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:29
+#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:34
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:49
 msgid "Items"
 msgstr "Položky"
 
-#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:34
+#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:39
 #: ../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:26
 msgid "Edit item"
 msgstr "Upravit položku"
 
-#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:39
+#: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:44
 #: ../app/Modules/EventModule/templates/ScheduleGroup/detail.latte.latte2php:7
 msgid "Create item"
 msgstr "Vytvořit položku"
@@ -523,7 +480,7 @@ msgstr "Upravit akci %s"
 msgid "Dashboard"
 msgstr "Pultík"
 
-#: ../app/Modules/PublicModule/BasePresenter.php:58
+#: ../app/Modules/PublicModule/BasePresenter.php:59
 #, php-format
 msgid "%d. year"
 msgstr "%d. ročník"
@@ -533,15 +490,15 @@ msgstr "%d. ročník"
 msgid "Application for %s: %s"
 msgstr "Přihlášky pro %s: %s"
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:153
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:152
 msgid "Unknown application."
 msgstr "Neznámá přihláška"
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:181
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:180
 msgid "Registration is not open."
 msgstr "Registrace není otevřena"
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:183
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:182
 msgid "Application machine has no available transitions."
 msgstr "Žádné přechody nejsou dostupné"
 
@@ -604,7 +561,7 @@ msgstr "Error při ukládání úlohy"
 #: ../app/Modules/PublicModule/RegisterPresenter.php:95
 #: ../app/Modules/PublicModule/RegisterPresenter.php:100
 #: ../app/Modules/PublicModule/RegisterPresenter.php:107
-#: ../app/Modules/PublicModule/RegisterPresenter.php:299
+#: ../app/Modules/PublicModule/RegisterPresenter.php:298
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:9
 msgid "Register"
@@ -646,6 +603,11 @@ msgstr "%s je již účastníkem v %s."
 msgid "Contestant %s registered."
 msgstr "Soutěžící %s registrovaný"
 
+#: ../app/Modules/PublicModule/RegisterPresenter.php:231
+#, php-format
+msgid "Contestant %s modified."
+msgstr "Soutěžící %s upraven."
+
 #: ../app/Modules/PublicModule/RegisterPresenter.php:236
 msgid "Error while registering."
 msgstr "Chyba při registraci"
@@ -662,11 +624,11 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:252
 #: ../app/Components/Grids/BaseGrid.php:158
-#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:40
+#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:43
 msgid "Find"
 msgstr "Najít"
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:315
+#: ../app/Modules/PublicModule/RegisterPresenter.php:314
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:210
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:242
 msgid "The form has expired. Please send it again."
@@ -676,6 +638,11 @@ msgstr "Formulář vypršel, prosím, odešlete jej znovu."
 #: ../app/Components/Charts/Event/Model/GraphComponent.php:95
 msgid "Model of event"
 msgstr "Model akce"
+
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:179
+#, fuzzy
+msgid "Event type is not supported"
+msgstr "Vybraná metoda není podporována"
 
 #: ../app/Modules/EventModule/DashboardPresenter.php:18
 #, php-format
@@ -763,7 +730,7 @@ msgstr "Základní nastavení Fyziklání"
 msgid "Sealing of the scoring"
 msgstr "Uzavření bodování"
 
-#: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:65
+#: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:66
 #, php-format
 msgid "Sealing of the scoring for the team \"%s\""
 msgstr "Uzavření bodování pro tým \"%s\""
@@ -801,17 +768,17 @@ msgstr "Přidat organizátora akce"
 msgid "Edit Organiser of event \"%s\""
 msgstr "Upravit organizátora akce \"%s\""
 
-#: ../app/Modules/EventModule/EventOrgPresenter.php:67
+#: ../app/Modules/EventModule/EventOrgPresenter.php:70
 msgid "Entity has been deleted"
 msgstr "Osoba smazána"
 
-#: ../app/Modules/EventModule/EventOrgPresenter.php:70
+#: ../app/Modules/EventModule/EventOrgPresenter.php:73
 #: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
 msgid "Error during deleting"
 msgstr "Chyba při mazání"
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:45
-#: ../app/Models/ORM/Models/PaymentState.php:42
+#: ../app/Models/ORM/Models/PaymentState.php:43
 msgid "New payment"
 msgstr "Nová platba"
 
@@ -834,12 +801,8 @@ msgstr "Seznam plateb"
 msgid "Payment #%s can not be edited"
 msgstr "Platba #%s nemůže být editována"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:115
-msgid "Payment is not allowed in this time!"
-msgstr "Platba není v tuto chvíli povolena!"
-
 #: ../app/Modules/EventModule/ScheduleGroupPresenter.php:39
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:11
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:12
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:22
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:68
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:6
@@ -889,6 +852,16 @@ msgstr "Přihlášení"
 #: ../app/Modules/CoreModule/SettingsPresenter.php:121
 msgid "Incorrect old password."
 msgstr "Špatně zadané staré heslo."
+
+#: ../app/Modules/CoreModule/SettingsPresenter.php:126
+#: ../app/Components/EntityForms/EntityFormComponent.php:63
+#: ../app/Components/Controls/PreferredLangFormComponent.php:38
+#: ../app/Components/Controls/Events/ApplicationComponent.php:115
+#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:64
+#: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:37
+#: ../app/Components/Controls/Inbox/SeriesTableFormComponent.php:21
+msgid "Save"
+msgstr "Uložit"
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:141
 msgid "Username"
@@ -982,7 +955,7 @@ msgstr "Žádný účet není asoviován s tímto porfilem"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:165
 #: ../app/Modules/CoreModule/ErrorPresenter.php:18
-#: ../app/Components/EntityForms/EntityFormComponent.php:56
+#: ../app/Components/EntityForms/EntityFormComponent.php:57
 #: ../app/Components/Controls/PreferredLangFormComponent.php:54
 msgid "Error"
 msgstr "Chyba"
@@ -1032,7 +1005,7 @@ msgstr "Soutěžící ročníku %d"
 msgid "Organiser %s"
 msgstr "%s organizátor"
 
-#: ../app/Modules/Core/AuthenticatedPresenter.php:125
+#: ../app/Modules/Core/AuthenticatedPresenter.php:126
 msgid "Successful token authentication."
 msgstr "Úspěšné přihlášení přes token"
 
@@ -1280,6 +1253,12 @@ msgstr "Vyberte typ akce"
 msgid "revoked"
 msgstr "odvoláno"
 
+#: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/NameColumnFactory.php:23
+msgid ""
+"Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
+"       a ASCII znaky."
+msgstr ""
+
 #: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/OpenedSubmittingColumnFactory.php:24
 msgid "Opened"
 msgstr "Otevřené"
@@ -1338,7 +1317,7 @@ msgstr ""
 msgid "Payment not found"
 msgstr "Platba nenalezena"
 
-#: ../app/Models/ORM/Columns/Tables/Payment/CurrencyColumnFactory.php:24
+#: ../app/Models/ORM/Columns/Tables/Payment/CurrencyColumnFactory.php:25
 msgid "Select currency"
 msgstr "Vybrat měnu"
 
@@ -1370,7 +1349,7 @@ msgstr "d. m. Y"
 msgid "__date_time"
 msgstr "d. m. Y, H:i:s"
 
-#: ../app/Models/ORM/Columns/Types/FloatColumnFactory.php:57
+#: ../app/Models/ORM/Columns/Types/FloatColumnFactory.php:56
 msgid "Must be a floating number"
 msgstr ""
 
@@ -1470,37 +1449,37 @@ msgstr "Čeština"
 msgid "English"
 msgstr "English (angličtina)"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:66
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:67
 msgid "applied"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:68
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:69
 msgid "pending"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:70
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:71
 msgid "approved"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:72
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:73
 msgid "spare"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:74
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:75
 #, fuzzy
 msgid "participated"
 msgstr "Zúčastnil se"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:76
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:77
 msgid "missed"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:78
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:79
 #, fuzzy
 msgid "disqualified"
 msgstr "Změněno"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:80
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:81
 #, fuzzy
 msgid "canceled"
 msgstr "Zrušit"
@@ -1558,16 +1537,16 @@ msgstr "Žena"
 msgid "Male"
 msgstr "Muž"
 
-#: ../app/Models/ORM/Models/PaymentState.php:44
+#: ../app/Models/ORM/Models/PaymentState.php:45
 msgid "Waiting for paying"
 msgstr "Čeká se platba"
 
-#: ../app/Models/ORM/Models/PaymentState.php:46
+#: ../app/Models/ORM/Models/PaymentState.php:47
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:25
 msgid "Payment received"
 msgstr "Platba přijata"
 
-#: ../app/Models/ORM/Models/PaymentState.php:49
+#: ../app/Models/ORM/Models/PaymentState.php:50
 msgid "Payment canceled"
 msgstr "Platba zrušena"
 
@@ -1810,7 +1789,7 @@ msgstr "Pole narození je povinné"
 msgid "Set new game password."
 msgstr "Nastavit nové herní heslo"
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:27
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:26
 msgid "Not valid $rulesVersion."
 msgstr "Neplatné $rulesVersion"
 
@@ -1857,7 +1836,7 @@ msgid "Only %d different schools can be represented in the team."
 msgstr "Pouze %d různé školy mohou být součástí daného týmu."
 
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:17
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:274
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:242
 msgid "Field %label is required."
 msgstr "Pole %label je vyžadováno"
 
@@ -1879,7 +1858,7 @@ msgstr "Akce nenalezena"
 msgid "Configuration for event %s (%d-%s) not found"
 msgstr "Nastavení akce %s (%d-%s) nenalezeno"
 
-#: ../app/Models/Events/Transitions/MailSender.php:180
+#: ../app/Models/Events/Transitions/MailSender.php:182
 msgid "Camp invitation"
 msgstr "Pozvánka na soustředění"
 
@@ -2008,7 +1987,7 @@ msgstr "Submit neexistuje."
 msgid "Access denied"
 msgstr "Přístup zamítnut"
 
-#: ../app/Models/Transitions/Machine/Machine.php:151
+#: ../app/Models/Transitions/Machine/Machine.php:147
 msgid "Prechod sa nedá vykonať"
 msgstr "Přechod není možné vykonat"
 
@@ -2258,32 +2237,22 @@ msgstr "Není to duplicita"
 msgid "There has been a change in the data of this form since it was shown."
 msgstr "Od zobrazení formuláře byla změněna jeho data."
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:98
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:94
 msgid "Deliver address"
 msgstr "Doručovací adresa"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:101
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:97
 #: ../app/Components/Forms/Factories/AddressFactory.php:50
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:11
 msgid "Permanent address"
 msgstr "Trvalá adresa"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:103
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:99
 #: ../app/Components/Forms/Factories/AddressFactory.php:50
 msgid "(when different from delivery address)"
 msgstr "(pokud je odlišná od doručovací)"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:131
-#, fuzzy
-msgid ""
-"There is (formally) different person with email %value. \n"
-"                                Probably it is a duplicate so it substituted "
-"original data in the form."
-msgstr ""
-"Existuje formálně odlišná osoba se stejným mailem %value. Pravděpodobně se "
-"jedná o duplicitu, do dotazníku byla vložena původní data."
-
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:272
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:240
 msgid "Confirmation is necessary to proceed."
 msgstr "Schválení je nutné pro pokračování"
 
@@ -2401,7 +2370,7 @@ msgstr "Pole \"%s\" je vyžadováno"
 msgid "%s is required"
 msgstr "Pole \"%s\" je vyžadováno"
 
-#: ../app/Components/Forms/Factories/Events/PersonFactory.php:158
+#: ../app/Components/Forms/Factories/Events/PersonFactory.php:154
 #, php-format
 msgid "%s: %s is a required field."
 msgstr "%s: %s je požadované pole"
@@ -2471,7 +2440,7 @@ msgid "Active record"
 msgstr "Aktivní záznam"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:56
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:46
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:55
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:52
 #: ../app/config/orm.neon.neon2php:178 ../app/config/orm.neon.neon2php:221
 #: ../app/config/orm.neon.neon2php:686 ../app/config/orm.neon.neon2php:805
@@ -2640,11 +2609,93 @@ msgstr "Platba byla vytvořena."
 msgid "Payment has been updated."
 msgstr "Platba byla úspěšně upravena."
 
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:58
+#: ../app/Components/EntityForms/ContestantFormComponent.php:68
+#, fuzzy
+msgid "Contestant has been updated"
+msgstr "Data byla úspěšně upravena."
+
+#: ../app/Components/EntityForms/ContestantFormComponent.php:68
+#, fuzzy
+msgid "Contestant has been created"
+msgstr "Soutěžící %s vytvořen"
+
+#: ../app/Components/EntityForms/ReferencedPersonTrait.php:30
+msgid "Person is required."
+msgstr "Pole osoba je vyžadováno"
+
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:26
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:28
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:50
+#: ../data/events/fol/fol12.neon.neon2php:18
+#: ../data/events/fol/fol12.neon.neon2php:29
+#: ../data/events/fol/fol8.neon.neon2php:18
+#: ../data/events/fol/fol8.neon.neon2php:29
+#: ../data/events/fol/fol11.neon.neon2php:18
+#: ../data/events/fol/fol11.neon.neon2php:29
+msgid "Pouze pro české a slovenské studenty."
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:33
+msgid ""
+"Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu.\n"
+"                        Pokud nelze školu nalézt, pošlete na email schola."
+"novum@fykos.cz údaje o vaší škole jako název,\n"
+"                        adresu a pokud možno i odkaz na webovou stránku. "
+"Školu založíme a pošleme vám odpověď.\n"
+"                        Pak budete schopni dokončit registraci. Pokud nejste "
+"student, vyplňte \"not a student\"."
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:41
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:44
+#: ../data/events/fol/fol8.neon.neon2php:25
+#: ../data/events/fol/fol11.neon.neon2php:25
+msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:35
+msgid ""
+"Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. \n"
+"                        Pokud nelze školu nalézt, pošlete na email schola."
+"novum@fykos.cz údaje o vaší škole jako název,\n"
+"                        adresu a pokud možno i odkaz na webovou stránku.\n"
+"                        Školu založíme a pošleme vám odpověď. Pak budete "
+"schopni dokončit \n"
+"                        registraci. Pokud nejste student, vyplňte \"not a "
+"student\"."
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/DuplicateTeamNameException.php:13
+#, fuzzy, php-format
+msgid "Team with name \"%s\" already exists."
+msgstr "Soutěžící již existuje"
+
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:95
+#, fuzzy
+msgid "Application has been updated"
+msgstr "Data byla úspěšně upravena."
+
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:96
+#, fuzzy
+msgid "Application has been create"
+msgstr "Přihláška \"%s\" vytvořena."
+
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:208
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:209
+#, php-format
+msgid "Member #%d"
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/DuplicateMemberException.php:14
+#, fuzzy, php-format
+msgid "Person %s already applied."
+msgstr "Osoba \"%s\" je již na akci přihlášena."
+
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:67
 msgid "Event org has been updated"
 msgstr "Org akce byl aktualizován."
 
-#: ../app/Components/EntityForms/EventOrgFormComponent.php:58
+#: ../app/Components/EntityForms/EventOrgFormComponent.php:67
 msgid "Event org has been created"
 msgstr "Akce byla vytvořena"
 
@@ -2667,6 +2718,16 @@ msgstr "Adresa byla vytvořena."
 #: ../app/Components/EntityForms/PersonFormComponent.php:178
 msgid "Address has been deleted"
 msgstr "Adresa byla smazána."
+
+#: ../app/Components/EntityForms/EntityFormComponent.php:63
+#: ../app/config/payment.neon.neon2php:90
+#: ../app/config/payment.neon.neon2php:116
+#: ../app/config/payment.neon.neon2php:140
+#: ../app/config/payments/payment16.neon.neon2php:36
+#: ../app/config/payments/payment14.neon.neon2php:36
+#: ../app/config/payments/payment13.neon.neon2php:33
+msgid "Create"
+msgstr "Vytvořit"
 
 #: ../app/Components/EntityForms/ScheduleGroupFormComponent.php:50
 #, php-format
@@ -2770,11 +2831,11 @@ msgstr "Org byl vytvořen."
 msgid "Product"
 msgstr "Produkty"
 
-#: ../app/Components/EntityForms/TeacherFormComponent.php:62
+#: ../app/Components/EntityForms/TeacherFormComponent.php:78
 msgid "Teacher has been updated"
 msgstr "Učitel byl úspěšně aktualizován"
 
-#: ../app/Components/EntityForms/TeacherFormComponent.php:62
+#: ../app/Components/EntityForms/TeacherFormComponent.php:78
 msgid "Teacher has been created"
 msgstr "Učitel byl vytvořen."
 
@@ -2805,11 +2866,11 @@ msgstr "Škola byla aktualizována."
 msgid "School has been created"
 msgstr "Učitel byl vytvořen."
 
-#: ../app/Components/EntityForms/OrgFormComponent.php:69
+#: ../app/Components/EntityForms/OrgFormComponent.php:74
 msgid "Org has been updated."
 msgstr "Org byl aktualizován."
 
-#: ../app/Components/EntityForms/OrgFormComponent.php:69
+#: ../app/Components/EntityForms/OrgFormComponent.php:74
 msgid "Org has been created."
 msgstr "Org byl vytvořen."
 
@@ -2965,8 +3026,8 @@ msgstr "Akce"
 msgid "Series %d"
 msgstr "Série %d"
 
-#: ../app/Components/Controls/Choosers/YearChooserComponent.php:37
-#: ../app/Components/Controls/Choosers/YearChooserComponent.php:44
+#: ../app/Components/Controls/Choosers/YearChooserComponent.php:31
+#: ../app/Components/Controls/Choosers/YearChooserComponent.php:38
 #, php-format
 msgid "Year %d"
 msgstr "Rok %d"
@@ -3163,49 +3224,50 @@ msgstr "Import přihlášek"
 msgid "Mass transitions"
 msgstr "Hromadné přechody"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:19
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:20
 #: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:4
 msgid "Info"
 msgstr "Info"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:36
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:37
 msgid "Rank & points"
 msgstr "Pořadí a body"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:42
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:43
 msgid "Results is not accessible."
 msgstr "Výsledky nejsou dostupné."
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:49
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:51
 #, fuzzy
 msgid "Teachers"
 msgstr "Učitel"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:57
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:59
 msgid "Participants"
 msgstr "Účastníci"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:65
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:67
 msgid "Parcipant"
 msgstr "Účastník"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:77
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:79
+#: ../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:3
+#: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:16
+msgid "Actions"
+msgstr "Akce"
+
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:83
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:26
 msgid "Transitions"
 msgstr "Přechody"
 
-#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:81
+#: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:87
 msgid "Seating"
 msgstr "Rozsazení"
 
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:5
 msgid "Base info"
 msgstr "Základní info"
-
-#: ../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:3
-#: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:16
-msgid "Actions"
-msgstr "Akce"
 
 #: ../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:5
 msgid "Schedule item"
@@ -3628,7 +3690,8 @@ msgstr "Zrušit platbu"
 msgid "Paid"
 msgstr "Zaplaceno"
 
-#: ../app/config/fyziklani/default.neon.neon2php:15
+#: ../app/config/fyziklani/default.neon.neon2php:13
+#: ../data/events/fol/fol12.neon.neon2php:68
 #: ../data/events/fol/fol8.neon.neon2php:63
 #: ../data/events/fol/fol11.neon.neon2php:68
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:53
@@ -3638,9 +3701,9 @@ msgstr "Zaplaceno"
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:111
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
 msgid "Register team"
-msgstr "Přihlásit tým"
+msgstr "Registrovat tým"
 
-#: ../app/config/fyziklani/default.neon.neon2php:23
+#: ../app/config/fyziklani/default.neon.neon2php:19
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:58
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:113
@@ -3650,7 +3713,7 @@ msgstr "Přihlásit tým"
 msgid "Schválit účast"
 msgstr ""
 
-#: ../app/config/fyziklani/default.neon.neon2php:28
+#: ../app/config/fyziklani/default.neon.neon2php:23
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:61
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:97
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:118
@@ -3660,7 +3723,7 @@ msgstr ""
 msgid "Potvrdit jako náhradníka"
 msgstr ""
 
-#: ../app/config/fyziklani/default.neon.neon2php:35
+#: ../app/config/fyziklani/default.neon.neon2php:26
 #: ../data/events/council/councilDefault.neon.neon2php:53
 #: ../data/events/tsaf/tsaf8.neon.neon2php:107
 #: ../data/events/tsaf/tsaf9.neon.neon2php:105
@@ -3689,7 +3752,7 @@ msgstr ""
 msgid "Prezentovat"
 msgstr ""
 
-#: ../app/config/fyziklani/default.neon.neon2php:39
+#: ../app/config/fyziklani/default.neon.neon2php:29
 #: ../data/events/council/councilDefault.neon.neon2php:56
 #: ../data/events/tsaf/tsaf8.neon.neon2php:110
 #: ../data/events/tsaf/tsaf9.neon.neon2php:108
@@ -3723,7 +3786,8 @@ msgstr ""
 msgid "Nepřijel"
 msgstr ""
 
-#: ../app/config/fyziklani/default.neon.neon2php:44
+#: ../app/config/fyziklani/default.neon.neon2php:32
+#: ../data/events/fol/fol12.neon.neon2php:80
 #: ../data/events/fol/fol8.neon.neon2php:75
 #: ../data/events/fol/fol11.neon.neon2php:80
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:71
@@ -3733,18 +3797,6 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:118
 msgid "Zrušit tým"
-msgstr ""
-
-#: ../app/config/fyziklani/default.neon.neon2php:49
-#: ../data/events/fol/fol8.neon.neon2php:79
-#: ../data/events/fol/fol11.neon.neon2php:84
-#: ../data/events/fyziklani/fyziklani15.neon.neon2php:75
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:132
-#: ../data/events/fyziklani/fyziklani11.neon.neon2php:117
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:139
-#: ../data/events/fyziklani/fyziklani13.neon.neon2php:122
-msgid "Smazat tým"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:52
@@ -4583,6 +4635,7 @@ msgstr ""
 #: ../data/events/tabor/tabor9.neon.neon2php:102
 #: ../data/events/tabor/tabor1-6.neon.neon2php:146
 #: ../data/events/tabor/tabor8.neon.neon2php:102
+#: ../data/events/fol/fol12.neon.neon2php:73
 #: ../data/events/fol/fol8.neon.neon2php:68
 #: ../data/events/fol/fol11.neon.neon2php:73
 msgid "Zúčastnil se"
@@ -5175,6 +5228,90 @@ msgstr "Vrátit do DB jako Zrušen"
 msgid "What t-shirt size do you wear?"
 msgstr "Jakou velikost trička nosíš?"
 
+#: ../data/events/fol/fol12.neon.neon2php:22
+msgid ""
+"Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. "
+"Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz, údaje o "
+"vaší škole jako název, adresu a pokud možno i odkaz na webovou stránku. "
+"Školu založíme a pošleme vám odpověď. Pak budete schopni dokončit "
+"registraci. Pokud nejste student, vyplňte \"not a student\"."
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:25
+msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ nebo ZŠ."
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:76
+#: ../data/events/fol/fol8.neon.neon2php:71
+#: ../data/events/fol/fol11.neon.neon2php:76
+msgid "Nezúčastnil se"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:84
+#: ../data/events/fol/fol8.neon.neon2php:79
+#: ../data/events/fol/fol11.neon.neon2php:84
+#: ../data/events/fyziklani/fyziklani15.neon.neon2php:75
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:132
+#: ../data/events/fyziklani/fyziklani11.neon.neon2php:117
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:139
+#: ../data/events/fyziklani/fyziklani13.neon.neon2php:122
+msgid "Smazat tým"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:88
+#: ../data/events/fol/fol8.neon.neon2php:83
+#: ../data/events/fol/fol11.neon.neon2php:88
+#: ../data/events/fyziklani/fyziklani15.neon.neon2php:79
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:115
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:136
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:143
+#: ../data/events/fyziklani/fyziklani13.neon.neon2php:126
+msgid "Název týmu"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:93
+#: ../data/events/fol/fol8.neon.neon2php:88
+#: ../data/events/fol/fol11.neon.neon2php:93
+#: ../data/events/fyziklani/fyziklani15.neon.neon2php:90
+#: ../data/events/fyziklani/fyziklani12.neon.neon2php:120
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:147
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:154
+#: ../data/events/fyziklani/fyziklani13.neon.neon2php:137
+msgid "Kategorie"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:115
+#: ../data/events/fol/fol8.neon.neon2php:123
+#: ../data/events/fol/fol11.neon.neon2php:115
+#: ../data/events/fyziklani/fyziklani15.neon.neon2php:130
+msgid "Přidat člena"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:126
+#: ../data/events/fol/fol8.neon.neon2php:134
+#: ../data/events/fol/fol11.neon.neon2php:126
+#: ../data/events/fyziklani/fyziklani15.neon.neon2php:139
+msgid "Smazat člena"
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:147
+#: ../data/events/fol/fol8.neon.neon2php:154
+#: ../data/events/fol/fol11.neon.neon2php:147
+msgid "Tým s názvem '%value' již existuje."
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:148
+msgid "Osoba je již na Fyziklání Online přihlášena."
+msgstr ""
+
+#: ../data/events/fol/fol12.neon.neon2php:151
+#: ../data/events/fol/fol8.neon.neon2php:158
+#: ../data/events/fol/fol11.neon.neon2php:151
+msgid ""
+"Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky."
+msgstr ""
+
 #: ../data/events/fol/fol.default.neon.neon2php:13
 msgid "1st member"
 msgstr "První člen"
@@ -5268,47 +5405,10 @@ msgstr ""
 msgid "The person is already registered for Online Physics Brawl."
 msgstr ""
 
-#: ../data/events/fol/fol8.neon.neon2php:18
-#: ../data/events/fol/fol8.neon.neon2php:29
-#: ../data/events/fol/fol11.neon.neon2php:18
-#: ../data/events/fol/fol11.neon.neon2php:29
-msgid "Pouze pro české a slovenské studenty."
-msgstr ""
-
 #: ../data/events/fol/fol8.neon.neon2php:22
 msgid ""
 "Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje "
 "rychle. Pokud nejste student, vyplňte \"not a student\"."
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:25
-#: ../data/events/fol/fol11.neon.neon2php:25
-msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:71
-#: ../data/events/fol/fol11.neon.neon2php:76
-msgid "Nezúčastnil se"
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:83
-#: ../data/events/fol/fol11.neon.neon2php:88
-#: ../data/events/fyziklani/fyziklani15.neon.neon2php:79
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:115
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:136
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:143
-#: ../data/events/fyziklani/fyziklani13.neon.neon2php:126
-msgid "Název týmu"
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:88
-#: ../data/events/fol/fol11.neon.neon2php:93
-#: ../data/events/fyziklani/fyziklani15.neon.neon2php:90
-#: ../data/events/fyziklani/fyziklani12.neon.neon2php:120
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:147
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:154
-#: ../data/events/fyziklani/fyziklani13.neon.neon2php:137
-msgid "Kategorie"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:93
@@ -5332,32 +5432,9 @@ msgid ""
 "Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo."
 msgstr ""
 
-#: ../data/events/fol/fol8.neon.neon2php:123
-#: ../data/events/fol/fol11.neon.neon2php:115
-#: ../data/events/fyziklani/fyziklani15.neon.neon2php:130
-msgid "Přidat člena"
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:134
-#: ../data/events/fol/fol11.neon.neon2php:126
-#: ../data/events/fyziklani/fyziklani15.neon.neon2php:139
-msgid "Smazat člena"
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:154
-#: ../data/events/fol/fol11.neon.neon2php:147
-msgid "Tým s názvem '%value' již existuje."
-msgstr ""
-
 #: ../data/events/fol/fol8.neon.neon2php:155
 #: ../data/events/fol/fol11.neon.neon2php:148
 msgid "Osoba je již na Fyziklání online přihlášena."
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:158
-#: ../data/events/fol/fol11.neon.neon2php:151
-msgid ""
-"Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky."
 msgstr ""
 
 #: ../data/events/fol/fol11.neon.neon2php:22
@@ -5737,6 +5814,14 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
+#: ../app/Bootstrap.tsx.tsx2php:179 ../app/Bootstrap.tsx.tsx2php:184
+msgid "Upravit"
+msgstr ""
+
+#: ../app/Bootstrap.tsx.tsx2php:188 ../app/Bootstrap.tsx.tsx2php:193
+msgid "Smazat"
+msgstr ""
+
 #: ../app/Models/ValuePrinters/PricePrinter.tsx.tsx2php:14
 msgid "for free"
 msgstr "zdarma"
@@ -5943,6 +6028,21 @@ msgstr "Načítání"
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:41
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
+
+#~ msgid "Error while creating the contestant."
+#~ msgstr "Chyba při vytváření soutěžícího."
+
+#~ msgid "Payment is not allowed in this time!"
+#~ msgstr "Platba není v tuto chvíli povolena!"
+
+#, fuzzy
+#~ msgid ""
+#~ "There is (formally) different person with email %value. \n"
+#~ "                                Probably it is a duplicate so it "
+#~ "substituted original data in the form."
+#~ msgstr ""
+#~ "Existuje formálně odlišná osoba se stejným mailem %value. Pravděpodobně "
+#~ "se jedná o duplicitu, do dotazníku byla vložena původní data."
 
 #~ msgid "Authentication failure."
 #~ msgstr "Chyba přihlašování"
