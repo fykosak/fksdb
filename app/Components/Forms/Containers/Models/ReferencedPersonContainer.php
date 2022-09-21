@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -117,10 +118,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                         ->addRule(
                             function (BaseControl $control): bool {
                                 $personId = $this->getReferencedId()->getValue(false);
-
-                                $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
-                                    $control->getValue()
-                                );
+                                $foundPerson = $this->personService->findByEmail($control->getValue());
                                 if ($foundPerson && $foundPerson->getPrimary() != $personId) {
                                     $this->getReferencedId()->setValue($foundPerson, (bool)ReferencedId::MODE_FORCE);
                                     return false;
@@ -159,11 +157,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             if (!$subContainer instanceof \Nette\Forms\Container) {
                 continue;
             }
-            /**
-             * @var string $fieldName
-             * @var BaseControl $component
-             * TODO type safe
-             */
+            /** @var BaseControl|ModelContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $realValue = $this->getPersonValue(
                     $model,
@@ -188,9 +182,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
-                    // $component->setOmitted(false);
+                    $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
-                    // $component->setDefaultValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);

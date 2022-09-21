@@ -111,16 +111,16 @@ class ReferencedPersonFactory
             case 'person_schedule':
                 return $person->getSerializedSchedule($event, $field);
             case 'person':
-                return $person[$field];
+                return $person->{$field};
             case 'person_info':
-                $result = ($info = $person->getInfo()) ? $info[$field] : null;
+                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
                 if ($field == 'agreed') {
                     // See isFilled() semantics. We consider those who didn't agree as NOT filled.
                     $result = $result ? true : null;
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history[$field]
+                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
                     : null;
             case 'post_contact_d':
                 return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
