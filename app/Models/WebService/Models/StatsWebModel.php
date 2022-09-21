@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
-use Tracy\Debugger;
 
 class StatsWebModel extends WebModel
 {
