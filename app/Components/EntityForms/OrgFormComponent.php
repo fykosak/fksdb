@@ -57,7 +57,8 @@ class OrgFormComponent extends EntityFormComponent
         $referencedId = $this->createPersonId(
             $this->contestYear,
             $this->isCreating(),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest)
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            $this->getContext()->getParameters()['forms']['adminOrg']
         );
         $container->addComponent($referencedId, 'person_id', 'since');
         $form->addComponent($container, self::CONTAINER);

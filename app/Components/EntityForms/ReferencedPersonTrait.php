@@ -18,10 +18,11 @@ trait ReferencedPersonTrait
     protected function createPersonId(
         ContestYearModel $contestYear,
         bool $allowClear,
-        Resolver $resolver
+        Resolver $resolver,
+        array $fieldDefinition
     ): ReferencedId {
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
-            $this->getContext()->getParameters()[$contestYear->contest->getContestSymbol()]['adminTeacher'],
+            $fieldDefinition,
             $contestYear,
             PersonSearchContainer::SEARCH_ID,
             $allowClear,
