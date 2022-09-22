@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -22,6 +22,7 @@ class StatsWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @deprecated
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -89,18 +90,13 @@ class StatsWebModel extends WebModel
         return Expect::structure([
             'contestId' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
-            'series' => Expect::arrayOf(Expect::scalar()->castTo('int')),
         ]);
     }
 
     public function getJsonResponse(array $params): array
     {
-        $query = $this->container->getByType(TaskService::class)->getTable()
-            ->where('contest_id', $params['contestId'])
-            ->where('year', $params['year']);
-        if (count($params['series'])) {
-            $query->where('series', $params['series']);
-        }
+        $contest = $this->contestService->findByPrimary($params['contestId']);
+        $query = $contest->related(DbNames::TAB_TASK)->where('year', $params['year']);
 
         $result = [];
         /** @var TaskModel $task */
