@@ -63,11 +63,7 @@ class MailCallback implements TransitionCallback
 
     protected function resolveLogin(PersonModel $person): LoginModel
     {
-        $login = $person->getLogin();
-        if (!$login) {
-            $login = $this->accountManager->createLogin($person);
-        }
-        return $login;
+        return $person->getLogin() ?? $this->accountManager->createLogin($person);
     }
 
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
