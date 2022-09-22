@@ -31,7 +31,7 @@ class FyziklaniTeamHolder implements ModelHolder
         return $this->team->state;
     }
 
-    public function getModel(): Model
+    public function getModel(): TeamModel2
     {
         return $this->team;
     }
