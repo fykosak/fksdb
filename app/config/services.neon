@@ -48,7 +48,7 @@ services:
     #main
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Models\Persons\SelfResolver
+    - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
