@@ -54,6 +54,10 @@ abstract class EvaluationStrategy
 
     abstract protected function getCategoryMap(): array;
 
+    public function studyYearsToCategory(?int $studyYear): ModelCategory;
+
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float;
+
     /**
      * @return ModelCategory[]
      */

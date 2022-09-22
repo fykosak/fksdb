@@ -78,7 +78,7 @@ class TaskModel extends Model
     public function __toArray(): array
     {
         return [
-            'task_id' => $this->task_id,
+            'taskId' => $this->task_id,
             'series' => $this->series,
             'label' => $this->label,
             'name' => [

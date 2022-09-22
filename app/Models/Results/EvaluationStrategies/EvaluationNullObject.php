@@ -58,4 +58,20 @@ class EvaluationNullObject extends EvaluationStrategy
     {
         throw new NotImplementedException();
     }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    {
+        throw new NotImplementedException();
+    }
 }
