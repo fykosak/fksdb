@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
@@ -61,6 +62,11 @@ class EvaluationFykos2001 implements EvaluationStrategy
         return $task->points;
     }
 
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    {
+        return $submit->raw_points;
+    }
+
     /**
      * @param ModelCategory $category
      * @return int|string
@@ -68,5 +74,25 @@ class EvaluationFykos2001 implements EvaluationStrategy
     public function getTaskPointsColumn(ModelCategory $category): string
     {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+    }
+
+    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    {
+        switch ($studyYear) {
+            case 9:
+            case 8:
+            case 7:
+            case 6:
+            case 1:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_1);
+            case 2:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_2);
+            case 3:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_3);
+            case 4:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_4);
+            default:
+                throw new InvalidArgumentException('Invalid studyYear ' . $studyYear);
+        }
     }
 }
