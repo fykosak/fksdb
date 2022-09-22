@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -58,6 +59,22 @@ class EvaluationNullObject implements EvaluationStrategy
      * @throws NotImplementedException
      */
     public function getTaskPointsColumn(ModelCategory $category): string
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
     {
         throw new NotImplementedException();
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 
@@ -29,6 +30,10 @@ interface EvaluationStrategy
      * @return array of int (study years of students with category)
      */
     public function categoryToStudyYears(ModelCategory $category): array;
+
+    public function studyYearsToCategory(?int $studyYear): ModelCategory;
+
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float;
 
     /**
      * @return ModelCategory[]

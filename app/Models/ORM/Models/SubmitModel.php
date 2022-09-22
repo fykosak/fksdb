@@ -17,8 +17,8 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface submitted_on
  * @property-read SubmitSource source
  * @property-read string note
- * @property-read float raw_points
- * @property-read float calc_points
+ * @property-read float|null raw_points
+ * @property-read float|null calc_points
  * @property-read int corrected FUCK MARIADB
  */
 class SubmitModel extends Model implements Resource
@@ -73,5 +73,16 @@ class SubmitModel extends Model implements Resource
                 break;
         }
         return $value;
+    }
+
+    public function __toArray(): array
+    {
+        return [
+            'submitId' => $this->submit_id,
+            'taskId' => $this->task_id,
+            'source' => $this->source->value,
+            'rawPoints' => $this->raw_points,
+            'calcPoints' => $this->calc_points,
+        ];
     }
 }

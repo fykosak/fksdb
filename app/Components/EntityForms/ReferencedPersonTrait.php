@@ -20,10 +20,11 @@ trait ReferencedPersonTrait
         ContestYearModel $contestYear,
         bool $allowClear,
         VisibilityResolver $visibilityResolver,
-        ModifiabilityResolver $resolver
+        ModifiabilityResolver $resolver,
+        array $fieldDefinition
     ): ReferencedId {
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
-            $this->getContext()->getParameters()[$contestYear->contest->getContestSymbol()]['adminTeacher'],
+            $fieldDefinition,
             $contestYear,
             PersonSearchContainer::SEARCH_ID,
             $allowClear,

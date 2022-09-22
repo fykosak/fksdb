@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
@@ -20,6 +22,7 @@ class StatsWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @deprecated
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -56,21 +59,22 @@ class StatsWebModel extends WebModel
                 $seriesNo = $series->series;
                 $model->series = $seriesNo;
                 $tasks = $series->{'_'};
+                /** @var TaskModel $task */
                 foreach ($model->getData(explode(' ', $tasks)) as $task) {
                     $taskNode = $doc->createElement('task');
                     $statsNode->appendChild($taskNode);
 
                     $taskNode->setAttribute('series', (string)$seriesNo);
-                    $taskNode->setAttribute('label', (string)$task['label']);
-                    $taskNode->setAttribute('tasknr', (string)$task['tasknr']);
+                    $taskNode->setAttribute('label', (string)$task->label);
+                    $taskNode->setAttribute('tasknr', (string)$task->tasknr);
 
-                    $node = $doc->createElement('points', (string)$task['points']);
+                    $node = $doc->createElement('points', (string)$task->points);
                     $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('solvers', (string)$task['task_count']);
+                    $node = $doc->createElement('solvers', (string)$task->task_count);
                     $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('average', (string)$task['task_avg']);
+                    $node = $doc->createElement('average', (string)$task->task_avg);
                     $taskNode->appendChild($node);
                 }
             }
@@ -84,9 +88,21 @@ class StatsWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int'),
-            'year' => Expect::scalar()->castTo('int'),
-            'series' => Expect::arrayOf(Expect::scalar()->castTo('int')),
+            'contestId' => Expect::scalar()->castTo('int')->required(),
+            'year' => Expect::scalar()->castTo('int')->required(),
         ]);
+    }
+
+    public function getJsonResponse(array $params): array
+    {
+        $contest = $this->contestService->findByPrimary($params['contestId']);
+        $query = $contest->related(DbNames::TAB_TASK)->where('year', $params['year']);
+
+        $result = [];
+        /** @var TaskModel $task */
+        foreach ($query as $task) {
+            $result[] = array_merge($task->__toArray(), $task->getTaskStats());
+        }
+        return $result;
     }
 }
