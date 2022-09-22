@@ -44,7 +44,7 @@ abstract class EvaluationStrategy
         $map = $this->getCategoryMap();
         foreach ($map as $key => $values) {
             if (in_array($studyYear, $values, true)) {
-                return ModelCategory::tryFrom($key);
+                return ModelCategory::tryFrom((string)$key);
             }
         }
         throw new InvalidArgumentException('Invalid studyYear ' . $studyYear);
@@ -62,7 +62,7 @@ abstract class EvaluationStrategy
      */
     final public function getCategories(): array
     {
-        return array_map(fn($value) => ModelCategory::tryFrom($value), array_keys($this->getCategoryMap()));
+        return array_map(fn($value) => ModelCategory::tryFrom((string)$value), array_keys($this->getCategoryMap()));
     }
 
     /**

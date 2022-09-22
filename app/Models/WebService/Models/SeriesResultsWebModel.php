@@ -66,11 +66,14 @@ class SeriesResultsWebModel extends WebModel
             $category = $evaluationStrategy->studyYearsToCategory($contestant->getPersonHistory()->study_year);
             $submits = $contestant->related(DbNames::TAB_SUBMIT)->where('task.series', $params['series']);
             $submitsData = [];
+            $sum = 0;
             /** @var SubmitModel $submit */
             foreach ($submits as $submit) {
+                $points = $evaluationStrategy->getSubmitPoints($submit, $category);
+                $sum += $points;
                 $submitsData[] = [
                     'taskId' => $submit->task_id,
-                    'points' => $evaluationStrategy->getSubmitPoints($submit, $category),
+                    'points' => $points,
                 ];
             }
             $school = $contestant->getPersonHistory()->school;
@@ -80,9 +83,26 @@ class SeriesResultsWebModel extends WebModel
                     'name' => $contestant->person->getFullName(),
                     'school' => $school->name_abbrev,
                 ],
+                'sum' => $sum,
                 'submits' => $submitsData,
             ];
         }
-        return ['tasks' => $tasksData, 'submits' => $results];
+        foreach ($results as &$values) {
+            usort($values, fn(array $a, array $b) => $b['sum'] <=> $a['sum']);
+            $lastSum = null;
+            $rank = 1;
+            foreach ($values as &$value) {
+                $value['rank'] = $rank;
+                if ($value['sum'] !== $lastSum) {
+                    $rank++;
+                    $lastSum = $value['sum'];
+                }
+            }
+        }
+
+        return [
+            'tasks' => $tasksData,
+            'submits' => $results,
+        ];
     }
 }
