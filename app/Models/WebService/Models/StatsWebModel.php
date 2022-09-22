@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
