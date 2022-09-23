@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -207,6 +208,10 @@ abstract class TeamFormComponent extends EntityFormComponent
             $memberContainer->referencedContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
             $form->addComponent($memberContainer, 'member_' . $member);
         }
+        $privacyControl = $this->reflectionFormFactory->createField('person_info', 'agreed');
+        $privacyControl->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
+        $form->addComponent($privacyControl, 'privacy');
+        $form->addComponent(new CaptchaBox(), 'captcha');
     }
 
     abstract protected function getFieldsDefinition(): array;

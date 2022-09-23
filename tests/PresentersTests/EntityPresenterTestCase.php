@@ -98,6 +98,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             'person' => [
                 'other_name' => $person->other_name,
                 'family_name' => $person->family_name,
+                'gender' => $person->gender->value,
             ],
             'person_info' => [
                 'email' => $person->getInfo()->email,

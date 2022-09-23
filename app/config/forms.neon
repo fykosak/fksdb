@@ -111,11 +111,13 @@ parameters:
         adminPerson:
             person:
                 other_name:
-                  required: true
+                    required: true
                 family_name:
-                  required: true
+                    required: true
                 born_family_name:
-                  required: false
+                    required: false
+                gender:
+                    required: true
             post_contact_d:
                 address:
                   required: false

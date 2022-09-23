@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../Bootstrap.php';
 
+use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -20,6 +21,7 @@ use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
+use Tester\Environment;
 
 class TeamApplicationPresenterTest extends EntityPresenterTestCase
 {
@@ -76,6 +78,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
@@ -103,6 +107,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
@@ -125,6 +131,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_3_container' => self::personToValues($this->personD),
             'member_4' => (string)$this->personE->person_id,
             'member_4_container' => self::personToValues($this->personE),
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
@@ -151,6 +159,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => (string)$this->personC->person_id,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
@@ -168,6 +178,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
@@ -186,6 +198,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
@@ -204,6 +218,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         /** @var RedirectResponse $response */
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
@@ -229,6 +245,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         /** @var RedirectResponse $response */
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
@@ -253,6 +271,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         Assert::exception(
             fn() => $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]),
@@ -278,6 +298,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         /** @var RedirectResponse $response */
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
@@ -304,6 +326,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         Assert::exception(
             fn() => $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]),
@@ -330,6 +354,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         /** @var RedirectResponse $response */
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
@@ -355,6 +381,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
         Assert::type(RedirectResponse::class, $response);
@@ -375,6 +403,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
@@ -396,6 +426,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
@@ -417,6 +449,8 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
             'member_2' => null,
             'member_3' => null,
             'member_4' => null,
+            'captcha' => 'pqrt',
+            'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
