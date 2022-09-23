@@ -42,6 +42,7 @@ class MailCallback implements Statement
         $this->accountManager = $accountManager;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->accountManager = $accountManager;
         $this->authTokenService = $authTokenService;
     }
 
@@ -53,24 +54,29 @@ class MailCallback implements Statement
     public function __invoke(ModelHolder $holder): void
     {
         foreach ($this->getPersonFromHolder($holder) as $person) {
-            $login = $person->getLogin();
-            if (!$login) {
-                $login = $this->accountManager->createLogin($person);
-            }
-            $this->createMessage($login, $person, $holder);
+            $this->createMessage($person, $holder);
         }
+    }
+
+    protected function resolveLogin(PersonModel $person): LoginModel
+    {
+        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+    }
+
+    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
+    {
+        return $this->authTokenService->createToken($this->resolveLogin($person), 'default', null);
     }
 
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function createMessage(LoginModel $login, PersonModel $person, ModelHolder $holder): EmailMessageModel
+    protected function createMessage(PersonModel $person, ModelHolder $holder): EmailMessageModel
     {
         $data = $this->emailData;
-
         $data['recipient_person_id'] = $person->person_id;
-        $data['text'] = $this->createMessageText($login, $person, $holder);
+        $data['text'] = $this->createMessageText($person, $holder);
         return $this->emailMessageService->addMessageToSend($data);
     }
 
@@ -94,10 +100,9 @@ class MailCallback implements Statement
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function createMessageText(LoginModel $login, PersonModel $person, ModelHolder $holder): string
+    protected function createMessageText(PersonModel $person, ModelHolder $holder): string
     {
-
-        $token = $this->createToken($login, $holder);
+        $token = $this->createToken($person, $holder);
         return (string)$this->mailTemplateFactory->createWithParameters(
             $this->templateFile,
             $person->getPreferredLang(),
@@ -106,21 +111,6 @@ class MailCallback implements Statement
                 'holder' => $holder,
                 'linkArgs' => $this->createLinkArgs($holder, $token),
             ]
-        );
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    protected function createToken(LoginModel $login, ModelHolder $holder): AuthTokenModel
-    {
-        $event = $holder->getModel()->getReferencedModel(EventModel::class);
-        return $this->authTokenService->createToken(
-            $login,
-            AuthTokenModel::TYPE_EVENT_NOTIFY,
-            $event->registration_end ?? $event->end,
-            null,
-            true
         );
     }
 

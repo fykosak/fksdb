@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use Fykosak\NetteORM\Model;
 
 class FyziklaniTeamHolder implements ModelHolder
 {
@@ -31,7 +30,7 @@ class FyziklaniTeamHolder implements ModelHolder
         return $this->team->state;
     }
 
-    public function getModel(): Model
+    public function getModel(): TeamModel2
     {
         return $this->team;
     }

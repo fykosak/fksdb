@@ -12,8 +12,6 @@ use Nette\Utils\Html;
 abstract class SearchContainer extends ContainerWithOptions
 {
 
-    protected const CSS_AJAX = 'ajax';
-
     protected const CONTROL_SEARCH = '_c_search';
     protected const SUBMIT_SEARCH = '__search';
 
@@ -46,9 +44,7 @@ abstract class SearchContainer extends ContainerWithOptions
         );
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);
 
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-
-        $submit->onClick[] = function (): void {
+        $cb = function (): void {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->getSearchCallback())($term);
 
@@ -61,6 +57,8 @@ abstract class SearchContainer extends ContainerWithOptions
             $this->referencedId->referencedContainer->setValues($values);
             $this->referencedId->invalidateFormGroup();
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     abstract protected function createSearchControl(): ?BaseControl;

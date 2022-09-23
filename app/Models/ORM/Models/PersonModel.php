@@ -85,6 +85,11 @@ class PersonModel extends Model implements Resource
         return $related;
     }
 
+    public function getContestantByContestYear(ContestYearModel $contestYear): ?ContestantModel
+    {
+        return $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+    }
+
     public function getOrgs(?int $contestId = null): TypedGroupedSelection
     {
         $related = $this->related(DbNames::TAB_ORG, 'person_id');

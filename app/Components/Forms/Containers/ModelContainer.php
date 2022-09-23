@@ -32,4 +32,15 @@ class ModelContainer extends ContainerWithOptions
             $component->setDisabled($value);
         }
     }
+
+    /**
+     * @param mixed $value
+     */
+    public function setHtmlAttribute(string $name, $value = true): self
+    {
+        foreach ($this->getComponents() as $component) {
+            $component->setHtmlAttribute($name, $value);
+        }
+        return $this;
+    }
 }

@@ -41,15 +41,11 @@ class FOLCategoryProcessing extends FormProcessing
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
-        $abroad = 0;
         // calculate stats
         foreach ($members as $member) {
             $history = $member->getHistory($event->getContestYear()->ac_year);
-            $school = $history->school;
-            if (!$school) { // for future
+            if (!$history->school) { // for future
                 $olds += 1;
-            } elseif (!in_array($school->address->region->country_iso, ['CZ', 'SK'])) {
-                $abroad += 1;
             }
 
             if (is_null($history->study_year)) {

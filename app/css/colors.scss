@@ -24,6 +24,9 @@ $fyziklaniPoints1: #f45d01;
     color: color-contrast($color);
     background-color: $color;
   }
+  .text-#{$index} {
+    color: $color;
+  }
 }
 
 @mixin page-theme($color) {

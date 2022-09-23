@@ -45,12 +45,10 @@ services:
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #maitenance
-    - FKSDB\Models\Maintenance\Updater
     #main
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Models\Persons\ExtendedPersonHandlerFactory
+    - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory

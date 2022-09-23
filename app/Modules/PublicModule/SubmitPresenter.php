@@ -164,7 +164,7 @@ class SubmitPresenter extends BasePresenter
                         Form::MIME_TYPE,
                         _('Only PDF files are accepted.'),
                         'application/pdf'
-                    ); //TODO verify this check at production server
+                    );
 
                 if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                     $upload->setOption('description', _('Task is not for your category.'));

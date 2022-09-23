@@ -53,9 +53,13 @@ class NewApplicationsGrid extends BaseGrid
         ]);
         $this->addButton('create')
             ->setText(_('Create application'))
-            ->setLink(fn(EventModel $row): string => $this->getPresenter()
-                ->link(':Public:Application:default', ['eventId' => $row->event_id]))
-            ->setShow(fn(EventModel $modelEvent): bool => (bool)count(
+            ->setLink(function (EventModel $event): string {
+                if ($event->isTeamEvent()) {
+                    return $this->getPresenter()
+                        ->link(':Event:TeamApplication:create', ['eventId' => $event->event_id]);
+                }
+                return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $event->event_id]);
+            })->setShow(fn(EventModel $modelEvent): bool => (bool)count(
                 $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
                     $this->eventDispatchFactory->getDummyHolder($modelEvent),
                     EventParticipantStatus::tryFrom(Machine::STATE_INIT),

@@ -14,7 +14,10 @@ use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
+
+// phpcs:enable
 
 class PrimaryLast extends ResourceAvailabilityTestCase
 {
@@ -75,5 +78,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new PrimaryLast($container);
 $testCase->run();
+// phpcs:enable

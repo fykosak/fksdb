@@ -72,7 +72,7 @@ class TeacherPresenter extends BasePresenter
 
     protected function createComponentCreateForm(): TeacherFormComponent
     {
-        return new TeacherFormComponent($this->getContext(), null);
+        return new TeacherFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
     }
 
     /**
@@ -81,7 +81,7 @@ class TeacherPresenter extends BasePresenter
      */
     protected function createComponentEditForm(): TeacherFormComponent
     {
-        return new TeacherFormComponent($this->getContext(), $this->getEntity());
+        return new TeacherFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
     }
 
     /**

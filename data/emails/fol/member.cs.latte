@@ -1,7 +1,12 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+{varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{var $team = $holder->getModel()}
+{var $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 <p>
     Jsi členem týmu <em>{$team->name}</em> pro {$team->event->name}.
+    {$editLink}
+{$detailLink}
 </p>
 {*include '../inc/eventEdit.cs.latte' event => $team->event, token => $token*}
 {*include '../inc/closing.cs.latte'*}
