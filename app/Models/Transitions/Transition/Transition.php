@@ -110,10 +110,10 @@ class Transition
         $this->afterExecute[] = $callBack;
     }
 
-    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
+    final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder, ...$args);
+            $callback($holder);
         }
     }
 

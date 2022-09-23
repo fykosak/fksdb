@@ -34,7 +34,6 @@ class TeamMemberMailCallback extends MailCallback
         if (!$holder instanceof FyziklaniTeamHolder) {
             throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
         }
-        $holder->getModel()->event;
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
             AuthTokenModel::TYPE_EVENT_NOTIFY,
