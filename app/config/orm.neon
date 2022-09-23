@@ -120,7 +120,7 @@ orm:
                     description: _('In Neon syntax, the scheme is specific for each event.')
                 name:
                     type: string
-                    title: _('Name')
+                    title: _('Events name')
                     description: _("For the camps, it is its place.")
                     required: true
                 begin:
@@ -854,6 +854,12 @@ orm:
                         eventId: event_id
                         id: fyziklani_team_id
                     title: Detail
+                edit:
+                    destination: ':Event:TeamApplication:edit'
+                    params:
+                        eventId: event_id
+                        id: fyziklani_team_id
+                    title: Edit
         fyziklani_team_member:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel

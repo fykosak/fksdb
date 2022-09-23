@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;

@@ -124,32 +124,27 @@ class MailSender
         BaseMachine $baseMachine,
         BaseHolder $baseHolder
     ): EmailMessageModel {
-        $machine = $baseMachine->getMachine();
+        $email = $login->person->getInfo()->email;
+        $application = $baseHolder->holder->primaryHolder->getModel2();
 
-        $holder = $baseHolder->holder;
-        $person = $login->person;
-        $event = $baseHolder->event;
-        $email = $person->getInfo()->email;
-        $application = $holder->primaryHolder->getModel2();
-
-        $token = $this->createToken($login, $event, $application);
+        $token = $this->createToken($login, $baseHolder->event, $application);
 
         // prepare and send email
         $templateParams = [
             'token' => $token->token,
-            'person' => $person,
+            'person' => $login->person,
             'until' => $token->until,
-            'event' => $event,
+            'event' => $baseHolder->event,
             'application' => $application,
-            'holder' => $holder,
-            'machine' => $machine,
+            'holder' => $baseHolder->holder,
+            'machine' =>  $baseMachine->getMachine(),
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
             'linkArgs' => [
                 '//:Public:Application:',
                 [
-                    'eventId' => $event->event_id,
-                    'contestId' => $event->event_type->contest_id,
+                    'eventId' => $baseHolder->event->event_id,
+                    'contestId' => $baseHolder->event->event_type->contest_id,
                     'at' => $token->token,
                 ],
             ],
@@ -158,11 +153,11 @@ class MailSender
 
         $data = [];
         $data['text'] = (string)$template;
-        $data['subject'] = $this->getSubject($event, $application, $holder, $machine);
-        $data['sender'] = $holder->getParameter(self::FROM_PARAM);
-        $data['reply_to'] = $holder->getParameter(self::FROM_PARAM);
+        $data['subject'] = $this->getSubject($baseHolder->event, $application);
+        $data['sender'] = $baseHolder->holder->getParameter(self::FROM_PARAM);
+        $data['reply_to'] = $baseHolder->holder->getParameter(self::FROM_PARAM);
         if ($this->hasBcc()) {
-            $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
+            $data['blind_carbon_copy'] = $baseHolder->holder->getParameter(self::BCC_PARAM);
         }
         $data['recipient'] = $email;
         $data['state'] = EmailMessageState::WAITING;
@@ -176,15 +171,13 @@ class MailSender
         return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    private function getSubject(EventModel $event, Model $application, Holder $holder, Machine $machine): string
+    private function getSubject(EventModel $event, Model $application): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application;
-        //state in subject: . ' ' .
-        // mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
     private function getUntil(EventModel $event): \DateTimeInterface
