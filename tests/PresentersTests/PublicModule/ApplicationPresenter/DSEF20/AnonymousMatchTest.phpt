@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
@@ -68,5 +70,7 @@ class AnonymousMatchTest extends DsefTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new AnonymousMatchTest($container);
 $testCase->run();
+// phpcs:enable

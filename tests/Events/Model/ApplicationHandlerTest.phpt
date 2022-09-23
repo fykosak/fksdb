@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Model;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
@@ -213,5 +215,7 @@ class ApplicationHandlerTest extends EventTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new ApplicationHandlerTest($container);
 $testCase->run();
+// phpcs:enable

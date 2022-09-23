@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -11,11 +15,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
-
-// phpcs:disable
-$container = require '../../Bootstrap.php';
-
-// phpcs:enable
 
 class PrimaryLimit extends ResourceAvailabilityTestCase
 {

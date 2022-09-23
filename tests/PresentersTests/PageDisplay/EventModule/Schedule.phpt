@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
+// phpcs:disable
+$container = require '../../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
-
-$container = require '../../../Bootstrap.php';
 
 class Schedule extends EventModuleTestCase
 {
@@ -20,13 +22,13 @@ class Schedule extends EventModuleTestCase
         $this->scheduleGroup = $this->getContainer()
             ->getByType(ScheduleGroupService::class)
             ->storeModel([
-            'schedule_group_type' => 'accommodation',
-            'name_cs' => 'name CS',
-            'name_en' => 'name EN',
-            'event_id' => $this->event->event_id,
-            'start' => new \DateTime(),
-            'end' => new \DateTime(),
-        ]);
+                'schedule_group_type' => 'accommodation',
+                'name_cs' => 'name CS',
+                'name_en' => 'name EN',
+                'event_id' => $this->event->event_id,
+                'start' => new \DateTime(),
+                'end' => new \DateTime(),
+            ]);
     }
 
     protected function getEventData(): array
@@ -59,6 +61,7 @@ class Schedule extends EventModuleTestCase
         ];
     }
 }
-
+// phpcs:disable
 $testCase = new Schedule($container);
 $testCase->run();
+// phpcs:enable

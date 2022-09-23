@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
+// phpcs:enable
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
@@ -39,6 +41,7 @@ class Display extends StalkingTestCase
         return 1000;
     }
 }
-
+// phpcs:disable
 $testCase = new Display($container);
 $testCase->run();
+// phpcs:enable

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -12,8 +16,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
-
-$container = require '../../Bootstrap.php';
 
 class SecondaryLimitOk extends ResourceAvailabilityTestCase
 {
@@ -66,7 +68,7 @@ EOT
             'parameters' => <<<EOT
 accomodationCapacity: $capacity                
 EOT
-    ,
+            ,
         ], $this->event);
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
@@ -97,5 +99,7 @@ EOT
     }
 }
 
+// phpcs:disable
 $testCase = new SecondaryLimitOk($container);
 $testCase->run();
+// phpcs:enable

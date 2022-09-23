@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
+// phpcs:disable
 $container = require '../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\WebService\WebServiceModel;
 use Tester\Assert;
 
@@ -41,5 +43,7 @@ class WebServiceModelTest extends DatabaseTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new WebServiceModelTest($container);
 $testCase->run();
+// phpcs:enable

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\PersonHistory;
 
-/** @var Container $container */
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
@@ -124,5 +125,7 @@ class Extrapolate extends DatabaseTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new Extrapolate($container);
 $testCase->run();
+// phpcs:enable

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\OrgService;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
-use Tracy\Debugger;
 
 class OrgPresenterTest extends AbstractOrgPresenterTestCase
 {
@@ -150,6 +150,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ->count('*');
     }
 }
-
+// phpcs:disable
 $testCase = new OrgPresenterTest($container);
 $testCase->run();
+// phpcs:enable

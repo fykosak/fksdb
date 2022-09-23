@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Components\Forms\Controls\CaptchaBox;
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -501,5 +502,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new TeamApplicationPresenterTest($container);
 $testCase->run();
+// phpcs:enable
