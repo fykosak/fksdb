@@ -1,8 +1,8 @@
 {varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var $team = $holder->getModel()}
-{var $detailLink = $presenter->link(':Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
-{var $editLink = $presenter->link(':Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var $detailLink = $presenter->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var $editLink = $presenter->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 <p>
     You are now a member of the team <em>{$team->name}</em> at {$team->event->name}.
     {$editLink}
