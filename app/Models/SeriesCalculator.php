@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Utils\DateTime;
@@ -13,19 +12,15 @@ class SeriesCalculator
 {
     public static function getCurrentSeries(ContestModel $contest): int
     {
-        $year = $contest->getCurrentContestYear()->year;
-        $currentSeries = $contest->related(DbNames::TAB_TASK)->where([
-            'year' => $year,
-            '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime(),
-        ])->max('series');
+        $currentSeries = $contest->getCurrentContestYear()->getTasks()
+            ->where('(submit_deadline < ? OR submit_deadline IS NULL)', new DateTime())
+            ->max('series');
         return $currentSeries ?? 1;
     }
 
     public static function getLastSeries(ContestYearModel $contestYear): int
     {
-        return $contestYear->contest->related(DbNames::TAB_TASK)->where([
-                'year' => $contestYear->year,
-            ])->max('series') ?? 1;
+        return $contestYear->getTasks()->max('series') ?? 1;
     }
 
     public static function getTotalSeries(ContestYearModel $contestYear): int

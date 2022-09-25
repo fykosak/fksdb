@@ -201,31 +201,6 @@ class PersonModel extends Model implements Resource
             ->where('until IS NULL OR until >=?', $year);
     }
 
-    /**
-     * Active contestant := contestant in the highest year but not older than the current year.
-     *
-     * @return ContestantModel[] indexed by contest_id
-     * TODO definitely piece of shit this method
-     */
-    public function getActiveContestants(): array
-    {
-        $result = [];
-        /** @var ContestantModel $contestant */
-        foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
-            $currentYear = $contestant->contest->getCurrentContestYear()->year;
-            if ($contestant->year >= $currentYear) { // forward contestant
-                if (isset($result[$contestant->contest_id])) {
-                    if ($contestant->year > $result[$contestant->contest_id]->year) {
-                        $result[$contestant->contest_id] = $contestant;
-                    }
-                } else {
-                    $result[$contestant->contest_id] = $contestant;
-                }
-            }
-        }
-        return $result;
-    }
-
     public static function parseFullName(string $fullName): array
     {
         $names = explode(' ', $fullName);

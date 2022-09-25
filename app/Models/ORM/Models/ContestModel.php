@@ -46,11 +46,26 @@ class ContestModel extends Model
 
     public function getContestYears(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_CONTEST_YEAR);
+        return $this->related(DbNames::TAB_CONTEST_YEAR, 'contest_id');
+    }
+
+    public function getForwardedYear(): ?ContestYearModel
+    {
+        return $this->getContestYears()->where('ac_year > ?', YearCalculator::getCurrentAcademicYear())->fetch();
     }
 
     public function getCurrentContestYear(): ContestYearModel
     {
         return $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
+    }
+
+    public function getOrganisers(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_ORG, 'contest_id');
+    }
+
+    public function getTasks(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_TASK, 'contest_id');
     }
 }

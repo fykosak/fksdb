@@ -7,7 +7,6 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\InvalidArgumentException;
 
 /**
  * First two categories have doubled points for the first two problems.
@@ -42,7 +41,7 @@ class EvaluationFykos2011 extends EvaluationStrategy
     /**
      * @return float|int
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): float
     {
         return $this->getMultiplyCoefficient($task, $category) * $task->points;
     }

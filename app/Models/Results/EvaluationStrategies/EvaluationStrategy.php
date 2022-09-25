@@ -54,10 +54,6 @@ abstract class EvaluationStrategy
 
     abstract protected function getCategoryMap(): array;
 
-    public function studyYearsToCategory(?int $studyYear): ModelCategory;
-
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float;
-
     /**
      * @return ModelCategory[]
      */
@@ -79,5 +75,5 @@ abstract class EvaluationStrategy
     /**
      * Should return points for correctly solved task (aka Student Pilný).
      */
-    abstract public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int;
+    abstract public function getTaskPoints(TaskModel $task, ModelCategory $category): ?float;
 }

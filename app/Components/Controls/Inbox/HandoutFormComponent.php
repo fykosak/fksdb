@@ -10,7 +10,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -77,7 +76,7 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
+            $task->getContributions()->where([
                 'type' => TaskContributionType::GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;

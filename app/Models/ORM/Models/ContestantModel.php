@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -33,5 +35,15 @@ class ContestantModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getSubmits(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_SUBMIT);
+    }
+
+    public function getSubmitsForSeries(int $series): TypedGroupedSelection
+    {
+        return $this->getSubmits()->where('task.series', $series);
     }
 }

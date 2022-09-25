@@ -33,7 +33,7 @@ class EvaluationNullObject extends EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?float
     {
         throw new NotImplementedException();
     }
@@ -55,22 +55,6 @@ class EvaluationNullObject extends EvaluationStrategy
     }
 
     protected function getCategoryMap(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function studyYearsToCategory(?int $studyYear): ModelCategory
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
     {
         throw new NotImplementedException();
     }

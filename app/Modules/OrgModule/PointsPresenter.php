@@ -6,7 +6,6 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel};
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Results\SQLResultsCache;
@@ -112,13 +111,13 @@ class PointsPresenter extends BasePresenter
     public function handleRecalculateAll(): void
     {
         try {
-            $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
+            $years = $this->getSelectedContestYear()->contest->getTasks()
                 ->select('year')
                 ->group('year');
             /** @var TaskModel $year */
             foreach ($years as $year) {
                 // TODO WTF -1 year
-                $contestYear = $this->getSelectedContest()->getContestYear($year->year);
+                $contestYear = $this->getSelectedContestYear();
                 if ($contestYear) {
                     $this->resultsCache->recalculate($contestYear);
                 }

@@ -8,6 +8,7 @@ use Fykosak\NetteORM\Model;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
 /**
@@ -70,7 +71,8 @@ class LoginModel extends Model implements IIdentity
                         $org->contest,
                     );
                 }
-                foreach ($person->getActiveContestants() as $contestant) {
+                /** @var ContestantModel $contestant */
+                foreach ($person->getContestants() as $contestant) {
                     $this->roles[] = new Grant(
                         RoleModel::CONTESTANT,
                         $contestant->contest,
@@ -79,5 +81,14 @@ class LoginModel extends Model implements IIdentity
             }
         }
         return $this->roles;
+    }
+
+    public function getTokens(?string $type = null): TypedGroupedSelection
+    {
+        $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
+        if (isset($type)) {
+            $query->where('type', $type);
+        }
+        return $query;
     }
 }

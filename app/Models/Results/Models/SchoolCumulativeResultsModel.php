@@ -8,13 +8,13 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Connection;
 use Nette\Database\Row;
 use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
+ * @deprecated
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel
 {
@@ -29,10 +29,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function __construct(
         CumulativeResultsModel $cumulativeResultsModel,
         ContestYearModel $contestYear,
-        TaskService $taskService,
-        Connection $connection
+        TaskService $taskService
     ) {
-        parent::__construct($contestYear, $taskService, $connection, new EvaluationNullObject());
+        parent::__construct($contestYear, $taskService, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 

@@ -9,15 +9,13 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\QuizModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use FKSDB\Models\ORM\Services\QuizService;
+use FKSDB\Models\ORM\Services\SubmitQuestionService;
 use FKSDB\Models\ORM\Services\SubmitService;
-use FKSDB\Models\ORM\Services\SubmitQuizService;
+use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
@@ -35,18 +33,18 @@ class SubmitPresenter extends BasePresenter
 {
 
     private SubmitService $submitService;
-    private SubmitQuizService $submitQuizQuestionService;
+    private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
     private TaskService $taskService;
-    private QuizService $quizQuestionService;
+    private SubmitQuestionService $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
         SubmitService $submitService,
-        SubmitQuizService $submitQuizQuestionService,
+        SubmitQuestionAnswerService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
         TaskService $taskService,
-        QuizService $quizQuestionService,
+        SubmitQuestionService $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
@@ -88,21 +86,9 @@ class SubmitPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
-        $this->template->canRegister = false;
-        $this->template->hasForward = false;
-        if (!$this->template->hasTasks) {
-            /** @var PersonModel $person */
-            $person = $this->getUser()->getIdentity()->person;
-            $contestants = $person->getActiveContestants();
-            $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentContestYear = $this->getSelectedContest()->getCurrentContestYear();
-            $this->template->canRegister = ($contestant->year < $currentContestYear->year
-                + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
-
-            $this->template->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year)
-                && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
-        }
+        $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
+        $this->template->canRegister = !$hasTasks;
+        $this->template->hasForward = !$hasTasks;
     }
 
     private function getAvailableTasks(): TypedSelection
@@ -155,8 +141,8 @@ class SubmitPresenter extends BasePresenter
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $questions = $task->related(DbNames::TAB_QUIZ);
-            if (!count($questions)) {
+            $questions = $task->getQuestions();
+            if (!$questions->count('*')) {
                 $upload = $container->addUpload('file', $task->getFQName());
                 $conditionedUpload = $upload
                     ->addCondition(Form::FILLED)
@@ -181,10 +167,10 @@ class SubmitPresenter extends BasePresenter
             } else {
                 //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
-                /** @var QuizModel $question */
+                /** @var SubmitQuestionModel $question */
                 foreach ($questions as $question) {
                     $select = $container->addRadioList(
-                        'question' . $question->question_id,
+                        'question' . $question->submit_question_id,
                         $task->getFQName() . ' - ' . $question->getFQName(),
                         $options
                     );
@@ -255,9 +241,9 @@ class SubmitPresenter extends BasePresenter
                 if (count($questions)) {
                     // Verification if user has event submitted any answer
                     $anySubmit = false;
-                    /** @var QuizModel $question */
+                    /** @var SubmitQuestionModel $question */
                     foreach ($questions as $question) {
-                        $name = 'question' . $question->question_id;
+                        $name = 'question' . $question->submit_question_id;
                         $answer = $taskValues[$name];
                         if ($answer != null) {
                             $anySubmit = true;

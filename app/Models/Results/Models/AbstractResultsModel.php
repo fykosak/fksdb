@@ -6,10 +6,9 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\TaskService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Connection;
 use Nette\Database\Row;
 
 /**
@@ -39,18 +38,15 @@ abstract class AbstractResultsModel
     public const DATA_PREFIX = 'd';
     protected ContestYearModel $contestYear;
     protected TaskService $taskService;
-    protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
     public function __construct(
         ContestYearModel $contestYear,
         TaskService $taskService,
-        Connection $connection,
         EvaluationStrategy $evaluationStrategy
     ) {
         $this->contestYear = $contestYear;
         $this->taskService = $taskService;
-        $this->connection = $connection;
         $this->evaluationStrategy = $evaluationStrategy;
     }
 
@@ -62,7 +58,7 @@ abstract class AbstractResultsModel
     {
         $sql = $this->composeQuery($category);
 
-        $stmt = $this->connection->query($sql);
+        $stmt = $this->taskService->explorer->query($sql);
         $result = $stmt->fetchAll();
 
         // reverse iteration to get ranking ranges
@@ -113,22 +109,18 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
-    protected function getTasks(int $series): TypedSelection
+    protected function getTasks(int $series): TypedGroupedSelection
     {
-        return $this->taskService->getTable()
-            ->select('task_id, label, points,series')
-            ->where([
-                'contest_id' => $this->contestYear->contest_id,
-                'year' => $this->contestYear->year,
-                'series' => $series,
-            ])
-            ->order('tasknr');
+        return $this->contestYear->getTasks($series)->order('tasknr');
     }
 
     /**
      * @return ModelCategory[]
      */
-    abstract public function getCategories(): array;
+    public function getCategories(): array
+    {
+        return $this->evaluationStrategy->getCategories();
+    }
 
     abstract public function getDataColumns(ModelCategory $category): array;
 }

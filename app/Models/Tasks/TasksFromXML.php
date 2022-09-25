@@ -103,7 +103,6 @@ class TasksFromXML extends Stage
             ]),
             $task
         );
-        // forward it to pipeline
         $datum->addTask($tasknr, $task);
     }
 }

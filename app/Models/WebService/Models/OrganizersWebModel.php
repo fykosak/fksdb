@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\ORM\Services\OrgService;
@@ -67,7 +66,7 @@ class OrganizersWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $contest = $this->contestService->findByPrimary($params['contestId']);
-        $organisers = $contest->related(DbNames::TAB_ORG);
+        $organisers = $contest->getOrganisers();
         if (isset($params['year'])) {
             $organisers->where('since<=?', $params['year'])
                 ->where('until IS NULL OR until >=?', $params['year']);

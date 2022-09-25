@@ -31,7 +31,7 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?float
     {
         if ($task->label == '1' && $task->series < 7) {
             if (

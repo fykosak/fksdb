@@ -7,7 +7,6 @@ namespace FKSDB\Models\Authentication;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -87,8 +86,7 @@ class AccountManager
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $login->related(DbNames::TAB_AUTH_TOKEN)
-            ->where('type', AuthTokenModel::TYPE_RECOVERY)
+        $token = $login->getTokens(AuthTokenModel::TYPE_RECOVERY)
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
             throw new RecoveryExistsException();
@@ -112,9 +110,7 @@ class AccountManager
 
     public function cancelRecovery(LoginModel $login): void
     {
-        $login->related(DbNames::TAB_AUTH_TOKEN)->where([
-            'type' => AuthTokenModel::TYPE_RECOVERY,
-        ])->delete();
+        $login->getTokens(AuthTokenModel::TYPE_RECOVERY)->delete();
     }
 
     final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel

@@ -6,23 +6,28 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\QuizModel;
-use FKSDB\Models\ORM\Models\SubmitQuizModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use Nette\Utils\DateTime;
 use Fykosak\NetteORM\Service;
 
-class SubmitQuizService extends Service
+class SubmitQuestionAnswerService extends Service
 {
 
-    public function findByContestant(QuizModel $question, ContestantModel $contestant): ?SubmitQuizModel
-    {
-        return $contestant->related(DbNames::TAB_SUBMIT_QUIZ)
-            ->where('question_id', $question->question_id)
+    public function findByContestant(
+        SubmitQuestionModel $question,
+        ContestantModel $contestant
+    ): ?SubmitQuestionAnswerModel {
+        return $contestant->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER)
+            ->where('question_id', $question->submit_question_id)
             ->fetch();
     }
 
-    public function saveSubmittedQuestion(QuizModel $question, ContestantModel $contestant, ?string $answer): void
-    {
+    public function saveSubmittedQuestion(
+        SubmitQuestionModel $question,
+        ContestantModel $contestant,
+        ?string $answer
+    ): void {
         $submit = $this->findByContestant($question, $contestant);
         if ($submit) {
             $this->storeModel([
@@ -31,7 +36,7 @@ class SubmitQuizService extends Service
             ], $submit);
         } else {
             $this->storeModel([
-                'question_id' => $question->question_id,
+                'submit_question_id' => $question->submit_question_id,
                 'contestant_id' => $contestant->contestant_id,
                 'submitted_on' => new DateTime(),
                 'answer' => $answer,

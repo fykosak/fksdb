@@ -159,13 +159,12 @@ class RegisterPresenter extends CoreBasePresenter
     final public function renderYear(): void
     {
         $contest = $this->getSelectedContest();
-        $forward = $this->yearCalculator->getForwardShift($contest);
-        if ($forward) {
+        $forwardedYear = $contest->getForwardedYear();
+        if ($forwardedYear) {
             $years = [
                 $contest->getCurrentContestYear(),
-                $contest->getContestYearByAcYear(YearCalculator::getCurrentAcademicYear() + $forward),
+                $forwardedYear,
             ];
-
             $this->template->years = $years;
         } else {
             $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year]);

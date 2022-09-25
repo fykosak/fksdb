@@ -66,7 +66,7 @@ class TaskModel extends Model
         $count = 0;
         $sum = 0;
         /** @var SubmitModel $submit */
-        foreach ($this->related(DbNames::TAB_SUBMIT) as $submit) {
+        foreach ($this->getSubmits() as $submit) {
             if (isset($submit->raw_points)) {
                 $count++;
                 $sum += $submit->raw_points;
@@ -88,5 +88,15 @@ class TaskModel extends Model
             'taskNumber' => $this->tasknr,
             'points' => $this->points,
         ];
+    }
+
+    public function getSubmits(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_SUBMIT, 'task_id');
+    }
+
+    public function getQuestions(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
     }
 }

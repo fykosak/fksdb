@@ -24,7 +24,7 @@ class EvaluationFykos2001 extends EvaluationStrategy
         return 's.raw_points';
     }
 
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): float
     {
         return $task->points;
     }

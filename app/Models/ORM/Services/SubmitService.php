@@ -36,7 +36,7 @@ class SubmitService extends Service
     {
         $key = $contestant->contestant_id . ':' . $task->task_id;
         if (!isset($this->submitCache[$key]) || !$useCache) {
-            $this->submitCache[$key] = $contestant->related(DbNames::TAB_SUBMIT)->where(
+            $this->submitCache[$key] = $contestant->getSubmits()->where(
                 'task_id',
                 $task->task_id
             )->fetch();
@@ -51,7 +51,7 @@ class SubmitService extends Service
             'name' => $task->getFQName(),
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
-            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
+            'isQuiz' => count($task->related(DbNames::TAB_SUBMIT_QUESTION)) > 0,
             'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
         ];
     }
