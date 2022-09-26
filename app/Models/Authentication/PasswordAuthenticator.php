@@ -38,7 +38,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     {
         $login = $this->findLogin($user);
 
-        if ($login->hash !== $this->calculateHash($password, $login)) {
+        if ($login->hash !== $login->calculateHash($password)) {
             throw new InvalidCredentialsException();
         }
         $this->logAuthentication($login);
@@ -99,11 +99,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         if (!$login->active) {
             throw new InactiveLoginException();
         }
-    }
-
-    public static function calculateHash(string $password, LoginModel $login): string
-    {
-        return sha1($login->login_id . md5($password));
     }
 
     public function sleepIdentity(IIdentity $identity): IIdentity

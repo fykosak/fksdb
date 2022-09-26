@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use FKSDB\Models\ORM\Services\SubmitQuestionService;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\TaskService;
@@ -21,10 +20,10 @@ use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -36,7 +35,6 @@ class SubmitPresenter extends BasePresenter
     private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
     private TaskService $taskService;
-    private SubmitQuestionService $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
@@ -44,14 +42,12 @@ class SubmitPresenter extends BasePresenter
         SubmitQuestionAnswerService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
         TaskService $taskService,
-        SubmitQuestionService $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
         $this->submitQuizQuestionService = $submitQuizQuestionService;
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
         $this->taskService = $taskService;
-        $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -91,20 +87,12 @@ class SubmitPresenter extends BasePresenter
         $this->template->hasForward = !$hasTasks;
     }
 
-    private function getAvailableTasks(): TypedSelection
+    private function getAvailableTasks(): TypedGroupedSelection
     {
-        // TODO related
-        $tasks = $this->taskService->getTable();
-        $tasks->where(
-            'contest_id = ? AND year = ?',
-            $this->getSelectedContestYear()->contest_id,
-            $this->getSelectedContestYear()->year
-        );
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
-
-        return $tasks;
+        return $this->getSelectedContestYear()->getTasks()
+            ->where('submit_start IS NULL OR submit_start < NOW()')
+            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
+            ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
     final public function renderAjax(): void
@@ -174,11 +162,7 @@ class SubmitPresenter extends BasePresenter
                         $task->getFQName() . ' - ' . $question->getFQName(),
                         $options
                     );
-
-                    $existingEntry = $this->submitQuizQuestionService->findByContestant(
-                        $question,
-                        $this->getContestant()
-                    );
+                    $existingEntry = $this->getContestant()->getAnswers($question);
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
@@ -224,9 +208,9 @@ class SubmitPresenter extends BasePresenter
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var TaskModel $task */
                 $task = $this->taskService->findByPrimary($taskId);
+                $questions = $task->getQuestions();
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(

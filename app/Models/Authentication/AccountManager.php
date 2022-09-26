@@ -124,7 +124,7 @@ class AccountManager
 
         /* Must be done after login_id is allocated. */
         if ($password) {
-            $hash = $login->createHash($password);
+            $hash = $login->calculateHash($password);
             $this->loginService->storeModel(['hash' => $hash], $login);
         }
         return $login;

@@ -115,7 +115,7 @@ class SettingsPresenter extends BasePresenter
                 ->addCondition(Form::FILLED)
                 ->addRule(
                     function (BaseControl $control) use ($login): bool {
-                        $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
+                        $hash = $login->calculateHash($control->getValue());
                         return $hash == $login->hash;
                     },
                     _('Incorrect old password.')
@@ -187,7 +187,7 @@ class SettingsPresenter extends BasePresenter
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
-            $loginData['hash'] = $login->createHash($loginData['password']);
+            $loginData['hash'] = $login->calculateHash($loginData['password']);
         }
 
         $this->loginService->storeModel($loginData, $login);

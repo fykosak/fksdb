@@ -11,11 +11,9 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\YearCalculator;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
-use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 

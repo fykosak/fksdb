@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -33,9 +32,9 @@ class LoginModel extends Model implements IIdentity
      *
      * @note Must be called after setting login_id.
      */
-    public function createHash(string $password): string
+    public function calculateHash(string $password): string
     {
-        return PasswordAuthenticator::calculateHash($password, $this);
+        return sha1($this->login_id . md5($password));
     }
 
     // ----- IIdentity implementation ----------
@@ -58,10 +57,8 @@ class LoginModel extends Model implements IIdentity
             $this->roles[] = new Grant(RoleModel::REGISTERED, null);
 
             // explicitly assigned roles
-            /** @var GrantModel $grant */
-            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $this->roles[] = new Grant($grant->role->name, $grant->contest);
-            }
+            $this->roles[] = [...$this->roles, ...$this->createGrantModels()];
+
             // roles from other tables
             $person = $this->person;
             if ($person) {
@@ -81,6 +78,24 @@ class LoginModel extends Model implements IIdentity
             }
         }
         return $this->roles;
+    }
+
+    public function getGrants(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_GRANT, 'login_id');
+    }
+
+    /**
+     * @return Grant[]
+     */
+    public function createGrantModels(): array
+    {
+        $grants = [];
+        /** @var GrantModel $grant */
+        foreach ($this->getGrants() as $grant) {
+            $grants[] = new Grant($grant->role->name, $grant->contest);
+        }
+        return $grants;
     }
 
     public function getTokens(?string $type = null): TypedGroupedSelection

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\YearCalculator;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
 
@@ -51,12 +51,12 @@ class ContestModel extends Model
 
     public function getForwardedYear(): ?ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year > ?', YearCalculator::getCurrentAcademicYear())->fetch();
+        return $this->getContestYears()->where('ac_year > ?', ContestYearService::getCurrentAcademicYear())->fetch();
     }
 
     public function getCurrentContestYear(): ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
+        return $this->getContestYears()->where('ac_year', ContestYearService::getCurrentAcademicYear())->fetch();
     }
 
     public function getOrganisers(): TypedGroupedSelection
@@ -67,5 +67,10 @@ class ContestModel extends Model
     public function getTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_TASK, 'contest_id');
+    }
+
+    public function getEventTypes(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_EVENT_TYPE);
     }
 }

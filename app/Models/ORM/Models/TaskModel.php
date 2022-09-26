@@ -35,8 +35,8 @@ class TaskModel extends Model
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
-        if ($type !== null) {
-            $contributions->where(['type' => $type->value]);
+        if ($type) {
+            $contributions->where('type', $type->value);
         }
         return $contributions;
     }

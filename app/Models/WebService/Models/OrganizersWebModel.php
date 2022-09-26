@@ -6,20 +6,16 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class OrganizersWebModel extends WebModel
 {
-
-    private OrgService $orgService;
     private ContestService $contestService;
 
-    public function inject(OrgService $orgService, ContestService $contestService): void
+    public function inject(ContestService $contestService): void
     {
-        $this->orgService = $orgService;
         $this->contestService = $contestService;
     }
 
@@ -31,9 +27,11 @@ class OrganizersWebModel extends WebModel
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $organisers = $this->orgService->getTable()->where('contest_id', $args->contestId);
+        $contest = $this->contestService->findByPrimary($args->contestId);
+        $organisers = $contest->getOrganisers();
         if (isset($args->year)) {
-            $organisers->where('since<=?', $args->year)->where('until IS NULL OR until >=?', $args->year);
+            $organisers->where('since<=?', $args->year)
+                ->where('until IS NULL OR until >=?', $args->year);
         }
 
         $doc = new \DOMDocument();

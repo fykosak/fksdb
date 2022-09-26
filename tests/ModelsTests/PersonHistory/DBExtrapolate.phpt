@@ -7,7 +7,7 @@ namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\YearCalculator;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -22,11 +22,11 @@ class DBExtrapolate extends DatabaseTestCase
     public function testNull(): void
     {
         $person = $this->createPerson('Student', 'Pilný');
-        $this->createPersonHistory($person, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
+        $this->createPersonHistory($person, ContestYearService::getCurrentAcademicYear(), $this->genericSchool, 1);
 
-        $extrapolated = $person->getHistory(YearCalculator::getCurrentAcademicYear() + 1, true);
+        $extrapolated = $person->getHistory(ContestYearService::getCurrentAcademicYear() + 1, true);
 
-        Assert::same(YearCalculator::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
+        Assert::same(ContestYearService::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
         Assert::same($this->genericSchool->school_id, $extrapolated->school_id);
         Assert::same(null, $extrapolated->class);
         Assert::same(2, $extrapolated->study_year);

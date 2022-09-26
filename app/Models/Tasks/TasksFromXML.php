@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
@@ -90,9 +91,8 @@ class TasksFromXML extends Stage
             }
             $data[$column] = $value;
         }
-
-        // obtain FKSDB\Models\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($datum->getContestYear(), $series, $tasknr);
+        /** @var TaskModel $task */
+        $task = $datum->getContestYear()->getTasks($series)->where('tasknr', $tasknr)->fetch();
 
         $task = $this->taskService->storeModel(
             array_merge($data, [

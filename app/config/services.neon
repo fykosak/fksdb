@@ -69,8 +69,6 @@ services:
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
-    - FKSDB\Models\YearCalculator
-    - FKSDB\Models\SeriesCalculator
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder

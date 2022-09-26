@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\TypedSelection;
@@ -21,12 +20,12 @@ class EventService extends Service
     {
         // TODO to related
         return $this->getTable()
-            ->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contestYear->contest_id)
-            ->where(DbNames::TAB_EVENT . '.year', $contestYear->year);
+            ->where('event_type.contest_id', $contestYear->contest_id)
+            ->where('year', $contestYear->year);
     }
 
     public function getByEventTypeId(ContestYearModel $contestYear, int $eventTypeId): ?EventModel
     {
-        return $this->getEvents($contestYear)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+        return $this->getEvents($contestYear)->where('event_type_id', $eventTypeId)->fetch();
     }
 }

@@ -27,10 +27,15 @@ class QueryModel extends Model implements Resource
     public function getParameters(): array
     {
         $result = [];
-        foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
+        foreach ($this->getParameters2() as $row) {
             $result[] = $row;
         }
         return $result;
+    }
+
+    public function getParameters2(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
     }
 
     /**
