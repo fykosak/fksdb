@@ -35,7 +35,7 @@ class SchedulePaymentService extends Service
         if (count($newScheduleIds) == 0) {
             throw new EmptyDataException(_('No item selected.'));
         }
-        $payment->related(DbNames::TAB_SCHEDULE_PAYMENT)->delete();
+        $payment->getSchedulePayment()->delete();
         foreach ($newScheduleIds as $id) {
             /** @var SchedulePaymentModel $model */
             $model = $this->getTable()->where('person_schedule_id', $id)

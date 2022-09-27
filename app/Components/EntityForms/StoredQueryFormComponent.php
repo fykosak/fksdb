@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
@@ -135,9 +136,10 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function saveTags(array $tags, QueryModel $query): void
     {
-        $this->storedQueryTagService->getTable()->where([
-            'query_id' => $query->query_id,
-        ])->delete();
+        /** @var TagModel $tag */
+        foreach ($query->getTags() as $tag) {
+            $this->storedQueryTagService->disposeModel($tag);
+        }
         foreach ($tags as $tagTypeId) {
             $this->storedQueryTagService->storeModel([
                 'query_id' => $query->query_id,
@@ -196,8 +198,10 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function saveParameters(array $parameters, QueryModel $query): void
     {
-        $this->storedQueryParameterService->getTable()
-            ->where(['query_id' => $query->query_id])->delete();
+        /** @var ParameterModel $parameter */
+        foreach ($query->getParameters2() as $parameter) {
+            $this->storedQueryParameterService->disposeModel($parameter);
+        }
 
         foreach ($parameters as $paramMetaData) {
             $data = (array)$paramMetaData;

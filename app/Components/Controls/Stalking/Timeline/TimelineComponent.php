@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\YearCalculator;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
@@ -49,16 +49,16 @@ class TimelineComponent extends FrontEndComponent
         ];
         $organisers = [];
         /** @var OrgModel $org */
-        foreach ($this->person->getOrgs() as $org) {
+        foreach ($this->person->getOrganisers() as $org) {
             $since = new \DateTime(
-                $org->contest->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+                $org->contest->getContestYear($org->since)->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
             );
             $until = new \DateTime();
             if ($org->until) {
                 $until = new \DateTime(
                     $org->contest->getContestYear(
                         $org->until
-                    )->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+                    )->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
                 );
             }
             $dates['since'][] = $since;
@@ -77,8 +77,8 @@ class TimelineComponent extends FrontEndComponent
         foreach ($this->person->getContestants() as $contestant) {
             $year = $contestant->contest->getContestYear($contestant->year)->ac_year;
 
-            $since = new \DateTime($year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
-            $until = new \DateTime(($year + 1) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+            $since = new \DateTime($year . '-' . ContestYearService::FIRST_AC_MONTH . '-1');
+            $until = new \DateTime(($year + 1) . '-' . ContestYearService::FIRST_AC_MONTH . '-1');
             $dates['since'][] = $since;
             $dates['until'][] = $until;
             $contestants[] = [

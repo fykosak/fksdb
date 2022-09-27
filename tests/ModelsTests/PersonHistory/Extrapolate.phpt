@@ -11,10 +11,10 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -63,14 +63,14 @@ class Extrapolate extends DatabaseTestCase
     {
         $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
             'class' => '3.B',
             'study_year' => 3,
         ]);
 
-        $extrapolated = $fixture->extrapolate(YearCalculator::getCurrentAcademicYear() + 1);
-        Assert::same(YearCalculator::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
+        $extrapolated = $fixture->extrapolate(ContestYearService::getCurrentAcademicYear() + 1);
+        Assert::same(ContestYearService::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
         Assert::same($this->school->school_id, $extrapolated->school_id);
         Assert::same('4.B', $extrapolated->class);
         Assert::same(4, $extrapolated->study_year);
@@ -80,14 +80,14 @@ class Extrapolate extends DatabaseTestCase
     {
         $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
             'class' => null,
             'study_year' => 3,
         ]);
 
-        $extrapolated = $fixture->extrapolate(YearCalculator::getCurrentAcademicYear() + 1);
-        Assert::same(YearCalculator::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
+        $extrapolated = $fixture->extrapolate(ContestYearService::getCurrentAcademicYear() + 1);
+        Assert::same(ContestYearService::getCurrentAcademicYear() + 1, $extrapolated->ac_year);
         Assert::same($this->school->school_id, $extrapolated->school_id);
         Assert::same(null, $extrapolated->class);
         Assert::same(4, $extrapolated->study_year);
@@ -100,14 +100,14 @@ class Extrapolate extends DatabaseTestCase
     {
         $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
             'class' => null,
             'study_year' => $from,
         ]);
 
-        $extrapolated = $fixture->extrapolate(YearCalculator::getCurrentAcademicYear() + $step);
-        Assert::same(YearCalculator::getCurrentAcademicYear() + $step, $extrapolated->ac_year);
+        $extrapolated = $fixture->extrapolate(ContestYearService::getCurrentAcademicYear() + $step);
+        Assert::same(ContestYearService::getCurrentAcademicYear() + $step, $extrapolated->ac_year);
         Assert::same($this->school->school_id, $extrapolated->school_id);
         Assert::same(null, $extrapolated->class);
         Assert::same($to, $extrapolated->study_year);

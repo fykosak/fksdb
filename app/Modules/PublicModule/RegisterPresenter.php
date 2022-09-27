@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\YearCalculator;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
@@ -158,13 +157,12 @@ class RegisterPresenter extends CoreBasePresenter
     final public function renderYear(): void
     {
         $contest = $this->getSelectedContest();
-        $forward = $this->yearCalculator->getForwardShift($contest);
-        if ($forward) {
+        $forwardedYear = $contest->getForwardedYear();
+        if ($forwardedYear) {
             $years = [
                 $contest->getCurrentContestYear(),
-                $contest->getContestYearByAcYear(YearCalculator::getCurrentAcademicYear() + $forward),
+                $forwardedYear,
             ];
-
             $this->template->years = $years;
         } else {
             $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year]);

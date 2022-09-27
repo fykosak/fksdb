@@ -11,7 +11,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
-use FKSDB\Models\SeriesCalculator;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
@@ -108,8 +107,8 @@ class TasksPresenter extends BasePresenter
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
-        $seriesItems = range(1, SeriesCalculator::getTotalSeries($this->getSelectedContestYear()));
-        if (SeriesCalculator::hasHolidaySeries($this->getSelectedContestYear())) {
+        $seriesItems = range(1, $this->getSelectedContestYear()->getTotalSeries());
+        if ($this->getSelectedContestYear()->hasHolidaySeries()) {
             $key = array_search('7', $seriesItems);
             unset($seriesItems[$key]);
         }

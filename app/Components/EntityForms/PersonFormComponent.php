@@ -170,11 +170,9 @@ class PersonFormComponent extends EntityFormComponent
                     $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
                 }
             } elseif ($oldAddress) {
-                $this->postContactService->getTable()->where([
-                    'type' => $shortType->value,
-                    'person_id' => $person->person_id,
-                ])->delete();
-                $oldAddress->delete();
+                $postContact = $person->getPostContact($shortType);
+                $this->postContactService->disposeModel($postContact);
+                $this->addressService->disposeModel($oldAddress);
                 $this->logger->log(new Message(_('Address has been deleted'), Message::LVL_INFO));
             }
         }

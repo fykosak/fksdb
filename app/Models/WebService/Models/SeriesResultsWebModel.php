@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
@@ -16,17 +15,17 @@ use Nette\Schema\Expect;
 
 class SeriesResultsWebModel extends WebModel
 {
-    private ContestService $contestService;
+    private ContestYearService $contestYearService;
 
-    public function inject(ContestService $contestService): void
+    public function inject(ContestYearService $contestYearService): void
     {
-        $this->contestService = $contestService;
+        $this->contestYearService = $contestYearService;
     }
 
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int')->required(),
+            'contest_id' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
             'series' => Expect::scalar()->castTo('int')->required(),
         ]);
@@ -37,17 +36,11 @@ class SeriesResultsWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->contestService->findByPrimary($params['contestId']);
-        $contestYear = $contest->getContestYear($params['year']);
+        $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
-        $contestants = $contest->related(DbNames::TAB_CONTESTANT)->where('year', $contestYear->year);
         $tasksData = [];
         /** @var TaskModel $task */
-        foreach (
-            $contest->related(DbNames::TAB_TASK)
-                ->where('year', $params['year'])
-                ->where('series', $params['series']) as $task
-        ) {
+        foreach ($contestYear->getTasks($params['series']) as $task) {
             foreach ($evaluationStrategy->getCategories() as $category) {
                 $tasksData[$category->value] = $tasksData[$category->value] ?? [];
                 $points = $evaluationStrategy->getTaskPoints($task, $category);
@@ -62,27 +55,50 @@ class SeriesResultsWebModel extends WebModel
         }
         $results = [];
         /** @var ContestantModel $contestant */
-        foreach ($contestants as $contestant) {
+        foreach ($contestYear->getContestants() as $contestant) {
             $category = $evaluationStrategy->studyYearsToCategory($contestant->getPersonHistory()->study_year);
-            $submits = $contestant->related(DbNames::TAB_SUBMIT)->where('task.series', $params['series']);
+            $submits = $contestant->getSubmitsForSeries($params['series']);
             $submitsData = [];
+            $sum = 0;
             /** @var SubmitModel $submit */
             foreach ($submits as $submit) {
-                $submitsData[] = [
-                    'taskId' => $submit->task_id,
-                    'points' => $evaluationStrategy->getSubmitPoints($submit, $category),
+                $points = $evaluationStrategy->getSubmitPoints($submit, $category);
+                $sum += $points;
+                $submitsData[$submit->task_id] = $points;
+            }
+            if (count($submitsData)) {
+                $school = $contestant->getPersonHistory()->school;
+                $results[$category->value] = $results[$category->value] ?? [];
+                $results[$category->value][] = [
+                    'contestant' => [
+                        'name' => $contestant->person->getFullName(),
+                        'school' => $school->name_abbrev,
+                    ],
+                    'sum' => $sum,
+                    'submits' => $submitsData,
                 ];
             }
-            $school = $contestant->getPersonHistory()->school;
-            $results[$category->value] = $results[$category->value] ?? [];
-            $results[$category->value][] = [
-                'contestant' => [
-                    'name' => $contestant->person->getFullName(),
-                    'school' => $school->name_abbrev,
-                ],
-                'submits' => $submitsData,
-            ];
         }
-        return ['tasks' => $tasksData, 'submits' => $results];
+        foreach ($results as &$values) {
+            usort($values, fn(array $a, array $b) => $b['sum'] <=> $a['sum']);
+            $fromRank = 1;
+            $sameRank = [];
+            foreach ($values as $index => &$value) {
+                $toRank = $index + 1;
+                $sameRank[] =& $value;
+                if (!isset($values[$index + 1]) || $value['sum'] !== $values[$index + 1]['sum']) {
+                    foreach ($sameRank as &$sameValue) {
+                        $sameValue['rank'] = [$fromRank, $toRank];
+                    }
+                    $sameRank = [];
+                    $fromRank = $toRank + 1;
+                }
+            }
+        }
+
+        return [
+            'tasks' => $tasksData,
+            'submits' => $results,
+        ];
     }
 }

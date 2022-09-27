@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -20,7 +19,6 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
 use Nette\Application\IPresenterFactory;
@@ -66,12 +64,12 @@ abstract class DatabaseTestCase extends TestCase
         $fykosData = [
             'contest_id' => ContestModel::ID_FYKOS,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $vyfukData = [
             'contest_id' => ContestModel::ID_VYFUK,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $serviceContestYear->storeModel(
             $fykosData,

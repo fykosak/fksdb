@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 // phpcs:disable
+use FKSDB\Models\ORM\Services\ContestYearService;
+
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
@@ -18,7 +20,7 @@ class AllUpload extends SubmitTestCase
         parent::setUp();
         $this->createPersonHistory(
             $this->person,
-            YearCalculator::getCurrentAcademicYear(),
+            ContestYearService::getCurrentAcademicYear(),
             $this->genericSchool,
             6
         );

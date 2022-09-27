@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
@@ -22,12 +21,8 @@ abstract class BasePresenter extends AuthenticatedPresenter
         if (!isset($this->contestant)) {
             /** @var PersonModel $person */
             $person = $this->getUser()->getIdentity()->person;
-            $this->contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')->where(
-                [
-                    'contest_id' => $this->getSelectedContestYear()->contest_id,
-                    'year' => $this->getSelectedContestYear()->year,
-                ]
-            )->fetch();
+            // TODO
+            $this->contestant = $person->getContestantByContestYear($this->getSelectedContestYear());
         }
         return $this->contestant;
     }
