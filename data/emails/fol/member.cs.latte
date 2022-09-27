@@ -1,16 +1,15 @@
 {varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var $team = $holder->getModel()}
+{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
 {var $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 {var $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
-<p>
-    Jsi členem týmu <em>{$team->name}</em> pro {$team->event->name}.
-    {$editLink}
-{$detailLink}
-{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
-<p>Ahoj,<br>
+
+<p>Ahoj,<br/>
     byl(a) jsi úspěšně zaregistrován(a) na Fyziklání Online, jsi členem týmu <em>{$team->name}</em>.
 </p>
-{* TODO: přidat link na detail přihlášky místo úpravy *}
-{include '../inc/eventEdit.cs.latte' event => $team->event, token => $token}
+<p>
+    Přihlášku si můžeš prohlédnout na odkazu <a href="{$detailLink}">{$detailLink}</a>, případné změny lze provádět až do {$event->registration_end|date:'%d.%m.%Y, %H:%i'} po přihlášení v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
+nebo na odkazu níže:<br/>
+    <a href="{$editLink}">{$editLink}</a>.
+</p>
 {include '../inc/closing.cs.latte'}
