@@ -67,7 +67,6 @@ abstract class TeamFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        Debugger::barDump($values);
         $this->teamService->explorer->beginTransaction();
         try {
             $values = array_reduce(
