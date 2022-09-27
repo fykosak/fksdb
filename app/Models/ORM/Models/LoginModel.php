@@ -53,11 +53,8 @@ class LoginModel extends Model implements IIdentity
     public function getRoles(): array
     {
         if (!isset($this->roles)) {
-            $this->roles = [];
-            $this->roles[] = new Grant(RoleModel::REGISTERED, null);
-
             // explicitly assigned roles
-            $this->roles[] = [...$this->roles, ...$this->createGrantModels()];
+            $this->roles = [new Grant(RoleModel::REGISTERED, null), ...$this->createGrantModels()];
 
             // roles from other tables
             $person = $this->person;
