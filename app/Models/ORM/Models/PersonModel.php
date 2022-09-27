@@ -61,9 +61,14 @@ class PersonModel extends Model implements Resource
         return $this->getHistory($contestYear->ac_year, $extrapolated);
     }
 
+    public function getHistories(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
+    }
+
     public function getHistory(int $acYear, bool $extrapolated = false): ?PersonHistoryModel
     {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY)
+        $history = $this->getHistories()
             ->where('ac_year', $acYear)
             ->fetch();
         if ($history) {
@@ -95,7 +100,7 @@ class PersonModel extends Model implements Resource
      */
     public function getOrgs(?int $contestId = null): TypedGroupedSelection
     {
-        $related = $this->related(DbNames::TAB_ORG, 'person_id');
+        $related = $this->getOrganisers();
         if ($contestId) {
             $related->where('contest_id', $contestId);
         }
@@ -165,7 +170,7 @@ class PersonModel extends Model implements Resource
      */
     private function getLastHistory(): ?PersonHistoryModel
     {
-        return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
+        return $this->getHistories()->order(('ac_year DESC'))->fetch();
     }
 
     public function getFullName(): string

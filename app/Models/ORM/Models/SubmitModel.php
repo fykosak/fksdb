@@ -105,6 +105,6 @@ class SubmitModel extends Model implements Resource
 
     public function getQuestionAnswers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER);
+        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'submit_id');
     }
 }

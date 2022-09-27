@@ -71,6 +71,6 @@ class ContestModel extends Model
 
     public function getEventTypes(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_TYPE);
+        return $this->related(DbNames::TAB_EVENT_TYPE, 'contest_id');
     }
 }

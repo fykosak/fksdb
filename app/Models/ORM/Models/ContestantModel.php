@@ -39,7 +39,7 @@ class ContestantModel extends Model implements Resource
 
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT);
+        return $this->related(DbNames::TAB_SUBMIT, 'contestant_id');
     }
 
     public function getSubmitsForSeries(int $series): TypedGroupedSelection
@@ -49,7 +49,7 @@ class ContestantModel extends Model implements Resource
 
     public function getAnswers(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER)
+        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
             ->where('question_id', $question->submit_question_id)
             ->fetch();
     }
