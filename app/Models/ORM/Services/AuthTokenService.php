@@ -42,11 +42,8 @@ class AuthTokenService extends Service
         }
 
         if ($refresh) {
-            // TODO to related
             /** @var AuthTokenModel $token */
-            $token = $this->getTable()
-                ->where('login_id', $login->login_id)
-                ->where('type', $type)
+            $token = $login->getTokens($type)
                 ->where('data', $data)
                 ->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()')
@@ -71,7 +68,7 @@ class AuthTokenService extends Service
             $this->storeModel(['until' => $until], $token);
         }
         if (!$outerTransaction) {
-            $this->explorer->getConnection()->commit();
+            $connection->commit();
         }
 
         return $token;

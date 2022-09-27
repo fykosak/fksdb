@@ -40,7 +40,7 @@ class TeamModel2 extends Model implements Resource
 
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
     }
 
     public function getMembers(): TypedGroupedSelection

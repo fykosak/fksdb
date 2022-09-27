@@ -22,7 +22,6 @@ use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -48,7 +47,6 @@ abstract class BasePresenter extends Presenter implements
      */
     public ?string $lang = null;
     private string $language;
-    protected YearCalculator $yearCalculator;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
@@ -69,12 +67,10 @@ abstract class BasePresenter extends Presenter implements
 
     final public function injectBase(
         Container $diContainer,
-        YearCalculator $yearCalculator,
         ContestService $contestService,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator
     ): void {
-        $this->yearCalculator = $yearCalculator;
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;

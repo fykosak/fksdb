@@ -1325,13 +1325,13 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 -- Table `quiz`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `quiz`
+CREATE TABLE IF NOT EXISTS `submit_question`
 (
-    `question_id` INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `task_id`     INT(11)    NOT NULL,
-    `question_nr` TINYINT(4) NULL DEFAULT NULL COMMENT 'Cislo otazky',
-    `points`      TINYINT(4) NULL DEFAULT NULL COMMENT 'Pocet bodu',
-    `answer`      VARCHAR(1) NULL DEFAULT NULL COMMENT 'Spravna odpoved',
+    `submit_question_id` INT(11)                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `task_id`            INT(11)                NOT NULL,
+    `label`              VARCHAR(16)            NULL DEFAULT NULL COMMENT 'Cislo otazky',
+    `points`             TINYINT(4)             NULL DEFAULT NULL COMMENT 'Pocet bodu',
+    `answer`             ENUM ('A','B','C','D') NULL DEFAULT NULL COMMENT 'Spravna odpoved',
     INDEX `idx_quiz__task` (`task_id` ASC),
     CONSTRAINT `fk_quiz__task`
         FOREIGN KEY (`task_id`)
@@ -1341,21 +1341,21 @@ CREATE TABLE IF NOT EXISTS `quiz`
 -- -----------------------------------------------------
 -- Table `submit_quiz`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `submit_quiz`
+CREATE TABLE IF NOT EXISTS `submit_question_answer`
 (
-    `submit_question_id` INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contestant_id`      INT(11)    NOT NULL COMMENT 'Resitel',
-    `question_id`        INT(11)    NOT NULL COMMENT 'Otazka',
-    `submitted_on`       DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `answer`             VARCHAR(1) NULL,
-    UNIQUE INDEX `uq_submit_quiz__contestant_question` (`contestant_id` ASC, `question_id` ASC),
-    INDEX `idx_submit_quiz__question_id` (`question_id` ASC),
-    CONSTRAINT `fk_submit_quiz__contestant`
+    `answer_id`          INT(11)                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contestant_id`      INT(11)                NOT NULL COMMENT 'Resitel',
+    `submit_question_id` INT(11)                NOT NULL COMMENT 'Otazka',
+    `submitted_on`       DATETIME               NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `answer`             ENUM ('A','B','C','D') NULL,
+    UNIQUE INDEX `uq_submit_quiz__contestant_question` (`contestant_id` ASC, `submit_question_id` ASC),
+    INDEX `idx_submit_quiz__question_id` (`submit_question_id` ASC),
+    CONSTRAINT `fk_submit_question_answer__contestant`
         FOREIGN KEY (`contestant_id`)
             REFERENCES `contestant` (`contestant_id`),
-    CONSTRAINT `fk_submit_quiz__quiz`
-        FOREIGN KEY (`question_id`)
-            REFERENCES `quiz` (`question_id`)
+    CONSTRAINT `fk_submit_question_answer__submit_question`
+        FOREIGN KEY (`submit_question_id`)
+            REFERENCES `submit_question` (`submit_question_id`)
 )
     ENGINE = InnoDB;
 

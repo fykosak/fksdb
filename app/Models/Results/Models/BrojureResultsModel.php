@@ -108,14 +108,6 @@ class BrojureResultsModel extends AbstractResultsModel
         $this->dataColumns = [];
     }
 
-    /**
-     * @return ModelCategory[]
-     */
-    public function getCategories(): array
-    {
-        return $this->evaluationStrategy->getCategories();
-    }
-
     protected function composeQuery(ModelCategory $category): string
     {
         if (!$this->series) {
@@ -161,23 +153,19 @@ class BrojureResultsModel extends AbstractResultsModel
             . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $from = ' from v_contestant ct
+        $query = 'select ' . implode(', ', $select);
+        $query .= ' from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_id';
 
-        $conditions = [
+        $where = $this->conditionsToWhere([
             'ct.year' => $this->contestYear->year,
             'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
             'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
-        ];
-
-        $query = 'select ' . implode(', ', $select);
-        $query .= $from;
-
-        $where = $this->conditionsToWhere($conditions);
+        ]);
         $query .= " where $where";
 
         $query .= ' group by p.person_id, sch.name_abbrev '; //abuse MySQL misimplementation of GROUP BY
@@ -209,13 +197,10 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
     {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
-            // sum points as sum of tasks
-            $points = null;
             /** @var TaskModel $task */
             foreach ($this->getTasks($series) as $task) {
-                $points += $this->evaluationStrategy->getTaskPoints($task, $category);
+                $sum += $this->evaluationStrategy->getTaskPoints($task, $category);
             }
-            $sum += $points;
         }
         return $sum;
     }

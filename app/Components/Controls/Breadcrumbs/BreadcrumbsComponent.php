@@ -251,7 +251,7 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /*     * **********************
+    /* ***********************
      * Storing requests and their IDs
      * ********************** */
 

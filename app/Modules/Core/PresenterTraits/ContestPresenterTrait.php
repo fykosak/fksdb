@@ -17,18 +17,15 @@ use Nette\InvalidStateException;
 use Nette\Security\User;
 
 /**
- * Trait ContestPresenterTrait
  * @property ContestService $contestService
  * @method User getUser()
  */
 trait ContestPresenterTrait
 {
-
     /**
      * @persistent
      */
     public ?int $contestId = null;
-    private ?ContestModel $contest;
 
     /**
      * @throws BadRequestException
@@ -36,7 +33,7 @@ trait ContestPresenterTrait
     protected function contestTraitStartup(): void
     {
         $contest = $this->getSelectedContest();
-        if (!isset($contest) || !$this->isValidContest($contest)) {
+        if (!$this->isValidContest($contest)) {
             $this->redirect(
                 'this',
                 array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id])
@@ -46,15 +43,16 @@ trait ContestPresenterTrait
 
     public function getSelectedContest(): ?ContestModel
     {
-        if (!isset($this->contest)) {
-            $this->contest = $this->contestService->findByPrimary($this->contestId);
+        static $contest;
+        if (!isset($contest) || $contest->contest_id !== $this->contestId) {
+            $contest = $this->contestService->findByPrimary($this->contestId);
         }
-        return $this->contest;
+        return $contest;
     }
 
     private function isValidContest(?ContestModel $contest): bool
     {
-        if (!$contest) {
+        if (!isset($contest)) {
             return false;
         }
         return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
@@ -65,7 +63,7 @@ trait ContestPresenterTrait
      */
     private function getAvailableContests(): TypedSelection
     {
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
 
         switch ($this->getRole()) {
@@ -88,9 +86,9 @@ trait ContestPresenterTrait
                 }
                 $contestsIds = [];
                 foreach ($login->person->getActiveOrgs() as $org) {
-                    $contestsIds[] = $org->contest_id;
+                    $contestsIds[$org->contest_id] = $org->contest_id;
                 }
-                return $this->contestService->getTable()->where('contest_id', $contestsIds);
+                return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
@@ -105,7 +103,7 @@ trait ContestPresenterTrait
     {
         /** @var ContestModel $candidate */
         $candidate = $this->getAvailableContests()->fetch();
-        if (!$this->isValidContest($candidate)) {
+        if (!$candidate) {
             throw new BadRequestException(_('No contest available'));
         }
         return $candidate;
