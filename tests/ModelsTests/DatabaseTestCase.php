@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
+use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -156,7 +157,7 @@ abstract class DatabaseTestCase extends TestCase
         );
 
         if (isset($pseudoLogin->hash)) {
-            $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
+            $hash = $pseudoLogin->calculateHash($loginData['hash']);
             $this->getContainer()->getByType(LoginService::class)->storeModel(['hash' => $hash], $pseudoLogin);
         }
         return $pseudoLogin;
