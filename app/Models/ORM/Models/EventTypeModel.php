@@ -20,6 +20,6 @@ class EventTypeModel extends Model
 
     public function getEvents(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT,'event_type_id');
+        return $this->related(DbNames::TAB_EVENT, 'event_type_id');
     }
 }
