@@ -86,7 +86,7 @@ abstract class PaymentTransitions implements TransitionsDecorator
     {
         return function (PaymentHolder $holder) {
             Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
-            foreach ($holder->getModel()->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
+            foreach ($holder->getModel()->getSchedulePayment() as $row) {
                 Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                 $row->delete();
             }

@@ -28,7 +28,7 @@ class OrgsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $orgs = $this->contest->related(DbNames::TAB_ORG);
+        $orgs = $this->contest->getOrganisers();
 
         $dataSource = new SearchableDataSource($orgs);
         $dataSource->setFilterCallback(function (Selection $table, array $value) {

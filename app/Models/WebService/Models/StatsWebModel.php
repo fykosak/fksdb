@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class StatsWebModel extends WebModel
 {
-    private ContestService $contestService;
+    private ContestYearService $contestYearService;
 
-    public function inject(ContestService $contestService): void
+    public function inject(ContestYearService $contestYearService): void
     {
-        $this->contestService = $contestService;
+        $this->contestYearService = $contestYearService;
     }
 
     /**
@@ -26,30 +25,27 @@ class StatsWebModel extends WebModel
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
-
         if (
             !isset($args->contest)
             || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])
         ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->contestService->findByPrimary(
-            $this->container->getParameters()['inverseContestMapping'][$args->contest]
-        );
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
         if (!isset($args->series)) {
             throw new \SoapFault('Sender', 'Unknown series.');
         }
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest],
+            (int)$args->year
+        );
 
         $doc = new \DOMDocument();
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
-        $model = new TaskStatsModel(
-            $contest->getContestYear((int)$args->year),
-            $this->contestService->explorer
-        );
+        $model = new TaskStatsModel($contestYear, $this->contestYearService->explorer);
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {
@@ -88,19 +84,18 @@ class StatsWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int')->required(),
+            'contest_id' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
 
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->contestService->findByPrimary($params['contestId']);
-        $query = $contest->related(DbNames::TAB_TASK)->where('year', $params['year']);
-
+        $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
+        $contestYear->getTasks();
         $result = [];
         /** @var TaskModel $task */
-        foreach ($query as $task) {
+        foreach ($contestYear->getTasks() as $task) {
             $result[] = array_merge($task->__toArray(), $task->getTaskStats());
         }
         return $result;

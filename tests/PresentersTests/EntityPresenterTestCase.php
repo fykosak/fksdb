@@ -6,10 +6,10 @@ namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Response;
@@ -104,9 +104,11 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
                 'born' => $person->getInfo()->born,
             ],
             'person_history' => [
-                'school_id__meta' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'school_id' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->school_id,
-                'study_year' => (string)$person->getHistory(YearCalculator::getCurrentAcademicYear())->study_year,
+                'school_id__meta' => (string)$person->getHistory(
+                    ContestYearService::getCurrentAcademicYear()
+                )->school_id,
+                'school_id' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->school_id,
+                'study_year' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->study_year,
             ],
             'person_has_flag' => [
                 'spam_mff' => '1',
