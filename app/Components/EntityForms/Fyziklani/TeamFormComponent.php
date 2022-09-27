@@ -89,7 +89,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->machine->executeImplicitTransition($holder);
             }
             $this->teamService->explorer->commit();
-            $this->flashMessage(
+            $this->getPresenter()->flashMessage(
                 isset($this->model)
                     ? _('Application has been updated')
                     : _('Application has been create'),
