@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
@@ -57,22 +58,31 @@ class EvaluationFykos2011 implements EvaluationStrategy
         s.raw_points)";
     }
 
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    {
+        if (is_null($submit->raw_points)) {
+            return null;
+        }
+        return $this->getMultiplyCoefficient($submit->task, $category) * $submit->raw_points;
+    }
+
     /**
      * @return float|int
      */
     public function getTaskPoints(TaskModel $task, ModelCategory $category): int
     {
-        switch ($category->value) {
-            case ModelCategory::FYKOS_1:
-            case ModelCategory::FYKOS_2:
-                if ($task->label == '1' || $task->label == '2') {
-                    return $task->points * 2;
-                } else {
-                    return $task->points;
-                }
-            default:
-                return $task->points;
+        return $this->getMultiplyCoefficient($task, $category) * $task->points;
+    }
+
+    private function getMultiplyCoefficient(TaskModel $task, ModelCategory $category): int
+    {
+        if (
+            in_array($task->label, ['1', '2']) &&
+            in_array($category->value, [ModelCategory::FYKOS_1, ModelCategory::FYKOS_2])
+        ) {
+            return 2;
         }
+        return 1;
     }
 
     public function getTaskPointsColumn(ModelCategory $category): string
@@ -83,6 +93,27 @@ class EvaluationFykos2011 implements EvaluationStrategy
                 return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1', '2'), 2 * t.points, t.points), NULL)";
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+        }
+    }
+
+    public function studyYearsToCategory(?int $studyYear): ModelCategory
+    {
+        switch ($studyYear) {
+            case 9:
+            case 8:
+            case 7:
+            case 6:
+            case 1:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_1);
+            case 2:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_2);
+            case 3:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_3);
+            case 4:
+            case null:
+                return ModelCategory::tryFrom(ModelCategory::FYKOS_4);
+            default:
+                throw new InvalidArgumentException('Invalid studyYear ' . $studyYear);
         }
     }
 }

@@ -33,20 +33,30 @@ class MyApplicationsPresenter extends BasePresenter
         return new NewApplicationsGrid($this->getContext());
     }
 
-    protected function createComponentMyEventTeachersGrid(): PersonRelatedGrid
+    protected function createComponentEventTeachersGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
-            'event_teacher',
+            'fyziklani_team_teacher',
             $this->getPerson(),
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()
         );
     }
 
-    protected function createComponentMyApplicationsGrid(): PersonRelatedGrid
+    protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
             'event_participant',
+            $this->getPerson(),
+            FieldLevelPermission::ALLOW_FULL,
+            $this->getContext()
+        );
+    }
+
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
             $this->getPerson(),
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()

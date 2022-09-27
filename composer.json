@@ -82,7 +82,7 @@
       "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 8"
     ],
     "testPSR12": [
-      "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --parallel=8 app/ tests/"
+      "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --extensions=php,phpt --standard=PSR12 --parallel=8 app/ tests/"
     ]
   }
 }

@@ -59,17 +59,15 @@ class AccountManager
 
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
-
-        $templateParams = [
-            'token' => $token->token,
-            'person' => $person,
-            'email' => $email,
-            'until' => $until,
-        ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
             $person->getPreferredLang() ?? $lang,
-            $templateParams
+            [
+                'token' => $token->token,
+                'person' => $person,
+                'email' => $email,
+                'until' => $until,
+            ]
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;

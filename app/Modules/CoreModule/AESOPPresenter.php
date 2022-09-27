@@ -55,7 +55,6 @@ class AESOPPresenter extends AuthenticatedPresenter
     public function getAllowedAuthMethods(): array
     {
         return [
-            self::AUTH_GITHUB => false,
             self::AUTH_HTTP => true,
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
+use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
@@ -15,6 +19,8 @@ class MailCallback implements TransitionCallback
 
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
+    protected AccountManager $accountManager;
+    protected AuthTokenService $authTokenService;
     protected string $templateFile;
     protected array $emailData;
 
@@ -22,12 +28,16 @@ class MailCallback implements TransitionCallback
         string $templateFile,
         array $emailData,
         EmailMessageService $emailMessageService,
-        MailTemplateFactory $mailTemplateFactory
+        MailTemplateFactory $mailTemplateFactory,
+        AuthTokenService $authTokenService,
+        AccountManager $accountManager
     ) {
         $this->templateFile = $templateFile;
         $this->emailData = $emailData;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->accountManager = $accountManager;
+        $this->authTokenService = $authTokenService;
     }
 
     /**
@@ -39,14 +49,26 @@ class MailCallback implements TransitionCallback
         foreach ($this->getPersonFromHolder($holder) as $person) {
             $data = $this->emailData;
             $data['recipient_person_id'] = $person->person_id;
-
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 $this->templateFile,
                 $person->getPreferredLang(),
-                ['holder' => $holder]
+                [
+                    'holder' => $holder,
+                    'token' => $this->createToken($person, $holder),
+                ]
             );
             $this->emailMessageService->addMessageToSend($data);
         }
+    }
+
+    protected function resolveLogin(PersonModel $person): LoginModel
+    {
+        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+    }
+
+    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
+    {
+        return $this->authTokenService->createToken($this->resolveLogin($person), 'default', null);
     }
 
     /**

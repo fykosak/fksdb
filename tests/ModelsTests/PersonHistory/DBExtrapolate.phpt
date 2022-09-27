@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\PersonHistory;
 
-/** @var Container $container */
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
@@ -33,5 +34,7 @@ class DBExtrapolate extends DatabaseTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new DBExtrapolate($container);
 $testCase->run();
+// phpcs:enable

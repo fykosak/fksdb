@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -93,6 +95,7 @@ class NoDSEFTest extends TsafTestCase
         Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
 }
-
+// phpcs:disable
 $testCase = new NoDSEFTest($container);
 $testCase->run();
+// phpcs:enable

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -209,6 +211,7 @@ class ClosePresenter extends FyziklaniTestCase
           }*/
     }
 }
-
+// phpcs:disable
 $testCase = new ClosePresenter($container);
 $testCase->run();
+// phpcs:enable

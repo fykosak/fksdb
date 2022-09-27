@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
@@ -127,11 +128,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             if (!$subContainer instanceof \Nette\Forms\Container) {
                 continue;
             }
-            /**
-             * @var string $fieldName
-             * @var BaseControl $component
-             * TODO type safe
-             */
+            /** @var BaseControl|ModelContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $realValue = $this->getPersonValue(
                     $model,
@@ -156,9 +153,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
-                    // $component->setOmitted(false);
+                    $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
-                    // $component->setDefaultValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);

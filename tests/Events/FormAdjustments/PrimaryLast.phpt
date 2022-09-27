@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
+
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -13,11 +18,6 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
-
-// phpcs:disable
-$container = require '../../Bootstrap.php';
-
-// phpcs:enable
 
 class PrimaryLast extends ResourceAvailabilityTestCase
 {

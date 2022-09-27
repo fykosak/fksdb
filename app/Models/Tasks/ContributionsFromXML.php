@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
@@ -77,12 +78,11 @@ class ContributionsFromXML extends Stage
                 $contributors[] = $row;
             }
 
-            // delete old contributions
+            /** @var TaskContributionModel $contribution */
             foreach ($task->getContributions(TaskContributionType::tryFrom($type)) as $contribution) {
                 $this->taskContributionService->disposeModel($contribution);
             }
 
-            // store new contributions
             /** @var OrgModel $contributor */
             foreach ($contributors as $contributor) {
                 $this->taskContributionService->storeModel([

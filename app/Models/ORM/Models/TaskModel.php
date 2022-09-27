@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
 use Fykosak\NetteORM\Model;
 
@@ -31,22 +32,13 @@ class TaskModel extends Model
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);
     }
 
-    /**
-     * @return TaskContributionModel[] indexed by contribution_id
-     */
-    public function getContributions(?TaskContributionType $type = null): array
+    public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type !== null) {
             $contributions->where(['type' => $type->value]);
         }
-
-        $result = [];
-        /** @var TaskContributionModel $contribution */
-        foreach ($contributions as $contribution) {
-            $result[$contribution->contribution_id] = $contribution;
-        }
-        return $result;
+        return $contributions;
     }
 
     /**
@@ -67,5 +59,34 @@ class TaskModel extends Model
     public function webalizeLabel(): string
     {
         return Strings::webalize($this->label, null, false);
+    }
+
+    public function getTaskStats(): array
+    {
+        $count = 0;
+        $sum = 0;
+        /** @var SubmitModel $submit */
+        foreach ($this->related(DbNames::TAB_SUBMIT) as $submit) {
+            if (isset($submit->raw_points)) {
+                $count++;
+                $sum += $submit->raw_points;
+            }
+        }
+        return ['solversCount' => $count, 'averagePoints' => $count ? ($sum / $count) : null];
+    }
+
+    public function __toArray(): array
+    {
+        return [
+            'taskId' => $this->task_id,
+            'series' => $this->series,
+            'label' => $this->label,
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+            'taskNumber' => $this->tasknr,
+            'points' => $this->points,
+        ];
     }
 }

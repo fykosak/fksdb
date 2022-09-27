@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-use FKSDB\Models\YearCalculator;
-
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
+
+// phpcs:enable
+use FKSDB\Models\YearCalculator;
 
 class AllUpload extends SubmitTestCase
 {
@@ -30,5 +32,7 @@ class AllUpload extends SubmitTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new AllUpload($container);
 $testCase->run();
+// phpcs:enable
