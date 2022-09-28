@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
@@ -19,9 +19,9 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
@@ -152,7 +152,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
-                    $component->setDisabled();
+                  //  $component->setDisabled();
                     $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
@@ -172,7 +172,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                         $component->setDefaultValue($value);
                     }
                     if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
-                        $component->setDisabled(); // could not store different value anyway
+                        $component->setHtmlAttribute('readonly', 'readonly');
+                       // $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }

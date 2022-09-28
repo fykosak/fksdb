@@ -74,6 +74,7 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
+            'member_0_container' => self::personToValues($this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,

@@ -163,7 +163,8 @@ class ReferencedId extends HiddenField
                     $this->setValue(null, true);
                 }
             } catch (ModelDataConflictException $exception) {
-                $exception->setReferencedId($this);
+                $this->referencedContainer->setConflicts($exception->getConflicts());
+                $this->addError($exception->getMessage());
                 throw $exception;
             } catch (ExistingPaymentException $exception) {
                 $this->addError($exception->getMessage());

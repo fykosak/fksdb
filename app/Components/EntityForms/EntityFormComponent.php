@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use Fykosak\Utils\Logging\Message;
-use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;

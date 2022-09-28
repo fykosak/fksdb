@@ -94,7 +94,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
-                $component->addError(null);
+                $component->addError(_('Field does not match an existing record.'));
             }
         }
     }
