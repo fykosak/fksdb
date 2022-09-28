@@ -22,18 +22,15 @@ class MailCallback implements TransitionCallback
     protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
     protected string $templateFile;
-    protected array $emailData;
 
     public function __construct(
         string $templateFile,
-        array $emailData,
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
     ) {
         $this->templateFile = $templateFile;
-        $this->emailData = $emailData;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
@@ -47,7 +44,7 @@ class MailCallback implements TransitionCallback
     public function __invoke(ModelHolder $holder, ...$args): void
     {
         foreach ($this->getPersonFromHolder($holder) as $person) {
-            $data = $this->emailData;
+            $data = $this->getData($person, $holder);
             $data['recipient_person_id'] = $person->person_id;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
                 $this->templateFile,
@@ -59,6 +56,15 @@ class MailCallback implements TransitionCallback
             );
             $this->emailMessageService->addMessageToSend($data);
         }
+    }
+
+    protected function getData(PersonModel $person, ModelHolder $holder): array
+    {
+        return [
+            'subject' => '',
+            'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
+            'sender' => 'fykos@fykos.cz',
+        ];
     }
 
     protected function resolveLogin(PersonModel $person): LoginModel

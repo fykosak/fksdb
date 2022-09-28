@@ -6,22 +6,21 @@ namespace FKSDB\Models\Events\Transitions;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EmailMessageState;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -137,7 +136,7 @@ class MailSender
             'event' => $baseHolder->event,
             'application' => $application,
             'holder' => $baseHolder->holder,
-            'machine' =>  $baseMachine->getMachine(),
+            'machine' => $baseMachine->getMachine(),
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
             'linkArgs' => [
@@ -166,23 +165,22 @@ class MailSender
 
     private function createToken(LoginModel $login, EventModel $event, Model $application): AuthTokenModel
     {
-        $until = $this->getUntil($event);
-        $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
+        return $this->authTokenService->createToken(
+            $login,
+            AuthTokenModel::TYPE_EVENT_NOTIFY,
+            $event->registration_end ?? $event->end,
+            ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary()),
+            true
+        );
     }
 
-    private function getSubject(EventModel $event, Model $application): string
+    protected function getSubject(EventModel $event, Model $application): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application;
-    }
-
-    private function getUntil(EventModel $event): \DateTimeInterface
-    {
-        return $event->registration_end ?? $event->end;
     }
 
     private function hasBcc(): bool

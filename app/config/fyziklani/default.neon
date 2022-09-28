@@ -12,7 +12,7 @@ transitions:
             init->pending:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Application created',]) #TODO
+                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member')
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
