@@ -104,10 +104,9 @@ abstract class ReferencedContainer extends ContainerWithOptions
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
         // $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $cb = function () {
+        $cb = function (): void {
             if ($this->allowClear) {
                 $this->referencedId->setValue(null);
-                $this->referencedId->invalidateFormGroup();
             }
         };
         $submit->onClick[] = $cb;

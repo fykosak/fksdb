@@ -55,7 +55,6 @@ abstract class SearchContainer extends ContainerWithOptions
             }
             $this->referencedId->setValue($model);
             $this->referencedId->referencedContainer->setValues($values);
-            $this->referencedId->invalidateFormGroup();
         };
         $submit->onClick[] = $cb;
         $submit->onInvalidClick[] = $cb;
