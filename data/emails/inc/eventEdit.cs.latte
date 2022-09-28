@@ -1,7 +1,7 @@
-{varType string[]|string[][] $linkArgs}
+    {varType string[]|string[][] $linkArgs}
 <p>
-    Případné změny lze provádět po <a n:href="//:Core:Authentication:login">přihlášení</a>
+    Případné změny lze provádět až do {$event->registration_end|date:'%d.%m.%Y, %H:%i'} po <a n:href="//:Core:Authentication:login">přihlášení</a> v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
     nebo využitím soukromého odkazu níže:<br/>
     {var $link= $control->link(...$linkArgs)}
-    <a href="{$link}">{$link}</a>
+    <a href="{$link}">{$link}</a>.
 </p>

@@ -51,7 +51,6 @@ class MailSender extends MailCallback
     ) {
         parent::__construct(
             $templateFile,
-            [],
             $emailMessageService,
             $mailTemplateFactory,
             $authTokenService,
@@ -65,7 +64,7 @@ class MailSender extends MailCallback
      * @return PersonModel[]
      * @throws \ReflectionException
      */
-    protected function getPersonFromHolder(ModelHolder $holder): array
+    protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         return [$holder->getPerson()];
     }
@@ -97,21 +96,16 @@ class MailSender extends MailCallback
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
     {
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
-        $login = $this->resolveLogin($person);
-        $data = ApplicationPresenter::encodeParameters(
-            $event->getPrimary(),
-            $holder->getModel()->getPrimary()
-        );
         return $this->authTokenService->createToken(
-            $login,
+            $this->resolveLogin($person),
             AuthTokenModel::TYPE_EVENT_NOTIFY,
             $event->registration_end ?? $event->end,
-            $data,
+            ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
     }
 
-    private function getSubject(EventModel $event, Model $application): string
+    protected function getSubject(EventModel $event, Model $application): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');

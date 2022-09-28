@@ -8,9 +8,9 @@ use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -50,7 +50,7 @@ class InboxFormComponent extends SeriesTableFormComponent
 // $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), I\Fykosak\Utils\Logging\Message::LVL_INFO);
                 } elseif (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
-                    $submit->delete();
+                    $this->submitService->disposeModel($submit);
                 } elseif ($submittedOn && !$submit) {
                     $this->submitService->storeModel([
                         'task_id' => $taskNo,

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
-
+// phpcs:enable
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
@@ -68,6 +69,7 @@ class AnonymousExistingTest extends DsefTestCase
         Assert::equal(3, $application->lunch_count);
     }
 }
-
+// phpcs:disable
 $testCase = new AnonymousExistingTest($container);
 $testCase->run();
+// phpcs:enable

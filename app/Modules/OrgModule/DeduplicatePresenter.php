@@ -106,7 +106,7 @@ class DeduplicatePresenter extends BasePresenter
         $this->personInfoService->storeModel($trunkData, $trunkPI);
 
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
-        $this->backLinkRedirect(true);
+        //$this->backLinkRedirect(true);
     }
 
     public function actionMerge(int $trunkId, int $mergedId): void
@@ -208,7 +208,7 @@ class DeduplicatePresenter extends BasePresenter
 
         $cancelButton = $form->addSubmit('cancel', _('Cancel'));
         $cancelButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
+        // $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
 
 
         return $control;
@@ -231,7 +231,7 @@ class DeduplicatePresenter extends BasePresenter
         if ($merger->merge()) {
             $this->flashMessage(_('Persons successfully merged.'), Message::LVL_SUCCESS);
             FlashMessageDump::dump($logger, $this);
-            $this->backLinkRedirect(true);
+           // $this->backLinkRedirect(true);
         } else {
             $this->flashMessage(_('Manual conflict resolution is necessary.'), Message::LVL_INFO);
             $this->redirect('this'); //this is correct

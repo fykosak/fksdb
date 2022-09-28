@@ -2,6 +2,7 @@
 services:
     fol.default.machine:
         factory: FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine
+    fof.default.machine: @fol.default.machine
 
 transitions:
     fol.default:
@@ -12,7 +13,7 @@ transitions:
             init->pending:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Application created',]) #TODO
+                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member')
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
@@ -31,3 +32,8 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Zrušit tým')
                 behaviorType: danger
+    fof.default:
+        machine: fof.default.machine
+        stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
+        decorator: null
+        transitions: []

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
+use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;

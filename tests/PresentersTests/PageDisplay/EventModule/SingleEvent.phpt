@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use DateTime;
-
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
+
+// phpcs:enable
+use DateTime;
 
 class SingleEvent extends EventModuleTestCase
 {
@@ -44,6 +46,7 @@ class SingleEvent extends EventModuleTestCase
         ];
     }
 }
-
+// phpcs:disable
 $testCase = new SingleEvent($container);
 $testCase->run();
+// phpcs:enable

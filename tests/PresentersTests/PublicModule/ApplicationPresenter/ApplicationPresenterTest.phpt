@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -14,8 +16,6 @@ use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
-use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -90,5 +90,7 @@ class ApplicationPresenterTest extends EventTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new ApplicationPresenterTest($container);
 $testCase->run();
+// phpcs:enable

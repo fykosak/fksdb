@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
@@ -144,5 +146,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new EventOrgPresenterTest($container);
 $testCase->run();
+// phpcs:enable

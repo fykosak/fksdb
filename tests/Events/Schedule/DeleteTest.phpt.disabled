@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
@@ -16,8 +20,6 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Schema\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
-
-$container = require '../../Bootstrap.php';
 
 class DeleteTest extends ScheduleTestCase
 {
@@ -114,7 +116,6 @@ class DeleteTest extends ScheduleTestCase
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
         Assert::equal(
             0,
             $this->getContainer()->getByType(PersonScheduleService::class)->getTable()->where(
@@ -129,5 +130,7 @@ class DeleteTest extends ScheduleTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new DeleteTest($container);
 $testCase->run();
+// phpcs:enable

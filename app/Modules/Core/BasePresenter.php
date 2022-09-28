@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
@@ -14,14 +13,13 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\UI\PageStyleContainer;
+use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Models\Utils\Utils;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -114,23 +112,6 @@ abstract class BasePresenter extends Presenter implements
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
-    final public function backLinkRedirect(bool $need = false): void
-    {
-        $this->putIntoBreadcrumbs();
-        /** @var BreadcrumbsComponent $component */
-        $component = $this->getComponent('breadcrumbs');
-        $backLink = $component->getBackLinkUrl();
-        if ($backLink) {
-            $this->redirectUrl($backLink);
-        } elseif ($need) {
-            $this->redirect(':Core:Authentication:login');
-        }
     }
 
     /**
@@ -254,11 +235,6 @@ abstract class BasePresenter extends Presenter implements
         return $template;
     }
 
-    /**
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function beforeRender(): void
     {
         parent::beforeRender();
@@ -267,9 +243,6 @@ abstract class BasePresenter extends Presenter implements
         $this->getTemplate()->pageStyleContainer = $this->getPageStyleContainer();
         $this->getTemplate()->lang = $this->getLang();
         $this->getTemplate()->navRoots = $this->getNavRoots();
-
-        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
-        $this->putIntoBreadcrumbs();
     }
 
     public function getTitle(): PageTitle
@@ -316,22 +289,6 @@ abstract class BasePresenter extends Presenter implements
     protected function getNavRoots(): array
     {
         return [];
-    }
-
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
-    protected function putIntoBreadcrumbs(): void
-    {
-        /** @var BreadcrumbsComponent $component */
-        $component = $this->getComponent('breadcrumbs');
-        $component->setBackLink($this->getRequest());
-    }
-
-    protected function createComponentBreadcrumbs(): BreadcrumbsComponent
-    {
-        return new BreadcrumbsComponent($this->getContext());
     }
 
     public function getContext(): Container

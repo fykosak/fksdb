@@ -6,8 +6,10 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Models\ORM\Services\ContestYearService;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
+// phpcs:enable
 class RestrictedUpload extends SubmitTestCase
 {
 
@@ -28,6 +30,7 @@ class RestrictedUpload extends SubmitTestCase
         $this->assertNotSubmit($this->contestant, $this->taskRestricted);
     }
 }
-
+// phpcs:disable
 $testCase = new RestrictedUpload($container);
 $testCase->run();
+// phpcs:enable

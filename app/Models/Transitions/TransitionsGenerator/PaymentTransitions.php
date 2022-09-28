@@ -6,16 +6,15 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
-use FKSDB\Models\Transitions\TransitionsDecorator;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\TransitionsDecorator;
 use Tracy\Debugger;
 
 abstract class PaymentTransitions implements TransitionsDecorator

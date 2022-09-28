@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -26,7 +23,6 @@ use Nette\Forms\Form;
 class ReferencedId extends HiddenField
 {
     public const VALUE_PROMISE = '__promise';
-    private const JSON_DATA = 'referencedContainer';
 
     public ReferencedContainer $referencedContainer;
     public SearchContainer $searchContainer;
@@ -112,9 +108,9 @@ class ReferencedId extends HiddenField
      *
      * @return mixed
      */
-    public function getValue(bool $fullfilPromise = true)
+    public function getValue(bool $usePromise = true)
     {
-        if ($fullfilPromise && $this->promise) {
+        if ($usePromise && $this->promise) {
             return $this->promise->getValue();
         }
         $value = parent::getValue();
@@ -143,12 +139,12 @@ class ReferencedId extends HiddenField
 
     private function createPromise(): void
     {
-        $values = $this->referencedContainer->getValues();
+        $values = $this->referencedContainer->getValues('array');
         $referencedId = $this->getValue();
-        $promise = new Promise(function () use ($values, $referencedId) {
+        $promise = new Promise(function () use ($values, $referencedId): ?int {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues((array)$values);
+                    $model = $this->handler->createFromValues($values);
                     $this->setValue($model, true);
                     $this->modelCreated = true;
                     return $model->getPrimary();
@@ -161,37 +157,21 @@ class ReferencedId extends HiddenField
                     return $referencedId;
                 } else {
                     $this->setValue(null, true);
+                    return null;
                 }
             } catch (ModelDataConflictException $exception) {
-                $exception->setReferencedId($this);
+                $this->referencedContainer->setConflicts($exception->getConflicts());
+                $this->addError($exception->getMessage());
+                $this->rollback();
                 throw $exception;
             } catch (ExistingPaymentException $exception) {
                 $this->addError($exception->getMessage());
                 $this->rollback();
+                throw $exception;
             }
         });
-        $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->promise = $promise;
-    }
-
-    public function invalidateFormGroup(): void
-    {
-        $form = $this->getForm();
-        /** @var Presenter $presenter */
-        $presenter = $form->lookup(Presenter::class);
-        if ($presenter->isAjax()) {
-            /** @var Control $control */
-            $control = $form->getParent();
-            $control->redrawControl(FormControl::SNIPPET_MAIN);
-            $control->getTemplate()->mainContainer = $this->parent;
-            $control->getTemplate()->level = 2;
-            $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object)[
-                'id' => $this->getHtmlId(),
-                'value' => $this->getValue(),
-            ];
-        }
     }
 
     protected function setModel(?Model $model, ReferencedIdMode $mode): void

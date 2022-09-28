@@ -22,7 +22,7 @@ class FyziklaniTeamMachine extends Machine
     }
 
     /**
-     * @param TeamModel2|null $model
+     * @param TeamModel2 $model
      */
     public function createHolder(Model $model): ModelHolder
     {

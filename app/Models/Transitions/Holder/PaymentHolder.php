@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Holder;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\PaymentService;
 
 class PaymentHolder implements ModelHolder
@@ -24,7 +25,7 @@ class PaymentHolder implements ModelHolder
         $this->service->storeModel(['state' => $newState->value], $this->model);
     }
 
-    public function getState(): EnumColumn
+    public function getState(): PaymentState
     {
         return $this->model->state;
     }

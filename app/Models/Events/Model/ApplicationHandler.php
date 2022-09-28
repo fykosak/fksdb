@@ -7,6 +7,7 @@ namespace FKSDB\Models\Events\Model;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
@@ -15,7 +16,6 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use FKSDB\Models\Events\EventDispatchFactory;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -101,25 +101,15 @@ class ApplicationHandler
             if ($transition->source->value !== $holder->getModelState()->value) {
                 throw new UnavailableTransitionException($transition, $holder->getModel());
             }
-
             $this->saveAndExecute($transition, $holder);
-        } catch (ModelDataConflictException $exception) {
-            $container = $exception->getReferencedId()->referencedContainer;
-            $container->setConflicts($exception->getConflicts());
-
-            $message = sprintf(
-                _('Some fields of group "%s" don\'t match an existing record.'),
-                $container->getOption('label')
-            );
-            $this->logger->log(new Message($message, Message::LVL_ERROR));
-            $this->reRaise($exception);
         } catch (
-        DuplicateApplicationException
-        | MachineExecutionException
-        | SubmitProcessingException
-        | FullCapacityException
-        | ExistingPaymentException
-        | UnavailableTransitionException $exception
+            ModelDataConflictException
+            | DuplicateApplicationException
+            | MachineExecutionException
+            | SubmitProcessingException
+            | FullCapacityException
+            | ExistingPaymentException
+            | UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -164,24 +154,14 @@ class ApplicationHandler
                     )
                 );
             }
-        } catch (ModelDataConflictException $exception) {
-            $container = $exception->getReferencedId()->referencedContainer;
-            $container->setConflicts($exception->getConflicts());
-            $message = sprintf(
-                _('Some fields of group "%s" don\'t match an existing record.'),
-                $container->getOption('label')
-            );
-            $this->logger->log(new Message($message, Message::LVL_ERROR));
-            $this->formRollback($form);
-            $this->reRaise($exception);
         } catch (
-        DuplicateApplicationException
-        | MachineExecutionException
-        | SubmitProcessingException
-        | FullCapacityException
-        | ExistingPaymentException $exception
+            ModelDataConflictException |
+            DuplicateApplicationException |
+            MachineExecutionException |
+            SubmitProcessingException |
+            FullCapacityException |
+            ExistingPaymentException $exception
         ) {
-            Debugger::dump(get_class($exception));
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);

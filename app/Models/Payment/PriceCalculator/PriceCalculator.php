@@ -67,12 +67,4 @@ class PriceCalculator implements Statement
         }
         return $items;
     }
-
-    /**
-     * @throws \Exception
-     */
-    public function invoke(ModelHolder $holder, ...$args): void
-    {
-        $this->__invoke($holder, ...$args);
-    }
 }

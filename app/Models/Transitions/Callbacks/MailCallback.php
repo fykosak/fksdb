@@ -27,18 +27,15 @@ class MailCallback implements Statement
     protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
     protected string $templateFile;
-    protected array $emailData;
 
     public function __construct(
         string $templateFile,
-        array $emailData,
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
     ) {
         $this->templateFile = $templateFile;
-        $this->emailData = $emailData;
         $this->accountManager = $accountManager;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -53,9 +50,28 @@ class MailCallback implements Statement
      */
     public function __invoke(ModelHolder $holder): void
     {
-        foreach ($this->getPersonFromHolder($holder) as $person) {
-            $this->createMessage($person, $holder);
+        foreach ($this->getPersonsFromHolder($holder) as $person) {
+            $data = $this->getData($person, $holder);
+            $data['recipient_person_id'] = $person->person_id;
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
+                $this->templateFile,
+                $person->getPreferredLang(),
+                [
+                    'holder' => $holder,
+                    'token' => $this->createToken($person, $holder),
+                ]
+            );
+            $this->emailMessageService->addMessageToSend($data);
         }
+    }
+
+    protected function getData(PersonModel $person, ModelHolder $holder): array
+    {
+        return [
+            'subject' => '',
+            'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
+            'sender' => 'fykos@fykos.cz',
+        ];
     }
 
     protected function resolveLogin(PersonModel $person): LoginModel
@@ -119,7 +135,7 @@ class MailCallback implements Statement
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function getPersonFromHolder(ModelHolder $holder): array
+    protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {

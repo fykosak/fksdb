@@ -94,7 +94,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
-                $component->addError(null);
+                $component->addError(_('Field does not match an existing record.'));
             }
         }
     }
@@ -103,13 +103,14 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
-       // $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function () {
+        // $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $cb = function (): void {
             if ($this->allowClear) {
                 $this->referencedId->setValue(null);
-                $this->referencedId->invalidateFormGroup();
             }
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     private function createCompactValue(): void
