@@ -181,6 +181,7 @@ class ApplicationHandler
         | FullCapacityException
         | ExistingPaymentException $exception
         ) {
+            Debugger::dump(get_class($exception));
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);

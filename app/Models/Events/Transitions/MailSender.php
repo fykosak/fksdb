@@ -7,18 +7,17 @@ namespace FKSDB\Models\Events\Transitions;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Callbacks\MailCallback;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\Transitions\Callbacks\MailCallback;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Strings;
 
@@ -77,7 +76,7 @@ class MailSender extends MailCallback
      * @throws ModelException
      * @throws \ReflectionException
      */
-    protected function createMessage(LoginModel $login, PersonModel $person, ModelHolder $holder): EmailMessageModel
+    protected function createMessage(PersonModel $person, ModelHolder $holder): EmailMessageModel
     {
         $data = [];
         $data['subject'] = $this->getSubject($holder->event, $holder->getModel());
@@ -88,13 +87,17 @@ class MailSender extends MailCallback
         }
 
         $data['recipient_person_id'] = $person->person_id;
-        $data['text'] = $this->createMessageText($login, $person, $holder);
+        $data['text'] = $this->createMessageText($person, $holder);
         return $this->emailMessageService->addMessageToSend($data);
     }
 
-    protected function createToken(LoginModel $login, ModelHolder $holder): AuthTokenModel
+    /**
+     * @throws \ReflectionException
+     */
+    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
     {
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
+        $login = $this->resolveLogin($person);
         $data = ApplicationPresenter::encodeParameters(
             $event->getPrimary(),
             $holder->getModel()->getPrimary()

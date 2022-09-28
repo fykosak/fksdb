@@ -102,7 +102,7 @@ class Transition
                 $callback($holder);
             }
         } catch (\Throwable $exception) {
-            throw new TransitionOnExecutedException($this->getId(), 0, $exception);
+            throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);
         }
     }
 }
