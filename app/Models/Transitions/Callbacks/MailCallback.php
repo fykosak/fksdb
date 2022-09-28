@@ -43,7 +43,7 @@ class MailCallback implements TransitionCallback
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
-        foreach ($this->getPersonFromHolder($holder) as $person) {
+        foreach ($this->getPersonsFromHolder($holder) as $person) {
             $data = $this->getData($person, $holder);
             $data['recipient_person_id'] = $person->person_id;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
@@ -82,7 +82,7 @@ class MailCallback implements TransitionCallback
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function getPersonFromHolder(ModelHolder $holder): array
+    protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {

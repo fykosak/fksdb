@@ -13,5 +13,5 @@ interface ModelHolder
 
     public function getState(): EnumColumn;
 
-    public function getModel(): ?Model;
+    public function getModel(): Model;
 }
