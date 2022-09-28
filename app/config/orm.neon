@@ -585,9 +585,9 @@ orm:
         post_contact:
             service: FKSDB\Models\ORM\Services\PostContactService
             model: FKSDB\Models\ORM\Models\PostContactModel
-        quiz:
-            service: FKSDB\Models\ORM\Services\QuizService
-            model: FKSDB\Models\ORM\Models\QuizModel
+        submit_question:
+            service: FKSDB\Models\ORM\Services\SubmitQuestionService
+            model: FKSDB\Models\ORM\Models\SubmitQuestionModel
         region:
             service: FKSDB\Models\ORM\Services\RegionService
             model: FKSDB\Models\ORM\Models\RegionModel
@@ -619,9 +619,9 @@ orm:
         submit:
             service: FKSDB\Models\ORM\Services\SubmitService
             model: FKSDB\Models\ORM\Models\SubmitModel
-        submit_quiz:
-            service: FKSDB\Models\ORM\Services\SubmitQuizService
-            model: FKSDB\Models\ORM\Models\SubmitQuizModel
+        submit_question_answer:
+            service: FKSDB\Models\ORM\Services\SubmitQuestionAnswerService
+            model: FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel
         task:
              service: FKSDB\Models\ORM\Services\TaskService
              model: FKSDB\Models\ORM\Models\TaskModel

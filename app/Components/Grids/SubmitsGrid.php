@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
@@ -41,7 +40,7 @@ class SubmitsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        return new NDataSource($this->contestant->related(DbNames::TAB_SUBMIT));
+        return new NDataSource($this->contestant->getSubmits());
     }
 
     /**

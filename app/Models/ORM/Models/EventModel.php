@@ -115,7 +115,7 @@ class EventModel extends Model implements Resource, NodeCreator
 
     public function getFyziklaniTasks(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TASK);
+        return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
     }
 
     public function __toArray(): array

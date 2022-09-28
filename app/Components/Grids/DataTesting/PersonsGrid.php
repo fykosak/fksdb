@@ -33,8 +33,7 @@ class PersonsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $persons = $this->personService->getTable();
-        return new NDataSource($persons);
+        return new NDataSource($this->personService->getTable());
     }
 
     /**

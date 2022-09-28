@@ -10,7 +10,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -77,9 +76,7 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => TaskContributionType::GRADE,
-            ])->delete();
+            $task->getContributions(TaskContributionType::tryFrom(TaskContributionType::GRADE))->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
@@ -107,16 +104,16 @@ class HandoutFormComponent extends BaseComponent
      */
     public function setDefaults(): void
     {
-        $taskIds = [];
+        $contributions = [];
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $taskIds[] = $task->task_id;
+            $contributions = [
+                ...$contributions,
+                ...$task->getContributions(
+                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                )->fetchAll(),
+            ];
         }
-        $contributions = $this->taskContributionService->getTable()->where([
-            'type' => TaskContributionType::GRADE,
-            'task_id' => $taskIds,
-        ]);
-
         $values = [];
         /** @var TaskContributionModel $contribution */
         foreach ($contributions as $contribution) {

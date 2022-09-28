@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Pipeline\Stage;
@@ -67,7 +66,7 @@ class ContributionsFromXML extends Stage
                 }
 
                 $row = $data->getContestYear()->contest
-                    ->related(DbNames::TAB_ORG)
+                    ->getOrganisers()
                     ->where('tex_signature', $signature)
                     ->fetch();
 

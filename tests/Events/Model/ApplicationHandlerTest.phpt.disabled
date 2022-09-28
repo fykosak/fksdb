@@ -9,7 +9,7 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\YearCalculator;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
@@ -72,9 +72,9 @@ class ApplicationHandlerTest extends EventTestCase
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
-        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
+        $this->createPersonHistory($id2, ContestYearService::getCurrentAcademicYear(), $this->genericSchool, 1);
         $id3 = $this->createPerson('Kristína', 'Nešporová', ['email' => 'kiki@fykos.cz']);
-        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
+        $this->createPersonHistory($id3, ContestYearService::getCurrentAcademicYear(), $this->genericSchool, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 

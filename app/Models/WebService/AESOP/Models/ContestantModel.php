@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
@@ -19,7 +18,6 @@ class ContestantModel extends AESOPModel
 {
 
     protected TaskService $taskService;
-
     private ?ModelCategory $category;
 
     /**
@@ -82,10 +80,7 @@ WHERE
         if (!$this->category) {
             return null;
         }
-        $tasks = $this->taskService->getTable()
-            ->where('contest_id', $this->contestYear->contest_id)
-            ->where('year', $this->contestYear->year)
-            ->where('series BETWEEN 1 AND 6');
+        $tasks = $this->contestYear->getTasks()->where('series BETWEEN 1 AND 6');
         $sum = 0;
         /** @var TaskModel $task */
         foreach ($tasks as $task) {
@@ -166,6 +161,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return YearCalculator::getGraduationYear($studyYear, $contestYear);
+        return $contestYear->getGraduationYear($studyYear);
     }
 }

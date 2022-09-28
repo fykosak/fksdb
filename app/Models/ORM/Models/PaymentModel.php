@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
@@ -42,13 +43,17 @@ class PaymentModel extends Model implements Resource
      */
     public function getRelatedPersonSchedule(): array
     {
-        $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
         /** @var SchedulePaymentModel $row */
-        foreach ($query as $row) {
+        foreach ($this->getSchedulePayment() as $row) {
             $items[] = $row->person_schedule;
         }
         return $items;
+    }
+
+    public function getSchedulePayment(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
     }
 
     public function getResourceId(): string

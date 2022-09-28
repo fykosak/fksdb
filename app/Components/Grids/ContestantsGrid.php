@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Application\UI\InvalidLinkException;
@@ -30,12 +29,7 @@ class ContestantsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        return new NDataSource(
-            $this->contestYear->contest->related(DbNames::TAB_CONTESTANT)->where(
-                'year',
-                $this->contestYear->year
-            )
-        );
+        return new NDataSource($this->contestYear->getContestants());
     }
 
     /**

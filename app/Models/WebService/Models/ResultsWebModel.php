@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -16,15 +16,15 @@ use Nette\DI\Container;
 class ResultsWebModel extends WebModel
 {
 
-    private ContestService $contestService;
     private ResultsModelFactory $resultsModelFactory;
+    private ContestYearService $contestYearService;
 
     public function inject(
         Container $container,
-        ContestService $contestService,
+        ContestYearService $contestYearService,
         ResultsModelFactory $resultsModelFactory
     ): void {
-        $this->contestService = $contestService;
+        $this->contestYearService = $contestYearService;
         $this->resultsModelFactory = $resultsModelFactory;
         $this->container = $container;
     }
@@ -45,9 +45,10 @@ class ResultsWebModel extends WebModel
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
-        $contestYear = $this->contestService->findByPrimary(
-            $this->container->getParameters()['inverseContestMapping'][$args->contest]
-        )->getContestYear($args->year);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest],
+            (int)$args->year
+        );
         $doc = new \DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);

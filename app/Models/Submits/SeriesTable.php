@@ -9,11 +9,8 @@ use FKSDB\Models\ORM\Models\{
     ContestYearModel,
     SubmitModel,
 };
-use FKSDB\Models\ORM\Services\{
-    ContestantService,
-    SubmitService,
-    TaskService,
-};
+use FKSDB\Models\ORM\Services\SubmitService;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
 
 class SeriesTable
@@ -22,8 +19,6 @@ class SeriesTable
     public const FORM_SUBMIT = 'submit';
     public const FORM_CONTESTANT = 'contestant';
 
-    private ContestantService $contestantService;
-    private TaskService $taskService;
     private SubmitService $submitService;
 
     public ContestYearModel $contestYear;
@@ -35,32 +30,19 @@ class SeriesTable
      */
     public ?array $taskFilter = null;
 
-    public function __construct(
-        ContestantService $contestantService,
-        TaskService $taskService,
-        SubmitService $submitService
-    ) {
-        $this->contestantService = $contestantService;
-        $this->taskService = $taskService;
+    public function __construct(SubmitService $submitService)
+    {
         $this->submitService = $submitService;
     }
 
-    public function getContestants(): TypedSelection
+    public function getContestants(): TypedGroupedSelection
     {
-        return $this->contestantService->getTable()->where([
-            'contest_id' => $this->contestYear->contest_id,
-            'year' => $this->contestYear->year,
-        ])->order('person.family_name, person.other_name, person.person_id');
+        return $this->contestYear->getContestants()->order('person.family_name, person.other_name, person.person_id');
     }
 
-    public function getTasks(): TypedSelection
+    public function getTasks(): TypedGroupedSelection
     {
-        $tasks = $this->taskService->getTable()->where([
-            'contest_id' => $this->contestYear->contest_id,
-            'year' => $this->contestYear->year,
-            'series' => $this->series,
-        ]);
-
+        $tasks = $this->contestYear->getTasks($this->series);
         if (isset($this->taskFilter)) {
             $tasks->where('task_id', $this->taskFilter);
         }

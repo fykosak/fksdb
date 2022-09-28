@@ -6,9 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel};
-use FKSDB\Models\ORM\Services\TaskContributionService;
+use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, LoginModel, TaskContributionType};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
@@ -19,7 +17,6 @@ use Tracy\Debugger;
 
 class PointsPresenter extends BasePresenter
 {
-
     /**
      * Show all tasks?
      * @persistent
@@ -27,16 +24,13 @@ class PointsPresenter extends BasePresenter
     public ?bool $all = null;
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
-    private TaskContributionService $taskContributionService;
 
     final public function injectQuarterly(
         SQLResultsCache $resultsCache,
-        SeriesTable $seriesTable,
-        TaskContributionService $taskContributionService
+        SeriesTable $seriesTable
     ): void {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
-        $this->taskContributionService = $taskContributionService;
     }
 
     public function titleEntry(): PageTitle
@@ -72,14 +66,9 @@ class PointsPresenter extends BasePresenter
         if (!$person) {
             return [];
         }
-        $gradedTasks = $this->taskContributionService->getTable()
-            ->where(
-                [
-                    'person_id' => $person->person_id,
-                    'task_id' => (clone $this->seriesTable->getTasks())->select('task_id'),
-                    'type' => TaskContributionType::GRADE,
-                ]
-            )->fetchPairs('task_id', 'task_id');
+        $gradedTasks = $person->getTaskContributions(TaskContributionType::tryFrom(TaskContributionType::GRADE))
+            ->where('task_id', (clone $this->seriesTable->getTasks())->select('task_id'))
+            ->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
     }
 
@@ -112,18 +101,11 @@ class PointsPresenter extends BasePresenter
     public function handleRecalculateAll(): void
     {
         try {
-            $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
-                ->select('year')
-                ->group('year');
-            /** @var TaskModel $year */
-            foreach ($years as $year) {
-                // TODO WTF -1 year
-                $contestYear = $this->getSelectedContest()->getContestYear($year->year);
-                if ($contestYear) {
-                    $this->resultsCache->recalculate($contestYear);
-                }
+            $years = $this->getSelectedContestYear()->contest->getContestYears();
+            /** @var ContestYearModel $contestYear */
+            foreach ($years as $contestYear) {
+                $this->resultsCache->recalculate($contestYear);
             }
-
             $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);
