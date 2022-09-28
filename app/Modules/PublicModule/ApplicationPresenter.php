@@ -321,7 +321,7 @@ class ApplicationPresenter extends BasePresenter
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(
             function ($modelId, $eventId) {
-                $this->backLinkRedirect();
+                // $this->backLinkRedirect();
                 $this->redirect(
                     'this',
                     [

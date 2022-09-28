@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -12,6 +11,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 
 class Handler
 {
@@ -61,7 +61,7 @@ class Handler
                 unset($newScheduleData[$index]);
             } else {
                 try {
-                    $modelPersonSchedule->delete();
+                    $this->personScheduleService->disposeModel($modelPersonSchedule);
                 } catch (\PDOException $exception) {
                     if (preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(

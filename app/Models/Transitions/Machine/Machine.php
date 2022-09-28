@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\TransitionsDecorator;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\TransitionsDecorator;
+use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 

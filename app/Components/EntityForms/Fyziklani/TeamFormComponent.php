@@ -75,6 +75,10 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $values
             );
             $this->checkUniqueTeamName($values['team']['name']);
+
+            // $newState = $values['team']['state'] ?? null;
+            // unset($values['team']['state']);
+
             $team = $this->teamService->storeModel(
                 array_merge($values['team'], [
                     'event_id' => $this->event->event_id,
