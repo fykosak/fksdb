@@ -10,7 +10,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Forms\Referenced\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Services\AddressService;
 use Nette\DI\Container;
 use Nette\Forms\Form;

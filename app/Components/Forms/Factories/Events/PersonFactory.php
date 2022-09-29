@@ -13,6 +13,8 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
+use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 use FKSDB\Models\Persons\SelfResolver;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
@@ -145,7 +147,7 @@ class PersonFactory extends AbstractFactory
                 }
                 if (
                     $metadata['required']
-                    && !PersonHandler::isFilled(
+                    && !ReferencedPersonHandler::isFilled(
                         $person,
                         $subName,
                         $fieldName,

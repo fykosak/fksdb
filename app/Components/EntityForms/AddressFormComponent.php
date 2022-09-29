@@ -7,7 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Forms\Referenced\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;

@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Forms\Referenced\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;

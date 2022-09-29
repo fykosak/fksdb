@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Referenced\Address;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Components\Forms\Referenced\DataContainer;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Services\RegionService;
 use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-class AddressDataContainer extends DataContainer
+class AddressDataContainer extends ReferencedContainer
 {
     private RegionService $regionService;
     private bool $writeOnly;

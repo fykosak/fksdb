@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Referenced\Address;
 
-use FKSDB\Components\Forms\Referenced\SearchContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use Nette\Forms\Controls\BaseControl;
 
 class AddressSearchContainer extends SearchContainer

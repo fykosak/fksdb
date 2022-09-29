@@ -8,25 +8,26 @@ use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\PostContactType;
-use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Components\Forms\Referenced\ReferencedHandler;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\FlagService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHasFlagService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Model;
 use Nette\SmartObject;
 
 class ReferencedPersonHandler implements ReferencedHandler
@@ -378,5 +379,62 @@ class ReferencedPersonHandler implements ReferencedHandler
             $connection->rollBack();
         }
         //else: TODO ? throw an exception?
+    }
+
+
+    final public static function isFilled(
+        PersonModel $person,
+        string $sub,
+        string $field,
+        ContestYearModel $contestYear,
+        ?EventModel $event = null
+    ): bool {
+        $value = self::getPersonValue($person, $sub, $field, $contestYear, false, false, true, $event);
+        return !($value === null || $value === '');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getPersonValue(
+        ?PersonModel $person,
+        string $sub,
+        string $field,
+        ContestYearModel $contestYear,
+        bool $extrapolate = false,
+        bool $hasDelivery = false,
+        bool $targetValidation = false,
+        ?EventModel $event = null
+    ) {
+        if (!$person) {
+            return null;
+        }
+        switch ($sub) {
+            case 'person_schedule':
+                return $person->getSerializedSchedule($event, $field);
+            case 'person':
+                return $person->{$field};
+            case 'person_info':
+                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
+                if ($field == 'agreed') {
+                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
+                    $result = $result ? true : null;
+                }
+                return $result;
+            case 'person_history':
+                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
+                    : null;
+            case 'post_contact_d':
+                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+            case 'post_contact_p':
+                if ($targetValidation || !$hasDelivery) {
+                    return $person->getPermanentPostContact();
+                }
+                return $person->getPermanentPostContact(false);
+            case 'person_has_flag':
+                return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
+            default:
+                throw new \InvalidArgumentException("Unknown person sub '$sub'.");
+        }
     }
 }

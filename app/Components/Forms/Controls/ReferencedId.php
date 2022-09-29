@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Models\Persons\ReferencedHandler;
+use FKSDB\Components\Forms\Referenced\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonModel;
