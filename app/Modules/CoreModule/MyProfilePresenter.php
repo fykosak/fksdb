@@ -21,6 +21,16 @@ class MyProfilePresenter extends BasePresenter
         return new PageTitle(null, _('Update my profile'), 'fa fa-cogs');
     }
 
+    public function renderDefault(): void
+    {
+        $this->template->person = $this->getPerson();
+    }
+
+    private function getPerson(): PersonModel
+    {
+        return $this->getUser()->getIdentity()->person;
+    }
+
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
         return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
@@ -33,12 +43,10 @@ class MyProfilePresenter extends BasePresenter
 
     private function createComponentPostContactForm(PostContactType $type): AddressFormComponent
     {
-        /** @var PersonModel $person */
-        $person = $this->getUser()->getIdentity()->person;
         return new AddressFormComponent(
             $this->getContext(),
             $type,
-            $person
+            $this->getPerson()
         );
     }
 }

@@ -1,3 +1,5 @@
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
 {block content}
 Tu nič nieje....
+    {(new FKSDB\Models\ValuePrinters\AddressPrinter())($person->getPermanentPostContact()->address)}
 {/block}
