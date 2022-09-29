@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Components\Forms\Referenced\ReferencedHandler;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ReferencedHandler;
 use Nette\SmartObject;
 use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\VisibilityResolver;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\SelfResolver;
 
 class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Referenced\Address;
 
-use FKSDB\Components\Forms\Referenced\ReferencedHandler;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PSCRegionModel;
 use FKSDB\Models\ORM\Models\RegionModel;
@@ -13,6 +12,7 @@ use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PSCRegionService;
 use FKSDB\Models\ORM\Services\RegionService;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;

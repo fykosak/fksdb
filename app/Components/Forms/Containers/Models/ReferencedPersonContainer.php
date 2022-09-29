@@ -46,7 +46,6 @@ class ReferencedPersonContainer extends ReferencedContainer
     private PersonScheduleFactory $personScheduleFactory;
     protected ?EventModel $event;
 
-    private bool $configured = false;
 
     public function __construct(
         Container $container,
@@ -63,11 +62,6 @@ class ReferencedPersonContainer extends ReferencedContainer
         $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
-        $this->monitor(IContainer::class, function (): void {
-            if (!$this->configured) {
-                $this->configure();
-            }
-        });
     }
 
     final public function injectPrimary(
@@ -317,7 +311,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         bool $hasDelivery = false,
         bool $targetValidation = false
     ) {
-        return ReferencedPersonFactory::getPersonValue(
+        return ReferencedPersonHandler::getPersonValue(
             $person,
             $sub,
             $field,

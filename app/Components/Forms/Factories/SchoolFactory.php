@@ -7,16 +7,26 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
+use FKSDB\Models\ORM\Services\AddressService;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 
 class SchoolFactory
 {
 
     private SchoolProvider $schoolProvider;
+    private AddressService $addressService;
+    private Container $container;
 
-    public function __construct(SchoolProvider $schoolProvider)
+    public function __construct(SchoolProvider $schoolProvider, AddressService $addressService, Container $container)
     {
         $this->schoolProvider = $schoolProvider;
+        $this->addressService = $addressService;
+        $this->container = $container;
     }
 
     public function createContainer(): ModelContainer
@@ -54,6 +64,13 @@ class SchoolFactory
             ->setDefaultValue(true);
 
         $container->addText('note', _('Note'));
+        $address = new ReferencedId(
+            new AddressSearchContainer($this->container),
+            new AddressDataContainer($this->container, false, true),
+            $this->addressService,
+            new AddressHandler($this->container)
+        );
+        $container->addComponent($address, 'address_id');
 
         return $container;
     }

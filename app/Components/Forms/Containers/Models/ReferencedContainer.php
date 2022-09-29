@@ -33,6 +33,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     protected bool $allowClear = true;
 
     private bool $attachedJS = false;
+    private bool $configured = false;
 
     public function __construct(DIContainer $container, bool $allowClear)
     {
@@ -43,6 +44,11 @@ abstract class ReferencedContainer extends ContainerWithOptions
                 $this->updateHtmlData();
             }
         }, fn() => $this->attachedJS = false);
+        $this->monitor(IContainer::class, function (): void {
+            if (!$this->configured) {
+                $this->configure();
+            }
+        });
         $this->createClearButton();
         $this->createCompactValue();
 
