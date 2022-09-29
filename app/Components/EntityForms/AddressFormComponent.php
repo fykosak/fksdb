@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
-use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\PostContactService;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -69,6 +70,7 @@ class AddressFormComponent extends EntityFormComponent
             ],
             $this->model
         );
+        $this->getPresenter()->redirect('default');
     }
 
     protected function setDefaults(): void
@@ -76,5 +78,32 @@ class AddressFormComponent extends EntityFormComponent
         $this->getForm()->setValues(
             ['address' => isset($this->model) ? $this->model->address_id : ReferencedId::VALUE_PROMISE]
         );
+    }
+
+    public function handleDelete(): void
+    {
+        if (!isset($this->model)) {
+            $this->flashMessage(_('Address does not exists'), Message::LVL_ERROR);
+            return;
+        }
+        if ($this->postContactType->value === PostContactType::PERMANENT) {
+            $this->flashMessage(_('Permanent address cannot be deleted'), Message::LVL_ERROR);
+            return;
+        }
+        $this->addressService->disposeModel($this->model->address);
+        $this->postContactService->disposeModel($this->model);
+        $this->flashMessage(_('Address has been deleted'), Message::LVL_INFO);
+    }
+
+    public function render(): void
+    {
+        $this->template->type = $this->postContactType;
+        $this->template->hasAddress = isset($this->model);
+        parent::render();
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . '/layout.address.latte';
     }
 }

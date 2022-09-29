@@ -72,7 +72,11 @@ class AddressDataContainer extends ReferencedContainer
     public function setModel(?Model $model, string $mode): void
     {
         if ($model instanceof AddressModel) {
-            $this->setValues($model->toArray());
+            $data = $model->toArray();
+            if ($data['region_id'] > 10000) {
+                unset($data['region_id']);
+            }
+            $this->setValues($data);
         }
     }
 }

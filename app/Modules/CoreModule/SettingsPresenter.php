@@ -6,15 +6,12 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Utils\FormUtils;
@@ -200,26 +197,5 @@ class SettingsPresenter extends BasePresenter
             $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
-    }
-
-    protected function createComponentDeliveryPostContactForm(): AddressFormComponent
-    {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
-    }
-
-    protected function createComponentPermanentPostContactForm(): AddressFormComponent
-    {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
-    }
-
-    private function createComponentPostContactForm(PostContactType $type): AddressFormComponent
-    {
-        /** @var PersonModel $person */
-        $person = $this->getUser()->getIdentity()->person;
-        return new AddressFormComponent(
-            $this->getContext(),
-            $type,
-            $person
-        );
     }
 }

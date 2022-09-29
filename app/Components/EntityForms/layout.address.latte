@@ -1,0 +1,17 @@
+{layout '../Controls/FormComponent/layout.latte'}
+{varType FKSDB\Models\ORM\Models\PostContactType $type}
+{varType bool $hasAddress}
+{block content}
+    {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY}
+        <p>V prípade ak je odlišná od adresy trvalej. Korešpodencia bude smerovná na túto adresu</p>
+    {/if}
+    {include parent}
+    {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY && $hasAddress}
+        <div class="alert alert-warning">
+            <p>Ak je doručovacia adresa rovnaká ako trvalá je možné ju zmazať, korešpodenica bude
+                smerovaná na trvalú adresu</p>
+            <a href="{link delete!}" class="btn btn-danger">{_'Remove delivery address'}</a>
+        </div>
+
+    {/if}
+{/block}
