@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Persons;
+namespace FKSDB\Components\Forms\Referenced;
 
 use Fykosak\NetteORM\Model;
 

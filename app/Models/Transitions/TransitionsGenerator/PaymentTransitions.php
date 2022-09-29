@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;

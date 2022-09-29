@@ -6,7 +6,6 @@ namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;

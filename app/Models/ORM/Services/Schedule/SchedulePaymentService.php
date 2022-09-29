@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;

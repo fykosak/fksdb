@@ -145,7 +145,7 @@ class PersonFactory extends AbstractFactory
                 }
                 if (
                     $metadata['required']
-                    && !ReferencedPersonFactory::isFilled(
+                    && !PersonHandler::isFilled(
                         $person,
                         $subName,
                         $fieldName,
