@@ -6,7 +6,9 @@ namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Tests\ORM\ParticipantModel;

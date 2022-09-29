@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Forms\Referenced\ReferencedHandler;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;
 
