@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\VisibilityResolver;
