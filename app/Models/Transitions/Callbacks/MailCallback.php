@@ -61,7 +61,7 @@ class MailCallback implements TransitionCallback
     protected function getData(PersonModel $person, ModelHolder $holder): array
     {
         return [
-            'subject' => '',
+            'subject' => 'FYKOS',
             'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
             'sender' => 'fykos@fykos.cz',
         ];

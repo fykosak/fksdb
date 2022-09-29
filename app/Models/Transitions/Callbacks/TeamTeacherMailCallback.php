@@ -42,4 +42,34 @@ class TeamTeacherMailCallback extends MailCallback
             true
         );
     }
+
+    protected function getData(PersonModel $person, ModelHolder $holder): array
+    {
+        if (!$holder instanceof FyziklaniTeamHolder) {
+            throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
+        }
+        switch($holder->getModel()->event->event_type_id){
+            case 1:
+                $subject = _('Fyziklani Team Registration');
+                return [
+                    'subject' => $subject,
+                    'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
+                    'sender' => 'Fyziklání <fyziklani@fykos.cz>',
+                ];
+            case 9:
+                $subject = _('Physics Brawl Online Team Registration');
+                $sender = _('Physics Brawl Online <online@physicsbrawl.org>');
+                return [
+                    'subject' => $subject,
+                    'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
+                    'sender' => $sender,
+                ];
+            default:
+                return [
+                    'subject' => $holder->getModel()->event->name,
+                    'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
+                    'sender' => 'FYKOS <fykos@fykos.cz>',
+                ];
+        }
+    }
 }
