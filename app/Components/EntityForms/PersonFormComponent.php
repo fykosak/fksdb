@@ -6,19 +6,23 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Forms\Referenced\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PostContactService;
+use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\AddressService;
-use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\ORM\Services\PersonInfoService;
-use FKSDB\Models\ORM\Services\PostContactService;
-use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -36,7 +40,6 @@ class PersonFormComponent extends EntityFormComponent
     public const PERSON_INFO_CONTAINER = 'person_info';
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private AddressFactory $addressFactory;
     private PersonService $personService;
     private PersonInfoService $personInfoService;
     private PostContactService $postContactService;
@@ -62,7 +65,6 @@ class PersonFormComponent extends EntityFormComponent
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
-        $this->addressFactory = $addressFactory;
         $this->postContactService = $postContactService;
         $this->addressService = $addressService;
     }
@@ -98,7 +100,12 @@ class PersonFormComponent extends EntityFormComponent
                     break;
                 case self::POST_CONTACT_DELIVERY:
                 case self::POST_CONTACT_PERMANENT:
-                    $control = $this->addressFactory->createAddressContainer($table);
+                    $control = new ReferencedId(
+                        new AddressSearchContainer($this->container),
+                        new AddressDataContainer($this->container, false, false),
+                        $this->addressService,
+                        new AddressHandler($this->container)
+                    );
                     break;
                 default:
                     throw new InvalidArgumentException();
@@ -145,6 +152,11 @@ class PersonFormComponent extends EntityFormComponent
                     $this->model->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY)) ?? [],
                 self::POST_CONTACT_PERMANENT =>
                     $this->model->getAddress(PostContactType::tryFrom(PostContactType::PERMANENT)) ?? [],
+            ]);
+        } else {
+            $this->getForm()->setDefaults([
+                self::POST_CONTACT_DELIVERY => ReferencedId::VALUE_PROMISE,
+                self::POST_CONTACT_PERMANENT => ReferencedId::VALUE_PROMISE,
             ]);
         }
     }

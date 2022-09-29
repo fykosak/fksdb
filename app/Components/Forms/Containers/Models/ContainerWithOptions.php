@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use Nette\Forms\Container;
 use Nette\DI\Container as DIContainer;
+use Nette\Forms\Container;
 
 /**
  * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
@@ -13,9 +13,11 @@ use Nette\DI\Container as DIContainer;
 class ContainerWithOptions extends Container
 {
     private array $options = [];
+    protected ?DIContainer $container;
 
     public function __construct(?DIContainer $container = null)
     {
+        $this->container = $container;
         if ($container) {
             $container->callInjects($this);
         }

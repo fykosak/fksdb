@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @property TeacherModel|null $model

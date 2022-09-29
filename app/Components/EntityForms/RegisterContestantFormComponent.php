@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Referenced\Person\PersonSearchContainer;
+use FKSDB\Components\Forms\Referenced\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
