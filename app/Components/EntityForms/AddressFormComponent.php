@@ -13,8 +13,11 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
+use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PostContactService;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -52,30 +55,47 @@ class AddressFormComponent extends EntityFormComponent
             $this->addressService,
             new AddressHandler($this->container)
         );
-        $form->addComponent($address, 'address');
+        $form->addComponent(new AddressDataContainer($this->container, false, true), 'address');
     }
 
     protected function handleFormSuccess(Form $form): void
     {
-        $form->getValues('array');// trigger referencedId
-        /** @var ReferencedId $referencedId */
-        $referencedId = $form->getComponent('address');
-        /** @var AddressModel $address */
-        $address = $referencedId->getModel();
-        $this->postContactService->storeModel(
-            [
-                'type' => $this->postContactType->value,
-                'address_id' => $address->address_id,
-                'person_id' => $this->person->person_id,
-            ],
-            $this->model
-        );
-        $this->getPresenter()->redirect('default');
+        try {
+            $this->addressService->explorer->getConnection()->beginTransaction();
+            $form->getValues('array');// trigger referencedId
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('address');
+            /** @var AddressModel $address */
+            $address = $referencedId->getModel();
+            if (isset($this->model) && $this->model->address_id !== $address->address_id) {
+                // zmena address_id nieje dovolená
+                throw new ForbiddenRequestException(_('This address does not belong to you!'));
+            }
+            if (!isset($this->model)) {
+                $this->postContactService->storeModel(
+                    [
+                        'type' => $this->postContactType->value,
+                        'address_id' => $address->address_id,
+                        'person_id' => $this->person->person_id,
+                    ],
+                    $this->model
+                );
+            }
+            $this->addressService->explorer->getConnection()->commit();
+            $this->getPresenter()->flashMessage(_('Address has been saved'));
+            //   $this->getPresenter()->redirect('default');
+        } catch (InvalidAddressException | InvalidPostalCode $exception) {
+            $this->addressService->explorer->getConnection()->rollBack();
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (\Throwable $exception) {
+            $this->addressService->explorer->getConnection()->rollBack();
+            throw $exception;
+        }
     }
 
     protected function setDefaults(): void
     {
-        $this->getForm()->setValues(
+        $this->getForm()->setDefaults(
             ['address' => isset($this->model) ? $this->model->address_id : ReferencedId::VALUE_PROMISE]
         );
     }

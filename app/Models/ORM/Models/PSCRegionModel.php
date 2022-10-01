@@ -8,8 +8,8 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read string psc
- * @property-read int region_id
- * @property-read RegionModel region
+ * @property-read int country_subdivision_id
+ * @property-read CountrySubdivisionModel country_subdivision
  */
 class PSCRegionModel extends Model
 {

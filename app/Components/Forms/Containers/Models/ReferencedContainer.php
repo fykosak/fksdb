@@ -55,7 +55,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
         $this->setAllowClear($allowClear);
     }
 
-    public function getReferencedId(): ReferencedId
+    public function getReferencedId(): ?ReferencedId
     {
         return $this->referencedId;
     }

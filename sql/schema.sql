@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `address`
     `target`                 VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
     `city`                   VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
     `postal_code`            CHAR(5)      NULL DEFAULT NULL COMMENT 'PSČ (pro ČR a SR)',
-    `region_id`              INT(11)      NOT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
+    `region_id`              INT(11)      NULL DEFAULT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
     `country_id`             INT          NULL DEFAULT NULL,
     `country_subdivision_id` INT          NULL DEFAULT NULL,
     INDEX `idx_address__region_id` (`region_id` ASC),

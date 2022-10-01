@@ -588,6 +588,12 @@ orm:
         submit_question:
             service: FKSDB\Models\ORM\Services\SubmitQuestionService
             model: FKSDB\Models\ORM\Models\SubmitQuestionModel
+        country:
+            service: FKSDB\Models\ORM\Services\CountryService
+            model: FKSDB\Models\ORM\Models\CountryModel
+        country_subdivision:
+            service: FKSDB\Models\ORM\Services\CountrySubdivisionService
+            model: FKSDB\Models\ORM\Models\CountrySubdivisionModel
         region:
             service: FKSDB\Models\ORM\Services\RegionService
             model: FKSDB\Models\ORM\Models\RegionModel

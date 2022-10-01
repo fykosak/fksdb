@@ -7,16 +7,16 @@ namespace FKSDB\Components\Forms\Referenced\Address;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Models\AddressModel;
-use FKSDB\Models\ORM\Services\RegionService;
+use FKSDB\Models\ORM\Services\CountryService;
 use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
 class AddressDataContainer extends ReferencedContainer
 {
-    private RegionService $regionService;
     private bool $writeOnly;
     private bool $required;
+    private CountryService $countryService;
 
     public function __construct(Container $container, bool $writeOnly = true, bool $required = false)
     {
@@ -25,9 +25,9 @@ class AddressDataContainer extends ReferencedContainer
         $this->required = $required;
     }
 
-    public function inject(RegionService $regionService): void
+    public function inject(CountryService $countryService): void
     {
-        $this->regionService = $regionService;
+        $this->countryService = $countryService;
     }
 
     protected function configure(): void
@@ -64,8 +64,8 @@ class AddressDataContainer extends ReferencedContainer
         $this->addComponent($postalCode, 'postal_code');
 
 
-        $country = $this->addSelect('region_id', _('Country'));
-        $country->setItems($this->regionService->getCountries()->order('name')->fetchPairs('region_id', 'name'));
+        $country = $this->addSelect('country_id', _('Country'));
+        $country->setItems($this->countryService->getTable()->fetchPairs('country_id', 'name'));
         $country->setPrompt(_('Detect country from postal code (CR, SK only)'));
     }
 
@@ -73,8 +73,9 @@ class AddressDataContainer extends ReferencedContainer
     {
         if ($model instanceof AddressModel) {
             $data = $model->toArray();
-            if ($data['region_id'] > 10000) {
-                unset($data['region_id']);
+            unset($data['region_id']);
+            if ($model->region) {
+                $data['country_id'] = $this->countryService->findFromLegacyRegion($model->region)->country_id;
             }
             $this->setValues($data);
         }

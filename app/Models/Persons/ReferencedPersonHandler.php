@@ -29,7 +29,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Nette\SmartObject;
 
-class ReferencedPersonHandler implements ReferencedHandler
+class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;
 
@@ -49,8 +49,6 @@ class ReferencedPersonHandler implements ReferencedHandler
     private FlagService $flagService;
 
     private EventModel $event;
-
-    private string $resolution;
 
     public function __construct(
         ContestYearModel $contestYear,
@@ -78,16 +76,6 @@ class ReferencedPersonHandler implements ReferencedHandler
         $this->addressService = $addressService;
         $this->postContactService = $postContactService;
         $this->flagService = $flagService;
-    }
-
-    public function getResolution(): string
-    {
-        return $this->resolution;
-    }
-
-    public function setResolution(string $resolution): void
-    {
-        $this->resolution = $resolution;
     }
 
     /**

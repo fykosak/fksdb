@@ -6,49 +6,35 @@ namespace FKSDB\Components\Forms\Referenced\Address;
 
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PSCRegionModel;
-use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
-use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PSCRegionService;
-use FKSDB\Models\ORM\Services\RegionService;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-class AddressHandler implements ReferencedHandler
+class AddressHandler extends ReferencedHandler
 {
     private const PATTERN = '/[0-9]{5}/';
 
     private AddressService $addressService;
     private PSCRegionService $PSCRegionService;
-    private RegionService $regionService;
 
     public function __construct(Container $container)
     {
+        $this->resolution = self::RESOLUTION_EXCEPTION;
         $container->callInjects($this);
     }
 
     public function inject(
         AddressService $addressService,
-        PSCRegionService $PSCRegionService,
-        RegionService $regionService
+        PSCRegionService $PSCRegionService
     ): void {
         $this->addressService = $addressService;
         $this->PSCRegionService = $PSCRegionService;
-        $this->regionService = $regionService;
-    }
-
-    public function getResolution(): string
-    {
-        return ReferencedHandler::RESOLUTION_OVERWRITE;
-    }
-
-    public function setResolution(string $resolution): void
-    {
-        // void
     }
 
     public function update(Model $model, array $values): void
@@ -65,61 +51,56 @@ class AddressHandler implements ReferencedHandler
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values));
 
-        $region = null;
-        if (isset($data['postal_code'])) {
-            $region = $this->inferRegion($data['postal_code'], true);
+        if (!isset($data['country_id'])) {
+            $countryData = $this->inferCountry($data['postal_code']);
+            if ($countryData) {
+                $data = array_merge($data, $countryData);
+            }
         }
-        if (isset($data['region_id'])) {
-            $region = $this->regionService->findByPrimary($data['region_id']);
+        if (!isset($data['country_id'])) {
+            throw new InvalidAddressException(_('Cannot infer country'));
         }
-        if (!$region) {
-            throw new InvalidAddressException(_('Cannot infer region'));
+        if (
+            in_array($data['country_id'], [CountryService::SLOVAKIA, CountryService::CZECH_REPUBLIC]) &&
+            !isset($data['postal_code'])
+        ) {
+            throw new InvalidAddressException(_('PSC is required for Czech and Slovak'));
         }
-        $data['region_id'] = $region->region_id;
-
-        return $this->addressService->storeModel($data, $model);
+        // $this->findModelConflicts($model, $data, null);
+        return $this->addressService->storeModel($data, $model, false);
     }
 
-    /**
-     * @throws InvalidPostalCode
-     */
-    private function inferRegion(?string $postalCode, bool $throw = false): ?RegionModel
+    private function inferCountry(?string $postalCode): ?array
     {
         if (!$postalCode) {
-            if ($throw) {
-                throw new InvalidPostalCode($postalCode);
-            }
             return null;
         }
-
         if (!preg_match(self::PATTERN, $postalCode)) {
-            if ($throw) {
-                throw new InvalidPostalCode($postalCode);
-            }
             return null;
         }
         /** @var PSCRegionModel $pscRegion */
         $pscRegion = $this->PSCRegionService->findByPrimary($postalCode);
         if ($pscRegion) {
-            return $pscRegion->region;
+            return [
+                'country_subdivision_id' => $pscRegion->country_subdivision_id,
+                'country_id' => $pscRegion->country_subdivision->country_id,
+            ];
         } else {
             if (strlen($postalCode) != 5) {
-                if ($throw) {
-                    throw new InvalidPostalCode($postalCode);
-                }
                 return null;
             }
             Debugger::log("Czechoslovak PSC not found '$postalCode'", Debugger::WARNING);
             $firstChar = substr($postalCode, 0, 1);
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
-                return $this->regionService->findByPrimary(RegionModel::CZECH_REPUBLIC);
+                return [
+                    'country_id' => CountryService::CZECH_REPUBLIC,
+                ];
             } elseif (in_array($firstChar, ['8', '9', '0'])) {
-                return $this->regionService->findByPrimary(RegionModel::SLOVAKIA);
+                return [
+                    'country_id' => CountryService::SLOVAKIA,
+                ];
             }
-        }
-        if ($throw) {
-            throw new InvalidPostalCode($postalCode);
         }
         return null;
     }
