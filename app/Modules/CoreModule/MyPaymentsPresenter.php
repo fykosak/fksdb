@@ -13,7 +13,7 @@ class MyPaymentsPresenter extends BasePresenter
 
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->person);
+        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getLoggedPerson());
     }
 
     public function titleDefault(): PageTitle
@@ -25,7 +25,7 @@ class MyPaymentsPresenter extends BasePresenter
     {
         return new PersonRelatedGrid(
             'payment',
-            $this->getUser()->getIdentity()->person,
+            $this->getLoggedPerson(),
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()
         );

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
@@ -19,10 +18,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     public function getContestant(): ?ContestantModel
     {
         if (!isset($this->contestant)) {
-            /** @var PersonModel $person */
-            $person = $this->getUser()->getIdentity()->person;
-            // TODO
-            $this->contestant = $person->getContestantByContestYear($this->getSelectedContestYear());
+            $this->contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
         }
         return $this->contestant;
     }

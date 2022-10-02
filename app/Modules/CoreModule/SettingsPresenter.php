@@ -9,16 +9,15 @@ use FKSDB\Components\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
-use Fykosak\Utils\Logging\Message;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -74,7 +73,7 @@ class SettingsPresenter extends BasePresenter
 
     protected function createComponentPreferredLangForm(): PreferredLangFormComponent
     {
-        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->person);
+        return new PreferredLangFormComponent($this->getContext(), $this->$this->getLoggedPerson());
     }
 
     /**

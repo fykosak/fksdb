@@ -61,13 +61,12 @@ trait YearPresenterTrait
             case PresenterRole::SELECTED:
                 return $contest->getContestYears();
             case PresenterRole::CONTESTANT:
-                /** @var LoginModel $login */
-                $login = $this->getUser()->getIdentity();
-                if (!$login || !$login->person) {
+                $person = $this->getLoggedPerson();
+                if (!$person) {
                     return $contest->getContestYears()->where('1=0');
                 }
                 $years = [];
-                $contestants = $login->person->getContestants($contest);
+                $contestants = $person->getContestants($contest);
                 /** @var ContestantModel $contestant */
                 foreach ($contestants as $contestant) {
                     $years[] = $contestant->year;

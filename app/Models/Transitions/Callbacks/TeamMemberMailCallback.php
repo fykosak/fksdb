@@ -43,33 +43,45 @@ class TeamMemberMailCallback extends MailCallback
         );
     }
 
-    protected function getData(PersonModel $person, ModelHolder $holder): array
+    /**
+     * @throws BadTypeException
+     */
+    protected function getTemplatePath(ModelHolder $holder): string
     {
         if (!$holder instanceof FyziklaniTeamHolder) {
             throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
         }
-        switch($holder->getModel()->event->event_type_id){
+        switch ($holder->getModel()->event->event_type_id) {
             case 1:
-                $subject = _('Fyziklani Team Registration');
+                return 'fof/member';
+            case 9:
+                return 'fol/member';
+        }
+        throw new \InvalidArgumentException('Event is not supported');
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    protected function getData(ModelHolder $holder): array
+    {
+        if (!$holder instanceof FyziklaniTeamHolder) {
+            throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
+        }
+        switch ($holder->getModel()->event->event_type_id) {
+            case 1:
                 return [
-                    'subject' => $subject,
+                    'subject' => _('Fyziklani Team Registration'),
                     'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
                     'sender' => 'Fyziklání <fyziklani@fykos.cz>',
                 ];
             case 9:
-                $subject = _('Physics Brawl Online Team Registration');
-                $sender = _('Physics Brawl Online <online@physicsbrawl.org>');
                 return [
-                    'subject' => $subject,
+                    'subject' => _('Physics Brawl Online Team Registration'),
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
-                    'sender' => $sender,
-                ];
-            default:
-                return [
-                    'subject' => $holder->getModel()->event->name,
-                    'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
-                    'sender' => 'FYKOS <fykos@fykos.cz>',
+                    'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
                 ];
         }
+        throw new \InvalidArgumentException('Event is not supported');
     }
 }

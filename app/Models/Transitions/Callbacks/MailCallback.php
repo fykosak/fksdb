@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -40,14 +41,15 @@ class MailCallback implements TransitionCallback
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws NotImplementedException
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
         foreach ($this->getPersonsFromHolder($holder) as $person) {
-            $data = $this->getData($person, $holder);
+            $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
-                $this->templateFile,
+                $this->getTemplatePath($holder),
                 $person->getPreferredLang(),
                 [
                     'holder' => $holder,
@@ -58,7 +60,15 @@ class MailCallback implements TransitionCallback
         }
     }
 
-    protected function getData(PersonModel $person, ModelHolder $holder): array
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getTemplatePath(ModelHolder $holder): string
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'subject' => 'FYKOS',
