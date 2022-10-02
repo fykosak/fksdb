@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results;
 
-use  FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\TaskService;
