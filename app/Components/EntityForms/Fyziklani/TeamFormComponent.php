@@ -179,6 +179,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 /** @var ReferencedId $referencedId */
                 $referencedId = $this->getForm()->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
+                $index++;
             }
         }
     }
