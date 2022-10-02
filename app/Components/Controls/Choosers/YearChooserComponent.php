@@ -12,12 +12,6 @@ use Nette\DI\Container;
 
 final class YearChooserComponent extends ChooserComponent
 {
-
-    public const ROLE_ORG = 'org';
-    public const ROLE_CONTESTANT = 'contestant';
-    public const ROLE_ALL = 'all';
-    public const ROLE_SELECTED = 'selected';
-
     private ?ContestYearModel $contestYear;
     private TypedGroupedSelection $availableYears;
 

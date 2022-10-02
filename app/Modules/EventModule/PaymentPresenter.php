@@ -111,12 +111,12 @@ class PaymentPresenter extends BasePresenter
      */
     public function actionCreate(): void
     {
-        if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
+       /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Public:Dashboard:default');
             }
-        }
+        }*/ //TODO
     }
 
     /* ********* actions *****************/

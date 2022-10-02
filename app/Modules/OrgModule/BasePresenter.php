@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Nette\Security\Resource;
 
@@ -47,8 +48,8 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege);
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
-        return 'org';
+        return PresenterRole::tryFrom(PresenterRole::ORG);
     }
 }

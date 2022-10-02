@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
+use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -132,33 +133,34 @@ abstract class DatabaseTestCase extends TestCase
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
-        if ($info) {
+        if (!is_null($info)) {
             $info['person_id'] = $person->person_id;
             $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
-
         if (!is_null($loginData)) {
-            $data = [
-                'login_id' => $person->person_id,
-                'person_id' => $person->person_id,
-                'active' => 1,
-            ];
-            $loginData = array_merge($data, $loginData);
-
-            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel($loginData);
-
-            if (isset($pseudoLogin->hash)) {
-                $hash = $pseudoLogin->calculateHash($loginData['hash']);
-                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
-            }
+            $this->createLogin($person, $loginData);
         }
 
         return $person;
     }
 
-    protected function assertPersonInfo(PersonModel $person): PersonInfoModel
+    protected function createLogin(PersonModel $person, array $loginData): LoginModel
     {
-        return $person->getInfo();
+        $data = [
+            'login_id' => $person->person_id,
+            'person_id' => $person->person_id,
+            'active' => 1,
+        ];
+
+        $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
+            array_merge($data, $loginData)
+        );
+
+        if (isset($pseudoLogin->hash)) {
+            $hash = $pseudoLogin->calculateHash($loginData['hash']);
+            $this->getContainer()->getByType(LoginService::class)->storeModel(['hash' => $hash], $pseudoLogin);
+        }
+        return $pseudoLogin;
     }
 
     protected function createPersonHistory(
@@ -186,11 +188,7 @@ abstract class DatabaseTestCase extends TestCase
         $mailFactory->injectApplication($application);
     }
 
-    /**
-     * @param $token
-     * @param null $timeout
-     */
-    protected function fakeProtection($token, $timeout = null): void
+    protected function fakeProtection(string $token, int $timeout = null): void
     {
         /** @var Session $session */
         $session = $this->getContainer()->getService('session');
@@ -207,6 +205,15 @@ abstract class DatabaseTestCase extends TestCase
 
         if ($presenter) {
             $presenter->getUser()->login($login);
+        }
+    }
+
+    protected function logOut(?Presenter $presenter = null): void
+    {
+        $storage = $this->getContainer()->getByType(UserStorage::class);
+        $storage->clearAuthentication(true);
+        if ($presenter) {
+            $presenter->getUser()->logout(true);
         }
     }
 

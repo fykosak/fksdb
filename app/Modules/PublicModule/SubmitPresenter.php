@@ -9,21 +9,20 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
-use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use FKSDB\Models\ORM\Services\SubmitService;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -109,9 +108,7 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $personHistory = $login->person->getHistoryByContestYear($this->getSelectedContestYear());
+        $personHistory = $this->getLoggedPerson()->getHistoryByContestYear($this->getSelectedContestYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));

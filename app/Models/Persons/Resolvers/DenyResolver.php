@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Persons;
+namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ResolutionMode;
 use Nette\SmartObject;
 
-class DenyResolver implements VisibilityResolver, ModifiabilityResolver
+class DenyResolver implements Resolver
 {
     use SmartObject;
 
@@ -16,9 +17,9 @@ class DenyResolver implements VisibilityResolver, ModifiabilityResolver
         return false;
     }
 
-    public function getResolutionMode(?PersonModel $person): string
+    public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
-        return ReferencedHandler::RESOLUTION_EXCEPTION;
+        return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

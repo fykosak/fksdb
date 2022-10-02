@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
@@ -64,6 +66,7 @@ class RegisterPresenterTest extends DatabaseTestCase
         Assert::contains('contestant application', $html);
     }
 }
-
+// phpcs:disable
 $testCase = new RegisterPresenterTest($container);
 $testCase->run();
+// phpcs:enable

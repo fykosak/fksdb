@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
-
-$container = require '../../Bootstrap.php';
 
 class LimitTest extends ScheduleTestCase
 {
@@ -40,5 +42,7 @@ class LimitTest extends ScheduleTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new LimitTest($container);
 $testCase->run();
+// phpcs:enable

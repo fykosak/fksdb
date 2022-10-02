@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Security\Resource;
 
 class ImplicitEventRole extends EventRole
 {
@@ -21,12 +21,12 @@ class ImplicitEventRole extends EventRole
      */
     protected function evaluate(...$args): bool
     {
-        [$model] = $args;
-        if (!$model instanceof Resource) {
-            throw new BadTypeException(Resource::class, $model);
+        [$holder] = $args;
+        if (!$holder instanceof ModelHolder) {
+            throw new BadTypeException(ModelHolder::class, $holder);
         }
         /** @var EventModel $event */
-        $event = $model->getReferencedModel(EventModel::class);
-        return $this->eventAuthorizator->isAllowed($model, $this->privilege, $event);
+        $event = $holder->getModel()->getReferencedModel(EventModel::class);
+        return $this->eventAuthorizator->isAllowed($holder->getModel(), $this->privilege, $event);
     }
 }

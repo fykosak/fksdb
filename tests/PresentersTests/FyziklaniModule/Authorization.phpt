@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -154,6 +156,7 @@ class Authorization extends FyziklaniTestCase
         }
     }
 }
-
+// phpcs:disable
 $testCase = new Authorization($container);
 $testCase->run();
+// phpcs:enable

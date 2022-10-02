@@ -7,7 +7,6 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class MyApplicationsPresenter extends BasePresenter
@@ -15,12 +14,7 @@ class MyApplicationsPresenter extends BasePresenter
 
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getPerson());
-    }
-
-    private function getPerson(): ?PersonModel
-    {
-        return $this->getUser()->getIdentity()->person;
+        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getLoggedPerson());
     }
 
     public function titleDefault(): PageTitle
@@ -33,21 +27,31 @@ class MyApplicationsPresenter extends BasePresenter
         return new NewApplicationsGrid($this->getContext());
     }
 
-    protected function createComponentMyEventTeachersGrid(): PersonRelatedGrid
+    protected function createComponentEventTeachersGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
-            'event_teacher',
-            $this->getPerson(),
+            'fyziklani_team_teacher',
+            $this->getLoggedPerson(),
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()
         );
     }
 
-    protected function createComponentMyApplicationsGrid(): PersonRelatedGrid
+    protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
             'event_participant',
-            $this->getPerson(),
+            $this->getLoggedPerson(),
+            FieldLevelPermission::ALLOW_FULL,
+            $this->getContext()
+        );
+    }
+
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
+            $this->getLoggedPerson(),
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()
         );

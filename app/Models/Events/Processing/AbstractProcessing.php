@@ -122,7 +122,7 @@ abstract class AbstractProcessing implements Processing
         }
 
         foreach ($values as $key => $value) {
-            $key = $prefix . str_replace('_1', '', $key);
+            $key = $prefix . str_replace('_container', '', $key);
             if ($value instanceof ArrayHash) {
                 $this->setValues($value, $key . self::DELIMITER);
             } else {
@@ -144,7 +144,7 @@ abstract class AbstractProcessing implements Processing
                 $control->loadHttpData();
             }
             $path = $control->lookupPath(Form::class);
-            $path = str_replace('_1', '', $path);
+            $path = str_replace('_container', '', $path);
             $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->formPathCache[$path] = $control;
         }

@@ -1,49 +1,39 @@
 
 services:
-    fyziklani.default.machine:
+    fol.default.machine:
         factory: FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine
+    fof.default.machine: @fol.default.machine
 
 transitions:
-    fyziklani.default:
-        machine: fyziklani.default.machine
+    fol.default:
+        machine: fol.default.machine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
-        #transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
+        decorator: FKSDB\Models\Transitions\Decorators\FOLDecorator()
         transitions:
-            __init->pending:
-                #condition: %events.fyziklani16.appCond%
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
+            init->pending:
                 label: _('Register team')
-                #onExecuted:
-                #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
-                #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\FolTeamMemberMailCallback()
             pending->approved:
                 behaviorType: success
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                #condition: role('admin')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Schválit účast')
             pending->spare:
                 behaviorType: warning
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                    #condition: role('admin')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Potvrdit jako náhradníka')
-                #onExecuted:
-                #    - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/spare,.secondary)
             approved|spare->participated:
-                behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                    #condition: and(role('admin'),eventWas())
                 label: _('Prezentovat')
             approved|spare->missed:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                    #condition: and(role('admin'),eventWas())
                 label: _('Nepřijel')
-                behaviorType: danger
             pending|spare|approved->cancelled:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                    #condition: role('admin')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Zrušit tým')
                 behaviorType: danger
-            cancelled->__terminated:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-                    #condition: role('admin')
-                label: _('Smazat tým')
+    fof.default:
+        machine: fof.default.machine
+        stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
+        decorator: null
+        transitions: []

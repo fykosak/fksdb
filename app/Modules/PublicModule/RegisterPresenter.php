@@ -11,9 +11,9 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
@@ -151,7 +151,7 @@ class RegisterPresenter extends CoreBasePresenter
         if (!$this->getUser()->isLoggedIn()) {
             return null;
         }
-        return $this->getUser()->getIdentity()->person;
+        return $this->getLoggedPerson();
     }
 
     final public function renderYear(): void
