@@ -22,16 +22,13 @@ class MailCallback implements TransitionCallback
     protected MailTemplateFactory $mailTemplateFactory;
     protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
-    protected string $templateFile;
 
     public function __construct(
-        string $templateFile,
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
     ) {
-        $this->templateFile = $templateFile;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
