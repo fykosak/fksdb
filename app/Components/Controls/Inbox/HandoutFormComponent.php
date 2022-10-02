@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Models\ORM\Models\TaskContributionType;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
+use FKSDB\Models\ORM\Models\TaskContributionType;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -76,7 +76,13 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $task->getContributions(TaskContributionType::tryFrom(TaskContributionType::GRADE))->delete();
+            foreach (
+                $task->getContributions(
+                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                ) as $contribution
+            ) {
+                $this->taskContributionService->disposeModel($contribution);
+            }
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
-/** @var Container $container */
+// phpcs:disable
 $container = require '../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\AddressService;
 use Nette\DI\Container;
@@ -49,5 +50,7 @@ class ServiceAddressTest extends TestCase
     }
 }
 
+// phpcs:disable
 $testCase = new ServiceAddressTest($container->getByType(AddressService::class));
 $testCase->run();
+// phpcs:enable

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -11,8 +15,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
-
-$container = require '../../Bootstrap.php';
 
 class PrimaryLimit extends ResourceAvailabilityTestCase
 {
@@ -43,7 +45,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "František",
@@ -92,5 +94,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new PrimaryLimit($container);
 $testCase->run();
+// phpcs:enable

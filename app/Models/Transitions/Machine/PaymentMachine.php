@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Models\Transitions\TransitionsDecorator;
 use Nette\Database\Explorer;
 
 class PaymentMachine extends Machine
@@ -25,11 +24,6 @@ class PaymentMachine extends Machine
         parent::__construct($explorer);
         $this->eventService = $eventService;
         $this->paymentService = $paymentService;
-    }
-
-    final public function decorateTransitions(TransitionsDecorator $decorator): void
-    {
-        $decorator->decorate($this);
     }
 
     final public function setEventId(int $eventId): void
@@ -48,7 +42,7 @@ class PaymentMachine extends Machine
     /**
      * @param PaymentModel|null $model
      */
-    public function createHolder(?Model $model): PaymentHolder
+    public function createHolder(Model $model): PaymentHolder
     {
         return new PaymentHolder($model, $this->paymentService);
     }

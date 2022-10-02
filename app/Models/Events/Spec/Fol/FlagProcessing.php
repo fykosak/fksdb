@@ -55,7 +55,7 @@ class FlagProcessing extends WithSchoolProcessing
                     && $this->isStudent($participantData['study_year']))
             ) {
                 /** @var PersonHasFlagModel $personHasFlag */
-                $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
+                $personHasFlag = $values[$name]['person_id_container']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
 //                $values[$name]['person_id_1']['person_has_flag']['spam_mff'] = null;

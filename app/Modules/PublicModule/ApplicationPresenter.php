@@ -12,21 +12,21 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
@@ -59,11 +59,10 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws GoneException
+     * @throws GoneException|EventNotFoundException
      */
     public function authorizedDefault(): void
     {
-        /** @var EventModel $event */
         $event = $this->getEvent();
         if (
             $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
@@ -97,13 +96,14 @@ class ApplicationPresenter extends BasePresenter
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle(null, (string)$this->getEvent(), 'fas fa-calendar-plus');
+            return new PageTitle(null, $this->getEvent()->__toString(), 'fas fa-calendar-plus');
         }
     }
 
     /**
      * @return TeamModel|EventParticipantModel|null
      * @throws NeonSchemaException
+     * @throws EventNotFoundException
      */
     private function getEventApplication(): ?Model
     {
@@ -120,6 +120,7 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
+     * @throws EventNotFoundException
      */
     private function getHolder(): Holder
     {
@@ -143,9 +144,6 @@ class ApplicationPresenter extends BasePresenter
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
-        if (!$this->getEvent()) {
-            throw new EventNotFoundException();
-        }
         $eventApplication = $this->getEventApplication();
         if ($id) {
             // test if there is a new application, case is set there are a edit od application, empty => new application
@@ -207,6 +205,9 @@ class ApplicationPresenter extends BasePresenter
         }
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     private function getMachine(): Machine
     {
         if (!isset($this->machine)) {
@@ -226,9 +227,6 @@ class ApplicationPresenter extends BasePresenter
                 break;
             case 'default':
                 if (!isset($this->contestId)) {
-                    if (!$this->getEvent()) {
-                        throw new EventNotFoundException();
-                    }
                     // hack if contestId is not present, but there ale a eventId param
                     $this->forward(
                         'default',
@@ -246,7 +244,10 @@ class ApplicationPresenter extends BasePresenter
         parent::startup();
     }
 
-    private function getEvent(): ?EventModel
+    /**
+     * @throws EventNotFoundException
+     */
+    private function getEvent(): EventModel
     {
         if (!isset($this->event)) {
             $eventId = null;
@@ -259,6 +260,9 @@ class ApplicationPresenter extends BasePresenter
             }
             $eventId = $eventId ?? $this->getParameter('eventId');
             $this->event = $this->eventService->findByPrimary($eventId);
+        }
+        if (!isset($this->event)) {
+            throw new EventNotFoundException();
         }
 
         return $this->event;
@@ -279,6 +283,7 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
+     * @throws EventNotFoundException
      */
     protected function unauthorizedAccess(): void
     {
@@ -290,12 +295,12 @@ class ApplicationPresenter extends BasePresenter
                 return;
             }
         }
-
         parent::unauthorizedAccess();
     }
 
     /**
      * @throws NeonSchemaException
+     * @throws EventNotFoundException
      */
     private function initializeMachine(): void
     {
@@ -305,6 +310,7 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
+     * @throws EventNotFoundException
      */
     protected function createComponentApplication(): ApplicationComponent
     {
@@ -313,7 +319,7 @@ class ApplicationPresenter extends BasePresenter
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(
             function ($modelId, $eventId) {
-                $this->backLinkRedirect();
+                // $this->backLinkRedirect();
                 $this->redirect(
                     'this',
                     [
@@ -329,9 +335,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws BadRequestException
-     * @throws \ReflectionException
      */
     protected function beforeRender(): void
     {
@@ -354,10 +358,10 @@ class ApplicationPresenter extends BasePresenter
         }
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
         if ($this->getAction() === 'default') {
-            return 'selected';
+            return PresenterRole::tryFrom(PresenterRole::SELECTED);
         }
         return parent::getRole();
     }

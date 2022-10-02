@@ -21,18 +21,6 @@ class StatisticsPresenter extends BasePresenter
         return !$this->getEvent()->getFyziklaniGameSetup()->result_hard_display;
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws NotSetGameParametersException
-     * @throws ForbiddenRequestException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        if (!$this->getEvent()->getFyziklaniGameSetup()->result_hard_display) {
-            parent::unauthorizedAccess();
-        }
-    }
-
     protected function beforeRender(): void
     {
         switch ($this->getAction()) {

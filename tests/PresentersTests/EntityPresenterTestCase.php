@@ -22,7 +22,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 {
 
     protected PersonModel $cartesianPerson;
-    protected LoginModel $login;
+    protected LoginModel $cartesianLogin;
     protected Presenter $fixture;
 
     protected function setUp(): void
@@ -52,14 +52,14 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->login = $this->getContainer()->getByType(LoginService::class)->storeModel(
+        $this->cartesianLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
         $this->getContainer()->getByType(GrantService::class)->storeModel(
-            ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
+            ['login_id' => $this->cartesianLogin->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
-        $this->authenticateLogin($this->login, $this->fixture);
+        $this->authenticateLogin($this->cartesianLogin, $this->fixture);
     }
 
     protected function assertPageDisplay(Response $response): string
@@ -98,6 +98,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             'person' => [
                 'other_name' => $person->other_name,
                 'family_name' => $person->family_name,
+                'gender' => $person->gender->value,
             ],
             'person_info' => [
                 'email' => $person->getInfo()->email,

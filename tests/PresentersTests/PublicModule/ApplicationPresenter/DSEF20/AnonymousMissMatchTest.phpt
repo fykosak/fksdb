@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\TextResponse;
@@ -23,7 +25,7 @@ class AnonymousMissMatchTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Paní',
@@ -59,16 +61,19 @@ class AnonymousMissMatchTest extends DsefTestCase
         Assert::type(Template::class, $source);
 
         $html = (string)$source;
+        // phpcs:disable
         Assert::contains(
-            '<div class="form-group mb-3 has-error " id="frm-application-form-form-participant-person_id_1-person_info-born-pair">',
+            '<div class="form-group mb-3 has-error " id="frm-application-form-form-participant-person_id_container-person_info-born-pair">',
             $html
         );
-
-        $info = $this->assertPersonInfo($this->person);
+        // phpcs:enable
+        $info = $this->person->getInfo();
         Assert::equal(null, $info->id_number); // shouldn't be rewritten
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
     }
 }
 
+// phpcs:disable
 $testCase = new AnonymousMissMatchTest($container);
 $testCase->run();
+// phpcs:enable

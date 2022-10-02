@@ -12,7 +12,7 @@ class ParticipantDetailLink extends LinkFactory
 
     public function getText(): string
     {
-        return _('Detail');
+        return _('Applications detail');
     }
 
     /**

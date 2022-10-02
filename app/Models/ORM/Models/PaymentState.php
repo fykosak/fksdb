@@ -14,6 +14,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
     public const RECEIVED = 'received'; // payment received
     public const CANCELED = 'canceled'; // payment canceled
     public const NEW = 'new'; // new payment
+    public const INIT = 'init'; // virtual state for correct ORM
 
     public function badge(): Html
     {

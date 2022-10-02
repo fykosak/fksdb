@@ -43,7 +43,7 @@ class AddressContainer extends ModelContainer
      */
     public function setDefaultValue($value): void
     {
-        $this->setDefaults($value === null ? [] : $value);
+        $this->setDefaults($value ?? []);
     }
 
     /**

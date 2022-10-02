@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
@@ -24,7 +25,6 @@ abstract class ReferencedContainer extends ContainerWithOptions
 {
 
     public const ID_MASK = 'frm%s-%s';
-    public const CSS_AJAX = 'ajax';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
 
@@ -94,7 +94,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
-                $component->addError(null);
+                $component->addError(_('Field does not match an existing record.'));
             }
         }
     }
@@ -103,13 +103,14 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function () {
+        // $submit->getControlPrototype()->class[] = self::CSS_AJAX;
+        $cb = function (): void {
             if ($this->allowClear) {
                 $this->referencedId->setValue(null);
-                $this->referencedId->invalidateFormGroup();
             }
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     private function createCompactValue(): void
@@ -140,5 +141,5 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?Model $model, string $mode): void;
+    abstract public function setModel(?Model $model, ReferencedIdMode $mode): void;
 }

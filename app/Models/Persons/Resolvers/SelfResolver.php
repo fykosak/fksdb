@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Persons;
+namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ResolutionMode;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-class SelfResolver implements VisibilityResolver, ModifiabilityResolver
+class SelfResolver implements Resolver
 {
     use SmartObject;
 
@@ -25,13 +26,14 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver
         return !$person || $this->isSelf($person);
     }
 
-    public function getResolutionMode(?PersonModel $person): string
+    public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ReferencedHandler::RESOLUTION_EXCEPTION;
+            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
         }
-        return $this->isSelf($person) ? ReferencedHandler::RESOLUTION_OVERWRITE
-            : ReferencedHandler::RESOLUTION_EXCEPTION;
+        return $this->isSelf($person)
+            ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
+            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

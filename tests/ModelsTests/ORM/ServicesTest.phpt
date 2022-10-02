@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\ORM;
 
-/** @var Container $container */
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use Fykosak\NetteORM\Service;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
@@ -32,5 +33,7 @@ class ServicesTest extends DatabaseTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new ServicesTest($container);
 $testCase->run();
+// phpcs:enable

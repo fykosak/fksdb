@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\GrantService;
@@ -34,7 +36,7 @@ class WithDSEFAnonymousTest extends TsafTestCase
             'lunch_count' => 3,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel( [
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $dsefApp->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
@@ -46,7 +48,7 @@ class WithDSEFAnonymousTest extends TsafTestCase
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Paní",
@@ -100,5 +102,7 @@ class WithDSEFAnonymousTest extends TsafTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new WithDSEFAnonymousTest($container);
 $testCase->run();
+// phpcs:enable

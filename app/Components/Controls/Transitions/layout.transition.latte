@@ -4,7 +4,7 @@
     {if count($transitions)}
         <div class="btn-group">
             {foreach $transitions as $transition}
-                {var $className = 'btn btn-outline-' . $transition->getBehaviorType()->value}
+                {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
                 <a href="{link transition! $transition->getId()}" class="{$className}">
                     {$transition->getLabel()}
                 </a>

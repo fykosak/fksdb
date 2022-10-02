@@ -8,8 +8,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\VisibilityResolver;
+use FKSDB\Models\Persons\Resolvers\Resolver;
 use Nette\Forms\Form;
 
 trait ReferencedPersonTrait
@@ -19,8 +18,7 @@ trait ReferencedPersonTrait
     protected function createPersonId(
         ContestYearModel $contestYear,
         bool $allowClear,
-        VisibilityResolver $visibilityResolver,
-        ModifiabilityResolver $resolver,
+        Resolver $resolver,
         array $fieldDefinition
     ): ReferencedId {
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
@@ -28,12 +26,11 @@ trait ReferencedPersonTrait
             $contestYear,
             PersonSearchContainer::SEARCH_ID,
             $allowClear,
-            $resolver,
-            $visibilityResolver
+            $resolver
         );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
-        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
-        $referencedId->getSearchContainer()->setOption('label', _('Person'));
+        $referencedId->referencedContainer->setOption('label', _('Person'));
+        $referencedId->searchContainer->setOption('label', _('Person'));
         return $referencedId;
     }
 

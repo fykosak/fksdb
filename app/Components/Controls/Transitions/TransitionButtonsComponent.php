@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transitions;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;

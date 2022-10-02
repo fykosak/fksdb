@@ -27,9 +27,9 @@ transitions:
     fyziklani13payment:
         machine: fyziklani13payment.machine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
+        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
         transitions:
-            __init->new:
+            init->new:
                 label: _('Create')
                 #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
             new->waiting:

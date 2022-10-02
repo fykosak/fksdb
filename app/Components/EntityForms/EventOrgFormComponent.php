@@ -7,7 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
@@ -49,7 +49,6 @@ class EventOrgFormComponent extends EntityFormComponent
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
             $this->isCreating(),
-            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
             $this->getContext()->getParameters()['forms']['adminEventOrg']
         );

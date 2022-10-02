@@ -6,22 +6,21 @@ namespace FKSDB\Models\Events\Transitions;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EmailMessageState;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -78,6 +77,7 @@ class MailSender
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __invoke(Transition $transition, Holder $holder): void
     {
@@ -86,6 +86,7 @@ class MailSender
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     private function send(Transition $transition, Holder $holder): void
     {
@@ -122,32 +123,27 @@ class MailSender
         BaseMachine $baseMachine,
         BaseHolder $baseHolder
     ): EmailMessageModel {
-        $machine = $baseMachine->getMachine();
+        $email = $login->person->getInfo()->email;
+        $application = $baseHolder->holder->primaryHolder->getModel2();
 
-        $holder = $baseHolder->holder;
-        $person = $login->person;
-        $event = $baseHolder->event;
-        $email = $person->getInfo()->email;
-        $application = $holder->primaryHolder->getModel2();
-
-        $token = $this->createToken($login, $event, $application);
+        $token = $this->createToken($login, $baseHolder->event, $application);
 
         // prepare and send email
         $templateParams = [
             'token' => $token->token,
-            'person' => $person,
+            'person' => $login->person,
             'until' => $token->until,
-            'event' => $event,
+            'event' => $baseHolder->event,
             'application' => $application,
-            'holder' => $holder,
-            'machine' => $machine,
+            'holder' => $baseHolder->holder,
+            'machine' => $baseMachine->getMachine(),
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
             'linkArgs' => [
                 '//:Public:Application:',
                 [
-                    'eventId' => $event->event_id,
-                    'contestId' => $event->event_type->contest_id,
+                    'eventId' => $baseHolder->event->event_id,
+                    'contestId' => $baseHolder->event->event_type->contest_id,
                     'at' => $token->token,
                 ],
             ],
@@ -156,11 +152,11 @@ class MailSender
 
         $data = [];
         $data['text'] = (string)$template;
-        $data['subject'] = $this->getSubject($event, $application, $holder, $machine);
-        $data['sender'] = $holder->getParameter(self::FROM_PARAM);
-        $data['reply_to'] = $holder->getParameter(self::FROM_PARAM);
+        $data['subject'] = $this->getSubject($baseHolder->event, $application);
+        $data['sender'] = $baseHolder->holder->getParameter(self::FROM_PARAM);
+        $data['reply_to'] = $baseHolder->holder->getParameter(self::FROM_PARAM);
         if ($this->hasBcc()) {
-            $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
+            $data['blind_carbon_copy'] = $baseHolder->holder->getParameter(self::BCC_PARAM);
         }
         $data['recipient'] = $email;
         $data['state'] = EmailMessageState::WAITING;
@@ -169,25 +165,22 @@ class MailSender
 
     private function createToken(LoginModel $login, EventModel $event, Model $application): AuthTokenModel
     {
-        $until = $this->getUntil($event);
-        $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
+        return $this->authTokenService->createToken(
+            $login,
+            AuthTokenModel::TYPE_EVENT_NOTIFY,
+            $event->registration_end ?? $event->end,
+            ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary()),
+            true
+        );
     }
 
-    private function getSubject(EventModel $event, Model $application, Holder $holder, Machine $machine): string
+    protected function getSubject(EventModel $event, Model $application): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application;
-        //state in subject: . ' ' .
-        // mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
-    }
-
-    private function getUntil(EventModel $event): \DateTimeInterface
-    {
-        return $event->registration_end ?? $event->end;
     }
 
     private function hasBcc(): bool

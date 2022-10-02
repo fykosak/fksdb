@@ -15,7 +15,7 @@ use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -70,7 +70,6 @@ class RegisterContestantFormComponent extends EntityFormComponent
             $this->contestYear,
             PersonSearchContainer::SEARCH_NONE,
             false,
-            new SelfResolver($this->user),
             new SelfResolver($this->user)
         );
         $container->addComponent($referencedId, 'person_id');

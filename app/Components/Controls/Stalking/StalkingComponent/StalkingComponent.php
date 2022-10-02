@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
-use Fykosak\NetteORM\Mapper;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Exceptions\NotImplementedException;

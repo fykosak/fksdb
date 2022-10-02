@@ -1,3 +1,4 @@
+import * as ReactDOM from 'react-dom';
 import PerSeriesChart from './Components/Charts/Contestants/PerSeriesChart';
 import PerYearsChart from './Components/Charts/Contestants/PerYearsChart';
 import ApplicationRationGeoChart from './Components/Charts/Event/Applications/ApplicationRationGeoChart';
@@ -26,6 +27,7 @@ import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
+import { translator } from '@translator/translator';
 
 const renderer = new Renderer();
 
@@ -148,7 +150,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const elRefId = $(refId);
             const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
             const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
-            const originalSearchButton = container.find('input[type=\'submit\'][name*=\'' + this.options.submitSearchMask + '\']');
             const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
             let compacted = null;
             //  const options = this.options;
@@ -156,99 +157,47 @@ window.addEventListener('DOMContentLoaded', () => {
                 this.options.refId = elRefId;
             }
 
-            const searchifyContainer = function () {
-
-                // create search button
-                const searchButton = $('<button class="input-group-append btn btn-outline-secondary" type="button"><span class="fa fa-search"></span></button>');
-                searchButton.click(() => originalSearchButton.click());
-
-                const searchInputGroup = $('<div class="input-group"/>');
-                let elToReplace = $searchInput;
-                if ($searchInput.data('uiElement')) {
-                    elToReplace = $searchInput.data('uiElement');
-                }
-
-                // Workaround for broken replaceWith()
-                //elToReplace.replaceWith(searchInputGroup);
-                const par = elToReplace.parent();
-                const prev = elToReplace.prev();
-                if (prev.length) {
-                    searchInputGroup.insertAfter(prev);
-                } else {
-                    searchInputGroup.prependTo(par);
-                }
-
-                searchInputGroup.append($searchInput);
-                searchInputGroup.append(elToReplace);
-                searchInputGroup.append(searchButton);
-
-                // append handler
-                $searchInput.change(() => {
-                    originalSearchButton.click();
-                });
-                // promote search group in place of the container
-                // let searchGroup = $searchInput.closest('.form-group');
-
-
-                // searchGroup.children('.control-label').text(elContainer.find('legend').text());
-                // searchGroup.attr('id', elContainer.attr('id'));
-                // elContainer.attr('id', null);
-                // elContainer.replaceWith(searchGroup);
-                // elContainer.hide();
-                return;
-
-                // elContainer.appendTo(searchGroup);// we need the group to working form
-
-                // ensure proper filling of the referenced id
-                /*const writableFields = elContainer.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton);
-                writableFields.change(function () {
-                    const filledFields = writableFields.filter(function () {
-                        return $(this).val() != '';
-                    });
-                    if (filledFields.length > 0 && options.refId.val() == '') {
-                        options.refId.val(options.valuePromise);
-                    } else if (filledFields.length == 0 && options.refId.val() == options.valuePromise) {
-                        options.refId.val('');
-                    }
-                });*/
-
-            };
-
-            function decompactifyContainer() {
+            function decompactifyContainer(): void {
                 if (compacted !== null) {
                     compacted.hide();
                 }
                 container.show();
             }
 
-            function createCompactField(label: string, value) {
-                const $compactGroup = $('<div class="form-group">\
-        <label class="control-label"/>\
-<div class="input-group"><p class="form-control-static form-control"/></div></div>');
-
-                const elLabel = $compactGroup.find('label');
-                elLabel.text(label);
-
-                const elValue = $compactGroup.find('p.form-control-static');
-                const $label = $('<span></span>');
-                elValue.append('<span class="fa fa-user me-3"></span>');
-                $label.text(value);
-                elValue.append($label);
-
-                const $btnContainer = $('<div class="input-group-append"></div>');
-                const $buttonEdit = $('<button type="button" class="btn btn-outline-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
-                $buttonEdit.click(decompactifyContainer);
-
-                const $buttonDel = $('<button type="button" class="btn btn-outline-warning" title="Smazat"><span class="fa fa-times"></span></button>');
-                $buttonDel.click(() => {
-                    $clearButton.click();
-                });
-                $btnContainer.append($buttonEdit);
-                $btnContainer.append($buttonDel);
-
-                elValue.parent('.input-group').append($btnContainer);
-
-                return $compactGroup;
+            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLElement> {
+                const compactGroup = document.createElement('div');
+                const ReEl = () => {
+                    return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
+                        <h4>{label}</h4>
+                        <div className="form-group">
+                            <div className="input-group">
+                                <p className="form-control-plaintext"><span className="fa fa-user me-3"/>{value}</p>
+                            </div>
+                            <div className="input-group-append">
+                                <button type="button"
+                                        className="btn btn-outline-secondary"
+                                        title={translator.getText('Upravit')}
+                                        onClick={() => {
+                                            decompactifyContainer();
+                                        }}>
+                                    <span className="fa fa-pen me-3"/>
+                                    {translator.getText('Upravit')}
+                                </button>
+                                <button type="button"
+                                        className="btn btn-outline-warning"
+                                        title={translator.getText('Smazat')}
+                                        onClick={() => {
+                                            $clearButton.click();
+                                        }}>
+                                    <span className="fa fa-times me-3"/>
+                                    {translator.getText('Smazat')}
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>;
+                }
+                ReactDOM.render(<ReEl/>, compactGroup);
+                return $(compactGroup);
             }
 
 
@@ -257,24 +206,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (compacted === null) {
                     const label = container.find('> fieldset > h4').text();
                     const value = $compactValueInput.val();
-                    compacted = createCompactField(label, value); //TODO clear button
+                    compacted = createCompactField(label, value);
                     compacted.insertAfter(container);
-                    compacted.find('.value').click(decompactifyContainer);
                     //elContainer.find('legend').click(compactifyContainer);
-                    decorateClearButton(); //in original container
+                    //decorateClearButton(); //in original container
                 }
                 compacted.show();
                 container.hide();
-            }
-
-            function decorateClearButton() {
-                const well = container.children('.bd-callout');
-                const buttonDel = $('<button type="button" class="btn btn-sm btn-outline-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
-                buttonDel.click(() => {
-                    $clearButton.click();
-                });
-                $clearButton.closest('.btn-group').hide();
-                buttonDel.prependTo(well);
             }
 
             const hasAnyFields = container.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
@@ -284,11 +222,11 @@ window.addEventListener('DOMContentLoaded', () => {
             const hasErrors = container.find('.has-error');
 
             if ($searchInput.length) {
-                searchifyContainer();
+                // searchifyContainer();
             } else if ($clearButton.length && !(hasAnyFields.length || hasErrors.length)) {
                 compactifyContainer();
             } else if ($clearButton.length && (hasAnyFields.length || hasErrors.length)) {
-                decorateClearButton();
+                // decorateClearButton();
             }
         },
     });
@@ -302,6 +240,14 @@ window.addEventListener('DOMContentLoaded', () => {
             // @ts-ignore
             field.value = el.querySelector('.value').innerText;
         });
+    });
+    document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
+        el.addEventListener('click', () => {
+            if (window.confirm('O RLY?')) {
+                // @ts-ignore
+                el.trigger('click');
+            }
+        })
     });
 
     // @ts-ignore

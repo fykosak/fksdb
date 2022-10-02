@@ -55,7 +55,7 @@ class DefaultGenerator extends AbstractSymbolGenerator
      * @throws UnsupportedCurrencyException
      * @throws \Exception
      */
-    protected function create(PaymentModel $modelPayment, ...$args): array
+    protected function create(PaymentModel $modelPayment): array
     {
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(

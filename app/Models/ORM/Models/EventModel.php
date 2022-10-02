@@ -131,4 +131,10 @@ class EventModel extends Model implements Resource
             'eventTypeId' => $this->event_type_id,
         ];
     }
+
+    public function isRegistrationOpened(): bool
+    {
+        return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
+            && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+    }
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -41,7 +43,7 @@ class AnonymousTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "František",
@@ -81,6 +83,7 @@ class AnonymousTest extends DsefTestCase
         Assert::equal(3, $application->lunch_count);
     }
 }
-
+// phpcs:disable
 $testCase = new AnonymousTest($container);
 $testCase->run();
+// phpcs:enable

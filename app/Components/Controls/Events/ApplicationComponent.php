@@ -143,7 +143,7 @@ class ApplicationComponent extends BaseComponent
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()->value]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->behaviorType->value]);
         }
 
         /*

@@ -30,9 +30,9 @@ transitions:
     fyziklani16payment:
         machine: fyziklani16payment.machine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani16Payment()
+        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani16Payment()
         transitions:
-            __init->new:
+            init->new:
                 label: _('Create')
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-18', '2022-02-10')
             new->waiting:

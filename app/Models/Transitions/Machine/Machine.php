@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\TransitionsDecorator;
+use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
@@ -25,6 +26,11 @@ abstract class Machine extends AbstractMachine
     public function __construct(Explorer $explorer)
     {
         $this->explorer = $explorer;
+    }
+
+    final public function decorateTransitions(TransitionsDecorator $decorator): void
+    {
+        $decorator->decorate($this);
     }
 
     final public function setImplicitCondition(callable $implicitCondition): void
@@ -57,7 +63,7 @@ abstract class Machine extends AbstractMachine
         return $this->selectTransition($transitions);
     }
 
-    public function getTransitionByStates(?EnumColumn $source, ?EnumColumn $target): ?Transition
+    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
     {
         $transitions = \array_filter(
             $this->getTransitions(),
@@ -117,19 +123,9 @@ abstract class Machine extends AbstractMachine
      * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
-    final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void
+    final public function executeImplicitTransition(ModelHolder $holder): void
     {
         $transition = $this->selectTransition($this->getAvailableTransitions($holder));
-        $this->saveAndExecuteTransition($transition, $holder, $data);
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws \Throwable
-     */
-    final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void
-    {
-        $holder->updateData($data);
         $this->execute($transition, $holder);
     }
 
@@ -150,7 +146,9 @@ abstract class Machine extends AbstractMachine
         if (!$this->canExecute($transition, $holder)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
+        $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $outerTransition = false;
             $this->explorer->getConnection()->beginTransaction();
         }
         try {
@@ -159,10 +157,13 @@ abstract class Machine extends AbstractMachine
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
-        $this->explorer->getConnection()->commit();
+        if (!$outerTransition) {
+            $this->explorer->getConnection()->commit();
+        }
+
         $holder->updateState($transition->targetStateEnum);
         $transition->callAfterExecute($holder);
     }
 
-    abstract public function createHolder(?Model $model): ModelHolder;
+    abstract public function createHolder(Model $model): ModelHolder;
 }
