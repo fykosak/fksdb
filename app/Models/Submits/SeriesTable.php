@@ -52,8 +52,8 @@ class SeriesTable
     public function getSubmits(): TypedSelection
     {
         return $this->submitService->getTable()
-            ->where('contestant_id', $this->getContestants())
-            ->where('task_id', $this->getTasks());
+            ->where('contestant_id', $this->getContestants()->fetchPairs('contestant_id'))
+            ->where('task_id', $this->getTasks()->fetchPairs('task_id'));
     }
 
     public function getSubmitsTable(): array
