@@ -12,22 +12,21 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
@@ -296,7 +295,6 @@ class ApplicationPresenter extends BasePresenter
                 return;
             }
         }
-
         parent::unauthorizedAccess();
     }
 
@@ -337,9 +335,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws BadRequestException
-     * @throws \ReflectionException
      */
     protected function beforeRender(): void
     {

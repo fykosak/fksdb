@@ -59,4 +59,15 @@ class FOLTeamFormComponent extends TeamFormComponent
             new FOLCategoryProcessing($this->container),
         ];
     }
+
+    public function render(): void
+    {
+        $this->template->event = $this->event;
+        parent::render();
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+    }
 }

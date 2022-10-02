@@ -26,6 +26,7 @@ use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
@@ -43,29 +44,49 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         $this->teamService = $teamService;
     }
 
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create team'), 'fa fa-calendar-plus');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fa fa-edit');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
     public function authorizedEdit(): void
     {
         $event = $this->getEvent();
-        if ($this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)) {
-            $this->setAuthorized(true);
-            return;
-        }
         $this->setAuthorized(
-            $event->isRegistrationOpened()
-            && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
+            $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
+            )
         );
     }
 
     public function authorizedCreate(): void
     {
         $event = $this->getEvent();
-        if ($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event)) {
-            $this->setAuthorized(true);
-            return;
-        }
         $this->setAuthorized(
-            $event->isRegistrationOpened() &&
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+            )
         );
     }
 

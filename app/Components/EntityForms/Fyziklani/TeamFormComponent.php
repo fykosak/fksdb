@@ -31,12 +31,12 @@ use Nette\Forms\Form;
  */
 abstract class TeamFormComponent extends EntityFormComponent
 {
-    private SingleReflectionFormFactory $reflectionFormFactory;
-    private FyziklaniTeamMachine $machine;
-    private ReferencedPersonFactory $referencedPersonFactory;
-    private EventModel $event;
-    private TeamService2 $teamService;
-    private TeamMemberService $teamMemberService;
+    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected FyziklaniTeamMachine $machine;
+    protected ReferencedPersonFactory $referencedPersonFactory;
+    protected EventModel $event;
+    protected TeamService2 $teamService;
+    protected TeamMemberService $teamMemberService;
 
     public function __construct(
         FyziklaniTeamMachine $machine,
@@ -222,12 +222,3 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     abstract protected function getProcessing(): array;
 }
-
-/* TODO
-                - @events.captcha
-                - FKSDB\Models\Events\Spec\Fol\FlagCheck()
-                - FKSDB\Models\Events\Spec\Fol\BornCheck()
-
-            processings:
-                - @events.privacyPolicy
- */
