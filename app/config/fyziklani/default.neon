@@ -13,7 +13,7 @@ transitions:
             init->pending:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback('fol/member')
+                    - FKSDB\Models\Transitions\Callbacks\FolTeamMemberMailCallback()
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
