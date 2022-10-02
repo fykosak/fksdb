@@ -73,7 +73,7 @@ class SettingsPresenter extends BasePresenter
 
     protected function createComponentPreferredLangForm(): PreferredLangFormComponent
     {
-        return new PreferredLangFormComponent($this->getContext(), $this->$this->getLoggedPerson());
+        return new PreferredLangFormComponent($this->getContext(), $this->getLoggedPerson());
     }
 
     /**
