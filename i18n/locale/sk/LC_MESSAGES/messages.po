@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-29 13:04+0200\n"
+"POT-Creation-Date: 2022-10-02 21:33+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -17,36 +17,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:38
+#: ../app/Modules/OrgModule/PointsPresenter.php:39
 #, php-format
 msgid "Grade series %d"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:43
+#: ../app/Modules/OrgModule/PointsPresenter.php:44
 msgid "Points list"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:89
+#: ../app/Modules/OrgModule/PointsPresenter.php:85
 msgid "Points invalidated."
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:91
+#: ../app/Modules/OrgModule/PointsPresenter.php:87
 msgid "Error during invalidation."
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:109
+#: ../app/Modules/OrgModule/PointsPresenter.php:105
 msgid "Points recounted."
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:111
+#: ../app/Modules/OrgModule/PointsPresenter.php:107
 msgid "Error while recounting."
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:122
+#: ../app/Modules/OrgModule/PointsPresenter.php:118
 msgid "Calculate quiz points."
 msgstr ""
 
-#: ../app/Modules/OrgModule/PointsPresenter.php:124
+#: ../app/Modules/OrgModule/PointsPresenter.php:120
 msgid "Error during calculation."
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Pizza"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:155
+#: ../app/Modules/OrgModule/PersonPresenter.php:153
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Grids/EmailsGrid.php:37
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
@@ -152,11 +152,11 @@ msgstr ""
 msgid "Person"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:159
+#: ../app/Modules/OrgModule/PersonPresenter.php:157
 msgid "Let's stalk"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:165
+#: ../app/Modules/OrgModule/PersonPresenter.php:163
 #: ../app/Components/Grids/ContestantsGrid.php:55
 #: ../app/Components/Grids/Schedule/GroupsGrid.php:53
 #: ../app/Components/Grids/Schedule/ItemsGrid.php:43
@@ -487,82 +487,82 @@ msgstr "Uprava platby #%s"
 msgid "Dashboard"
 msgstr ""
 
-#: ../app/Modules/PublicModule/BasePresenter.php:54
+#: ../app/Modules/PublicModule/BasePresenter.php:50
 #, php-format
 msgid "%d. year"
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:93
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:92
 #, php-format
 msgid "Application for %s: %s"
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:152
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:151
 #, fuzzy
 msgid "Unknown application."
 msgstr "Zoznam platieb"
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:180
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:179
 #, fuzzy
 msgid "Registration is not open."
 msgstr "Registrácia"
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:182
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:181
 msgid "Application machine has no available transitions."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:70
+#: ../app/Modules/PublicModule/SubmitPresenter.php:69
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:7
 #: ../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:3
 msgid "Submitted solutions"
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:80
+#: ../app/Modules/PublicModule/SubmitPresenter.php:79
 msgid "Submit a solution"
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:117
+#: ../app/Modules/PublicModule/SubmitPresenter.php:114
 msgid "Contestant is missing study year. Not all tasks are thus available."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:123
+#: ../app/Modules/PublicModule/SubmitPresenter.php:120
 #: ../app/Models/ORM/Services/SubmitService.php:44
 #, php-format
 msgid "Deadline %s"
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:139
+#: ../app/Modules/PublicModule/SubmitPresenter.php:136
 msgid "Only PDF files are accepted."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:144
+#: ../app/Modules/PublicModule/SubmitPresenter.php:141
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:35
 msgid "Task is not for your category."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:149
+#: ../app/Modules/PublicModule/SubmitPresenter.php:146
 msgid "Overwrite submitted solutions."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:152
+#: ../app/Modules/PublicModule/SubmitPresenter.php:149
 msgid "Either tick overwrite the solution, or don't submit it."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:183
+#: ../app/Modules/PublicModule/SubmitPresenter.php:180
 msgid "Submit"
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:217
+#: ../app/Modules/PublicModule/SubmitPresenter.php:214
 #, php-format
 msgid "Task %s cannot be submitted anymore."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:261
+#: ../app/Modules/PublicModule/SubmitPresenter.php:258
 #, php-format
 msgid "Task %s submitted."
 msgstr ""
 
-#: ../app/Modules/PublicModule/SubmitPresenter.php:271
+#: ../app/Modules/PublicModule/SubmitPresenter.php:268
 msgid "Task storing error."
 msgstr ""
 
@@ -620,7 +620,17 @@ msgstr ""
 msgid "Model of event"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/EventModule/TeamApplicationPresenter.php:179
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:49
+#, fuzzy
+msgid "Create team"
+msgstr "Zoznam platieb"
+
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:61
+#, fuzzy, php-format
+msgid "Edit team \"%s\""
+msgstr "Uprava platby #%s"
+
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:200
 #, fuzzy
 msgid "Event type is not supported"
 msgstr "Zvoliť typ"
@@ -646,19 +656,19 @@ msgstr "Časový vývoj prihlášiek"
 msgid "Group transitions"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:47
+#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:35
 msgid "Correlation statistics"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:52
+#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:40
 msgid "Teams statistics"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:57
+#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:45
 msgid "Tasks statistics"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:62
+#: ../app/Modules/EventModule/Fyziklani/StatisticsPresenter.php:50
 msgid "Detailed results"
 msgstr ""
 
@@ -820,25 +830,25 @@ msgstr ""
 msgid "List of events"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:45
+#: ../app/Modules/CoreModule/SettingsPresenter.php:44
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:58
 msgid "Settings"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:67
-#: ../app/Modules/CoreModule/SettingsPresenter.php:71
+#: ../app/Modules/CoreModule/SettingsPresenter.php:66
+#: ../app/Modules/CoreModule/SettingsPresenter.php:70
 msgid "Set up new password."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:93
+#: ../app/Modules/CoreModule/SettingsPresenter.php:92
 msgid "Authentication"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:121
+#: ../app/Modules/CoreModule/SettingsPresenter.php:120
 msgid "Incorrect old password."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:126
+#: ../app/Modules/CoreModule/SettingsPresenter.php:125
 #: ../app/Components/EntityForms/EntityFormComponent.php:63
 #: ../app/Components/Controls/PreferredLangFormComponent.php:38
 #: ../app/Components/Controls/Events/ApplicationComponent.php:115
@@ -848,51 +858,51 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:141
+#: ../app/Modules/CoreModule/SettingsPresenter.php:140
 msgid "Username"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:144
+#: ../app/Modules/CoreModule/SettingsPresenter.php:143
 msgid "This username is already taken."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:148
+#: ../app/Modules/CoreModule/SettingsPresenter.php:147
 msgid "Old password"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:153
+#: ../app/Modules/CoreModule/SettingsPresenter.php:152
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:201
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:205
 #: ../app/config/orm.neon.neon2php:279 ../app/config/orm.neon.neon2php:837
 msgid "Password"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:157
+#: ../app/Modules/CoreModule/SettingsPresenter.php:156
 #, php-format
 msgid "The password must have at least %d characters."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:163
+#: ../app/Modules/CoreModule/SettingsPresenter.php:162
 msgid "It is necessary to set a new password."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:165
+#: ../app/Modules/CoreModule/SettingsPresenter.php:164
 msgid "Password cannot be empty."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:168
+#: ../app/Modules/CoreModule/SettingsPresenter.php:167
 msgid "Password (verification)"
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:169
+#: ../app/Modules/CoreModule/SettingsPresenter.php:168
 msgid "The submitted passwords do not match."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:195
+#: ../app/Modules/CoreModule/SettingsPresenter.php:194
 msgid "User information has been saved."
 msgstr ""
 
-#: ../app/Modules/CoreModule/SettingsPresenter.php:197
+#: ../app/Modules/CoreModule/SettingsPresenter.php:196
 msgid "Password changed."
 msgstr ""
 
@@ -902,7 +912,7 @@ msgstr ""
 msgid "My payments"
 msgstr "Nová platba"
 
-#: ../app/Modules/CoreModule/MyApplicationsPresenter.php:28
+#: ../app/Modules/CoreModule/MyApplicationsPresenter.php:22
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:33
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:2
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:62
@@ -1006,7 +1016,7 @@ msgstr ""
 msgid "No series available"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/ContestPresenterTrait.php:107
+#: ../app/Modules/Core/PresenterTraits/ContestPresenterTrait.php:105
 msgid "No contest available"
 msgstr ""
 
@@ -1036,7 +1046,7 @@ msgstr ""
 msgid "Charts"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/YearPresenterTrait.php:91
+#: ../app/Modules/Core/PresenterTraits/YearPresenterTrait.php:90
 msgid "No year available"
 msgstr ""
 
@@ -1422,7 +1432,7 @@ msgstr ""
 msgid "Departure destination"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:93
+#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:91
 #, fuzzy
 msgid "Unlimited capacity"
 msgstr "Kapacita"
@@ -1975,15 +1985,16 @@ msgstr ""
 msgid "Prechod sa nedá vykonať"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:53
+#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:74
+#: ../app/Models/Transitions/Callbacks/TeamTeacherMailCallback.php:72
 msgid "Fyziklani Team Registration"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:60
+#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:80
 msgid "Physics Brawl Online Team Registration"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:61
+#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:82
 msgid "Physics Brawl Online <online@physicsbrawl.org>"
 msgstr ""
 
@@ -2698,7 +2709,7 @@ msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:99
 #, fuzzy
-msgid "Application has been create"
+msgid "Application has been created"
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:211

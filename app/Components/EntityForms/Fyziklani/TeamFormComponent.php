@@ -96,7 +96,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->getPresenter()->flashMessage(
                 isset($this->model)
                     ? _('Application has been updated')
-                    : _('Application has been create'),
+                    : _('Application has been created'),
                 Message::LVL_SUCCESS
             );
             $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
