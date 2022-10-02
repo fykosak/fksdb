@@ -221,10 +221,9 @@ abstract class BasePresenter extends Presenter implements
 
     private function getUserPreferredLang(): ?string
     {
-        /**@var LoginModel $login */
         $person = $this->getLoggedPerson();
         if ($person) {
-            return $login->person->getPreferredLang();
+            return $person->getPreferredLang();
         }
         return null;
     }
