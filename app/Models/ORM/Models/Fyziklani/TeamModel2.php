@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -171,27 +170,6 @@ class TeamModel2 extends Model implements Resource
             'forceA' => $this->force_a,
             'gameLang' => $this->game_lang->value,
         ];
-    }
-
-    public function createXMLNode(\DOMDocument $document): \DOMElement
-    {
-        $node = $document->createElement('team');
-        $node->setAttribute('teamId', (string)$this->fyziklani_team_id);
-        XMLHelper::fillArrayToNode([
-            'teamId' => $this->fyziklani_team_id,
-            'name' => $this->name,
-            'status' => $this->state->value,
-            'category' => $this->category->value,
-            'created' => $this->created->format('c'),
-            'phone' => $this->phone,
-            'password' => $this->password,
-            'points' => $this->points,
-            'rankCategory' => $this->rank_category,
-            'rankTotal' => $this->rank_total,
-            'forceA' => $this->force_a,
-            'gameLang' => $this->game_lang,
-        ], $document, $node);
-        return $node;
     }
 
     public function getResourceId(): string
