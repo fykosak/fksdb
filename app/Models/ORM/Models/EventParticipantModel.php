@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\WebService\NodeCreator;
-use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
@@ -39,12 +37,10 @@ use Nette\Security\Resource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class EventParticipantModel extends Model implements Resource, NodeCreator
+class EventParticipantModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'event.participant';
-    public const STATE_AUTO_INVITED = 'auto.invited';
-    public const STATE_AUTO_SPARE = 'auto.spare';
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
@@ -93,14 +89,5 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
                 break;
         }
         return $value;
-    }
-
-
-    public function createXMLNode(\DOMDocument $document): \DOMElement
-    {
-        $node = $document->createElement('participant');
-        $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
-        return $node;
     }
 }

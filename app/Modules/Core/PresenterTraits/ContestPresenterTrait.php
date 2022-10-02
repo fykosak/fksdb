@@ -7,7 +7,6 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
@@ -62,8 +61,7 @@ trait ContestPresenterTrait
      */
     private function getAvailableContests(): TypedSelection
     {
-        /** @var LoginModel|null $login */
-        $login = $this->getUser()->getIdentity();
+        $person = $this->getLoggedPerson();
 
         switch ($this->getRole()->value) {
             case PresenterRole::SELECTED:
@@ -71,21 +69,21 @@ trait ContestPresenterTrait
             case PresenterRole::ALL:
                 return $this->contestService->getTable();
             case PresenterRole::CONTESTANT:
-                if (!$login || !$login->person) {
+                if (!$person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
                 /** @var ContestantModel $contestant */
-                foreach ($login->person->getContestants() as $contestant) {
+                foreach ($person->getContestants() as $contestant) {
                     $contestsIds[$contestant->contest_id] = $contestant->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
             case PresenterRole::ORG:
-                if (!$login || !$login->person) {
+                if (!$person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
-                foreach ($login->person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrgs() as $org) {
                     $contestsIds[$org->contest_id] = $org->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));

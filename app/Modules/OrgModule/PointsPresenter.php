@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, LoginModel, TaskContributionType};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -55,21 +56,16 @@ class PointsPresenter extends BasePresenter
 
     public function actionEntry(): void
     {
-        $this->seriesTable->taskFilter = $this->all ? null : $this->getGradedTasks();
-    }
-
-    private function getGradedTasks(): array
-    {
-        /**@var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $person = $login->person;
-        if (!$person) {
-            return [];
-        }
-        $gradedTasks = $person->getTaskContributions(TaskContributionType::tryFrom(TaskContributionType::GRADE))
-            ->where('task_id', (clone $this->seriesTable->getTasks())->select('task_id'))
-            ->fetchPairs('task_id', 'task_id');
-        return array_values($gradedTasks);
+        $this->seriesTable->taskFilter = $this->all
+            ? null
+            : function (TypedGroupedSelection $selection) {
+                $selection->where(
+                    'task_id',
+                    $this->getLoggedPerson()->getTaskContributions(
+                        TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    )->fetchPairs('task_id', 'task_id')
+                );
+            };
     }
 
     final public function renderEntry(): void

@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\Utils\Utils;
@@ -220,12 +221,19 @@ abstract class BasePresenter extends Presenter implements
 
     private function getUserPreferredLang(): ?string
     {
-        /**@var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        if ($login && $login->person) {
-            return $login->person->getPreferredLang();
+        $person = $this->getLoggedPerson();
+        if ($person) {
+            return $person->getPreferredLang();
         }
         return null;
+    }
+
+
+    protected function getLoggedPerson(): ?PersonModel
+    {
+        /**@var LoginModel $login */
+        $login = $this->getUser()->getIdentity();
+        return $login ? $login->person : null;
     }
 
     protected function createTemplate(): Template

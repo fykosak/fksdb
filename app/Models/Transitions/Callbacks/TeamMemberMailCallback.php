@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-class TeamMemberMailCallback extends MailCallback
+abstract class TeamMemberMailCallback extends MailCallback
 {
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {

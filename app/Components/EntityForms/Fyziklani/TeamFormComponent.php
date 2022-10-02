@@ -31,12 +31,12 @@ use Nette\Forms\Form;
  */
 abstract class TeamFormComponent extends EntityFormComponent
 {
-    private SingleReflectionFormFactory $reflectionFormFactory;
-    private FyziklaniTeamMachine $machine;
-    private ReferencedPersonFactory $referencedPersonFactory;
-    private EventModel $event;
-    private TeamService2 $teamService;
-    private TeamMemberService $teamMemberService;
+    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected FyziklaniTeamMachine $machine;
+    protected ReferencedPersonFactory $referencedPersonFactory;
+    protected EventModel $event;
+    protected TeamService2 $teamService;
+    protected TeamMemberService $teamMemberService;
 
     public function __construct(
         FyziklaniTeamMachine $machine,
@@ -96,7 +96,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->getPresenter()->flashMessage(
                 isset($this->model)
                     ? _('Application has been updated')
-                    : _('Application has been create'),
+                    : _('Application has been created'),
                 Message::LVL_SUCCESS
             );
             $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
@@ -179,6 +179,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 /** @var ReferencedId $referencedId */
                 $referencedId = $this->getForm()->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
+                $index++;
             }
         }
     }
@@ -222,12 +223,3 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     abstract protected function getProcessing(): array;
 }
-
-/* TODO
-                - @events.captcha
-                - FKSDB\Models\Events\Spec\Fol\FlagCheck()
-                - FKSDB\Models\Events\Spec\Fol\BornCheck()
-
-            processings:
-                - @events.privacyPolicy
- */

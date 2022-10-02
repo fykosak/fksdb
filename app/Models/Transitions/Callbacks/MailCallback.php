@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
@@ -26,16 +27,13 @@ class MailCallback implements Statement
     protected MailTemplateFactory $mailTemplateFactory;
     protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
-    protected string $templateFile;
 
     public function __construct(
-        string $templateFile,
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
     ) {
-        $this->templateFile = $templateFile;
         $this->accountManager = $accountManager;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -47,14 +45,15 @@ class MailCallback implements Statement
     /**
      * @throws \ReflectionException
      * @throws BadTypeException
+     * @throws NotImplementedException
      */
     public function __invoke(ModelHolder $holder): void
     {
         foreach ($this->getPersonsFromHolder($holder) as $person) {
-            $data = $this->getData($person, $holder);
+            $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;
             $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
-                $this->templateFile,
+                $this->getTemplatePath($holder),
                 $person->getPreferredLang(),
                 [
                     'holder' => $holder,
@@ -65,10 +64,18 @@ class MailCallback implements Statement
         }
     }
 
-    protected function getData(PersonModel $person, ModelHolder $holder): array
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getTemplatePath(ModelHolder $holder): string
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => '',
+            'subject' => 'FYKOS',
             'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
             'sender' => 'fykos@fykos.cz',
         ];
@@ -87,10 +94,11 @@ class MailCallback implements Statement
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws NotImplementedException
      */
     protected function createMessage(PersonModel $person, ModelHolder $holder): EmailMessageModel
     {
-        $data = $this->emailData;
+        $data = $this->getData($holder);
         $data['recipient_person_id'] = $person->person_id;
         $data['text'] = $this->createMessageText($person, $holder);
         return $this->emailMessageService->addMessageToSend($data);
@@ -115,12 +123,13 @@ class MailCallback implements Statement
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws NotImplementedException
      */
     protected function createMessageText(PersonModel $person, ModelHolder $holder): string
     {
         $token = $this->createToken($person, $holder);
         return (string)$this->mailTemplateFactory->createWithParameters(
-            $this->templateFile,
+            $this->getTemplatePath($holder),
             $person->getPreferredLang(),
             [
                 'tokenModel' => $token,

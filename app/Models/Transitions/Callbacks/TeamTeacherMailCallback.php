@@ -42,4 +42,38 @@ class TeamTeacherMailCallback extends MailCallback
             true
         );
     }
+
+    /**
+     * @throws BadTypeException
+     */
+    protected function getTemplatePath(ModelHolder $holder): string
+    {
+        if (!$holder instanceof FyziklaniTeamHolder) {
+            throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
+        }
+        switch ($holder->getModel()->event->event_type_id) {
+            case 1:
+                return 'fof/teacher';
+        }
+        throw new \InvalidArgumentException('Event is not supported');
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    protected function getData(ModelHolder $holder): array
+    {
+        if (!$holder instanceof FyziklaniTeamHolder) {
+            throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
+        }
+        switch ($holder->getModel()->event->event_type_id) {
+            case 1:
+                return [
+                    'subject' => _('Fyziklani Team Registration'),
+                    'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
+                    'sender' => 'Fyziklání <fyziklani@fykos.cz>',
+                ];
+        }
+        throw new \InvalidArgumentException('Event is not supported');
+    }
 }

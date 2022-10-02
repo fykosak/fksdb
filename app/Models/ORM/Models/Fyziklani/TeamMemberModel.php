@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 
 /**
@@ -30,13 +29,5 @@ class TeamMemberModel extends Model
             'participantId' => $this->fyziklani_team_member_id,
             'personId' => $this->person_id,
         ];
-    }
-
-    public function createXMLNode(\DOMDocument $document): \DOMElement
-    {
-        $node = $document->createElement('participant');
-        $node->setAttribute('eventParticipantId', (string)$this->fyziklani_team_member_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
-        return $node;
     }
 }

@@ -18,8 +18,8 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\Resource;
 use Tracy\Debugger;
@@ -118,14 +118,12 @@ class PersonPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $person = $this->getEntity();
-        $this->getTemplate()->isSelf = $this->getUser()->getIdentity()->person->person_id === $person->person_id;
-        /** @var PersonModel $userPerson */
-        $userPerson = $this->getUser()->getIdentity()->person;
+        $this->template->isSelf = $this->getLoggedPerson()->person_id === $person->person_id;
         Debugger::log(
             sprintf(
                 '%s (%d) stalk %s (%d)',
-                $userPerson->getFullName(),
-                $userPerson->person_id,
+                $this->getLoggedPerson()->getFullName(),
+                $this->getLoggedPerson()->person_id,
                 $person->getFullName(),
                 $person->person_id
             ),
