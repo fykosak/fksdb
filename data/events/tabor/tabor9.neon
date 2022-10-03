@@ -39,32 +39,32 @@ events:
                         condition: role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                           - FKSDB\Models\Events\Transitions\MailSender(tabor/invited, .self)
+                           - FKSDB\Models\Events\Transitions\MailSender(tabor/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tabor/invited)
                     __init->spare:
                         condition: role('admin')
                         label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare)
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Potrvrdit učast')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-applied, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-applied)
                     spare->interested:
                         condition: before(param('deadline'))
                         label: _('Chci jet')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-interested, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-interested)
                     applied->paid:
                         condition: role('admin')
                         label: _('Zaplatil')

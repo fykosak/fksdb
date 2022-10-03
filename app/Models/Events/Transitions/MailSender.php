@@ -9,7 +9,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -17,7 +16,6 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Strings;
 
@@ -31,32 +29,22 @@ class MailSender extends MailCallback
     public const BCC_PARAM = 'notifyBcc';
     public const FROM_PARAM = 'notifyFrom';
 
-    public const BCC_PREFIX = '.';
-    /**
-     * @var array|string
-     */
-    protected $addressees;
+    private string $templateFile;
 
-    /**
-     * MailSender constructor.
-     * @param array|string $addresees
-     */
     public function __construct(
         string $templateFile,
-        $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
         AuthTokenService $authTokenService,
         EmailMessageService $emailMessageService
     ) {
         parent::__construct(
-            $templateFile,
             $emailMessageService,
             $mailTemplateFactory,
             $authTokenService,
             $accountManager
         );
-        $this->addressees = $addresees;
+        $this->templateFile = $templateFile;
     }
 
     /**
@@ -67,27 +55,6 @@ class MailSender extends MailCallback
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         return [$holder->getPerson()];
-    }
-
-    /**
-     * @param BaseHolder $holder
-     * @throws BadTypeException
-     * @throws ModelException
-     * @throws \ReflectionException
-     */
-    protected function createMessage(PersonModel $person, ModelHolder $holder): EmailMessageModel
-    {
-        $data = [];
-        $data['subject'] = $this->getSubject($holder->event, $holder->getModel());
-        $data['sender'] = $holder->getParameter(self::FROM_PARAM);
-        $data['reply_to'] = $holder->getParameter(self::FROM_PARAM);
-        if ($this->hasBcc()) {
-            $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
-        }
-
-        $data['recipient_person_id'] = $person->person_id;
-        $data['text'] = $this->createMessageText($person, $holder);
-        return $this->emailMessageService->addMessageToSend($data);
     }
 
     /**
@@ -105,6 +72,54 @@ class MailSender extends MailCallback
         );
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function getData(ModelHolder $holder): array
+    {
+        return [
+            'blind_carbon_copy' => $holder->getParameter(self::BCC_PARAM) ?? null,
+            'subject' => $this->getSubject($holder->event, $holder->getModel()),
+            'sender' => $holder->getParameter(self::FROM_PARAM),
+            'reply_to' => $holder->getParameter(self::FROM_PARAM),
+        ];
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
+    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
+    {
+        $token = $this->createToken($person, $holder);
+        return (string)$this->mailTemplateFactory->createWithParameters(
+            $this->getTemplatePath($holder),
+            $person->getPreferredLang(),
+            [
+                'person' => $person,
+                'token' => $token,
+                'holder' => $holder,
+                'linkArgs' => $this->createLinkArgs($holder, $token),
+            ]
+        );
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    public function createLinkArgs(ModelHolder $holder, AuthTokenModel $token): array
+    {
+        $event = $holder->getModel()->getReferencedModel(EventModel::class);
+        return [
+            '//:Public:Application:',
+            [
+                'eventId' => $event->event_id,
+                'contestId' => $event->event_type->contest_id,
+                'at' => $token->token,
+            ],
+        ];
+    }
+
     protected function getSubject(EventModel $event, Model $application): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
@@ -114,9 +129,8 @@ class MailSender extends MailCallback
         return $event->name . ': ' . $application;
     }
 
-    private function hasBcc(): bool
+    protected function getTemplatePath(ModelHolder $holder): string
     {
-        return !is_array($this->addressees)
-            && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
+        return $this->templateFile;
     }
 }

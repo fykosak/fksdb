@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 class Transition

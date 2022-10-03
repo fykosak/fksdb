@@ -9,7 +9,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 

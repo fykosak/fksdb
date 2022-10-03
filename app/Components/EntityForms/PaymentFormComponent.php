@@ -10,15 +10,16 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\ORM\Services\PaymentService;
+use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
-use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
@@ -39,15 +40,18 @@ class PaymentFormComponent extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
+    private EventModel $event;
 
     public function __construct(
         Container $container,
         bool $isOrg,
         PaymentMachine $machine,
+        EventModel $event,
         ?PaymentModel $model
     ) {
         parent::__construct($container, $model);
         $this->machine = $machine;
+        $this->event = $event;
         $this->isOrg = $isOrg;
     }
 
@@ -123,7 +127,7 @@ class PaymentFormComponent extends EntityFormComponent
             } else {
                 $model = $this->paymentService->storeModel(
                     array_merge($data, [
-                        'event_id' => $this->machine->event->event_id,
+                        'event_id' => $this->event->event_id,
                     ])
                 );
                 $holder = $this->machine->createHolder($model);

@@ -51,7 +51,7 @@ abstract class Machine
     public function getTransitionById(string $id): Transition
     {
         $transitions = \array_filter(
-            $this->getTransitions(),
+            $this->transitions,
             fn(Transition $transition): bool => $transition->getId() === $id
         );
         return $this->selectTransition($transitions);
@@ -75,14 +75,11 @@ abstract class Machine
         return \array_values($transitions)[0];
     }
 
-    final public function decorateTransitions(TransitionsDecorator $decorator): void
+    final public function decorateTransitions(?TransitionsDecorator $decorator): void
     {
-        $decorator->decorate($this);
-    }
-
-    final public function setImplicitCondition(callable $implicitCondition): void
-    {
-        $this->implicitCondition = $implicitCondition;
+        if ($decorator) {
+            $decorator->decorate($this);
+        }
     }
 
     /**
@@ -91,7 +88,7 @@ abstract class Machine
     public function getAvailableTransitions(ModelHolder $holder): array
     {
         return \array_filter(
-            $this->getTransitions(),
+            $this->transitions,
             fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
         );
     }
@@ -99,7 +96,7 @@ abstract class Machine
     public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
     {
         $transitions = \array_filter(
-            $this->getTransitions(),
+            $this->transitions,
             fn(Transition $transition): bool => ($source->value === $transition->source->value) &&
                 ($target->value === $transition->target->value)
         );

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions;
 
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 abstract class EvaluatedExpression implements Statement

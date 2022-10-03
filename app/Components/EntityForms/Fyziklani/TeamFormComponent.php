@@ -25,6 +25,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -106,6 +107,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             $this->teamService->explorer->rollBack();
             throw $exception;
         }

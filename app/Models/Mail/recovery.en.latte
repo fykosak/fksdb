@@ -1,0 +1,13 @@
+﻿{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Models\ORM\Models\LoginModel $login}
+<p>
+    Someone asked to reset a passsword for fykos.cz for the user <em>{$login}</em>. If it was you,
+    use the following link to change your password:<br/>
+    <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
+</p>
+
+<p>
+    The link is valid until <strong>{$token->until|date:'%B %e, %Y %k:%M %Z'}</strong>.
+</p>
+
+{include 'inc/closing.en.latte'}

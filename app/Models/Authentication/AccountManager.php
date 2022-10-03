@@ -94,12 +94,11 @@ class AccountManager
 
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
-        $templateParams = [
-            'tokenModel' => $token,
-            'login' => $login,
-        ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, [
+            'token' => $token,
+            'login' => $login,
+        ]);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $recoveryAddress;

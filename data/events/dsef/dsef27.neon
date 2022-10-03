@@ -24,7 +24,7 @@ parameters:
                     condition: role('admin')
                     label: _('Přihlásit účastníka')
                     afterExecute:
-                        - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                 applied->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Prezentovat')

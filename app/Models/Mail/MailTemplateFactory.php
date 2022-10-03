@@ -11,6 +11,7 @@ use Nette\Application\UI\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
+use Tracy\Debugger;
 
 class MailTemplateFactory
 {
@@ -59,7 +60,7 @@ class MailTemplateFactory
      */
     public function createPasswordRecovery(string $lang, array $data): Template
     {
-        return $this->createWithParameters('passwordRecovery', $lang, $data);
+        return $this->createWithParameters(__DIR__ . DIRECTORY_SEPARATOR . 'recovery', $lang, $data);
     }
 
     /**
@@ -87,19 +88,21 @@ class MailTemplateFactory
         if ($lang === null) {
             $lang = $presenter->getLang();
         }
-        $control = $presenter;
+        $filename = "$filename.$lang.latte";
+        if (realpath($filename) !== $filename) {
+            $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
+        }
 
-        $file = $this->templateDir . DIRECTORY_SEPARATOR . "$filename.$lang.latte";
-        if (!file_exists($file)) {
+        if (!file_exists($filename)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
-        $template->setFile($file);
+        $template->setFile($filename);
 
         if ($template instanceof \Nette\Bridges\ApplicationLatte\Template) {
-            $template->getLatte()->addProvider('uiControl', $control);
+            $template->getLatte()->addProvider('uiControl', $presenter);
         }
-        $template->control = $control;
+        $template->control = $presenter;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }

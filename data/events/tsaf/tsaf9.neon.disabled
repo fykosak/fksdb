@@ -71,24 +71,24 @@ events:
                         condition: role('admin')
                         label: _('Pozvat účastníka')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Pozvat účastníka')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf9.appCond%
                         label: _('Přihlásit náhradníka')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     # to applied
                     __init->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Přihlásit účastníka')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     spare->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Potvrdit účastníka')

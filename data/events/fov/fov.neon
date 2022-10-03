@@ -41,12 +41,12 @@ events:
                         condition: role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')

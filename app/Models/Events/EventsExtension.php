@@ -228,9 +228,6 @@ class EventsExtension extends CompilerExtension
             ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']])
             ->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($fieldDefinition as $key => $parameter) {
-            if ($key == 'required') {
-                Debugger::barDump($parameter);
-            }
             if (is_numeric($key)) {
                 continue;
             }
