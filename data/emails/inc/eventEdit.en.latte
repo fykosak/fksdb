@@ -1,7 +1,7 @@
 {varType mixed[] $linkArgs}
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 <p>
-    Changes are possible until {$event->registration_end|date:'%B %e, %Y %k:%M %Z'} after
+    Changes are possible until {$event->registration_end|date:'M d, Y; H:i, P'} after
     <a n:href="//:Core:Authentication:login">logging in</a> in <a n:href="//:Core:MyApplications:default">My Applications</a>
     or via this private link:<br/>
     {var $link = $control->link(...$linkArgs)}
