@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\WebService\NodeCreator;
+use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
@@ -25,9 +28,14 @@ use Nette\Security\Resource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ScheduleItemModel extends Model implements Resource
+class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
+
+    public function getEvent(): EventModel
+    {
+        return $this->schedule_group->event;
+    }
 
     /**
      * @throws \Exception
@@ -35,10 +43,10 @@ class ScheduleItemModel extends Model implements Resource
     public function getPrice(): MultiCurrencyPrice
     {
         $items = [];
-        if (isset($this->price_eur)) {
+        if (!is_null($this->price_eur)) {
             $items[] = new Price(Currency::from(Currency::EUR), +$this->price_eur);
         }
-        if (isset($this->price_czk)) {
+        if (!is_null($this->price_czk)) {
             $items[] = new Price(Currency::from(Currency::CZK), +$this->price_czk);
         }
         return new MultiCurrencyPrice($items);
@@ -124,6 +132,36 @@ class ScheduleItemModel extends Model implements Resource
                 'en' => $this->description_en,
             ],
         ];
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
+        $node = $document->createElement('scheduleItem');
+        $node->setAttribute('scheduleItemId', (string)$this->schedule_item_id);
+        XMLHelper::fillArrayToNode([
+            'scheduleGroupId' => $this->schedule_group_id,
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'requireIdNumber' => $this->require_id_number,
+        ], $document, $node);
+        XMLHelper::fillArrayArgumentsToNode('lang', [
+            'description' => [
+                'cs' => $this->description_cs,
+                'en' => $this->description_en,
+            ],
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+        ], $document, $node);
+        XMLHelper::fillArrayArgumentsToNode('currency', [
+            'price' => [
+                'eur' => $this->price_eur,
+                'czk' => $this->price_czk,
+            ],
+        ], $document, $node);
+        return $node;
     }
 
     public function getResourceId(): string

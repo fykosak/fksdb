@@ -8,6 +8,8 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\WebService\NodeCreator;
+use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -26,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null registration_end
  * @property-read string parameters
  */
-class EventModel extends Model implements Resource
+class EventModel extends Model implements Resource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13];
@@ -38,9 +40,14 @@ class EventModel extends Model implements Resource
         TeamState::APPLIED,
     ];
 
+    public function getContest(): ContestModel
+    {
+        return $this->event_type->contest;
+    }
+
     public function getContestYear(): ContestYearModel
     {
-        return $this->event_type->contest->getContestYear($this->year);
+        return $this->getContest()->getContestYear($this->year);
     }
 
     public function getResourceId(): string
@@ -113,7 +120,7 @@ class EventModel extends Model implements Resource
 
     public function getFyziklaniTasks(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TASK);
     }
 
     public function __toArray(): array
@@ -132,9 +139,11 @@ class EventModel extends Model implements Resource
         ];
     }
 
-    public function isRegistrationOpened(): bool
+    public function createXMLNode(\DOMDocument $document): \DOMElement
     {
-        return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
-            && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+        $node = $document->createElement('event');
+        $node->setAttribute('eventId', (string)$this->event_id);
+        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        return $node;
     }
 }

@@ -7,39 +7,45 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
+ * @property-read TeamCategory category
+ * @property-read string name
  * @property-read int fyziklani_team_id
  * @property-read int event_id
- * @property-read EventModel event
- * @property-read string name
+ * @property-read int points
  * @property-read TeamState state
- * @property-read TeamCategory category
  * @property-read \DateTimeInterface created
  * @property-read string phone
- * @property-read string note
+ * @property-read bool force_a
  * @property-read string password
- * @property-read int points
- * @property-read int rank_total
- * @property-read int rank_category
- * @property-read int force_a
+ * @property-read EventModel event
  * @property-read GameLang game_lang
+ * @property-read int rank_category
+ * @property-read int rank_total
  */
 class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
+    public function getContest(): ContestModel
+    {
+        return $this->event->event_type->contest;
+    }
+
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
     }
 
     public function getMembers(): TypedGroupedSelection
@@ -66,7 +72,7 @@ class TeamModel2 extends Model implements Resource
 
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
-        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitModel::STATE_CHECKED);
     }
 
     public function hasAllSubmitsChecked(): bool
@@ -170,6 +176,27 @@ class TeamModel2 extends Model implements Resource
             'forceA' => $this->force_a,
             'gameLang' => $this->game_lang->value,
         ];
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
+        $node = $document->createElement('team');
+        $node->setAttribute('teamId', (string)$this->fyziklani_team_id);
+        XMLHelper::fillArrayToNode([
+            'teamId' => $this->fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->state->value,
+            'category' => $this->category->value,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'password' => $this->password,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ], $document, $node);
+        return $node;
     }
 
     public function getResourceId(): string
