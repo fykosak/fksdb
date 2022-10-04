@@ -148,7 +148,7 @@ class ReferencedPersonHandler implements ReferencedHandler
             $originalModels = \array_keys($data);
             $this->resolvePostContacts($data, $models);
 
-//            $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
+            $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
             $data = $this->findConflicts($models, $data);
 
             if (isset($data['person'])) {
