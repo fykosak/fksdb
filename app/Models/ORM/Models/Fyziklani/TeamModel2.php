@@ -45,7 +45,7 @@ class TeamModel2 extends Model implements Resource
 
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
     }
 
     public function getMembers(): TypedGroupedSelection
@@ -72,7 +72,7 @@ class TeamModel2 extends Model implements Resource
 
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
-        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitModel::STATE_CHECKED);
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);
     }
 
     public function hasAllSubmitsChecked(): bool

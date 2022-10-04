@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 
@@ -20,20 +18,9 @@ use Fykosak\NetteORM\Model;
  */
 class TeamMemberModel extends Model
 {
-    public function getEvent(): EventModel
-    {
-        return $this->fyziklani_team->event;
-    }
-
     public function getPersonHistory(): ?PersonHistoryModel
     {
         return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
-    }
-
-    public function getSchool(): ?SchoolModel
-    {
-        $history = $this->getPersonHistory();
-        return $history ? $history->school : null;
     }
 
     public function __toArray(): array

@@ -40,14 +40,9 @@ class EventModel extends Model implements Resource, NodeCreator
         TeamState::APPLIED,
     ];
 
-    public function getContest(): ContestModel
-    {
-        return $this->event_type->contest;
-    }
-
     public function getContestYear(): ContestYearModel
     {
-        return $this->getContest()->getContestYear($this->year);
+        return $this->event_type->contest->getContestYear($this->year);
     }
 
     public function getResourceId(): string
@@ -145,5 +140,11 @@ class EventModel extends Model implements Resource, NodeCreator
         $node->setAttribute('eventId', (string)$this->event_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
+    }
+
+    public function isRegistrationOpened(): bool
+    {
+        return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
+            && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
     }
 }

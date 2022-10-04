@@ -32,11 +32,6 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
 
-    public function getEvent(): EventModel
-    {
-        return $this->schedule_group->event;
-    }
-
     /**
      * @throws \Exception
      */
