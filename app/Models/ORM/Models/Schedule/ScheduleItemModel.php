@@ -38,10 +38,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     public function getPrice(): MultiCurrencyPrice
     {
         $items = [];
-        if (!is_null($this->price_eur)) {
+        if (isset($this->price_eur)) {
             $items[] = new Price(Currency::from(Currency::EUR), +$this->price_eur);
         }
-        if (!is_null($this->price_czk)) {
+        if (isset($this->price_czk)) {
             $items[] = new Price(Currency::from(Currency::CZK), +$this->price_czk);
         }
         return new MultiCurrencyPrice($items);

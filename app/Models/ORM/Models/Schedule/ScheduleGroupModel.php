@@ -63,7 +63,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
 
     /**
      * @param string $key
-     * @return ScheduleGroupType|mixed|ActiveRow|null
+     * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)
