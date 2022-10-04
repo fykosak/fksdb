@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
+use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
+use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
+use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Semantics\Count;
@@ -15,22 +16,19 @@ use FKSDB\Models\Events\Semantics\Parameter;
 use FKSDB\Models\Events\Semantics\RegOpen;
 use FKSDB\Models\Events\Semantics\Role;
 use FKSDB\Models\Events\Semantics\State;
-use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
-use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
-use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\TransitionsExtension;
-use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
+use Nette\DI\Config\Loader;
 use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use Tracy\Debugger;
 
 /**
  * It's a f**** magic!
@@ -97,7 +95,6 @@ class EventsExtension extends CompilerExtension
                             'afterExecute' => Expect::listOf($expressionType),
                             'beforeExecute' => Expect::listOf($expressionType),
                             'behaviorType' => Expect::string('secondary'),
-                            'visible' => $boolExpressionType(true)->default(true),
                         ])->castTo('array'),
                         Expect::string()
                     ),
@@ -187,15 +184,10 @@ class EventsExtension extends CompilerExtension
         [$sources, $target] = TransitionsExtension::parseMask($mask, EventParticipantStatus::class);
         $factories = [];
         foreach ($sources as $source) {
-            if (!$definition['label'] && $definition['visible'] !== false) {
-                throw new MachineDefinitionException(
-                    "Transition $mask with non-false visibility must have label defined."
-                );
-            }
             $factory = TransitionsExtension::createCommonTransition(
                 $this,
                 $this->getContainerBuilder(),
-                Transition::class,
+                \FKSDB\Models\Transitions\Transition\Transition::class,
                 $baseName,
                 $source,
                 $target,
@@ -317,7 +309,6 @@ class EventsExtension extends CompilerExtension
 
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $factory->addSetup('setValidator', ['@events.dataValidator']);
 
         $config = $this->getConfig();
         $paramScheme = $definition['paramScheme'] ?? $config[$eventName]['paramScheme'];

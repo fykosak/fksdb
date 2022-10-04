@@ -1,4 +1,4 @@
-{varType FKSDB\Models\Events\Machine\Transition[] $transitions}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
 {foreach $transitions as $transition}
     {continueIf $transition->isCreating()}
     <h3>{_($transition->getLabel())}</h3>

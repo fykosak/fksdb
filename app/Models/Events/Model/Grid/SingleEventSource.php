@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model\Grid;
 
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\NetteORM\TypedSelection;
@@ -15,7 +15,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-class SingleEventSource implements HolderSource
+class SingleEventSource
 {
     use SmartObject;
 

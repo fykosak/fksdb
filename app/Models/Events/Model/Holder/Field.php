@@ -115,11 +115,6 @@ class Field
         $this->visible = $visible;
     }
 
-    public function validate(DataValidator $validator): void
-    {
-        $this->factory->validate($this, $validator);
-    }
-
     /**
      * @return mixed
      */

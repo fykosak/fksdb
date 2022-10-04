@@ -6,9 +6,8 @@ namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Controls\Events\ExpressionPrinter;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
@@ -17,17 +16,11 @@ class GraphComponent extends FrontEndComponent implements Chart
 {
 
     private EventParticipantMachine $baseMachine;
-    private ExpressionPrinter $expressionPrinter;
 
     public function __construct(Container $container, EventParticipantMachine $baseMachine)
     {
         parent::__construct($container, 'event.model.graph');
         $this->baseMachine = $baseMachine;
-    }
-
-    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void
-    {
-        $this->expressionPrinter = $expressionPrinter;
     }
 
     final public function getData(): array
@@ -72,15 +65,12 @@ class GraphComponent extends FrontEndComponent implements Chart
     private function prepareTransitions(): array
     {
         $edges = [];
-        /** @var Transition $transition */
         foreach ($this->baseMachine->getTransitions() as $transition) {
             $edges[] = [
                 'from' => $transition->source->value,
                 'to' => $transition->target->value,
-                'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                 'label' => $transition->getLabel(),
             ];
-
         }
         return $edges;
     }

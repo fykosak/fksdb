@@ -115,8 +115,7 @@ class ApplicationComponent extends BaseComponent
         foreach (
             $primaryMachine->getAvailableTransitions(
                 $this->holder,
-                $this->holder->getModelState(),
-                true
+                $this->holder->getModelState()
             ) as $transition
         ) {
             $transitionName = $transition->getId();

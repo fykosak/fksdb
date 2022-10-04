@@ -28,8 +28,7 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $this->getTemplate()->transitions = $this->handler->getMachine()->getAvailableTransitions(
             $this->holder,
-            $this->holder->getModelState(),
-            true
+            $this->holder->getModelState()
         );
         $this->getTemplate()->holder = $this->holder;
         $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 use Nette\InvalidArgumentException;
@@ -32,15 +32,8 @@ class EventParticipantMachine extends Machine
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    public function addTransition(\FKSDB\Models\Transitions\Transition\Transition $transition): void
+    public function addTransition(Transition $transition): void
     {
-        if (!$transition instanceof Transition) {
-            throw new BadTypeException(Transition::class, $transition);
-        }
-        $transition->setBaseMachine($this);
         $this->transitions[$transition->getId()] = $transition;
     }
 
@@ -49,21 +42,22 @@ class EventParticipantMachine extends Machine
      */
     public function getAvailableTransitions(
         ModelHolder $holder,
-        ?EnumColumn $sourceState = null,
-        bool $visible = false
+        ?EnumColumn $sourceState = null
     ): array {
         return array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => $transition->canExecute($holder)
-                && (!$visible || $transition->isVisible())
         );
     }
 
-    public function getTransitionByTarget(EnumColumn $sourceState, EnumColumn $target): ?Transition
-    {
+    public function getTransitionByTarget(
+        EnumColumn $sourceState,
+        EnumColumn $target
+    ): ?Transition {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => $transition->target->value == $target->value
+            fn(Transition $transition): bool => $transition->target->value ==
+                $target->value
         );
         if (count($candidates) == 0) {
             return null;
@@ -87,7 +81,8 @@ class EventParticipantMachine extends Machine
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $sourceStateMask->value === $transition->source->value
+            fn(Transition $transition): bool => $sourceStateMask->value ===
+                $transition->source->value
         );
     }
 
@@ -100,5 +95,16 @@ class EventParticipantMachine extends Machine
         $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
         $holder->setModel($model);
         return $holder;
+    }
+
+    final public function execute2(
+        Transition $transition,
+        BaseHolder $holder
+    ): void {
+        if (!$transition->canExecute($holder)) {
+            throw new UnavailableTransitionsException();
+        }
+
+        $holder->setModelState($transition->target);
     }
 }

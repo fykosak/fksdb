@@ -6,23 +6,23 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\Transition;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -38,7 +38,6 @@ class BaseHolder implements ModelHolder
     private $modifiable;
 
     private ExpressionEvaluator $evaluator;
-    public DataValidator $validator;
     public EventModel $event;
     /** @var Service|ServiceMulti */
     public $service;
@@ -129,11 +128,6 @@ class BaseHolder implements ModelHolder
     public function setEvaluator(ExpressionEvaluator $evaluator): void
     {
         $this->evaluator = $evaluator;
-    }
-
-    public function setValidator(DataValidator $validator): void
-    {
-        $this->validator = $validator;
     }
 
     public function isModifiable(): bool
@@ -270,7 +264,7 @@ class BaseHolder implements ModelHolder
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
-    public function getState(): EnumColumn
+    public function getState(): ?EnumColumn
     {
         return $this->model->status;
     }

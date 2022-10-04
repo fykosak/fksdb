@@ -141,10 +141,10 @@ abstract class Machine
      * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
-    private function execute(Transition $transition, ModelHolder $holder): void
+    public function execute(Transition $transition, ModelHolder $holder): void
     {
         if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException(_('Prechod sa nedá vykonať'));
+            throw new UnavailableTransitionsException();
         }
         $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {

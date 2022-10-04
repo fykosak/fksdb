@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\EventsExtension;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
@@ -109,49 +108,6 @@ class PersonFactory extends AbstractFactory
             }
         }
         $control->setDefaultValue($default);
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
-    public function validate(Field $field, DataValidator $validator): void
-    {
-        // check person ID itself
-        parent::validate($field, $validator);
-
-        $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $personId = $field->getValue();
-        $person = $personId ? $this->personService->findByPrimary($personId) : null;
-
-        if (!$person) {
-            return;
-        }
-
-        foreach ($fieldsDefinition as $subName => $sub) {
-            foreach ($sub as $fieldName => $metadata) {
-                if (!is_array($metadata)) {
-                    $metadata = ['required' => $metadata];
-                }
-                if (
-                    $metadata['required']
-                    && !ReferencedPersonFactory::isFilled(
-                        $person,
-                        $subName,
-                        $fieldName,
-                        $field->holder->event->getContestYear(),
-                        $field->holder->event
-                    )
-                ) {
-                    $validator->addError(
-                        sprintf(
-                            _('%s: %s is a required field.'),
-                            $field->holder->label,
-                            $field->label . '.' . $subName . '.' . $fieldName
-                        )
-                    ); //TODO better GUI name than DB identifier
-                }
-            }
-        }
     }
 
     /**

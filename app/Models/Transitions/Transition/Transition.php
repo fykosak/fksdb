@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
@@ -40,12 +41,12 @@ class Transition
 
     public function isCreating(): bool
     {
-        return is_null($this->source);
+        return $this->source->value === 'init' || $this->source->value === Machine::STATE_INIT;
     }
 
     public function getId(): string
     {
-        return $this->source->value . '__' . $this->target->value;
+        return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
     }
 
     public function setBehaviorType(BehaviorType $behaviorType): void

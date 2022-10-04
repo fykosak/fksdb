@@ -37,7 +37,6 @@ services:
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ORMFactory
     # Events
-    events.dataValidator: FKSDB\Models\Events\Model\Holder\DataValidator
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha

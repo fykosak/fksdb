@@ -37,7 +37,6 @@ events:
                     # to spare
                     __init->spare.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
                     # to applied
                     __init->applied:
                         condition: %events.dsef23.appCond%
@@ -46,15 +45,12 @@ events:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
-                        visible: false
                     applied->applied.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
                     # to end-states
                     applied|applied.tsaf|applied.notsaf->participated:
                         condition: and(role('admin'),eventWas())
@@ -70,7 +66,6 @@ events:
                         behaviorType: danger
                     spare.tsaf->cancelled:
                         condition: role('admin')
-                        visible: false
 
                 fields:
                     person_id:

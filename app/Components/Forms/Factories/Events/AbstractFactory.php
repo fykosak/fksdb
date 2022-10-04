@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -25,13 +24,6 @@ abstract class AbstractFactory implements FieldFactory
     {
         if ($field->isRequired()) {
             $control->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
-        }
-    }
-
-    public function validate(Field $field, DataValidator $validator): void
-    {
-        if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s is required'), $field->label));
         }
     }
 

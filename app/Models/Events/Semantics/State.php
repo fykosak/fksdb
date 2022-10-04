@@ -22,7 +22,7 @@ class State extends EvaluatedExpression
      */
     public function __invoke(ModelHolder $holder): bool
     {
-        return $holder->getModelState() == $this->state;
+        return $holder->getModelState()->value === $this->state;
     }
 
     public function __toString(): string

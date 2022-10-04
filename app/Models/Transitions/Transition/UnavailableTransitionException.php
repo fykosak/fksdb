@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\Events\Machine\Transition as EventTransition;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;

@@ -9,18 +9,17 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -96,20 +95,19 @@ class ApplicationHandler
     {
         try {
             $this->beginTransaction();
-            /** @var Transition $transition */
             $transition = $this->getMachine()->getTransitionById($explicitTransitionName);
             if ($transition->source->value !== $holder->getModelState()->value) {
                 throw new UnavailableTransitionException($transition, $holder->getModel());
             }
             $this->saveAndExecute($transition, $holder);
         } catch (
-            ModelDataConflictException
-            | DuplicateApplicationException
-            | MachineExecutionException
-            | SubmitProcessingException
-            | FullCapacityException
-            | ExistingPaymentException
-            | UnavailableTransitionException $exception
+        ModelDataConflictException
+        | DuplicateApplicationException
+        | MachineExecutionException
+        | SubmitProcessingException
+        | FullCapacityException
+        | ExistingPaymentException
+        | UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -155,12 +153,12 @@ class ApplicationHandler
                 );
             }
         } catch (
-            ModelDataConflictException |
-            DuplicateApplicationException |
-            MachineExecutionException |
-            SubmitProcessingException |
-            FullCapacityException |
-            ExistingPaymentException $exception
+        ModelDataConflictException |
+        DuplicateApplicationException |
+        MachineExecutionException |
+        SubmitProcessingException |
+        FullCapacityException |
+        ExistingPaymentException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
@@ -168,10 +166,13 @@ class ApplicationHandler
         }
     }
 
-    private function saveAndExecute(?Transition $transition, BaseHolder $holder)
+    /**
+     * @throws \Throwable
+     */
+    private function saveAndExecute(?\FKSDB\Models\Transitions\Transition\Transition $transition, BaseHolder $holder)
     {
         if ($transition) {
-            $transition->execute($holder);
+            $this->getMachine()->execute2($transition, $holder);
         }
         $holder->saveModel();
         if ($transition) {
@@ -202,10 +203,10 @@ class ApplicationHandler
     private function processData(
         ?ArrayHash $data,
         ?Form $form,
-        ?Transition $transition,
+        ?\FKSDB\Models\Transitions\Transition\Transition $transition,
         BaseHolder $holder,
         ?string $execute
-    ): ?Transition {
+    ): ?\FKSDB\Models\Transitions\Transition\Transition {
         if ($form) {
             $values = FormUtils::emptyStrToNull($form->getValues());
         } else {

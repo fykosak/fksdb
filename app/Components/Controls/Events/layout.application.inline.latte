@@ -1,6 +1,6 @@
 {layout ../@layout.latte}
 
-{varType FKSDB\Models\Events\Machine\Transition[] $transitions}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {block content}
     {if count($transitions)}
