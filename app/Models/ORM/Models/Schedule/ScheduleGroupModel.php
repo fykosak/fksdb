@@ -10,7 +10,6 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
