@@ -42,11 +42,11 @@ events:
                         condition: %events.dsef23.appCond%
                         label: _('Přihlásit účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef23.appCond%
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     applied.tsaf->applied.notsaf:
                         condition: role('admin')
                     applied->applied.tsaf:

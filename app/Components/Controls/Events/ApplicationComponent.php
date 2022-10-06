@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Fykosak\Utils\Logging\FlashMessageDump;
 
 /**
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
@@ -84,7 +85,6 @@ class ApplicationComponent extends BaseComponent
 
         $this->getTemplate()->holder = $this->holder;
         $this->getTemplate()->event = $this->holder->event;
-        $this->getTemplate()->primaryMachine = $this->handler->getMachine();
         $this->getTemplate()->render($this->templateFile);
     }
 
@@ -109,19 +109,12 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine();
+        $machine = $this->handler->getMachine();
         $transitionSubmit = null;
 
-        foreach (
-            $primaryMachine->getAvailableTransitions(
-                $this->holder,
-                $this->holder->getModelState()
-            ) as $transition
-        ) {
-            $transitionName = $transition->getId();
-            $submit = $form->addSubmit($transitionName, $transition->getLabel());
-
-            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transitionName);
+        foreach ($machine->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition) {
+            $submit = $form->addSubmit($transition->getId(), $transition->getLabel());
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
@@ -151,22 +144,24 @@ class ApplicationComponent extends BaseComponent
         return $result;
     }
 
-    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void
+    /**
+     * @throws \Throwable
+     */
+    public function handleSubmit(Form $form, ?Transition $explicitTransition = null): void
     {
         try {
-            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
+            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransition);
+            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
         }
     }
 
     private function canEdit(): bool
     {
-        return $this->holder->getModelState()
-            != Machine::STATE_INIT && $this->holder->isModifiable();
+        return $this->holder->getModelState() != Machine::STATE_INIT && $this->holder->isModifiable();
     }
 
     private function finalRedirect(): void

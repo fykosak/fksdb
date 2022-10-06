@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Logger;
@@ -23,21 +24,12 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-class ApplicationHandler
+final class ApplicationHandler
 {
-
-    public const ERROR_ROLLBACK = 'rollback';
-    public const ERROR_SKIP = 'skip';
-    public const STATE_TRANSITION = 'transition';
-    public const STATE_OVERWRITE = 'overwrite';
     private EventModel $event;
-
-    private Logger $logger;
-
-    private string $errorMode = self::ERROR_ROLLBACK;
+    public Logger $logger;
     private Connection $connection;
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -54,11 +46,6 @@ class ApplicationHandler
         $this->connection = $connection;
     }
 
-    public function setErrorMode(string $errorMode): void
-    {
-        $this->errorMode = $errorMode;
-    }
-
     public function getMachine(): EventParticipantMachine
     {
         static $machine;
@@ -68,29 +55,17 @@ class ApplicationHandler
         return $machine;
     }
 
-    public function getLogger(): Logger
+    /**
+     * @throws \Throwable
+     */
+    final public function storeAndExecuteForm(BaseHolder $holder, Form $form, ?Transition $transition = null): void
     {
-        return $this->logger;
+        $this->innerStoreAndExecute($holder, $form, $transition);
     }
 
-    final public function store(BaseHolder $holder, ArrayHash $data): void
-    {
-        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
-    }
-
-    final public function storeAndExecuteValues(BaseHolder $holder, ArrayHash $data): void
-    {
-        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
-    }
-
-    final public function storeAndExecuteForm(
-        BaseHolder $holder,
-        Form $form,
-        ?string $explicitTransitionName = null
-    ): void {
-        $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
-    }
-
+    /**
+     * @throws \Throwable
+     */
     final public function onlyExecute(BaseHolder $holder, string $explicitTransitionName): void
     {
         try {
@@ -114,44 +89,19 @@ class ApplicationHandler
         }
     }
 
-    private function innerStoreAndExecute(
-        BaseHolder $holder,
-        ?ArrayHash $data,
-        ?Form $form,
-        ?string $explicitTransitionName,
-        ?string $execute
-    ): void {
+    /**
+     * @throws \Throwable
+     */
+    private function innerStoreAndExecute(BaseHolder $holder, Form $form, ?Transition $explicitTransition): void
+    {
         try {
             $this->beginTransaction();
-
-            $transition = $this->processData(
-                $data,
-                $form,
-                $explicitTransitionName
-                    ? $this->getMachine()->getTransitionById($explicitTransitionName)
-                    : null,
-                $holder,
-                $execute
-            );
-
-            if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data[$holder->name]['status'])) {
-                    $holder->setModelState(
-                        $data[$holder->name]['status']
-                    );
-                }
-            }
+            $transition = $this->processData($form, $explicitTransition, $holder);
 
             $this->saveAndExecute($transition, $holder);
-
-            if ($data || $form) {
-                $this->logger->log(
-                    new Message(
-                        sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
-                        Message::LVL_SUCCESS
-                    )
-                );
-            }
+            $this->logger->log(
+                new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getModel()), Message::LVL_SUCCESS)
+            );
         } catch (
         ModelDataConflictException |
         DuplicateApplicationException |
@@ -169,7 +119,7 @@ class ApplicationHandler
     /**
      * @throws \Throwable
      */
-    private function saveAndExecute(?\FKSDB\Models\Transitions\Transition\Transition $transition, BaseHolder $holder)
+    private function saveAndExecute(?Transition $transition, BaseHolder $holder)
     {
         if ($transition) {
             $this->getMachine()->execute2($transition, $holder);
@@ -190,60 +140,38 @@ class ApplicationHandler
         } elseif ($transition) {
             $this->logger->log(
                 new Message(
-                    sprintf(
-                        _('State of application "%s" changed.'),
-                        (string)$holder->getModel()
-                    ),
+                    sprintf(_('State of application "%s" changed.'), (string)$holder->getModel()),
                     Message::LVL_INFO
                 )
             );
         }
     }
 
-    private function processData(
-        ?ArrayHash $data,
-        ?Form $form,
-        ?\FKSDB\Models\Transitions\Transition\Transition $transition,
-        BaseHolder $holder,
-        ?string $execute
-    ): ?\FKSDB\Models\Transitions\Transition\Transition {
-        if ($form) {
-            $values = FormUtils::emptyStrToNull($form->getValues());
-        } else {
-            $values = $data;
-        }
+    private function processData(Form $form, ?Transition $transition, BaseHolder $holder): ?Transition
+    {
+        $values = FormUtils::emptyStrToNull($form->getValues());
+
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
         if (isset($values[$holder->name]['status'])) {
             $newState = EventParticipantStatus::tryFrom($values[$holder->name]['status']);
         }
 
-        $processState = $holder->processFormValues(
-            $values,
-            $transition,
-            $this->logger,
-            $form
-        );
+        $holder->processFormValues($values, $this->logger, $form);
 
-        $newState = $newState ?: $processState;
+        $target = $newState ?: ($transition ? $transition->target : null);
 
-        if ($execute == self::STATE_TRANSITION) {
-            if ($newState) {
-                $state = $holder->getModelState();
-                $transition = $this->getMachine()->getTransitionByTarget(
-                    $state,
-                    $newState
+        if ($target) {
+            $source = $holder->getModelState();
+            $transition = $this->getMachine()->getTransitionByStates($source, $target);
+            if (!$transition) {
+                throw new MachineExecutionException(
+                    sprintf(
+                        _('There is not a transition from state "%s" to state "%s".'),
+                        $source->label(),
+                        $target->label()
+                    )
                 );
-                if (!$transition) {
-                    throw new MachineExecutionException(
-                        sprintf(
-                            _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
-                            $state->label(),
-                            $holder->label,
-                            $newState->label()
-                        )
-                    );
-                }
             }
         }
 
@@ -274,14 +202,12 @@ class ApplicationHandler
 
     private function rollback(): void
     {
-        if ($this->errorMode === self::ERROR_ROLLBACK) {
-            $this->connection->rollBack();
-        }
+        $this->connection->rollBack();
     }
 
     public function commit(bool $final = false): void
     {
-        if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
+        if ($this->connection->getPdo()->inTransaction() && $final) {
             $this->connection->commit();
         }
     }

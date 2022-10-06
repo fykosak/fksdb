@@ -63,14 +63,17 @@ abstract class Machine
      * @throws UnavailableTransitionsException
      * Protect more that one transition between nodes
      */
-    protected function selectTransition(array $transitions): Transition
+    protected function selectTransition(array $transitions, bool $throw = true): ?Transition
     {
         $length = \count($transitions);
         if ($length > 1) {
             throw new UnavailableTransitionsException();
         }
         if (!$length) {
-            throw new UnavailableTransitionsException();
+            if ($throw) {
+                throw new UnavailableTransitionsException();
+            }
+            return null;
         }
         return \array_values($transitions)[0];
     }
@@ -101,6 +104,17 @@ abstract class Machine
                 ($target->value === $transition->target->value)
         );
         return $this->selectTransition($transitions);
+    }
+
+    /**
+     * @return Transition[]
+     */
+    protected function geTransitionsBySource(EnumColumn $source): array
+    {
+        return array_filter(
+            $this->transitions,
+            fn(Transition $transition): bool => $source->value === $transition->source->value
+        );
     }
 
     /* ********** execution ******** */

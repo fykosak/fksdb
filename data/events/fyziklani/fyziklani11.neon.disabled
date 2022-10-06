@@ -92,12 +92,12 @@ events:
                         condition: %events.fyziklani11.appCond%
                         label: _('Register team')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, .*)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(team, .*)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
@@ -176,7 +176,7 @@ events:
                         condition: %events.fyziklani11.appCond%
                         label: _('Přihlásit člena')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(member,self)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani11.appCond% # TODO the time period is not specified in rules
                         label: _('Odebrat člena')

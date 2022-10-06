@@ -26,7 +26,7 @@ parameters:
                     condition: or(regOpen(), role('admin'))
                     label: _('Přihlásit se')
                     afterExecute:
-                        - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                        - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                 applied->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Prezentovat')

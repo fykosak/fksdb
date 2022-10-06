@@ -108,8 +108,8 @@ events:
                         condition: %events.fyziklani16.appCond%
                         label: _('Register team')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fyziklani/fyziklani2022/teacher,.primary)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fyziklani/fyziklani2022/participant,.secondary)
                     pending->approved:
                         behaviorType: success
                         condition: role('admin')
@@ -119,7 +119,7 @@ events:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/spare,.secondary)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fyziklani/fyziklani2022/spare,.secondary)
                     approved|spare->participated:
                         behaviorType: success
                         condition: and(role('admin'),eventWas())

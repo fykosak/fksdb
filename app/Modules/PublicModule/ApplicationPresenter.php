@@ -9,21 +9,21 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
-use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -106,11 +106,8 @@ class ApplicationPresenter extends BasePresenter
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
-            $service = $this->getHolder()->service;
-
-            $this->eventApplication = $service->findByPrimary($id);
+            $this->eventApplication = $this->getHolder()->service->findByPrimary($id);
         }
-
         return $this->eventApplication;
     }
 
@@ -184,11 +181,7 @@ class ApplicationPresenter extends BasePresenter
 
         if (
             !$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) &&
-            !$this->eventAuthorizator->isAllowed(
-                $this->getEvent(),
-                'application',
-                $this->getEvent()
-            )
+            !$this->eventAuthorizator->isAllowed($this->getEvent(), 'application', $this->getEvent())
         ) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');

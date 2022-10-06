@@ -24,17 +24,14 @@ abstract class AbstractProcessing implements Processing
     public const WILD_CART = '*';
     private array $valuesPathCache;
     private array $formPathCache;
-    private ?EventParticipantStatus $state;
     private ModelHolder $holder;
 
     final public function process(
-        ?EventParticipantStatus $state,
         ArrayHash $values,
         ModelHolder $holder,
         Logger $logger,
         ?Form $form
     ): void {
-        $this->state = $state;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);

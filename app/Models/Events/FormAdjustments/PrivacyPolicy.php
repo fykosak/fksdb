@@ -58,7 +58,6 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     public function process(
-        ?EventParticipantStatus $state,
         ArrayHash $values,
         ModelHolder $holder,
         Logger $logger,

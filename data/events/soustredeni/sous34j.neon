@@ -22,22 +22,22 @@ events:
                         condition: role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j)
                     __init->spare:
                         condition: role('admin')
                         label: _('Invite Spare')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Invite Spare')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')
@@ -53,57 +53,57 @@ events:
                         condition: role('admin')
                         label: _('Send first call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     invited->invited1:
                         condition: role('admin')
                         label: _('Send first call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     spare1->spare2:
                         condition: role('admin')
                         label: _('Send second call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     invited1->invited2:
                         condition: role('admin')
                         label: _('Send second call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     spare2->spare3:
                         condition: role('admin')
                         label: _('Send last call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     invited2->invited3:
                         condition: role('admin')
                         label: _('Send last call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/34j.call)
                     interested->applied:
                         condition: role('admin')
                         label: _('Validate as a participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/interested-applied)
                     spare->invited:
                         condition: role('admin')
                         label: _('Invite as a participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare-invited)
                     spare1->invited1:
                         condition: role('admin')
                         label: _('Invite as a participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare-invited)
                     spare2->invited2:
                         condition: role('admin')
                         label: _('Invite as a participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare-invited)
                     spare3->invited3:
                         condition: role('admin')
                         label: _('Invite as a participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare-invited)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Participated')

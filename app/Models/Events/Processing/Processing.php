@@ -13,7 +13,6 @@ use Nette\Utils\ArrayHash;
 interface Processing
 {
     public function process(
-        ?EventParticipantStatus $state,
         ArrayHash $values,
         ModelHolder $holder,
         Logger $logger,

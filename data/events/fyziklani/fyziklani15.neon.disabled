@@ -50,7 +50,7 @@ events:
                         condition: %events.fyziklani15.appCond%
                         label: _('Register team')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2021/participant,.secondary)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fyziklani/fyziklani2021/participant,.secondary)
                     pending|spare->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
@@ -106,7 +106,7 @@ events:
                         visible: true
                         modifiable: %events.fyziklani15.appCond%
                         description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
-                        factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
+
 
             #
             #   PARTICIPANT

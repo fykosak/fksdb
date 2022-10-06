@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Events\Transitions;
+namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model;
@@ -24,7 +23,7 @@ use Nette\Utils\Strings;
  * to the person that is found as the primary of the application that is
  * experienced the transition.
  */
-class MailSender extends MailCallback
+class EventParticipantMailCallback extends MailCallback
 {
     public const BCC_PARAM = 'notifyBcc';
     public const FROM_PARAM = 'notifyFrom';

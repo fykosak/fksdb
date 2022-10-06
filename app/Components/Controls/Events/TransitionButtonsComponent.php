@@ -38,11 +38,11 @@ class TransitionButtonsComponent extends BaseComponent
     {
         try {
             $this->handler->onlyExecute($this->holder, $transitionName);
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
+            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
         }
     }
 }
