@@ -63,14 +63,14 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
 
     abstract protected function getCategory(BaseHolder $holder, ArrayHash $values): ?TeamCategory;
 
-    protected function isBaseReallyEmpty(string $name): bool
+    protected function isBaseReallyEmpty(): bool
     {
-        $personIdControls = $this->getControl("$name.person_id");
+        $personIdControls = $this->getControl(".person_id");
         $personIdControl = reset($personIdControls);
         if ($personIdControl && $personIdControl->getValue(false)) {
             return false;
         }
-        return parent::isBaseReallyEmpty($name);
+        return parent::isBaseReallyEmpty();
     }
 
     private function getPersonHistory(BaseHolder $holder): ?PersonHistoryModel

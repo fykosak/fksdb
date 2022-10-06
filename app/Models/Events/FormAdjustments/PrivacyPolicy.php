@@ -8,13 +8,12 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -57,12 +56,8 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process(
-        ArrayHash $values,
-        ModelHolder $holder,
-        Logger $logger,
-        ?Form $form
-    ): void {
+    public function process(ArrayHash $values, ModelHolder $holder, Logger $logger, Form $form): void
+    {
         $this->trySetAgreed($values);
     }
 
@@ -76,7 +71,6 @@ class PrivacyPolicy implements Processing, FormAdjustment
                 $personInfo = $this->personInfoService->findByPrimary($personId);
                 if ($personInfo) {
                     $this->personInfoService->storeModel(['agreed' => 1], $personInfo);
-
                     $values[$key . '_container']['person_info']['agreed'] = 1;
                 }
             }

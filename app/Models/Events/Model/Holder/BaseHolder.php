@@ -71,7 +71,7 @@ class BaseHolder implements ModelHolder
     public function processFormValues(
         ArrayHash $values,
         Logger $logger,
-        ?Form $form
+        Form $form
     ): void {
         foreach ($this->processings as $processing) {
             $processing->process($values, $this, $logger, $form);

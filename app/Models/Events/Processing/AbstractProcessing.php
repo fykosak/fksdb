@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Processing;
 
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
+use Nette\Forms\Control as FormControl;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -24,13 +24,14 @@ abstract class AbstractProcessing implements Processing
     public const WILD_CART = '*';
     private array $valuesPathCache;
     private array $formPathCache;
+    /** @var BaseHolder */
     private ModelHolder $holder;
 
     final public function process(
         ArrayHash $values,
         ModelHolder $holder,
         Logger $logger,
-        ?Form $form
+        Form $form
     ): void {
         $this->holder = $holder;
         $this->setValues($values);
@@ -38,11 +39,7 @@ abstract class AbstractProcessing implements Processing
         $this->innerProcess($values, $holder, $logger);
     }
 
-    abstract protected function innerProcess(
-        ArrayHash $values,
-        ModelHolder $holder,
-        Logger $logger
-    ): void;
+    abstract protected function innerProcess(ArrayHash $values, ModelHolder $holder, Logger $logger): void;
 
     /**
      * @return FormControl[]
@@ -84,12 +81,9 @@ abstract class AbstractProcessing implements Processing
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      */
-    protected function isBaseReallyEmpty(string $name): bool
+    protected function isBaseReallyEmpty(): bool
     {
-        if ($this->holder->getModelState() == Machine::STATE_INIT) {
-            return true; // it was empty since beginning
-        }
-        return false;
+        return $this->holder->getModelState()->value === Machine::STATE_INIT;
     }
 
     private function setValues(ArrayHash $values, string $prefix = ''): void
@@ -108,12 +102,9 @@ abstract class AbstractProcessing implements Processing
         }
     }
 
-    private function setForm(?Form $form): void
+    private function setForm(Form $form): void
     {
         $this->formPathCache = [];
-        if (!$form) {
-            return;
-        }
         /** @var Control $control */
         // TODO not type safe
         foreach ($form->getComponents(true, FormControl::class) as $control) {

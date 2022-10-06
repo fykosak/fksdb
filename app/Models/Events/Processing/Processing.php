@@ -16,6 +16,6 @@ interface Processing
         ArrayHash $values,
         ModelHolder $holder,
         Logger $logger,
-        ?Form $form
+        Form $form
     ): void;
 }

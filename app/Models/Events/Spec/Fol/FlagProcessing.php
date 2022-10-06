@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Fykosak\Utils\Logging\Logger;
 use Nette\Utils\ArrayHash;
 
 class FlagProcessing extends WithSchoolProcessing
@@ -21,11 +21,8 @@ class FlagProcessing extends WithSchoolProcessing
         $this->schoolService = $schoolService;
     }
 
-    protected function innerProcess(
-        ArrayHash $values,
-        ModelHolder $holder,
-        Logger $logger
-    ): void {
+    protected function innerProcess(ArrayHash $values, ModelHolder $holder, Logger $logger): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -38,7 +35,7 @@ class FlagProcessing extends WithSchoolProcessing
         ];
 
         if (!$formValues['school_id']) {
-            if ($this->isBaseReallyEmpty($holder->name)) {
+            if ($this->isBaseReallyEmpty()) {
                 return;
             }
 

@@ -152,14 +152,11 @@ final class ApplicationHandler
         $values = FormUtils::emptyStrToNull($form->getValues());
 
         Debugger::log(json_encode((array)$values), 'app-form');
-        $newState = null;
-        if (isset($values[$holder->name]['status'])) {
-            $newState = EventParticipantStatus::tryFrom($values[$holder->name]['status']);
-        }
+        $target = isset($values[$holder->name]['status'])
+            ? EventParticipantStatus::tryFrom($values[$holder->name]['status'])
+            : ($transition ? $transition->target : null);
 
         $holder->processFormValues($values, $this->logger, $form);
-
-        $target = $newState ?: ($transition ? $transition->target : null);
 
         if ($target) {
             $source = $holder->getModelState();
