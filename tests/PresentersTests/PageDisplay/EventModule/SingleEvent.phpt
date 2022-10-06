@@ -28,7 +28,6 @@ class SingleEvent extends EventModuleTestCase
     {
         return [
             ['Event:Application', 'list'],
-            ['Event:Application', 'import'],
             ['Event:Application', 'transitions'],
             ['Event:Chart', 'list'],
             ['Event:Chart', 'participantAcquaintance'],
