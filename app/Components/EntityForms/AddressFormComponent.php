@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -14,6 +15,7 @@ use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PostContactService;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -69,10 +71,12 @@ class AddressFormComponent extends EntityFormComponent
             }
             $this->postContactService->explorer->getConnection()->commit();
             $this->getPresenter()->flashMessage(_('Address has been saved'));
-            //   $this->getPresenter()->redirect('default');
+            $this->getPresenter()->redirect('default');
         } catch (InvalidAddressException | InvalidPostalCode $exception) {
             $this->postContactService->explorer->getConnection()->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (AbortException $exception) {
+            throw $exception;
         } catch (\Throwable $exception) {
             $this->postContactService->explorer->getConnection()->rollBack();
             throw $exception;
@@ -83,7 +87,10 @@ class AddressFormComponent extends EntityFormComponent
     {
         /** @var AddressDataContainer $container */
         $container = $this->getForm()->getComponent('address');
-        $container->setModel(isset($this->model) ? $this->model->address : null, '');
+        $container->setModel(
+            isset($this->model) ? $this->model->address : null,
+            ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
+        );
     }
 
     public function handleDelete(): void

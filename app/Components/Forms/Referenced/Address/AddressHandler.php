@@ -36,7 +36,7 @@ class AddressHandler extends ReferencedHandler
 
     public function store(array $values, ?Model $model = null): AddressModel
     {
-        $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values));
+        $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
 
         if (!isset($data['country_id'])) {
             $countryData = $this->inferCountry($data['postal_code']);
