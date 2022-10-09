@@ -67,8 +67,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);
             } elseif (isset($values[$key . '_container']) && isset($values[$key . '_container']['person_info'])) {
-                $personId = $value;
-                $personInfo = $this->personInfoService->findByPrimary($personId);
+                $personInfo = $this->personInfoService->findByPrimary($value);
                 if ($personInfo) {
                     $this->personInfoService->storeModel(['agreed' => 1], $personInfo);
                     $values[$key . '_container']['person_info']['agreed'] = 1;

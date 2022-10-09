@@ -201,11 +201,6 @@ class RegisterPresenter extends CoreBasePresenter
         return $contest->getContestYear($this->year);
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws BadRequestException
-     * @throws \ReflectionException
-     */
     protected function beforeRender(): void
     {
         $contest = $this->getSelectedContest();

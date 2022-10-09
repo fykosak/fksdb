@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -29,7 +30,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     private ContestYearModel $contestYear;
     private ?PersonModel $person;
-    private string $lang;
+    private Language $lang;
 
     private ContestAuthorizator $contestAuthorizator;
     private ContestantService $service;
@@ -38,7 +39,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     public function __construct(
         Container $container,
-        string $lang,
+        Language $lang,
         ContestYearModel $contestYear,
         ?PersonModel $person
     ) {

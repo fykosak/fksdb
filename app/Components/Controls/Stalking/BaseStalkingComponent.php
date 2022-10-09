@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Badges\ContestBadge;
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 
 abstract class BaseStalkingComponent extends BaseComponent
 {
@@ -26,8 +26,8 @@ abstract class BaseStalkingComponent extends BaseComponent
         int $userPermissions,
         int $minimalPermissions
     ): void {
-        $this->getTemplate()->gender = $person->gender;
-        $this->getTemplate()->headline = $headline;
+        $this->template->person = $person;
+        $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {
             $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
         }

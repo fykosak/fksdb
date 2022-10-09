@@ -18,7 +18,6 @@ use Nette\Utils\ArrayHash;
 
 abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider
 {
-
     protected PersonService $personService;
 
     public function __construct(PersonService $personService)
@@ -41,19 +40,13 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $original = $model ? $model->category : null;
         if ($original != $category->value) {
             $logger->log(
-                new Message(
-                    sprintf(_('Team inserted to category %s.'), $category->label()),
-                    Message::LVL_INFO
-                )
+                new Message(sprintf(_('Team inserted to category %s.'), $category->label()), Message::LVL_INFO)
             );
         }
     }
 
-    final protected function innerProcess(
-        ArrayHash $values,
-        ModelHolder $holder,
-        Logger $logger
-    ): void {
+    final protected function innerProcess(ArrayHash $values, ModelHolder $holder, Logger $logger): void
+    {
         if (!isset($values['team'])) {
             return;
         }

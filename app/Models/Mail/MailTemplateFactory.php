@@ -6,6 +6,7 @@ namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\Core\Language;
 use Nette\Application\Application;
 use Nette\Application\UI\Template;
 use Nette\Http\IRequest;
@@ -50,7 +51,7 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function createLoginInvitation(?string $lang, array $data): Template
+    public function createLoginInvitation(?Language $lang, array $data): Template
     {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
@@ -58,7 +59,7 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function createPasswordRecovery(string $lang, array $data): Template
+    public function createPasswordRecovery(Language $lang, array $data): Template
     {
         return $this->createWithParameters(__DIR__ . DIRECTORY_SEPARATOR . 'recovery', $lang, $data);
     }
@@ -66,7 +67,7 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): Template
+    public function createWithParameters(string $templateFile, ?Language $lang, array $data = []): Template
     {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
@@ -79,7 +80,7 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    final public function createFromFile(string $filename, ?string $lang): Template
+    final public function createFromFile(string $filename, ?Language $lang): Template
     {
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
@@ -88,13 +89,13 @@ class MailTemplateFactory
         if ($lang === null) {
             $lang = $presenter->getLang();
         }
-        $filename = "$filename.$lang.latte";
+        $filename = "$filename.$lang->value.latte";
         if (realpath($filename) !== $filename) {
             $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
         }
 
         if (!file_exists($filename)) {
-            throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
+            throw new InvalidArgumentException("Cannot find template '$filename.$lang->value'.");
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($filename);

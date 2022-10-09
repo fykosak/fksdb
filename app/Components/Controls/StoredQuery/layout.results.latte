@@ -2,7 +2,6 @@
 {block content}
     {varType bool $hasParameters}
     {varType bool $hasStoredQuery}
-    {varType \Throwable|null $error}
     {varType array $formats}
     {varType FKSDB\Models\StoredQuery\StoredQuery $storedQuery}
     {varType bool $showParametrizeForm}
@@ -10,23 +9,18 @@
         {control parametrizeForm}
     {/if}
     {if $hasStoredQuery}
-        {if $error}
-            <div class="alert alert-danger">
-                {$error->getMessage()}
-            </div>
-        {else}
-            {if $showParametrizeForm}
-                {foreach $formats as $formatName => $label}
-                    <a class="btn btn-outline-secondary btn-sm" href="{link 'format!', 'format' => $formatName}">{$label}</a>
-                {/foreach}
-            {/if}
-            {if $storedQuery}
-                {if $storedQuery->hasQueryPattern()}
-                    <a class="btn btn-outline-secondary btn-sm"
-                       href="{plink :Org:StoredQuery:detail 'id'=>$storedQuery->getQueryPattern()->query_id}">{_'Detail of the query'}</a>
-                {/if}
-            {/if}
-            {control grid}
+        {if $showParametrizeForm}
+            {foreach $formats as $formatName => $label}
+                <a class="btn btn-outline-secondary btn-sm"
+                   href="{link 'format!', 'format' => $formatName}">{$label}</a>
+            {/foreach}
         {/if}
+        {if $storedQuery}
+            {if $storedQuery->hasQueryPattern()}
+                <a class="btn btn-outline-secondary btn-sm"
+                   href="{plink :Org:StoredQuery:detail 'id'=>$storedQuery->getQueryPattern()->query_id}">{_'Detail of the query'}</a>
+            {/if}
+        {/if}
+        {control grid}
     {/if}
 {/block}

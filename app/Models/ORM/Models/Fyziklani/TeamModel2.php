@@ -7,8 +7,8 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -102,6 +102,7 @@ class TeamModel2 extends Model implements Resource
 
     /**
      * @return PersonScheduleModel[]
+     * @throws \Exception
      */
     public function getScheduleRest(
         array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]

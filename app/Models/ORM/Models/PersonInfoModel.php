@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int person_id
  * @property-read PersonModel person
- * @property-read string preferred_lang # TODO enum
+ * @property-read Language preferred_lang
  * @property-read \DateTimeInterface born
  * @property-read string id_number
  * @property-read string born_id
@@ -41,4 +42,18 @@ use Fykosak\NetteORM\Model;
  */
 class PersonInfoModel extends Model
 {
+    /**
+     * @return Language|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'preferred_lang':
+                $value = Language::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
 }

@@ -27,12 +27,8 @@ abstract class AbstractProcessing implements Processing
     /** @var BaseHolder */
     private ModelHolder $holder;
 
-    final public function process(
-        ArrayHash $values,
-        ModelHolder $holder,
-        Logger $logger,
-        Form $form
-    ): void {
+    final public function process(ArrayHash $values, ModelHolder $holder, Logger $logger, Form $form): void
+    {
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);

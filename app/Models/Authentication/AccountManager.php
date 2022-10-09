@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Modules\Core\Language;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 
@@ -52,7 +53,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
+    public function createLoginWithInvitation(PersonModel $person, string $email, Language $lang): LoginModel
     {
         $login = $this->createLogin($person);
 
@@ -79,7 +80,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(LoginModel $login, string $lang): void
+    public function sendRecovery(LoginModel $login, Language $lang): void
     {
         $person = $login->person;
         $recoveryAddress = $person ? $person->getInfo()->email : null;

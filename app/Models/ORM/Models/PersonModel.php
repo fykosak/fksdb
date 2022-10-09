@@ -6,17 +6,18 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
-    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
+    FyziklaniTeamTeacherRole,
     ParticipantRole
 };
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -44,7 +45,7 @@ class PersonModel extends Model implements Resource
         return $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
     }
 
-    public function getPreferredLang(): ?string
+    public function getPreferredLang(): ?Language
     {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
     }
@@ -290,23 +291,23 @@ class PersonModel extends Model implements Resource
     /**
      * @param string[] $types
      * @return SchedulePaymentModel[]
+     * @throws \Exception
      */
     public function getScheduleRests(
         EventModel $event,
-        array $types = [
-            ScheduleGroupType::ACCOMMODATION,
-            ScheduleGroupType::WEEKEND,
-        ]
+        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
     ): array {
         $toPay = [];
-        $schedule = $this->getScheduleForEvent($event)
-            ->where('schedule_item.schedule_group.schedule_group_type', $types)
-            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         /** @var PersonScheduleModel $pSchedule */
-        foreach ($schedule as $pSchedule) {
-            $payment = $pSchedule->getPayment();
-            if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
-                $toPay[] = $pSchedule;
+        foreach ($this->getScheduleForEvent($event) as $pSchedule) {
+            if (
+                $pSchedule->schedule_item->isPayable()
+                && in_array($pSchedule->schedule_item->schedule_group->schedule_group_type->value, $types)
+            ) {
+                $payment = $pSchedule->getPayment();
+                if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
+                    $toPay[] = $pSchedule;
+                }
             }
         }
         return $toPay;

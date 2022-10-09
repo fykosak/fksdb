@@ -45,7 +45,7 @@ abstract class BasePresenter extends Presenter implements
      * @internal
      */
     public ?string $lang = null;
-    private string $language;
+    private Language $language;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
@@ -195,16 +195,16 @@ abstract class BasePresenter extends Presenter implements
         parent::startup();
         if (!isset($this->language)) {
             $this->language = $this->selectLang();
-            $this->translator->setLang($this->language);
+            $this->translator->setLang($this->language->value);
         }
     }
 
     /**
      * @throws UnsupportedLanguageException
      */
-    private function selectLang(): string
+    private function selectLang(): Language
     {
-        $candidate = $this->getUserPreferredLang() ?? $this->lang;
+        $candidate = $this->getUserPreferredLang() ? $this->getUserPreferredLang()->value : $this->lang;
         $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
             $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
@@ -216,16 +216,13 @@ abstract class BasePresenter extends Presenter implements
         if (!in_array($candidate, $supportedLanguages)) {
             throw new UnsupportedLanguageException($candidate);
         }
-        return $candidate;
+        return Language::tryFrom($candidate);
     }
 
-    private function getUserPreferredLang(): ?string
+    private function getUserPreferredLang(): ?Language
     {
         $person = $this->getLoggedPerson();
-        if ($person) {
-            return $person->getPreferredLang();
-        }
-        return null;
+        return $person ? $person->getPreferredLang() : null;
     }
 
 
@@ -249,7 +246,7 @@ abstract class BasePresenter extends Presenter implements
 
         $this->getTemplate()->pageTitle = $this->getTitle();
         $this->getTemplate()->pageStyleContainer = $this->getPageStyleContainer();
-        $this->getTemplate()->lang = $this->getLang();
+        $this->getTemplate()->lang = $this->getLang()->value;
         $this->getTemplate()->navRoots = $this->getNavRoots();
     }
 
@@ -289,7 +286,7 @@ abstract class BasePresenter extends Presenter implements
         return $pageStyleContainer;
     }
 
-    public function getLang(): string
+    public function getLang(): Language
     {
         return $this->language;
     }
@@ -325,6 +322,6 @@ abstract class BasePresenter extends Presenter implements
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
-        return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
+        return new LanguageChooserComponent($this->getContext(), $this->getLang(), !$this->getUserPreferredLang());
     }
 }

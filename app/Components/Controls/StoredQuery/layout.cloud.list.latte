@@ -4,10 +4,10 @@
     {varType array $activeTagIds}
     <p>
         {foreach $tags as $tagType}
-            {var $active = isset($activeTagIds[$tagType->tag_type_id])?'active':''}
+            {var $active = (isset($activeTagIds[$tagType->tag_type_id]) && $activeTagIds[$tagType->tag_type_id])?'active':''}
             <a
                     class="btn btn-sm btn-color-{$tagType->color} {$active}"
-                    href="{link onClick! $tagType->tag_type_id}"
+                    href="{link onClick! $tagType->tag_type_id , !$active}"
                     title="{$tagType->description}"
             >
                 {$tagType->name}
