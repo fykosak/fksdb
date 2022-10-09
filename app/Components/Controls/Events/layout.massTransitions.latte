@@ -7,7 +7,7 @@
         <small class="text-muted">{$transition->getMask()}</small>
     </p>
     <p>
-        {var $className = 'btn btn-outline-' . $transition->getBehaviorType()->value}
+        {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
         <a class="{$className}" href="{link transition! $transition->getName()}">{_'Evalute'}</a>
     </p>
     <hr/>

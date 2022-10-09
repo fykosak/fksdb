@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -57,7 +57,6 @@ class OrgFormComponent extends EntityFormComponent
         $referencedId = $this->createPersonId(
             $this->contestYear,
             $this->isCreating(),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminOrg']
         );

@@ -25,7 +25,6 @@ class AddressHandler extends ReferencedHandler
 
     public function __construct(Container $container)
     {
-        $this->resolution = self::RESOLUTION_EXCEPTION;
         $container->callInjects($this);
     }
 

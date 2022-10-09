@@ -28,7 +28,7 @@ class DispatchPresenter extends BasePresenter
     {
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $person = $login->person;
+        $person = $this->getLoggedPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -102,7 +104,7 @@ class WriteOnlyTraitTest extends DsefTestCase
             'participant' =>
                 [
                     'person_id' => (string)$this->person->person_id,
-                    'person_id_1' =>
+                    'person_id_container' =>
                         [
                             '_c_compact' => 'Paní Bílá',
                             'person' =>
@@ -145,7 +147,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         Assert::equal('applied', $application->status);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal(null, $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 
@@ -173,5 +175,7 @@ class WriteOnlyTraitTest extends DsefTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new WriteOnlyTraitTest($container);
 $testCase->run();
+// phpcs:enable

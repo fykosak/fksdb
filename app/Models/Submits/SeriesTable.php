@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\{
-    ContestantModel,
-    ContestYearModel,
-    SubmitModel,
-};
+use FKSDB\Models\ORM\Models\{ContestantModel, ContestYearModel, SubmitModel,};
 use FKSDB\Models\ORM\Services\SubmitService;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
@@ -26,9 +22,9 @@ class SeriesTable
 
     /**
      *
-     * @var null|array of int IDs of allowed tasks or null for unrestricted
+     * @var null|callable
      */
-    public ?array $taskFilter = null;
+    public $taskFilter = null;
 
     public function __construct(SubmitService $submitService)
     {
@@ -44,7 +40,7 @@ class SeriesTable
     {
         $tasks = $this->contestYear->getTasks($this->series);
         if (isset($this->taskFilter)) {
-            $tasks->where('task_id', $this->taskFilter);
+            ($this->taskFilter)($tasks);
         }
         return $tasks->order('tasknr');
     }

@@ -8,6 +8,8 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -59,10 +61,10 @@ abstract class AuthenticatedPresenter extends BasePresenter
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
-            if ($this->isAuthorized()) { // check authorization
-                $method = $this->formatAuthorizedMethod($this->getAction());
-                $this->tryCall($method, $this->getParameters());
-            }
+            //if ($this->isAuthorized()) { // check authorization
+            $method = $this->formatAuthorizedMethod($this->getAction());
+            $this->tryCall($method, $this->getParameters());
+            //}
         }
     }
 
@@ -78,9 +80,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
     protected function startup(): void
     {
         parent::startup();
-
         $methods = $this->getAllowedAuthMethods();
-
         if ($methods[self::AUTH_TOKEN]) {
             // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
@@ -92,7 +92,8 @@ abstract class AuthenticatedPresenter extends BasePresenter
         // if token did not succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
-        } elseif (!$this->isAuthorized()) {
+        }
+        if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }

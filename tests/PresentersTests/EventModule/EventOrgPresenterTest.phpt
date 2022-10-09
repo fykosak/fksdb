@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
-use DateTime;
+// phpcs:enable
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
@@ -38,8 +39,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
@@ -67,7 +68,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->person),
                 'note' => 'note-c',
             ],
         ]);
@@ -96,7 +97,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         $response = $this->createFormRequest('edit', [
             EventOrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->eventOrgPerson->person_id,
-                'person_id_1' => self::personToValues($this->eventOrgPerson),
+                'person_id_container' => self::personToValues($this->eventOrgPerson),
                 'note' => 'note-edited',
             ],
         ], [
@@ -145,5 +146,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new EventOrgPresenterTest($container);
 $testCase->run();
+// phpcs:enable

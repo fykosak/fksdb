@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -54,7 +56,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)0,
                 'domain_alias' => 't',
@@ -105,7 +107,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->orgPerson->person_id,
-                'person_id_1' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)2,
                 'domain_alias' => 'b',
@@ -148,6 +150,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ->count('*');
     }
 }
-
+// phpcs:disable
 $testCase = new OrgPresenterTest($container);
 $testCase->run();
+// phpcs:enable

@@ -13,7 +13,7 @@ abstract class EventRole extends Statement
     protected EventAuthorizator $eventAuthorizator;
     protected ?string $privilege;
 
-    public function __construct(EventAuthorizator $eventAuthorizator, ?string $privilege)
+    public function __construct(string $privilege, EventAuthorizator $eventAuthorizator)
     {
         $this->eventAuthorizator = $eventAuthorizator;
         $this->privilege = $privilege;

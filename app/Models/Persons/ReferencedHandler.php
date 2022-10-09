@@ -13,14 +13,14 @@ abstract class ReferencedHandler
     public const RESOLUTION_KEEP = 'keep';
     public const RESOLUTION_EXCEPTION = 'exception';
 
-    protected string $resolution;
+    protected ResolutionMode $resolution;
 
-    final public function getResolution(): string
+    final public function getResolution(): ResolutionMode
     {
         return $this->resolution;
     }
 
-    final public function setResolution(string $resolution): void
+    final public function setResolution(ResolutionMode $resolution): void
     {
         $this->resolution = $resolution;
     }

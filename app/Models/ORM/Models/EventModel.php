@@ -141,4 +141,10 @@ class EventModel extends Model implements Resource, NodeCreator
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }
+
+    public function isRegistrationOpened(): bool
+    {
+        return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
+            && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+    }
 }

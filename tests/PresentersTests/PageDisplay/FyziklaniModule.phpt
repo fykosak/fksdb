@@ -7,8 +7,10 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 class FyziklaniModule extends EventModuleTestCase
 {
 
@@ -61,6 +63,7 @@ class FyziklaniModule extends EventModuleTestCase
         ];
     }
 }
-
+// phpcs:disable
 $testCase = new FyziklaniModule($container);
 $testCase->run();
+// phpcs:enable

@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Persons;
+namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ResolutionMode;
 use Nette\Security\Resource;
 use Nette\SmartObject;
 
-class AclResolver implements VisibilityResolver, ModifiabilityResolver
+class AclResolver implements Resolver
 {
     use SmartObject;
 
@@ -29,13 +30,13 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
         return !$person || $this->isAllowed($person, 'edit');
     }
 
-    public function getResolutionMode(?PersonModel $person): string
+    public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ReferencedHandler::RESOLUTION_EXCEPTION;
+            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
         }
-        return $this->isAllowed($person, 'edit') ? ReferencedHandler::RESOLUTION_OVERWRITE
-            : ReferencedHandler::RESOLUTION_EXCEPTION;
+        return $this->isAllowed($person, 'edit') ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
+            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

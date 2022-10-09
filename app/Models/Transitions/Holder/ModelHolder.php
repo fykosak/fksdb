@@ -11,9 +11,7 @@ interface ModelHolder
 {
     public function updateState(EnumColumn $newState): void;
 
-    public function getState(): ?EnumColumn;
+    public function getState(): EnumColumn;
 
-    public function getModel(): ?Model;
-
-    public function updateData(array $data): void;
+    public function getModel(): Model;
 }

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
-
-$container = require '../../Bootstrap.php';
 
 class PrimaryLimitOk extends ResourceAvailabilityTestCase
 {
@@ -43,5 +45,7 @@ class PrimaryLimitOk extends ResourceAvailabilityTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new PrimaryLimitOk($container);
 $testCase->run();
+// phpcs:enable

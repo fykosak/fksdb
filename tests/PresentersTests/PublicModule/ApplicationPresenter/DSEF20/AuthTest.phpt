@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -54,7 +56,7 @@ class AuthTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Paní",
@@ -90,7 +92,7 @@ class AuthTest extends DsefTestCase
         Assert::equal('applied', $application->status);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
 
@@ -100,5 +102,7 @@ class AuthTest extends DsefTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new AuthTest($container);
 $testCase->run();
+// phpcs:enable

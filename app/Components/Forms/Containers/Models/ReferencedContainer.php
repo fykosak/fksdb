@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
@@ -100,7 +101,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
             if ($component instanceof Container) {
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
-                $component->addError(null);
+                $component->addError(_('Field does not match an existing record.'));
             }
         }
     }
@@ -109,12 +110,13 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
-        $submit->onClick[] = function () {
-            if ($this->allowClear && isset($this->referencedId)) {
+        $cb = function (): void {
+            if ($this->allowClear) {
                 $this->referencedId->setValue(null);
-                $this->referencedId->invalidateFormGroup();
             }
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     private function createCompactValue(): void
@@ -147,5 +149,5 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?Model $model, string $mode): void;
+    abstract public function setModel(?Model $model, ReferencedIdMode $mode): void;
 }

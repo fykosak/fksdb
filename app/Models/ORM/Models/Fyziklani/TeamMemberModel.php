@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 

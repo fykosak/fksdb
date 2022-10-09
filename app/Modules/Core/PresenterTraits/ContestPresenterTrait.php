@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
-use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
@@ -63,29 +61,29 @@ trait ContestPresenterTrait
      */
     private function getAvailableContests(): TypedSelection
     {
-        /** @var LoginModel|null $login */
-        $login = $this->getUser()->getIdentity();
+        $person = $this->getLoggedPerson();
 
-        switch ($this->getRole()) {
-            case YearChooserComponent::ROLE_SELECTED:
-            case YearChooserComponent::ROLE_ALL:
+        switch ($this->getRole()->value) {
+            case PresenterRole::SELECTED:
+                return $this->contestService->getTable()->where('contest_id', $this->contestId);
+            case PresenterRole::ALL:
                 return $this->contestService->getTable();
-            case YearChooserComponent::ROLE_CONTESTANT:
-                if (!$login || !$login->person) {
+            case PresenterRole::CONTESTANT:
+                if (!$person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
                 /** @var ContestantModel $contestant */
-                foreach ($login->person->getContestants() as $contestant) {
+                foreach ($person->getContestants() as $contestant) {
                     $contestsIds[$contestant->contest_id] = $contestant->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
-            case YearChooserComponent::ROLE_ORG:
-                if (!$login || !$login->person) {
+            case PresenterRole::ORG:
+                if (!$person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
-                foreach ($login->person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrgs() as $org) {
                     $contestsIds[$org->contest_id] = $org->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
@@ -94,7 +92,7 @@ trait ContestPresenterTrait
         }
     }
 
-    abstract protected function getRole(): string;
+    abstract protected function getRole(): PresenterRole;
 
     /**
      * @throws BadRequestException

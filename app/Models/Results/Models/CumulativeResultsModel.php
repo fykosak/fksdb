@@ -162,6 +162,6 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
                 $sum += $this->evaluationStrategy->getTaskPoints($task, $category);
             }
         }
-        return $sum;
+        return (int)$sum;
     }
 }

@@ -631,6 +631,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `event_id`          INT(11)                    NOT NULL,
     `name`              VARCHAR(30)                NOT NULL,
     `state`             ENUM (
+        'init', # virtual state for correct ORM
         'applied',
         'pending',
         'approved',
@@ -639,7 +640,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'missed',
         'disqualified',
         'cancelled'
-        )                                          NOT NULL,
+        )                                          NOT NULL DEFAULT 'init',
     `category`          ENUM ('A','B','C','O','F') NOT NULL,
     `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `phone`             VARCHAR(30)                NULL     DEFAULT NULL,

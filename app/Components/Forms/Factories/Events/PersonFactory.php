@@ -14,8 +14,7 @@ use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
-use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
-use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
@@ -35,7 +34,6 @@ class PersonFactory extends AbstractFactory
     /** @var callable */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private SelfResolver $selfResolver;
     private ExpressionEvaluator $evaluator;
     private User $user;
     private PersonService $personService;
@@ -56,7 +54,6 @@ class PersonFactory extends AbstractFactory
         $modifiable,
         $visible,
         ReferencedPersonFactory $referencedPersonFactory,
-        SelfResolver $selfResolver,
         ExpressionEvaluator $evaluator,
         User $user,
         PersonService $personService,
@@ -68,7 +65,6 @@ class PersonFactory extends AbstractFactory
         $this->modifiable = $modifiable;
         $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
-        $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
         $this->personService = $personService;
@@ -85,27 +81,26 @@ class PersonFactory extends AbstractFactory
 
         $event = $field->getBaseHolder()->event;
 
-        $modifiableResolver = new PersonContainerResolver(
+        $resolver = new PersonContainerResolver(
             $field,
             $this->modifiable,
-            $this->selfResolver,
+            $this->visible,
+            new SelfResolver($this->user),
             $this->evaluator
         );
-        $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
             $event->getContestYear(),
             $searchType,
             $allowClear,
-            $modifiableResolver,
-            $visibleResolver,
+            $resolver,
             $event
         );
-        $referencedId->getSearchContainer()->setOption('label', $field->getLabel());
-        $referencedId->getSearchContainer()->setOption('description', $field->getDescription());
-        $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
-        $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
+        $referencedId->searchContainer->setOption('label', $field->getLabel());
+        $referencedId->searchContainer->setOption('description', $field->getDescription());
+        $referencedId->referencedContainer->setOption('label', $field->getLabel());
+        $referencedId->referencedContainer->setOption('description', $field->getDescription());
         return $referencedId;
     }
 

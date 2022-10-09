@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -124,5 +126,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new SchoolPresenterTest($container);
 $testCase->run();
+// phpcs:enable

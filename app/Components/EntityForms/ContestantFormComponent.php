@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -48,7 +48,6 @@ class ContestantFormComponent extends EntityFormComponent
         $referencedId = $this->createPersonId(
             $this->contestYear,
             $this->isCreating(),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminContestant']
         );
