@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Referenced\Address;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Services\CountryService;
@@ -69,7 +70,7 @@ class AddressDataContainer extends ReferencedContainer
         $country->setPrompt(_('Detect country from postal code (CR, SK only)'));
     }
 
-    public function setModel(?Model $model, string $mode): void
+    public function setModel(?Model $model, ReferencedIdMode $mode): void
     {
         if ($model instanceof AddressModel) {
             $data = $model->toArray();

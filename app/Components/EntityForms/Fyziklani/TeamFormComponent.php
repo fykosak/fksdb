@@ -25,6 +25,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -87,7 +88,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             );
 
             $this->saveTeamMembers($team, $form);
-
+            Debugger::dump($team->state->value);
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);

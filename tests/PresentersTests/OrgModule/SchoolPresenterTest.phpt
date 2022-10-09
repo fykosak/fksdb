@@ -60,7 +60,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
                 'name' => 'Test school',
                 'name_abbrev' => 'T school',
                 'address_id' => ReferencedId::VALUE_PROMISE,
-                'address_id_1' => [
+                'address_id_container' => [
                     'first_row' => 'PU',
                     'second_row' => 'PU',
                     'target' => 'PU',
@@ -85,7 +85,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
                     'name' => 'Test school edited',
                     'name_abbrev' => 'T school',
                     'address_id' => (string)$this->school->address_id,
-                    'address_id_1' => [
+                    'address_id_container' => [
                         'first_row' => 'PU',
                         'second_row' => 'PU',
                         'target' => 'PU',

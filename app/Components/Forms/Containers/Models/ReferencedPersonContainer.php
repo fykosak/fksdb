@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -146,7 +145,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
-                  //  $component->setDisabled();
+                    //  $component->setDisabled();
                     $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
@@ -167,7 +166,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     }
                     if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
-                       // $component->setDisabled(); // could not store different value anyway
+                        // $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }

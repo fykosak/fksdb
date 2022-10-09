@@ -87,7 +87,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             return $model;
         } else {
             $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
-            $person = $this->storePerson($person, $values);
+            $person = $this->storePerson($person, (array)$values['person']);
             $this->innerStore($person, $values);
             return $person;
         }
