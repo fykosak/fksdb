@@ -25,9 +25,7 @@ abstract class ReferencedHandler
         $this->resolution = $resolution;
     }
 
-    abstract public function update(Model $model, array $values): void;
-
-    abstract public function createFromValues(array $values): Model;
+    abstract public function store(array $values, ?Model $model = null): Model;
 
     protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
     {

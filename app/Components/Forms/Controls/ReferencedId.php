@@ -8,11 +8,11 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Models\Persons\ReferencedHandler;
-use FKSDB\Models\Persons\ModelDataConflictException;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ModelDataConflictException;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
@@ -178,15 +178,13 @@ class ReferencedId extends HiddenField
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues((array)$values);
+                    $model = $this->handler->store((array)$values);
                     $this->setValue($model, (bool)self::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {
                     $model = $this->service->findByPrimary($referencedId);
-                    $this->handler->update($model, (array)$values);
-// reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-                    $model = $this->service->findByPrimary($model->getPrimary());
+                    $this->handler->store((array)$values, $model);
                     $this->setValue($model, (bool)self::MODE_FORCE);
                     return $referencedId;
                 } else {

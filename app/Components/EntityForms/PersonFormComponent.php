@@ -6,19 +6,20 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PostContactService;
+use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\AddressService;
-use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\ORM\Services\PersonInfoService;
-use FKSDB\Models\ORM\Services\PostContactService;
-use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -116,7 +117,7 @@ class PersonFormComponent extends EntityFormComponent
         $this->logger->clear();
         $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->personInfoService->storeModel(
-            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),
+            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
             $person->getInfo()
         );
         $this->storeAddresses($person, $data);
@@ -151,16 +152,16 @@ class PersonFormComponent extends EntityFormComponent
 
     private function storeAddresses(PersonModel $person, array $data): void
     {
+        $handler = new AddressHandler($this->container);
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);
             $oldAddress = $person->getAddress($shortType);
             if (count($datum)) {
+                $address = $handler->store($datum, $oldAddress);
                 if ($oldAddress) {
-                    $this->addressService->storeModel($datum, $oldAddress);
                     $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
                 } else {
-                    $address = $this->addressService->storeModel($datum);
                     $postContactData = [
                         'type' => $shortType->value,
                         'person_id' => $person->person_id,

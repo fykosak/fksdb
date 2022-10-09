@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
-use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
-use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -17,7 +14,6 @@ use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PostContactService;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -31,11 +27,8 @@ class AddressFormComponent extends EntityFormComponent
     private PostContactService $postContactService;
     private PersonModel $person;
 
-    public function __construct(
-        Container $container,
-        PostContactType $postContactType,
-        PersonModel $person
-    ) {
+    public function __construct(Container $container, PostContactType $postContactType, PersonModel $person)
+    {
         parent::__construct($container, $person->getPostContact($postContactType));
         $this->postContactType = $postContactType;
         $this->person = $person;
@@ -49,28 +42,21 @@ class AddressFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $address = new ReferencedId(
-            new AddressSearchContainer($this->container),
-            new AddressDataContainer($this->container, false, true),
-            $this->addressService,
-            new AddressHandler($this->container)
-        );
         $form->addComponent(new AddressDataContainer($this->container, false, true), 'address');
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function handleFormSuccess(Form $form): void
     {
         try {
-            $this->addressService->explorer->getConnection()->beginTransaction();
-            $form->getValues('array');// trigger referencedId
-            /** @var ReferencedId $referencedId */
-            $referencedId = $form->getComponent('address');
-            /** @var AddressModel $address */
-            $address = $referencedId->getModel();
-            if (isset($this->model) && $this->model->address_id !== $address->address_id) {
-                // zmena address_id nieje dovolená
-                throw new ForbiddenRequestException(_('This address does not belong to you!'));
-            }
+            $this->postContactService->explorer->getConnection()->beginTransaction();
+            $values = $form->getValues('array');
+            $address = (new AddressHandler($this->container))->store(
+                $values['address'],
+                isset($this->model) ? $this->model->address : null
+            );
             if (!isset($this->model)) {
                 $this->postContactService->storeModel(
                     [
@@ -81,23 +67,23 @@ class AddressFormComponent extends EntityFormComponent
                     $this->model
                 );
             }
-            $this->addressService->explorer->getConnection()->commit();
+            $this->postContactService->explorer->getConnection()->commit();
             $this->getPresenter()->flashMessage(_('Address has been saved'));
             //   $this->getPresenter()->redirect('default');
         } catch (InvalidAddressException | InvalidPostalCode $exception) {
-            $this->addressService->explorer->getConnection()->rollBack();
+            $this->postContactService->explorer->getConnection()->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
-            $this->addressService->explorer->getConnection()->rollBack();
+            $this->postContactService->explorer->getConnection()->rollBack();
             throw $exception;
         }
     }
 
     protected function setDefaults(): void
     {
-        $this->getForm()->setDefaults(
-            ['address' => isset($this->model) ? $this->model->address_id : ReferencedId::VALUE_PROMISE]
-        );
+        /** @var AddressDataContainer $container */
+        $container = $this->getForm()->getComponent('address');
+        $container->setModel(isset($this->model) ? $this->model->address : null, '');
     }
 
     public function handleDelete(): void

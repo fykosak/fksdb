@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\RegionService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
+use Nette\Forms\Controls\BaseControl;
 
 class AddressFactory
 {
@@ -33,15 +34,12 @@ class AddressFactory
         bool $notWriteOnly = false,
         bool $showExtendedRows = false
     ): AddressContainer {
-        $container = new AddressContainer($this->container);
-        $this->buildAddress2($container, $conditioningField, $required, $notWriteOnly, $showExtendedRows);
-        return $container;
+        return $this->buildAddress2($conditioningField, $required, $notWriteOnly, $showExtendedRows);
     }
 
-    public function createAddressContainer(string $type): AddressContainer
+    public function createAddressContainer(string $type): AddressDataContainer
     {
-        $container = new AddressContainer($this->container);
-        $this->buildAddress2($container, null, false, true); // TODO is not safe
+        $container = new AddressDataContainer($this->container, false, true);
         switch ($type) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
                 $container->setOption('label', _('Delivery address'));
@@ -54,12 +52,12 @@ class AddressFactory
     }
 
     public function buildAddress2(
-        AddressContainer $container,
         ?Control $conditioningField = null,
         bool $required = false,
         bool $notWriteOnly = false,
         bool $showExtendedRows = false
-    ): void {
+    ): AddressContainer {
+        $container = new AddressContainer($this->container);
         if ($showExtendedRows) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));
@@ -144,5 +142,6 @@ class AddressFactory
                 },
                 _('Chosen country does not match provided postal code.')
             );
+        return $container;
     }
 }

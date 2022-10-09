@@ -29,25 +29,13 @@ class AddressHandler extends ReferencedHandler
         $container->callInjects($this);
     }
 
-    public function inject(
-        AddressService $addressService,
-        PSCRegionService $PSCRegionService
-    ): void {
+    public function inject(AddressService $addressService, PSCRegionService $PSCRegionService): void
+    {
         $this->addressService = $addressService;
         $this->PSCRegionService = $PSCRegionService;
     }
 
-    public function update(Model $model, array $values): void
-    {
-        $this->store($model, $values);
-    }
-
-    public function createFromValues(array $values): AddressModel
-    {
-        return $this->store(null, $values);
-    }
-
-    private function store(?AddressModel $model, array $values): AddressModel
+    public function store(array $values, ?Model $model = null): AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values));
 

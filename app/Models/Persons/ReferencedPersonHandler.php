@@ -79,33 +79,20 @@ class ReferencedPersonHandler extends ReferencedHandler
     }
 
     /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
-     * @throws ModelDataConflictException
-     * @throws ModelException
+     * @param PersonModel|null $model
      * @throws NotImplementedException
-     * @throws StorageException
      */
-    public function createFromValues(array $values): PersonModel
+    public function store(array $values, ?Model $model = null): PersonModel
     {
-        $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
-        $person = $this->storePerson($person, $values);
-        $this->store($person, $values);
-        return $person;
-    }
-
-    /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
-     * @throws ModelDataConflictException
-     * @throws ModelException
-     * @throws NotImplementedException
-     * @throws StorageException
-     */
-    public function update(Model $model, array $values): void
-    {
-        /** @var PersonModel $model */
-        $this->store($model, $values);
+        if (isset($model)) {
+            $this->innerStore($model, $values);
+            return $model;
+        } else {
+            $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            $person = $this->storePerson($person, $values);
+            $this->innerStore($person, $values);
+            return $person;
+        }
     }
 
     public function setEvent(EventModel $event): void
@@ -121,7 +108,7 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(PersonModel &$person, array $data): void
+    private function innerStore(PersonModel &$person, array $data): void
     {
         /*
          * Process data
@@ -251,24 +238,6 @@ class ReferencedPersonHandler extends ReferencedHandler
                         case self::RESOLUTION_OVERWRITE:
                             break;
                     }
-                }
-            }
-        }
-        return $values;
-    }
-
-    private function findModelConflicts(Model $model, array $values, string $subKey): array
-    {
-        foreach ($values as $key => $value) {
-            if (isset($model[$key]) && $model[$key] != $value) {
-                switch ($this->resolution) {
-                    case self::RESOLUTION_EXCEPTION:
-                        throw new ModelDataConflictException([$subKey => [$key => $value]]);
-                    case self::RESOLUTION_KEEP:
-                        unset($values[$key]);
-                        break;
-                    case self::RESOLUTION_OVERWRITE:
-                        break;
                 }
             }
         }
