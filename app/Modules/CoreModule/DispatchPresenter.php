@@ -64,7 +64,7 @@ class DispatchPresenter extends BasePresenter
     private function getAllOrganisers(LoginModel $login): array
     {
         $results = [];
-        foreach ($login->person->getActiveOrgs() as $contestId => $org) {
+        foreach ($login->person->getActiveOrganisers() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(
                     ':Org:Dashboard:default',

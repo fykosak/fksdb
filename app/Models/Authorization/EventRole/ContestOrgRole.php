@@ -9,11 +9,11 @@ use FKSDB\Models\ORM\Models\OrgModel;
 
 class ContestOrgRole extends EventRole
 {
-    public OrgModel $org;
+    public OrgModel $organiser;
 
-    public function __construct(EventModel $event, OrgModel $org)
+    public function __construct(EventModel $event, OrgModel $organiser)
     {
         parent::__construct('event.contestOrg', $event);
-        $this->org = $org;
+        $this->organiser = $organiser;
     }
 }

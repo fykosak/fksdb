@@ -86,7 +86,7 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
         } = this.props.data;
         this.scale = this.createTimeXScale(new Date(min), new Date(max));
         const content = <g transform="translate(0,15)" className="content">
-            {this.createEvents(eventOrgs, 'Event org')}
+            {this.createEvents(eventOrgs, 'Event organiser')}
             {this.createEvents(eventParticipants, 'Event participant')}
             {this.createEvents(eventTeachers, 'Event teacher')}
 
@@ -103,7 +103,7 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
                         <title/>
                     </rect>
                     <text y={this.lineHeight / 2}
-                          x={(since + until) / 2}>Org #{org.model.orgId}</text>
+                          x={(since + until) / 2}>Organiser #{org.model.orgId}</text>
                 </g>;
             })}
             {this.createContestants(contestants)}

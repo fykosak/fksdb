@@ -37,13 +37,13 @@ class SignaturesWebModel extends WebModel
 
         $rootNode = $doc->createElement('signatures');
         $organisers = $contest->getOrganisers();
-        /** @var OrgModel $org */
-        foreach ($organisers as $org) {
+        /** @var OrgModel $organiser */
+        foreach ($organisers as $organiser) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->person->getFullName(),
-                'texSignature' => $org->tex_signature,
-                'domainAlias' => $org->domain_alias,
+                'name' => $organiser->person->getFullName(),
+                'texSignature' => $organiser->tex_signature,
+                'domainAlias' => $organiser->domain_alias,
             ], $doc, $orgNode);
             $rootNode->appendChild($orgNode);
         }

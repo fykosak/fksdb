@@ -46,7 +46,7 @@ class EmailMessageModel extends Model implements Resource
         } elseif (isset($this->recipient)) {
             $mail = $this->recipient;
         } else {
-            throw new InvalidStateException('Recipient org person_id is required');
+            throw new InvalidStateException('Recipient organiser person_id is required');
         }
         $unsubscribedEmailService->checkEmail($mail);
         $message->addTo($mail);

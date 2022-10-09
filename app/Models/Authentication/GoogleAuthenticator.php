@@ -83,10 +83,10 @@ class GoogleAuthenticator extends AbstractAuthenticator
             default:
                 return null;
         }
-        /** @var OrgModel|null $org */
-        $org = $this->orgService->getTable()
+        /** @var OrgModel|null $organiser */
+        $organiser = $this->orgService->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
             ->fetch();
-        return $org ? $org->person : null;
+        return $organiser ? $organiser->person : null;
     }
 }

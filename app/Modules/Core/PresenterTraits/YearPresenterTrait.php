@@ -56,7 +56,7 @@ trait YearPresenterTrait
     {
         $contest = $this->getSelectedContest();
         switch ($this->getRole()->value) {
-            case PresenterRole::ORG:
+            case PresenterRole::ORGANISER:
             case PresenterRole::ALL:
             case PresenterRole::SELECTED:
                 return $contest->getContestYears();

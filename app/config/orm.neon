@@ -172,7 +172,7 @@ orm:
                 event_org_id:
                     accessKey: e_org_id
                     type: primaryKey
-                    title:  _('Event org Id')
+                    title:  _('Event organiser Id')
                 note:
                     type: string
                     title: _('Note')
@@ -291,7 +291,7 @@ orm:
              columnFactories:
                 org_id:
                     type: primaryKey
-                    title: _('Org Id')
+                    title: _('Organiser Id')
                 since:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory

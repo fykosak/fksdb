@@ -7,8 +7,8 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     EventRole,
-    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
+    FyziklaniTeamTeacherRole,
     ParticipantRole
 };
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -60,7 +60,10 @@ class EventRolePrinter
                 $container->addHtml(
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-7'])
-                        ->addText(_('Event org') . ($role->eventOrg->note ? (' - ' . $role->eventOrg->note) : ''))
+                        ->addText(
+                            _('Event organiser') .
+                            ($role->eventOrganiser->note ? (' - ' . $role->eventOrganiser->note) : '')
+                        )
                 );
             } elseif ($role instanceof FyziklaniTeamMemberRole) {
                 $container->addHtml(
@@ -82,7 +85,7 @@ class EventRolePrinter
                 $container->addHtml(
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-6'])
-                        ->addText(_('Contest org'))
+                        ->addText(_('Contest organiser'))
                 );
             }
         }

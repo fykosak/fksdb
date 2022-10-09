@@ -78,12 +78,12 @@ trait ContestPresenterTrait
                     $contestsIds[$contestant->contest_id] = $contestant->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
-            case PresenterRole::ORG:
+            case PresenterRole::ORGANISER:
                 if (!$person) {
                     return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
-                foreach ($person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrganisers() as $org) {
                     $contestsIds[$org->contest_id] = $org->contest_id;
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));

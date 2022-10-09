@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
@@ -48,16 +48,17 @@ class TimelineComponent extends FrontEndComponent
             'until' => [],
         ];
         $organisers = [];
-        /** @var OrgModel $org */
-        foreach ($this->person->getOrganisers() as $org) {
+        /** @var OrgModel $organiser */
+        foreach ($this->person->getOrganisers() as $organiser) {
             $since = new \DateTime(
-                $org->contest->getContestYear($org->since)->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
+                $organiser->contest->getContestYear($organiser->since)->ac_year . '-' .
+                ContestYearService::FIRST_AC_MONTH . '-1'
             );
             $until = new \DateTime();
-            if ($org->until) {
+            if ($organiser->until) {
                 $until = new \DateTime(
-                    $org->contest->getContestYear(
-                        $org->until
+                    $organiser->contest->getContestYear(
+                        $organiser->until
                     )->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
                 );
             }
@@ -67,8 +68,8 @@ class TimelineComponent extends FrontEndComponent
                 'since' => $since->format('c'),
                 'until' => $until->format('c'),
                 'model' => [
-                    'orgId' => $org->org_id,
-                    'contestId' => $org->contest_id,
+                    'orgId' => $organiser->org_id,
+                    'contestId' => $organiser->contest_id,
                 ],
             ];
         }
@@ -109,10 +110,10 @@ class TimelineComponent extends FrontEndComponent
             $eventParticipants[] = ['event' => $this->eventToArray($participant->event), 'model' => null];
         }
         $eventOrganisers = [];
-        /** @var EventOrgModel $eventOrg */
-        foreach ($this->person->getEventOrgs() as $eventOrg) {
-            $events[] = $eventOrg->event;
-            $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->event), 'model' => null];
+        /** @var EventOrgModel $eventOrganiser */
+        foreach ($this->person->getEventOrgs() as $eventOrganiser) {
+            $events[] = $eventOrganiser->event;
+            $eventOrganisers[] = ['event' => $this->eventToArray($eventOrganiser->event), 'model' => null];
         }
         $eventTeachers = [];
         /** @var TeamTeacherModel $teacher */

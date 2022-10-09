@@ -37,22 +37,22 @@ class OrganizersWebModel extends WebModel
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
         $doc->appendChild($rootNode);
-        /** @var OrgModel $org */
-        foreach ($organisers as $org) {
+        /** @var OrgModel $organiser */
+        foreach ($organisers as $organiser) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->person->getFullName(),
-                'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
-                'career' => $org->person->getInfo()->career,
-                'contribution' => $org->contribution,
-                'order' => $org->order,
-                'role' => $org->role,
-                'since' => $org->since,
-                'until' => $org->until,
-                'texSignature' => $org->tex_signature,
-                'domainAlias' => $org->domain_alias,
+                'name' => $organiser->person->getFullName(),
+                'personId' => $organiser->person_id,
+                'academicDegreePrefix' => $organiser->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $organiser->person->getInfo()->academic_degree_suffix,
+                'career' => $organiser->person->getInfo()->career,
+                'contribution' => $organiser->contribution,
+                'order' => $organiser->order,
+                'role' => $organiser->role,
+                'since' => $organiser->since,
+                'until' => $organiser->until,
+                'texSignature' => $organiser->tex_signature,
+                'domainAlias' => $organiser->domain_alias,
             ], $doc, $orgNode);
             $rootNode->appendChild($orgNode);
         }
@@ -70,21 +70,21 @@ class OrganizersWebModel extends WebModel
                 ->where('until IS NULL OR until >=?', $params['year']);
         }
         $items = [];
-        /** @var OrgModel $org */
-        foreach ($organisers as $org) {
+        /** @var OrgModel $organiser */
+        foreach ($organisers as $organiser) {
             $items[] = [
-                'name' => $org->person->getFullName(),
-                'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
-                'career' => $org->person->getInfo()->career,
-                'contribution' => $org->contribution,
-                'order' => $org->order,
-                'role' => $org->role,
-                'since' => $org->since,
-                'until' => $org->until,
-                'texSignature' => $org->tex_signature,
-                'domainAlias' => $org->domain_alias,
+                'name' => $organiser->person->getFullName(),
+                'personId' => $organiser->person_id,
+                'academicDegreePrefix' => $organiser->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $organiser->person->getInfo()->academic_degree_suffix,
+                'career' => $organiser->person->getInfo()->career,
+                'contribution' => $organiser->contribution,
+                'order' => $organiser->order,
+                'role' => $organiser->role,
+                'since' => $organiser->since,
+                'until' => $organiser->until,
+                'texSignature' => $organiser->tex_signature,
+                'domainAlias' => $organiser->domain_alias,
             ];
         }
         return $items;

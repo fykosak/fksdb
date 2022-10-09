@@ -59,7 +59,7 @@ class LoginModel extends Model implements IIdentity
             // roles from other tables
             $person = $this->person;
             if ($person) {
-                foreach ($person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrganisers() as $org) {
                     $this->roles[] = new Grant(
                         RoleModel::ORG,
                         $org->contest,

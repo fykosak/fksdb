@@ -64,7 +64,7 @@ class OrgPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Org %s'), $this->getEntity()->person->getFullName()), 'fa fa-user');
+        return new PageTitle(null, sprintf(_('Organisers %s'), $this->getEntity()->person->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate(): PageTitle

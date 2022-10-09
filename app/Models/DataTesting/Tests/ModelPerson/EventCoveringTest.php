@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Models\DataTesting\TestLog;
-use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
 class EventCoveringTest extends PersonTest
@@ -59,17 +59,17 @@ class EventCoveringTest extends PersonTest
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $organisers[$contestId])) {
-                    $logger->log($this->createLog($year, $contestId, $type, 'eventOrg'));
+                    $logger->log($this->createLog($year, $contestId, $type, 'eventOrganiser'));
                 }
                 $query = $person->getOrgs($contestId);
-                /** @var OrgModel $org */
-                foreach ($query as $org) {
-                    if ($org->until) {
-                        if ($org->until >= $year && $org->since <= $year) {
-                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
+                /** @var OrgModel $organiser */
+                foreach ($query as $organiser) {
+                    if ($organiser->until) {
+                        if ($organiser->until >= $year && $organiser->since <= $year) {
+                            $logger->log($this->createLog($year, $contestId, $type, 'organiser'));
                         }
-                    } elseif ($org->since <= $year) {
-                        $logger->log($this->createLog($year, $contestId, $type, 'org'));
+                    } elseif ($organiser->since <= $year) {
+                        $logger->log($this->createLog($year, $contestId, $type, 'organiser'));
                     }
                 }
             }
@@ -97,10 +97,10 @@ class EventCoveringTest extends PersonTest
             ContestModel::ID_FYKOS => [],
             ContestModel::ID_VYFUK => [],
         ];
-        /** @var EventOrgModel $eventOrg */
-        foreach ($person->getEventOrgs() as $eventOrg) {
-            $year = $eventOrg->event->year;
-            $contestId = $eventOrg->event->event_type->contest_id;
+        /** @var EventOrgModel $eventOrganiser */
+        foreach ($person->getEventOrgs() as $eventOrganiser) {
+            $year = $eventOrganiser->event->year;
+            $contestId = $eventOrganiser->event->event_type->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {
                 $eventOrgYears[$contestId][] = $year;
             }

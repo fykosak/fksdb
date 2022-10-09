@@ -50,6 +50,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::tryFrom(PresenterRole::ORG);
+        return PresenterRole::tryFrom(PresenterRole::ORGANISER);
     }
 }

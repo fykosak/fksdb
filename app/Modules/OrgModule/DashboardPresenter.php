@@ -14,7 +14,7 @@ class DashboardPresenter extends BasePresenter
     {
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $access = $login && count($login->person->getActiveOrgs());
+        $access = $login && count($login->person->getActiveOrganisers());
         $this->setAuthorized($access);
     }
 
