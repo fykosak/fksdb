@@ -8,11 +8,6 @@ use Fykosak\NetteORM\Model;
 
 abstract class ReferencedHandler
 {
-
-    public const RESOLUTION_OVERWRITE = 'overwrite';
-    public const RESOLUTION_KEEP = 'keep';
-    public const RESOLUTION_EXCEPTION = 'exception';
-
     protected ResolutionMode $resolution;
 
     final public function getResolution(): ResolutionMode
@@ -31,15 +26,15 @@ abstract class ReferencedHandler
     {
         foreach ($values as $key => $value) {
             if (isset($model[$key]) && $model[$key] != $value) {
-                switch ($this->resolution) {
-                    case self::RESOLUTION_EXCEPTION:
+                switch ($this->resolution->value) {
+                    case ResolutionMode::EXCEPTION:
                         throw new ModelDataConflictException(
                             $subKey ? [$subKey => [$key => $value]] : [$key => $value]
                         );
-                    case self::RESOLUTION_KEEP:
+                    case ResolutionMode::KEEP:
                         unset($values[$key]);
                         break;
-                    case self::RESOLUTION_OVERWRITE:
+                    case ResolutionMode::OVERWRITE:
                         break;
                 }
             }
