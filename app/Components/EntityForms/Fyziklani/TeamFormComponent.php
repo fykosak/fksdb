@@ -125,6 +125,9 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $persons[$person->person_id] = $person;
             }
         }
+        if (!count($persons)) {
+            throw new NoMemberException();
+        }
         /** @var TeamMemberModel $oldMember */
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
             $this->teamMemberService->disposeModel($oldMember);

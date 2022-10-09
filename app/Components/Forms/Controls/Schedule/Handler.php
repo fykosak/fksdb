@@ -100,7 +100,7 @@ class Handler
     {
         $newData = [];
         foreach ($data as $type => $datum) {
-            $newData[$type] = array_values((array)json_decode($datum));
+            $newData[$type] = $datum ? array_values((array)json_decode($datum)) : [];
         }
         return $newData;
     }

@@ -17,6 +17,7 @@ class NameColumnFactory extends ColumnFactory
     public function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());
+        $control->setRequired(true);
         $control->addRule(
             Form::PATTERN,
             _(
