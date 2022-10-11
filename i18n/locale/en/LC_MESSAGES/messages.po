@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-02 21:33+0200\n"
+"POT-Creation-Date: 2022-10-11 22:21+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -146,7 +146,7 @@ msgstr ""
 #: ../data/events/dsef/dsef24.neon.neon2php:41
 #: ../data/events/dsef/dsef20.neon.neon2php:93
 #: ../data/events/dsef/dsef25.neon.neon2php:41
-#: ../data/events/dsef/dsef28.neon.neon2php:62
+#: ../data/events/dsef/dsef28.neon.neon2php:64
 #: ../data/events/vaf/vaf.neon.neon2php:82
 #: ../data/events/vaf/vaf3.neon.neon2php:89
 msgid "Person"
@@ -1237,7 +1237,7 @@ msgstr ""
 msgid "revoked"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/NameColumnFactory.php:23
+#: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/NameColumnFactory.php:24
 #, fuzzy
 msgid ""
 "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
@@ -1407,7 +1407,7 @@ msgstr ""
 msgid "Departure destination"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:91
+#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:93
 msgid "Unlimited capacity"
 msgstr ""
 
@@ -1806,7 +1806,7 @@ msgid "Field %label is required."
 msgstr ""
 
 #: ../app/Models/Events/FormAdjustments/PrivacyPolicy.php:52
-#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:216
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:220
 msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
@@ -1948,16 +1948,16 @@ msgstr ""
 msgid "Prechod sa nedá vykonať"
 msgstr "Transition cannot be done"
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:74
+#: ../app/Models/Transitions/Callbacks/FofTeamMemberMailCallback.php:19
 #: ../app/Models/Transitions/Callbacks/TeamTeacherMailCallback.php:72
 msgid "Fyziklani Team Registration"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:80
+#: ../app/Models/Transitions/Callbacks/FolTeamMemberMailCallback.php:19
 msgid "Physics Brawl Online Team Registration"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/TeamMemberMailCallback.php:82
+#: ../app/Models/Transitions/Callbacks/FolTeamMemberMailCallback.php:21
 msgid "Physics Brawl Online <online@physicsbrawl.org>"
 msgstr ""
 
@@ -2627,7 +2627,6 @@ msgstr ""
 "it empty as it is."
 
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:33
-#, fuzzy
 msgid ""
 "Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu.\n"
 "                        Pokud nelze školu nalézt, pošlete na email schola."
@@ -2653,8 +2652,11 @@ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 "To calculate category. Leave empty if you are not a high school student."
 
+#: ../app/Components/EntityForms/Fyziklani/NoMemberException.php:14
+msgid "Application must have atleast one member"
+msgstr ""
+
 #: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:35
-#, fuzzy
 msgid ""
 "Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. \n"
 "                        Pokud nelze školu nalézt, pošlete na email schola."
@@ -2686,8 +2688,8 @@ msgstr ""
 msgid "Application has been created"
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:211
-#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:212
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:215
+#: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:216
 #, php-format
 msgid "Member #%d"
 msgstr ""
@@ -3778,7 +3780,7 @@ msgstr "Confirm as a substitute"
 #: ../data/events/dsef/defaultDsef.neon.neon2php:18
 #: ../data/events/dsef/dsef23.neon.neon2php:71
 #: ../data/events/dsef/dsef20.neon.neon2php:74
-#: ../data/events/dsef/dsef28.neon.neon2php:30
+#: ../data/events/dsef/dsef28.neon.neon2php:32
 #: ../data/events/vaf/vaf.neon.neon2php:67
 #: ../data/events/vaf/vaf3.neon.neon2php:74
 msgid "Prezentovat"
@@ -3813,7 +3815,7 @@ msgstr "Present"
 #: ../data/events/dsef/defaultDsef.neon.neon2php:21
 #: ../data/events/dsef/dsef23.neon.neon2php:74
 #: ../data/events/dsef/dsef20.neon.neon2php:77
-#: ../data/events/dsef/dsef28.neon.neon2php:33
+#: ../data/events/dsef/dsef28.neon.neon2php:35
 #: ../data/events/vaf/vaf.neon.neon2php:70
 #: ../data/events/vaf/vaf3.neon.neon2php:77
 msgid "Nepřijel"
@@ -4418,7 +4420,7 @@ msgstr "Register contestant"
 #: ../data/events/dsef/defaultDsef.neon.neon2php:25
 #: ../data/events/dsef/dsef23.neon.neon2php:79
 #: ../data/events/dsef/dsef20.neon.neon2php:82
-#: ../data/events/dsef/dsef28.neon.neon2php:37
+#: ../data/events/dsef/dsef28.neon.neon2php:39
 #: ../data/events/vaf/vaf.neon.neon2php:74
 #: ../data/events/vaf/vaf3.neon.neon2php:81
 msgid "Zrušit přihlášku"
@@ -4446,7 +4448,7 @@ msgstr "Cancel application"
 #: ../data/events/dsef/defaultDsef.neon.neon2php:29
 #: ../data/events/dsef/dsef23.neon.neon2php:83
 #: ../data/events/dsef/dsef20.neon.neon2php:86
-#: ../data/events/dsef/dsef28.neon.neon2php:41
+#: ../data/events/dsef/dsef28.neon.neon2php:43
 #: ../data/events/vaf/vaf.neon.neon2php:78
 #: ../data/events/vaf/vaf3.neon.neon2php:85
 msgid "Smazat přihlášku"
@@ -4488,7 +4490,7 @@ msgstr "Other notes"
 #: ../data/events/dsef/dsef24.neon.neon2php:64
 #: ../data/events/dsef/dsef20.neon.neon2php:120
 #: ../data/events/dsef/dsef25.neon.neon2php:64
-#: ../data/events/dsef/dsef28.neon.neon2php:74
+#: ../data/events/dsef/dsef28.neon.neon2php:76
 #: ../data/events/vaf/vaf.neon.neon2php:103
 #: ../data/events/vaf/vaf3.neon.neon2php:114
 msgid "Účastník"
@@ -5805,12 +5807,12 @@ msgstr "Choose a group"
 msgid "à 30 Kč"
 msgstr "30 CZK/pc"
 
-#: ../data/events/dsef/dsef28.neon.neon2php:25
+#: ../data/events/dsef/dsef28.neon.neon2php:27
 #, fuzzy
 msgid "Přihlásit se"
 msgstr "Login"
 
-#: ../data/events/dsef/dsef28.neon.neon2php:69
+#: ../data/events/dsef/dsef28.neon.neon2php:71
 msgid "Počet \"obědů\" (bageta za 50 Kč)"
 msgstr ""
 
