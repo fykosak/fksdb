@@ -132,7 +132,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->value);
+                $categoryNode->setAttribute('id', (string)$category);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);

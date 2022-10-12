@@ -39,4 +39,22 @@ class ModelCategory extends FakeStringEnum
             new self(self::ALL),
         ];
     }
+
+    public function __toString(): string
+    {
+        $values = [
+            'FYKOS_4' => '4',
+            'FYKOS_3' => '3',
+            'FYKOS_2' => '2',
+            'FYKOS_1' => '1',
+            'VYFUK_9' => '9',
+            'VYFUK_8' => '8',
+            'VYFUK_7' => '7',
+            'VYFUK_6' => '6',
+            'VYFUK_UNK' => 'UNK',
+            'ALL' => 'All'
+        ];
+
+        return $values[$this->value];
+    }
 }
