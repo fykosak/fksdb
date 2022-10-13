@@ -3,15 +3,13 @@
 {varType bool $hasAddress}
 {block content}
     {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY}
-        <p>V prípade ak je odlišná od adresy trvalej. Korešpodencia bude smerovná na túto adresu</p>
+        <p>{_'When different from delivery address. Mails will be send to permanent address.'}</p>
     {/if}
     {include parent}
     {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY && $hasAddress}
         <div class="alert alert-warning">
-            <p>Ak je doručovacia adresa rovnaká ako trvalá je možné ju zmazať, korešpodenica bude
-                smerovaná na trvalú adresu</p>
+            <p>{_'When delivery adrress same as permenant can deleted. Mails will be send to permanent address.'}</p>
             <a href="{link delete!}" class="btn btn-danger">{_'Remove delivery address'}</a>
         </div>
-
     {/if}
 {/block}

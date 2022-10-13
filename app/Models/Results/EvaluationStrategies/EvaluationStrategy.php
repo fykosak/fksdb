@@ -57,9 +57,6 @@ abstract class EvaluationStrategy
     /**
      * @return ModelCategory[]
      */
-    /**
-     * @return ModelCategory[]
-     */
     final public function getCategories(): array
     {
         return array_map(fn($value) => ModelCategory::tryFrom((string)$value), array_keys($this->getCategoryMap()));

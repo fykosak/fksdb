@@ -1,4 +1,6 @@
 {layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonHasFlagModel[] $flags}
+{block headline}{_'Flags'}{/block}
 {block content}
     {if count($flags)}
         {foreach $flags as $flag}

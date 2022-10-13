@@ -24,6 +24,8 @@ use Nette\Forms\Form;
  */
 class AddressFormComponent extends EntityFormComponent
 {
+    public const CONTAINER = 'address';
+
     private PostContactType $postContactType;
     private AddressService $addressService;
     private PostContactService $postContactService;
@@ -44,7 +46,7 @@ class AddressFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $form->addComponent(new AddressDataContainer($this->container, false, true), 'address');
+        $form->addComponent(new AddressDataContainer($this->container, false, true), self::CONTAINER);
     }
 
     /**
@@ -56,7 +58,7 @@ class AddressFormComponent extends EntityFormComponent
             $this->postContactService->explorer->getConnection()->beginTransaction();
             $values = $form->getValues('array');
             $address = (new AddressHandler($this->container))->store(
-                $values['address'],
+                $values[self::CONTAINER],
                 isset($this->model) ? $this->model->address : null
             );
             if (!isset($this->model)) {
@@ -86,7 +88,7 @@ class AddressFormComponent extends EntityFormComponent
     protected function setDefaults(): void
     {
         /** @var AddressDataContainer $container */
-        $container = $this->getForm()->getComponent('address');
+        $container = $this->getForm()->getComponent(self::CONTAINER);
         $container->setModel(
             isset($this->model) ? $this->model->address : null,
             ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)

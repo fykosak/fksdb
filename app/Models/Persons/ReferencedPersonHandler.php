@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
@@ -27,6 +26,7 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
+use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
 class ReferencedPersonHandler extends ReferencedHandler
@@ -232,8 +232,20 @@ class ReferencedPersonHandler extends ReferencedHandler
             $address = $this->addressService->storeModel($data['address']);
             $data['address_id'] = $address->address_id;
             $data['person_id'] = $person->person_id;
-            $data['type'] = PersonFormComponent::mapAddressContainerNameToType($type)->value;
+            $data['type'] = self::mapAddressContainerNameToType($type)->value;
             $this->postContactService->storeModel($data);
+        }
+    }
+
+    public static function mapAddressContainerNameToType(string $containerName): PostContactType
+    {
+        switch ($containerName) {
+            case self::POST_CONTACT_PERMANENT:
+                return PostContactType::tryFrom(PostContactType::PERMANENT);
+            case self::POST_CONTACT_DELIVERY:
+                return PostContactType::tryFrom(PostContactType::DELIVERY);
+            default:
+                throw new InvalidArgumentException();
         }
     }
 

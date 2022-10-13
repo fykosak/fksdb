@@ -6,10 +6,8 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\RegionService;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Control;
@@ -29,29 +27,6 @@ class AddressFactory
     }
 
     public function createAddress(
-        ?Control $conditioningField = null,
-        bool $required = false,
-        bool $notWriteOnly = false,
-        bool $showExtendedRows = false
-    ): AddressContainer {
-        return $this->buildAddress2($conditioningField, $required, $notWriteOnly, $showExtendedRows);
-    }
-
-    public function createAddressContainer(string $type): AddressDataContainer
-    {
-        $container = new AddressDataContainer($this->container, false, true);
-        switch ($type) {
-            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
-                $container->setOption('label', _('Delivery address'));
-                break;
-            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
-                $container->setOption('label', _('Permanent address') . _('(when different from delivery address)'));
-                break;
-        }
-        return $container;
-    }
-
-    public function buildAddress2(
         ?Control $conditioningField = null,
         bool $required = false,
         bool $notWriteOnly = false,

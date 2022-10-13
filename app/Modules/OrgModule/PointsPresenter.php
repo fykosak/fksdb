@@ -26,10 +26,8 @@ class PointsPresenter extends BasePresenter
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
 
-    final public function injectQuarterly(
-        SQLResultsCache $resultsCache,
-        SeriesTable $seriesTable
-    ): void {
+    final public function injectQuarterly(SQLResultsCache $resultsCache, SeriesTable $seriesTable): void
+    {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
     }
