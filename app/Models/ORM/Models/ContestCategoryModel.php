@@ -24,5 +24,4 @@ class ContestCategoryModel extends Model
     public const VYFUK_6 = 'VYFUK_6';
     public const VYFUK_UNK = 'VYFUK_UNK';
     public const ALL = 'ALL';
-
 }
