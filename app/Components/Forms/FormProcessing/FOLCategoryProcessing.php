@@ -68,9 +68,10 @@ class FOLCategoryProcessing extends FormProcessing
         } else {
             $sum = 0;
             $cnt = $year['P'];
-            for ($y = 1; $y <= 4; ++$y) {
-                $sum += $year['H_' . $y] * $y;
-                $cnt += $year['H_' . $y] ?? 0;
+            /** @var StudyYear $value */
+            foreach ([StudyYear::High1, StudyYear::High2, StudyYear::High3, StudyYear::High4] as $value) {
+                $sum += $year[$value->value] * $value->numeric();
+                $cnt += $year[$value->value];
             }
             $avg = $sum / $cnt;
             if ($avg <= 2 && $year[StudyYear::High4->value] === 0 && $year[StudyYear::High3->value] <= 2) {
