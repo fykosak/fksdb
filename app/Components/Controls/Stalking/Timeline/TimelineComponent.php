@@ -17,7 +17,6 @@ use Nette\DI\Container;
 
 class TimelineComponent extends FrontEndComponent
 {
-
     private PersonModel $person;
 
     public function __construct(Container $container, PersonModel $person)

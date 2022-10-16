@@ -9,7 +9,6 @@ use Nette\DI\Container;
 
 class OptimisticFormControl extends FormControl
 {
-
     /** @var callable */
     private $fingerprintCallback;
 

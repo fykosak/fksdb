@@ -15,7 +15,6 @@ use Nette\Application\UI\Form;
 
 class PizzaComponent extends BaseComponent
 {
-
     private array $persons = [];
     private PersonService $personService;
     private PersonFactory $personFactory;

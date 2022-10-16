@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 
 final class TaskCodePreprocessor
 {
-
     private TaskService $taskService;
     private TeamService2 $teamService;
     private EventModel $event;

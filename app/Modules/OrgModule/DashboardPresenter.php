@@ -9,7 +9,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class DashboardPresenter extends BasePresenter
 {
-
     public function authorizedDefault(): void
     {
         /** @var LoginModel $login */

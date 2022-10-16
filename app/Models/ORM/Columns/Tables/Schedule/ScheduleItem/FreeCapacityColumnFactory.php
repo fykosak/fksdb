@@ -12,7 +12,6 @@ use Nette\Utils\Html;
 
 class FreeCapacityColumnFactory extends ColumnFactory
 {
-
     /**
      * @param ScheduleItemModel $model
      */

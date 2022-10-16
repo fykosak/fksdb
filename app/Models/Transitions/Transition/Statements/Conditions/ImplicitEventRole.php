@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 
 class ImplicitEventRole extends EventRole
 {
-
     /**
      * @param Model[] $args
      * @throws BadTypeException

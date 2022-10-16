@@ -17,7 +17,6 @@ use Nette\Utils\Html;
 
 class DomainAliasColumnFactory extends ColumnFactory
 {
-
     /**
      * @param OrgModel $model
      * @throws ContestNotFoundException

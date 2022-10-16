@@ -20,7 +20,6 @@ use Nette\Utils\ArrayHash;
 
 abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider
 {
-
     protected PersonService $personService;
 
     public function __construct(PersonService $personService)

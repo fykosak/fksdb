@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class AnonymousTest extends DsefTestCase
 {
-
     public function testDisplay(): void
     {
         $request = new Request('Public:Application', 'GET', [

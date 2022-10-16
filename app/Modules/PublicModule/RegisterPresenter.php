@@ -41,7 +41,6 @@ use Nette\Application\UI\Form;
  */
 class RegisterPresenter extends CoreBasePresenter
 {
-
     /**
      * @persistent
      */

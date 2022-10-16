@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 class NameColumnFactory extends ColumnFactory
 {
-
     /**
      * @param ScheduleItemModel $model
      */

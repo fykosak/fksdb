@@ -15,7 +15,6 @@ use Nette\Forms\Controls\BaseControl;
 
 class SingleReflectionFormFactory
 {
-
     protected ORMFactory $tableReflectionFactory;
 
     public function __construct(ORMFactory $tableReflectionFactory)

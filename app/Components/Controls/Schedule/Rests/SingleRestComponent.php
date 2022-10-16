@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 
 class SingleRestComponent extends BaseComponent
 {
-
     final public function render(PersonModel $person, EventModel $event): void
     {
         $this->template->rests = $person->getScheduleRests($event);

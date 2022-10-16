@@ -33,7 +33,6 @@ use Nette\InvalidArgumentException;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {
-
     public Resolver $resolver;
     public ContestYearModel $contestYear;
     private array $fieldsDefinition;

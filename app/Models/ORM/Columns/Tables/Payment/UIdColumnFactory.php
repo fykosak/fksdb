@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 class UIdColumnFactory extends ColumnFactory
 {
-
     /**
      * @param PaymentModel $model
      */

@@ -12,7 +12,6 @@ use Tracy\Debugger;
 
 class ErrorPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Error'));

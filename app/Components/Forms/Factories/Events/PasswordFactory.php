@@ -10,7 +10,6 @@ use Nette\Forms\Controls\TextInput;
 
 class PasswordFactory extends AbstractFactory
 {
-
     public function createComponent(Field $field): TextInput
     {
         $element = new TextInput($field->getLabel());

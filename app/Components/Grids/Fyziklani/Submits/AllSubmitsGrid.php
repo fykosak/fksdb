@@ -28,7 +28,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class AllSubmitsGrid extends SubmitsGrid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)

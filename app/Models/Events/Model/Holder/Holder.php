@@ -26,7 +26,6 @@ use Nette\Utils\ArrayHash;
  */
 class Holder
 {
-
     /** @var FormAdjustment[] */
     private array $formAdjustments = [];
 

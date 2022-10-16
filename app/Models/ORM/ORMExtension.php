@@ -26,7 +26,6 @@ use Nette\DI\Definitions\Statement;
 
 class ORMExtension extends Extension
 {
-
     /**
      * @throws NotImplementedException
      */

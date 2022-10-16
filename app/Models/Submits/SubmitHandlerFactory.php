@@ -23,7 +23,6 @@ use Nette\Utils\DateTime;
 
 class SubmitHandlerFactory
 {
-
     public CorrectedStorage $correctedStorage;
     public UploadedStorage $uploadedStorage;
     public SubmitService $submitService;

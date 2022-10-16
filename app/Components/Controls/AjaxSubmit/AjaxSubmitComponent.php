@@ -24,7 +24,6 @@ use Tracy\Debugger;
 
 class AjaxSubmitComponent extends AjaxComponent
 {
-
     private SubmitService $submitService;
     private TaskModel $task;
     private ContestantModel $contestant;

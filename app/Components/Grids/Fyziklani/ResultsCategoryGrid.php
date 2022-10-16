@@ -16,7 +16,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class ResultsCategoryGrid extends BaseGrid
 {
-
     private EventModel $event;
     private TeamCategory $category;
 

@@ -15,7 +15,6 @@ use Nette\Database\Explorer;
 
 abstract class Machine extends AbstractMachine
 {
-
     protected Explorer $explorer;
     /**
      * @var callable|null

@@ -18,7 +18,6 @@ use Nette\Security\Resource;
  */
 class QueryModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'storedQuery';
 
     /**

@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 class SchoolsInTeam extends SchoolCheck
 {
-
     /** @var callable|int */
     private $schoolsInTeam;
     private int $schoolsInTeamValue;

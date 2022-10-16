@@ -10,7 +10,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class MyPaymentsPresenter extends BasePresenter
 {
-
     public function authorizedDefault(): void
     {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getLoggedPerson());

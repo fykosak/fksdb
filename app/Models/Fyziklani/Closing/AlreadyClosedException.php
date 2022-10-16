@@ -10,7 +10,6 @@ use Nette\Http\IResponse;
 
 class AlreadyClosedException extends BadRequestException
 {
-
     public function __construct(TeamModel2 $team, ?\Throwable $previous = null)
     {
         parent::__construct(

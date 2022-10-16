@@ -17,7 +17,6 @@ use Tracy\Debugger;
 
 abstract class EntityFormComponent extends FormComponent
 {
-
     protected ?Model $model;
 
     public function __construct(Container $container, ?Model $model)

@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 abstract class SearchContainer extends ContainerWithOptions
 {
-
     protected const CONTROL_SEARCH = '_c_search';
     protected const SUBMIT_SEARCH = '__search';
 

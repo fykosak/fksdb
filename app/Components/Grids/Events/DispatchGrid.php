@@ -14,7 +14,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class DispatchGrid extends EntityGrid
 {
-
     public function __construct(Container $container)
     {
         parent::__construct(

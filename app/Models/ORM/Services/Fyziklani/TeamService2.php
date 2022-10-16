@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Service;
  */
 class TeamService2 extends Service
 {
-
     public function isReadyForClosing(EventModel $event, ?TeamCategory $category = null): bool
     {
         $query = $event->getParticipatingFyziklaniTeams();

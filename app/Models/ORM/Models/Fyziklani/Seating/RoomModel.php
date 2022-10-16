@@ -15,7 +15,6 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 class RoomModel extends Model
 {
-
     public function getSeats(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SEAT);

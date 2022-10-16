@@ -32,7 +32,6 @@ use Nette\Security\Resource;
  */
 class PersonModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'person';
 
     /**

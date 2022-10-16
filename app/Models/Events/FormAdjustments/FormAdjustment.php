@@ -13,6 +13,5 @@ use Nette\Forms\Form;
  */
 interface FormAdjustment
 {
-
     public function adjust(Form $form, Holder $holder): void;
 }

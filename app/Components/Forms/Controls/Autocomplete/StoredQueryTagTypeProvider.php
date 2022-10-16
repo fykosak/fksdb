@@ -10,7 +10,6 @@ use Fykosak\NetteORM\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
-
     private const DESCRIPTION = 'description';
     private TagTypeService $storedQueryTagTypeService;
     private TypedSelection $searchTable;

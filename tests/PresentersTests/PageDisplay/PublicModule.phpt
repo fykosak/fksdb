@@ -12,7 +12,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 class PublicModule extends AbstractPageDisplayTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

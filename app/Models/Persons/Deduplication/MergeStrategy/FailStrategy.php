@@ -6,7 +6,6 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 class FailStrategy implements MergeStrategy
 {
-
     /**
      * @param mixed $trunk
      * @param mixed $merged

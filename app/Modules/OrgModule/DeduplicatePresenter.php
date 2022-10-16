@@ -25,7 +25,6 @@ use Nette\Utils\Html;
 
 class DeduplicatePresenter extends BasePresenter
 {
-
     private PersonService $personService;
     private Merger $merger;
     private PersonInfoService $personInfoService;

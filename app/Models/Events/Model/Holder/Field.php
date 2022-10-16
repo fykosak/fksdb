@@ -10,7 +10,6 @@ use Nette\Forms\Controls\BaseControl;
 
 class Field
 {
-
     private string $name;
     private bool $determining;
     private ?string $label;

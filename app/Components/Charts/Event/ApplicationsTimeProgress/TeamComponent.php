@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class TeamComponent extends FrontEndComponent implements Chart
 {
-
     private EventTypeModel $eventType;
 
     public function __construct(Container $context, EventModel $event)

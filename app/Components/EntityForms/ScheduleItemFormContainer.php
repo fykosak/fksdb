@@ -21,7 +21,6 @@ use Nette\Forms\Form;
  */
 class ScheduleItemFormContainer extends EntityFormComponent
 {
-
     public const CONTAINER = 'container';
 
     private ScheduleItemService $scheduleItemService;

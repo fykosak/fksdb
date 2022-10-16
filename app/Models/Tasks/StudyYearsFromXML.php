@@ -16,7 +16,6 @@ use Nette\DI\Container;
  */
 class StudyYearsFromXML extends Stage
 {
-
     public const XML_ELEMENT_PARENT = 'study-years';
     public const XML_ELEMENT_CHILD = 'study-year';
 

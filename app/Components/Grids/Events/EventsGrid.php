@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class EventsGrid extends EntityGrid
 {
-
     public function __construct(Container $container, ContestYearModel $contestYear)
     {
         parent::__construct($container, EventService::class, [

@@ -12,7 +12,6 @@ use Nette\Utils\Html;
 
 class HashColumnFactory extends ColumnFactory
 {
-
     /**
      * @param LoginModel $model
      */

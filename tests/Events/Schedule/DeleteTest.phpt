@@ -23,7 +23,6 @@ use Tester\Assert;
 
 class DeleteTest extends ScheduleTestCase
 {
-
     protected PersonModel $lastPerson;
 
     protected EventParticipantModel $dsefApp;

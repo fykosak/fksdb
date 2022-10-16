@@ -21,7 +21,6 @@ use Tester\Assert;
 
 class ApplicationPresenterTest extends EventTestCase
 {
-
     private IPresenter $fixture;
 
     protected function getEvent(): EventModel

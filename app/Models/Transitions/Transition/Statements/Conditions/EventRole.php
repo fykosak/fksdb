@@ -9,7 +9,6 @@ use FKSDB\Models\Transitions\Transition\Statements\Statement;
 
 abstract class EventRole extends Statement
 {
-
     protected EventAuthorizator $eventAuthorizator;
     protected ?string $privilege;
 

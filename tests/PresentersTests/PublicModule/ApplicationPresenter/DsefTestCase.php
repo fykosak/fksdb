@@ -13,7 +13,6 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class DsefTestCase extends EventTestCase
 {
-
     protected ApplicationPresenter $fixture;
     protected PersonModel $person;
     protected EventModel $event;

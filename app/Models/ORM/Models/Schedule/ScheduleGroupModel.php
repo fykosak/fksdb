@@ -24,7 +24,6 @@ use Nette\Security\Resource;
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.scheduleGroup';
 
     public function getItems(): TypedGroupedSelection

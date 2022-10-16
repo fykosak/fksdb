@@ -33,7 +33,6 @@ use Nette\InvalidArgumentException;
 
 class ApplicationPresenter extends BasePresenter
 {
-
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
     private ?Model $eventApplication = null;

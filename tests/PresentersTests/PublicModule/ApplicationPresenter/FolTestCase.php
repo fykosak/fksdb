@@ -15,7 +15,6 @@ use Tester\Assert;
 
 abstract class FolTestCase extends EventTestCase
 {
-
     protected IPresenter $fixture;
     protected PersonModel $person;
     protected EventModel $event;

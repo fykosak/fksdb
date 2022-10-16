@@ -17,7 +17,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class ResultsGrid extends BaseGrid
 {
-
     private StoredQuery $storedQuery;
 
     public function __construct(StoredQuery $storedQuery, Container $container)

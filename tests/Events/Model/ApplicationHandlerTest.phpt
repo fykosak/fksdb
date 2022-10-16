@@ -26,7 +26,6 @@ use Tester\Assert;
 
 class ApplicationHandlerTest extends EventTestCase
 {
-
     private ApplicationHandler $fixture;
     private TeamService $serviceTeam;
     private Holder $holder;

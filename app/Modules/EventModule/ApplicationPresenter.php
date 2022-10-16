@@ -23,7 +23,6 @@ use Nette\Application\ForbiddenRequestException;
 
 class ApplicationPresenter extends AbstractApplicationPresenter
 {
-
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Application import'), 'fas fa-download');

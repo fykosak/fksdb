@@ -13,7 +13,6 @@ $container = require '../../../Bootstrap.php';
 
 class AllUpload extends SubmitTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

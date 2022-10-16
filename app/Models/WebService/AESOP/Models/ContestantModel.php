@@ -17,7 +17,6 @@ use Nette\DI\Container;
 
 class ContestantModel extends AESOPModel
 {
-
     protected TaskService $taskService;
     private ?ContestCategoryModel $category;
 

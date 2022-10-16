@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\TaskModel;
  */
 class EvaluationFykos2001 extends EvaluationStrategy
 {
-
     public function getPointsColumn(TaskModel $task): string
     {
         return 's.raw_points';

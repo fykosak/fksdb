@@ -15,7 +15,6 @@ use Nette\InvalidArgumentException;
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 {
-
     private BaseMachine $baseMachine;
     private array $inducedTransitions = [];
     private string $mask;

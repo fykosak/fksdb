@@ -8,7 +8,6 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
 
 class Not extends EvaluatedExpression
 {
-
     /** @var mixed */
     private $expression;
 

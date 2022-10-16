@@ -29,7 +29,6 @@ use Tracy\Debugger;
 
 class SubmitPresenter extends BasePresenter
 {
-
     private SubmitService $submitService;
     private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;

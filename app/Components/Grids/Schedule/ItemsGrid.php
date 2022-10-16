@@ -14,7 +14,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class ItemsGrid extends RelatedGrid
 {
-
     public function __construct(Container $container, ScheduleGroupModel $group)
     {
         parent::__construct($container, $group, 'schedule_item');

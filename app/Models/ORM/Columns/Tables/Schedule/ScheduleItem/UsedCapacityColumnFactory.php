@@ -12,7 +12,6 @@ use Nette\Utils\Html;
 
 class UsedCapacityColumnFactory extends ColumnFactory
 {
-
     /**
      * @param ScheduleItemModel $model
      */

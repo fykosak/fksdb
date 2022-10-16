@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 
 class ExplicitEventRole extends EventRole
 {
-
     private EventModel $event;
 
     private string $resource;

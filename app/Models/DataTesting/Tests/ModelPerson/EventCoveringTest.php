@@ -16,7 +16,6 @@ use Fykosak\Utils\Logging\Message;
 
 class EventCoveringTest extends PersonTest
 {
-
     public function __construct()
     {
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));

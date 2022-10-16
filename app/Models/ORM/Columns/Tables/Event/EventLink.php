@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class EventLink extends ColumnFactory
 {
-
     private LinkGenerator $linkGenerator;
 
     public function __construct(LinkGenerator $linkGenerator, MetaDataFactory $metaDataFactory)

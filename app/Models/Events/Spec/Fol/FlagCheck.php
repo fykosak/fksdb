@@ -16,7 +16,6 @@ use Nette\Forms\Control;
 
 class FlagCheck extends AbstractAdjustment
 {
-
     private SchoolService $schoolService;
     private PersonHistoryService $personHistoryService;
     private Holder $holder;

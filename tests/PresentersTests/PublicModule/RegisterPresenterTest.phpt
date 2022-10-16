@@ -18,7 +18,6 @@ use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase
 {
-
     private IPresenter $fixture;
 
     protected function setUp(): void

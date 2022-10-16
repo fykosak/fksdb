@@ -21,7 +21,6 @@ use Tester\DomQuery;
 
 class PrimaryLast extends ResourceAvailabilityTestCase
 {
-
     private EventParticipantModel $app;
 
     protected function setUp(): void

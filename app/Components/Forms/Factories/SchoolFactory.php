@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 class SchoolFactory
 {
-
     private SchoolProvider $schoolProvider;
 
     public function __construct(SchoolProvider $schoolProvider)

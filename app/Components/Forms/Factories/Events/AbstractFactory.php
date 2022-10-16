@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 abstract class AbstractFactory implements FieldFactory
 {
-
     public function setFieldDefaultValue(BaseControl $control, Field $field): void
     {
         if (!$field->isModifiable()) {

@@ -25,7 +25,6 @@ use Nette\Forms\Form;
 
 class SettingsPresenter extends BasePresenter
 {
-
     public const CONT_LOGIN = 'login';
 
     private LoginService $loginService;

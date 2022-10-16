@@ -31,7 +31,6 @@ use Tracy\Debugger;
 
 class ApplicationHandler
 {
-
     public const ERROR_ROLLBACK = 'rollback';
     public const ERROR_SKIP = 'skip';
     public const STATE_TRANSITION = 'transition';

@@ -12,7 +12,6 @@ use Nette\Application\BadRequestException;
 
 class PersonScheduleFactory
 {
-
     private ScheduleItemService $scheduleItemService;
 
     public function __construct(ScheduleItemService $scheduleItemService)

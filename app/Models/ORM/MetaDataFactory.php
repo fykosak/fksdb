@@ -8,7 +8,6 @@ use Nette\Database\Connection;
 
 class MetaDataFactory
 {
-
     private array $metadata = [];
     private Connection $connection;
 

@@ -17,7 +17,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
-
     private TypedSelection $trunkPersons;
 
     /** @var PersonModel[] trunkId => ModelPerson */

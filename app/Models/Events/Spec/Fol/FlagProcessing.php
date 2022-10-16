@@ -14,7 +14,6 @@ use Nette\Utils\ArrayHash;
 
 class FlagProcessing extends WithSchoolProcessing
 {
-
     private SchoolService $schoolService;
 
     public function __construct(SchoolService $schoolService)

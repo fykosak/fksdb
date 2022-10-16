@@ -13,7 +13,6 @@ use Nette\Utils\Html;
 
 class FQNameColumnFactory extends ColumnFactory
 {
-
     /**
      * @param TaskModel $model
      */

@@ -11,7 +11,6 @@ use Nette\Application\AbortException;
 
 class WebServicePresenter extends BasePresenter
 {
-
     private \SoapServer $server;
     private ContestAuthorizator $contestAuthorizator;
 

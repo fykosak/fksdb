@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class TeamSubmitsGrid extends SubmitsGrid
 {
-
     private TeamModel2 $team;
 
     public function __construct(TeamModel2 $team, Container $container)

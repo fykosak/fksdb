@@ -9,7 +9,6 @@ use Nette\Forms\Controls\SelectBox;
 
 class CaptchaBox extends SelectBox
 {
-
     private const VALUE_YES = 'xyz';
     private const VALUE_NO = 'pqrt';
 

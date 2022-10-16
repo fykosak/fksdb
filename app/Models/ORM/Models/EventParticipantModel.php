@@ -43,7 +43,6 @@ use Nette\Security\Resource;
  */
 class EventParticipantModel extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';

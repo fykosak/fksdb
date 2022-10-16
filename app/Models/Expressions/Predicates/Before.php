@@ -9,7 +9,6 @@ use Nette\InvalidStateException;
 
 class Before extends EvaluatedExpression
 {
-
     /** @var mixed */
     private $datetime;
 

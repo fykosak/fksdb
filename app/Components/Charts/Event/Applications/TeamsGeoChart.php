@@ -9,7 +9,6 @@ use Nette\DI\Container;
 
 class TeamsGeoChart extends ApplicationsPerCountryChart
 {
-
     public function __construct(Container $context, EventModel $event)
     {
         parent::__construct($context, $event, 'chart.events.teams.geo');

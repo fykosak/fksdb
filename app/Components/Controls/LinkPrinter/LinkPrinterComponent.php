@@ -13,7 +13,6 @@ use Nette\Application\UI\InvalidLinkException;
 
 class LinkPrinterComponent extends BaseComponent
 {
-
     private ORMFactory $tableReflectionFactory;
 
     final public function injectTableReflectionFactory(ORMFactory $tableReflectionFactory): void

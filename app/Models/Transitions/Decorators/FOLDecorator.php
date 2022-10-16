@@ -9,7 +9,6 @@ use FKSDB\Models\Transitions\TransitionsDecorator;
 
 class FOLDecorator implements TransitionsDecorator
 {
-
     public function decorate(Machine $machine): void
     {
     }

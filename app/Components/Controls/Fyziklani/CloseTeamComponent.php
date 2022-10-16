@@ -14,7 +14,6 @@ use Nette\DI\Container;
 
 class CloseTeamComponent extends BaseComponent
 {
-
     private TeamModel2 $team;
     private Connection $connection;
 

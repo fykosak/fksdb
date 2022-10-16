@@ -12,7 +12,6 @@ use Fykosak\Utils\Logging\MemoryLogger;
  */
 class Pipeline
 {
-
     /** @var Stage[] */
     public array $stages = [];
 

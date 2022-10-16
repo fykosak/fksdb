@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Service;
  */
 class EventService extends Service
 {
-
     public function getEvents(ContestYearModel $contestYear): TypedSelection
     {
         // TODO to related

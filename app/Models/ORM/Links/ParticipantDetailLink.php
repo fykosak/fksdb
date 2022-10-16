@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 
 class ParticipantDetailLink extends LinkFactory
 {
-
     public function getText(): string
     {
         return _('Applications detail');

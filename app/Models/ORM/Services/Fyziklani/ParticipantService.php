@@ -8,5 +8,4 @@ use FKSDB\Models\ORM\Services\OldServiceSingle;
 
 class ParticipantService extends OldServiceSingle
 {
-
 }

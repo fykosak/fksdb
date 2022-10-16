@@ -18,7 +18,6 @@ use Tester\Assert;
 
 class EventPresenterTest extends AbstractOrgPresenterTestCase
 {
-
     private EventModel $event;
 
     protected function setUp(): void

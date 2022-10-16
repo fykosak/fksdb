@@ -11,7 +11,6 @@ use Nette\Utils\ArrayHash;
 
 class CategoryProcessing2 extends AbstractCategoryProcessing
 {
-
     /**
      *   Open (staří odkudkoliv - pokazí to i jeden člen týmu)
      *   Zahraniční

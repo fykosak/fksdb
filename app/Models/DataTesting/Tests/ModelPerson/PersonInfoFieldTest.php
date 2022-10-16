@@ -12,7 +12,6 @@ use Fykosak\Utils\Logging\Message;
 
 class PersonInfoFieldTest extends PersonFileLevelTest
 {
-
     /**
      * @throws BadTypeException
      */

@@ -19,7 +19,6 @@ use Tester\DomQuery;
 
 class SecondaryLimitOk extends ResourceAvailabilityTestCase
 {
-
     private EventModel $tsafEvent;
 
     protected function setUp(): void

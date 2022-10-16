@@ -18,7 +18,6 @@ use Nette\NotImplementedException;
 
 class Helpers
 {
-
     /** @var string[] */
     private static array $semanticMap = [
         'and' => LogicAnd::class,

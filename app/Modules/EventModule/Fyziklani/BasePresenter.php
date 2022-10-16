@@ -12,7 +12,6 @@ use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 
 abstract class BasePresenter extends EventBasePresenter
 {
-
     protected TeamService2 $teamService;
     protected SubmitService $submitService;
 

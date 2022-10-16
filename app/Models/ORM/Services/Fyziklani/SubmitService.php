@@ -16,7 +16,6 @@ use Fykosak\NetteORM\TypedSelection;
  */
 class SubmitService extends Service
 {
-
     public function findByTaskAndTeam(TaskModel $task, TeamModel2 $team): ?SubmitModel
     {
         return $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();

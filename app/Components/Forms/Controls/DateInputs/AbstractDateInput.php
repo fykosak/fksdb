@@ -10,7 +10,6 @@ use Nette\Utils\Html;
 
 abstract class AbstractDateInput extends TextInput
 {
-
     protected string $format;
 
     /**

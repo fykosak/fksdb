@@ -11,7 +11,6 @@ use Fykosak\NetteORM\Service;
 
 class CarefulRewrite extends SecondaryModelStrategy
 {
-
     private array $safeKeys;
 
     public function __construct(array $safeKeys = [])

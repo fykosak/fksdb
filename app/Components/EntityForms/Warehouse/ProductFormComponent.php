@@ -18,7 +18,6 @@ use Nette\Forms\Form;
 
 class ProductFormComponent extends EntityFormComponent
 {
-
     protected ProducerService $producerService;
     protected ProductService $productService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;

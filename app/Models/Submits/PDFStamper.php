@@ -10,7 +10,6 @@ use Nette\Utils\Strings;
 
 class PDFStamper implements StorageProcessing
 {
-
     private string $inputFile;
 
     private string $outputFile;

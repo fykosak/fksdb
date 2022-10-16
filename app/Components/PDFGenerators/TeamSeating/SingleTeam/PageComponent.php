@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 
 class PageComponent extends SeatingPageComponent
 {
-
     /**
      * @param TeamModel2 $row
      * @throws BadTypeException

@@ -12,7 +12,6 @@ use Nette\DI\Container;
 
 abstract class ApplicationsPerCountryChart extends GeoChart
 {
-
     protected EventModel $event;
     protected TeamMemberService $teamMemberService;
 

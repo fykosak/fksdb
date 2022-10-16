@@ -20,7 +20,6 @@ use Nette\InvalidArgumentException;
 
 class ResultsComponent extends BaseComponent
 {
-
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
     /**

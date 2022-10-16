@@ -18,7 +18,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class ContestantsGrid extends BaseGrid
 {
-
     private ContestYearModel $contestYear;
 
     public function __construct(Container $container, ContestYearModel $contestYear)

@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class ItemsGrid extends EntityGrid
 {
-
     public function __construct(Container $container, ContestModel $contest)
     {
         parent::__construct($container, ItemService::class, [

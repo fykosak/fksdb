@@ -11,7 +11,6 @@ use Fykosak\NetteORM\TypedSelection;
 
 class SeriesTable
 {
-
     public const FORM_SUBMIT = 'submit';
     public const FORM_CONTESTANT = 'contestant';
 

@@ -14,7 +14,6 @@ use Nette\Forms\Control;
 
 abstract class SchoolCheck extends AbstractAdjustment
 {
-
     private PersonHistoryService $personHistoryService;
     private Holder $holder;
 

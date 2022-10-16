@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class TaskGrid extends BaseGrid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)

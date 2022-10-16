@@ -20,7 +20,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
-
     private PersonService $personService;
 
     private DataTestingFactory $dataTestingFactory;

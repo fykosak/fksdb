@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class FullNameColumnFactory extends ColumnFactory
 {
-
     /**
      * @throws AbstractColumnException
      */

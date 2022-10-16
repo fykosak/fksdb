@@ -16,7 +16,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class AllPersonsGrid extends BaseGrid
 {
-
     private PersonScheduleService $personScheduleService;
     private EventModel $event;
 

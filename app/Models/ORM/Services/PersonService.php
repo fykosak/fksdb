@@ -13,7 +13,6 @@ use Fykosak\NetteORM\Service;
  */
 class PersonService extends Service
 {
-
     public function findByEmail(?string $email): ?PersonModel
     {
         return $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;

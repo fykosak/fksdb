@@ -10,7 +10,6 @@ use Nette\DI\Container;
 
 final class LanguageChooserComponent extends ChooserComponent
 {
-
     private array $supportedLanguages = [];
     public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 

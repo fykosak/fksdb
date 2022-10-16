@@ -14,7 +14,6 @@ use Tester\Assert;
 
 class Display extends StalkingTestCase
 {
-
     public function testDisplay(): void
     {
         $request = $this->createRequest();

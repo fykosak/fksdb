@@ -12,7 +12,6 @@ use Nette\OutOfRangeException;
 
 class DefaultGenerator extends AbstractSymbolGenerator
 {
-
     private int $variableSymbolStart;
 
     private int $variableSymbolEnd;

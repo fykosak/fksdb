@@ -13,7 +13,6 @@ use Nette\InvalidStateException;
  */
 class DetailResultsModel extends AbstractResultsModel
 {
-
     protected int $series;
     /** Cache */
     private array $dataColumns = [];

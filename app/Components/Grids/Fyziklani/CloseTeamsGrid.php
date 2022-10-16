@@ -17,7 +17,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class CloseTeamsGrid extends BaseGrid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)

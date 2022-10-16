@@ -16,7 +16,6 @@ use Nette\Forms\Control;
 
 class BornCheck extends AbstractAdjustment
 {
-
     private SchoolService $schoolService;
     private PersonHistoryService $personHistoryService;
     private Holder $holder;

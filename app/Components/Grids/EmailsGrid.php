@@ -14,7 +14,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class EmailsGrid extends EntityGrid
 {
-
     public function __construct(Container $container)
     {
         parent::__construct($container, EmailMessageService::class, [

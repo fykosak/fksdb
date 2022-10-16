@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 
 class Schedule extends EventModuleTestCase
 {
-
     private ScheduleGroupModel $scheduleGroup;
 
     protected function setUp(): void

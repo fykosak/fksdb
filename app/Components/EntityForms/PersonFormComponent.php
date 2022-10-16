@@ -28,7 +28,6 @@ use Nette\InvalidArgumentException;
  */
 class PersonFormComponent extends EntityFormComponent
 {
-
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
 

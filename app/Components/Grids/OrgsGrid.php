@@ -17,7 +17,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class OrgsGrid extends BaseGrid
 {
-
     private ContestModel $contest;
 
     public function __construct(Container $container, ContestModel $contest)

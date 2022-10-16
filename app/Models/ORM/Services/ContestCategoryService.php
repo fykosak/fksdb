@@ -9,7 +9,6 @@ use Fykosak\NetteORM\Service;
 
 class ContestCategoryService extends Service
 {
-
     public function findByLabel(string $label): ?ContestCategoryModel
     {
         return $this->getTable()->where('label', $label)->fetch();

@@ -8,7 +8,6 @@ use FKSDB\Models\Transitions\Transition\Statements\Statement;
 
 class Falsable extends Statement
 {
-
     protected function evaluate(...$args): bool
     {
         return false;

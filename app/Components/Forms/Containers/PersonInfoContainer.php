@@ -8,7 +8,6 @@ use Fykosak\NetteORM\Model;
 
 class PersonInfoContainer extends ModelContainer
 {
-
     /**
      * @param mixed|iterable $data
      * @return static

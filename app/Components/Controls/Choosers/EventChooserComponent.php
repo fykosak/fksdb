@@ -11,7 +11,6 @@ use Nette\DI\Container;
 
 final class EventChooserComponent extends ChooserComponent
 {
-
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event)

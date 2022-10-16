@@ -15,7 +15,6 @@ use Nette\Utils\Html;
 
 class OrderColumnFactory extends ColumnFactory
 {
-
     public function getOrderMapping(): array
     {
         return [

@@ -10,7 +10,6 @@ use Nette\Forms\Controls\BaseControl;
 
 interface FieldFactory
 {
-
     public function createComponent(Field $field): BaseControl;
 
     /**

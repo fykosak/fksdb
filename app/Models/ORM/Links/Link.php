@@ -8,7 +8,6 @@ use Fykosak\NetteORM\Model;
 
 class Link extends LinkFactory
 {
-
     private string $destination;
     private array $params;
     private string $title;

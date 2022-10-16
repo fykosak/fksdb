@@ -15,7 +15,6 @@ use Nette\Security\UserStorage;
 
 class SelfAssertion implements Assertion
 {
-
     private UserStorage $userStorage;
 
     public function __construct(UserStorage $userStorage)

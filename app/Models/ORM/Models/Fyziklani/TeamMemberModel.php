@@ -18,7 +18,6 @@ use Fykosak\NetteORM\Model;
  */
 class TeamMemberModel extends Model
 {
-
     public function getPersonHistory(): ?PersonHistoryModel
     {
         return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());

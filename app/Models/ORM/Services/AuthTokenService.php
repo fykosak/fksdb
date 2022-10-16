@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Service;
 
 class AuthTokenService extends Service
 {
-
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**

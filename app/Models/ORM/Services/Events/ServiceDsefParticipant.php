@@ -11,5 +11,4 @@ use FKSDB\Models\ORM\Services\OldServiceSingle;
  */
 class ServiceDsefParticipant extends OldServiceSingle
 {
-
 }

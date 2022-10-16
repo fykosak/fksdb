@@ -13,7 +13,6 @@ use Nette\Utils\Html;
 
 class ContestColumnFactory extends ColumnFactory
 {
-
     /**
      * @param ContestModel $model
      * @throws ContestNotFoundException

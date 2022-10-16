@@ -19,7 +19,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class SingleApplicationsGrid extends AbstractApplicationsGrid
 {
-
     /**
      * @throws BadTypeException
      * @throws DuplicateButtonException

@@ -25,7 +25,6 @@ use Fykosak\Utils\Logging\FlashMessageDump;
  */
 class ApplicationComponent extends BaseComponent
 {
-
     private ApplicationHandler $handler;
     private Holder $holder;
     /** @var callable ($primaryModelId, $eventId) */

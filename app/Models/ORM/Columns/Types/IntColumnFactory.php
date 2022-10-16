@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class IntColumnFactory extends ColumnFactory
 {
-
     private string $nullValue = 'notSet';
 
     private ?string $prefix = null;

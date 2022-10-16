@@ -23,7 +23,6 @@ use Nette\Neon\Neon;
 
 class BaseHolder
 {
-
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
     public string $name;

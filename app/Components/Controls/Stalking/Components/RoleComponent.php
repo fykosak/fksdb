@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 
 class RoleComponent extends BaseStalkingComponent
 {
-
     final public function render(PersonModel $person, int $userPermissions): void
     {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);

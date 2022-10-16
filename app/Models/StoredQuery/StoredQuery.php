@@ -16,7 +16,6 @@ use NiftyGrid\DataSource\IDataSource;
  */
 class StoredQuery implements IDataSource, Resource
 {
-
     private const INNER_QUERY = 'sub';
     private ?QueryModel $queryPattern = null;
     private ?string $qid = null;

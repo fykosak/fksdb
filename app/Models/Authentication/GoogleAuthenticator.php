@@ -17,7 +17,6 @@ use Nette\Security\AuthenticationException;
 
 class GoogleAuthenticator extends AbstractAuthenticator
 {
-
     private OrgService $orgService;
     private AccountManager $accountManager;
     private PersonService $personService;

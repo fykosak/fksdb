@@ -11,7 +11,6 @@ use Nette\InvalidStateException;
 
 class SchoolProvider implements FilteredDataProvider
 {
-
     private const LIMIT = 50;
 
     private SchoolService $schoolService;

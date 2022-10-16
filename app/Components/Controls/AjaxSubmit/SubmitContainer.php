@@ -15,7 +15,6 @@ use Nette\DI\Container;
 
 class SubmitContainer extends BaseComponent
 {
-
     private ContestantModel $contestant;
 
     public function __construct(Container $container, ContestantModel $contestant)

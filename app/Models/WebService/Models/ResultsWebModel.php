@@ -15,7 +15,6 @@ use Nette\DI\Container;
 
 class ResultsWebModel extends WebModel
 {
-
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 

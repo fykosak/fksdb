@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 
 abstract class PersonTest
 {
-
     public string $id;
 
     public string $title;

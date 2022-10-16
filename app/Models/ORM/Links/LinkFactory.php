@@ -11,7 +11,6 @@ use Nette\Application\UI\Presenter;
 
 abstract class LinkFactory
 {
-
     protected string $modelClassName;
 
     public function __construct(?string $modelClassName = null)

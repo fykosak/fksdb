@@ -19,7 +19,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class PersonRelatedGrid extends BaseGrid
 {
-
     protected PersonModel $person;
     protected array $definition;
     protected int $userPermissions;

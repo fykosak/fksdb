@@ -13,7 +13,6 @@ use Nette\Utils\Arrays;
  */
 class NeonScheme
 {
-
     public const TYPE_NEON = 'neon';
     public const TYPE_EXPRESSION = 'expression';
     public const QUALIFIER_ARRAY = 'array';

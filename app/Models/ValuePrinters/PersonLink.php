@@ -12,7 +12,6 @@ use Nette\Utils\Html;
 
 class PersonLink extends ValuePrinter
 {
-
     private LinkGenerator $presenterComponent;
 
     public function __construct(LinkGenerator $presenterComponent)

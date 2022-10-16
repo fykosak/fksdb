@@ -27,7 +27,6 @@ use Tracy\Debugger;
 
 class TasksPresenter extends BasePresenter
 {
-
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
 

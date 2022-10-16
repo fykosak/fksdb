@@ -26,7 +26,6 @@ use Nette\Utils\Strings;
  */
 class TaskModel extends Model
 {
-
     public function getFQName(): string
     {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);

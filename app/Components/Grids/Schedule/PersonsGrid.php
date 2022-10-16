@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
-
     private ScheduleItemModel $item;
 
     public function __construct(Container $container, ScheduleItemModel $item)

@@ -13,7 +13,6 @@ use Nette\Utils\Html;
 
 class TextColumnFactory extends ColumnFactory
 {
-
     protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});

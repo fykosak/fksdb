@@ -8,7 +8,6 @@ use FKSDB\Modules\Core\BasePresenter;
 
 class MockApplication
 {
-
     private BasePresenter $presenter;
 
     public function __construct(BasePresenter $presenter)

@@ -8,7 +8,6 @@ use FKSDB\Models\Expressions\VariadicExpression;
 
 class LogicOr extends VariadicExpression
 {
-
     protected function evaluate(...$args): bool
     {
         foreach ($this->arguments as $argument) {

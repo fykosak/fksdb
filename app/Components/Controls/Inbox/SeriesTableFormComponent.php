@@ -11,7 +11,6 @@ use Nette\Application\UI\Form;
 
 abstract class SeriesTableFormComponent extends SeriesTableComponent
 {
-
     protected function createComponentForm(): OptimisticForm
     {
         $form = new OptimisticForm(

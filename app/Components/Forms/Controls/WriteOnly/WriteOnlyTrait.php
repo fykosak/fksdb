@@ -19,7 +19,6 @@ use Nette\Utils\Html;
  */
 trait WriteOnlyTrait
 {
-
     private bool $writeOnly = true;
     private bool $actuallyDisabled = false;
     private bool $hasManualValue = false;

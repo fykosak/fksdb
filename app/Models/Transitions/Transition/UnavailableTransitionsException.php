@@ -8,7 +8,6 @@ use Nette\InvalidStateException;
 
 class UnavailableTransitionsException extends InvalidStateException
 {
-
     public function __construct(int $code = 0, \Throwable $previous = null)
     {
         parent::__construct(_('Transition unavailable'), $code, $previous);

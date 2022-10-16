@@ -14,7 +14,6 @@ use Nette\Localization\Translator;
 
 class MailTemplateFactory
 {
-
     /** without trailing slash */
     private string $templateDir;
     /** @var Application */

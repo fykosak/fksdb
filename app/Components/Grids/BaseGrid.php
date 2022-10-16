@@ -34,7 +34,6 @@ use PePa\CSVResponse;
 
 abstract class BaseGrid extends Grid
 {
-
     /** @persistent string */
     public ?array $searchTerm = null;
     protected ORMFactory $tableReflectionFactory;

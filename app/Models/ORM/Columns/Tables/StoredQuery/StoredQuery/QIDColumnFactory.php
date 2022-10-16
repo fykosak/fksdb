@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 class QIDColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());

@@ -12,7 +12,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class GameSetupPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Fyziklani game setup'), 'fa fa-cogs');

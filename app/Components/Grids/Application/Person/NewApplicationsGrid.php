@@ -18,7 +18,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class NewApplicationsGrid extends BaseGrid
 {
-
     protected EventService $eventService;
 
     protected EventDispatchFactory $eventDispatchFactory;

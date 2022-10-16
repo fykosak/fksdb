@@ -16,7 +16,6 @@ use Fykosak\NetteORM\Service;
  */
 class SubmitService extends Service
 {
-
     private array $submitCache = [];
 
     public function findByContestantId(ContestantModel $contestant, int $taskId, bool $useCache = true): ?SubmitModel

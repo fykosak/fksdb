@@ -11,7 +11,6 @@ use NiftyGrid\DataSource\NDataSource;
 
 abstract class RelatedGrid extends BaseGrid
 {
-
     protected Model $model;
     protected string $tableName;
 

@@ -9,7 +9,6 @@ use Nette\DI\Definitions\ServiceDefinition;
 
 class RouterExtension extends CompilerExtension
 {
-
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();

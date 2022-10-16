@@ -9,7 +9,6 @@ use FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions;
 
 class Fyziklani13Payment extends PaymentTransitions
 {
-
     /**
      * @throws \Exception
      */

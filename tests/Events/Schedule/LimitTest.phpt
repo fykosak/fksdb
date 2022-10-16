@@ -14,7 +14,6 @@ use Tester\Assert;
 
 class LimitTest extends ScheduleTestCase
 {
-
     public function testRegistration(): void
     {
 

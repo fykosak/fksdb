@@ -10,7 +10,6 @@ use Nette\DI\Container;
 
 final class SeriesChooserComponent extends ChooserComponent
 {
-
     private int $series;
     private array $allowedSeries;
 

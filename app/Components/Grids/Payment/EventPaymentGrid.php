@@ -16,7 +16,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class EventPaymentGrid extends RelatedGrid
 {
-
     public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container, $event, 'payment');

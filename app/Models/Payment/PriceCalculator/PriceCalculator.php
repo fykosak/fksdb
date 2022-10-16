@@ -15,7 +15,6 @@ use Fykosak\Utils\Price\MultiCurrencyPrice;
 
 class PriceCalculator implements TransitionCallback
 {
-
     private PaymentService $paymentService;
     /** @var Preprocess[] */
     private array $preProcess = [];

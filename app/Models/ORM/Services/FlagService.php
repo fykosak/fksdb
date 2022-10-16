@@ -9,7 +9,6 @@ use Fykosak\NetteORM\Service;
 
 class FlagService extends Service
 {
-
     public function findByFid(?string $fid): ?FlagModel
     {
         return $fid ? $this->getTable()->where('fid', $fid)->fetch() : null;

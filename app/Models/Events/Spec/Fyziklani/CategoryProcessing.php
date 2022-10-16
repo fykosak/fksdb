@@ -15,7 +15,6 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractCategoryProcessing
 {
-
     protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory
     {
         if ($values['team']['force_a']) {

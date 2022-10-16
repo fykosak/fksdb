@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Processing\AbstractProcessing;
 
 abstract class WithSchoolProcessing extends AbstractProcessing
 {
-
     protected function getSchoolValue(string $name): ?int
     {
         $schoolControls = $this->getControl("$name.person_id.person_history.school_id");

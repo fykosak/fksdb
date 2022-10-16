@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 
 trait WithEventTrait
 {
-
     /**
      * @throws \InvalidArgumentException
      */

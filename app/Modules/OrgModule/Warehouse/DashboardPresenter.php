@@ -8,7 +8,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class DashboardPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Warehouse'), 'fa fa-warehouse');

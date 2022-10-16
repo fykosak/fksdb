@@ -17,7 +17,6 @@ use Tracy\Debugger;
  */
 class AddressService extends Service
 {
-
     private const PATTERN = '/[0-9]{5}/';
 
     public function storeModel(array $data, ?Model $model = null): AddressModel

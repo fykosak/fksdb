@@ -13,7 +13,6 @@ use Fykosak\Utils\Logging\Message;
 
 class ParticipantsDurationTest extends PersonTest
 {
-
     private const CONTESTS = [
         ContestModel::ID_FYKOS => ['thresholds' => [5, 6]],
         ContestModel::ID_VYFUK => ['thresholds' => [5, 6]],

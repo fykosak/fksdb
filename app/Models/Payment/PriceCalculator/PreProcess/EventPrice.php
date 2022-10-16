@@ -9,7 +9,6 @@ use Fykosak\Utils\Price\MultiCurrencyPrice;
 
 class EventPrice implements Preprocess
 {
-
     public static function calculate(PaymentModel $modelPayment): MultiCurrencyPrice
     {
         /* $price = new Price(0, $modelPayment->currency);

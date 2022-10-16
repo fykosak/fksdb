@@ -17,7 +17,6 @@ use Fykosak\NetteORM\Model;
  */
 abstract class OldServiceSingle extends Service
 {
-
     /**
      * @deprecated
      * @internal Used also in MultiTableSelection.

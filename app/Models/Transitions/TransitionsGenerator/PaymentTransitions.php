@@ -19,7 +19,6 @@ use Tracy\Debugger;
 
 abstract class PaymentTransitions implements TransitionsDecorator
 {
-
     protected EventAuthorizator $eventAuthorizator;
     protected PersonScheduleService $personScheduleService;
 

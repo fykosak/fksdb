@@ -9,7 +9,6 @@ use Nette\Forms\Controls\Checkbox;
 
 class CheckboxFactory extends AbstractFactory
 {
-
     public function createComponent(Field $field): Checkbox
     {
         $component = new Checkbox($field->getLabel());

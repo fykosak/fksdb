@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
  */
 class ModelMFyziklaniParticipant extends ModelMulti
 {
-
     public function getEvent(): EventModel
     {
         return $this->mainModel->event;

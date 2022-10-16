@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class WithDSEFAnonymousTest extends TsafTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

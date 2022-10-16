@@ -20,7 +20,6 @@ use Nette\InvalidArgumentException;
 
 class DBReflectionFactory extends AbstractFactory
 {
-
     private Connection $connection;
     /** @var array tableName => columnName[] */
     private array $columns = [];

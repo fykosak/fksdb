@@ -12,5 +12,4 @@ use Fykosak\NetteORM\Model;
  */
 class TaskCategoryModel extends Model
 {
-
 }

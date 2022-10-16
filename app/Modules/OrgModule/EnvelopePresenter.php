@@ -16,7 +16,6 @@ use Nette\Forms\Form;
 
 class EnvelopePresenter extends BasePresenter
 {
-
     private Explorer $readOnlyExplorer;
     private PersonService $personService;
     /** @persistent */

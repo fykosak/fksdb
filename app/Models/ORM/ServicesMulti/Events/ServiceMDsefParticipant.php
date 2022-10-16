@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
  */
 class ServiceMDsefParticipant extends ServiceMulti
 {
-
     public function __construct(EventParticipantService $mainService, ServiceDsefParticipant $joinedService)
     {
         parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMDsefParticipant::class);

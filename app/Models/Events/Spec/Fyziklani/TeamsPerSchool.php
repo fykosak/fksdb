@@ -15,7 +15,6 @@ use Nette\Forms\Control;
 
 class TeamsPerSchool extends SchoolCheck
 {
-
     private Explorer $explorer;
     /** @var callable|int */
     private $teamsPerSchool;

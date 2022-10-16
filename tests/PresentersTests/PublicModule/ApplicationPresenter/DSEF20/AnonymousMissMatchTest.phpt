@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class AnonymousMissMatchTest extends DsefTestCase
 {
-
     public function testRegistration(): void
     {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)

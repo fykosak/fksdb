@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class EmailColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());

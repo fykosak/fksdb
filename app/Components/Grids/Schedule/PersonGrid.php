@@ -15,7 +15,6 @@ use NiftyGrid\GridException;
 
 class PersonGrid extends BaseGrid
 {
-
     public function setData(EventModel $event, PersonModel $person): void
     {
         $query = $person->getScheduleForEvent($event);

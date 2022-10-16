@@ -18,7 +18,6 @@ use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent
 {
-
     /**
      * @persistent
      */

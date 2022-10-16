@@ -17,7 +17,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class MailCallback implements TransitionCallback
 {
-
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
     protected AccountManager $accountManager;

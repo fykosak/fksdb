@@ -15,7 +15,6 @@ use Nette\Schema\Expect;
 
 class FyziklaniResultsWebModel extends WebModel
 {
-
     private EventService $eventService;
     private SubmitService $submitService;
 

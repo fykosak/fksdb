@@ -12,7 +12,6 @@ use Fykosak\Utils\UI\PageTitle;
  */
 class DashboardPresenter extends BasePresenter
 {
-
     private News $news;
 
     final public function injectNews(News $news): void

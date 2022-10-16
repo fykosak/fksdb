@@ -24,7 +24,6 @@ use Fykosak\NetteORM\Model;
  */
 class SubmitModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'submit';
 
     public function getResourceId(): string

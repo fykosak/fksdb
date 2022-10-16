@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Model;
  */
 class TeacherModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'teacher';
 
     public function getResourceId(): string

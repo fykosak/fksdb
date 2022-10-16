@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Service;
  */
 class EmailMessageService extends Service
 {
-
     public function getMessagesToSend(int $limit): TypedSelection
     {
         return $this->getTable()->where('state', EmailMessageState::WAITING)->limit($limit);

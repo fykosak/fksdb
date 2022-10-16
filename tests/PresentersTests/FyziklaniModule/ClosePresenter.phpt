@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class ClosePresenter extends FyziklaniTestCase
 {
-
     private IPresenter $fixture;
 
     protected function setUp(): void
@@ -211,6 +210,7 @@ class ClosePresenter extends FyziklaniTestCase
           }*/
     }
 }
+
 // phpcs:disable
 $testCase = new ClosePresenter($container);
 $testCase->run();

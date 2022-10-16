@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM;
 
 class DbNames
 {
-
     public const TAB_ADDRESS = 'address';
     public const TAB_AUTH_TOKEN = 'auth_token';
     public const TAB_CONTEST = 'contest';

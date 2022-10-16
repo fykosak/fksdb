@@ -8,7 +8,6 @@ use Nette\DI\CompilerExtension;
 
 class NavigationExtension extends CompilerExtension
 {
-
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();

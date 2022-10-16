@@ -9,7 +9,6 @@ use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
 {
-
     /**
      * @param Resource|string|null $resource
      */

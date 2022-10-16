@@ -18,7 +18,6 @@ use Tester\DomQuery;
 
 class PrimaryLimit extends ResourceAvailabilityTestCase
 {
-
     public function testDisplay(): void
     {
         $request = new Request('Public:Application', 'GET', [

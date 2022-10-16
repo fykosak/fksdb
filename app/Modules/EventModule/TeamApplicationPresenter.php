@@ -36,7 +36,6 @@ use Nette\InvalidStateException;
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
-
     private TeamService2 $teamService;
 
     final public function injectServiceFyziklaniTeam(TeamService2 $teamService): void

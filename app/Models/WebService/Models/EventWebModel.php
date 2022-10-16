@@ -22,7 +22,6 @@ use Nette\Schema\Expect;
 
 class EventWebModel extends WebModel
 {
-
     private EventService $eventService;
     private PersonScheduleService $personScheduleService;
 

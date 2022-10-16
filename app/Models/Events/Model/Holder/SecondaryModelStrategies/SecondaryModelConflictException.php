@@ -9,7 +9,6 @@ use Fykosak\NetteORM\Model;
 
 class SecondaryModelConflictException extends \RuntimeException
 {
-
     private BaseHolder $baseHolder;
 
     private iterable $conflicts;

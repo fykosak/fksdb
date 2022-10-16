@@ -20,7 +20,6 @@ use Nette\Forms\Form;
  */
 class ScheduleGroupFormComponent extends EntityFormComponent
 {
-
     public const CONTAINER = 'container';
 
     private ScheduleGroupService $scheduleGroupService;

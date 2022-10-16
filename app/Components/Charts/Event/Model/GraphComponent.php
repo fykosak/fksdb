@@ -14,7 +14,6 @@ use Nette\DI\Container;
 
 class GraphComponent extends FrontEndComponent implements Chart
 {
-
     private BaseMachine $baseMachine;
     private ExpressionPrinter $expressionPrinter;
 

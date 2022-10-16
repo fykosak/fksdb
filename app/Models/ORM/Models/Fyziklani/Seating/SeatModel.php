@@ -18,7 +18,6 @@ use Fykosak\NetteORM\Model;
  */
 class SeatModel extends Model
 {
-
     public function getTeamSeat(EventModel $event): ?TeamSeatModel
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)

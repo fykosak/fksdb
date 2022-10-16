@@ -15,7 +15,6 @@ use Tracy\Debugger;
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
-
     protected LoginService $loginService;
 
     public function __construct(LoginService $loginService)

@@ -15,7 +15,6 @@ use Nette\Utils\Html;
 
 class StudyYearColumnFactory extends ColumnFactory
 {
-
     /**
      * @throws \InvalidArgumentException
      */

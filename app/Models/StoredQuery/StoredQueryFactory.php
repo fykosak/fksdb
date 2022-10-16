@@ -16,7 +16,6 @@ use FKSDB\Models\WebService\XMLNodeSerializer;
 
 class StoredQueryFactory implements XMLNodeSerializer
 {
-
     public const PARAM_CONTEST_ID = 'contest_id';
     public const PARAM_CONTEST = 'contest';
     public const PARAM_YEAR = 'year';

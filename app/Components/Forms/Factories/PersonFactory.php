@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Controls\Autocomplete\DataProvider;
 
 class PersonFactory
 {
-
     public function createPersonSelect(
         bool $ajax,
         string $label,

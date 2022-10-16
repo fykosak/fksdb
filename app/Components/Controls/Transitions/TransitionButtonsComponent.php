@@ -16,7 +16,6 @@ use Tracy\Debugger;
 
 class TransitionButtonsComponent extends BaseComponent
 {
-
     private Machine $machine;
     private ModelHolder $holder;
 

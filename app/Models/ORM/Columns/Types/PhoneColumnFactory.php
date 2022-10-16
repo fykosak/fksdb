@@ -22,7 +22,6 @@ use Nette\Utils\Html;
 
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 {
-
     protected PhoneNumberFactory $phoneNumberFactory;
 
     private bool $isWriteOnly = true;

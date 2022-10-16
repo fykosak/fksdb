@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Service;
  */
 class SchoolService extends Service
 {
-
     public function isCzSkSchool(?int $schoolId): bool
     {
         if (is_null($schoolId)) {

@@ -8,7 +8,6 @@ use Nette\Utils\Html;
 
 class NotSetBadge extends Badge
 {
-
     public static function getHtml(...$args): Html
     {
         return Html::el('span')->addAttributes(['class' => 'badge bg-warning'])->addText(_('Not set'));

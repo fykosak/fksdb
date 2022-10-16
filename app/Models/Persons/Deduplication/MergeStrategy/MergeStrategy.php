@@ -6,7 +6,6 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 interface MergeStrategy
 {
-
     /**
      * @template T
      * @param T $trunk

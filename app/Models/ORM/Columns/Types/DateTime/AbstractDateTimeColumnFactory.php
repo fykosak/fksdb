@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory
 {
-
     private string $format;
 
     final public function setFormat(string $format): void

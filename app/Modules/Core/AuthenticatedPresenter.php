@@ -28,7 +28,6 @@ use Tracy\Debugger;
  */
 abstract class AuthenticatedPresenter extends BasePresenter
 {
-
     public const AUTH_LOGIN = 'login';
     public const AUTH_HTTP = 'http';
     public const AUTH_TOKEN = 'token';

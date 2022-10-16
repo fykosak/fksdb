@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class FloatColumnFactory extends ColumnFactory
 {
-
     private string $nullValue = 'notSet';
 
     private ?string $prefix = null;

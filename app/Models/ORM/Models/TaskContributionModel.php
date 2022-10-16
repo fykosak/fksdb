@@ -17,7 +17,6 @@ use Fykosak\NetteORM\Model;
  */
 class TaskContributionModel extends Model
 {
-
     /**
      * @param string $key
      * @return TaskContributionType|FakeStringEnum|mixed|null

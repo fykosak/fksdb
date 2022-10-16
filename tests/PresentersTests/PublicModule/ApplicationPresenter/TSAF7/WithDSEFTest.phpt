@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class WithDSEFTest extends TsafTestCase
 {
-
     private EventParticipantModel $tsafApp;
 
     protected function setUp(): void

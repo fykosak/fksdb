@@ -17,7 +17,6 @@ use FKSDB\Models\Submits\StorageException;
 
 class SchedulePaymentService extends Service
 {
-
     /**
      * @throws DuplicatePaymentException
      * @throws EmptyDataException

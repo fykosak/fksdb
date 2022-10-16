@@ -13,7 +13,6 @@ use Fykosak\NetteORM\Service;
  */
 class TaskService extends Service
 {
-
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
         return $event->getFyziklaniTasks()->where([

@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Services\SubmitService;
 
 class PerSeriesChart extends AbstractPerSeriesChart
 {
-
     private SubmitService $submitService;
 
     public function injectSecondary(SubmitService $submitService): void

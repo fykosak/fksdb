@@ -11,7 +11,6 @@ use Nette\Forms\Controls\TextInput;
 
 class NameColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());

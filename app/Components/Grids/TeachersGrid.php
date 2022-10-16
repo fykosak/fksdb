@@ -16,7 +16,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class TeachersGrid extends EntityGrid
 {
-
     public function __construct(Container $container)
     {
         parent::__construct($container, TeacherService::class, [

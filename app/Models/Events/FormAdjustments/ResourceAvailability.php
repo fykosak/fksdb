@@ -18,7 +18,6 @@ use Nette\Forms\Control;
  */
 class ResourceAvailability extends AbstractAdjustment
 {
-
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
     /** @var string Name of event parameter that hold overall capacity. */

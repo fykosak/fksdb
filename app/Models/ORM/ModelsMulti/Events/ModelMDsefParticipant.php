@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
  */
 class ModelMDsefParticipant extends ModelMulti
 {
-
     public function __toString(): string
     {
         return $this->mainModel->person->getFullName();

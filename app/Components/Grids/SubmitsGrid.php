@@ -23,7 +23,6 @@ use Tracy\Debugger;
 
 class SubmitsGrid extends BaseGrid
 {
-
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 

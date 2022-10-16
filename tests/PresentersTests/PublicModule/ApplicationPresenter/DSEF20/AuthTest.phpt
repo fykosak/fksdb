@@ -18,7 +18,6 @@ use Tester\Assert;
 
 class AuthTest extends DsefTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -21,7 +21,6 @@ use Nette\Forms\Form;
 
 class ItemFormComponent extends EntityFormComponent
 {
-
     protected ProductService $productService;
     protected ItemService $itemService;
     private ContestModel $contest;

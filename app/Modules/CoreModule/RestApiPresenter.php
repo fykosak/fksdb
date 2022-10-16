@@ -13,7 +13,6 @@ use Tracy\Debugger;
 
 class RestApiPresenter extends AuthenticatedPresenter
 {
-
     private WebServiceModel $server;
     /** @persistent */
     public string $webServiceName;

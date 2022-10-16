@@ -15,7 +15,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class FormControl extends BaseComponent
 {
-
     public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form

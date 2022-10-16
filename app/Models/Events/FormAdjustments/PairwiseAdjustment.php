@@ -12,7 +12,6 @@ use Nette\InvalidArgumentException;
 
 abstract class PairwiseAdjustment extends AbstractAdjustment
 {
-
     protected iterable $rules;
 
     public function __construct(iterable $rules)

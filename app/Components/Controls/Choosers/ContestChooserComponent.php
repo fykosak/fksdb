@@ -12,7 +12,6 @@ use Nette\DI\Container;
 
 final class ContestChooserComponent extends ChooserComponent
 {
-
     private TypedSelection $availableContests;
     private ContestModel $contest;
 

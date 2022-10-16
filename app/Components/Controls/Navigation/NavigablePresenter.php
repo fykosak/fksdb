@@ -16,7 +16,6 @@ use Nette\Application\IPresenter;
  */
 interface NavigablePresenter extends IPresenter
 {
-
     /**
      * Should set persistent parameter identifying the backlink.
      * @return string|null  original value of the backlink parameter

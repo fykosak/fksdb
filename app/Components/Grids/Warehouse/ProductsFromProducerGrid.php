@@ -11,7 +11,6 @@ use Nette\DI\Container;
 
 class ProductsFromProducerGrid extends EntityGrid
 {
-
     public function __construct(Container $container, ProducerModel $producer)
     {
         parent::__construct($container, ProductService::class, [

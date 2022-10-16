@@ -20,7 +20,6 @@ use Nette\Utils\Html;
  */
 class MultiResourceAvailability extends AbstractAdjustment
 {
-
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
 

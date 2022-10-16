@@ -14,7 +14,6 @@ use Nette\Utils\Html;
 
 class SchoolIdColumnFactory extends ColumnFactory
 {
-
     private SchoolFactory $schoolFactory;
 
     public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory)

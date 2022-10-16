@@ -13,7 +13,6 @@ use Fykosak\NetteORM\Model;
 
 class ColumnPrinterComponent extends BaseComponent
 {
-
     private ORMFactory $tableReflectionFactory;
 
     final public function injectTableReflectionFactory(ORMFactory $tableReflectionFactory): void

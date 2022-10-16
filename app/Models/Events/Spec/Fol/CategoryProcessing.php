@@ -14,7 +14,6 @@ use Nette\Utils\ArrayHash;
 
 class CategoryProcessing extends AbstractCategoryProcessing
 {
-
     private int $rulesVersion;
     protected SchoolService $schoolService;
 

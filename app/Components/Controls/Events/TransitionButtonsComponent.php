@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class TransitionButtonsComponent extends BaseComponent
 {
-
     private ApplicationHandler $handler;
     private Holder $holder;
 

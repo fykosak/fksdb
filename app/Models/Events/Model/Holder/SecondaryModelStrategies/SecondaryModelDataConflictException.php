@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 
 class SecondaryModelDataConflictException extends SecondaryModelConflictException
 {
-
     private array $conflictData;
 
     public function __construct(

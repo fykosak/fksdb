@@ -11,7 +11,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class ModelPresenter extends BasePresenter
 {
-
     /**
      * @throws EventNotFoundException
      */

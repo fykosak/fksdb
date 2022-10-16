@@ -16,7 +16,6 @@ use Nette\DI\Container;
 
 class PointsFormComponent extends SeriesTableFormComponent
 {
-
     /** @var callable */
     private $invalidCacheCallback;
 

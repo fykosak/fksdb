@@ -8,7 +8,6 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
 
 class Leq extends EvaluatedExpression
 {
-
     /** @var mixed */
     private $aValue;
     /** @var mixed */

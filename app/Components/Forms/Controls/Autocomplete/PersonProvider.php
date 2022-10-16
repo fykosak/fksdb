@@ -12,7 +12,6 @@ use Fykosak\NetteORM\TypedSelection;
 
 class PersonProvider implements FilteredDataProvider
 {
-
     private const PLACE = 'place';
     private PersonService $personService;
     private TypedSelection $searchTable;

@@ -11,7 +11,6 @@ use Nette\DI\Container;
 
 abstract class AbstractPerSeriesChart extends FrontEndComponent implements Chart
 {
-
     protected ContestModel $contest;
 
     public function __construct(Container $container, ContestModel $contest)

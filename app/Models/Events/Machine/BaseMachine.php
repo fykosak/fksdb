@@ -14,7 +14,6 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine extends AbstractMachine
 {
-
     private string $name;
     private array $states;
     private Machine $machine;

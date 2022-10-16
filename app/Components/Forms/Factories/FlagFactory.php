@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 class FlagFactory
 {
-
     public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl
     {
         $control = $this->createSpamMff();

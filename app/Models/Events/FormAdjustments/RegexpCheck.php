@@ -11,7 +11,6 @@ use Nette\Utils\Strings;
 
 class RegexpCheck extends AbstractAdjustment
 {
-
     private string $field;
     private string $message;
     private string $pattern;

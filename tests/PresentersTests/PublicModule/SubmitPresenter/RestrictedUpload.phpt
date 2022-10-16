@@ -12,7 +12,6 @@ $container = require '../../../Bootstrap.php';
 // phpcs:enable
 class RestrictedUpload extends SubmitTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();

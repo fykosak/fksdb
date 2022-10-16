@@ -13,7 +13,6 @@ use NiftyGrid\DuplicateColumnException;
 
 abstract class SubmitsGrid extends BaseGrid
 {
-
     protected SubmitService $submitService;
 
     final public function injectServiceFyziklaniSubmit(SubmitService $submitService): void

@@ -18,7 +18,6 @@ use Tester\Assert;
 
 class CancelTest extends TsafTestCase
 {
-
     private EventParticipantModel $tsafApp;
 
     protected function setUp(): void

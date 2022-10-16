@@ -12,7 +12,6 @@ use Nette\Utils\Html;
 
 class TShirtSizeColumnFactory extends ColumnFactory
 {
-
     public const SIZE_MAP = [
         'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL',
     ];

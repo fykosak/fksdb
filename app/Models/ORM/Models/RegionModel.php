@@ -18,7 +18,6 @@ use Fykosak\NetteORM\Model;
  */
 class RegionModel extends Model
 {
-
     public const CZECH_REPUBLIC = 3;
     public const SLOVAKIA = 2;
 

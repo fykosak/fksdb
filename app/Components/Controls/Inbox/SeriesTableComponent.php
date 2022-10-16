@@ -11,7 +11,6 @@ use Nette\DI\Container;
 
 abstract class SeriesTableComponent extends BaseComponent
 {
-
     private SeriesTable $seriesTable;
     private bool $displayAll;
 

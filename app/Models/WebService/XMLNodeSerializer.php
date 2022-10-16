@@ -6,7 +6,6 @@ namespace FKSDB\Models\WebService;
 
 interface XMLNodeSerializer
 {
-
     public const EXPORT_FORMAT_1 = 1;
     public const EXPORT_FORMAT_2 = 2;
 

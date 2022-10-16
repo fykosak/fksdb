@@ -14,7 +14,6 @@ use NiftyGrid\DuplicateColumnException;
 
 abstract class EntityGrid extends BaseGrid
 {
-
     protected Service $service;
 
     private array $queryParams;

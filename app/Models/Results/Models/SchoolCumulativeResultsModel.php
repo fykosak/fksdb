@@ -20,7 +20,6 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel
 {
-
     protected array $series;
     /**
      * Cache

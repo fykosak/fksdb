@@ -15,7 +15,6 @@ use NiftyGrid\DuplicateColumnException;
 
 class StoredQueriesGrid extends BaseGrid
 {
-
     /** @const No. of characters that are showed from query description. */
 
     public const DESCRIPTION_TRUNC = 80;

@@ -20,7 +20,6 @@ use Nette\Security\User;
 
 class PersonFactory extends AbstractFactory
 {
-
     private const VALUE_LOGIN = 'fromLogin';
     /** @var callable */
     private $fieldsDefinition;

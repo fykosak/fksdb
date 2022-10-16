@@ -23,7 +23,6 @@ use Nette\InvalidStateException;
 
 abstract class ReferencedContainer extends ContainerWithOptions
 {
-
     public const ID_MASK = 'frm%s-%s';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';

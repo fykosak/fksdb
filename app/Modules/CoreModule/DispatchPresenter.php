@@ -13,7 +13,6 @@ use Nette\Application\UI\InvalidLinkException;
 
 class DispatchPresenter extends BasePresenter
 {
-
     private array $contestsProperty;
 
     public function titleDefault(): PageTitle

@@ -14,7 +14,6 @@ use Nette\Utils\DateTime;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase
 {
-
     protected IPresenter $fixture;
     protected array $persons = [];
     protected EventModel $event;

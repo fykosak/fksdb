@@ -11,7 +11,6 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 
 class DispatchPresenter extends AuthenticatedPresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('List of events'), 'fa fa-calendar-alt');

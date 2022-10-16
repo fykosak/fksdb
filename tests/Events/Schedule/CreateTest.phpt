@@ -15,7 +15,6 @@ use Tester\Assert;
 
 class CreateTest extends ScheduleTestCase
 {
-
     public function testRegistration(): void
     {
         $request = $this->createAccommodationRequest();

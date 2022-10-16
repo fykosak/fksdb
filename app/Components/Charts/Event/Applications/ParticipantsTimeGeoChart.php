@@ -12,7 +12,6 @@ use Nette\DI\Container;
 
 class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
 {
-
     protected EventModel $event;
 
     public function __construct(Container $context, EventModel $event)

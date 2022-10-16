@@ -20,7 +20,6 @@ use Nette\Forms\Form;
  */
 class SchoolFormComponent extends EntityFormComponent
 {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 

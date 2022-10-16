@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class NoDSEFTest extends TsafTestCase
 {
-
     protected EventParticipantModel $tsafApp;
 
     protected function setUp(): void

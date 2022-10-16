@@ -16,7 +16,6 @@ use Tester\TestCase;
 
 class ServiceAddressTest extends TestCase
 {
-
     private AddressService $fixture;
 
     public function __construct(AddressService $service)

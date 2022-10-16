@@ -17,7 +17,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class PreferredLangFormComponent extends FormComponent
 {
-
     protected PersonModel $person;
 
     protected PersonInfoService $personInfoService;

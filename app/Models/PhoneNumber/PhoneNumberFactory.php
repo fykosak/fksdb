@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 class PhoneNumberFactory
 {
-
     private RegionService $regionService;
 
     private TypedSelection $table;
