@@ -7,6 +7,7 @@ namespace FKSDB\Models\WebService\AESOP\Models;
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -94,7 +95,7 @@ WHERE
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->label == $stringCategory) {
+            if ($category->contest_category_id === +$stringCategory) {
                 return $category;
             }
         }
@@ -115,7 +116,7 @@ WHERE
 
         $graduationYears = [];
         foreach ($studyYears as $studyYear) {
-            $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->contestYear);
+            $graduationYears[] = $this->studyYearToGraduation(StudyYear::tryFromLegacy($studyYear), $this->contestYear);
         }
 
         $result = [];
@@ -154,7 +155,7 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
+    private function studyYearToGraduation(?StudyYear $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;

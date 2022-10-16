@@ -13,7 +13,6 @@ use Nette\Forms\Form;
 
 class FOLCategoryProcessing extends FormProcessing
 {
-
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
         $members = [];
@@ -43,10 +42,10 @@ class FOLCategoryProcessing extends FormProcessing
         $olds = 0;
         $year = [
             'P' => 0,
-            StudyYear::H_1 => 0,
-            StudyYear::H_2 => 0,
-            StudyYear::H_3 => 0,
-            StudyYear::H_4 => 0,
+            StudyYear::High1->value => 0,
+            StudyYear::High2->value => 0,
+            StudyYear::High3->value => 0,
+            StudyYear::High4->value => 0,
         ]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
         foreach ($members as $member) {
@@ -55,14 +54,12 @@ class FOLCategoryProcessing extends FormProcessing
                 $olds += 1;
             }
             $studyYear = StudyYear::tryFromLegacy($history->study_year);
-            if (is_null($studyYear)) {
+            if (is_null($studyYear) || $studyYear === StudyYear::None || $studyYear === StudyYear::UniversityAll) {
                 $olds += 1;
             } elseif ($studyYear->isHighSchool()) {
                 $year[$studyYear->value] += 1;
             } elseif ($studyYear->isPrimarySchool()) {
                 $year['P'] += 1;
-            } elseif ($studyYear->value === StudyYear::NONE || $studyYear->value === StudyYear::U_ALL) {
-                $olds += 1;
             }
         }
         // evaluate stats
@@ -76,9 +73,9 @@ class FOLCategoryProcessing extends FormProcessing
                 $cnt += $year['H_' . $y] ?? 0;
             }
             $avg = $sum / $cnt;
-            if ($avg <= 2 && $year[StudyYear::H_4] === 0 && $year[StudyYear::H_3] <= 2) {
+            if ($avg <= 2 && $year[StudyYear::High4->value] === 0 && $year[StudyYear::High3->value] <= 2) {
                 return TeamCategory::tryFrom(TeamCategory::C);
-            } elseif ($avg <= 3 && $year[StudyYear::H_4] <= 2) {
+            } elseif ($avg <= 3 && $year[StudyYear::High4->value] <= 2) {
                 return TeamCategory::tryFrom(TeamCategory::B);
             } else {
                 return TeamCategory::tryFrom(TeamCategory::A);

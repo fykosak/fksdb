@@ -5,105 +5,69 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-class StudyYear extends FakeStringEnum implements EnumColumn
+enum StudyYear: string implements EnumColumn
 {
-    public const P_5 = 'P_5';
-    public const P_6 = 'P_6';
-    public const P_7 = 'P_7';
-    public const P_8 = 'P_8';
-    public const P_9 = 'P_9';
+    case Primary6 = 'PRIMARY_6';
+    case Primary7 = 'PRIMARY_7';
+    case Primary8 = 'PRIMARY_8';
+    case Primary9 = 'PRIMARY_9';
 
-    public const H_1 = 'H_1';
-    public const H_2 = 'H_2';
-    public const H_3 = 'H_3';
-    public const H_4 = 'H_4';
+    case High1 = 'HIGH_1';
+    case High2 = 'HIGH_2';
+    case High3 = 'HIGH_3';
+    case High4 = 'HIGH_4';
 
-    public const U_ALL = 'U_ALL';
+    case UniversityAll = 'UNIVERSITY_ALL';
 
-    public const NONE = 'NONE';
+    case None = 'NONE';
 
     public function badge(): Html
     {
-        return Html::el('span')->addText($this->value);
+        return Html::el('span')->addText($this->label());
     }
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::P_5:
-                return _('Primary school 5th grade or lower.');
-            case self::P_6:
-                return _('Primary school 6th.');
-            case self::P_7:
-                return _('Primary school 7th');
-            case self::P_8:
-                return _('Primary school 8th');
-            case self::P_9:
-                return _('Primary school 9th');
-            case self::H_1:
-                return _('High school 1st grade');
-            case self::H_2:
-                return _('High school 2nd grade');
-            case self::H_3:
-                return _('High school 3rd grade');
-            case self::H_4:
-                return _('High school 4th grade');
-            case self::U_ALL:
-                return _('University any grade');
-            case self::NONE:
-                return _('Not a student');
-        }
-        throw new \InvalidArgumentException();
+        return match ($this) {
+            self::Primary6 => _('Primary school 6th or lower.'),
+            self::Primary7 => _('Primary school 7th'),
+            self::Primary8 => _('Primary school 8th'),
+            self::Primary9 => _('Primary school 9th'),
+            self::High1 => _('High school 1st grade'),
+            self::High2 => _('High school 2nd grade'),
+            self::High3 => _('High school 3rd grade'),
+            self::High4 => _('High school 4th grade'),
+            self::UniversityAll => _('University any grade'),
+            self::None => _('Not a student'),
+        };
     }
 
     public function isPrimarySchool(): bool
     {
-        return Strings::startsWith($this->value, 'P');
+        return Strings::startsWith($this->value, 'PRIMARY_');
     }
 
     public function numeric(): ?int
     {
-        switch ($this->value) {
-            case self::P_5:
-                return 5;
-            case self::P_6:
-                return 6;
-            case self::P_7:
-                return 7;
-            case self::P_8:
-                return 8;
-            case self::P_9:
-                return 9;
-            case self::H_1:
-                return 1;
-            case self::H_2:
-                return 2;
-            case self::H_3:
-                return 3;
-            case self::H_4:
-                return 4;
-            default:
-                return null;
-        }
+        return match ($this) {
+            self::Primary6 => 6,
+            self::Primary7 => 7,
+            self::Primary8 => 8,
+            self::Primary9 => 9,
+            self::High1 => 1,
+            self::High2 => 2,
+            self::High3 => 3,
+            self::High4 => 4,
+            default => null,
+        };
     }
 
     public function isHighSchool(): bool
     {
-        return Strings::startsWith($this->value, 'H');
-    }
-
-    public function getGraduationYear(int $acYear): ?int
-    {
-        if ($this->isHighSchool()) {
-            return $acYear + 5 - $this->numeric();
-        } elseif ($this->isPrimarySchool()) {
-            return $acYear + 14 - $this->numeric();
-        }
-        return null;
+        return Strings::startsWith($this->value, 'HIGH_');
     }
 
     public static function tryFromLegacy(?int $studyYear): ?self
@@ -111,30 +75,16 @@ class StudyYear extends FakeStringEnum implements EnumColumn
         if (is_null($studyYear)) {
             return null;
         }
-        switch ($studyYear) {
-            case 1:
-                return new self(self::H_1);
-            case 2:
-                return new self(self::H_2);
-            case 3:
-                return new self(self::H_3);
-            case 4:
-                return new self(self::H_4);
-
-            case 6:
-                return new self(self::P_6);
-            case 7:
-                return new self(self::P_7);
-            case 8:
-                return new self(self::P_8);
-            case 9:
-                return new self(self::P_9);
-        }
-        throw new \InvalidArgumentException();
-    }
-
-    public static function cases(): array
-    {
-        return [];
+        return match ($studyYear) {
+            1 => self::High1,
+            2 => self::High2,
+            3 => self::High3,
+            4 => self::High4,
+            6 => self::Primary6,
+            7 => self::Primary7,
+            8 => self::Primary8,
+            9 => self::Primary9,
+            default => throw new \InvalidArgumentException(),
+        };
     }
 }
