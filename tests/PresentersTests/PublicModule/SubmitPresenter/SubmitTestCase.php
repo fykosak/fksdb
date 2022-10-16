@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\SubmitService;
+use FKSDB\Models\ORM\Services\TaskCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
-use FKSDB\Models\ORM\Services\TaskStudyYearService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -38,7 +38,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
         $serviceTask = $this->getContainer()->getByType(TaskService::class);
-        $serviceTaskStudyYear = $this->getContainer()->getByType(TaskStudyYearService::class);
+        $taskCategoryService = $this->getContainer()->getByType(TaskCategoryService::class);
         $this->taskAll = $serviceTask->storeModel([
             'label' => '1',
             'series' => '1',
@@ -46,36 +46,36 @@ abstract class SubmitTestCase extends DatabaseTestCase
             'contest_id' => '1',
         ]);
 
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskAll->task_id,
-            'study_year' => '6',
+            'contest_category_id' => 6,
         ]);
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskAll->task_id,
-            'study_year' => '7',
+            'contest_category_id' => 7,
         ]);
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskAll->task_id,
-            'study_year' => '8',
+            'contest_category_id' => 8,
         ]);
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskAll->task_id,
-            'study_year' => '9',
+            'contest_category_id' => 9,
         ]);
 
         $this->taskRestricted = $serviceTask->storeModel([
             'label' => '2',
             'series' => '1',
             'year' => '1',
-            'contest_id' => '1',
+            'contest_id' => 1,
         ]);
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskRestricted->task_id,
-            'study_year' => '6',
+            'contest_category_id' => 6,
         ]);
-        $serviceTaskStudyYear->storeModel([
+        $taskCategoryService->storeModel([
             'task_id' => $this->taskRestricted->task_id,
-            'study_year' => '7',
+            'contest_category_id' => 7,
         ]);
 
         $this->person = $this->createPerson('Matyáš', 'Korvín', null, []);
@@ -83,12 +83,15 @@ abstract class SubmitTestCase extends DatabaseTestCase
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->person->person_id,
+            'contest_category_id' => $this->getCategory(),
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
         $this->authenticatePerson($this->person, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
+
+    abstract protected function getCategory(): int;
 
     protected function tearDown(): void
     {
@@ -124,13 +127,15 @@ abstract class SubmitTestCase extends DatabaseTestCase
         $file = tempnam(TEMP_DIR, 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
-        return ['file' => new FileUpload([
-            'name' => 'reseni2-8.pdf',
-            'type' => 'application/pdf',
-            'size' => filesize($file),
-            'tmp_name' => $file,
-            'error' => 0,
-        ])];
+        return [
+            'file' => new FileUpload([
+                'name' => 'reseni2-8.pdf',
+                'type' => 'application/pdf',
+                'size' => filesize($file),
+                'tmp_name' => $file,
+                'error' => 0,
+            ]),
+        ];
     }
 
     protected function innerTestSubmit(): void

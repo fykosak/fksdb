@@ -43,10 +43,17 @@ orm:
                    type: class
                    class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
                    title: _('Contest')
+        contest_category:
+            model: FKSDB\Models\ORM\Models\ContestCategoryModel
+            service: FKSDB\Models\ORM\Services\ContestCategoryService
         contestant:
             service: FKSDB\Models\ORM\Services\ContestantService
             model: FKSDB\Models\ORM\Models\ContestantModel
             columnFactories:
+                contest_category:
+                    type: class
+                    title: _('Contest category')
+                    class: FKSDB\Models\ORM\Columns\Tables\Contestant\ContestCategoryColumnFactory
                 contestant_id:
                     type: primaryKey
                     title: _('Contestant Id')
@@ -656,9 +663,9 @@ orm:
                     type: enum
                     enumClassName: FKSDB\Models\ORM\Models\TaskContributionType
                     title: _('Type')
-        task_study_year:
-            service: FKSDB\Models\ORM\Services\TaskStudyYearService
-            model: FKSDB\Models\ORM\Models\TaskStudyYearModel
+        task_category:
+            model: FKSDB\Models\ORM\Models\TaskCategoryModel
+            service: FKSDB\Models\ORM\Services\TaskCategoryService
         teacher:
              service: FKSDB\Models\ORM\Services\TeacherService
              model: FKSDB\Models\ORM\Models\TeacherModel

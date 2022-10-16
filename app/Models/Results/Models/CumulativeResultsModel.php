@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
 /**
@@ -25,13 +25,13 @@ class CumulativeResultsModel extends AbstractResultsModel
     /**
      * Definition of header.
      */
-    public function getDataColumns(ModelCategory $category): array
+    public function getDataColumns(ContestCategoryModel $category): array
     {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
 
-        if (!isset($this->dataColumns[$category->value])) {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);
             $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
@@ -64,9 +64,9 @@ class CumulativeResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sumLimit,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->value] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->value];
+        return $this->dataColumns[$category->label];
     }
 
     public function getSeries(): array
@@ -84,7 +84,7 @@ class CumulativeResultsModel extends AbstractResultsModel
         $this->dataColumns = [];
     }
 
-    protected function composeQuery(ModelCategory $category): string
+    protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
@@ -142,18 +142,18 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
     /**
      * Returns total points of Student Pilny (without multiplication for first two tasks) for given series
      *
-     * @return int sum of Student Pilny points
+     * @return float sum of Student Pilny points
      */
     private function getSumLimitForStudentPilny(): float
     {
-        return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::FYKOS_4));
+        return $this->getSumLimit($this->contestCategoryService->findByLabel(ContestCategoryModel::FYKOS_4));
     }
 
     /**
      * Returns total points for given category and series
-     * @return int sum of points
+     * @return float sum of points
      */
-    private function getSumLimit(ModelCategory $category): float
+    private function getSumLimit(ContestCategoryModel $category): float
     {
         $sum = 0;
         foreach ($this->getSeries() as $series) {

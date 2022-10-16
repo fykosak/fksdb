@@ -63,7 +63,7 @@ services:
     #strored query
     - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection,...)
     #tasks
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultCategories%, ...)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel

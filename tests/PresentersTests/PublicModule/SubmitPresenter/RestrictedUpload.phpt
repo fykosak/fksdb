@@ -20,7 +20,7 @@ class RestrictedUpload extends SubmitTestCase
             $this->person,
             ContestYearService::getCurrentAcademicYear(),
             $this->genericSchool,
-            9
+            $this->getCategory()
         );
     }
 
@@ -28,6 +28,10 @@ class RestrictedUpload extends SubmitTestCase
     {
         $this->innerTestSubmit();
         $this->assertNotSubmit($this->contestant, $this->taskRestricted);
+    }
+    protected function getCategory(): int
+    {
+        return 9;
     }
 }
 // phpcs:disable

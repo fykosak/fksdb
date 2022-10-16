@@ -24,7 +24,7 @@ class TasksFromXML extends Stage
 
     private TaskService $taskService;
 
-    public function __construct(TaskService $taskService)
+    public function inject(TaskService $taskService): void
     {
         $this->taskService = $taskService;
     }

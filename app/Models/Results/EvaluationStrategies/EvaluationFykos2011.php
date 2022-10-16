@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 
 /**
  * First two categories have doubled points for the first two problems.
@@ -30,7 +30,7 @@ class EvaluationFykos2011 extends EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float
     {
         if (is_null($submit->raw_points)) {
             return null;
@@ -41,27 +41,27 @@ class EvaluationFykos2011 extends EvaluationStrategy
     /**
      * @return float|int
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): float
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): float
     {
         return $this->getMultiplyCoefficient($task, $category) * $task->points;
     }
 
-    private function getMultiplyCoefficient(TaskModel $task, ModelCategory $category): int
+    private function getMultiplyCoefficient(TaskModel $task, ContestCategoryModel $category): int
     {
         if (
             in_array($task->label, ['1', '2']) &&
-            in_array($category->value, [ModelCategory::FYKOS_1, ModelCategory::FYKOS_2])
+            in_array($category->label, [ContestCategoryModel::FYKOS_1, ContestCategoryModel::FYKOS_2])
         ) {
             return 2;
         }
         return 1;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
     {
-        switch ($category->value) {
-            case ModelCategory::FYKOS_1:
-            case ModelCategory::FYKOS_2:
+        switch ($category->label) {
+            case ContestCategoryModel::FYKOS_1:
+            case ContestCategoryModel::FYKOS_2:
                 return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1', '2'), 2 * t.points, t.points), NULL)";
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
@@ -71,10 +71,10 @@ class EvaluationFykos2011 extends EvaluationStrategy
     protected function getCategoryMap(): array
     {
         return [
-            ModelCategory::FYKOS_1 => [6, 7, 8, 9, 1],
-            ModelCategory::FYKOS_2 => [2],
-            ModelCategory::FYKOS_3 => [3],
-            ModelCategory::FYKOS_4 => [null, 4],
+            ContestCategoryModel::FYKOS_1 => [6, 7, 8, 9, 1],
+            ContestCategoryModel::FYKOS_2 => [2],
+            ContestCategoryModel::FYKOS_3 => [3],
+            ContestCategoryModel::FYKOS_4 => [null, 4],
         ];
     }
 }

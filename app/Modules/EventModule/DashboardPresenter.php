@@ -62,9 +62,6 @@ class DashboardPresenter extends BasePresenter
             case 7:
                 // TSAF
                 return \sprintf('https://fykos.cz/rocnik%02d/tsaf/', $this->getEvent()->year);
-            case 8:
-                // MFnáboj
-                return '#'; // FIXME
             case 9:
                 // FOL
                 return 'https://online.fyziklani.cz';
@@ -81,9 +78,6 @@ class DashboardPresenter extends BasePresenter
                     'https://vyfuk.mff.cuni.cz/akce/setkani/podzim%d',
                     $this->getEvent()->begin->format('Y')
                 );
-            case 13:
-                // Náboj Junior
-                return '#'; // FIXME
             case 14:
                 //DSEF 2
                 return \sprintf('https://fykos.cz/rocnik%02d/dsef2/', $this->getEvent()->year);

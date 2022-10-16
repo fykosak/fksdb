@@ -10,9 +10,12 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
 /**
@@ -65,6 +68,30 @@ class ContestantPresenter extends BasePresenter
     protected function getModelResource(): string
     {
         return ContestantModel::RESOURCE_ID;
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    public function handleRecalculate(): void
+    {
+        $contestants = $this->getSelectedContestYear()->getContestants();
+        $strategy = ResultsModelFactory::findEvaluationStrategy(
+            $this->getContext(),
+            $this->getSelectedContestYear()
+        );
+        /** @var ContestantModel $contestant */
+        foreach ($contestants as $contestant) {
+            try {
+                $category = $strategy->studyYearsToCategory($contestant);
+                $this->contestantService->storeModel(
+                    ['contest_category_id' => $category->contest_category_id],
+                    $contestant
+                );
+            } catch (InvalidArgumentException $exception) {
+                $this->flashMessage($exception->getMessage());
+            }
+        }
     }
 
     /**

@@ -11,9 +11,12 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 
 /**
  * @property ContestantModel $model
@@ -55,11 +58,14 @@ class ContestantFormComponent extends EntityFormComponent
         $form->addComponent($container, self::CONT_CONTESTANT);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
         if ($this->isCreating()) {
-            $this->service->storeModel([
+            $contestant = $this->service->storeModel([
                 'contest_id' => $this->contestYear->contest_id,
                 'year' => $this->contestYear->year,
                 'person_id' => $values[self::CONT_CONTESTANT]['person_id'],
@@ -69,6 +75,19 @@ class ContestantFormComponent extends EntityFormComponent
             isset($this->model) ? _('Contestant has been updated') : _('Contestant has been created'),
             Message::LVL_SUCCESS
         );
+
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        $contestant = $contestant ?? $this->model;
+        try {
+            $category = $strategy->studyYearsToCategory($contestant);
+            $this->service->storeModel(
+                ['contest_category_id' => $category->contest_category_id],
+                $contestant
+            );
+            $this->getPresenter()->flashMessage(sprintf(_('Contestant enlisted to category %s.'), $category->label));
+        } catch (InvalidArgumentException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage());
+        }
         $this->getPresenter()->redirect('list');
     }
 

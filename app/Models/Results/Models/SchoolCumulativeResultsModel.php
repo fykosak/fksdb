@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
-use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Row;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 
@@ -27,23 +29,25 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     private CumulativeResultsModel $cumulativeResultsModel;
 
     public function __construct(
+        Container $container,
         CumulativeResultsModel $cumulativeResultsModel,
         ContestYearModel $contestYear,
-        TaskService $taskService
+        TaskService $taskService,
+        ContestCategoryService $contestCategoryService
     ) {
-        parent::__construct($contestYear, $taskService, new EvaluationNullObject());
+        parent::__construct($contestYear, $taskService, new EvaluationNullObject($container), $contestCategoryService);
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
     /**
      * Definition of header.
      */
-    public function getDataColumns(ModelCategory $category): array
+    public function getDataColumns(ContestCategoryModel $category): array
     {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
-        if (!isset($this->dataColumns[$category->value])) {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             foreach ($this->getSeries() as $series) {
                 $dataColumns[] = [
@@ -72,9 +76,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->value] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->value];
+        return $this->dataColumns[$category->label];
     }
 
     public function getSeries(): array
@@ -94,17 +98,16 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return ModelCategory[]
+     * @return ContestCategoryModel[]
      */
     public function getCategories(): array
     {
-        //return $this->evaluationStrategy->getCategories();
         return [
-            ModelCategory::tryFrom(ModelCategory::ALL),
+            $this->contestCategoryService->findByLabel(ContestCategoryModel::ALL),
         ];
     }
 
-    protected function composeQuery(ModelCategory $category): string
+    protected function composeQuery(ContestCategoryModel $category): string
     {
         throw new NotSupportedException();
     }
@@ -112,10 +115,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     /**
      * @return Row[]
      */
-    public function getData(ModelCategory $category): array
+    public function getData(ContestCategoryModel $category): array
     {
         $categories = [];
-        if ($category->value == ModelCategory::ALL) {
+        if ($category->value == ContestCategoryModel::ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
         } else {
             $categories[] = $category;
@@ -172,7 +175,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         return max([1.0 - 0.1 * $i, 0.1]);
     }
 
-    private function createResultRow(array $schoolContestants, ModelCategory $category): array
+    private function createResultRow(array $schoolContestants, ContestCategoryModel $category): array
     {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {

@@ -1473,7 +1473,7 @@ msgstr "Středoškoláci B"
 
 #: ../app/Models/ORM/Models/Fyziklani/TeamCategory.php:43
 msgid "High-school students C"
-msgstr "Středoškoláci B"
+msgstr "Středoškoláci C"
 
 #: ../app/Models/ORM/Models/Fyziklani/TeamCategory.php:45
 msgid "Abroad high-school students"

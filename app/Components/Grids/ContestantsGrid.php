@@ -46,6 +46,7 @@ class ContestantsGrid extends BaseGrid
         $this->setDefaultOrder('person.other_name ASC');
         $this->addColumns([
             'person.full_name',
+            'contestant.contest_category',
             'person_history.study_year',
         ]);
         $this->addColumn('school_name', _('School'))->setRenderer(

@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int|null school_id
  * @property-read SchoolModel|null school
  * @property-read string class
- * @property-read int study_year
+ * @property-read int|null study_year
  */
 class PersonHistoryModel extends Model
 {
@@ -88,4 +88,19 @@ class PersonHistoryModel extends Model
         }
         return $result;
     }
+
+    /*
+     * @return StudyYear|mixed|null
+     * @throws \ReflectionException
+     */
+    /* public function &__get(string $key)
+     {
+         $value = parent::__get($key);
+         switch ($key) {
+             case 'study_year':
+                 $value = StudyYear::tryFromLegacy($value);
+                 break;
+         }
+         return $value;
+     }*/
 }

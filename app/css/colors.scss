@@ -51,3 +51,44 @@ $fyziklaniPoints1: #f45d01;
     }
   }
 }
+
+.bg-category-fykos-1 {
+  background-color: lighten($fykosMainColor, 20%);
+}
+
+.bg-category-fykos-2 {
+  background-color: lighten($fykosMainColor, 10%);
+}
+
+.bg-category-fykos-3 {
+  background-color: darken($fykosMainColor, 10%);
+}
+
+.bg-category-fykos-4 {
+  background-color: darken($fykosMainColor, 20%);
+}
+
+.bg-category-vyfuk-6 {
+  background-color: lighten($vyfukMainColor, 20%);
+}
+
+.bg-category-vyfuk-7 {
+  background-color: lighten($vyfukMainColor, 10%);
+}
+
+.bg-category-vyfuk-8 {
+  background-color: darken($vyfukMainColor, 10%);
+}
+
+.bg-category-vyfuk-9 {
+  background-color: darken($vyfukMainColor, 20%);
+}
+
+.bg-category-vyfuk-unk {
+  background-color: $vyfukMainColor;
+}
+
+.bg-category-all {
+  background-color: #ccc;
+}
+
