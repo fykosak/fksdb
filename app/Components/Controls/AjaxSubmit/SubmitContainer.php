@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\TaskService;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 

@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -44,7 +43,6 @@ class ReferencedPersonContainer extends ReferencedContainer
     private PersonScheduleFactory $personScheduleFactory;
     protected ?EventModel $event;
 
-    private bool $configured = false;
 
     public function __construct(
         Container $container,
@@ -59,11 +57,6 @@ class ReferencedPersonContainer extends ReferencedContainer
         $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
-        $this->monitor(IContainer::class, function (): void {
-            if (!$this->configured) {
-                $this->configure();
-            }
-        });
     }
 
     final public function injectPrimary(
@@ -152,7 +145,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
-                  //  $component->setDisabled();
+                    //  $component->setDisabled();
                     $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
@@ -173,7 +166,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     }
                     if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
-                       // $component->setDisabled(); // could not store different value anyway
+                        // $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }
@@ -289,7 +282,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         bool $hasDelivery = false,
         bool $targetValidation = false
     ) {
-        return ReferencedPersonFactory::getPersonValue(
+        return ReferencedPersonHandler::getPersonValue(
             $person,
             $sub,
             $field,

@@ -104,11 +104,7 @@ class PaymentPresenter extends BasePresenter
     }
     /* ********* Authorization *****************/
 
-    /**
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
+
     public function actionCreate(): void
     {
        /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {

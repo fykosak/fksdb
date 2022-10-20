@@ -105,10 +105,8 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws BadRequestException
-     * @throws \ReflectionException
      */
     protected function beforeRender(): void
     {

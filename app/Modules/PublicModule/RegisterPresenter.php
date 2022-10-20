@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -201,11 +200,6 @@ class RegisterPresenter extends CoreBasePresenter
         return $contest->getContestYear($this->year);
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws BadRequestException
-     * @throws \ReflectionException
-     */
     protected function beforeRender(): void
     {
         $contest = $this->getSelectedContest();

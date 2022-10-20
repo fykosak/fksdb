@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, LoginModel, TaskContributionType};
+use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -26,10 +26,8 @@ class PointsPresenter extends BasePresenter
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
 
-    final public function injectQuarterly(
-        SQLResultsCache $resultsCache,
-        SeriesTable $seriesTable
-    ): void {
+    final public function injectQuarterly(SQLResultsCache $resultsCache, SeriesTable $seriesTable): void
+    {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
     }

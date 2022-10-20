@@ -1,4 +1,6 @@
 {layout '../@layout.latte'}
+{varType FKSDB\Models\DataTesting\TestLog[] $logs}
+{block headline}{_'Validation'}{/block}
 {block content}
     <ul class="list-group list-group-flush">
         {foreach $logs as $log}

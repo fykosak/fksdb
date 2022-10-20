@@ -144,13 +144,13 @@ class ReferencedId extends HiddenField
         $promise = new Promise(function () use ($values, $referencedId): ?int {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues($values);
+                    $model = $this->handler->store((array)$values);
                     $this->setValue($model, true);
                     $this->modelCreated = true;
                     return $model->getPrimary();
                 } elseif ($referencedId) {
                     $model = $this->service->findByPrimary($referencedId);
-                    $this->handler->update($model, (array)$values);
+                    $this->handler->store((array)$values, $model);
                     $this->setValue($model, true);
                     return $referencedId;
                 } else {

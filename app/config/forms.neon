@@ -118,12 +118,6 @@ parameters:
                     required: false
                 gender:
                     required: true
-            post_contact_d:
-                address:
-                  required: false
-            post_contact_p:
-                address:
-                  required: false
             person_info:
                 # extends table person
                 academic_degree_prefix:
