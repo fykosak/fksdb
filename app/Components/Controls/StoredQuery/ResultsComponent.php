@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
@@ -13,7 +11,9 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use FKSDB\Models\StoredQuery\StoredQuery;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -95,7 +95,8 @@ class ResultsComponent extends BaseComponent
             $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
         $this->getTemplate()->error = $this->getSqlError();
-        $this->getTemplate()->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
+        $this->getTemplate()->hasParameters = $this->showParametrizeForm &&
+            count($this->storedQuery->getQueryParameters());
         $this->getTemplate()->showParametrizeForm = $this->showParametrizeForm;
         $this->getTemplate()->hasStoredQuery = isset($this->storedQuery);
         $this->getTemplate()->storedQuery = $this->storedQuery ?? null;

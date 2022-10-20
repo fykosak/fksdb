@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Logger;
@@ -169,7 +170,7 @@ class ApplicationHandler
     /**
      * @throws \Throwable
      */
-    private function saveAndExecute(?\FKSDB\Models\Transitions\Transition\Transition $transition, BaseHolder $holder)
+    private function saveAndExecute(?Transition $transition, BaseHolder $holder)
     {
         if ($transition) {
             $this->getMachine()->execute2($transition, $holder);
@@ -203,10 +204,10 @@ class ApplicationHandler
     private function processData(
         ?ArrayHash $data,
         ?Form $form,
-        ?\FKSDB\Models\Transitions\Transition\Transition $transition,
+        ?Transition $transition,
         BaseHolder $holder,
         ?string $execute
-    ): ?\FKSDB\Models\Transitions\Transition\Transition {
+    ): ?Transition {
         if ($form) {
             $values = FormUtils::emptyStrToNull($form->getValues());
         } else {
