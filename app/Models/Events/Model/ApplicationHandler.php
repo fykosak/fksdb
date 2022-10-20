@@ -101,13 +101,13 @@ class ApplicationHandler
             }
             $this->saveAndExecute($transition, $holder);
         } catch (
-        ModelDataConflictException
-        | DuplicateApplicationException
-        | MachineExecutionException
-        | SubmitProcessingException
-        | FullCapacityException
-        | ExistingPaymentException
-        | UnavailableTransitionException $exception
+            ModelDataConflictException
+            | DuplicateApplicationException
+            | MachineExecutionException
+            | SubmitProcessingException
+            | FullCapacityException
+            | ExistingPaymentException
+            | UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -153,12 +153,12 @@ class ApplicationHandler
                 );
             }
         } catch (
-        ModelDataConflictException |
-        DuplicateApplicationException |
-        MachineExecutionException |
-        SubmitProcessingException |
-        FullCapacityException |
-        ExistingPaymentException $exception
+            ModelDataConflictException |
+            DuplicateApplicationException |
+            MachineExecutionException |
+            SubmitProcessingException |
+            FullCapacityException |
+            ExistingPaymentException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
