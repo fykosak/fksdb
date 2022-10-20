@@ -87,7 +87,6 @@ abstract class TeamFormComponent extends EntityFormComponent
             );
 
             $this->saveTeamMembers($team, $form);
-
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);

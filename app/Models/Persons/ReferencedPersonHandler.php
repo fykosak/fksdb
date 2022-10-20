@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
@@ -27,9 +26,10 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
+use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-class ReferencedPersonHandler implements ReferencedHandler
+class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;
 
@@ -49,12 +49,9 @@ class ReferencedPersonHandler implements ReferencedHandler
     private FlagService $flagService;
 
     private EventModel $event;
-    private ResolutionMode $resolution;
 
-    public function __construct(
-        ContestYearModel $contestYear,
-        ResolutionMode $resolution
-    ) {
+    public function __construct(ContestYearModel $contestYear, ResolutionMode $resolution)
+    {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
     }
@@ -79,39 +76,21 @@ class ReferencedPersonHandler implements ReferencedHandler
         $this->flagService = $flagService;
     }
 
-    public function setResolution(ResolutionMode $resolution): void
-    {
-        $this->resolution = $resolution;
-    }
-
     /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
-     * @throws ModelDataConflictException
-     * @throws ModelException
+     * @param PersonModel|null $model
      * @throws NotImplementedException
-     * @throws StorageException
      */
-    public function createFromValues(array $values): PersonModel
+    public function store(array $values, ?Model $model = null): PersonModel
     {
-        $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
-        $person = $this->storePerson($person, (array)$values['person']);
-        $this->store($person, $values);
-        return $person;
-    }
-
-    /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
-     * @throws ModelDataConflictException
-     * @throws ModelException
-     * @throws NotImplementedException
-     * @throws StorageException
-     */
-    public function update(Model $model, array $values): void
-    {
-        /** @var PersonModel $model */
-        $this->store($model, $values);
+        if (isset($model)) {
+            $this->innerStore($model, $values);
+            return $model;
+        } else {
+            $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            $person = $this->storePerson($person, (array)$values['person']);
+            $this->innerStore($person, $values);
+            return $person;
+        }
     }
 
     public function setEvent(EventModel $event): void
@@ -127,7 +106,7 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(PersonModel $person, array $data): void
+    private function innerStore(PersonModel &$person, array $data): void
     {
         $connection = $this->personService->explorer->getConnection();
         try {
@@ -253,8 +232,20 @@ class ReferencedPersonHandler implements ReferencedHandler
             $address = $this->addressService->storeModel($data['address']);
             $data['address_id'] = $address->address_id;
             $data['person_id'] = $person->person_id;
-            $data['type'] = PersonFormComponent::mapAddressContainerNameToType($type)->value;
+            $data['type'] = self::mapAddressContainerNameToType($type)->value;
             $this->postContactService->storeModel($data);
+        }
+    }
+
+    public static function mapAddressContainerNameToType(string $containerName): PostContactType
+    {
+        switch ($containerName) {
+            case self::POST_CONTACT_PERMANENT:
+                return PostContactType::tryFrom(PostContactType::PERMANENT);
+            case self::POST_CONTACT_DELIVERY:
+                return PostContactType::tryFrom(PostContactType::DELIVERY);
+            default:
+                throw new InvalidArgumentException();
         }
     }
 
@@ -277,24 +268,6 @@ class ReferencedPersonHandler implements ReferencedHandler
                         case ResolutionMode::OVERWRITE:
                             break;
                     }
-                }
-            }
-        }
-        return $values;
-    }
-
-    private function findModelConflicts(Model $model, array $values, string $subKey): array
-    {
-        foreach ($values as $key => $value) {
-            if (isset($model[$key]) && $model[$key] != $value) {
-                switch ($this->resolution->value) {
-                    case ResolutionMode::EXCEPTION:
-                        throw new ModelDataConflictException([$subKey => [$key => $value]]);
-                    case ResolutionMode::KEEP:
-                        unset($values[$key]);
-                        break;
-                    case ResolutionMode::OVERWRITE:
-                        break;
                 }
             }
         }
@@ -342,6 +315,63 @@ class ReferencedPersonHandler implements ReferencedHandler
                     $data[$type]['type'] = PostContactType::PERMANENT;
                     break;
             }
+        }
+    }
+
+
+    final public static function isFilled(
+        PersonModel $person,
+        string $sub,
+        string $field,
+        ContestYearModel $contestYear,
+        ?EventModel $event = null
+    ): bool {
+        $value = self::getPersonValue($person, $sub, $field, $contestYear, false, false, true, $event);
+        return !($value === null || $value === '');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getPersonValue(
+        ?PersonModel $person,
+        string $sub,
+        string $field,
+        ContestYearModel $contestYear,
+        bool $extrapolate = false,
+        bool $hasDelivery = false,
+        bool $targetValidation = false,
+        ?EventModel $event = null
+    ) {
+        if (!$person) {
+            return null;
+        }
+        switch ($sub) {
+            case 'person_schedule':
+                return $person->getSerializedSchedule($event, $field);
+            case 'person':
+                return $person->{$field};
+            case 'person_info':
+                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
+                if ($field == 'agreed') {
+                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
+                    $result = $result ? true : null;
+                }
+                return $result;
+            case 'person_history':
+                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
+                    : null;
+            case 'post_contact_d':
+                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+            case 'post_contact_p':
+                if ($targetValidation || !$hasDelivery) {
+                    return $person->getPermanentPostContact();
+                }
+                return $person->getPermanentPostContact(false);
+            case 'person_has_flag':
+                return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
+            default:
+                throw new \InvalidArgumentException("Unknown person sub '$sub'.");
         }
     }
 }

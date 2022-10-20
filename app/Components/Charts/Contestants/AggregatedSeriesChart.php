@@ -27,6 +27,7 @@ class AggregatedSeriesChart extends AbstractPerSeriesChart
                     join task t on t.task_id = s.task_id
            where ts.series >= t.series
              AND ts.year = t.year
+           AND ts.contest_id = t.contest_id
        ) as \'count\'
 from task ts
 where contest_id = ?

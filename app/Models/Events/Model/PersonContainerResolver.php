@@ -7,9 +7,9 @@ namespace FKSDB\Models\Events\Model;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
-use Nette\SmartObject;
 use FKSDB\Models\Persons\Resolvers\Resolver;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use Nette\SmartObject;
 
 class PersonContainerResolver implements Resolver
 {

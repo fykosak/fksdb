@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistic
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 
 class StatisticsPresenter extends BasePresenter
 {

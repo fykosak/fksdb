@@ -17,10 +17,10 @@ use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
+use FKSDB\Models\Persons\Resolvers\Resolver;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\Resolvers\Resolver;
 
 class ReferencedPersonFactory
 {
