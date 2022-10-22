@@ -7,11 +7,10 @@ namespace FKSDB\Models\Mail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
-use Nette\Application\UI\Template;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
-use Tracy\Debugger;
 
 class MailTemplateFactory
 {
@@ -50,60 +49,76 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function createLoginInvitation(?string $lang, array $data): Template
+    public function renderLoginInvitation(string $lang, array $data): string
     {
-        return $this->createWithParameters('loginInvitation', $lang, $data);
+        return $this->create()->renderToString(
+            __DIR__ . DIRECTORY_SEPARATOR . 'loginInvitation.' . $lang . '.latte',
+            $data
+        );
     }
 
     /**
      * @throws BadTypeException
      */
-    public function createPasswordRecovery(string $lang, array $data): Template
+    public function renderPasswordRecovery(string $lang, array $data): string
     {
-        return $this->createWithParameters(__DIR__ . DIRECTORY_SEPARATOR . 'recovery', $lang, $data);
+        return $this->create()->renderToString(
+            __DIR__ . DIRECTORY_SEPARATOR . 'recovery.' . $lang . '.latte',
+            $data
+        );
     }
 
     /**
      * @throws BadTypeException
      */
-    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): Template
+    public function renderWithParameters(string $templateFile, ?string $lang, array $data = []): string
     {
-        $template = $this->createFromFile($templateFile, $lang);
-        $template->setTranslator($this->translator);
-        foreach ($data as $key => $value) {
-            $template->{$key} = $value;
-        }
-        return $template;
+        return $this->create()->renderToString($this->resolverFileName($templateFile, $lang), $data);
     }
 
     /**
      * @throws BadTypeException
      */
-    final public function createFromFile(string $filename, ?string $lang): Template
+    private function resolverFileName(string $filename, ?string $lang): string
     {
         $presenter = $this->application->getPresenter();
-        if (($lang === null) && !$presenter instanceof BasePresenter) {
-            throw new BadTypeException(BasePresenter::class, $presenter);
-        }
-        if ($lang === null) {
+
+        if (is_null($lang)) {
+            if (!$presenter instanceof BasePresenter) {
+                throw new BadTypeException(BasePresenter::class, $presenter);
+            }
             $lang = $presenter->getLang();
         }
         $filename = "$filename.$lang.latte";
-        if (realpath($filename) !== $filename) {
-            $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
+        if (file_exists($filename)) {
+            return $filename;
         }
+        $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
 
-        if (!file_exists($filename)) {
-            throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
+        if (file_exists($filename)) {
+            return $filename;
+        }
+        throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    private function create(): Template
+    {
+        $presenter = $this->application->getPresenter();
+        if (!$presenter instanceof BasePresenter) {
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
-        $template->setFile($filename);
 
-        if ($template instanceof \Nette\Bridges\ApplicationLatte\Template) {
-            $template->getLatte()->addProvider('uiControl', $presenter);
+        if (!$template instanceof Template) {
+            throw new BadTypeException(Template::class, $template);
         }
+        $template->getLatte()->addProvider('uiControl', $presenter);
         $template->control = $presenter;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
+        $template->setTranslator($this->translator);
         return $template;
     }
 }

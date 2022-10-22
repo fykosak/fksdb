@@ -15,13 +15,9 @@ class LoggingMailer implements Mailer
     use SmartObject;
 
     private Mailer $mailer;
-
     private string $logPath;
-
     private bool $logging = true;
-
     private int $sentMessages = 0;
-
     private Container $container;
 
     public function __construct(Mailer $mailer, Container $container)

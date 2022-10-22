@@ -58,7 +58,7 @@ abstract class MailCallback implements Statement
      */
     protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
-        return (string)$this->mailTemplateFactory->createWithParameters(
+        return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder),
             $person->getPreferredLang(),
             [

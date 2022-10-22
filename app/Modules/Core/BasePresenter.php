@@ -256,23 +256,16 @@ abstract class BasePresenter extends Presenter implements
     public function getTitle(): PageTitle
     {
         if (!isset($this->pageTitle)) {
-            $method = $this->formatTitleMethod($this->getView());
-            if (method_exists($this, $method)) {
-                $this->pageTitle = $this->{$method}();
+            try {
+                $reflection = new \ReflectionClass($this);
+                $method = $reflection->getMethod('title' . $this->getView());
+                $this->pageTitle = $method->invoke($this);
+            } catch (\ReflectionException$exception) {
             }
         }
         $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
-    }
-
-    /**
-     * Formats title method name.
-     * Method should set the title of the page using setTitle method.
-     */
-    protected static function formatTitleMethod(string $view): string
-    {
-        return 'title' . $view;
     }
 
     protected function getDefaultSubTitle(): ?string

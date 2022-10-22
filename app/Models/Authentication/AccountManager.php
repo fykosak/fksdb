@@ -59,7 +59,7 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
+        $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
             $person->getPreferredLang() ?? $lang,
             [
                 'token' => $token->token,
@@ -95,7 +95,7 @@ class AccountManager
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, [
+        $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery($lang, [
             'token' => $token,
             'login' => $login,
         ]);
