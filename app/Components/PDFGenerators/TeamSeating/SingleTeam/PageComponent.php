@@ -20,14 +20,14 @@ class PageComponent extends SeatingPageComponent
         if (!$row instanceof TeamModel2) {
             throw new BadTypeException(TeamModel2::class, $row);
         }
-        $this->getTemplate()->rests = $row->getScheduleRest();
-        $this->getTemplate()->team = $row;
+        $this->template->rests = $row->getScheduleRest();
+        $this->template->team = $row;
         $teamSeat = $row->getTeamSeat();
-        $this->getTemplate()->room = $teamSeat ? $teamSeat->fyziklani_seat->fyziklani_room : null;
-        $this->getTemplate()->event = $row->event;
-        $this->getTemplate()->sector = $teamSeat ? $teamSeat->fyziklani_seat->sector : null;
-        $this->getTemplate()->showBigNav = true;
+        $this->template->room = $teamSeat ? $teamSeat->fyziklani_seat->fyziklani_room : null;
+        $this->template->event = $row->event;
+        $this->template->sector = $teamSeat ? $teamSeat->fyziklani_seat->sector : null;
+        $this->template->showBigNav = true;
 
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 }

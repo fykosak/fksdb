@@ -77,6 +77,6 @@ class InboxFormComponent extends SeriesTableFormComponent
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

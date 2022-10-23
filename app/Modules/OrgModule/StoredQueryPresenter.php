@@ -72,7 +72,7 @@ class StoredQueryPresenter extends BasePresenter
      */
     final public function renderDetail(): void
     {
-        $this->getTemplate()->model = $this->getEntity();
+        $this->template->model = $this->getEntity();
     }
 
     protected function startup(): void

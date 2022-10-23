@@ -247,10 +247,10 @@ abstract class BasePresenter extends Presenter implements
     {
         parent::beforeRender();
 
-        $this->getTemplate()->pageTitle = $this->getTitle();
-        $this->getTemplate()->pageStyleContainer = $this->getPageStyleContainer();
-        $this->getTemplate()->lang = $this->getLang();
-        $this->getTemplate()->navRoots = $this->getNavRoots();
+        $this->template->pageTitle = $this->getTitle();
+        $this->template->pageStyleContainer = $this->getPageStyleContainer();
+        $this->template->lang = $this->getLang();
+        $this->template->navRoots = $this->getNavRoots();
     }
 
     public function getTitle(): PageTitle

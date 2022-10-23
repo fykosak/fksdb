@@ -55,9 +55,9 @@ class StalkingComponent extends BaseStalkingComponent
                 throw new NotImplementedException();
         }
 
-        $this->getTemplate()->model = $model;
-        $this->getTemplate()->rows = $definition['rows'];
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
+        $this->template->model = $model;
+        $this->template->rows = $definition['rows'];
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     /**

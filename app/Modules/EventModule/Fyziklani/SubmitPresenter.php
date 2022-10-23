@@ -74,7 +74,7 @@ class SubmitPresenter extends BasePresenter
      */
     final public function renderDetail(): void
     {
-        $this->getTemplate()->model = $this->getEntity();
+        $this->template->model = $this->getEntity();
     }
 
     /* ******** ACTION METHODS ********/
@@ -89,7 +89,7 @@ class SubmitPresenter extends BasePresenter
      */
     final public function renderEdit(): void
     {
-        $this->getTemplate()->model = $this->getEntity();
+        $this->template->model = $this->getEntity();
     }
 
     /**

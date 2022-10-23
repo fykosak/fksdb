@@ -29,10 +29,10 @@ class ColumnPrinterComponent extends BaseComponent
     final public function render(string $field, Model $model, int $userPermission): void
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
-        $this->getTemplate()->title = $factory->getTitle();
-        $this->getTemplate()->description = $factory->getDescription();
-        $this->getTemplate()->html = $factory->render($model, $userPermission);
-        $this->getTemplate()->render();
+        $this->template->title = $factory->getTitle();
+        $this->template->description = $factory->getDescription();
+        $this->template->html = $factory->render($model, $userPermission);
+        $this->template->render();
     }
 
     /**
@@ -45,7 +45,7 @@ class ColumnPrinterComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->getTemplate()->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -59,7 +59,7 @@ class ColumnPrinterComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->getTemplate()->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -73,7 +73,7 @@ class ColumnPrinterComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->getTemplate()->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');
         $this->render($field, $model, $userPermission);
     }
 }

@@ -162,7 +162,7 @@ class RegisterPresenter extends CoreBasePresenter
                 $contest->getCurrentContestYear(),
                 $forwardedYear,
             ];
-            $this->getTemplate()->years = $years;
+            $this->template->years = $years;
         } else {
             $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year]);
         }

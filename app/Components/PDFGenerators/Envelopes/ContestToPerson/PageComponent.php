@@ -32,11 +32,11 @@ class PageComponent extends AbstractPageComponent
             $postContact = $row->getPermanentPostContact();
         }
         if ($postContact) {
-            $this->getTemplate()->person = $row;
-            $this->getTemplate()->address = $postContact->address;
+            $this->template->person = $row;
+            $this->template->address = $postContact->address;
         }
-        $this->getTemplate()->contest = $this->contest;
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');
+        $this->template->contest = $this->contest;
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');
     }
 
     public function getPageFormat(): string

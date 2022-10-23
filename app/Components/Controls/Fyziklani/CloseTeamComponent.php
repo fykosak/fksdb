@@ -49,8 +49,8 @@ class CloseTeamComponent extends BaseComponent
      */
     final public function render(): void
     {
-        $this->getTemplate()->task = $this->getNextTask();
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
+        $this->template->task = $this->getNextTask();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
     }
 
     /**

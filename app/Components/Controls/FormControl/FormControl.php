@@ -37,10 +37,10 @@ class FormControl extends BaseComponent
 
     final public function render(): void
     {
-        if (!isset($this->getTemplate()->mainContainer)) {
-            $this->getTemplate()->form = $this->getComponent('form');
+        if (!isset($this->template->mainContainer)) {
+            $this->template->form = $this->getComponent('form');
         }
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 
     public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array

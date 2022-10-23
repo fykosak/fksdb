@@ -33,7 +33,7 @@ class SubmitCheckComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     public function handleCheck(): void
