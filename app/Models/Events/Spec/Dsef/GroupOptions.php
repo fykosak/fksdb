@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Spec\Dsef;
 
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
 use FKSDB\Models\ORM\Models\Events\ModelDsefParticipant;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\SmartObject;
-use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
-use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  * @deprecated
@@ -47,18 +47,6 @@ class GroupOptions implements OptionsProvider
         $this->excludeStates = $excludeStates;
         $this->mParticipantService = $mParticipantService;
         $this->dsefGroupService = $dsefGroupService;
-    }
-
-    private function transformGroups(iterable $groups): array
-    {
-        $result = [];
-        foreach ($groups as $name => $capacity) {
-            $result[] = [
-                'label' => $name,
-                'capacity' => $capacity,
-            ];
-        }
-        return $result;
     }
 
     /**
