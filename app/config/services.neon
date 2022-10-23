@@ -4,10 +4,7 @@
 
 services:
     ## extends nette
-    nette.mailer:
-        factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
-        setup:
-            - setLogPath(%logDir%/mail)
+    nette.mailer: Nette\Mail\SendmailMailer()
     ## need setUp
     submitUploatedStorage:
         factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)

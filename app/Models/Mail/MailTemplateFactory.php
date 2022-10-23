@@ -49,23 +49,17 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function renderLoginInvitation(string $lang, array $data): string
+    public function renderLoginInvitation(array $data): string
     {
-        return $this->create()->renderToString(
-            __DIR__ . DIRECTORY_SEPARATOR . 'loginInvitation.' . $lang . '.latte',
-            $data
-        );
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'loginInvitation.latte', $data);
     }
 
     /**
      * @throws BadTypeException
      */
-    public function renderPasswordRecovery(string $lang, array $data): string
+    public function renderPasswordRecovery(array $data): string
     {
-        return $this->create()->renderToString(
-            __DIR__ . DIRECTORY_SEPARATOR . 'recovery.' . $lang . '.latte',
-            $data
-        );
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'recovery.latte', $data);
     }
 
     /**
@@ -79,16 +73,25 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    private function resolverFileName(string $filename, ?string $lang): string
+    private function resolverLang(?string $lang): string
     {
+        if (!is_null($lang)) {
+            return $lang;
+        }
         $presenter = $this->application->getPresenter();
 
-        if (is_null($lang)) {
-            if (!$presenter instanceof BasePresenter) {
-                throw new BadTypeException(BasePresenter::class, $presenter);
-            }
-            $lang = $presenter->getLang();
+        if (!$presenter instanceof BasePresenter) {
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
+        return $presenter->getLang();
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    private function resolverFileName(string $filename, ?string $lang): string
+    {
+        $lang = $this->resolverLang($lang);
         $filename = "$filename.$lang.latte";
         if (file_exists($filename)) {
             return $filename;

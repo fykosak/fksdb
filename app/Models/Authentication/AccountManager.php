@@ -7,13 +7,13 @@ namespace FKSDB\Models\Authentication;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 
@@ -60,12 +60,12 @@ class AccountManager
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
         $data = [];
         $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
-            $person->getPreferredLang() ?? $lang,
             [
                 'token' => $token->token,
                 'person' => $person,
                 'email' => $email,
                 'until' => $until,
+                'lang' => $person->getPreferredLang() ?? $lang,
             ]
         );
         $data['subject'] = _('Create an account');
@@ -95,9 +95,10 @@ class AccountManager
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $data = [];
-        $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery($lang, [
+        $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
             'login' => $login,
+            'lang' => $lang,
         ]);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
