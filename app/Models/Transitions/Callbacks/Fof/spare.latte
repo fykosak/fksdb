@@ -1,0 +1,27 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
+{block body}
+    {if $holder->getModel()->game_lang->value == 'cs'}
+        <p>
+            Ahoj,<br/>
+            z Tvé školy jsou již přihlášené minimálně čtyři týmy. Kvůli omezené kapacitě tedy Tvůj tým přidáváme jako
+            náhradníky (zatím s Tebou tudíž na Fyziklání a doprovodném programu nepočítáme). V případě, že se uvolní
+            místo, Ti dáme vědět.
+        </p>
+        <p>Děkujeme za pochopení,</p>
+        <p>Organizátoři Fyziklání<br/>
+            <a href="https://fyziklani.cz">fyziklani.cz</a>
+        </p>
+    {else}
+        <p>
+            Hello,<br>
+            at least four teams from your school have already applied to Fyziklani. Due to the restricted capacity, your
+            team has been marked as a spare team (which means we can't invite you to the competition). If some of the
+            applied teams cancel their application, we will let you know.</p>
+        <p>
+            Thank you for your understanding,<br/>
+            Fyziklani's organisers<br/>
+            <a href="https://fyziklani.org/en">fyziklani.org</a>
+        </p>
+    {/if}
+{/block}
