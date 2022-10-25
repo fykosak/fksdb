@@ -10,13 +10,12 @@ use FKSDB\Models\ValuePrinters\HashPrinter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Utils\Html;
 
 class PasswordColumnFactory extends ColumnFactory
 {
     /**
-     * @param TeamModel|TeamModel2 $model
+     * @param TeamModel2 $model
      */
     protected function createHtmlValue(Model $model): Html
     {

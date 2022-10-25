@@ -15,6 +15,6 @@ class DuplicateApplicationException extends ModelException
             _('Person %s is already applied to the event.'),
             $person ? $person->getFullName() : _('Person')
         );
-        parent::__construct($message, null, $previous);
+        parent::__construct($message, 0, $previous);
     }
 }

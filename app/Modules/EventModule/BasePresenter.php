@@ -8,8 +8,7 @@ use FKSDB\Components\Controls\Choosers\EventChooserComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -72,10 +71,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function getHolder(): Holder
+    protected function getDummyHolder(): BaseHolder
     {
         static $holder;
-        if (!isset($holder)) {
+        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $holder;
@@ -101,7 +100,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function getDefaultSubTitle(): ?string
     {
-        return $this->getEvent()->__toString();
+        return $this->getEvent()->name;
     }
 
     /**

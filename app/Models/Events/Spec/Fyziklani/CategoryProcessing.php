@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Nette\Utils\ArrayHash;
@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractCategoryProcessing
 {
 
-    protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory
+    protected function getCategory(BaseHolder $holder, ArrayHash $values): ?TeamCategory
     {
         if ($values['team']['force_a']) {
             return TeamCategory::tryFrom(TeamCategory::A);

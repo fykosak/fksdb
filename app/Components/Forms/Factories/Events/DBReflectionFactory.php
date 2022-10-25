@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Connection;
@@ -36,8 +36,7 @@ class DBReflectionFactory extends AbstractFactory
     {
         $element = null;
         try {
-            $service = $field->getBaseHolder()->getService();
-            $columnName = $field->getName();
+            $service = $field->holder->service;
 
             $service->getTable()->getName();
             $tableName = null;
@@ -47,7 +46,7 @@ class DBReflectionFactory extends AbstractFactory
                 $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $field->name)->createField();
             }
         } catch (\Throwable $e) {
         }
@@ -60,28 +59,28 @@ class DBReflectionFactory extends AbstractFactory
          */
         if (!$element) {
             if ($type == 'TINYINT' && $size == 1) {
-                $element = new Checkbox($field->getLabel());
+                $element = new Checkbox($field->label);
             } elseif (substr_compare($type, 'INT', -3) == 0) {
-                $element = new TextInput($field->getLabel());
+                $element = new TextInput($field->label);
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label must be an integer.'));
                 if ($size) {
                     $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             } elseif ($type == 'TEXT') {
-                $element = new TextArea($field->getLabel());
+                $element = new TextArea($field->label);
             } elseif ($type == 'TIME') {
-                $element = new TimeInput($field->getLabel());
+                $element = new TimeInput($field->label);
             } else {
-                $element = new TextInput($field->getLabel());
+                $element = new TextInput($field->label);
                 if ($size) {
                     $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             }
         }
-        $element->caption = $field->getLabel();
-        if ($field->getDescription()) {
-            $element->setOption('description', $field->getDescription());
+        $element->caption = $field->label;
+        if ($field->description) {
+            $element->setOption('description', $field->description);
         }
 
         return $element;
@@ -89,7 +88,7 @@ class DBReflectionFactory extends AbstractFactory
 
     protected function setDefaultValue(BaseControl $control, Field $field): void
     {
-        if ($field->getBaseHolder()->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->holder->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -100,23 +99,22 @@ class DBReflectionFactory extends AbstractFactory
 
     private function resolveColumn(Field $field): ?array
     {
-        $service = $field->getBaseHolder()->getService();
-        $columnName = $field->getName();
+        $service = $field->holder->service;
 
         $column = null;
         if ($service instanceof Service) {
             $tableName = $service->getTable()->getName();
-            $column = $this->getColumnMetadata($tableName, $columnName);
+            $column = $this->getColumnMetadata($tableName, $field->name);
         } elseif ($service instanceof ServiceMulti) {
             $tableName = $service->mainService->getTable()->getName();
-            $column = $this->getColumnMetadata($tableName, $columnName);
+            $column = $this->getColumnMetadata($tableName, $field->name);
             if ($column === null) {
                 $tableName = $service->joinedService->getTable()->getName();
-                $column = $this->getColumnMetadata($tableName, $columnName);
+                $column = $this->getColumnMetadata($tableName, $field->name);
             }
         }
         if ($column === null) {
-            throw new InvalidArgumentException("Cannot find reflection for field '{$field->getName()}'.");
+            throw new InvalidArgumentException("Cannot find reflection for field '$field->name'.");
         }
         return $column;
     }

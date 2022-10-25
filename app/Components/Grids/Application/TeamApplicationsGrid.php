@@ -6,21 +6,32 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class TeamApplicationsGrid extends AbstractApplicationsGrid
+class TeamApplicationsGrid extends BaseGrid
 {
+    protected EventModel $event;
+
+    public function __construct(EventModel $event, Container $container)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
 
     /**
      * @throws BadTypeException
@@ -38,15 +49,37 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
             'fyziklani_team.fyziklani_team_id',
             'fyziklani_team.name',
             'fyziklani_team.state',
+            'fyziklani_team.game_lang',
+            'fyziklani_team.category',
+            'fyziklani_team.force_a',
+            'fyziklani_team.phone',
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
         $this->addCSVDownloadButton();
         parent::configure($presenter);
     }
 
-    protected function getSource(): TypedGroupedSelection
+    protected function getData(): IDataSource
     {
-        return $this->event->getFyziklaniTeams();
+        $participants = $this->event->getFyziklaniTeams();
+        $source = new SearchableDataSource($participants);
+        $source->setFilterCallback($this->getFilterCallBack());
+        return $source;
+    }
+
+    public function getFilterCallBack(): callable
+    {
+        return function (Selection $table, array $value): void {
+            $states = [];
+            foreach ($value['status'] as $state => $value) {
+                if ($value) {
+                    $states[] = str_replace('__', '.', $state);
+                }
+            }
+            if (count($states)) {
+                $table->where('status IN ?', $states);
+            }
+        };
     }
 
     /**
@@ -75,22 +108,5 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
             $this->getPaginator()->itemCount = $count;
         };
         return $control;
-    }
-
-    protected function getHoldersColumns(): array
-    {
-        return [
-            'note',
-            'game_lang',
-            'category',
-            'force_a',
-            'phone',
-            'password',
-        ];
-    }
-
-    protected function getTableName(): string
-    {
-        return DbNames::TAB_FYZIKLANI_TEAM;
     }
 }

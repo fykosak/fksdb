@@ -25,8 +25,8 @@ parameters:
                 __init->applied:
                     condition: or(regOpen(), role('admin'))
                     label: _('Přihlásit se')
-                    onExecuted:
-                        - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                    afterExecute:
+                        - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                 applied->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Prezentovat')
@@ -49,15 +49,13 @@ parameters:
 
 events:
     dsef28:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [28]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
 
-        baseMachines:
-            PARTICIPANT_DSEF:
+        baseMachine:
                 service: @orm.event_participant.service
-                states: %events.defaultDsef.states%
                 transitions: %events.dsef28.transitions%
                 fields:
                     person_id:
@@ -70,12 +68,8 @@ events:
                         modifiable: %events.defaultDsef.appCond%
                         description: _('Počet "obědů" (bageta za 50 Kč)')
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT_DSEF
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjunction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

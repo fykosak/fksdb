@@ -21,6 +21,7 @@ class StatsWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @throws \DOMException
      * @deprecated
      */
     public function getResponse(\stdClass $args): \SoapVar

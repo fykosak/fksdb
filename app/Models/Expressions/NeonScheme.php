@@ -32,7 +32,7 @@ class NeonScheme
                 try {
                     $result[$key] = Arrays::get($section, $key);
                 } catch (InvalidArgumentException $exception) {
-                    throw new NeonSchemaException("Expected key '$key' not found.", null, $exception);
+                    throw new NeonSchemaException("Expected key '$key' not found.", 0, $exception);
                 }
                 if ($metadata === null) {
                     continue;

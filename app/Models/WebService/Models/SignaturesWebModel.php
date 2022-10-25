@@ -25,6 +25,7 @@ class SignaturesWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {

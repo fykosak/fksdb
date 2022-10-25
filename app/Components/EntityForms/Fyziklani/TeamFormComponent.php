@@ -25,6 +25,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -112,16 +113,7 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     protected function saveTeamMembers(TeamModel2 $team, Form $form): void
     {
-        $persons = [];
-        for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId $referencedId */
-            $referencedId = $form->getComponent('member_' . $member);
-            /** @var PersonModel $person */
-            $person = $referencedId->getModel();
-            if ($person) {
-                $persons[$person->person_id] = $person;
-            }
-        }
+        $persons = self::getMembersFromForm($form);
         if (!count($persons)) {
             throw new NoMemberException();
         }
@@ -140,6 +132,24 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->teamMemberService->storeModel($data);
             }
         }
+    }
+
+    /**
+     * @return PersonModel[]
+     */
+    public static function getMembersFromForm(Form $form): array
+    {
+        $persons = [];
+        for ($member = 0; $member < 5; $member++) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('member_' . $member);
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            if ($person) {
+                $persons[$person->person_id] = $person;
+            }
+        }
+        return $persons;
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void

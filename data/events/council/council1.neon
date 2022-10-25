@@ -1,9 +1,8 @@
 events:
     council:
-        event_type_id: [15]
+        eventTypeIds: [15]
         eventYears: [1,2]
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 fields:
                     person_id:
                         label: _('Person')

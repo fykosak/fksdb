@@ -13,18 +13,10 @@ parameters:
                     school_id:
                         required: state('participated')
                         description: "If you cannot find your school, email the webmaster."
-            states:
-                - invited
-                - auto.invited
-                - applied
-                - participated
-                - rejected
-                - missed
-                - cancelled
 
 events:
     fov:
-        event_type_id: [16]
+        eventTypeIds: [16]
         #eventYears: [] # specify for which years this machine is valid, by default all years
         formLayout: fov.form
         paramScheme:
@@ -42,23 +34,19 @@ events:
                 default: až naprší a uschne
 
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states: %events.fov.states%
-
                 transitions:
                     __init->invited:
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     invited->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')
@@ -75,11 +63,6 @@ events:
                     invited|auto.invited|applied->cancelled:
                         condition: role('admin')
                         label: _('Cancel application')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -94,12 +77,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")

@@ -76,6 +76,7 @@ class StoredQueryFactory implements XMLNodeSerializer
     /**
      * @param StoredQuery $dataSource
      * @throws BadRequestException
+     * @throws \DOMException
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
     {

@@ -1,33 +1,3 @@
-parameters:
-    event_participant:
-        states:
-            applied: [badge : 'badge bg-color-1', label : 'Applied']
-            applied.nodsef: [badge : 'badge bg-color-1', label : 'applied.nodsef']
-            applied.notsaf: [badge : 'badge bg-color-1', label : 'applied.notsaf']
-            applied.tsaf: [badge : 'badge bg-color-1', label : 'applied.tsaf']
-            approved: [badge : 'badge bg-color-1', label : 'Approved']
-            interested: [badge : 'badge bg-color-2', label : 'Interested']
-            pending: [badge : 'badge bg-color-2', label : 'Pending']
-            participated: [badge : 'badge bg-color-3', label : 'Participated']
-            missed: [badge : 'badge bg-color-4', label : 'Missed']
-            disqualified : [badge : 'badge bg-color-5', label : 'Disqualified']
-            rejected : [badge : 'badge bg-color-6', label : 'Rejected']
-            cancelled : [badge : 'badge bg-color-6', label : 'Cancelled']
-            paid : [badge : 'badge bg-color-7', label : 'Paid']
-            out_of_db: [badge : 'badge bg-color-8', label : 'Out of FKSDB']
-            spare: [badge : 'badge bg-color-9', label : 'Spare']
-            spare1: [badge : 'badge bg-color-9', label : 'spare1']
-            spare2: [badge : 'badge bg-color-9', label : 'spare2']
-            spare3: [badge : 'badge bg-color-9', label : 'spare3']
-            spare.tsaf: [badge : 'badge bg-color-9', label : 'spare.tsaf']
-            auto.spare: [badge : 'badge bg-color-9', label : 'auto.spare']
-            invited: [badge : 'badge bg-color-10', label : 'Invited']
-            invited1: [badge : 'badge bg-color-10', label : 'invited1']
-            invited2: [badge : 'badge bg-color-10', label : 'invited2']
-            invited3: [badge : 'badge bg-color-10', label : 'invited3']
-            auto.invited: [badge : 'badge bg-color-10', label : 'auto.invited']
-
-
 orm:
         address:
             service: FKSDB\Models\ORM\Services\AddressService
@@ -194,9 +164,9 @@ orm:
              model: FKSDB\Models\ORM\Models\EventParticipantModel
              columnFactories:
                 status:
-                    type: state
+                    type: enum
                     title: _('State')
-                    states: %event_participant.states%
+                    enumClassName: FKSDB\Models\ORM\Models\EventParticipantStatus
                 created:
                     type: dateTime
                     title: _('Created event')
@@ -781,19 +751,6 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
-        e_fyziklani_team:
-            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel
-            linkFactories:
-                detail:
-                    destination: ':Event:TeamApplication:detail'
-                    params:
-                        eventId: event_id
-                        id: e_fyziklani_team_id
-                    title: Detail
-        e_fyziklani_participant:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
-            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
         fyziklani_team:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamService2
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
@@ -1084,6 +1041,4 @@ orm:
             service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
 
 services:
-    event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
-
-    event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    event.ServiceMDsefParticipant: FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
