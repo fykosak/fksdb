@@ -270,7 +270,7 @@ final class AuthenticationPresenter extends BasePresenter
             );
             $connection->commit();
             $this->redirect('login');
-        } catch (AuthenticationException|RecoveryException $exception) {
+        } catch (AuthenticationException | RecoveryException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
         }
