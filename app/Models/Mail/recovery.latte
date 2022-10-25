@@ -1,9 +1,9 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{varType FKSDB\Models\ORM\Models\LoginModel $login}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
 {varType string $lang}
 {if $lang === 'cs'}
     <p>
-        Bylo zažádáno o obnovu hesla na fykos.cz pro uživatele <em>{$login}</em>. Pokud jste žádali vy,
+        Bylo zažádáno o obnovu hesla na fykos.cz pro uživatele <em>{$person->getFullName()}</em>. Pokud jste žádali vy,
         tak použijte odkaz pro změnu hesla:<br/>
         <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
     </p>
@@ -17,7 +17,7 @@
     </p>
 {else}
     <p>
-        Someone asked to reset a passsword for fykos.cz for the user <em>{$login}</em>. If it was you,
+        Someone asked to reset a passsword for fykos.cz for the user <em>{$person->getFullName()}</em>. If it was you,
         use the following link to change your password:<br/>
         <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
     </p>

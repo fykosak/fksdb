@@ -160,7 +160,7 @@ final class AuthenticationPresenter extends BasePresenter
         } catch (UnknownLoginException $exception) {
             $this->flashMessage(_('No account is associated with this profile'), Message::LVL_ERROR);
             $this->redirect('login');
-        } catch (IdentityProviderException | AuthenticationException $exception) {
+        } catch (IdentityProviderException|AuthenticationException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
             $this->redirect('login');
         }
@@ -270,7 +270,7 @@ final class AuthenticationPresenter extends BasePresenter
             );
             $connection->commit();
             $this->redirect('login');
-        } catch (AuthenticationException | RecoveryException $exception) {
+        } catch (AuthenticationException|RecoveryException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
         }

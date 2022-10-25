@@ -70,7 +70,7 @@ class AccountManager
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $email;
+        $data['recipient_person_id'] = $person->person_id;
         $this->emailMessageService->addMessageToSend($data);
         return $login;
     }
@@ -81,9 +81,7 @@ class AccountManager
      */
     public function sendRecovery(LoginModel $login, string $lang): void
     {
-        $person = $login->person;
-        $recoveryAddress = $person ? $person->getInfo()->email : null;
-        if (!$recoveryAddress) {
+        if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
         }
         $token = $login->getTokens(AuthTokenModel::TYPE_RECOVERY)
@@ -97,12 +95,12 @@ class AccountManager
         $data = [];
         $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
-            'login' => $login,
+            'person' => $login->person,
             'lang' => $lang,
         ]);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $recoveryAddress;
+        $data['recipient_person_id'] = $login->person_id;
 
         $this->emailMessageService->addMessageToSend($data);
     }
