@@ -13,8 +13,7 @@ import ResultsPresentationComponent
     from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/ResultsPresentationComponent';
 import ResultsTableComponent
     from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
-import StatisticsComponent
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
+import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
 import PointsEntryComponent from './Components/Controls/Fyziklani/Submit/PointsEntryComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
@@ -241,14 +240,16 @@ window.addEventListener('DOMContentLoaded', () => {
             field.value = el.querySelector('.value').innerText;
         });
     });
-    document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
-        el.addEventListener('click', () => {
+ /*   document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
+        el.addEventListener('click', (event) => {
             if (window.confirm('O RLY?')) {
                 // @ts-ignore
                 el.trigger('click');
+                return;
             }
+            event.preventDefault();
         })
-    });
+    });*/
 
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
