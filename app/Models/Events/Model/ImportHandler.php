@@ -71,7 +71,7 @@ class ImportHandler
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import failed.'), null, $exception);
+                    throw new ImportHandlerException(_('Import failed.'), 0, $exception);
                 }
             }
         }

@@ -288,7 +288,7 @@ class ApplicationHandler
     }
 
     /**
-     * @return never|void
+     * @return never
      * @throws ApplicationHandlerException
      */
     private function reRaise(\Throwable $e): void

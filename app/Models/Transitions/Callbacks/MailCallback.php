@@ -31,7 +31,6 @@ abstract class MailCallback implements Statement
         AuthTokenService $authTokenService,
         AccountManager $accountManager
     ) {
-        $this->accountManager = $accountManager;
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;

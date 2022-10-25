@@ -68,6 +68,9 @@ class EventFormComponent extends EntityFormComponent
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
+    /**
+     * @return never
+     */
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();

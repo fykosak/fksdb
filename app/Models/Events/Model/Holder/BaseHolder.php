@@ -253,7 +253,7 @@ class BaseHolder implements ModelHolder
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException(
                 "No parameter '$name' for event " . $this->event . '.',
-                null,
+                0,
                 $exception
             );
         }
