@@ -240,16 +240,16 @@ window.addEventListener('DOMContentLoaded', () => {
             field.value = el.querySelector('.value').innerText;
         });
     });
- /*   document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
-        el.addEventListener('click', (event) => {
-            if (window.confirm('O RLY?')) {
-                // @ts-ignore
-                el.trigger('click');
-                return;
-            }
-            event.preventDefault();
-        })
-    });*/
+    /*   document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
+           el.addEventListener('click', (event) => {
+               if (window.confirm('O RLY?')) {
+                   // @ts-ignore
+                   el.trigger('click');
+                   return;
+               }
+               event.preventDefault();
+           })
+       });*/
 
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
