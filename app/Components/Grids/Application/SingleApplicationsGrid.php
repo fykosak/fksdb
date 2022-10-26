@@ -6,19 +6,107 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class SingleApplicationsGrid extends AbstractApplicationsGrid
+class SingleApplicationsGrid extends BaseGrid
 {
+
+    protected EventModel $event;
+    private BaseHolder $holder;
+
+    public function __construct(EventModel $event, BaseHolder $holder, Container $container)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+        $this->holder = $holder;
+    }
+
+    protected function getData(): IDataSource
+    {
+        $participants = $this->getSource();
+        $source = new SearchableDataSource($participants);
+        $source->setFilterCallback($this->getFilterCallBack());
+        return $source;
+    }
+
+    protected function getSource(): TypedGroupedSelection
+    {
+        return $this->event->getParticipants();
+    }
+
+    public function getFilterCallBack(): callable
+    {
+        return function (Selection $table, array $value): void {
+            $states = [];
+            foreach ($value['status'] as $state => $value) {
+                if ($value) {
+                    $states[] = str_replace('__', '.', $state);
+                }
+            }
+            if (count($states)) {
+                $table->where('status IN ?', $states);
+            }
+        };
+    }
+
+    protected function getHoldersColumns(): array
+    {
+        return [
+            'price',
+            'lunch_count',
+            'tshirt_color',
+            'tshirt_size',
+            //'jumper_size',
+            'arrival_ticket',
+            'arrival_time',
+            'arrival_destination',
+            'departure_time',
+            'departure_ticket',
+            'departure_destination',
+            'health_restrictions',
+            'diet',
+            'used_drugs',
+            'note',
+            'swimmer',
+        ];
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws DuplicateColumnException
+     */
+    protected function addHolderColumns(): void
+    {
+        $holderFields = $this->holder->getFields();
+        $fields = [];
+        foreach ($holderFields as $name => $def) {
+            if (in_array($name, $this->getHoldersColumns())) {
+                $fields[] = $this->getTableName() . '.' . $name;
+            }
+        }
+        $this->addColumns($fields);
+    }
+
+    protected function getTableName(): string
+    {
+        return DbNames::TAB_EVENT_PARTICIPANT;
+    }
 
     /**
      * @throws BadTypeException
@@ -38,6 +126,7 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();
+        $this->addHolderColumns();
         parent::configure($presenter);
     }
 
@@ -55,6 +144,7 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
         }
         return $states;
     }
+
     /**
      * @throws BadTypeException
      */
@@ -82,40 +172,5 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
             $this->getPaginator()->itemCount = $count;
         };
         return $control;
-    }
-
-    protected function getSource(): TypedGroupedSelection
-    {
-        return $this->event->getParticipants();
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getHoldersColumns(): array
-    {
-        return [
-            'price',
-            'lunch_count',
-            'tshirt_color',
-            'tshirt_size',
-            //'jumper_size',
-            'arrival_ticket',
-            'arrival_time',
-            'arrival_destination',
-            'departure_time',
-            'departure_ticket',
-            'departure_destination',
-            'health_restrictions',
-            'diet',
-            'used_drugs',
-            'note',
-            'swimmer',
-        ];
-    }
-
-    protected function getTableName(): string
-    {
-        return DbNames::TAB_EVENT_PARTICIPANT;
     }
 }

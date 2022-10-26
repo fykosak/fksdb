@@ -30,6 +30,7 @@ class ExportWebModel extends WebModel
     /**
      * @throws BadRequestException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -62,7 +63,7 @@ class ExportWebModel extends WebModel
         try {
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($args->qid, $parameters);
         } catch (\InvalidArgumentException $exception) {
-            throw new \SoapFault('Sender', $exception->getMessage(), $exception);
+            throw new \SoapFault('Sender', $exception->getMessage(), (string)$exception);
         }
 
         // authorization

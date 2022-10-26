@@ -42,10 +42,9 @@ class PreferredLangFormComponent extends FormComponent
     {
         $form = $button->getForm();
         $values = $form->getValues();
-        $lang = $values['preferred_lang'];
         try {
             $this->personInfoService->storeModel(
-                ['preferred_lang' => $lang, 'person_id' => $this->person->person_id],
+                ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
                 $this->person->getInfo()
             );
             $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);

@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class PasswordProcessing extends AbstractProcessing
 {
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
-    {
+    protected function innerProcess(
+        ArrayHash $values,
+        ModelHolder $holder,
+        Logger $logger
+    ): void {
         if (!isset($values['team'])) {
             return;
         }
-        /** @var TeamModel $model */
-        $model = $holder->primaryHolder->getModel2();
-        $original = $model ? $model->password : ($holder->primaryHolder->data['password'] ?? null);
+        $model = $holder->getModel();
+        $original = $model ? $model->password : ($holder->data['password'] ?? null);
 
         if (isset($values['team']['password']) && $values['team']['password']) {
             $result = $values['team']['password'] = $this->hash($values['team']['password']);

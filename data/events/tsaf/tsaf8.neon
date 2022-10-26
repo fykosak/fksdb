@@ -40,7 +40,7 @@ parameters:
 
 events:
     tsaf8:
-        event_type_id: 7
+        eventTypeIds: [7]
         #eventYears: [5,6,8]
         formLayout: tsaf.form
         paramScheme:
@@ -53,54 +53,43 @@ events:
             accomodationCapacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states:
-                    - auto.invited
-                    - invited
-                    - applied
-                    - spare
-                    - participated
-                    - rejected
-                    - missed
-                    - cancelled
 
                 transitions:
                     # to invited
                     __init->invited:
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Pozvat účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf8.appCond%
                         label: _('Přihlásit náhradníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     # to applied
                     __init->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     spare->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
                         label: _('Potvrdit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(transition, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(transition)
                     invited->applied:
                         condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
                         label: _('Potvrdit účast')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(transition, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(transition)
                     # to end-states
                     applied->participated:
                         condition: and(role('admin'),eventWas())
@@ -122,10 +111,6 @@ events:
                         condition: role('admin')
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -159,14 +144,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            secondaryModelStrategy: FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('TSAF')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-
 
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
@@ -177,16 +156,4 @@ events:
 
             processings:
                 - @events.privacyPolicy
-#            joins:
-#                participantTsaf:
-#                    *->applied:
-#                        participantDsef: applied.tsaf
-#                    *->spare:
-#                        participantDsef: spare.tsaf
-#                    applied|applied.nodsef->cancelled:
-#                        participantDsef: applied.notsaf
-#                    spare->cancelled:
-#                        participantDsef: cancelled
-#                    *->__terminated:
-#                        participantDsef: __terminated
 

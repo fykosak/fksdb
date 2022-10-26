@@ -38,7 +38,7 @@ parameters:
                 F_XL: XL dámské/female
 events:
     vikend3:
-        event_type_id: 3
+        eventTypeIds: [3]
         eventYears: [3]
         formLayout: vikend.form
         paramScheme:
@@ -49,23 +49,15 @@ events:
             capacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states:
-                    - applied
-                    - spare
-                    - participated
-                    - missed
-                    - cancelled
 
                 transitions:
                     __init->spare:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit náhradníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     spare->applied:
                         condition: role('admin')
                         label: _('Nasadit náhradníka')
@@ -80,10 +72,6 @@ events:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -108,12 +96,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true
-                    primary: true
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
                 - @events.privacyPolicy

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\FormControl;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -15,9 +15,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class FormControl extends BaseComponent
 {
-
-    public const SNIPPET_MAIN = 'groupContainer';
-
     protected function createComponentForm(): Form
     {
         return new Form();

@@ -144,7 +144,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->event, 'bila@hrad.cz');
-        Assert::equal('applied', $application->status);
+        Assert::equal('applied', $application->status->value);
         Assert::equal($this->person->person_id, $application->person_id);
 
         $info = $this->person->getInfo();

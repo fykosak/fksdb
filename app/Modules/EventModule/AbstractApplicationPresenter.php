@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
@@ -97,6 +96,20 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     * @throws \ReflectionException
+     */
+    public function getHolder(): BaseHolder
+    {
+        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        return $machine->createHolder($this->getEntity());
+    }
+
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
@@ -113,11 +126,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         return new ApplicationComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity())
+            $this->getHolder()
         );
     }
 
@@ -132,23 +144,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         return new TransitionButtonsComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity())
+            $this->getHolder()
         );
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    final protected function createComponentMassTransitions(): MassTransitionsComponent
-    {
-        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
-    }
-
-    abstract protected function createComponentGrid(): AbstractApplicationsGrid;
+    abstract protected function createComponentGrid(): BaseGrid;
 
     /**
      * @throws NotImplementedException

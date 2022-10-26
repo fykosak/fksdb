@@ -20,6 +20,7 @@ class EmailsGrid extends EntityGrid
         parent::__construct($container, EmailMessageService::class, [
             'email_message.email_message_id',
             'email_message.recipient',
+            'person.full_name',
             'email_message.subject',
             'email_message.state',
         ]);
@@ -34,9 +35,6 @@ class EmailsGrid extends EntityGrid
     {
         parent::configure($presenter);
         $this->setDefaultOrder('created DESC');
-        $this->addColumn('person', _('Person'))->setRenderer(
-            fn(EmailMessageModel $model): ?string => (string)$model->person
-        );
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }

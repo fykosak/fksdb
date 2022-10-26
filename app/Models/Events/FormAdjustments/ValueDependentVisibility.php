@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -12,7 +12,7 @@ use Nette\InvalidArgumentException;
 
 class ValueDependentVisibility extends PairwiseAdjustment
 {
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         foreach ($this->rules as $target => $prerequisite) {
             $cTarget = $this->getControl($target);
