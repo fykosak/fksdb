@@ -27,7 +27,7 @@ trait ChartPresenterTrait
 
     final public function renderChart(): void
     {
-        $this->getTemplate()->chart = $this->selectedChart;
+        $this->template->chart = $this->selectedChart;
     }
 
     /**
@@ -35,7 +35,7 @@ trait ChartPresenterTrait
      */
     final public function renderList(): void
     {
-        $this->getTemplate()->charts = $this->getCharts();
+        $this->template->charts = $this->getCharts();
     }
 
     /**

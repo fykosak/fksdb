@@ -7,7 +7,6 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).

@@ -88,7 +88,6 @@ abstract class TeamFormComponent extends EntityFormComponent
             );
 
             $this->saveTeamMembers($team, $form);
-
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
                 $this->machine->executeImplicitTransition($holder);
@@ -107,7 +106,6 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
             $this->teamService->explorer->rollBack();
             throw $exception;
         }
@@ -115,15 +113,9 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     protected function saveTeamMembers(TeamModel2 $team, Form $form): void
     {
-        $persons = [];
-        for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId $referencedId */
-            $referencedId = $form->getComponent('member_' . $member);
-            /** @var PersonModel $person */
-            $person = $referencedId->getModel();
-            if ($person) {
-                $persons[$person->person_id] = $person;
-            }
+        $persons = self::getMembersFromForm($form);
+        if (!count($persons)) {
+            throw new NoMemberException();
         }
         /** @var TeamMemberModel $oldMember */
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
@@ -140,6 +132,24 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $this->teamMemberService->storeModel($data);
             }
         }
+    }
+
+    /**
+     * @return PersonModel[]
+     */
+    public static function getMembersFromForm(Form $form): array
+    {
+        $persons = [];
+        for ($member = 0; $member < 5; $member++) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('member_' . $member);
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            if ($person) {
+                $persons[$person->person_id] = $person;
+            }
+        }
+        return $persons;
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void

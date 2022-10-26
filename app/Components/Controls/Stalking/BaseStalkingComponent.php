@@ -10,28 +10,35 @@ use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Nette\DI\Container;
 
 abstract class BaseStalkingComponent extends BaseComponent
 {
     protected ORMFactory $tableReflectionFactory;
+    protected PersonModel $person;
+    protected int $userPermissions;
+
+    public function __construct(Container $container, PersonModel $person, int $userPermissions)
+    {
+        parent::__construct($container);
+        $this->person = $person;
+        $this->userPermissions = $userPermissions;
+    }
 
     final public function injectPrimary(ORMFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender(
-        PersonModel $person,
-        string $headline,
-        int $userPermissions,
-        int $minimalPermissions
-    ): void {
-        $this->template->person = $person;
-        $this->template->headline = $headline;
-        if ($userPermissions < $minimalPermissions) {
-            $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+    public function beforeRender(): void
+    {
+        $this->template->person = $this->person;
+        if ($this->userPermissions < $this->getMinimalPermissions()) {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
         }
     }
+
+    abstract protected function getMinimalPermissions(): int;
 
     protected function createComponentContestBadge(): ContestBadge
     {

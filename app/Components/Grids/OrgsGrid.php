@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;

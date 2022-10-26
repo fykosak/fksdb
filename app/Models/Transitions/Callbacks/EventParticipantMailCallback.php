@@ -91,7 +91,7 @@ class EventParticipantMailCallback extends MailCallback
     protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
         $token = $this->createToken($person, $holder);
-        return (string)$this->mailTemplateFactory->createWithParameters(
+        return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder),
             $person->getPreferredLang(),
             [

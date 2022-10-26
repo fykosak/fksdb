@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, LoginModel, TaskContributionType};
+use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -26,10 +26,8 @@ class PointsPresenter extends BasePresenter
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
 
-    final public function injectQuarterly(
-        SQLResultsCache $resultsCache,
-        SeriesTable $seriesTable
-    ): void {
+    final public function injectQuarterly(SQLResultsCache $resultsCache, SeriesTable $seriesTable): void
+    {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
     }
@@ -70,11 +68,11 @@ class PointsPresenter extends BasePresenter
 
     final public function renderEntry(): void
     {
-        $this->getTemplate()->showAll = (bool)$this->all;
+        $this->template->showAll = (bool)$this->all;
         if ($this->getSelectedContest()->contest_id === ContestModel::ID_VYFUK && $this->getSelectedSeries() > 6) {
-            $this->getTemplate()->hasQuizTask = true;
+            $this->template->hasQuizTask = true;
         } else {
-            $this->getTemplate()->hasQuizTask = false;
+            $this->template->hasQuizTask = false;
         }
     }
 

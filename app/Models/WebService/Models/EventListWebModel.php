@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
@@ -21,11 +20,23 @@ class EventListWebModel extends WebModel
     }
 
     /**
-     * @throws GoneException
+     * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
-        throw new GoneException();
+        if (!isset($args->eventTypeIds)) {
+            throw new \SoapFault('Sender', 'Unknown eventType.');
+        }
+        $query = $this->eventService->getTable()->where('event_type_id', (array)$args->eventTypeIds);
+        $document = new \DOMDocument();
+        $document->formatOutput = true;
+        $rootNode = $document->createElement('events');
+        /** @var EventModel $event */
+        foreach ($query as $event) {
+            $rootNode->appendChild($event->createXMLNode($document));
+        }
+        return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
     }
 
     public function getJsonResponse(array $params): array

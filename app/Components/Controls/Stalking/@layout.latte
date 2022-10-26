@@ -1,6 +1,5 @@
 {varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType string $headline}
 <div class="{($person->gender->value == 'F'?'border-pink':'border-primary') . ' card mb-3'}">
-    <h4 class="{($person->gender->value == 'F'?'bg-pink':'bg-primary') . ' card-header text-white'}">{$headline}</h4>
+    <h4 class="{($person->gender->value == 'F'?'bg-pink':'bg-primary') . ' card-header text-white'}">{include headline}</h4>
     {include content}
 </div>

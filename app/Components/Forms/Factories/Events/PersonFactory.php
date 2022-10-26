@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
@@ -19,7 +18,6 @@ use Nette\Security\User;
 
 class PersonFactory extends AbstractFactory
 {
-
     private const VALUE_LOGIN = 'fromLogin';
     /** @var callable */
     private $fieldsDefinition;
@@ -34,7 +32,6 @@ class PersonFactory extends AbstractFactory
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExpressionEvaluator $evaluator;
     private User $user;
-    private PersonService $personService;
     private DIContainer $container;
 
     /**
@@ -54,7 +51,6 @@ class PersonFactory extends AbstractFactory
         ReferencedPersonFactory $referencedPersonFactory,
         ExpressionEvaluator $evaluator,
         User $user,
-        PersonService $personService,
         DIContainer $container
     ) {
         $this->fieldsDefinition = $fieldsDefinition;
@@ -65,7 +61,6 @@ class PersonFactory extends AbstractFactory
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->evaluator = $evaluator;
         $this->user = $user;
-        $this->personService = $personService;
         $this->container = $container;
     }
 

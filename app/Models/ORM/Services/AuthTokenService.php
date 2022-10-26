@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Fykosak\NetteORM\Service;
 
 class AuthTokenService extends Service
 {
@@ -76,11 +76,9 @@ class AuthTokenService extends Service
 
     public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
     {
-        $tokens = $this->getTable()
-            ->where('token', $tokenData);
+        $tokens = $this->getTable()->where('token', $tokenData);
         if ($strict) {
-            $tokens->where('since <= NOW()')
-                ->where('until IS NULL OR until >= NOW()');
+            $tokens->where('since <= NOW()')->where('until IS NULL OR until >= NOW()');
         }
         return $tokens->fetch();
     }

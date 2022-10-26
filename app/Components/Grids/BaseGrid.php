@@ -88,7 +88,7 @@ abstract class BaseGrid extends Grid
          * @var Template $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($this->getTranslator());
+        $paginator->template->setTranslator($this->getTranslator());
         $template = parent::createTemplate();
         $template->setTranslator($this->getTranslator());
         return $template;
@@ -127,7 +127,7 @@ abstract class BaseGrid extends Grid
             sort($arr);
             $steps = array_values(array_unique($arr));
         }
-        $this->getComponent('paginator')->getTemplate()->steps = $steps;
+        $this->getComponent('paginator')->template->steps = $steps;
 
         parent::render();
     }

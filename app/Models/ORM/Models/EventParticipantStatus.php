@@ -11,31 +11,31 @@ use Nette\Utils\Html;
 class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
 
-    public const APPLIED = 'APPLIED';
-    public const APPLIED_NODSEF = 'APPLIED.NODSEF';
-    public const APPLIED_NOTSAF = 'APPLIED.NOTSAF';
-    public const APPLIED_TSAF = 'APPLIED.TSAF';
-    public const APPROVED = 'APPROVED';
-    public const AUTO_INVITED = 'AUTO.INVITED';
-    public const AUTO_SPARE = 'AUTO.SPARE';
-    public const CANCELLED = 'CANCELLED';
-    public const DISQUALIFIED = 'DISQUALIFIED';
-    public const INTERESTED = 'INTERESTED';
-    public const INVITED = 'INVITED';
-    public const INVITED1 = 'INVITED1';
-    public const INVITED2 = 'INVITED2';
-    public const INVITED3 = 'INVITED3';
-    public const MISSED = 'MISSED';
-    public const OUT_OF_DB = 'OUT_OF_DB';
-    public const PAID = 'PAID';
-    public const PARTICIPATED = 'PARTICIPATED';
-    public const PENDING = 'PENDING';
-    public const REJECTED = 'REJECTED';
-    public const SPARE = 'SPARE';
-    public const SPARE_TSAF = 'SPARE.TSAF';
-    public const SPARE1 = 'SPARE1';
-    public const SPARE2 = 'SPARE2';
-    public const SPARE3 = 'SPARE3';
+    public const APPLIED = 'applied';
+    public const APPLIED_NODSEF = 'applied.nodsef';
+    public const APPLIED_NOTSAF = 'applied.notsaf';
+    public const APPLIED_TSAF = 'applied.tsaf';
+    public const APPROVED = 'approved';
+    public const AUTO_INVITED = 'auto.invited';
+    public const AUTO_SPARE = 'auto.spare';
+    public const CANCELLED = 'cancelled';
+    public const DISQUALIFIED = 'disqualified';
+    public const INTERESTED = 'interested';
+    public const INVITED = 'invited';
+    public const INVITED1 = 'invited1';
+    public const INVITED2 = 'invited2';
+    public const INVITED3 = 'invited3';
+    public const MISSED = 'missed';
+    public const OUT_OF_DB = 'out_of_db';
+    public const PAID = 'paid';
+    public const PARTICIPATED = 'participated';
+    public const PENDING = 'pending';
+    public const REJECTED = 'rejected';
+    public const SPARE = 'spare';
+    public const SPARE_TSAF = 'spare.tsaf';
+    public const SPARE1 = 'spare1';
+    public const SPARE2 = 'spare2';
+    public const SPARE3 = 'spare3';
 
     public function badge(): Html
     {

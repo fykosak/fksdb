@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\RegionService;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
+use Nette\Forms\Controls\BaseControl;
 
 class AddressFactory
 {
@@ -34,32 +33,6 @@ class AddressFactory
         bool $showExtendedRows = false
     ): AddressContainer {
         $container = new AddressContainer($this->container);
-        $this->buildAddress2($container, $conditioningField, $required, $notWriteOnly, $showExtendedRows);
-        return $container;
-    }
-
-    public function createAddressContainer(string $type): AddressContainer
-    {
-        $container = new AddressContainer($this->container);
-        $this->buildAddress2($container, null, false, true); // TODO is not safe
-        switch ($type) {
-            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
-                $container->setOption('label', _('Delivery address'));
-                break;
-            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
-                $container->setOption('label', _('Permanent address') . _('(when different from delivery address)'));
-                break;
-        }
-        return $container;
-    }
-
-    public function buildAddress2(
-        AddressContainer $container,
-        ?Control $conditioningField = null,
-        bool $required = false,
-        bool $notWriteOnly = false,
-        bool $showExtendedRows = false
-    ): void {
         if ($showExtendedRows) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));
@@ -144,5 +117,6 @@ class AddressFactory
                 },
                 _('Chosen country does not match provided postal code.')
             );
+        return $container;
     }
 }

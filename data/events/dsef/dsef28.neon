@@ -19,8 +19,8 @@ parameters:
                         required: true
                     dsef_afternoon:
                         required: true
-                    accommodation:
-                        required: false
+#                    accommodation:
+#                        required: false
             transitions:
                 __init->applied:
                     condition: or(regOpen(), role('admin'))

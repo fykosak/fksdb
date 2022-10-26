@@ -96,7 +96,7 @@ class SubmitPresenter extends BasePresenter
 
     final public function renderAjax(): void
     {
-        $this->getTemplate()->availableTasks = $this->getAvailableTasks();
+        $this->template->availableTasks = $this->getAvailableTasks();
     }
 
     /**

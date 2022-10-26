@@ -9,7 +9,6 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -101,14 +100,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function getDefaultSubTitle(): ?string
     {
-        return $this->getEvent()->__toString();
+        return $this->getEvent()->name;
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws BadRequestException
-     * @throws \ReflectionException
      */
     protected function beforeRender(): void
     {

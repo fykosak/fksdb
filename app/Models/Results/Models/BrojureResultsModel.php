@@ -182,18 +182,18 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
     /**
      * Returns total points of Student Pilny (without multiplication for first two tasks) for given series
      *
-     * @return int sum of Student Pilny points
+     * @return float sum of Student Pilny points
      */
-    private function getSumLimitForStudentPilny(): int
+    private function getSumLimitForStudentPilny(): float
     {
         return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::FYKOS_4));
     }
 
     /**
      * Returns total points for given category and series
-     * @return int sum of points
+     * @return float sum of points
      */
-    private function getSumLimit(ModelCategory $category): int
+    private function getSumLimit(ModelCategory $category): float
     {
         $sum = 0;
         foreach ($this->getSeries() as $series) {

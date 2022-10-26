@@ -25,7 +25,7 @@ class GameSetupPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        $this->getTemplate()->gameSetup = $this->getGameSetup();
+        $this->template->gameSetup = $this->getGameSetup();
     }
 
     /**

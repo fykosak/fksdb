@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\TaskService;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -51,7 +50,7 @@ class SubmitContainer extends BaseComponent
 
     final public function render(): void
     {
-        $this->getTemplate()->availableTasks = $this->getAvailableTasks();
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
+        $this->template->availableTasks = $this->getAvailableTasks();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 }

@@ -1,6 +1,77 @@
 parameters:
     events:
         defaultFyziklani:
+            event_type_id: 1
+            #eventYears: [1,2,3,4,5,6,7] # specify for which years this machine is valid, by default all years
+            formLayout: fyziklani/fyziklani13.form
+            paramScheme:
+                notifyBcc:
+                    default: fyziklani@fykos.cz
+                notifyFrom:
+                    default: FYKOSí Fyziklání <fyziklani@fykos.cz>
+
+                schoolsInTeam:
+                    default: 2
+                teamsPerSchool:
+                    default: 2
+            #
+            #   MACHINE
+            #   explanation: machine consists of several instances of base machines
+            #
+            machine:
+                baseMachines: %events.defaultFyziklani.baseMachines%
+                team:
+                    bmName: TEAM
+                    label: _('Tým')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                    p1:
+                        bmName: PARTICIPANT
+                        label: _('1. člen')
+                        required: true
+                    p2:
+                        bmName: PARTICIPANT
+                        label: _('2. člen')
+                    p3:
+                        bmName: PARTICIPANT
+                        label: _('3. člen')
+                    p4:
+                        bmName: PARTICIPANT
+                        label: _('4. člen')
+                    p5:
+                        bmName: PARTICIPANT
+                        label: _('5. člen')
+                formAdjustments: []
+                processings: []
+                joins:
+                    team: []
+
+
+            baseMachines:
+                #
+                #   TEAM
+                #
+                TEAM:
+                    service: @orm.e_fyziklani_team.service
+                    personIds: [teacher_id]
+                    eventId: e_fyziklani_team.event_id
+
+                    states: %events.defaultFyziklani.teamStates%
+                    transitions: []
+                    fields: []
+
+                #
+                #   PARTICIPANT
+                #
+                PARTICIPANT:
+                    service: @event.ServiceMFyziklaniParticipant
+                    joinOn: e_fyziklani_team_id
+                    personIds: [:e_fyziklani_participant.event_participant.person_id]
+
+                    states: %events.defaultFyziklani.participantStates%
+                    transitions: []
+                    fields: []
+
             teamStates:
                 - pending
                 - spare

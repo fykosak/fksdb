@@ -5,27 +5,31 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
-use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 class StalkingComponent extends BaseStalkingComponent
 {
+    private int $minimalPermissions = FieldLevelPermission::ALLOW_FULL;
+
     /**
      * @throws NotImplementedException
      */
-    final public function render(string $section, PersonModel $person, int $userPermission): void
+    final public function render(string $section): void
     {
         $definition = $this->getContext()->getParameters()['components'][$section];
-        $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
-        $this->getTemplate()->userPermission = $userPermission;
+        $this->minimalPermissions = $definition['minimalPermission'];
+        $this->beforeRender();
+        $this->template->headline = $definition['label'];
+        $this->template->userPermission = $this->userPermissions;
         switch ($definition['layout']) {
             case 'single':
-                $this->renderSingle($definition, $person);
+                $this->renderSingle($definition);
                 return;
             case 'multi':
-                $this->renderMulti($definition, $person);
+                $this->renderMulti($definition);
                 return;
             default:
                 throw new InvalidStateException();
@@ -35,36 +39,41 @@ class StalkingComponent extends BaseStalkingComponent
     /**
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, PersonModel $person): void
+    private function renderSingle(array $definition): void
     {
         switch ($definition['table']) {
             case 'person_info':
-                $model = $person->getInfo();
+                $model = $this->person->getInfo();
                 break;
             case 'person':
-                $model = $person;
+                $model = $this->person;
                 break;
             case 'login':
-                $model = $person->getLogin();
+                $model = $this->person->getLogin();
                 break;
             default:
                 throw new NotImplementedException();
         }
 
-        $this->getTemplate()->model = $model;
-        $this->getTemplate()->rows = $definition['rows'];
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
+        $this->template->model = $model;
+        $this->template->rows = $definition['rows'];
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     /**
      * @param array|Model[] $definition
      */
-    private function renderMulti(array $definition, PersonModel $person): void
+    private function renderMulti(array $definition): void
     {
-        $this->getTemplate()->links = $definition['links'];
-        $this->getTemplate()->rows = $definition['rows'];
-        $this->getTemplate()->models =  $person->related($definition['table']);
-        $this->getTemplate()->itemHeadline = $definition['itemHeadline'];
-        $this->getTemplate()->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
+        $this->template->links = $definition['links'];
+        $this->template->rows = $definition['rows'];
+        $this->template->models = $this->person->related($definition['table']);
+        $this->template->itemHeadline = $definition['itemHeadline'];
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
+    }
+
+    protected function getMinimalPermissions(): int
+    {
+        return $this->minimalPermissions;
     }
 }

@@ -10,7 +10,7 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
 {
     protected function getTemplatePath(ModelHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'member.latte';
     }
 
     protected function getData(ModelHolder $holder): array

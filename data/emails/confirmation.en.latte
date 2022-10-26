@@ -8,5 +8,5 @@
         {$holder->event->begin|date:'Y-m-d'}.
     {/if}
 </p>
-{include 'inc/eventEdit.cs.latte'}
-{include 'inc/closing.cs.latte'}
+{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/closing.en.latte'}

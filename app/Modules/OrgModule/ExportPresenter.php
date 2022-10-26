@@ -112,7 +112,7 @@ class ExportPresenter extends BasePresenter
      */
     final public function renderExecute(): void
     {
-        $this->getTemplate()->model = $this->getStoredQuery()->getQueryPattern();
+        $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
     protected function startup(): void

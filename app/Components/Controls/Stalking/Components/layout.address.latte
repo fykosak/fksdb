@@ -1,5 +1,5 @@
 {layout '../@layout.latte'}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block headline}{_'Addresses'}{/block}
 {block content}
     {varType Fykosak\NetteORM\TypedGroupedSelection|\Fykosak\NetteORM\Model[] $postContacts}
     {if count($postContacts)}
@@ -36,10 +36,6 @@
 
         {/foreach}
         <hr/>
-        <div class="card-body">
-            <a class="card-link"
-               href="{plink :Org:Envelope:output personIds=>[$person->person_id]}">{_'Create envelope'}</a>
-        </div>
     {else}
         {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
     {/if}

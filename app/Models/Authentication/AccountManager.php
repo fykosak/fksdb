@@ -7,6 +7,7 @@ namespace FKSDB\Models\Authentication;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -60,18 +61,18 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
-            $person->getPreferredLang() ?? $lang,
+        $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
             [
                 'token' => $token->token,
                 'person' => $person,
                 'email' => $email,
                 'until' => $until,
+                'lang' => $person->getPreferredLang() ?? $lang,
             ]
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $email;
+        $data['recipient_person_id'] = $person->person_id;
         $this->emailMessageService->addMessageToSend($data);
         return $login;
     }
@@ -82,9 +83,7 @@ class AccountManager
      */
     public function sendRecovery(LoginModel $login, Language $lang): void
     {
-        $person = $login->person;
-        $recoveryAddress = $person ? $person->getInfo()->email : null;
-        if (!$recoveryAddress) {
+        if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
         }
         $token = $login->getTokens(AuthTokenModel::TYPE_RECOVERY)
@@ -96,13 +95,14 @@ class AccountManager
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, [
+        $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
-            'login' => $login,
+            'person' => $login->person,
+            'lang' => $lang,
         ]);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $recoveryAddress;
+        $data['recipient_person_id'] = $login->person_id;
 
         $this->emailMessageService->addMessageToSend($data);
     }

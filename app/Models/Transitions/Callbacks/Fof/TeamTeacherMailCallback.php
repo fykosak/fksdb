@@ -46,7 +46,7 @@ class TeamTeacherMailCallback extends MailCallback
 
     protected function getTemplatePath(ModelHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';
     }
 
     protected function getData(ModelHolder $holder): array

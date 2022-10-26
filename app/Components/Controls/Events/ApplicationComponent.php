@@ -82,10 +82,10 @@ class ApplicationComponent extends BaseComponent
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
-
-        $this->getTemplate()->holder = $this->holder;
-        $this->getTemplate()->event = $this->holder->event;
-        $this->getTemplate()->render($this->templateFile);
+        $this->template->holder = $this->holder;
+        $this->template->event = $this->holder->event;
+        $this->template->primaryMachine = $this->handler->getMachine();
+        $this->template->render($this->templateFile);
     }
 
     /**

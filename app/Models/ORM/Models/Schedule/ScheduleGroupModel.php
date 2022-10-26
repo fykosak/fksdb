@@ -6,6 +6,8 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\WebService\NodeCreator;
+use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -20,7 +22,7 @@ use Nette\Security\Resource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ScheduleGroupModel extends Model implements Resource
+class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
@@ -72,5 +74,25 @@ class ScheduleGroupModel extends Model implements Resource
                 break;
         }
         return $value;
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
+        $node = $document->createElement('scheduleGroup');
+        $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
+        XMLHelper::fillArrayToNode([
+            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupType' => $this->schedule_group_type->value,
+            'eventId' => $this->event_id,
+            'start' => $this->start->format('c'),
+            'end' => $this->end->format('c'),
+        ], $document, $node);
+        XMLHelper::fillArrayArgumentsToNode('lang', [
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+        ], $document, $node);
+        return $node;
     }
 }

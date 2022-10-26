@@ -77,12 +77,12 @@ final class ApplicationHandler
             $this->saveAndExecute($transition, $holder);
         } catch (
         ModelDataConflictException
-        | DuplicateApplicationException
-        | MachineExecutionException
-        | SubmitProcessingException
-        | FullCapacityException
-        | ExistingPaymentException
-        | UnavailableTransitionException $exception
+        |DuplicateApplicationException
+        |MachineExecutionException
+        |SubmitProcessingException
+        |FullCapacityException
+        |ExistingPaymentException
+        |UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -103,11 +103,11 @@ final class ApplicationHandler
                 new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getModel()), Message::LVL_SUCCESS)
             );
         } catch (
-        ModelDataConflictException |
-        DuplicateApplicationException |
-        MachineExecutionException |
-        SubmitProcessingException |
-        FullCapacityException |
+        ModelDataConflictException|
+        DuplicateApplicationException|
+        MachineExecutionException|
+        SubmitProcessingException|
+        FullCapacityException|
         ExistingPaymentException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
@@ -150,7 +150,6 @@ final class ApplicationHandler
     private function processData(Form $form, ?Transition $transition, BaseHolder $holder): ?Transition
     {
         $values = FormUtils::emptyStrToNull($form->getValues());
-
         Debugger::log(json_encode((array)$values), 'app-form');
         $target = isset($values[$holder->name]['status'])
             ? EventParticipantStatus::tryFrom($values[$holder->name]['status'])
@@ -210,7 +209,7 @@ final class ApplicationHandler
     }
 
     /**
-     * @return never|void
+     * @return never
      * @throws ApplicationHandlerException
      */
     private function reRaise(\Throwable $e): void
