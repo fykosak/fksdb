@@ -99,14 +99,14 @@ events:
                     arrival_destination:
                        label: _('Na jaké místo přijedeš?')
                        required: true
-                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                       factory: Chooser("Zvol místo",Options(%events.setkani12podzim.arrival.destination%))
                     departure_time:
                        label: _('Předpokládaný odjezd')
                        description: "Čas odjezdu"
                     departure_destination:
                        label: _('Z jakého místa chceš odjíždět?')
                        required: true
-                       factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                       factory: Chooser("Zvol místo",Options(%events.setkani12podzim.arrival.destination%))
                     tshirt_size:
                         label: 'Jakou velikost mikiny bys chtěl?'
                         required: true
@@ -114,7 +114,7 @@ events:
                     tshirt_color:
                         label: 'Jakou barvu mikiny bys chtěl?'
                         required: false
-                        factory: Chooser("Zvol barvu", Options(%events.setkani11podzim.tshirt.color%))
+                        factory: Chooser("Zvol barvu", Options(%events.setkani12podzim.tshirt.color%))
                     diet:
                         label: _('Food')
                         description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
