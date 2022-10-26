@@ -34,6 +34,14 @@ parameters:
                     orange: Oranžová
                     wine: Vínová
                     black: Černá
+            arrival:
+                destination:
+                    flr: "ÚAN Florenc"
+                    hln: "Hlavní nádraží"
+                time:
+                    start: 17:00
+                    end: 18:00
+
 events:
     setkani12podzim:
         event_type_id: [12]
