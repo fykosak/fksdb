@@ -12,7 +12,7 @@ class ParticipantMailCallback extends EventParticipantCallback
 
     protected function getTemplatePath(ModelHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'confirmation.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'confirmation';
     }
 
     protected function getData(ModelHolder $holder): array
