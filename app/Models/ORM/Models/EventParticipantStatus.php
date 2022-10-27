@@ -37,11 +37,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public const SPARE2 = 'spare2';
     public const SPARE3 = 'spare3';
 
-    public function badge(): Html
-    {
-        return Html::el('span')->addText($this->label());
-    }
-
     public function label(): string
     {
         return _($this->value);
@@ -76,5 +71,61 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             new self(self::SPARE2),
             new self(self::SPARE3),
         ];
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function badge(): Html
+    {
+        $badge = '';
+        switch ($this->value) {
+            case self::APPLIED:
+            case self::APPLIED_NODSEF:
+            case self::APPLIED_NOTSAF:
+            case self::APPLIED_TSAF:
+            case self::APPROVED:
+                $badge = 'badge bg-color-1';
+                break;
+            case self::INTERESTED:
+            case self::PENDING:
+                $badge = 'badge bg-color-2';
+                break;
+            case self::PARTICIPATED:
+                $badge = 'badge bg-color-3';
+                break;
+            case self::MISSED:
+                $badge = 'badge bg-color-4';
+                break;
+            case self::DISQUALIFIED:
+                $badge = 'badge bg-color-5';
+                break;
+            case self::REJECTED:
+            case self::CANCELLED:
+                $badge = 'badge bg-color-6';
+                break;
+            case self::PAID:
+                $badge = 'badge bg-color-7';
+                break;
+            case self::OUT_OF_DB:
+                $badge = 'badge bg-color-8';
+                break;
+            case self::SPARE:
+            case self::SPARE1:
+            case self::SPARE2:
+            case self::SPARE3:
+            case self::SPARE_TSAF:
+            case self::AUTO_SPARE:
+                $badge = 'badge bg-color-9';
+                break;
+            case self::INVITED:
+            case self::INVITED1:
+            case self::INVITED2:
+            case self::INVITED3:
+            case self::AUTO_INVITED:
+                $badge = 'badge bg-color-10';
+                break;
+        }
+        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 }
