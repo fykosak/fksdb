@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -37,11 +38,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public const SPARE2 = 'spare2';
     public const SPARE3 = 'spare3';
 
-    public function label(): string
-    {
-        return _($this->value);
-    }
-
     public static function cases(): array
     {
         return [
@@ -73,9 +69,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         ];
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function badge(): Html
     {
         $badge = '';
@@ -127,5 +120,65 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
                 break;
         }
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function label(): string
+    {
+        switch ($this->value) {
+            case self::APPLIED:
+                return _('Applied');
+            case self::APPLIED_NODSEF:
+                return _('Applied no DSEF');
+            case self::APPLIED_NOTSAF:
+                return _('Applied no TSAF');
+            case self::APPLIED_TSAF:
+                return _('Applied TSAF');
+            case self::APPROVED:
+                return _('Approved');
+            case self::AUTO_INVITED:
+                return _('Auto invited');
+            case self::AUTO_SPARE:
+                return _('Auto spare');
+            case self::CANCELLED:
+                return _('Cancelled');
+            case self::DISQUALIFIED:
+                return _('Disqualified');
+            case self::INTERESTED:
+                return _('Interested');
+            case self::INVITED:
+                return _('Invited');
+            case self::INVITED1:
+                return _('Invited 1');
+            case self::INVITED2:
+                return _('Invited 2');
+            case self::INVITED3:
+                return _('Invited 3');
+            case self::MISSED:
+                return _('Missed');
+            case self::OUT_OF_DB:
+                return _('Out of DB');
+            case self::PAID:
+                return _('Paid');
+            case self::PARTICIPATED:
+                return _('Participated');
+            case self::PENDING:
+                return _('Pending');
+            case self::REJECTED:
+                return _('Rejected');
+            case self::SPARE:
+                return _('Spare');
+            case self::SPARE_TSAF:
+                return _('Spare TSAF');
+            case self::SPARE1:
+                return _('Spare 1');
+            case self::SPARE2:
+                return _('Spare 2');
+            case self::SPARE3:
+                return _('Spare 3');
+        }
+        throw new NotImplementedException();
     }
 }
