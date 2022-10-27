@@ -59,11 +59,17 @@ class NewApplicationsGrid extends BaseGrid
                         ->link(':Event:TeamApplication:create', ['eventId' => $event->event_id]);
                 }
                 return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $event->event_id]);
-            })->setShow(fn(EventModel $modelEvent): bool => (bool)count(
-                $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
-                    $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                    EventParticipantStatus::tryFrom(Machine::STATE_INIT)
-                )
-            ));
+            })->setShow(function (EventModel $modelEvent): bool {
+                try {
+                    return (bool)count(
+                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
+                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
+                        )
+                    );
+                } catch (\Throwable $exception) {
+                    return $modelEvent->isRegistrationOpened();
+                }
+            });
     }
 }
