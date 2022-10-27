@@ -9,7 +9,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class ParticipantMailCallback extends EventParticipantCallback
 {
-
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'confirmation.latte';
