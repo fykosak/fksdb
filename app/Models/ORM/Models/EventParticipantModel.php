@@ -21,7 +21,7 @@ use Nette\Security\Resource;
  * @property-read EventModel event
  * @property-read int person_id
  * @property-read string note poznámka
- * @property-read string status
+ * @property-read EventParticipantStatus status
  * @property-read \DateTimeInterface created čas vytvoření přihlášky
  * @property-read int accomodation
  * @property-read string diet speciální stravování
@@ -45,8 +45,6 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.participant';
-    public const STATE_AUTO_INVITED = 'auto.invited';
-    public const STATE_AUTO_SPARE = 'auto.spare';
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
@@ -66,17 +64,6 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
         return new MultiCurrencyPrice([new Price(Currency::from(Currency::CZK), $this->price)]);
     }
 
-    /**
-     * @deprecated
-     */
-    public function getFyziklaniTeam(): ?TeamModel
-    {
-        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
-            ->select('e_fyziklani_team.*')
-            ->fetch();
-        return $row ? TeamModel::createFromActiveRow($row) : null;
-    }
-
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
@@ -88,27 +75,25 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
             'participantId' => $this->event_participant_id,
             'eventId' => $this->event_id,
             'personId' => $this->person_id,
-            // 'note' => $this->note,
-            'status' => $this->status,
+            'status' => $this->status->value,
             'created' => $this->created,
-            // 'diet' => $this->diet,
-            // 'healthRestrictions' => $this->health_restrictions,
-            // 'tshirtSize' => $this->tshirt_size,
-            // 'tshirtColor' => $this->tshirt_color,
-            // 'jumperSize' => $this->jumper_size,
-            // 'price' => $this->price,
-            // 'arrivalTime' => $this->arrival_time,
-            // 'arrivalDestination' => $this->arrival_destination,
-            // 'arrivalTicket' => $this->arrival_ticket,
-            // 'departureTime' => $this->departure_time,
-            // 'departureDestination' => $this->departure_destination,
-            // 'departureTicket' => $this->departure_ticket,
-            // 'swimmer' => $this->swimmer,
-            // 'usedDrugs' => $this->used_drugs,
-            // 'lunchCount' => $this->lunch_count,
         ];
     }
 
+    /**
+     * @return EventParticipantStatus|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'status':
+                $value = EventParticipantStatus::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('participant');

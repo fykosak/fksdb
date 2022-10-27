@@ -8,12 +8,12 @@ transitions:
     fol.default:
         machine: fol.default.machine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
-        decorator: FKSDB\Models\Transitions\Decorators\FOLDecorator()
+        decorator: null
         transitions:
             init->pending:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\FolTeamMemberMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Fol\TeamMemberMailCallback()
             pending->approved:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')

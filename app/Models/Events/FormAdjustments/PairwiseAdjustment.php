@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -20,7 +20,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment
         $this->rules = $rules;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         foreach ($this->rules as $target => $prerequisites) {
             if (is_scalar($prerequisites)) {

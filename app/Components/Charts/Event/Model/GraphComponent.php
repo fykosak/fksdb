@@ -6,27 +6,21 @@ namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Controls\Events\ExpressionPrinter;
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 class GraphComponent extends FrontEndComponent implements Chart
 {
 
-    private BaseMachine $baseMachine;
-    private ExpressionPrinter $expressionPrinter;
+    private EventParticipantMachine $baseMachine;
 
-    public function __construct(Container $container, BaseMachine $baseMachine)
+    public function __construct(Container $container, EventParticipantMachine $baseMachine)
     {
         parent::__construct($container, 'event.model.graph');
         $this->baseMachine = $baseMachine;
-    }
-
-    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void
-    {
-        $this->expressionPrinter = $expressionPrinter;
     }
 
     final public function getData(): array
@@ -38,13 +32,15 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @return string[]
+     * @return EventParticipantStatus[]
      */
     private function getAllStates(): array
     {
         return array_merge(
-            $this->baseMachine->getStates(),
-            [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]
+            EventParticipantStatus::cases(),
+            [
+                EventParticipantStatus::tryFrom(Machine::STATE_INIT),
+            ]
         );
     }
 
@@ -53,15 +49,11 @@ class GraphComponent extends FrontEndComponent implements Chart
      */
     private function prepareNodes(): array
     {
-        $states = $this->getAllStates();
         $nodes = [];
-        foreach ($states as $state) {
-            $nodes[$state] = [
-                'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === AbstractMachine::STATE_INIT
-                    ? 'init'
-                    : ($state === AbstractMachine::STATE_TERMINATED ? 'terminated'
-                        : 'default'),
+        foreach ($this->getAllStates() as $state) {
+            $nodes[$state->value] = [
+                'label' => $state->value,
+                'type' => $state->value === Machine::STATE_INIT ? 'init' : 'default',
             ];
         }
         return $nodes;
@@ -72,20 +64,13 @@ class GraphComponent extends FrontEndComponent implements Chart
      */
     private function prepareTransitions(): array
     {
-        $states = $this->getAllStates();
         $edges = [];
-        /** @var Transition $transition */
         foreach ($this->baseMachine->getTransitions() as $transition) {
-            foreach ($states as $state) {
-                if ($transition->matches($state)) {
-                    $edges[] = [
-                        'from' => $state,
-                        'to' => $transition->target,
-                        'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
-                        'label' => $transition->getLabel(),
-                    ];
-                }
-            }
+            $edges[] = [
+                'from' => $transition->source->value,
+                'to' => $transition->target->value,
+                'label' => $transition->getLabel(),
+            ];
         }
         return $edges;
     }

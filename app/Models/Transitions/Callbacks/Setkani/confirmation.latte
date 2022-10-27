@@ -1,0 +1,24 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType string[]|string[][] $linkArgs}
+<p>
+    Potvrzujeme přijetí přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->event}</em>,
+    která se koná
+    {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
+        {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'}.
+    {else}
+        {$holder->event->begin|date:'j.n. Y'}.
+    {/if}
+</p>
+
+<p>
+    Případné změny lze provádět až do {$event->registration_end|date:'j. n. Y, H:i'} 
+    po <a n:href="//:Core:Authentication:login">přihlášení</a> 
+    v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
+    nebo využitím soukromého odkazu níže:<br/>
+    {var $link= $control->link(...$linkArgs)}
+    <a href="{$link}">{$link}</a>.
+</p>
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

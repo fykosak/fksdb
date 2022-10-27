@@ -76,7 +76,7 @@ class AnonymousTest extends DsefTestCase
         Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->event, 'ksaad@kalo.cz');
-        Assert::equal('applied', $application->status);
+        Assert::equal('applied', $application->status->value);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);

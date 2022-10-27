@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class FlagProcessing extends WithSchoolProcessing
@@ -22,46 +21,46 @@ class FlagProcessing extends WithSchoolProcessing
         $this->schoolService = $schoolService;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
-    {
+    protected function innerProcess(
+        ArrayHash $values,
+        ModelHolder $holder,
+        Logger $logger
+    ): void {
         if (!isset($values['team'])) {
             return;
         }
+        if ($holder->name == 'team') {
+            return;
+        }
+        $formValues = [
+            'school_id' => $this->getSchoolValue($holder->name),
+            'study_year' => $this->getStudyYearValue($holder->name),
+        ];
 
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if ($name == 'team') {
-                continue;
+        if (!$formValues['school_id']) {
+            if ($this->isBaseReallyEmpty($holder->name)) {
+                return;
             }
-            $formValues = [
-                'school_id' => $this->getSchoolValue($name),
-                'study_year' => $this->getStudyYearValue($name),
+
+            $history = $holder->getModel()->mainModel->getPersonHistory();
+            $participantData = [
+                'school_id' => $history->school_id,
+                'study_year' => $history->study_year,
             ];
-
-            if (!$formValues['school_id']) {
-                if ($this->isBaseReallyEmpty($name)) {
-                    continue;
-                }
-
-                $history = $baseHolder->getModel2()->mainModel->getPersonHistory();
-                $participantData = [
-                    'school_id' => $history->school_id,
-                    'study_year' => $history->study_year,
-                ];
-            } else {
-                $participantData = $formValues;
-            }
-            if (
-                !($this->schoolService->isCzSkSchool($participantData['school_id'])
-                    && $this->isStudent($participantData['study_year']))
-            ) {
-                /** @var PersonHasFlagModel $personHasFlag */
-                $personHasFlag = $values[$name]['person_id_container']['person_has_flag'];
-                $personHasFlag->offsetUnset('spam_mff');
+        } else {
+            $participantData = $formValues;
+        }
+        if (
+            !($this->schoolService->isCzSkSchool($participantData['school_id'])
+                && $this->isStudent($participantData['study_year']))
+        ) {
+            /** @var PersonHasFlagModel $personHasFlag */
+            $personHasFlag = $values[$holder->name]['person_id_container']['person_has_flag'];
+            $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
 //                $values[$name]['person_id_1']['person_has_flag']['spam_mff'] = null;
 //                $a=$c;
-                //unset($values[$name]['person_id_1']['person_has_flag']);
-            }
+            //unset($values[$name]['person_id_1']['person_has_flag']);
         }
     }
 

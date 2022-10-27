@@ -35,7 +35,6 @@ class PaymentExtension extends CompilerExtension
 
             $builder->addDefinition($this->prefix(self::MACHINE_PREFIX . $item['eventId']))
                 ->setFactory(PaymentMachine::class)
-                ->addSetup('setEventId', [$item['eventId']])
                 ->addSetup('setTransitions', [$transitionsGenerator])
                 ->addSetup('setScheduleGroupTypes', [$item['scheduleGroupType']]);
         }

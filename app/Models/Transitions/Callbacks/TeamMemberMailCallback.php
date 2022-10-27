@@ -13,7 +13,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 abstract class TeamMemberMailCallback extends MailCallback
 {
-    protected function getPersonsFromHolder(ModelHolder $holder): array
+    final protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         if (!$holder instanceof FyziklaniTeamHolder) {
             throw new BadTypeException(FyziklaniTeamHolder::class, $holder);
