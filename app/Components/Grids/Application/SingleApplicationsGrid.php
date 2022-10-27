@@ -160,7 +160,7 @@ class SingleApplicationsGrid extends BaseGrid
                 ->addText(': ')
                 ->addHtml(Html::el('i')->addText(_((string)$state['description'])))
                 ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
+            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']->value), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
