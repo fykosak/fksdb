@@ -11,9 +11,10 @@ class AddressComponent extends BaseStalkingComponent
 {
     final public function render(): void
     {
-        $this->beforeRender();
-        $this->template->postContacts = $this->person->getPostContacts();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
+        if ($this->beforeRender()) {
+            $this->template->postContacts = $this->person->getPostContacts();
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
+        }
     }
 
     protected function getMinimalPermissions(): int
