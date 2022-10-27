@@ -1,5 +1,5 @@
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{varType string[]|string[][] $linkArgs}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 <p>
     Potvrzujeme přijetí přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->event}</em>,
     která se koná
@@ -11,11 +11,11 @@
 </p>
 
 <p>
-    Případné změny lze provádět až do {$event->registration_end|date:'j. n. Y, H:i'} 
-    po <a n:href="//:Core:Authentication:login">přihlášení</a> 
-    v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
-    nebo využitím soukromého odkazu níže:<br/>
-    {var $link= $control->link(...$linkArgs)}
+    Případné změny lze provádět až do {$holder->event->registration_end|date:'j. n. Y, H:i'}
+    po <a n:href="//:Core:Authentication:login">přihlášení</a>
+v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
+nebo využitím soukromého odkazu níže:<br/>
+    {var $link = $control->link('//:Public:Application:',  ['eventId'=> $holder->event->event_id, 'contestId'=> $holder->event->event_type->contest_id, 'at'=> $token])}
     <a href="{$link}">{$link}</a>.
 </p>
 <p>
