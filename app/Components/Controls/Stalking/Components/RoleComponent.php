@@ -12,14 +12,15 @@ class RoleComponent extends BaseStalkingComponent
 
     final public function render(): void
     {
-        $this->beforeRender();
-        $login = $this->person->getLogin();
-        $this->template->roles = $login ? $login->createGrantModels() : [];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
+        if ($this->beforeRender()) {
+            $login = $this->person->getLogin();
+            $this->template->roles = $login ? $login->createGrantModels() : [];
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
+        }
     }
 
     protected function getMinimalPermissions(): int
     {
-        return FieldLevelPermission::ALLOW_RESTRICT;
+        return FieldLevelPermission::ALLOW_FULL;
     }
 }

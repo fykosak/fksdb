@@ -21,18 +21,19 @@ class StalkingComponent extends BaseStalkingComponent
     {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->minimalPermissions = $definition['minimalPermission'];
-        $this->beforeRender();
-        $this->template->headline = $definition['label'];
-        $this->template->userPermission = $this->userPermissions;
-        switch ($definition['layout']) {
-            case 'single':
-                $this->renderSingle($definition);
-                return;
-            case 'multi':
-                $this->renderMulti($definition);
-                return;
-            default:
-                throw new InvalidStateException();
+        if ($this->beforeRender()) {
+            $this->template->headline = $definition['label'];
+            $this->template->userPermission = $this->userPermissions;
+            switch ($definition['layout']) {
+                case 'single':
+                    $this->renderSingle($definition);
+                    return;
+                case 'multi':
+                    $this->renderMulti($definition);
+                    return;
+                default:
+                    throw new InvalidStateException();
+            }
         }
     }
 

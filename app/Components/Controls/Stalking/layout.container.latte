@@ -1,4 +1,5 @@
 {layout '../@layout.latte'}
+{varType int $userPermission}
 {define person}
     <div class="row row-cols-1 row-cols-md-2 g-4">
         <div class="col">
@@ -114,7 +115,11 @@
             {include validation}
         </div>
         <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
-            {control timeline}
+            {if $userPermission < FKSDB\Models\ORM\FieldLevelPermission::ALLOW_RESTRICT}
+                {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
+            {else}
+                {control timeline}
+            {/if}
         </div>
     </div>
 

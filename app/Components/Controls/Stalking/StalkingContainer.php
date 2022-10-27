@@ -27,6 +27,7 @@ class StalkingContainer extends BaseComponent
 
     final public function render(): void
     {
+        $this->template->userPermission = $this->userPermission;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 
