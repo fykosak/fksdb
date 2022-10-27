@@ -72,9 +72,12 @@ events:
                     label: _('Nepřijel')
                     behaviorType: danger
                 applied->cancelled:
-                    condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                    condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
+                cancelled->__terminated:
+                    condition: role('admin')
+                    label: _('Smazat přihlášku')
 
             fields:
                 person_id:
@@ -89,14 +92,14 @@ events:
                 arrival_destination:
                    label: _('Na jaké místo přijedeš?')
                    required: true
-                   factory: Chooser("Zvol místo",Options(%events.setkani12podzim.arrival.destination%))
+                   factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
                 departure_time:
                    label: _('Předpokládaný odjezd')
                    description: "Čas odjezdu"
                 departure_destination:
                    label: _('Z jakého místa chceš odjíždět?')
                    required: true
-                   factory: Chooser("Zvol místo",Options(%events.setkani12podzim.arrival.destination%))
+                   factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
                 tshirt_size:
                     label: 'Jakou velikost mikiny bys chtěl?'
                     required: true
