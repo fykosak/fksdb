@@ -11,9 +11,10 @@ class FlagComponent extends BaseStalkingComponent
 {
     final public function render(): void
     {
-        $this->beforeRender();
-        $this->template->flags = $this->person->getFlags();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.flag.latte');
+        if ($this->beforeRender()) {
+            $this->template->flags = $this->person->getFlags();
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.flag.latte');
+        }
     }
 
     protected function getMinimalPermissions(): int

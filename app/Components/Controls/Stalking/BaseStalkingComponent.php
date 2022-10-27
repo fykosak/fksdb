@@ -30,12 +30,14 @@ abstract class BaseStalkingComponent extends BaseComponent
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender(): void
+    public function beforeRender(): bool
     {
         $this->template->person = $this->person;
         if ($this->userPermissions < $this->getMinimalPermissions()) {
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+            return false;
         }
+        return true;
     }
 
     abstract protected function getMinimalPermissions(): int;
