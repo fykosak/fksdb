@@ -254,7 +254,8 @@ class EventWebModel extends WebModel
             'schoolName' => $history ? $history->school->name_abbrev : null,
             'countryIso' => $history ? (
             ($school = $history->school)
-                ? $school->address->region->country_iso
+                ? $school->address->country->alpha_2
+                ?? $school->address->region->country_iso // TODO temporary, remove after addresss migration
                 : null
             ) : null,
         ];
