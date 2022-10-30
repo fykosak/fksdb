@@ -7,7 +7,6 @@ namespace FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson;
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\PostContactType;
 use Nette\DI\Container;
 
 class PageComponent extends AbstractPageComponent
@@ -27,10 +26,7 @@ class PageComponent extends AbstractPageComponent
      */
     public function render($row, array $params = []): void
     {
-        $postContact = $row->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
-        if (!$postContact) {
-            $postContact = $row->getPermanentPostContact();
-        }
+        $postContact = $row->getActivePostContact();
         if ($postContact) {
             $this->template->person = $row;
             $this->template->address = $postContact->address;

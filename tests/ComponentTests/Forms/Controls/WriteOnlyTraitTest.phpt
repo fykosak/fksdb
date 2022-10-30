@@ -8,6 +8,8 @@ namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -43,7 +45,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         $this->getContainer()->getByType(PostContactService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'address_id' => $address->address_id,
-            'type' => PostContactType::DELIVERY,
+            'type' => PostContactType::PERMANENT,
         ]);
 
         // apply person
@@ -116,15 +118,15 @@ class WriteOnlyTraitTest extends DsefTestCase
                             'person_info' =>
                                 [
                                     'email' => 'bila@hrad.cz',
-                                    'id_number' => '__original',
-                                    'born' => '__original',
+                                    'id_number' => WriteOnly::VALUE_ORIGINAL,
+                                    'born' => WriteOnly::VALUE_ORIGINAL,
                                 ],
                             'post_contact_p' =>
                                 [
                                     'address' =>
                                         [
-                                            'target' => '__original',
-                                            'city' => '__original',
+                                            'target' => WriteOnly::VALUE_ORIGINAL,
+                                            'city' => WriteOnly::VALUE_ORIGINAL,
                                             'postal_code' => '67401',
                                             'country_iso' => 'CZ',
                                         ],

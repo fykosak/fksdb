@@ -4,27 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\PhoneNumber;
 
-use FKSDB\Models\ORM\Models\RegionModel;
-use FKSDB\Models\ORM\Services\RegionService;
+use FKSDB\Models\ORM\Models\CountryModel;
+use FKSDB\Models\ORM\Services\CountryService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
 
 class PhoneNumberFactory
 {
-
-    private RegionService $regionService;
-
+    private CountryService $countryService;
     private TypedSelection $table;
 
-    public function __construct(RegionService $regionService)
+    public function __construct(CountryService $countryService)
     {
-        $this->regionService = $regionService;
-        $this->table = $this->regionService->getTable();
-    }
-
-    private function getAllRegions(): TypedSelection
-    {
-        return $this->table;
+        $this->countryService = $countryService;
+        $this->table = $this->countryService->getTable();
     }
 
     public function formatPhone(string $number): Html
@@ -37,7 +30,7 @@ class PhoneNumberFactory
                     ->addHtml(
                         Html::el('i')
                             ->addAttributes([
-                                'class' => 'flag-icon flag-icon-' . \strtolower($region->country_iso),
+                                'class' => 'flag-icon flag-icon-' . \strtolower($region->alpha_2),
                             ])
                     );
                 return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
@@ -47,10 +40,10 @@ class PhoneNumberFactory
         return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?RegionModel
+    private function getRegion(string $number): ?CountryModel
     {
-        /** @var RegionModel $region */
-        foreach ($this->getAllRegions() as $region) {
+        /** @var CountryModel $region */
+        foreach ($this->table as $region) {
             if ($region->matchPhone($number)) {
                 return $region;
             }
@@ -60,6 +53,6 @@ class PhoneNumberFactory
 
     public function isValid(string $number): bool
     {
-        return !!$this->getRegion($number);
+        return (bool)$this->getRegion($number);
     }
 }

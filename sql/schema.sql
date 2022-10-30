@@ -143,24 +143,6 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `region`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `region`
-(
-    `region_id`    INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `country_iso`  CHAR(2)      NOT NULL COMMENT 'ISO 3166-1',
-    `country_iso3` CHAR(3)      NOT NULL COMMENT 'ISO 3166-1',
-    `nuts`         VARCHAR(5)   NOT NULL COMMENT 'NUTS of the EU region\nor ISO 3166-1 for other countries',
-    `name`         VARCHAR(255) NOT NULL COMMENT 'name of the region in the language intelligible in that region',
-    `phone_nsn`    INT(11)      NULL DEFAULT NULL,
-    `phone_prefix` VARCHAR(16)  NULL DEFAULT NULL,
-    UNIQUE INDEX `uq_region__nuts` (`nuts` ASC)
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COMMENT = 'Ciselnik regionu pro vyber skoly v registraci';
-
--- -----------------------------------------------------
 -- Table `address`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `address`
@@ -171,13 +153,10 @@ CREATE TABLE IF NOT EXISTS `address`
     `target`                 VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
     `city`                   VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
     `postal_code`            CHAR(5)      NULL DEFAULT NULL COMMENT 'PSČ (pro ČR a SR)',
-    `region_id`              INT(11)      NULL DEFAULT NULL COMMENT 'detekce státu && formátovacích zvyklostí',
-    `country_id`             INT          NULL DEFAULT NULL,
+    `country_id`             INT          NOT NULL,
     `country_subdivision_id` INT          NULL DEFAULT NULL,
-    INDEX `idx_address__region_id` (`region_id` ASC),
-    CONSTRAINT `fk_address__region`
-        FOREIGN KEY (`region_id`)
-            REFERENCES `region` (`region_id`),
+    INDEX `idx_address__country_id` (`country_id` ASC),
+    INDEX `idx_address__country_subdivision_id` (`country_subdivision_id` ASC),
     CONSTRAINT `fk_address__country`
         FOREIGN KEY (`country_id`)
             REFERENCES `country` (`country_id`),
@@ -445,15 +424,15 @@ CREATE TABLE IF NOT EXISTS `psc_region`
 (
     `psc`                    CHAR(5) NOT NULL PRIMARY KEY,
     `country_subdivision_id` INT     NOT NULL,
-    INDEX `idx_psc__region_id` (`country_subdivision_id` ASC),
-    CONSTRAINT `fk_psc__region`
+    INDEX `idx_psc__country_subdivision_id` (`country_subdivision_id` ASC),
+    CONSTRAINT `fk_psc__country_subdivision`
         FOREIGN KEY (`country_subdivision_id`)
             REFERENCES `country_subdivision` (`country_subdivision_id`)
             ON DELETE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'mapování českých a slovenských PSČ na evidovaný region'
+    COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision'
 /* comment truncated */ /*n*/;
 
 -- -----------------------------------------------------
@@ -1438,12 +1417,12 @@ CREATE TABLE `unsubscribed_email`
 DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country`
 (
-    `country_id` INT         NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
-    `name`       VARCHAR(64) NOT NULL,
-    `alpha_2`    CHAR(2)     NOT NULL,
-    `alpha_3`    CHAR(3)     NOT NULL,
-    `phone_nsn`    INT(11)      NULL DEFAULT NULL,
-    `phone_prefix` VARCHAR(16)  NULL DEFAULT NULL
+    `country_id`   INT         NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
+    `name`         VARCHAR(64) NOT NULL,
+    `alpha_2`      CHAR(2)     NOT NULL,
+    `alpha_3`      CHAR(3)     NOT NULL,
+    `phone_nsn`    INT(11)     NULL DEFAULT NULL,
+    `phone_prefix` VARCHAR(16) NULL DEFAULT NULL
 ) ENGINE = InnoDB
   COLLATE = utf8_czech_ci;
 
@@ -1453,7 +1432,7 @@ CREATE TABLE `country_subdivision`
     `country_subdivision_id` INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `code`                   VARCHAR(32) NOT NULL COMMENT 'ISO 3166-2 code',
     `name`                   VARCHAR(64) NOT NULL,
-    `country_id`             INT     NOT NULL,
+    `country_id`             INT         NOT NULL,
     CONSTRAINT `fk_country_subdivision__country`
         FOREIGN KEY (`country_id`)
             REFERENCES `country` (`country_id`)

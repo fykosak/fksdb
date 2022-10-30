@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\CountryModel;
-use FKSDB\Models\ORM\Models\RegionModel;
 use Fykosak\NetteORM\Service;
 
 /**
