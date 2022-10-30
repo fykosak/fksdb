@@ -57,7 +57,7 @@ class AddressHandler extends ReferencedHandler
         return $this->addressService->storeModel($data, $model, false);
     }
 
-    private function inferCountry(?string $postalCode): ?array
+    public function inferCountry(?string $postalCode): ?array
     {
         if (!$postalCode) {
             return null;

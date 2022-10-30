@@ -8,8 +8,9 @@ namespace FKSDB\Tests\ModelsTests;
 $container = require '../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use FKSDB\Models\ORM\Services\AddressService;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
@@ -17,33 +18,27 @@ use Tester\TestCase;
 class ServiceAddressTest extends TestCase
 {
 
-    private AddressService $fixture;
+    private AddressHandler $fixture;
 
-    public function __construct(AddressService $service)
+    public function __construct(Container $container)
     {
-        $this->fixture = $service;
+        $this->fixture = new AddressHandler($container);
     }
 
     /**
      * @dataProvider getPostalCodeData
      */
-    public function testStudyYear(string $postalCode, ?int $region): void
+    public function testStudyYear(string $postalCode, ?int $countryId): void
     {
-        if ($region === null) {
-            Assert::exception(function () use ($postalCode) {
-                $this->fixture->inferRegion($postalCode);
-            }, InvalidPostalCode::class);
-        } else {
-            $inferredRegion = $this->fixture->inferRegion($postalCode);
-            Assert::equal($region, $inferredRegion);
-        }
+        $countryData = $this->fixture->inferCountry($postalCode);
+        Assert::equal($countryId, $countryData ? $countryData['country_id'] : $countryData);
     }
 
     public function getPostalCodeData(): array
     {
         return [
-            ['01233', 2],
-            ['67401', 3],
+            ['01233', CountryService::SLOVAKIA],
+            ['67401', CountryService::CZECH_REPUBLIC],
             ['654a5', null],
             ['354 0', null],
         ];
@@ -51,6 +46,6 @@ class ServiceAddressTest extends TestCase
 }
 
 // phpcs:disable
-$testCase = new ServiceAddressTest($container->getByType(AddressService::class));
+$testCase = new ServiceAddressTest($container);
 $testCase->run();
 // phpcs:enable

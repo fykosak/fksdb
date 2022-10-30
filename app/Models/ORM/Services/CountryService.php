@@ -15,12 +15,4 @@ class CountryService extends Service
 {
     public const CZECH_REPUBLIC = 203;
     public const SLOVAKIA = 703;
-
-    public function findFromLegacyRegion(RegionModel $region): ?CountryModel
-    {
-        return $this->getTable()->where(
-            'alpha_2',
-            $region->country_iso
-        )->fetch();
-    }
 }

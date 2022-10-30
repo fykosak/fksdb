@@ -11,6 +11,7 @@ $container = require '../../../Bootstrap.php';
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -37,7 +38,7 @@ class WriteOnlyTraitTest extends DsefTestCase
             'target' => 'PomaláUlice',
             'city' => 'SinCity',
             'postal_code' => '67401',
-            'region_id' => '3',
+            'country_id' => (string)CountryService::SLOVAKIA,
         ]);
         $this->getContainer()->getByType(PostContactService::class)->storeModel([
             'person_id' => $this->person->person_id,

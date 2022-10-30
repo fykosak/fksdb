@@ -29,7 +29,6 @@ class DbNames
     public const TAB_POST_CONTACT = 'post_contact';
     public const TAB_PSC_REGION = 'psc_region';
     public const TAB_SUBMIT_QUESTION = 'submit_question';
-    public const TAB_REGION = 'region';
     public const TAB_ROLE = 'role';
     public const TAB_SCHOOL = 'school';
     public const TAB_STORED_QUERY = 'stored_query';

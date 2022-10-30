@@ -29,8 +29,8 @@
                 {if isset($address->postal_code)}
                     <div>{$address->postal_code}</div>
                 {/if}
-                {if isset($address->region_id)}
-                    <div>{$address->region->name}</div>
+                {if isset($address->country_id)}
+                    <div>{$address->country->name}</div>
                 {/if}
             </div>
 

@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\SchoolService;
@@ -45,7 +46,7 @@ class Extrapolate extends DatabaseTestCase
             'target' => 'PU',
             'city' => 'PU',
             'postal_code' => '02001',
-            'region_id' => '1',
+            'country_id' => CountryService::SLOVAKIA,
         ]);
         $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'name_full' => 'GPU',

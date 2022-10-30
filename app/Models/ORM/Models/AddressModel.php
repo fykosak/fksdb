@@ -15,6 +15,10 @@ use Fykosak\NetteORM\Model;
  * @property-read string postal_code
  * @property-read int region_id
  * @property-read RegionModel|null region
+ * @property-read int|null country_id
+ * @property-read CountryModel|null country
+ * @property-read int|null country_subdivision_id
+ * @property-read CountrySubdivisionModel country_subdivision
  */
 class AddressModel extends Model
 {
