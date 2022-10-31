@@ -54,7 +54,10 @@ export default class BarHistogram extends ChartComponent<OwnProps, Record<string
                 rows.push(<polygon
                     key={index}
                     points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
-                    fill={item.color}/>);
+                    fill={item.color}>
+                    <title>{item.yValue}</title>
+                    </polygon>
+                );
             });
             bars.push(rows);
         });

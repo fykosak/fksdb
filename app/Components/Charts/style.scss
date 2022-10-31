@@ -38,6 +38,9 @@
       opacity: .1;
     }
   }
+  g polygon:hover {
+    filter: brightness(60%);
+  }
 }
 
 
