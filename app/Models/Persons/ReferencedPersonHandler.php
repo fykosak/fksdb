@@ -149,7 +149,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             if (!$outerTransaction) {
                 $connection->commit();
             }
-        } catch (ModelDataConflictException|StorageException|ModelException $exception) {
+        } catch (ModelDataConflictException | StorageException | ModelException $exception) {
             if (!$outerTransaction) {
                 $connection->rollBack();
             }

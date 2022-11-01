@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
@@ -96,9 +97,24 @@ class StalkingContainer extends BaseComponent
         return new StalkingComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
-    protected function createComponentAddress(): Components\AddressComponent
+    protected function createComponentPermanentAddress(): Components\AddressComponent
     {
-        return new Components\AddressComponent($this->getContext(), $this->person, $this->userPermission);
+        return new Components\AddressComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission,
+            PostContactType::tryFrom(PostContactType::PERMANENT)
+        );
+    }
+
+    protected function createComponentDeliveryAddress(): Components\AddressComponent
+    {
+        return new Components\AddressComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission,
+            PostContactType::tryFrom(PostContactType::DELIVERY)
+        );
     }
 
     protected function createComponentRole(): Components\RoleComponent
