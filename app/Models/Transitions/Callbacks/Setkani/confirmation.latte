@@ -13,9 +13,13 @@
 <p>
     Případné změny lze provádět až do {$holder->event->registration_end|date:'j. n. Y, H:i'}
     po <a n:href="//:Core:Authentication:login">přihlášení</a>
-v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
-nebo využitím soukromého odkazu níže:<br/>
-    {var $link = $control->link('//:Public:Application:',  ['eventId'=> $holder->event->event_id, 'contestId'=> $holder->event->event_type->contest_id, 'at'=> $token])}
+    v sekci <a n:href="//:Core:MyApplications:default">Moje přihlášky</a>
+    nebo využitím soukromého odkazu níže:<br/>
+    {var $link = $control->link('//:Public:Application:',
+    ['eventId'=> $holder->event->event_id,
+    'contestId'=>$holder->event->event_type->contest_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.
 </p>
 <p>
