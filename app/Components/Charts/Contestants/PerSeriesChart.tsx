@@ -51,7 +51,13 @@ export default class PerSeriesChart extends React.Component<OwnProps> {
 
         return <ChartContainer
             chart={BarHistogram}
-            chartProps={{xScale, yScale, data: histogramData}}
+            chartProps={{xScale,
+                yScale,
+                data: histogramData,
+                display: {
+                    xGrid: false, yGrid: true
+                }
+            }}
             legendComponent={LineChartLegend}
             legendProps={{data: legendData}}
         />;
