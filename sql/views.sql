@@ -19,10 +19,10 @@ select s.school_id,
        s.ic,
        a.target,
        a.city,
-       r.country_iso
+       c.alpha_2
 from school s
          left join address a on a.address_id = s.address_id
-         left join region r on r.region_id = a.region_id
+         left join country c on c.country_id = a.country_id
     );
 
 CREATE OR REPLACE VIEW v_task_stats as
@@ -63,18 +63,18 @@ where not (ap.address_id is null and ad.address_id is null)
 
 CREATE OR REPLACE VIEW v_person_envelope as
 (
-SELECT `pc`.`person_id`                                 AS `person_id`,
-       p.name                                           AS `CeleJmeno`,
-       `a`.`first_row`                                  AS `PrvniRadek`,
-       `a`.`second_row`                                 AS `DruhyRadek`,
-       `a`.`target`                                     AS `TretiRadek`,
-       `a`.`city`                                       AS `Mesto`,
-       `a`.`postal_code`                                AS `PSC`,
-       if((`r`.`country_iso` = 'SK'), 'Slovakia', NULL) AS `Stat`
+SELECT pc.person_id                             AS `person_id`,
+       p.name                                   AS `CeleJmeno`,
+       a.first_row                              AS `PrvniRadek`,
+       a.second_row                             AS `DruhyRadek`,
+       a.target                                 AS `TretiRadek`,
+       a.city                                   AS `Mesto`,
+       a.postal_code                            AS `PSC`,
+       if((c.alpha_2 = 'SK'), 'Slovakia', NULL) AS `Stat`
 FROM v_post_contact pc
          inner join v_person p on p.person_id = pc.person_id
          inner join address a on pc.address_id = a.address_id
-         inner join region r on a.region_id = r.region_id and r.country_iso in ('CZ', 'SK')
+         inner join country c on c.country_id = a.country_id and c.country_id in ('CZ', 'SK')
     );
 
 create or replace view v_series_points as
@@ -106,15 +106,15 @@ select p.other_name                                                             
        a.target                                                                                      as street,
        a.city                                                                                        as town,
        a.postal_code                                                                                 as postcode,
-       r.country_iso                                                                                 as country,
+       c.alpha_2                                                                                     as country,
        p.display_name                                                                                as fullname,
        p.gender                                                                                      as gender,
        if(pi.born is null, null,
           concat(year(pi.born), '-', lpad(month(pi.born), 2, '0'), '-', lpad(day(pi.born), 2, '0'))) as born,
 
        coalesce(
-               if(sar.country_iso = 'cz', concat('red-izo:', s.izo), null),
-               if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
+               if(sac.alpha_2 = 'cz', concat('red-izo:', s.izo), null),
+               if(sac.alpha_2 = 'sk', concat('sk:', s.izo), null),
                null, -- TODO AESOP id
                if(s.school_id is null, null, 'ufo')
            )                                                                                         as school,
@@ -131,11 +131,11 @@ select p.other_name                                                             
 from person p
          left join v_post_contact pc on pc.person_id = p.person_id
          left join address a on a.address_id = pc.address_id
-         left join region r on r.region_id = a.region_id
+         left join country c on c.country_id = a.country_id
          left join person_history ph on ph.person_id = p.person_id
          left join school s on s.school_id = ph.school_id
          left join address sa on sa.address_id = s.address_id
-         left join region sar on sar.region_id = sa.region_id
+         left join country sac on sac.country_id = sa.country_id
          left join person_info pi on pi.person_id = p.person_id
          left join flag f on f.fid = 'spam_mff'
          left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id

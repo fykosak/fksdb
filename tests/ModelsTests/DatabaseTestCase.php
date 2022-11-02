@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
@@ -56,7 +57,7 @@ abstract class DatabaseTestCase extends TestCase
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $address = $this->getContainer()->getByType(AddressService::class)->storeModel(
-            ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
+            ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );
         $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->storeModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]

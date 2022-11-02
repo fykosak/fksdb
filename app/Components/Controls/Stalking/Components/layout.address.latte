@@ -1,40 +1,19 @@
 {layout '../@layout.latte'}
-{block headline}{_'Addresses'}{/block}
+{varType FKSDB\Models\ORM\Models\AddressModel|null $address}
+{varType FKSDB\Models\ORM\Models\PostContactType $type}
+{block headline}
+    {if $type->value == 'P'}
+        {_'Permanent address'}
+    {else}
+        {_'Delivery address'}
+    {/if}
+{/block}
 {block content}
-    {varType Fykosak\NetteORM\TypedGroupedSelection|\Fykosak\NetteORM\Model[] $postContacts}
-    {if count($postContacts)}
-        {foreach $postContacts as $postContact}
-            {varType FKSDB\Models\ORM\Models\PostContactModel $postContact}
-            {var $address = $postContact->address}
-            <h3 class="card-header">
-                {if $postContact->type == 'P'}
-                    {_'Permanent address'}
-                {else}
-                    {_'Delivery address'}
-                {/if}
-            </h3>
-            <div class="card-body">
-                {if isset($address->first_row)}
-                    <div>{$address->first_row}</div>
-                {/if}
-                {if isset($address->second_row)}
-                    <div>{$address->second_row}</div>
-                {/if}
-                {if isset($address->target)}
-                    <div>{$address->target}</div>
-                {/if}
-                {if isset($address->city)}
-                    <div>{$address->city}</div>
-                {/if}
-                {if isset($address->postal_code)}
-                    <div>{$address->postal_code}</div>
-                {/if}
-                {if isset($address->region_id)}
-                    <div>{$address->region->name}</div>
-                {/if}
-            </div>
-
-        {/foreach}
+    {if address}
+        {var $addressPrinter = new FKSDB\Models\ValuePrinters\AddressPrinter()}
+        <div class="card-body">
+            {$addressPrinter($address)}
+        </div>
     {else}
         {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
     {/if}

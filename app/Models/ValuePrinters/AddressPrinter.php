@@ -28,8 +28,8 @@ class AddressPrinter extends ValuePrinter
         }
         $container->addHtml(Html::el('div')->addText($value->target));
         $container->addHtml(Html::el('div')->addText($value->postal_code . ' ' . $value->city));
-        if ($value->region->country_iso != 'CZ') {
-            $container->addHtml(Html::el('div')->addHtml(Html::el('strong')->addText($value->region->name)));
+        if ($value->country->alpha_2 != 'CZ') {
+            $container->addHtml(Html::el('div')->addHtml(Html::el('strong')->addText($value->country->name)));
         }
         return $container;
     }
