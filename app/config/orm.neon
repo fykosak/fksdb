@@ -565,8 +565,8 @@ orm:
             service: FKSDB\Models\ORM\Services\CountrySubdivisionService
             model: FKSDB\Models\ORM\Models\CountrySubdivisionModel
         psc_region:
-            service: FKSDB\Models\ORM\Services\PSCRegionService
-            model: FKSDB\Models\ORM\Models\PSCRegionModel
+            service: FKSDB\Models\ORM\Services\PSCSubdivisionService
+            model: FKSDB\Models\ORM\Models\PSCSubdivisionModel
         role:
            service: FKSDB\Models\ORM\Services\RoleService
            model: FKSDB\Models\ORM\Models\RoleModel

@@ -74,7 +74,6 @@ class AddressDataContainer extends ReferencedContainer
     {
         if ($model instanceof AddressModel) {
             $data = $model->toArray();
-            unset($data['region_id']);
             $this->setValues($data);
         }
     }

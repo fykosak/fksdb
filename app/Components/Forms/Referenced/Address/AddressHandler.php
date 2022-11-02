@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Referenced\Address;
 
 use FKSDB\Models\ORM\Models\AddressModel;
-use FKSDB\Models\ORM\Models\PSCRegionModel;
+use FKSDB\Models\ORM\Models\PSCSubdivisionModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
-use FKSDB\Models\ORM\Services\PSCRegionService;
+use FKSDB\Models\ORM\Services\PSCSubdivisionService;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model;
@@ -21,17 +21,17 @@ class AddressHandler extends ReferencedHandler
     private const PATTERN = '/[0-9]{5}/';
 
     private AddressService $addressService;
-    private PSCRegionService $PSCRegionService;
+    private PSCSubdivisionService $PSCSubdivisionService;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(AddressService $addressService, PSCRegionService $PSCRegionService): void
+    public function inject(AddressService $addressService, PSCSubdivisionService $PSCSubdivisionService): void
     {
         $this->addressService = $addressService;
-        $this->PSCRegionService = $PSCRegionService;
+        $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
     public function store(array $values, ?Model $model = null): AddressModel
@@ -65,12 +65,12 @@ class AddressHandler extends ReferencedHandler
         if (!preg_match(self::PATTERN, $postalCode)) {
             return null;
         }
-        /** @var PSCRegionModel $pscRegion */
-        $pscRegion = $this->PSCRegionService->findByPrimary($postalCode);
-        if ($pscRegion) {
+        /** @var PSCSubdivisionModel $pscSubdivision */
+        $pscSubdivision = $this->PSCSubdivisionService->findByPrimary($postalCode);
+        if ($pscSubdivision) {
             return [
-                'country_subdivision_id' => $pscRegion->country_subdivision_id,
-                'country_id' => $pscRegion->country_subdivision->country_id,
+                'country_subdivision_id' => $pscSubdivision->country_subdivision_id,
+                'country_id' => $pscSubdivision->country_subdivision->country_id,
             ];
         } else {
             if (strlen($postalCode) != 5) {

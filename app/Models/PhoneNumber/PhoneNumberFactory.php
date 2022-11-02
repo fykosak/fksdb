@@ -23,29 +23,29 @@ class PhoneNumberFactory
     public function formatPhone(string $number): Html
     {
         try {
-            $region = $this->getRegion($number);
-            if ($region) {
+            $country = $this->getCountry($number);
+            if ($country) {
                 $flag = Html::el('span')
                     ->addAttributes(['class' => 'phone-flag me-3'])
                     ->addHtml(
                         Html::el('i')
                             ->addAttributes([
-                                'class' => 'flag-icon flag-icon-' . \strtolower($region->alpha_2),
+                                'class' => 'flag-icon flag-icon-' . \strtolower($country->alpha_2),
                             ])
                     );
-                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
+                return Html::el('span')->addHtml($flag)->addText($country->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
         return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?CountryModel
+    private function getCountry(string $number): ?CountryModel
     {
-        /** @var CountryModel $region */
-        foreach ($this->table as $region) {
-            if ($region->matchPhone($number)) {
-                return $region;
+        /** @var CountryModel $country */
+        foreach ($this->table as $country) {
+            if ($country->matchPhone($number)) {
+                return $country;
             }
         }
         return null;
@@ -53,6 +53,6 @@ class PhoneNumberFactory
 
     public function isValid(string $number): bool
     {
-        return (bool)$this->getRegion($number);
+        return (bool)$this->getCountry($number);
     }
 }
