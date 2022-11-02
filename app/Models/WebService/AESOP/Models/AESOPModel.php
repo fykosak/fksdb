@@ -55,7 +55,7 @@ abstract class AESOPModel
         if (!$school) {
             return null;
         }
-        $countryISO = $school->address->region->country_iso;
+        $countryISO = $school->address->country->alpha_2;
         if ($countryISO === 'cz') {
             return 'red-izo:' . $school->izo;
         }
@@ -85,7 +85,7 @@ abstract class AESOPModel
 
     protected function getAESOPContestant(PersonModel $person): array
     {
-        $postContact = $person->getPermanentPostContact(true);
+        $postContact = $person->getActivePostContact();
         $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->school;
         $spamFlag = $person->hasPersonFlag('spam_mff');
@@ -96,7 +96,7 @@ abstract class AESOPModel
             'street' => $postContact->address->target,
             'town' => $postContact->address->city,
             'postcode' => $postContact->address->postal_code,
-            'country' => $postContact->address->region->country_iso,
+            'country' => $postContact->address->country->alpha_2,
             'fullname' => $person->display_name,
             'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),

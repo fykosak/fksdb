@@ -74,10 +74,6 @@ class AddressDataContainer extends ReferencedContainer
     {
         if ($model instanceof AddressModel) {
             $data = $model->toArray();
-            unset($data['region_id']);
-            if ($model->region) {
-                $data['country_id'] = $this->countryService->findFromLegacyRegion($model->region)->country_id;
-            }
             $this->setValues($data);
         }
     }

@@ -12,6 +12,7 @@ use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Application\Responses\RedirectResponse;
@@ -34,7 +35,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
             'target' => 'PU',
             'city' => 'PU',
             'postal_code' => '02001',
-            'region_id' => '2',
+            'country_id' => (string)CountryService::SLOVAKIA,
         ]);
         $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'address_id' => $address->address_id,
@@ -66,7 +67,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
                     'target' => 'PU',
                     'city' => 'PU',
                     'postal_code' => '02001',
-                    'region_id' => '2',
+                    'country_id' => (string)CountryService::SLOVAKIA,
                 ],
             ],
         ]);
@@ -91,7 +92,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
                         'target' => 'PU',
                         'city' => 'PU edited',
                         'postal_code' => '02001',
-                        'region_id' => '2',
+                        'country_id' => (string)CountryService::SLOVAKIA,
                     ],
                 ],
             ],

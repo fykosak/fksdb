@@ -48,7 +48,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
                 $olds += 1;
             } else {
                 $school = $this->schoolService->findByPrimary($member['school_id']);
-                if (!in_array($school->address->region->country_iso, ['CZ', 'SK'])) {
+                if (!in_array($school->address->country->alpha_2, ['CZ', 'SK'])) {
                     $abroad += 1;
                 }
             }

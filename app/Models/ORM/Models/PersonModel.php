@@ -133,16 +133,10 @@ class PersonModel extends Model implements Resource
         return $this->getPostContacts()->where(['type' => $type->value])->fetch();
     }
 
-    public function getPermanentPostContact(bool $fallback = true): ?PostContactModel
+    public function getActivePostContact(): ?PostContactModel
     {
-        $postContact = $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
-        if ($postContact) {
-            return $postContact;
-        } elseif ($fallback) {
-            return $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
-        } else {
-            return null;
-        }
+        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
+            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
     }
 
     public function getEventParticipants(): TypedGroupedSelection
