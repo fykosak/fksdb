@@ -27,6 +27,12 @@
       stroke: #ccc;
     }
   }
+  .axis {
+    .tick .grid-line {
+      stroke-dasharray: 10 10;
+      stroke: #ccc;
+    }
+  }
 
   &.line-chart {
     .line {
