@@ -14,12 +14,6 @@ use Tracy\Debugger;
 // absolute filesystem path to this web root
 define('TESTS_DIR', dirname(__FILE__));
 
-// absolute filesystem path to the application root
-define('APP_DIR', TESTS_DIR . '/../app');
-
-// absolute filesystem path to the libraries
-define('LIBS_DIR', TESTS_DIR . '/../libs');
-
 define('TEMP_DIR', TESTS_DIR . '/../temp/tester');
 @mkdir(TEMP_DIR);
 
@@ -27,7 +21,8 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 @mkdir(LOG_DIR);
 
 // Load Nette Framework
-require LIBS_DIR . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
 // phpcs:enable
 class Bootstrap
 {
@@ -49,15 +44,15 @@ class Bootstrap
             ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED
         );
         $configurator->createRobotLoader()
-            ->addDirectory(APP_DIR)
-            ->addDirectory(LIBS_DIR)
-            ->addDirectory(TESTS_DIR)
+            ->addDirectory(__DIR__ . '/../app/')
+            ->addDirectory(__DIR__.'/../libs/')
+            ->addDirectory(__DIR__)
             ->register();
 
 // Create Dependency Injection container from config.neon file
-        $configurator->addConfig(APP_DIR . '/config/config.neon');
-        $configurator->addConfig(APP_DIR . '/config/config.local.neon');
-        $configurator->addConfig(APP_DIR . '/config/config.tester.neon');
+        $configurator->addConfig(__DIR__ . '../app/config/config.neon');
+        $configurator->addConfig(__DIR__ . '../app/config/config.local.neon');
+        $configurator->addConfig(__DIR__ . '../app/config/config.tester.neon');
 
         // Load all .neon files in events data directory
         foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
@@ -70,6 +65,7 @@ class Bootstrap
         return $configurator;
     }
 }
+
 // phpcs:disable
 // Configure application
 $configurator = Bootstrap::boot();
