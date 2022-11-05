@@ -217,7 +217,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return FyziklaniTeamMachine
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
@@ -246,7 +245,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return BaseComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

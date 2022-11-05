@@ -16,7 +16,7 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -39,7 +39,7 @@ class BaseHolder implements ModelHolder
 
     private ExpressionEvaluator $evaluator;
     public EventModel $event;
-    /** @var Service|ServiceMulti */
+    /** @var Service|ServiceMDsefParticipant */
     public $service;
     /** @var EventParticipantModel|ModelMDsefParticipant|null */
     private ?Model $model;
@@ -174,7 +174,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param Service|ServiceMulti $service
+     * @param Service|ServiceMDsefParticipant $service
      */
     public function setService($service): void
     {

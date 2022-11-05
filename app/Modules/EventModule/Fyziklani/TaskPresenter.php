@@ -48,7 +48,6 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @return Service
      * @throws GoneException
      */
     protected function getORMService(): Service

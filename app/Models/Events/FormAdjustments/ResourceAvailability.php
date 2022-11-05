@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
@@ -86,7 +86,7 @@ class ResourceAvailability extends AbstractAdjustment
         }
 
         $usage = 0;
-        /** @var Service|ServiceMulti[]|BaseHolder[][] $dataService */
+        /** @var Service|ServiceMDsefParticipant[]|BaseHolder[][] $dataService */
         foreach ($sService as $dataService) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($dataService['holders']);

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tables;
 
-use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
@@ -15,11 +15,10 @@ use Nette\Database\Table\Selection;
  */
 class MultiTableSelection extends Selection
 {
-
-    private ServiceMulti $service;
+    private ServiceMDsefParticipant $service;
 
     public function __construct(
-        ServiceMulti $service,
+        ServiceMDsefParticipant $service,
         string $table,
         Explorer $explorer,
         Conventions $conventions
@@ -31,7 +30,7 @@ class MultiTableSelection extends Selection
     /**
      * This override ensures returned objects are of correct class.
      */
-    protected function createRow(array $row): ModelMulti
+    protected function createRow(array $row): ModelMDsefParticipant
     {
         $mainModel = $this->service->mainService->createFromArray($row);
         $joinedModel = $this->service->joinedService->createFromArray($row);

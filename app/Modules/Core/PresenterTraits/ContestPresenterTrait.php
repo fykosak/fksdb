@@ -56,9 +56,6 @@ trait ContestPresenterTrait
         return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
     }
 
-    /**
-     * @return TypedSelection|ContestModel[]
-     */
     private function getAvailableContests(): TypedSelection
     {
         $person = $this->getLoggedPerson();

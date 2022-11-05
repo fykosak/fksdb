@@ -7,9 +7,9 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -42,7 +42,7 @@ class DBReflectionFactory extends AbstractFactory
             $tableName = null;
             if ($service instanceof Service) {
                 $tableName = $service->getTable()->getName();
-            } elseif ($service instanceof ServiceMulti) {
+            } elseif ($service instanceof ServiceMDsefParticipant) {
                 $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
@@ -105,7 +105,7 @@ class DBReflectionFactory extends AbstractFactory
         if ($service instanceof Service) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $field->name);
-        } elseif ($service instanceof ServiceMulti) {
+        } elseif ($service instanceof ServiceMDsefParticipant) {
             $tableName = $service->mainService->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $field->name);
             if ($column === null) {
