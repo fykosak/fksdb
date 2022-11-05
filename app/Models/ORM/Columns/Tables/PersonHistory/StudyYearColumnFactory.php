@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -39,7 +38,7 @@ class StudyYearColumnFactory extends ColumnFactory
             $hsYears[$studyYear] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear)
+                $contestYear->getGraduationYear($studyYear)
             );
         }
 
@@ -48,7 +47,7 @@ class StudyYearColumnFactory extends ColumnFactory
             $primaryYears[$studyYear] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear)
+                $contestYear->getGraduationYear($studyYear)
             );
         }
 

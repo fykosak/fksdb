@@ -11,7 +11,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
-class FyziklaniTeamMachine extends Machine
+final class FyziklaniTeamMachine extends Machine
 {
     private TeamService2 $teamService;
 
@@ -22,9 +22,9 @@ class FyziklaniTeamMachine extends Machine
     }
 
     /**
-     * @param TeamModel2|null $model
+     * @param TeamModel2 $model
      */
-    public function createHolder(?Model $model): ModelHolder
+    public function createHolder(Model $model): ModelHolder
     {
         return new FyziklaniTeamHolder($model, $this->teamService);
     }

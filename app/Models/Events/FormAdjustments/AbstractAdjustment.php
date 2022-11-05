@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Form;
@@ -20,13 +20,13 @@ abstract class AbstractAdjustment implements FormAdjustment
 
     private array $pathCache;
 
-    final public function adjust(Form $form, Holder $holder): void
+    final public function adjust(Form $form, ModelHolder $holder): void
     {
         $this->setForm($form);
         $this->innerAdjust($form, $holder);
     }
 
-    abstract protected function innerAdjust(Form $form, Holder $holder): void;
+    abstract protected function innerAdjust(Form $form, ModelHolder $holder): void;
 
     final protected function hasWildCart(string $mask): bool
     {
@@ -64,7 +64,7 @@ abstract class AbstractAdjustment implements FormAdjustment
         // TODO not type safe
         foreach ($form->getComponents(true, FormControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
-            $path = str_replace('_1', '', $path);
+            $path = str_replace('_container', '', $path);
             $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->pathCache[$path] = $control;
         }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\GrantService;
@@ -54,7 +56,7 @@ class CancelTest extends TsafTestCase
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Paní",
@@ -109,5 +111,7 @@ class CancelTest extends TsafTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new CancelTest($container);
 $testCase->run();
+// phpcs:enable

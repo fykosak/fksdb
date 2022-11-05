@@ -2,17 +2,12 @@ parameters:
     events:
         defaultDsef:
             appCond: or(regOpen(), role('admin'))
-            states:
-                - applied
-                - participated
-                - missed
-                - cancelled
             transitions:
                 __init->applied:
                     condition: %events.defaultDsef.appCond%
                     label: _('Přihlásit účastníka')
-                    onExecuted:
-                        - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                    afterExecute:
+                        - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                 applied->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Prezentovat')
@@ -24,9 +19,6 @@ parameters:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-                cancelled->__terminated:
-                    condition: role('admin')
-                    label: _('Smazat přihlášku')
             paramScheme:
                  notifyBcc:
                      default: dsef@fykos.cz
@@ -34,17 +26,13 @@ parameters:
                      default: Den s experimentální fyzikou <dsef@fykos.cz>
 events:
     dsefDefault:
-        event_type_id: 2
+        eventTypeIds: [2]
         #eventYears: all
         formLayout: dsef.form
         paramScheme: []
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states:
-                    - participated
                 transitions: [] #not modifable
                 fields: [] #not modifable
         #
@@ -52,12 +40,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

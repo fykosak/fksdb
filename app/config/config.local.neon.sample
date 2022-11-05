@@ -18,34 +18,9 @@ parameters:
         host: astrid.fykos.cz
         user:
         password:
-    github:
-        # login name in fksdb of Github webhook user
-        login: github
-        # API secret key
-        secret:
-    updater:
-		# definition of install instances
-		# deployment:
-		# 	/path/to/fksdb/instance: branch-name
-		# 	/path/to/another/fksdb/instance: branch-name
     googleOAuth2:
         clientId:
         clientSecret:
-# Contest specific parameters
-    fykos:
-        # Allow forward registrations
-        forwardRegistration: true
-        # Temporary messages to dashboard
-	# news:
-	#     - cs:
-	#         - msg1
-	#         - msg2
-	#     - sk:
-	#         - dfads
-	#     - en:
-	#         - dfsadfsd
-    vyfuk:
-        forwardRegistration: %fykos.forwardRegistration%
     #send blank emails by spamMailer
     spamMailer:
         enabled: true

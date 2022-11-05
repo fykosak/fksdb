@@ -124,7 +124,7 @@ parameters:
                 - payment.detail
             rows:
                 - payment.payment_uid
-                - event.event
+                - event.name
                 - payment.price
                 - payment.state
         contestant:
@@ -146,17 +146,18 @@ parameters:
                 - event_participant.edit
             rows:
                 - event_participant.event_participant_id
-                - event.event
+                - event.name
                 - event_participant.status
         fyziklani_team_member:
             layout: grid
             minimalPermission: 128
             table: fyziklani_team_member
-            links: []
             rows:
-                - event.name
                 - fyziklani_team.name
                 - fyziklani_team.state
+                - event.name
+            links:
+                - fyziklani_team.detail
         event_org:
             layout: grid
             minimalPermission: 128
@@ -166,22 +167,22 @@ parameters:
                 - event_org.detail
             rows:
                 - event_org.event_org_id
-                - event.event
+                - event.name
                 - contest.contest
                 - event_org.note
-        event_teacher:
+        fyziklani_team_teacher:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: fyziklani_team_teacher
             links:
                 - fyziklani_team.detail
             rows:
                 - fyziklani_team.name
-                - event.event
                 - fyziklani_team.state
+                - event.name
         schedule_item:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: person_schedule
             links: []
             rows:
@@ -194,7 +195,7 @@ parameters:
                 - schedule_item.price_eur
         email_message:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: email_message
             rows:
                 - email_message.email_message_id

@@ -6,11 +6,10 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel};
-use FKSDB\Models\ORM\Services\TaskContributionService;
+use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -19,7 +18,6 @@ use Tracy\Debugger;
 
 class PointsPresenter extends BasePresenter
 {
-
     /**
      * Show all tasks?
      * @persistent
@@ -27,16 +25,11 @@ class PointsPresenter extends BasePresenter
     public ?bool $all = null;
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
-    private TaskContributionService $taskContributionService;
 
-    final public function injectQuarterly(
-        SQLResultsCache $resultsCache,
-        SeriesTable $seriesTable,
-        TaskContributionService $taskContributionService
-    ): void {
+    final public function injectQuarterly(SQLResultsCache $resultsCache, SeriesTable $seriesTable): void
+    {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
-        $this->taskContributionService = $taskContributionService;
     }
 
     public function titleEntry(): PageTitle
@@ -61,26 +54,16 @@ class PointsPresenter extends BasePresenter
 
     public function actionEntry(): void
     {
-        $this->seriesTable->taskFilter = $this->all ? null : $this->getGradedTasks();
-    }
-
-    private function getGradedTasks(): array
-    {
-        /**@var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $person = $login->person;
-        if (!$person) {
-            return [];
-        }
-        $gradedTasks = $this->taskContributionService->getTable()
-            ->where(
-                [
-                    'person_id' => $person->person_id,
-                    'task_id' => (clone $this->seriesTable->getTasks())->select('task_id'),
-                    'type' => TaskContributionType::GRADE,
-                ]
-            )->fetchPairs('task_id', 'task_id');
-        return array_values($gradedTasks);
+        $this->seriesTable->taskFilter = $this->all
+            ? null
+            : function (TypedGroupedSelection $selection) {
+                $selection->where(
+                    'task_id',
+                    $this->getLoggedPerson()->getTaskContributions(
+                        TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    )->fetchPairs('task_id', 'task_id')
+                );
+            };
     }
 
     final public function renderEntry(): void
@@ -112,18 +95,11 @@ class PointsPresenter extends BasePresenter
     public function handleRecalculateAll(): void
     {
         try {
-            $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
-                ->select('year')
-                ->group('year');
-            /** @var TaskModel $year */
-            foreach ($years as $year) {
-                // TODO WTF -1 year
-                $contestYear = $this->getSelectedContest()->getContestYear($year->year);
-                if ($contestYear) {
-                    $this->resultsCache->recalculate($contestYear);
-                }
+            $years = $this->getSelectedContestYear()->contest->getContestYears();
+            /** @var ContestYearModel $contestYear */
+            foreach ($years as $contestYear) {
+                $this->resultsCache->recalculate($contestYear);
             }
-
             $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);

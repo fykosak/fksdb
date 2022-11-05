@@ -9,16 +9,16 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
+use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -91,10 +91,6 @@ class DeduplicatePresenter extends BasePresenter
         return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     public function actionDontMerge(int $trunkId, int $mergedId): void
     {
         $mergedPI = $this->personInfoService->findByPrimary($mergedId);
@@ -106,7 +102,7 @@ class DeduplicatePresenter extends BasePresenter
         $this->personInfoService->storeModel($trunkData, $trunkPI);
 
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
-        $this->backLinkRedirect(true);
+        //$this->backLinkRedirect(true);
     }
 
     public function actionMerge(int $trunkId, int $mergedId): void
@@ -208,16 +204,12 @@ class DeduplicatePresenter extends BasePresenter
 
         $cancelButton = $form->addSubmit('cancel', _('Cancel'));
         $cancelButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
+        // $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
 
 
         return $control;
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
     private function handleMergeFormSuccess(Form $form): void
     {
 
@@ -231,7 +223,7 @@ class DeduplicatePresenter extends BasePresenter
         if ($merger->merge()) {
             $this->flashMessage(_('Persons successfully merged.'), Message::LVL_SUCCESS);
             FlashMessageDump::dump($logger, $this);
-            $this->backLinkRedirect(true);
+            // $this->backLinkRedirect(true);
         } else {
             $this->flashMessage(_('Manual conflict resolution is necessary.'), Message::LVL_INFO);
             $this->redirect('this'); //this is correct

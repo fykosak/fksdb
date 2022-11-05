@@ -6,14 +6,14 @@ namespace FKSDB\Models\Payment\PriceCalculator;
 
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
-class PriceCalculator implements TransitionCallback
+class PriceCalculator implements Statement
 {
 
     private PaymentService $paymentService;
@@ -42,7 +42,7 @@ class PriceCalculator implements TransitionCallback
      * @param PaymentHolder $holder
      * @throws \Exception
      */
-    final public function __invoke(ModelHolder $holder, ...$args): void
+    final public function __invoke(ModelHolder $holder): void
     {
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 
@@ -66,13 +66,5 @@ class PriceCalculator implements TransitionCallback
             $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function invoke(ModelHolder $holder, ...$args): void
-    {
-        $this->__invoke($holder, ...$args);
     }
 }

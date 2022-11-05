@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
@@ -46,7 +48,7 @@ class WithDSEFTest extends TsafTestCase
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Paní",
@@ -99,6 +101,7 @@ class WithDSEFTest extends TsafTestCase
         Assert::equal(3, $application->lunch_count);
     }
 }
-
+// phpcs:disable
 $testCase = new WithDSEFTest($container);
 $testCase->run();
+// phpcs:enable

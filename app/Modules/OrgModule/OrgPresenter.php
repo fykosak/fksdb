@@ -99,7 +99,7 @@ class OrgPresenter extends BasePresenter
 
     protected function createComponentCreateForm(): OrgFormComponent
     {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), null);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
     }
 
     /**
@@ -109,7 +109,7 @@ class OrgPresenter extends BasePresenter
      */
     protected function createComponentEditForm(): OrgFormComponent
     {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
     }
 
     protected function createComponentGrid(): OrgsGrid

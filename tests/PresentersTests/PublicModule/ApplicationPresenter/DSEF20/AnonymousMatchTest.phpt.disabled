@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
+// phpcs:disable
 $container = require '../../../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
@@ -21,7 +23,7 @@ class AnonymousMatchTest extends DsefTestCase
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
-                'person_id_1' => [
+                'person_id_container' => [
                     '_c_compact' => ' ',
                     'person' => [
                         'other_name' => 'Paní',
@@ -54,10 +56,10 @@ class AnonymousMatchTest extends DsefTestCase
         Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->event, 'bila@hrad.cz');
-        Assert::equal('applied', $application->status);
+        Assert::equal('applied', $application->status->value);
         Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->person);
+        $info = $this->person->getInfo();
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 
@@ -68,5 +70,7 @@ class AnonymousMatchTest extends DsefTestCase
     }
 }
 
+// phpcs:disable
 $testCase = new AnonymousMatchTest($container);
 $testCase->run();
+// phpcs:enable

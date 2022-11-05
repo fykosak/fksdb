@@ -6,10 +6,11 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -37,17 +38,19 @@ class InboxFormComponent extends SeriesTableFormComponent
     {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
-                if (!$this->getSeriesTable()->getContestants()->where('contestant_id', $ctId)->fetch()) {
+                /** @var ContestantModel $contestant */
+                $contestant = $this->getSeriesTable()->getContestants()->where('contestant_id', $ctId)->fetch();
+                if (!$contestant) {
                     // secure check for rewrite contestant_id.
                     throw new ForbiddenRequestException();
                 }
-                $submit = $this->submitService->findByContestantId($ctId, $taskNo);
+                $submit = $this->submitService->findByContestantId($contestant, $taskNo);
                 if ($submittedOn && $submit) {
                     //   $submitService->updateModel($submit, ['submitted_on' => $submittedOn]);
 // $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), I\Fykosak\Utils\Logging\Message::LVL_INFO);
                 } elseif (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
-                    $submit->delete();
+                    $this->submitService->disposeModel($submit);
                 } elseif ($submittedOn && !$submit) {
                     $this->submitService->storeModel([
                         'task_id' => $taskNo,

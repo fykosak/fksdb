@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use DateTime;
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -80,7 +82,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         ]);
 
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('alert-danger', $html);
         $after = $this->countEvents();
         Assert::equal($init, $after);
     }
@@ -117,6 +119,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         return $this->getContainer()->getByType(EventService::class)->getTable()->count('*');
     }
 }
-
+// phpcs:disable
 $testCase = new EventPresenterTest($container);
 $testCase->run();
+// phpcs:enable

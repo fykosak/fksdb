@@ -15,12 +15,12 @@ use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
 use Nette\Application\IPresenterFactory;
@@ -57,7 +57,7 @@ abstract class DatabaseTestCase extends TestCase
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $address = $this->getContainer()->getByType(AddressService::class)->storeModel(
-            ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
+            ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );
         $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->storeModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
@@ -66,12 +66,12 @@ abstract class DatabaseTestCase extends TestCase
         $fykosData = [
             'contest_id' => ContestModel::ID_FYKOS,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $vyfukData = [
             'contest_id' => ContestModel::ID_VYFUK,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $serviceContestYear->storeModel(
             $fykosData,
@@ -132,33 +132,34 @@ abstract class DatabaseTestCase extends TestCase
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
-        if ($info) {
+        if (!is_null($info)) {
             $info['person_id'] = $person->person_id;
             $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
-
         if (!is_null($loginData)) {
-            $data = [
-                'login_id' => $person->person_id,
-                'person_id' => $person->person_id,
-                'active' => 1,
-            ];
-            $loginData = array_merge($data, $loginData);
-
-            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel($loginData);
-
-            if (isset($pseudoLogin->hash)) {
-                $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
-                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
-            }
+            $this->createLogin($person, $loginData);
         }
 
         return $person;
     }
 
-    protected function assertPersonInfo(PersonModel $person): PersonInfoModel
+    protected function createLogin(PersonModel $person, array $loginData): LoginModel
     {
-        return $person->getInfo();
+        $data = [
+            'login_id' => $person->person_id,
+            'person_id' => $person->person_id,
+            'active' => 1,
+        ];
+
+        $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
+            array_merge($data, $loginData)
+        );
+
+        if (isset($pseudoLogin->hash)) {
+            $hash = $pseudoLogin->calculateHash($loginData['hash']);
+            $this->getContainer()->getByType(LoginService::class)->storeModel(['hash' => $hash], $pseudoLogin);
+        }
+        return $pseudoLogin;
     }
 
     protected function createPersonHistory(
@@ -186,11 +187,7 @@ abstract class DatabaseTestCase extends TestCase
         $mailFactory->injectApplication($application);
     }
 
-    /**
-     * @param $token
-     * @param null $timeout
-     */
-    protected function fakeProtection($token, $timeout = null): void
+    protected function fakeProtection(string $token, int $timeout = null): void
     {
         /** @var Session $session */
         $session = $this->getContainer()->getService('session');
@@ -207,6 +204,15 @@ abstract class DatabaseTestCase extends TestCase
 
         if ($presenter) {
             $presenter->getUser()->login($login);
+        }
+    }
+
+    protected function logOut(?Presenter $presenter = null): void
+    {
+        $storage = $this->getContainer()->getByType(UserStorage::class);
+        $storage->clearAuthentication(true);
+        if ($presenter) {
+            $presenter->getUser()->logout(true);
         }
     }
 

@@ -1,9 +1,10 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
-
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Components\Controls\Events\ApplicationComponent $control}
 {block content}
 <ul>
     <li>
-        Podrobné informace jsou k nalezení na stránce <a href="http://tsaf.cz/">Týdne s experimentální fyzikou</a>.
+        Podrobné informace jsou k nalezení na stránce <a href="https://tsaf.cz/">Týdne s experimentální fyzikou</a>.
     </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->storeRequest()}
@@ -12,7 +13,7 @@
         Ušetříš si tím práci při vyplňování formuláře.
     </li>
     <li>
-        Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+        Registrace končí <strong>{$holder->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
 

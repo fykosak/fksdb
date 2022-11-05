@@ -7,8 +7,10 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 class OrgModule extends AbstractPageDisplayTestCase
 {
 
@@ -96,6 +98,7 @@ class OrgModule extends AbstractPageDisplayTestCase
         ];
     }
 }
-
+// phpcs:disable
 $testCase = new OrgModule($container);
 $testCase->run();
+// phpcs:enable

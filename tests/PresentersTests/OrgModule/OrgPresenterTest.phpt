@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -53,14 +55,15 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => (string)$this->person->person_id,
+                'person_id_container' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
         Assert::type(RedirectResponse::class, $response);
+
         $after = $this->countOrgs();
         Assert::equal($init + 1, $after);
     }
@@ -70,7 +73,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => (string)$this->person->person_id,
                 'since' => (string)2, // out of range
                 'order' => (string)0,
@@ -88,7 +90,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => 'JS',
                 'person_id' => null, // empty personId
                 'since' => (string)1,
                 'order' => (string)0,
@@ -96,7 +97,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ],
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('alert-danger', $html);
         $after = $this->countOrgs();
         Assert::equal($init, $after);
     }
@@ -105,7 +106,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => (string)$this->orgPerson->person_id,
+                'person_id' => (string)$this->orgPerson->person_id,
+                'person_id_container' => self::personToValues($this->person),
                 'since' => (string)1,
                 'order' => (string)2,
                 'domain_alias' => 'b',
@@ -148,6 +150,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ->count('*');
     }
 }
-
+// phpcs:disable
 $testCase = new OrgPresenterTest($container);
 $testCase->run();
+// phpcs:enable

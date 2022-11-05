@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -27,7 +28,7 @@ class DispatchPresenter extends BasePresenter
     {
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $person = $login->person;
+        $person = $this->getLoggedPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
@@ -39,15 +40,19 @@ class DispatchPresenter extends BasePresenter
     private function getAllContestants(PersonModel $person): array
     {
         $result = [];
-        foreach ($person->getActiveContestants() as $contestId => $contestant) {
-            $result[$contestId] = [
+        /** @var ContestantModel $contestant */
+        foreach ($person->getContestants() as $contestant) {
+            $result[$contestant->contest_id] = $result[$contestant->contest_id] ?? [];
+            $result[$contestant->contest_id][] = [
                 'link' => $this->link(
                     ':Public:Dashboard:default',
                     [
-                        'contestId' => $contestId,
+                        'contestId' => $contestant->contest_id,
+                        'year' => $contestant->year,
                     ]
                 ),
-                'title' => sprintf(_('Contestant %s'), $contestant->contest->name),
+                'title' => sprintf(_('Contestant in %d'), $contestant->year),
+
             ];
         }
         return $result;

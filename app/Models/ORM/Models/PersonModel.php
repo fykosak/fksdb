@@ -61,9 +61,14 @@ class PersonModel extends Model implements Resource
         return $this->getHistory($contestYear->ac_year, $extrapolated);
     }
 
+    public function getHistories(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
+    }
+
     public function getHistory(int $acYear, bool $extrapolated = false): ?PersonHistoryModel
     {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY)
+        $history = $this->getHistories()
             ->where('ac_year', $acYear)
             ->fetch();
         if ($history) {
@@ -85,9 +90,17 @@ class PersonModel extends Model implements Resource
         return $related;
     }
 
+    public function getContestantByContestYear(ContestYearModel $contestYear): ?ContestantModel
+    {
+        return $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+    }
+
+    /**
+     * @deprecated
+     */
     public function getOrgs(?int $contestId = null): TypedGroupedSelection
     {
-        $related = $this->related(DbNames::TAB_ORG, 'person_id');
+        $related = $this->getOrganisers();
         if ($contestId) {
             $related->where('contest_id', $contestId);
         }
@@ -120,16 +133,10 @@ class PersonModel extends Model implements Resource
         return $this->getPostContacts()->where(['type' => $type->value])->fetch();
     }
 
-    public function getPermanentPostContact(bool $fallback = true): ?PostContactModel
+    public function getActivePostContact(): ?PostContactModel
     {
-        $postContact = $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
-        if ($postContact) {
-            return $postContact;
-        } elseif ($fallback) {
-            return $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
-        } else {
-            return null;
-        }
+        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
+            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
     }
 
     public function getEventParticipants(): TypedGroupedSelection
@@ -157,7 +164,7 @@ class PersonModel extends Model implements Resource
      */
     private function getLastHistory(): ?PersonHistoryModel
     {
-        return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
+        return $this->getHistories()->order(('ac_year DESC'))->fetch();
     }
 
     public function getFullName(): string
@@ -178,7 +185,7 @@ class PersonModel extends Model implements Resource
     {
         $result = [];
         /** @var OrgModel $org */
-        foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
+        foreach ($this->getOrganisers() as $org) {
             $year = $org->contest->getCurrentContestYear()->year;
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
@@ -187,37 +194,21 @@ class PersonModel extends Model implements Resource
         return $result;
     }
 
+    public function getOrganisers(?ContestModel $contest = null): TypedGroupedSelection
+    {
+        $related = $this->related(DbNames::TAB_ORG, 'person_id');
+        if ($contest) {
+            $related->where('contest_id', $contest->contest_id);
+        }
+        return $related;
+    }
+
     public function getActiveOrgsAsQuery(ContestModel $contest): TypedGroupedSelection
     {
         $year = $contest->getCurrentContestYear()->year;
-        return $this->related(DbNames::TAB_ORG, 'person_id')
-            ->where('contest_id', $contest->contest_id)
+        return $this->getOrganisers($contest)
             ->where('since<=?', $year)
             ->where('until IS NULL OR until >=?', $year);
-    }
-
-    /**
-     * Active contestant := contestant in the highest year but not older than the current year.
-     *
-     * @return ContestantModel[] indexed by contest_id
-     */
-    public function getActiveContestants(): array
-    {
-        $result = [];
-        /** @var ContestantModel $contestant */
-        foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
-            $currentYear = $contestant->contest->getCurrentContestYear()->year;
-            if ($contestant->year >= $currentYear) { // forward contestant
-                if (isset($result[$contestant->contest_id])) {
-                    if ($contestant->year > $result[$contestant->contest_id]->year) {
-                        $result[$contestant->contest_id] = $contestant;
-                    }
-                } else {
-                    $result[$contestant->contest_id] = $contestant;
-                }
-            }
-        }
-        return $result;
     }
 
     public static function parseFullName(string $fullName): array
@@ -275,11 +266,7 @@ class PersonModel extends Model implements Resource
      */
     public function removeScheduleForEvent(EventModel $event): void
     {
-        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
-            'schedule_item.schedule_group.event_id=?',
-            $event->event_id
-        );
-        foreach ($query as $row) {
+        foreach ($this->getScheduleForEvent($event) as $row) {
             $row->delete();
         }
     }
@@ -373,5 +360,14 @@ class PersonModel extends Model implements Resource
             $roles[] = new ContestOrgRole($event, $org);
         }
         return $roles;
+    }
+
+    public function getTaskContributions(?TaskContributionType $type = null): TypedGroupedSelection
+    {
+        $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'person_id');
+        if ($type) {
+            $contributions->where('type', $type->value);
+        }
+        return $contributions;
     }
 }

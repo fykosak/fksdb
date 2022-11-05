@@ -4,43 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\InvalidArgumentException;
 
 /**
  * First two categories have doubled points for the first two problems.
  * Introduced in FYKOS 2011 (25 th year).
  */
-class EvaluationFykos2011 implements EvaluationStrategy
+class EvaluationFykos2011 extends EvaluationStrategy
 {
-
-    public function getCategories(): array
-    {
-        return [
-            ModelCategory::tryFrom(ModelCategory::FYKOS_1),
-            ModelCategory::tryFrom(ModelCategory::FYKOS_2),
-            ModelCategory::tryFrom(ModelCategory::FYKOS_3),
-            ModelCategory::tryFrom(ModelCategory::FYKOS_4),
-        ];
-    }
-
-    public function categoryToStudyYears(ModelCategory $category): array
-    {
-        switch ($category->value) {
-            case ModelCategory::FYKOS_1:
-                return [6, 7, 8, 9, 1];
-            case ModelCategory::FYKOS_2:
-                return [2];
-            case ModelCategory::FYKOS_3:
-                return [3];
-            case ModelCategory::FYKOS_4:
-                return [null, 4];
-            default:
-                throw new InvalidArgumentException('Invalid category ' . $category->value);
-        }
-    }
-
     public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1' || $task->label == '2') {
@@ -57,22 +30,31 @@ class EvaluationFykos2011 implements EvaluationStrategy
         s.raw_points)";
     }
 
+    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    {
+        if (is_null($submit->raw_points)) {
+            return null;
+        }
+        return $this->getMultiplyCoefficient($submit->task, $category) * $submit->raw_points;
+    }
+
     /**
      * @return float|int
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): float
     {
-        switch ($category->value) {
-            case ModelCategory::FYKOS_1:
-            case ModelCategory::FYKOS_2:
-                if ($task->label == '1' || $task->label == '2') {
-                    return $task->points * 2;
-                } else {
-                    return $task->points;
-                }
-            default:
-                return $task->points;
+        return $this->getMultiplyCoefficient($task, $category) * $task->points;
+    }
+
+    private function getMultiplyCoefficient(TaskModel $task, ModelCategory $category): int
+    {
+        if (
+            in_array($task->label, ['1', '2']) &&
+            in_array($category->value, [ModelCategory::FYKOS_1, ModelCategory::FYKOS_2])
+        ) {
+            return 2;
         }
+        return 1;
     }
 
     public function getTaskPointsColumn(ModelCategory $category): string
@@ -84,5 +66,15 @@ class EvaluationFykos2011 implements EvaluationStrategy
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }
+    }
+
+    protected function getCategoryMap(): array
+    {
+        return [
+            ModelCategory::FYKOS_1 => [6, 7, 8, 9, 1],
+            ModelCategory::FYKOS_2 => [2],
+            ModelCategory::FYKOS_3 => [3],
+            ModelCategory::FYKOS_4 => [null, 4],
+        ];
     }
 }

@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -30,10 +26,10 @@ class RelatedPersonAuthorizator
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
      */
-    public function isRelatedPerson(Holder $holder): bool
+    public function isRelatedPerson(BaseHolder $holder): bool
     {
         // everyone is related
-        if ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() == Machine::STATE_INIT) {
             return true;
         }
         /** @var LoginModel|null $login */
@@ -48,30 +44,11 @@ class RelatedPersonAuthorizator
             return false;
         }
 
-        foreach ($holder->getBaseHolders() as $baseHolder) {
-            $model = $baseHolder->getModel2();
-            if ($model instanceof TeamModel) {
-                if ($model->teacher_id == $person->person_id) {
-                    return true;
-                }
-            } elseif ($model instanceof TeamModel2) {
-                /** @var TeamTeacherModel $teacher */
-                foreach ($model->getTeachers() as $teacher) {
-                    if ($teacher->person_id == $person->person_id) {
-                        return true;
-                    }
-                }
-            } elseif (
-                $model instanceof EventParticipantModel
-                || $model instanceof ModelMFyziklaniParticipant
-            ) {
-                if ($model->person_id == $person->person_id) {
-                    return true;
-                }
+        $model = $holder->getModel();
+        if ($model instanceof EventParticipantModel) {
+            if ($model->person_id == $person->person_id) {
+                return true;
             }
-            /* if ($baseHolder->getPerson()->person_id == $person->person_id) {
-                 return true;
-             }*/
         }
         return false;
     }

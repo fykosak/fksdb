@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Models\ORM\Models\TaskContributionType;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
+use FKSDB\Models\ORM\Models\TaskContributionType;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -77,9 +76,13 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => TaskContributionType::GRADE,
-            ])->delete();
+            foreach (
+                $task->getContributions(
+                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                ) as $contribution
+            ) {
+                $this->taskContributionService->disposeModel($contribution);
+            }
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
@@ -107,16 +110,16 @@ class HandoutFormComponent extends BaseComponent
      */
     public function setDefaults(): void
     {
-        $taskIds = [];
+        $contributions = [];
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $taskIds[] = $task->task_id;
+            $contributions = [
+                ...$contributions,
+                ...$task->getContributions(
+                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                )->fetchAll(),
+            ];
         }
-        $contributions = $this->taskContributionService->getTable()->where([
-            'type' => TaskContributionType::GRADE,
-            'task_id' => $taskIds,
-        ]);
-
         $values = [];
         /** @var TaskContributionModel $contribution */
         foreach ($contributions as $contribution) {

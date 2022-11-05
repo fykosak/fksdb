@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Utils\FakeStringEnum;
+use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
@@ -17,8 +18,8 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface submitted_on
  * @property-read SubmitSource source
  * @property-read string note
- * @property-read float raw_points
- * @property-read float calc_points
+ * @property-read float|null raw_points
+ * @property-read float|null calc_points
  * @property-read int corrected FUCK MARIADB
  */
 class SubmitModel extends Model implements Resource
@@ -55,13 +56,29 @@ class SubmitModel extends Model implements Resource
         return ($now <= $deadline) && ($now >= $start);
     }
 
+    public function calculateQuestionSum(): ?int
+    {
+        $query = $this->getQuestionAnswers();
+        if ($query->count('*')) {
+            $sum = 0;
+            /** @var SubmitQuestionAnswerModel $answer */
+            foreach ($query as $answer) {
+                if ($answer->answer === $answer->submit_question->answer) {
+                    $sum += $answer->submit_question->points;
+                }
+            }
+            return $sum;
+        }
+        return null;
+    }
+
     public function isQuiz(): bool
     {
         return $this->source->value === SubmitSource::QUIZ;
     }
 
     /**
-     * @return SubmitSource|FakeStringEnum|mixed|null
+     * @return SubmitSource|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)
@@ -73,5 +90,21 @@ class SubmitModel extends Model implements Resource
                 break;
         }
         return $value;
+    }
+
+    public function __toArray(): array
+    {
+        return [
+            'submitId' => $this->submit_id,
+            'taskId' => $this->task_id,
+            'source' => $this->source->value,
+            'rawPoints' => $this->raw_points,
+            'calcPoints' => $this->calc_points,
+        ];
+    }
+
+    public function getQuestionAnswers(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'submit_id');
     }
 }

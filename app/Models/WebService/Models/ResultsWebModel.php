@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -16,15 +16,15 @@ use Nette\DI\Container;
 class ResultsWebModel extends WebModel
 {
 
-    private ContestService $contestService;
     private ResultsModelFactory $resultsModelFactory;
+    private ContestYearService $contestYearService;
 
     public function inject(
         Container $container,
-        ContestService $contestService,
+        ContestYearService $contestYearService,
         ResultsModelFactory $resultsModelFactory
     ): void {
-        $this->contestService = $contestService;
+        $this->contestYearService = $contestYearService;
         $this->resultsModelFactory = $resultsModelFactory;
         $this->container = $container;
     }
@@ -33,6 +33,7 @@ class ResultsWebModel extends WebModel
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -45,9 +46,10 @@ class ResultsWebModel extends WebModel
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
-        $contestYear = $this->contestService->findByPrimary(
-            $this->container->getParameters()['inverseContestMapping'][$args->contest]
-        )->getContestYear($args->year);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest],
+            (int)$args->year
+        );
         $doc = new \DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -126,6 +128,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -139,6 +142,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -152,6 +156,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -166,6 +171,7 @@ class ResultsWebModel extends WebModel
      * @param BrojureResultsModel $resultsModel
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {

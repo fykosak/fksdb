@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
+use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 class Transition
@@ -16,73 +18,40 @@ class Transition
 
     /** @var callable|bool */
     protected $condition;
-    private ?BehaviorType $behaviorType = null;
+    public BehaviorType $behaviorType;
     private string $label;
-    /** @var TransitionCallback[] */
+    /** @var Statement[] */
     public array $beforeExecute = [];
-    /** @var TransitionCallback[] */
+    /** @var Statement[] */
     public array $afterExecute = [];
 
-    public ?EnumColumn $sourceStateEnum; // null for INIT
-    public ?EnumColumn $targetStateEnum; // null for TERMINATED
+    public EnumColumn $source;
+    public EnumColumn $target;
     protected ExpressionEvaluator $evaluator;
 
-    public function setSourceStateEnum(?EnumColumn $sourceState): void
+    public function setSourceStateEnum(EnumColumn $sourceState): void
     {
-        $this->sourceStateEnum = $sourceState;
+        $this->source = $sourceState;
     }
 
-    public function setTargetStateEnum(?EnumColumn $targetState): void
+    public function setTargetStateEnum(EnumColumn $targetState): void
     {
-        $this->targetStateEnum = $targetState;
-    }
-
-    final public function matchSource(?EnumColumn $source): bool
-    {
-        if (is_null($source) && is_null($this->sourceStateEnum)) {
-            return true;
-        }
-        if ($source->value === $this->sourceStateEnum->value) {
-            return true;
-        }
-        return false;
+        $this->target = $targetState;
     }
 
     public function isCreating(): bool
     {
-        return is_null($this->sourceStateEnum);
-    }
-
-    public function isTerminating(): bool
-    {
-        return is_null($this->sourceStateEnum);
+        return $this->source->value === 'init' || $this->source->value === Machine::STATE_INIT;
     }
 
     public function getId(): string
     {
-        return static::createId($this->sourceStateEnum, $this->targetStateEnum);
+        return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
     }
 
-    public static function createId(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    public function setBehaviorType(BehaviorType $behaviorType): void
     {
-        return ($sourceState ? $sourceState->value : 'init') . '__' .
-            ($targetState ? $targetState->value : 'terminated');
-    }
-
-    public function getBehaviorType(): BehaviorType
-    {
-        if ($this->isTerminating()) {
-            return new BehaviorType(BehaviorType::DANGEROUS);
-        }
-        if ($this->isCreating()) {
-            return new BehaviorType(BehaviorType::SUCCESS);
-        }
-        return $this->behaviorType;
-    }
-
-    public function setBehaviorType(string $behaviorType): void
-    {
-        $this->behaviorType = new BehaviorType($behaviorType);
+        $this->behaviorType = $behaviorType;
     }
 
     public function setEvaluator(ExpressionEvaluator $evaluator): void
@@ -95,9 +64,9 @@ class Transition
         return _($this->label);
     }
 
-    public function setLabel(string $label): void
+    public function setLabel(?string $label): void
     {
-        $this->label = $label;
+        $this->label = $label ?? '';
     }
 
     public function setCondition(?callable $callback): void
@@ -105,14 +74,9 @@ class Transition
         $this->condition = $callback;
     }
 
-    protected function isConditionFulfilled(...$args): bool
+    public function canExecute(ModelHolder $holder): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, ...$args);
-    }
-
-    public function canExecute2(ModelHolder $holder): bool
-    {
-        return $this->isConditionFulfilled($holder);
+        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
     }
 
     public function addBeforeExecute(callable $callBack): void
@@ -125,17 +89,21 @@ class Transition
         $this->afterExecute[] = $callBack;
     }
 
-    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
+    final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder, ...$args);
+            $callback($holder);
         }
     }
 
-    final public function callAfterExecute(...$args): void
+    final public function callAfterExecute(ModelHolder $holder): void
     {
-        foreach ($this->afterExecute as $callback) {
-            $callback(...$args);
+        try {
+            foreach ($this->afterExecute as $callback) {
+                $callback($holder);
+            }
+        } catch (\Throwable $exception) {
+            throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);
         }
     }
 }

@@ -60,6 +60,9 @@ class EventOrgPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function actionDelete(): void
     {
         try {

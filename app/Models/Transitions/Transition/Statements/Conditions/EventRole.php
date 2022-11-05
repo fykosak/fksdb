@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Transitions\Statement;
 
-abstract class EventRole extends Statement
+abstract class EventRole implements Statement
 {
-
     protected EventAuthorizator $eventAuthorizator;
     protected ?string $privilege;
 
-    public function __construct(EventAuthorizator $eventAuthorizator, ?string $privilege)
+    public function __construct(string $privilege, EventAuthorizator $eventAuthorizator)
     {
         $this->eventAuthorizator = $eventAuthorizator;
         $this->privilege = $privilege;

@@ -75,7 +75,7 @@ class EventRolePrinter
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-10'])
                         ->addText(
-                            _('Participant') . ' - ' . _($role->eventParticipant->status)
+                            _('Participant') . ' - ' . _($role->eventParticipant->status->value)
                         )
                 );
             } elseif ($role instanceof ContestOrgRole) {

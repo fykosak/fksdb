@@ -5,24 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\EventTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 class EventTypeColumnFactory extends ColumnFactory
 {
-    private EventTypeService $eventTypeService;
-
-    public function __construct(EventTypeService $eventTypeService, MetaDataFactory $metaDataFactory)
-    {
-        parent::__construct($metaDataFactory);
-        $this->eventTypeService = $eventTypeService;
-    }
 
     /**
      * @throws \InvalidArgumentException
@@ -36,7 +27,7 @@ class EventTypeColumnFactory extends ColumnFactory
 
         $element = new SelectBox($this->getTitle());
 
-        $types = $this->eventTypeService->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
+        $types = $contest->getEventTypes()->fetchPairs(
             'event_type_id',
             'name'
         );

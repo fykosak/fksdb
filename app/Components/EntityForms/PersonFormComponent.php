@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\PostContactType;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\AddressService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
-use FKSDB\Models\ORM\Services\PostContactService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -28,19 +24,12 @@ use Nette\InvalidArgumentException;
  */
 class PersonFormComponent extends EntityFormComponent
 {
-
-    public const POST_CONTACT_DELIVERY = 'post_contact_d';
-    public const POST_CONTACT_PERMANENT = 'post_contact_p';
-
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private AddressFactory $addressFactory;
     private PersonService $personService;
     private PersonInfoService $personInfoService;
-    private PostContactService $postContactService;
-    private AddressService $addressService;
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
@@ -54,29 +43,11 @@ class PersonFormComponent extends EntityFormComponent
     final public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonService $personService,
-        PersonInfoService $personInfoService,
-        AddressFactory $addressFactory,
-        PostContactService $postContactService,
-        AddressService $addressService
+        PersonInfoService $personInfoService
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
-        $this->addressFactory = $addressFactory;
-        $this->postContactService = $postContactService;
-        $this->addressService = $addressService;
-    }
-
-    public static function mapAddressContainerNameToType(string $containerName): PostContactType
-    {
-        switch ($containerName) {
-            case self::POST_CONTACT_PERMANENT:
-                return PostContactType::tryFrom(PostContactType::PERMANENT);
-            case self::POST_CONTACT_DELIVERY:
-                return PostContactType::tryFrom(PostContactType::DELIVERY);
-            default:
-                throw new InvalidArgumentException();
-        }
     }
 
     /**
@@ -85,7 +56,7 @@ class PersonFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $fields = $this->getContext()->getParameters()['common']['editPerson'];
+        $fields = $this->getContext()->getParameters()['forms']['adminPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
@@ -95,10 +66,6 @@ class PersonFormComponent extends EntityFormComponent
                         $rows,
                         $this->userPermission
                     );
-                    break;
-                case self::POST_CONTACT_DELIVERY:
-                case self::POST_CONTACT_PERMANENT:
-                    $control = $this->addressFactory->createAddressContainer($table);
                     break;
                 default:
                     throw new InvalidArgumentException();
@@ -116,10 +83,9 @@ class PersonFormComponent extends EntityFormComponent
         $this->logger->clear();
         $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->personInfoService->storeModel(
-            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),
+            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
             $person->getInfo()
         );
-        $this->storeAddresses($person, $data);
 
         $connection->commit();
         $this->logger->log(
@@ -141,42 +107,7 @@ class PersonFormComponent extends EntityFormComponent
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY =>
-                    $this->model->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY)) ?? [],
-                self::POST_CONTACT_PERMANENT =>
-                    $this->model->getAddress(PostContactType::tryFrom(PostContactType::PERMANENT)) ?? [],
             ]);
-        }
-    }
-
-    private function storeAddresses(PersonModel $person, array $data): void
-    {
-        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
-            $datum = FormUtils::removeEmptyValues($data[$type]);
-            $shortType = self::mapAddressContainerNameToType($type);
-            $oldAddress = $person->getAddress($shortType);
-            if (count($datum)) {
-                if ($oldAddress) {
-                    $this->addressService->storeModel($datum, $oldAddress);
-                    $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
-                } else {
-                    $address = $this->addressService->storeModel($datum);
-                    $postContactData = [
-                        'type' => $shortType->value,
-                        'person_id' => $person->person_id,
-                        'address_id' => $address->address_id,
-                    ];
-                    $this->postContactService->storeModel($postContactData);
-                    $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
-                }
-            } elseif ($oldAddress) {
-                $this->postContactService->getTable()->where([
-                    'type' => $shortType->value,
-                    'person_id' => $person->person_id,
-                ])->delete();
-                $oldAddress->delete();
-                $this->logger->log(new Message(_('Address has been deleted'), Message::LVL_INFO));
-            }
         }
     }
 }

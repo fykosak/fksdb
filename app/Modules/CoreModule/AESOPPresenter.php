@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
 
@@ -55,7 +55,6 @@ class AESOPPresenter extends AuthenticatedPresenter
     public function getAllowedAuthMethods(): array
     {
         return [
-            self::AUTH_GITHUB => false,
             self::AUTH_HTTP => true,
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,
@@ -73,8 +72,8 @@ class AESOPPresenter extends AuthenticatedPresenter
         $this->yearTraitStartup();
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
-        return YearChooserComponent::ROLE_SELECTED;
+        return PresenterRole::tryFrom(PresenterRole::SELECTED);
     }
 }

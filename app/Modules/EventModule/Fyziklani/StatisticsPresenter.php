@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistic
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 
 class StatisticsPresenter extends BasePresenter
 {
@@ -19,18 +18,6 @@ class StatisticsPresenter extends BasePresenter
     public function requiresLogin(): bool
     {
         return !$this->getEvent()->getFyziklaniGameSetup()->result_hard_display;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws NotSetGameParametersException
-     * @throws ForbiddenRequestException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        if (!$this->getEvent()->getFyziklaniGameSetup()->result_hard_display) {
-            parent::unauthorizedAccess();
-        }
     }
 
     protected function beforeRender(): void

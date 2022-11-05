@@ -31,17 +31,17 @@ abstract class ApplicationsPerCountryChart extends GeoChart
     {
         return $this->teamMemberService->explorer->query(
             'SELECT 
-region.country_iso3 as `country` ,
+country.alpha_3 as `country` ,
 COUNT(distinct fyziklani_team_id) as `t`, 
 COUNT(*) as `p`
 FROM fyziklani_team_member ep
 LEFT JOIN person_history ph ON ph.person_id=ep.person_id AND ac_year = ?
 LEFT JOIN school USING (school_id)
 LEFT JOIN address USING (address_id)
-LEFT JOIN region USING (region_id)
+LEFT JOIN country USING (country_id)
 LEFT JOIN fyziklani_team ft USING (fyziklani_team_id)
 WHERE ft.event_id = ?
-GROUP BY  region.country_iso3',
+GROUP BY  country.alpha_3',
             $this->event->getContestYear()->ac_year,
             $this->event->event_id
         );

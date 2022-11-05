@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
@@ -28,7 +27,7 @@ class OrgsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $orgs = $this->contest->related(DbNames::TAB_ORG);
+        $orgs = $this->contest->getOrganisers();
 
         $dataSource = new SearchableDataSource($orgs);
         $dataSource->setFilterCallback(function (Selection $table, array $value) {

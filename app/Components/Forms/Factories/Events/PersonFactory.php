@@ -8,19 +8,16 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\EventsExtension;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
 class PersonFactory extends AbstractFactory
 {
-
     private const VALUE_LOGIN = 'fromLogin';
     /** @var callable */
     private $fieldsDefinition;
@@ -33,10 +30,8 @@ class PersonFactory extends AbstractFactory
     /** @var callable */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private SelfResolver $selfResolver;
     private ExpressionEvaluator $evaluator;
     private User $user;
-    private PersonService $personService;
     private DIContainer $container;
 
     /**
@@ -54,10 +49,8 @@ class PersonFactory extends AbstractFactory
         $modifiable,
         $visible,
         ReferencedPersonFactory $referencedPersonFactory,
-        SelfResolver $selfResolver,
         ExpressionEvaluator $evaluator,
         User $user,
-        PersonService $personService,
         DIContainer $container
     ) {
         $this->fieldsDefinition = $fieldsDefinition;
@@ -66,10 +59,8 @@ class PersonFactory extends AbstractFactory
         $this->modifiable = $modifiable;
         $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
-        $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
-        $this->personService = $personService;
         $this->container = $container;
     }
 
@@ -78,32 +69,26 @@ class PersonFactory extends AbstractFactory
      */
     public function createComponent(Field $field): ReferencedId
     {
-        $searchType = $this->evaluator->evaluate($this->searchType, $field);
-        $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
-
-        $event = $field->getBaseHolder()->event;
-
-        $modifiableResolver = new PersonContainerResolver(
+        $resolver = new PersonContainerResolver(
             $field,
             $this->modifiable,
-            $this->selfResolver,
+            $this->visible,
+            new SelfResolver($this->user),
             $this->evaluator
         );
-        $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
-            $event->getContestYear(),
-            $searchType,
-            $allowClear,
-            $modifiableResolver,
-            $visibleResolver,
-            $event
+            $field->holder->event->getContestYear(),
+            $this->evaluator->evaluate($this->searchType, $field->holder),
+            $this->evaluator->evaluate($this->allowClear, $field->holder),
+            $resolver,
+            $field->holder->event
         );
-        $referencedId->getSearchContainer()->setOption('label', $field->getLabel());
-        $referencedId->getSearchContainer()->setOption('description', $field->getDescription());
-        $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
-        $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
+        $referencedId->searchContainer->setOption('label', $field->label);
+        $referencedId->searchContainer->setOption('description', $field->description);
+        $referencedId->referencedContainer->setOption('label', $field->label);
+        $referencedId->referencedContainer->setOption('description', $field->description);
         return $referencedId;
     }
 
@@ -123,51 +108,6 @@ class PersonFactory extends AbstractFactory
     /**
      * @throws \ReflectionException
      */
-    public function validate(Field $field, DataValidator $validator): void
-    {
-        // check person ID itself
-        parent::validate($field, $validator);
-
-        $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->getBaseHolder()->event;
-        $contestYear = $event->getContestYear();
-        $personId = $field->getValue();
-        $person = $personId ? $this->personService->findByPrimary($personId) : null;
-
-        if (!$person) {
-            return;
-        }
-
-        foreach ($fieldsDefinition as $subName => $sub) {
-            foreach ($sub as $fieldName => $metadata) {
-                if (!is_array($metadata)) {
-                    $metadata = ['required' => $metadata];
-                }
-                if (
-                    $metadata['required']
-                    && !ReferencedPersonFactory::isFilled(
-                        $person,
-                        $subName,
-                        $fieldName,
-                        $contestYear,
-                        $event
-                    )
-                ) {
-                    $validator->addError(
-                        sprintf(
-                            _('%s: %s is a required field.'),
-                            $field->getBaseHolder()->label,
-                            $field->getLabel() . '.' . $subName . '.' . $fieldName
-                        )
-                    ); //TODO better GUI name than DB identifier
-                }
-            }
-        }
-    }
-
-    /**
-     * @throws \ReflectionException
-     */
     private function evaluateFieldsDefinition(Field $field): array
     {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
@@ -179,7 +119,7 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = $this->evaluator->evaluate($value, $field);
+                    $value = $this->evaluator->evaluate($value, $field->holder);
                 }
             }
         }

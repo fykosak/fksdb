@@ -12,7 +12,7 @@ class ApplicationEditLink extends LinkFactory
 
     public function getText(): string
     {
-        return _('Edit');
+        return _('Edit application');
     }
 
     /**
@@ -20,7 +20,11 @@ class ApplicationEditLink extends LinkFactory
      */
     protected function getDestination(Model $model): string
     {
-        return ':Public:Application:default';
+        if ($model->event->isTeamEvent()) {
+            return ':Event:TeamApplication:edit';
+        } else {
+            return ':Public:Application:default';
+        }
     }
 
     /**
@@ -28,16 +32,9 @@ class ApplicationEditLink extends LinkFactory
      */
     protected function prepareParams(Model $model): array
     {
-        if ($model->event->isTeamEvent()) {
-            return [
-                'eventId' => $model->event_id,
-                'id' => $model->getFyziklaniTeam()->e_fyziklani_team_id,
-            ];
-        } else {
-            return [
-                'eventId' => $model->event_id,
-                'id' => $model->event_participant_id,
-            ];
-        }
+        return [
+            'eventId' => $model->event_id,
+            'id' => $model->event_participant_id,
+        ];
     }
 }

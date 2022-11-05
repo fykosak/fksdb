@@ -4,10 +4,7 @@
 
 services:
     ## extends nette
-    nette.mailer:
-        factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
-        setup:
-            - setLogPath(%logDir%/mail)
+    nette.mailer: Nette\Mail\SendmailMailer()
     ## need setUp
     submitUploatedStorage:
         factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
@@ -37,7 +34,6 @@ services:
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ORMFactory
     # Events
-    events.dataValidator: FKSDB\Models\Events\Model\Holder\DataValidator
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
@@ -45,14 +41,10 @@ services:
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #maitenance
-    - FKSDB\Models\Maintenance\Updater
     #main
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Models\Persons\ReferencedPersonHandlerFactory
-    - FKSDB\Models\Persons\ExtendedPersonHandlerFactory
-    - FKSDB\Models\Persons\SelfResolver
+    - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
@@ -72,8 +64,6 @@ services:
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
-    - FKSDB\Models\YearCalculator
-    - FKSDB\Models\SeriesCalculator
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
@@ -87,7 +77,6 @@ services:
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
-    - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory

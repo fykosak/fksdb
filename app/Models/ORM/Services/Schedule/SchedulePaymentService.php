@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\PaymentState;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use Fykosak\NetteORM\Service;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Service;
 
 class SchedulePaymentService extends Service
 {
@@ -35,17 +34,19 @@ class SchedulePaymentService extends Service
         if (count($newScheduleIds) == 0) {
             throw new EmptyDataException(_('No item selected.'));
         }
-        $payment->related(DbNames::TAB_SCHEDULE_PAYMENT)->delete();
+        $payment->getSchedulePayment()->delete();
         foreach ($newScheduleIds as $id) {
             /** @var SchedulePaymentModel $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
                 ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
                 ->fetch();
             if ($model) {
-                throw new DuplicatePaymentException(sprintf(
-                    _('Item "%s" has already another payment.'),
-                    $model->person_schedule->getLabel()
-                ));
+                throw new DuplicatePaymentException(
+                    sprintf(
+                        _('Item "%s" has already another payment.'),
+                        $model->person_schedule->getLabel()
+                    )
+                );
             }
             $this->storeModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
         }

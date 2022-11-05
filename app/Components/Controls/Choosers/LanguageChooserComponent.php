@@ -18,7 +18,7 @@ final class LanguageChooserComponent extends ChooserComponent
     private bool $modifiable;
 
 
-    public function __construct(Container $container, ?string $lang, bool $modifiable)
+    public function __construct(Container $container, string $lang, bool $modifiable)
     {
         parent::__construct($container);
         $this->lang = $lang;

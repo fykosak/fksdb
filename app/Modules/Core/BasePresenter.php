@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
@@ -14,15 +13,14 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\UI\PageStyleContainer;
+use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Models\Utils\Utils;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -48,7 +46,6 @@ abstract class BasePresenter extends Presenter implements
      */
     public ?string $lang = null;
     private string $language;
-    protected YearCalculator $yearCalculator;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
@@ -69,12 +66,10 @@ abstract class BasePresenter extends Presenter implements
 
     final public function injectBase(
         Container $diContainer,
-        YearCalculator $yearCalculator,
         ContestService $contestService,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator
     ): void {
-        $this->yearCalculator = $yearCalculator;
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
@@ -118,23 +113,6 @@ abstract class BasePresenter extends Presenter implements
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
-    final public function backLinkRedirect(bool $need = false): void
-    {
-        $this->putIntoBreadcrumbs();
-        /** @var BreadcrumbsComponent $component */
-        $component = $this->getComponent('breadcrumbs');
-        $backLink = $component->getBackLinkUrl();
-        if ($backLink) {
-            $this->redirectUrl($backLink);
-        } elseif ($need) {
-            $this->redirect(':Core:Authentication:login');
-        }
     }
 
     /**
@@ -243,12 +221,19 @@ abstract class BasePresenter extends Presenter implements
 
     private function getUserPreferredLang(): ?string
     {
-        /**@var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        if ($login && $login->person) {
-            return $login->person->getPreferredLang();
+        $person = $this->getLoggedPerson();
+        if ($person) {
+            return $person->getPreferredLang();
         }
         return null;
+    }
+
+
+    protected function getLoggedPerson(): ?PersonModel
+    {
+        /**@var LoginModel $login */
+        $login = $this->getUser()->getIdentity();
+        return $login ? $login->person : null;
     }
 
     protected function createTemplate(): Template
@@ -258,11 +243,6 @@ abstract class BasePresenter extends Presenter implements
         return $template;
     }
 
-    /**
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function beforeRender(): void
     {
         parent::beforeRender();
@@ -271,31 +251,21 @@ abstract class BasePresenter extends Presenter implements
         $this->template->pageStyleContainer = $this->getPageStyleContainer();
         $this->template->lang = $this->getLang();
         $this->template->navRoots = $this->getNavRoots();
-
-        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
-        $this->putIntoBreadcrumbs();
     }
 
     public function getTitle(): PageTitle
     {
         if (!isset($this->pageTitle)) {
-            $method = $this->formatTitleMethod($this->getView());
-            if (method_exists($this, $method)) {
-                $this->pageTitle = $this->{$method}();
+            try {
+                $reflection = new \ReflectionClass($this);
+                $method = $reflection->getMethod('title' . $this->getView());
+                $this->pageTitle = $method->invoke($this);
+            } catch (\ReflectionException$exception) {
             }
         }
         $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
-    }
-
-    /**
-     * Formats title method name.
-     * Method should set the title of the page using setTitle method.
-     */
-    protected static function formatTitleMethod(string $view): string
-    {
-        return 'title' . $view;
     }
 
     protected function getDefaultSubTitle(): ?string
@@ -320,22 +290,6 @@ abstract class BasePresenter extends Presenter implements
     protected function getNavRoots(): array
     {
         return [];
-    }
-
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
-    protected function putIntoBreadcrumbs(): void
-    {
-        /** @var BreadcrumbsComponent $component */
-        $component = $this->getComponent('breadcrumbs');
-        $component->setBackLink($this->getRequest());
-    }
-
-    protected function createComponentBreadcrumbs(): BreadcrumbsComponent
-    {
-        return new BreadcrumbsComponent($this->getContext());
     }
 
     public function getContext(): Container

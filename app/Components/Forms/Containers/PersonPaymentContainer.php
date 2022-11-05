@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -16,15 +17,17 @@ class PersonPaymentContainer extends ContainerWithOptions
     private PersonScheduleService $personScheduleService;
     private PaymentMachine $machine;
     private bool $showAll;
+    private EventModel $event;
 
     /**
      * @throws NotImplementedException
      */
-    public function __construct(Container $container, PaymentMachine $machine, bool $showAll = true)
+    public function __construct(Container $container, PaymentMachine $machine, EventModel $event, bool $showAll = true)
     {
         parent::__construct($container);
         $this->machine = $machine;
         $this->showAll = $showAll;
+        $this->event = $event;
         $this->configure();
     }
 
@@ -40,7 +43,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     protected function configure(): void
     {
         $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->machine->event->event_id);
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->machine->scheduleGroupTypes)) {
             $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->machine->scheduleGroupTypes);
         }

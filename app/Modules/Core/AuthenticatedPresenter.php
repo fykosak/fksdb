@@ -30,7 +30,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     public const AUTH_LOGIN = 'login';
     public const AUTH_HTTP = 'http';
     public const AUTH_TOKEN = 'token';
-    public const AUTH_GITHUB = 'github';
 
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
@@ -60,10 +59,10 @@ abstract class AuthenticatedPresenter extends BasePresenter
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
-            if ($this->isAuthorized()) { // check authorization
-                $method = $this->formatAuthorizedMethod($this->getAction());
-                $this->tryCall($method, $this->getParameters());
-            }
+            //if ($this->isAuthorized()) { // check authorization
+            $method = $this->formatAuthorizedMethod($this->getAction());
+            $this->tryCall($method, $this->getParameters());
+            //}
         }
     }
 
@@ -79,9 +78,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
     protected function startup(): void
     {
         parent::startup();
-
         $methods = $this->getAllowedAuthMethods();
-
         if ($methods[self::AUTH_TOKEN]) {
             // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
@@ -93,7 +90,8 @@ abstract class AuthenticatedPresenter extends BasePresenter
         // if token did not succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
-        } elseif (!$this->isAuthorized()) {
+        }
+        if (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }
@@ -101,7 +99,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     public function getAllowedAuthMethods(): array
     {
         return [
-            self::AUTH_GITHUB => false,
             self::AUTH_HTTP => false,
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,

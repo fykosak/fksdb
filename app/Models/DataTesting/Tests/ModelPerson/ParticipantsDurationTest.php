@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use Fykosak\Utils\Logging\Logger;
+use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\DataTesting\TestLog;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
 class ParticipantsDurationTest extends PersonTest
@@ -52,7 +52,7 @@ class ParticipantsDurationTest extends PersonTest
         }
     }
 
-    final private function evaluateThresholds(int $delta, array $thresholds): string
+    private function evaluateThresholds(int $delta, array $thresholds): string
     {
         if ($delta < $thresholds[0]) {
             return Message::LVL_SUCCESS;

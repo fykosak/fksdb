@@ -27,9 +27,9 @@ transitions:
     fyziklani13payment:
         machine: fyziklani13payment.machine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
+        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
         transitions:
-            __init->new:
+            init->new:
                 label: _('Create')
                 #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
             new->waiting:
@@ -40,7 +40,7 @@ transitions:
                     - @fyziklani13payment.symbolGenerator
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',])
+                    - FKSDB\Models\Transitions\Callbacks\Payment\NewPaymentCallback()
             new|waiting->canceled:
                 #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
                 label: _('Cancel payment')
@@ -49,4 +49,4 @@ transitions:
                 behaviorType: success
                 label: _('Paid')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/receive',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
+                    - FKSDB\Models\Transitions\Callbacks\Payment\ReceivedPaymentCallback()

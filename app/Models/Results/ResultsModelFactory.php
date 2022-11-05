@@ -22,7 +22,6 @@ use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
-use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Tracy\Debugger;
@@ -31,12 +30,10 @@ class ResultsModelFactory implements XMLNodeSerializer
 {
     use SmartObject;
 
-    private Connection $connection;
     private TaskService $taskService;
 
-    public function __construct(Connection $connection, TaskService $taskService)
+    public function __construct(TaskService $taskService)
     {
-        $this->connection = $connection;
         $this->taskService = $taskService;
     }
 
@@ -45,13 +42,11 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createCumulativeResultsModel(ContestYearModel $contestYear): CumulativeResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new CumulativeResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new CumulativeResultsModel(
+            $contestYear,
+            $this->taskService,
+            self::findEvaluationStrategy($contestYear)
+        );
     }
 
     /**
@@ -59,13 +54,11 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createDetailResultsModel(ContestYearModel $contestYear): DetailResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new DetailResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new DetailResultsModel(
+            $contestYear,
+            $this->taskService,
+            self::findEvaluationStrategy($contestYear)
+        );
     }
 
     /**
@@ -73,26 +66,23 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createBrojureResultsModel(ContestYearModel $contestYear): BrojureResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new BrojureResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new BrojureResultsModel(
+            $contestYear,
+            $this->taskService,
+            self::findEvaluationStrategy($contestYear)
+        );
     }
 
     /**
      * @throws BadRequestException
+     * @deprecated
      */
     public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
     {
-        $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
         return new SchoolCumulativeResultsModel(
-            $cumulativeResultsModel,
+            $this->createCumulativeResultsModel($contestYear),
             $contestYear,
-            $this->taskService,
-            $this->connection
+            $this->taskService
         );
     }
 
@@ -142,7 +132,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->value);
+                $categoryNode->setAttribute('id', (string)$category);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);

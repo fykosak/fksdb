@@ -29,4 +29,9 @@ class SchoolModel extends Model implements Resource
     {
         return self::RESOURCE_ID;
     }
+
+    public function isCzSk(): bool
+    {
+        return in_array($this->address->country->alpha_2, ['CZ', 'SK']);
+    }
 }

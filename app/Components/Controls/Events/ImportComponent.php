@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -26,12 +27,18 @@ class ImportComponent extends BaseComponent
 {
     private SingleEventSource $source;
     private ApplicationHandler $handler;
+    private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(SingleEventSource $source, ApplicationHandler $handler, Container $container)
-    {
+    public function __construct(
+        SingleEventSource $source,
+        ApplicationHandler $handler,
+        Container $container,
+        EventDispatchFactory $eventDispatchFactory
+    ) {
         parent::__construct($container);
         $this->source = $source;
         $this->handler = $handler;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -48,7 +55,7 @@ class ImportComponent extends BaseComponent
                 Form::MIME_TYPE,
                 _('Only CSV files are accepted.'),
                 'text/plain'
-            ); //TODO verify this check at production server
+            );
 
         $form->addRadioList('errorMode', _('Error mode'))
             ->setItems([
@@ -93,7 +100,7 @@ class ImportComponent extends BaseComponent
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->getContext(), $parser, $this->source);
+            $importHandler = new ImportHandler($parser, $this->source, $this->eventDispatchFactory);
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);
@@ -102,7 +109,7 @@ class ImportComponent extends BaseComponent
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
                 $this->getPresenter()->flashMessage(
-                    sprintf(_('Import succesfull (%.2f s).'), $elapsedTime),
+                    sprintf(_('Import successful (%.2f s).'), $elapsedTime),
                     Message::LVL_SUCCESS
                 );
             } else {

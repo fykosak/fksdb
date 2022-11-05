@@ -10,7 +10,7 @@ parameters:
         org: fykos.org
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payments|my-applications
+    rootPresenters: settings|my-payments|my-applications|my-profile|my-account
 
     # Pipe-separated list of modules
     constestModules: org|public|warehouse

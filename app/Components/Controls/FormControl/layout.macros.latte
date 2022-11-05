@@ -38,15 +38,13 @@
             {include metadata field => $field}
         </div>
     {/switch}
-
 {/define}
 
 {define checkbox}
-    {varType Nette\Forms\Controls\Checkbox $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        <div class="form-check mb-3">
-            {input $field class: 'form-check-input ' . $field->getControlPrototype()->class}
-            {label $field class: 'form-check-label ' . $field->getLabelPrototype()->class /}
+        <div class="form-check">
+            {$field->getControlPart()->setAttribute('class','form-check-input ' . $field->getControlPrototype()->class)}
+            {$field->getLabelPart()->setAttribute('class','form-check-label ' . $field->getLabelPrototype()->class)}
         </div>
         {include metadata field => $field}
     </div>
@@ -67,8 +65,9 @@
 {/define}
 
 {define button}
+    {dump (string)$field->getControlPrototype()->getAttribute('class')}
     {varType Nette\Forms\Controls\Button $field}
-    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-outline-primary':''))}
+    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains((string)$field->getControlPrototype()->getAttribute('class'),'btn-')?' btn-outline-primary':''))}
 {/define}
 
 {define buttonArray}

@@ -1,0 +1,44 @@
+{layout '../../Controls/FormComponent/layout.latte'}
+{varType FKSDB\Modules\EventModule\TeamApplicationPresenter $presenter}
+{block content}
+    <ul>
+        {if $presenter->getLang() == 'cs'}
+            <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání Online.
+                Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.
+            </li>
+            <li>
+                Informace, jak se přihlásit do hry, vám budou zaslány později.
+            </li>
+            <li>
+                Není-li vaše <strong>škola</strong>, v nabídce napište na <a
+                        href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>.
+            </li>
+            <li>
+                Další informace a pravidla naleznente na stránce <a href="http://online.fyziklani.cz/">Fyziklání
+                    Online</a>.
+            </li>
+            <li>
+                Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+            </li>
+        {else}
+            <li>You can apply a team for <strong>Online Physics Brawl</strong> using this form.
+                Each member of the team will receive an e-mail with link to edit the application.
+            </li>
+            <li>
+                Information on how to log into the game will be sent to you later.
+            </li>
+            <li>
+                If you cannot find your <strong>school</strong> in the list, let us know to <a
+                        href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>, we will add it.
+            </li>
+            <li>
+                Further information and rules are on the web <a href="http://physicsbrawl.org/">Online Physics
+                    Brawl</a>.
+            </li>
+            <li>
+                Registration is open until <strong>{$event->registration_end|date:'r'}</strong>.
+            </li>
+        {/if}
+    </ul>
+    {include parent}
+{/block}

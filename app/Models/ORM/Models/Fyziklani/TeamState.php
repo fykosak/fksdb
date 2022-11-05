@@ -20,6 +20,7 @@ class TeamState extends FakeStringEnum implements EnumColumn
     public const MISSED = 'missed';
     public const DISQUALIFIED = 'disqualified';
     public const CANCELLED = 'cancelled';
+    public const INIT = 'init'; // virtual state for correct ORM
 
     /**
      * @throws NotImplementedException

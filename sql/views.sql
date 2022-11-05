@@ -13,16 +13,16 @@ create or replace view v_school as
 (
 select s.school_id,
        s.address_id,
-       coalesce(s.name_abbrev, s.name, s.name_full) as name,
+       s.name_abbrev as name,
        s.email,
        s.izo,
        s.ic,
        a.target,
        a.city,
-       r.country_iso
+       c.alpha_2
 from school s
          left join address a on a.address_id = s.address_id
-         left join region r on r.region_id = a.region_id
+         left join country c on c.country_id = a.country_id
     );
 
 CREATE OR REPLACE VIEW v_task_stats as
@@ -52,37 +52,6 @@ from contestant ct
          left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
          left join v_school s on s.school_id = ph.school_id
     );
-
-CREATE OR REPLACE VIEW v_gooddata as
-(
--- Reseni;Rocnik;Serie;CisloUlohy;Uloha;MaxBodu;Bodu;Resitel;Rokmaturity;Pohlavi;Skola;Mesto;Stat
-
-select s.submit_id                                                                          AS Reseni,
-       t.year                                                                               AS Rocnik,
-       t.series                                                                             AS Serie,
-       t.tasknr                                                                             AS CisloUlohy,
-       t.label                                                                              AS Uloha,
-       t.points                                                                             AS MaxBodu,
-       s.calc_points                                                                        AS Bodu,
-       IF(p.display_name is null, concat(p.other_name, ' ', p.family_name), p.display_name) AS Resitel,
-       (IF(ct.contest_id = 1, 1991 + ct.year, 2015 + ct.year) -
-        IF(ct.study_year between 1 and 4, ct.study_year, ct.study_year - 9))                AS RokMaturity,
-       p.gender                                                                             AS Pohlavi,
-       sch.name_abbrev                                                                      AS Skola,
-       scha.city                                                                            AS Mesto,
-       reg.country_iso                                                                      AS Stat,
-       cst.name                                                                             AS Seminar
-
-from submit s
-         left join task t on t.task_id = s.task_id
-         left join v_contestant ct on ct.contestant_id = s.contestant_id
-         left join person p on p.person_id = ct.person_id
-         left join school sch on ct.school_id = sch.school_id
-         left join address scha on scha.address_id = sch.address_id
-         left join region reg on scha.region_id = reg.region_id
-         left join contest cst on cst.contest_id = ct.contest_id
-    );
-
 CREATE OR REPLACE VIEW v_post_contact as
 (
 select p.person_id, IF(ad.address_id is null, ap.address_id, ad.address_id) AS address_id
@@ -94,18 +63,18 @@ where not (ap.address_id is null and ad.address_id is null)
 
 CREATE OR REPLACE VIEW v_person_envelope as
 (
-SELECT `pc`.`person_id`                                 AS `person_id`,
-       p.name                                           AS `CeleJmeno`,
-       `a`.`first_row`                                  AS `PrvniRadek`,
-       `a`.`second_row`                                 AS `DruhyRadek`,
-       `a`.`target`                                     AS `TretiRadek`,
-       `a`.`city`                                       AS `Mesto`,
-       `a`.`postal_code`                                AS `PSC`,
-       if((`r`.`country_iso` = 'SK'), 'Slovakia', NULL) AS `Stat`
+SELECT pc.person_id                             AS `person_id`,
+       p.name                                   AS `CeleJmeno`,
+       a.first_row                              AS `PrvniRadek`,
+       a.second_row                             AS `DruhyRadek`,
+       a.target                                 AS `TretiRadek`,
+       a.city                                   AS `Mesto`,
+       a.postal_code                            AS `PSC`,
+       if((c.alpha_2 = 'SK'), 'Slovakia', NULL) AS `Stat`
 FROM v_post_contact pc
          inner join v_person p on p.person_id = pc.person_id
          inner join address a on pc.address_id = a.address_id
-         inner join region r on a.region_id = r.region_id and r.country_iso in ('CZ', 'SK')
+         inner join country c on c.country_id = a.country_id and c.country_id in ('CZ', 'SK')
     );
 
 create or replace view v_series_points as
@@ -137,15 +106,15 @@ select p.other_name                                                             
        a.target                                                                                      as street,
        a.city                                                                                        as town,
        a.postal_code                                                                                 as postcode,
-       r.country_iso                                                                                 as country,
+       c.alpha_2                                                                                     as country,
        p.display_name                                                                                as fullname,
        p.gender                                                                                      as gender,
        if(pi.born is null, null,
           concat(year(pi.born), '-', lpad(month(pi.born), 2, '0'), '-', lpad(day(pi.born), 2, '0'))) as born,
 
        coalesce(
-               if(sar.country_iso = 'cz', concat('red-izo:', s.izo), null),
-               if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
+               if(sac.alpha_2 = 'cz', concat('red-izo:', s.izo), null),
+               if(sac.alpha_2 = 'sk', concat('sk:', s.izo), null),
                null, -- TODO AESOP id
                if(s.school_id is null, null, 'ufo')
            )                                                                                         as school,
@@ -162,11 +131,11 @@ select p.other_name                                                             
 from person p
          left join v_post_contact pc on pc.person_id = p.person_id
          left join address a on a.address_id = pc.address_id
-         left join region r on r.region_id = a.region_id
+         left join country c on c.country_id = a.country_id
          left join person_history ph on ph.person_id = p.person_id
          left join school s on s.school_id = ph.school_id
          left join address sa on sa.address_id = s.address_id
-         left join region sar on sar.region_id = sa.region_id
+         left join country sac on sac.country_id = sa.country_id
          left join person_info pi on pi.person_id = p.person_id
          left join flag f on f.fid = 'spam_mff'
          left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id

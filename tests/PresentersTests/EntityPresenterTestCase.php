@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -21,7 +22,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 {
 
     protected PersonModel $cartesianPerson;
-    protected LoginModel $login;
+    protected LoginModel $cartesianLogin;
     protected Presenter $fixture;
 
     protected function setUp(): void
@@ -51,14 +52,14 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->login = $this->getContainer()->getByType(LoginService::class)->storeModel(
+        $this->cartesianLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
         $this->getContainer()->getByType(GrantService::class)->storeModel(
-            ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
+            ['login_id' => $this->cartesianLogin->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
-        $this->authenticateLogin($this->login, $this->fixture);
+        $this->authenticateLogin($this->cartesianLogin, $this->fixture);
     }
 
     protected function assertPageDisplay(Response $response): string
@@ -88,6 +89,32 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         );
 
         return $this->fixture->run($request);
+    }
+
+    public static function personToValues(PersonModel $person): array
+    {
+        return [
+            '_c_compact' => $person->getFullName(),
+            'person' => [
+                'other_name' => $person->other_name,
+                'family_name' => $person->family_name,
+                'gender' => $person->gender->value,
+            ],
+            'person_info' => [
+                'email' => $person->getInfo()->email,
+                'born' => $person->getInfo()->born,
+            ],
+            'person_history' => [
+                'school_id__meta' => (string)$person->getHistory(
+                    ContestYearService::getCurrentAcademicYear()
+                )->school_id,
+                'school_id' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->school_id,
+                'study_year' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->study_year,
+            ],
+            'person_has_flag' => [
+                'spam_mff' => '1',
+            ],
+        ];
     }
 
     abstract protected function getPresenterName(): string;

@@ -9,9 +9,9 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{
-    FyziklaniResultsWebModel,
+use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
     PaymentListWebModel,
+    SeriesResultsWebModel,
     WebModel,
     OrganizersWebModel,
     EventListWebModel,
@@ -19,7 +19,7 @@ use FKSDB\Models\WebService\Models\{
     ExportWebModel,
     SignaturesWebModel,
     ResultsWebModel,
-    StatsWebModel,
+    StatsWebModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -47,6 +47,7 @@ class WebServiceModel
         'GetResults' => ResultsWebModel::class,
         'GetStats' => StatsWebModel::class,
         'GetPaymentList' => PaymentListWebModel::class,
+        'GetSeriesResults' => SeriesResultsWebModel::class,
     ];
 
     public function __construct(Container $container, PasswordAuthenticator $authenticator)

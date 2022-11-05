@@ -23,11 +23,9 @@ class PersonScheduleModel extends Model
 {
     public function getPayment(): ?PaymentModel
     {
-        $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
-        if (!$data) {
-            return null;
-        }
-        return $data;
+        /** @var SchedulePaymentModel|null $schedulePayment */
+        $schedulePayment = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->fetch();
+        return $schedulePayment ? $schedulePayment->payment : null;
     }
 
     public function hasActivePayment(): bool

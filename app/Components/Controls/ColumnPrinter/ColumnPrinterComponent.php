@@ -38,6 +38,7 @@ class ColumnPrinterComponent extends BaseComponent
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     final public function renderRow(
         string $field,
@@ -51,6 +52,7 @@ class ColumnPrinterComponent extends BaseComponent
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     final public function renderListItem(
         string $field,
@@ -64,6 +66,7 @@ class ColumnPrinterComponent extends BaseComponent
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     final public function renderOnlyValue(
         string $field,

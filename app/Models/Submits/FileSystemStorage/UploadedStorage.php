@@ -111,7 +111,7 @@ class UploadedStorage implements SubmitStorage
                 }
             }
         } catch (InvalidStateException $exception) {
-            throw new StorageException('Error while storing files.', null, $exception);
+            throw new StorageException('Error while storing files.', 0, $exception);
         }
 
         $this->todo = null;

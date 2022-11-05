@@ -13,15 +13,15 @@ use FKSDB\Models\Utils\FakeStringEnum;
 class ModelCategory extends FakeStringEnum
 {
 
-    public const FYKOS_4 = '4';
-    public const FYKOS_3 = '3';
-    public const FYKOS_2 = '2';
-    public const FYKOS_1 = '1';
-    public const VYFUK_9 = '9';
-    public const VYFUK_8 = '8';
-    public const VYFUK_7 = '7';
-    public const VYFUK_6 = '6';
-    public const VYFUK_UNK = 'UNK';
+    public const FYKOS_4 = 'FYKOS_4';
+    public const FYKOS_3 = 'FYKOS_3';
+    public const FYKOS_2 = 'FYKOS_2';
+    public const FYKOS_1 = 'FYKOS_1';
+    public const VYFUK_9 = 'VYFUK_9';
+    public const VYFUK_8 = 'VYFUK_8';
+    public const VYFUK_7 = 'VYFUK_7';
+    public const VYFUK_6 = 'VYFUK_6';
+    public const VYFUK_UNK = 'VYFUK_UNK';
     public const ALL = 'ALL';
 
     public static function cases(): array
@@ -38,5 +38,23 @@ class ModelCategory extends FakeStringEnum
             new self(self::VYFUK_UNK),
             new self(self::ALL),
         ];
+    }
+
+    public function __toString(): string
+    {
+        $values = [
+            'FYKOS_4' => '4',
+            'FYKOS_3' => '3',
+            'FYKOS_2' => '2',
+            'FYKOS_1' => '1',
+            'VYFUK_9' => '9',
+            'VYFUK_8' => '8',
+            'VYFUK_7' => '7',
+            'VYFUK_6' => '6',
+            'VYFUK_UNK' => 'UNK',
+            'ALL' => 'All'
+        ];
+
+        return $values[$this->value];
     }
 }

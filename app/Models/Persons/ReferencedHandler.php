@@ -6,20 +6,39 @@ namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\Model;
 
-interface ReferencedHandler
+abstract class ReferencedHandler
 {
+    protected ResolutionMode $resolution;
 
-    public const RESOLUTION_OVERWRITE = 'overwrite';
-    public const RESOLUTION_KEEP = 'keep';
-    public const RESOLUTION_EXCEPTION = 'exception';
+    final public function getResolution(): ResolutionMode
+    {
+        return $this->resolution;
+    }
 
-    public function getResolution(): string;
+    final public function setResolution(ResolutionMode $resolution): void
+    {
+        $this->resolution = $resolution;
+    }
 
-    public function setResolution(string $resolution): void;
+    abstract public function store(array $values, ?Model $model = null): Model;
 
-    public function update(Model $model, array $values): void;
-
-    public function createFromValues(array $values): Model;
-
-    public function findBySecondaryKey(string $key): ?Model;
+    protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
+    {
+        foreach ($values as $key => $value) {
+            if (isset($model[$key]) && $model[$key] != $value) {
+                switch ($this->resolution->value) {
+                    case ResolutionMode::EXCEPTION:
+                        throw new ModelDataConflictException(
+                            $subKey ? [$subKey => [$key => $value]] : [$key => $value]
+                        );
+                    case ResolutionMode::KEEP:
+                        unset($values[$key]);
+                        break;
+                    case ResolutionMode::OVERWRITE:
+                        break;
+                }
+            }
+        }
+        return $values;
+    }
 }

@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\TransitionsDecorator;
+use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
-abstract class Machine extends AbstractMachine
+abstract class Machine
 {
+    public const STATE_INIT = '__init';
+    public const STATE_ANY = '*';
 
+    /** @var Transition[] */
+    protected array $transitions = [];
     protected Explorer $explorer;
     /**
      * @var callable|null
@@ -27,22 +32,17 @@ abstract class Machine extends AbstractMachine
         $this->explorer = $explorer;
     }
 
-    final public function setImplicitCondition(callable $implicitCondition): void
+    public function addTransition(Transition $transition): void
     {
-        $this->implicitCondition = $implicitCondition;
+        $this->transitions[] = $transition;
     }
-    /* **************** Select transition ****************/
-
 
     /**
      * @return Transition[]
      */
-    public function getAvailableTransitions(ModelHolder $holder): array
+    public function getTransitions(): array
     {
-        return \array_filter(
-            $this->getTransitions(),
-            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
-        );
+        return $this->transitions;
     }
 
     /**
@@ -51,32 +51,10 @@ abstract class Machine extends AbstractMachine
     public function getTransitionById(string $id): Transition
     {
         $transitions = \array_filter(
-            $this->getTransitions(),
+            $this->transitions,
             fn(Transition $transition): bool => $transition->getId() === $id
         );
         return $this->selectTransition($transitions);
-    }
-
-    public function getTransitionByStates(?EnumColumn $source, ?EnumColumn $target): ?Transition
-    {
-        $transitions = \array_filter(
-            $this->getTransitions(),
-            function (Transition $transition) use ($target, $source): bool {
-                $matchSource = is_null($source) && is_null($transition->sourceStateEnum) ||
-                    ($source && $transition->sourceStateEnum &&
-                        ($source->value === $transition->sourceStateEnum->value));
-                $matchTarget = is_null($target) && is_null($transition->targetStateEnum) ||
-                    ($target && $transition->targetStateEnum &&
-                        ($target->value === $transition->targetStateEnum->value));
-                return $matchSource && $matchTarget;
-            }
-        );
-        return $this->selectTransition($transitions);
-    }
-
-    private function isAvailable(Transition $transition, ModelHolder $holder): bool
-    {
-        return $transition->matchSource($holder->getState()) && $this->canExecute($transition, $holder);
     }
 
     /**
@@ -85,7 +63,7 @@ abstract class Machine extends AbstractMachine
      * @throws UnavailableTransitionsException
      * Protect more that one transition between nodes
      */
-    private function selectTransition(array $transitions): Transition
+    protected function selectTransition(array $transitions): Transition
     {
         $length = \count($transitions);
         if ($length > 1) {
@@ -97,6 +75,34 @@ abstract class Machine extends AbstractMachine
         return \array_values($transitions)[0];
     }
 
+    final public function decorateTransitions(?TransitionsDecorator $decorator): void
+    {
+        if ($decorator) {
+            $decorator->decorate($this);
+        }
+    }
+
+    /**
+     * @return Transition[]
+     */
+    public function getAvailableTransitions(ModelHolder $holder): array
+    {
+        return \array_filter(
+            $this->transitions,
+            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
+        );
+    }
+
+    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
+    {
+        $transitions = \array_filter(
+            $this->transitions,
+            fn(Transition $transition): bool => ($source->value === $transition->source->value) &&
+                ($target->value === $transition->target->value)
+        );
+        return $this->selectTransition($transitions);
+    }
+
     /* ********** execution ******** */
 
     /**
@@ -106,9 +112,6 @@ abstract class Machine extends AbstractMachine
     final public function executeTransitionById(string $id, ModelHolder $holder): void
     {
         $transition = $this->getTransitionById($id);
-        if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException();
-        }
         $this->execute($transition, $holder);
     }
 
@@ -117,52 +120,49 @@ abstract class Machine extends AbstractMachine
      * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
-    final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void
+    final public function executeImplicitTransition(ModelHolder $holder): void
     {
         $transition = $this->selectTransition($this->getAvailableTransitions($holder));
-        $this->saveAndExecuteTransition($transition, $holder, $data);
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws \Throwable
-     */
-    final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void
-    {
-        $holder->updateData($data);
         $this->execute($transition, $holder);
     }
 
-    protected function canExecute(Transition $transition, ModelHolder $holder): bool
+    protected function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
+        if ($transition->source->value !== $holder->getState()->value) {
+            return false;
+        }
         if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
             return true;
         }
-        return $transition->canExecute2($holder);
+        return $transition->canExecute($holder);
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionsException
      * @throws \Throwable
      */
-    private function execute(Transition $transition, ModelHolder $holder): void
+    public function execute(Transition $transition, ModelHolder $holder): void
     {
-        if (!$this->canExecute($transition, $holder)) {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+        if (!$this->isAvailable($transition, $holder)) {
+            throw new UnavailableTransitionsException();
         }
+        $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $outerTransition = false;
             $this->explorer->getConnection()->beginTransaction();
         }
         try {
             $transition->callBeforeExecute($holder);
+            $holder->updateState($transition->target);
+            $transition->callAfterExecute($holder);
         } catch (\Throwable $exception) {
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
-        $this->explorer->getConnection()->commit();
-        $holder->updateState($transition->targetStateEnum);
-        $transition->callAfterExecute($holder);
+        if (!$outerTransition) {
+            $this->explorer->getConnection()->commit();
+        }
     }
 
-    abstract public function createHolder(?Model $model): ModelHolder;
+    abstract public function createHolder(Model $model): ModelHolder;
 }

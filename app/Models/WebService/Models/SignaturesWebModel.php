@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
@@ -26,6 +25,7 @@ class SignaturesWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -37,7 +37,7 @@ class SignaturesWebModel extends WebModel
         $doc = new \DOMDocument();
 
         $rootNode = $doc->createElement('signatures');
-        $organisers = $contest->related(DbNames::TAB_ORG);
+        $organisers = $contest->getOrganisers();
         /** @var OrgModel $org */
         foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -23,29 +22,8 @@ abstract class AbstractFactory implements FieldFactory
 
     final protected function appendRequiredRule(BaseControl $control, Field $field): void
     {
-        $container = $control->getParent();
         if ($field->isRequired()) {
-            $conditioned = $control;
-            foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
-                if ($determiningField === $field) {
-                    $conditioned = $control;
-                    break;
-                }
-                /*
-                 * NOTE: If the control doesn't exists, it's hidden and as such cannot condition further requirements.
-                 */
-                if (isset($container[$name])) {
-                    $conditioned = $conditioned->addConditionOn($container[$name], Form::FILLED);
-                }
-            }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
-        }
-    }
-
-    public function validate(Field $field, DataValidator $validator): void
-    {
-        if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
+            $control->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
         }
     }
 

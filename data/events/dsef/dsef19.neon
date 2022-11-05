@@ -21,7 +21,7 @@ parameters:
 
 events:
     dsef19:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [19,21,22]
         formLayout: dsef.form
         paramScheme:
@@ -31,15 +31,9 @@ events:
                 default: Den s experimentální fyzikou <dsef@fykos.cz>
             accomodationCapacity:
                 default: 0
-
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states: %events.defaultDsef.states%
-
                 transitions:  %events.defaultDsef.transitions%
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -57,12 +51,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - FKSDB\Models\Events\FormAdjustments\ResourceAvailability(['participant.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')

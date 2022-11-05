@@ -22,7 +22,7 @@ export default class Group extends React.Component<OwnProps> {
                 </small>)}
             <div className="row">
                 {group.items.map((item, index) => {
-                    return <div key={index} className="col">
+                    return <div key={index} className={`col-12 ${(group.items.length < 3) ? "col-xl-6" : "col-12 col-sm-6 col-md-4 col-xl-2"}`}>
                         <ScheduleItem
                             params={params}
                             type={this.props.group.scheduleGroupType}

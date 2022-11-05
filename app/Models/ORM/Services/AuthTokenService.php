@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Fykosak\NetteORM\Service;
 
 class AuthTokenService extends Service
 {
@@ -42,11 +42,8 @@ class AuthTokenService extends Service
         }
 
         if ($refresh) {
-            // TODO to related
             /** @var AuthTokenModel $token */
-            $token = $this->getTable()
-                ->where('login_id', $login->login_id)
-                ->where('type', $type)
+            $token = $login->getTokens($type)
                 ->where('data', $data)
                 ->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()')
@@ -71,7 +68,7 @@ class AuthTokenService extends Service
             $this->storeModel(['until' => $until], $token);
         }
         if (!$outerTransaction) {
-            $this->explorer->getConnection()->commit();
+            $connection->commit();
         }
 
         return $token;
@@ -79,11 +76,9 @@ class AuthTokenService extends Service
 
     public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
     {
-        $tokens = $this->getTable()
-            ->where('token', $tokenData);
+        $tokens = $this->getTable()->where('token', $tokenData);
         if ($strict) {
-            $tokens->where('since <= NOW()')
-                ->where('until IS NULL OR until >= NOW()');
+            $tokens->where('since <= NOW()')->where('until IS NULL OR until >= NOW()');
         }
         return $tokens->fetch();
     }

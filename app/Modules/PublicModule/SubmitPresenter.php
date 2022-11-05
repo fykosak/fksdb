@@ -9,24 +9,20 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\QuizModel;
-use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use FKSDB\Models\ORM\Services\QuizService;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\SubmitService;
-use FKSDB\Models\ORM\Services\SubmitQuizService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -35,25 +31,22 @@ class SubmitPresenter extends BasePresenter
 {
 
     private SubmitService $submitService;
-    private SubmitQuizService $submitQuizQuestionService;
+    private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
     private TaskService $taskService;
-    private QuizService $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
         SubmitService $submitService,
-        SubmitQuizService $submitQuizQuestionService,
+        SubmitQuestionAnswerService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
         TaskService $taskService,
-        QuizService $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
         $this->submitQuizQuestionService = $submitQuizQuestionService;
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
         $this->taskService = $taskService;
-        $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -88,37 +81,17 @@ class SubmitPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
-        $this->template->canRegister = false;
-        $this->template->hasForward = false;
-        if (!$this->template->hasTasks) {
-            /** @var PersonModel $person */
-            $person = $this->getUser()->getIdentity()->person;
-            $contestants = $person->getActiveContestants();
-            $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentContestYear = $this->getSelectedContest()->getCurrentContestYear();
-            $this->template->canRegister = ($contestant->year < $currentContestYear->year
-                + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
-
-            $this->template->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year)
-                && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
-        }
+        $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
+        $this->template->canRegister = !$hasTasks;
+        $this->template->hasForward = !$hasTasks;
     }
 
-    private function getAvailableTasks(): TypedSelection
+    private function getAvailableTasks(): TypedGroupedSelection
     {
-        // TODO related
-        $tasks = $this->taskService->getTable();
-        $tasks->where(
-            'contest_id = ? AND year = ?',
-            $this->getSelectedContestYear()->contest_id,
-            $this->getSelectedContestYear()->year
-        );
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
-
-        return $tasks;
+        return $this->getSelectedContestYear()->getTasks()
+            ->where('submit_start IS NULL OR submit_start < NOW()')
+            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
+            ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
     final public function renderAjax(): void
@@ -135,9 +108,7 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $personHistory = $login->person->getHistoryByContestYear($this->getSelectedContestYear());
+        $personHistory = $this->getLoggedPerson()->getHistoryByContestYear($this->getSelectedContestYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
@@ -155,8 +126,8 @@ class SubmitPresenter extends BasePresenter
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $questions = $task->related(DbNames::TAB_QUIZ);
-            if (!count($questions)) {
+            $questions = $task->getQuestions();
+            if (!$questions->count('*')) {
                 $upload = $container->addUpload('file', $task->getFQName());
                 $conditionedUpload = $upload
                     ->addCondition(Form::FILLED)
@@ -164,7 +135,7 @@ class SubmitPresenter extends BasePresenter
                         Form::MIME_TYPE,
                         _('Only PDF files are accepted.'),
                         'application/pdf'
-                    ); //TODO verify this check at production server
+                    );
 
                 if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
                     $upload->setOption('description', _('Task is not for your category.'));
@@ -181,18 +152,14 @@ class SubmitPresenter extends BasePresenter
             } else {
                 //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
-                /** @var QuizModel $question */
+                /** @var SubmitQuestionModel $question */
                 foreach ($questions as $question) {
                     $select = $container->addRadioList(
-                        'question' . $question->question_id,
+                        'question' . $question->submit_question_id,
                         $task->getFQName() . ' - ' . $question->getFQName(),
                         $options
                     );
-
-                    $existingEntry = $this->submitQuizQuestionService->findByContestant(
-                        $question,
-                        $this->getContestant()
-                    );
+                    $existingEntry = $this->getContestant()->getAnswers($question);
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
@@ -238,9 +205,9 @@ class SubmitPresenter extends BasePresenter
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-                $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var TaskModel $task */
                 $task = $this->taskService->findByPrimary($taskId);
+                $questions = $task->getQuestions();
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(
@@ -255,9 +222,9 @@ class SubmitPresenter extends BasePresenter
                 if (count($questions)) {
                     // Verification if user has event submitted any answer
                     $anySubmit = false;
-                    /** @var QuizModel $question */
+                    /** @var SubmitQuestionModel $question */
                     foreach ($questions as $question) {
-                        $name = 'question' . $question->question_id;
+                        $name = 'question' . $question->submit_question_id;
                         $answer = $taskValues[$name];
                         if ($answer != null) {
                             $anySubmit = true;

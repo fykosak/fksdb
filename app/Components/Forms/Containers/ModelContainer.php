@@ -6,11 +6,7 @@ namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use Fykosak\NetteORM\Model;
-use Nette\Forms\Controls\BaseControl;
 
-/**
- * Formulářový kontejder reprezentující záznam z DB tabulky.
- */
 class ModelContainer extends ContainerWithOptions
 {
     /**
@@ -23,13 +19,5 @@ class ModelContainer extends ContainerWithOptions
             $data = $data->toArray();
         }
         return parent::setValues($data, $erase);
-    }
-
-    public function setDisabled(bool $value = true): void
-    {
-        /** @var BaseControl $component */
-        foreach ($this->getComponents() as $component) {
-            $component->setDisabled($value);
-        }
     }
 }
