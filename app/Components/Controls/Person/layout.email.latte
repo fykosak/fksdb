@@ -1,0 +1,9 @@
+{varType bool $changeActive}
+{dump $changeActive}
+{block content}
+    {if $changeActive}
+        <p class="alert alert-info">{_'Changing in progress, please check yout email and confirm you new mail.'}</p>
+    {else}
+        {control form}
+    {/if}
+{/block}

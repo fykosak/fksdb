@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authentication;
 
+use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Modules\Core\Language;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 class AccountManager
 {
@@ -57,7 +61,7 @@ class AccountManager
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
-        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
+        $token = $this->authTokenService->createToken($login, AuthTokenType::InitialLogin, $until);
         $data = [];
         $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
             [
@@ -84,14 +88,13 @@ class AccountManager
         if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $login->getTokens(AuthTokenModel::TYPE_RECOVERY)
-            ->where('until > ?', new DateTime())->fetch();
+        $token = $login->getActiveTokens(AuthTokenType::Recovery)->fetch();
         if ($token) {
             throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->recoveryExpiration);
-        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
+        $token = $this->authTokenService->createToken($login, AuthTokenType::Recovery, $until);
         $data = [];
         $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
@@ -105,9 +108,49 @@ class AccountManager
         $this->emailMessageService->addMessageToSend($data);
     }
 
-    public function cancelRecovery(LoginModel $login): void
+    public function sendChangeEmail(PersonModel $person, string $newEmail, Language $lang): void
     {
-        $login->getTokens(AuthTokenModel::TYPE_RECOVERY)->delete();
+        Debugger::log(
+            sprintf(
+                'person %d (%s) with old email "%s" ask change to %s',
+                $person->person_id,
+                $person->getFullName(),
+                $person->getInfo()->email,
+                $newEmail
+            )
+        );
+        $login = $person->getLogin();
+        if (!$login) {
+            $this->createLogin($person);
+        }
+        $token = $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
+        if ($token) {
+            throw new ChangeInProgressException();
+        }
+        $token = $this->authTokenService->createToken(
+            $login,
+            AuthTokenType::ChangeEmail,
+            (new \DateTime())->modify('+20 minutes'),
+            $newEmail
+        );
+        $oldData = [
+            'text' => $this->mailTemplateFactory->renderChangePasswordOld(
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,]
+            ),
+            'sender' => $this->emailFrom,
+            'subject' => _('Change email'),
+            'recipient' => $person->getInfo()->email,
+        ];
+        $newData = [
+            'text' => $this->mailTemplateFactory->renderChangePasswordNew(
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,]
+            ),
+            'sender' => $this->emailFrom,
+            'subject' => _('Confirm you email'),
+            'recipient' => $newEmail,
+        ];
+        $this->emailMessageService->addMessageToSend($oldData);
+        $this->emailMessageService->addMessageToSend($newData);
     }
 
     final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel

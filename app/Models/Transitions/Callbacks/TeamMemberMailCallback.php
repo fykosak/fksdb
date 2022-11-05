@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder;
@@ -36,7 +37,7 @@ abstract class TeamMemberMailCallback extends MailCallback
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenModel::TYPE_EVENT_NOTIFY,
+            AuthTokenType::EventNotify,
             $holder->getModel()->event->registration_end,
             null,
             true

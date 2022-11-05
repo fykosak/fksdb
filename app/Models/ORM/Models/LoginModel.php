@@ -9,6 +9,7 @@ use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\IIdentity;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int login_id
@@ -95,12 +96,22 @@ class LoginModel extends Model implements IIdentity
         return $grants;
     }
 
-    public function getTokens(?string $type = null): TypedGroupedSelection
+    public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
         if (isset($type)) {
-            $query->where('type', $type);
+            $query->where('type', $type->value);
         }
+        return $query;
+    }
+
+    public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    {
+        $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
+        if (isset($type)) {
+            $query->where('type', $type->value);
+        }
+        $query->where('until > ?', new DateTime());
         return $query;
     }
 }

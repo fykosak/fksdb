@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -62,11 +63,10 @@ class SettingsPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN)) {
-            $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
-        }
-
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY)) {
+        if (
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin)
+        ) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
@@ -86,8 +86,8 @@ class SettingsPresenter extends BasePresenter
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery);
 
         $group = $form->addGroup(_('Authentication'));
         $rule = function (BaseControl $baseControl) use ($login): bool {
@@ -179,8 +179,8 @@ class SettingsPresenter extends BasePresenter
     {
         $values = $form->getValues();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery);
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 

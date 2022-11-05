@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Controls\Person\ChangeEmailComponent;
 use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -23,12 +24,7 @@ class MyProfilePresenter extends BasePresenter
 
     public function renderDefault(): void
     {
-        $this->template->person = $this->getPerson();
-    }
-
-    private function getPerson(): PersonModel
-    {
-        return $this->getUser()->getIdentity()->person;
+        $this->template->person = $this->getLoggedPerson();
     }
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
@@ -46,7 +42,12 @@ class MyProfilePresenter extends BasePresenter
         return new AddressFormComponent(
             $this->getContext(),
             $type,
-            $this->getPerson()
+            $this->getLoggedPerson()
         );
+    }
+
+    protected function createComponentChangeEmail(): ChangeEmailComponent
+    {
+        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson(), $this->getLang());
     }
 }

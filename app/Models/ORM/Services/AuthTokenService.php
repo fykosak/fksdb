@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -23,7 +24,7 @@ class AuthTokenService extends Service
      */
     public function createToken(
         LoginModel $login,
-        string $type,
+        AuthTokenType $type,
         ?\DateTimeInterface $until,
         ?string $data = null,
         bool $refresh = false,
@@ -83,14 +84,9 @@ class AuthTokenService extends Service
         return $tokens->fetch();
     }
 
-    /**
-     * @param string|AuthTokenModel $token
-     */
-    public function disposeToken($token): void
+    public function disposeToken(string $token): void
     {
-        if (!$token instanceof AuthTokenModel) {
-            $token = $this->verifyToken($token);
-        }
+        $token = $this->verifyToken($token);
         if ($token) {
             $this->disposeModel($token);
         }
@@ -99,7 +95,7 @@ class AuthTokenService extends Service
     public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()
-            ->where('type', AuthTokenModel::TYPE_EVENT_NOTIFY)
+            ->where('type', AuthTokenType::EventNotify->value)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
             ->where('data LIKE ?', $event->event_id . ':%');

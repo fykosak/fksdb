@@ -9,6 +9,7 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -157,7 +158,7 @@ class ApplicationPresenter extends BasePresenter
 
         $this->initializeMachine();
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::EventNotify)) {
             $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
                 $this->tokenAuthenticator->disposeTokenData();
@@ -251,7 +252,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if (!isset($this->event)) {
             $eventId = null;
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::EventNotify)) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
                     $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());

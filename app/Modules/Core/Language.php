@@ -8,10 +8,10 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class Language extends FakeStringEnum
+enum Language: string
 {
-    public const CS = 'cs';
-    public const EN = 'en';
+    case Cs = 'cs';
+    case En = 'en';
 
     public function badge(): Html
     {
@@ -20,31 +20,17 @@ class Language extends FakeStringEnum
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::CS:
-                return _('Czech');
-            case self::EN:
-                return _('English');
-        }
-        throw new NotImplementedException();
+        return match ($this) {
+            self::Cs => _('Czech'),
+            self::En => _('English'),
+        };
     }
 
     public function locales(): string
     {
-        switch ($this->value) {
-            case self::CS:
-                return 'cs_CZ.utf-8';
-            case self::EN:
-                return 'en_US.utf-8';
-        }
-        throw new NotImplementedException();
-    }
-
-    public static function cases(): array
-    {
-        return [
-            new static(self::EN),
-            new static(self::CS),
-        ];
+        return match ($this) {
+            self::Cs => 'cs_CZ.utf-8',
+            self::En => 'en_US.utf-8',
+        };
     }
 }
