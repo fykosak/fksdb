@@ -6,14 +6,20 @@ namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueEmail
 {
     private PersonInfoService $personInfoService;
-    private ?PersonModel $ignoredPerson;
+    private ?PersonModel $ignoredPerson = null;
 
-    public function __construct(PersonInfoService $personInfoService)
+    public function __construct(Container $container)
+    {
+        $container->callInjects($this);
+    }
+
+    public function inject(PersonInfoService $personInfoService): void
     {
         $this->personInfoService = $personInfoService;
     }

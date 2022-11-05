@@ -6,17 +6,17 @@ namespace FKSDB\Components\Controls\Person;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 class ChangeEmailComponent extends BaseComponent
@@ -42,8 +42,6 @@ class ChangeEmailComponent extends BaseComponent
 
     public function render(): void
     {
-        $login = $this->person->getLogin();
-        $this->template->changeActive = $login && $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.email.latte');
     }
 
@@ -55,13 +53,20 @@ class ChangeEmailComponent extends BaseComponent
     {
         $control = new FormControl($this->container);
         $form = $control->getForm();
-        $form->addComponent($this->reflectionFormFactory->createField('person_info', 'email'), 'new_email');
+        $newEmailControl = $this->reflectionFormFactory->createField('person_info', 'email');
+        $uniqueEmail = new UniqueEmail($this->container);
+        $newEmailControl->addRule(
+            fn(BaseControl $baseControl) => ($uniqueEmail)($baseControl),
+            _('This email is already assigned to account')
+        );
+        $form->addComponent($newEmailControl, 'new_email');
         $form->addSubmit('submit', _('Change email'));
         $form->onSuccess[] = fn(Form $form) => $this->handleFormSuccess($form);
         return $control;
     }
 
     /**
+     * @throws BadTypeException
      * @throws ChangeInProgressException
      */
     private function handleFormSuccess(Form $form): void

@@ -26,18 +26,14 @@ use Nette\Forms\Form;
 
 class SettingsPresenter extends BasePresenter
 {
-
     public const CONT_LOGIN = 'login';
 
     private LoginService $loginService;
-    private PersonInfoService $personInfoService;
 
     final public function injectQuarterly(
-        LoginService $loginService,
-        PersonInfoService $personInfoService
+        LoginService $loginService
     ): void {
         $this->loginService = $loginService;
-        $this->personInfoService = $personInfoService;
     }
 
     public function titleDefault(): PageTitle
@@ -91,10 +87,10 @@ class SettingsPresenter extends BasePresenter
 
         $group = $form->addGroup(_('Authentication'));
         $rule = function (BaseControl $baseControl) use ($login): bool {
-            $uniqueLogin = new UniqueLogin($this->loginService);
+            $uniqueLogin = new UniqueLogin($this->getContext());
             $uniqueLogin->setIgnoredLogin($login);
 
-            $uniqueEmail = new UniqueEmail($this->personInfoService);
+            $uniqueEmail = new UniqueEmail($this->getContext());
             $uniqueEmail->setIgnoredPerson($login->person);
 
             return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
@@ -102,7 +98,6 @@ class SettingsPresenter extends BasePresenter
         $loginContainer = $this->createLogin(
             $group,
             $rule,
-            true,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
         );
@@ -130,7 +125,6 @@ class SettingsPresenter extends BasePresenter
     private function createLogin(
         ControlGroup $group,
         callable $loginRule,
-        bool $showPassword = true,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ModelContainer {
@@ -142,32 +136,31 @@ class SettingsPresenter extends BasePresenter
 
         $login->addRule($loginRule, _('This username is already taken.'));
 
-        if ($showPassword) {
-            if ($verifyOldPassword) {
-                $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(
-                    'autocomplete',
-                    'current-password'
-                );
-            }
-            $newPwd = $container->addPassword('password', _('Password'));
-            $newPwd->setHtmlAttribute('autocomplete', 'new-password');
-            $newPwd->addCondition(Form::FILLED)->addRule(
-                Form::MIN_LENGTH,
-                _('The password must have at least %d characters.'),
-                6
+
+        if ($verifyOldPassword) {
+            $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(
+                'autocomplete',
+                'current-password'
             );
-
-            if ($verifyOldPassword) {
-                $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
-                    ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
-            } elseif ($requirePassword) {
-                $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
-            }
-
-            $container->addPassword('password_verify', _('Password (verification)'))
-                ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
-                ->setHtmlAttribute('autocomplete', 'new-password');
         }
+        $newPwd = $container->addPassword('password', _('Password'));
+        $newPwd->setHtmlAttribute('autocomplete', 'new-password');
+        $newPwd->addCondition(Form::FILLED)->addRule(
+            Form::MIN_LENGTH,
+            _('The password must have at least %d characters.'),
+            6
+        );
+
+        if ($verifyOldPassword) {
+            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
+                ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
+        } elseif ($requirePassword) {
+            $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
+        }
+
+        $container->addPassword('password_verify', _('Password (verification)'))
+            ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
+            ->setHtmlAttribute('autocomplete', 'new-password');
 
         return $container;
     }

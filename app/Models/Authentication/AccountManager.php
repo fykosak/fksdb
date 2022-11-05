@@ -9,7 +9,6 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -25,30 +24,15 @@ class AccountManager
 {
     use SmartObject;
 
-    private LoginService $loginService;
-    private AuthTokenService $authTokenService;
-    private string $invitationExpiration;
-    private string $recoveryExpiration;
-    private string $emailFrom;
-    private EmailMessageService $emailMessageService;
-    private MailTemplateFactory $mailTemplateFactory;
-
     public function __construct(
-        string $invitationExpiration,
-        string $recoveryExpiration,
-        string $emailFrom,
-        MailTemplateFactory $mailTemplateFactory,
-        LoginService $loginService,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+        private readonly string $invitationExpiration,
+        private readonly string $recoveryExpiration,
+        private readonly string $emailFrom,
+        private readonly MailTemplateFactory $mailTemplateFactory,
+        private readonly LoginService $loginService,
+        private readonly AuthTokenService $authTokenService,
+        private readonly EmailMessageService $emailMessageService
     ) {
-        $this->invitationExpiration = $invitationExpiration;
-        $this->recoveryExpiration = $recoveryExpiration;
-        $this->emailFrom = $emailFrom;
-        $this->loginService = $loginService;
-        $this->authTokenService = $authTokenService;
-        $this->emailMessageService = $emailMessageService;
-        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**
@@ -56,7 +40,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
+    public function sendLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
     {
         $login = $this->createLogin($person);
 
@@ -108,6 +92,10 @@ class AccountManager
         $this->emailMessageService->addMessageToSend($data);
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws ChangeInProgressException
+     */
     public function sendChangeEmail(PersonModel $person, string $newEmail, Language $lang): void
     {
         Debugger::log(
@@ -117,7 +105,8 @@ class AccountManager
                 $person->getFullName(),
                 $person->getInfo()->email,
                 $newEmail
-            )
+            ),
+            'email-change'
         );
         $login = $person->getLogin();
         if (!$login) {

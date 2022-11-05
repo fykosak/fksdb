@@ -98,7 +98,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
         ]);
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
-            $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+            $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
             $this->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
         }
         $this->getPresenter()->redirect(':Core:Dispatch:default');
