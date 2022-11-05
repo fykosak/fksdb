@@ -6,7 +6,8 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -36,11 +37,19 @@ EOT
             ,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
-            'e_dsef_group_id' => 1,
+        $this->group = $this->getContainer()->getByType(ServiceScheduleGroup::class)->createNewModel([
             'event_id' => $this->event->event_id,
-            'name' => 'Alpha',
-            'capacity' => 4,
+            'schedule_group_type' => 'dsef_morning',
+            'start' => new \DateTime(),
+            'end' => new \DateTime(),
+        ]);
+        $this->item = $this->getContainer()->getByType(ServiceScheduleItem::class)->createNewModel([
+            'name_cs' => 'alpha',
+            'name_en' => 'alpha',
+            'schedule_group_id' => $this->group->schedule_group_id,
+            'price_czk' => 20,
+            'price_eur' => 30,
+            'capacity' => 7,
         ]);
 
         $this->fixture = $this->createPresenter('Public:Application');
@@ -52,5 +61,16 @@ EOT
             ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
+
+        $this->getContainer()->getByType(ServicePersonSchedule::class)->createNewModel([
+            'person_id' => $this->person->person_id,
+            'schedule_item_id' => $this->item->schedule_item_id,
+        ]);
+
+        $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+            'person_id' => $this->person->person_id,
+            'event_id' => $this->event->event_id,
+            'status' => 'applied',
+        ]);
     }
 }

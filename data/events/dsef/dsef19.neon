@@ -31,9 +31,8 @@ events:
                 default: Den s experimentální fyzikou <dsef@fykos.cz>
             accomodationCapacity:
                 default: 0
-
         baseMachine:
-                service: @event.ServiceMDsefParticipant
+                service: @orm.event_participant.service
                 transitions:  %events.defaultDsef.transitions%
                 fields:
                     person_id:
@@ -42,15 +41,6 @@ events:
                         modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef19.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
-                    accomodation:
-                        label: _('Ubytování')
-                        description: %events.dsef19.accomodation%
-                        modifiable: %events.defaultDsef.appCond%
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
                         description:  à 30 Kč
