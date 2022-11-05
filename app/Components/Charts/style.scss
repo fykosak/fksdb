@@ -21,8 +21,8 @@
     }
   }
 
-  &.time-line, .axis.grid {
-    .tick line {
+  .axis {
+    .tick .grid-line {
       stroke-dasharray: 10 10;
       stroke: #ccc;
     }
@@ -37,6 +37,9 @@
     .area {
       opacity: .1;
     }
+  }
+  g polygon:hover {
+    filter: brightness(60%);
   }
 }
 

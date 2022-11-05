@@ -29,10 +29,8 @@ events:
                 default: dsef@fykos.cz
             notifyFrom:
                 default: Den s experimentální fyzikou <dsef@fykos.cz>
-
         baseMachine:
-                service: @event.ServiceMDsefParticipant
-
+                service: @orm.event_participant.service
                 transitions:
                     # to spare
                     __init->spare.tsaf:
@@ -74,11 +72,6 @@ events:
                         modifiable: %events.dsef23.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef23.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.dsef23.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         modifiable: %events.dsef23.appCond%
                         description:  à 30 Kč

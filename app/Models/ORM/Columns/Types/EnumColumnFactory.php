@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 
 class EnumColumnFactory extends ColumnFactory
 {
-    /** @var EnumColumn|string|enum */
+    /** @var EnumColumn|string */
     private string $className;
 
     public function setEnumClassName(string $className): void

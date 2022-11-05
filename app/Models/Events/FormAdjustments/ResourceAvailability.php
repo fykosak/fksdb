@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
@@ -80,17 +79,14 @@ class ResourceAvailability extends AbstractAdjustment
         if ($holders) {
             $sService[] = [
                 'service' => $holder->service,
-                'holders' => $holders,
                 'field' => $field,
             ];
         }
 
         $usage = 0;
-        /** @var Service|ServiceMDsefParticipant[]|BaseHolder[][] $dataService */
+        /** @var Service|BaseHolder[][] $dataService */
         foreach ($sService as $dataService) {
-            /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($dataService['holders']);
-            $event = $firstHolder->event;
+            $event = $holder->event;
             /** @var TypedGroupedSelection $table */
             $table = $dataService['service']->getTable();
             $table->where('event_participant.event_id', $event->getPrimary());
@@ -102,17 +98,12 @@ class ResourceAvailability extends AbstractAdjustment
             } else {
                 $table->where('1=0');
             }
-
-            $primaries = array_map(function (BaseHolder $holder) {
-                $model = $holder->getModel();
-                return $model ? $model->getPrimary(false) : null;
-            }, $dataService['holders']);
-            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
+            $model = $holder->getModel();
 
             $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
-            if ($primaries) {
-                $table->where("NOT $pk IN", $primaries);
+            if ($model) {
+                $table->where("NOT $pk IN", [$model->getPrimary()]);
             }
             $usage += $table->sum($column);
         }

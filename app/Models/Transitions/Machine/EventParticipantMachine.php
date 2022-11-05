@@ -90,7 +90,7 @@ class EventParticipantMachine extends Machine
      * @param EventParticipantModel $model
      * @throws NeonSchemaException
      */
-    public function createHolder(Model $model): ModelHolder
+    public function createHolder(Model $model): BaseHolder
     {
         $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
         $holder->setModel($model);

@@ -15,14 +15,11 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -39,10 +36,8 @@ class BaseHolder implements ModelHolder
 
     private ExpressionEvaluator $evaluator;
     public EventModel $event;
-    /** @var Service|ServiceMDsefParticipant */
-    public $service;
-    /** @var EventParticipantModel|ModelMDsefParticipant|null */
-    private ?Model $model;
+    public EventParticipantService $service;
+    private ?EventParticipantModel $model;
     public array $data = [];
 
     public array $paramScheme;
@@ -135,15 +130,12 @@ class BaseHolder implements ModelHolder
         return $this->evaluator->evaluate($this->modifiable, $this);
     }
 
-    /**
-     * @return ModelMDsefParticipant|EventParticipantModel
-     */
-    public function getModel(): ?Model
+    public function getModel(): ?EventParticipantModel
     {
         return $this->model ?? null;
     }
 
-    public function setModel(?Model $model): void
+    public function setModel(?EventParticipantModel $model): void
     {
         $this->model = $model;
     }
@@ -173,10 +165,7 @@ class BaseHolder implements ModelHolder
         $this->data['status'] = $state->value;
     }
 
-    /**
-     * @param Service|ServiceMDsefParticipant $service
-     */
-    public function setService($service): void
+    public function setService(EventParticipantService $service): void
     {
         $this->service = $service;
     }
@@ -264,7 +253,7 @@ class BaseHolder implements ModelHolder
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
-    public function getState(): ?EnumColumn
+    public function getState(): ?EventParticipantStatus
     {
         return $this->model->status;
     }

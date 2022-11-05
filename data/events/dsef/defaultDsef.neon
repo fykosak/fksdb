@@ -32,7 +32,7 @@ events:
         paramScheme: []
 
         baseMachine:
-                service: @event.ServiceMDsefParticipant
+                service: @orm.event_participant.service
                 transitions: [] #not modifable
                 fields: [] #not modifable
         #

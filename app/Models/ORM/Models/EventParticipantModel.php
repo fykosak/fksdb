@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
@@ -77,6 +75,7 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
             'personId' => $this->person_id,
             'status' => $this->status->value,
             'created' => $this->created,
+            'lunchCount' => $this->lunch_count,
         ];
     }
 

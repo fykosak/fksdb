@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
@@ -40,8 +38,8 @@ accomodationCapacity: $capacity
 EOT
             ,
         ]);
-
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
+//TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'e_dsef_group_id' => 1,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',
@@ -63,7 +61,8 @@ EOT
             'status' => 'applied',
             'accomodation' => 1,
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'event_participant_id' => $application->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
@@ -79,7 +78,8 @@ EOT
             'status' => 'applied',
             'accomodation' => 1,
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'event_participant_id' => $application->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);

@@ -7,9 +7,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\NetteORM\Service;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -36,18 +34,8 @@ class DBReflectionFactory extends AbstractFactory
     {
         $element = null;
         try {
-            $service = $field->holder->service;
-
-            $service->getTable()->getName();
-            $tableName = null;
-            if ($service instanceof Service) {
-                $tableName = $service->getTable()->getName();
-            } elseif ($service instanceof ServiceMDsefParticipant) {
-                $tableName = $service->mainService->getTable()->getName();
-            }
-            if ($tableName) {
-                $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $field->name)->createField();
-            }
+            $tableName = $field->holder->service->getTable()->getName();
+            $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $field->name)->createField();
         } catch (\Throwable $e) {
         }
         $column = $this->resolveColumn($field);
@@ -99,20 +87,8 @@ class DBReflectionFactory extends AbstractFactory
 
     private function resolveColumn(Field $field): ?array
     {
-        $service = $field->holder->service;
-
-        $column = null;
-        if ($service instanceof Service) {
-            $tableName = $service->getTable()->getName();
-            $column = $this->getColumnMetadata($tableName, $field->name);
-        } elseif ($service instanceof ServiceMDsefParticipant) {
-            $tableName = $service->mainService->getTable()->getName();
-            $column = $this->getColumnMetadata($tableName, $field->name);
-            if ($column === null) {
-                $tableName = $service->joinedService->getTable()->getName();
-                $column = $this->getColumnMetadata($tableName, $field->name);
-            }
-        }
+        $tableName = $field->holder->service->getTable()->getName();
+        $column = $this->getColumnMetadata($tableName, $field->name);
         if ($column === null) {
             throw new InvalidArgumentException("Cannot find reflection for field '$field->name'.");
         }
