@@ -27,18 +27,8 @@ events:
         eventYears: [25]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
-
-<<<<<<< HEAD
-        baseMachines:
-            PARTICIPANT_DSEF:
-                service: @orm.event_participant.service
-
-                states: %events.defaultDsef.states%
-
-=======
         baseMachine:
-                service: @event.ServiceMDsefParticipant
->>>>>>> origin/master
+                service: @orm.event_participant.service
                 transitions: %events.defaultDsef.transitions%
 
                 fields:
