@@ -7,7 +7,6 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

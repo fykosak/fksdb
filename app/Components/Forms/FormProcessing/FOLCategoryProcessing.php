@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\FormProcessing;
 
-use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -15,15 +16,7 @@ class FOLCategoryProcessing extends FormProcessing
 {
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
-        $members = [];
-        for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId $referencedId */
-            $referencedId = $form->getComponent('member_' . $member);
-            $person = $referencedId->getModel();
-            if ($person) {
-                $members[] = $person;
-            }
-        }
+        $members = TeamFormComponent::getMembersFromForm($form);
         $values['team']['category'] = $this->getCategory($members, $event)->value;
         return $values;
     }
@@ -38,6 +31,9 @@ class FOLCategoryProcessing extends FormProcessing
      */
     protected function getCategory(array $members, EventModel $event): TeamCategory
     {
+        if (!count($members)) {
+            throw new NoMemberException();
+        }
         // init stats
         $olds = 0;
         $year = [

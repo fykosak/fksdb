@@ -7,11 +7,10 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
-use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -40,11 +39,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
-    protected AddressFactory $addressFactory;
     private PersonScheduleFactory $personScheduleFactory;
     protected ?EventModel $event;
 
-    private bool $configured = false;
 
     public function __construct(
         Container $container,
@@ -59,15 +56,9 @@ class ReferencedPersonContainer extends ReferencedContainer
         $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
-        $this->monitor(IContainer::class, function (): void {
-            if (!$this->configured) {
-                $this->configure();
-            }
-        });
     }
 
     final public function injectPrimary(
-        AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         PersonService $personService,
         SingleReflectionFormFactory $singleReflectionFormFactory,
@@ -76,7 +67,6 @@ class ReferencedPersonContainer extends ReferencedContainer
         $this->personService = $personService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
-        $this->addressFactory = $addressFactory;
         $this->personScheduleFactory = $personScheduleFactory;
     }
 
@@ -128,21 +118,18 @@ class ReferencedPersonContainer extends ReferencedContainer
             if (!$subContainer instanceof \Nette\Forms\Container) {
                 continue;
             }
-            /** @var BaseControl|ModelContainer $component */
+            /** @var BaseControl|ModelContainer|AddressDataContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $realValue = $this->getPersonValue(
                     $model,
                     $sub,
-                    $fieldName,
-                    false,
-                    isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
+                    $fieldName
                 ); // not extrapolated
                 $value = $this->getPersonValue(
                     $model,
                     $sub,
                     $fieldName,
-                    true,
-                    isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])
+                    true
                 );
                 $controlModifiable = isset($realValue) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
@@ -152,7 +139,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
-                  //  $component->setDisabled();
+                    //  $component->setDisabled();
                     $component->setHtmlAttribute('readonly', 'readonly');
                     $component->setValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
@@ -163,7 +150,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
-                    if (
+                    if ($component instanceof AddressDataContainer) {
+                        $component->setModel($value ? $value->address : null, $mode);
+                    } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
@@ -173,7 +162,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     }
                     if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
-                       // $component->setDisabled(); // could not store different value anyway
+                        // $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }
@@ -192,11 +181,8 @@ class ReferencedPersonContainer extends ReferencedContainer
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
-                if ($fieldName == 'address') {
-                    return $this->addressFactory->createAddress(
-                        $this->getReferencedId(),
-                        (bool)$metadata['required'] ?? false
-                    );
+                if ($fieldName === 'address') {
+                    return new AddressDataContainer($this->container, true, (bool)$metadata['required'] ?? false);
                 } else {
                     throw new InvalidArgumentException("Only 'address' field is supported.");
                 }
@@ -285,18 +271,14 @@ class ReferencedPersonContainer extends ReferencedContainer
         ?PersonModel $person,
         string $sub,
         string $field,
-        bool $extrapolate = false,
-        bool $hasDelivery = false,
-        bool $targetValidation = false
+        bool $extrapolate = false
     ) {
-        return ReferencedPersonFactory::getPersonValue(
+        return ReferencedPersonHandler::getPersonValue(
             $person,
             $sub,
             $field,
             $this->contestYear,
             $extrapolate,
-            $hasDelivery,
-            $targetValidation,
             $this->event
         );
     }

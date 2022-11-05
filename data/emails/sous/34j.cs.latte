@@ -1,16 +1,15 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $baseHolder}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType array $linkArgs}
-{var $link= $control->link(...$linkArgs)}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType string[]|string[][] $linkArgs}
+{var $link = $control->link(...$linkArgs)}
 
 <p>
-    {if $person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    gratulujeme! Jelikož jsi předvedl{if $person->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích FYKOSu, je nám
-    ctí Tě pozvat{if strpos($baseHolder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na
-    {$event->event_type->name}, které se bude konat v <strong>{$holder->getParameter('letterWhere')}</strong> v termínu
-    od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
+    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích FYKOSu, je nám
+    ctí Tě pozvat{if strpos($holder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na
+    {$holder->event->event_type->name}, které se bude konat v
+    <strong>{$holder->getParameter('letterWhere')}</strong> v termínu
+    od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
+    <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>
@@ -28,17 +27,20 @@
 </p>
 {include inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
-    Své rozhodnutí, zda bys chtěl{if $person->gender->value == 'F'}a{/if} přijet,{if strpos($baseHolder->getModelState(), 'spare') === 0}
+    Své rozhodnutí, zda bys
+    chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve,
-    nejpozději však do <strong>{$holder->getParameter('deadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
-    odkazu <a href="{$link}">{$link}</a>. I když si nyní nemůžeš být stoprocentně
-    jist{if $person->gender->value == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, zaškrni ano, pokud máš o soustředění zájem.
+    nejpozději však do
+    <strong>{$holder->getParameter('deadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+odkazu <a href="{$link}">{$link}</a>. I když si nyní nemůžeš být stoprocentně
+    jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, zaškrni ano, pokud máš o
+    soustředění zájem.
     Případné změny bychom dořešili podle situace. V každém případě nám dej vědět co nejdříve. Pokud víš, že se
     nezůčastníš, dej nám vědět i to (po otevření formuláře je dole tlačítko na odmítnutí účasti). Alespoň ti pak nebudou
     chodit upomínky.
 </p>
 
-<p n:if="strpos($baseHolder->getModelState(), 'spare') === 0">
+<p n:if="strpos($holder->getModelState(), 'spare') === 0">
     O Tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->getParameter('deadline')|date:'j. n.'}
 </p>
 
@@ -47,7 +49,7 @@
 </p>
 
 <p>
-    Pokud bys měl{if $person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
+    Pokud bys měl{if $holder->getPerson()->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
     <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 

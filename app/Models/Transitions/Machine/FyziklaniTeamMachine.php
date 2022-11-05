@@ -11,7 +11,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
-class FyziklaniTeamMachine extends Machine
+final class FyziklaniTeamMachine extends Machine
 {
     private TeamService2 $teamService;
 

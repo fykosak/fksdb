@@ -23,19 +23,13 @@ parameters:
 
 events:
     dsef24:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [24]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
-
-        baseMachines:
-            PARTICIPANT_DSEF:
-                service: @event.ServiceMDsefParticipant
-
-                states: %events.defaultDsef.states%
-
+        baseMachine:
+                service: @orm.event_participant.service
                 transitions: %events.defaultDsef.transitions%
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -43,11 +37,6 @@ events:
                         modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef24.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        factory: Chooser(_('Zvolit skupinu'), FKSDB\Models\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
                         description:  _('à 30 Kč')
@@ -58,12 +47,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT_DSEF
+            baseMachine:
                     label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

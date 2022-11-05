@@ -11,11 +11,10 @@ use Nette\Forms\Controls\BaseControl;
 class Field
 {
 
-    private string $name;
-    private bool $determining;
-    private ?string $label;
-    private ?string $description;
-    private BaseHolder $baseHolder;
+    public string $name;
+    public ?string $label;
+    public ?string $description;
+    public BaseHolder $holder;
     private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
     /** @var mixed */
@@ -27,50 +26,15 @@ class Field
     /** @var bool|callable */
     private $visible;
 
-    public function __construct(string $name, ?string $label = null)
+    public function __construct(string $name, ?string $label)
     {
         $this->name = $name;
         $this->label = $label;
     }
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function getBaseHolder(): BaseHolder
-    {
-        return $this->baseHolder;
-    }
-
-    public function setBaseHolder(BaseHolder $baseHolder): void
-    {
-        $this->baseHolder = $baseHolder;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
     public function setDescription(?string $description): void
     {
         $this->description = $description;
-    }
-
-    public function isDetermining(): bool
-    {
-        return $this->determining;
-    }
-
-    public function setDetermining(bool $determining): void
-    {
-        $this->determining = $determining;
     }
 
     /** @return mixed */
@@ -114,7 +78,7 @@ class Field
 
     public function isRequired(): bool
     {
-        return $this->evaluator->evaluate($this->required, $this);
+        return $this->evaluator->evaluate($this->required, $this->holder);
     }
 
     /** @param bool|callable $required */
@@ -127,7 +91,7 @@ class Field
 
     public function isModifiable(): bool
     {
-        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+        return $this->holder->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this->holder);
     }
 
     /** @param bool|callable $modifiable */
@@ -140,7 +104,7 @@ class Field
 
     public function isVisible(): bool
     {
-        return (bool)$this->evaluator->evaluate($this->visible, $this);
+        return (bool)$this->evaluator->evaluate($this->visible, $this->holder);
     }
 
     /**
@@ -151,19 +115,14 @@ class Field
         $this->visible = $visible;
     }
 
-    public function validate(DataValidator $validator): void
-    {
-        $this->factory->validate($this, $validator);
-    }
-
     /**
      * @return mixed
      */
     public function getValue()
     {
-        $model = $this->getBaseHolder()->getModel2();
-        if (isset($this->baseHolder->data[$this->name])) {
-            return $this->baseHolder->data[$this->name];
+        $model = $this->holder->getModel();
+        if (isset($this->holder->data[$this->name])) {
+            return $this->holder->data[$this->name];
         }
         if ($model) {
             if (isset($model[$this->name])) {
@@ -177,6 +136,6 @@ class Field
 
     public function __toString(): string
     {
-        return "$this->baseHolder.$this->name";
+        return "$this->holder.$this->name";
     }
 }

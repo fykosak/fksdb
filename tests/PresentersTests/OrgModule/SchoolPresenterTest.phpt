@@ -9,12 +9,13 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Components\EntityForms\SchoolFormComponent;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 class SchoolPresenterTest extends AbstractOrgPresenterTestCase
@@ -34,7 +35,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
             'target' => 'PU',
             'city' => 'PU',
             'postal_code' => '02001',
-            'region_id' => '1',
+            'country_id' => (string)CountryService::SLOVAKIA,
         ]);
         $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'address_id' => $address->address_id,
@@ -56,17 +57,18 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
     {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
-            SchoolFormComponent::CONT_ADDRESS => [
-                'first_row' => 'PU',
-                'second_row' => 'PU',
-                'target' => 'PU',
-                'city' => 'PU',
-                'postal_code' => '02001',
-                'region_id' => '1',
-            ],
             SchoolFormComponent::CONT_SCHOOL => [
                 'name' => 'Test school',
                 'name_abbrev' => 'T school',
+                'address_id' => ReferencedId::VALUE_PROMISE,
+                'address_id_container' => [
+                    'first_row' => 'PU',
+                    'second_row' => 'PU',
+                    'target' => 'PU',
+                    'city' => 'PU',
+                    'postal_code' => '02001',
+                    'country_id' => (string)CountryService::SLOVAKIA,
+                ],
             ],
         ]);
         Assert::type(RedirectResponse::class, $response);
@@ -80,26 +82,24 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest(
             'edit',
             [
-                SchoolFormComponent::CONT_ADDRESS => [
-                    'first_row' => 'PU',
-                    'second_row' => 'PU',
-                    'target' => 'PU',
-                    'city' => 'PU edited',
-                    'postal_code' => '02001',
-                    'region_id' => '1',
-                ],
                 SchoolFormComponent::CONT_SCHOOL => [
                     'name' => 'Test school edited',
                     'name_abbrev' => 'T school',
+                    'address_id' => (string)$this->school->address_id,
+                    'address_id_container' => [
+                        'first_row' => 'PU',
+                        'second_row' => 'PU',
+                        'target' => 'PU',
+                        'city' => 'PU edited',
+                        'postal_code' => '02001',
+                        'country_id' => (string)CountryService::SLOVAKIA,
+                    ],
                 ],
             ],
             [
                 'id' => $this->school->school_id,
             ]
         );
-        if ($response instanceof TextResponse) {
-            file_put_contents('t.html', (string)$response->getSource());
-        }
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init, $after);

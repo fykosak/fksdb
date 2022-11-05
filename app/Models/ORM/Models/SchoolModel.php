@@ -32,6 +32,6 @@ class SchoolModel extends Model implements Resource
 
     public function isCzSk(): bool
     {
-        return in_array($this->address->region->country_iso, ['CZ', 'SK']);
+        return in_array($this->address->country->alpha_2, ['CZ', 'SK']);
     }
 }

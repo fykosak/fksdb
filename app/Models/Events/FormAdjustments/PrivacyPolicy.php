@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -39,12 +40,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     /**
-     * @throws BadTypeException
+     * @param BaseHolder $holder
      * @throws OmittedControlException
+     * @throws BadTypeException
      */
-    public function adjust(Form $form, Holder $holder): void
+    public function adjust(Form $form, ModelHolder $holder): void
     {
-        if ($holder->primaryHolder->getModelState() != AbstractMachine::STATE_INIT) {
+        if ($holder->getModelState() != Machine::STATE_INIT) {
             return;
         }
 
@@ -56,15 +58,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     public function process(
-        array $states,
+        ?EventParticipantStatus $state,
         ArrayHash $values,
-        Machine $machine,
-        Holder $holder,
+        ModelHolder $holder,
         Logger $logger,
-        ?Form $form = null
-    ): ?array {
+        ?Form $form
+    ): void {
         $this->trySetAgreed($values);
-        return null;
     }
 
     private function trySetAgreed(ArrayHash $values): void

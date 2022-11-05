@@ -1,11 +1,8 @@
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType FKSDB\Models\Events\Machine\Machine $machine}
-{var $state = $holder->primaryHolder->getModelState()}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{var $state = $holder->getModelState()}
 <p>
-    Změna stavu přihlášky osoby {$person->getFullName()} na akci <em>{$event}</em>.
-    Nový stav <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
+    Změna stavu přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->name}</em>.
+    Nový stav <em>{$state->label()}</em>.
 </p>
-{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/eventEdit.cs.latte'}
 {include 'inc/closing.cs.latte'}

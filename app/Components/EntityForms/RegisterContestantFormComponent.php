@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
@@ -115,12 +114,8 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
-            try {
-                $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
-                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
-            } catch (SendFailedException $exception) {
-                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
-            }
+            $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+            $this->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
         }
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }

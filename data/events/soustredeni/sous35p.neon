@@ -1,6 +1,6 @@
 events:
     soustredeni35p:
-        event_type_id: [5] # jarní i podzimní sous. nejsou různá
+        eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [35] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
 #        notifyBcc: vercah@fykos.cz
@@ -24,33 +24,30 @@ events:
                 default: 1970-01-01 00:00:00
 
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states: %events.defaultSous.states%
 
                 transitions:
                     __init->invited:
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited)
                     __init->spare:
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(regOpen(),role('admin'))
                         label: _('Confirm participation')
@@ -65,33 +62,33 @@ events:
                     spare->spare1:
                         condition: role('admin')
                         label: _('Send first call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder)
                     invited->invited1:
                         condition: role('admin')
                         label: _('Send first call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder)
                     spare1->spare2:
                         condition: role('admin')
                         label: _('Send second call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder)
                     invited1->invited2:
                         condition: role('admin')
                         label: _('Send second call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder)
                     spare2->spare3:
                         condition: role('admin')
                         label: _('Send last call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder)
                     invited2->invited3:
                         condition: role('admin')
                         label: _('Send last call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder)
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(regOpen(),role('admin'))
                         label: _('Decline participation')
@@ -99,28 +96,28 @@ events:
                     interested->applied:
                         condition: role('admin')
                         label: _('Confirm participation')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied)
                     spare->invited:
                         condition: role('admin')
                         label: _('Invite as participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
                     spare1->invited1:
                         condition: role('admin')
                         label: _('Invite as participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
                     spare2->invited2:
                         condition: role('admin')
                         label: _('Invite as participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
                     spare3->invited3:
                         condition: role('admin')
                         label: _('Invite as participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Participated')
@@ -182,11 +179,6 @@ events:
                     out_of_db->cancelled:
                         condition: role('admin')
                         label: _('Return to DB as cancelled')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -215,12 +207,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")

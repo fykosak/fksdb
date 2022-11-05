@@ -13,13 +13,12 @@ use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
-use Fykosak\Utils\Logging\Message;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
 use Nette\Application\UI\Form;
@@ -274,9 +273,6 @@ final class AuthenticationPresenter extends BasePresenter
         } catch (AuthenticationException | RecoveryException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
-        } catch (SendFailedException $exception) {
-            $connection->rollBack();
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 

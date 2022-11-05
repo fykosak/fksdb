@@ -42,8 +42,8 @@ abstract class EventTestCase extends DatabaseTestCase
             Helpers::merge($params, [
                 'action' => 'default',
                 'lang' => 'cs',
-                'contestId' => (string)1,
-                'year' => (string)1,
+                'contestId' => '1',
+                'year' => '1',
                 'eventId' => $this->getEvent()->event_id,
             ]),
             Helpers::merge($formData, [

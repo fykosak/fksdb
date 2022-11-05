@@ -6,13 +6,11 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Tracy\Debugger;
@@ -40,9 +38,6 @@ abstract class PaymentTransitions implements TransitionsDecorator
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
-        $machine->setImplicitCondition(
-            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->event, PaymentModel::RESOURCE_ID)
-        );
 
         $this->decorateTransitionAllToCanceled($machine);
         $this->decorateTransitionWaitingToReceived($machine);

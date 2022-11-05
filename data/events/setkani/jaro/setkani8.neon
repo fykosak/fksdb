@@ -14,7 +14,7 @@ parameters:
 
 events:
     setkani8jaro:
-        event_type_id: [11]
+        eventTypeIds: [11]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
         paramScheme:
@@ -25,22 +25,15 @@ events:
             capacity:
                 default: 0
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states:
-                    - applied
-                    - participated
-                    - missed
-                    - cancelled
 
                 transitions:
                     __init->applied:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
@@ -52,10 +45,6 @@ events:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -101,12 +90,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Účastník')
-                    required: true
-                    primary: true
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

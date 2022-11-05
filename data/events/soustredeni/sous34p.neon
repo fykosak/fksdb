@@ -1,6 +1,6 @@
 events:
     soustredeni34p:
-        event_type_id: [5] # jarní i podzimní sous. nejsou různá
+        eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
         paramScheme:
@@ -24,33 +24,30 @@ events:
                 default: až naprší a uschne
 
 
-        baseMachines:
-            PARTICIPANT:
+        baseMachine:
                 service: @orm.event_participant.service
-
-                states: %events.defaultSous.states%
 
                 transitions:
                     __init->invited:
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited)
                     __init->spare:
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Invite Spare')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')
@@ -65,33 +62,33 @@ events:
                     spare->spare1:
                         condition: and(after(param('deadlineCall1')),role('admin'))
                         label: _('Send first call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare1, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare1)
                     invited->invited1:
                         condition: and(after(param('deadlineCall1')),role('admin'))
                         label: _('Send first call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited1, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited1)
                     spare1->spare2:
                         condition: and(after(param('deadlineCall2')),role('admin'))
                         label: _('Send second call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare2, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare2)
                     invited1->invited2:
                         condition: and(after(param('deadlineCall2')),role('admin'))
                         label: _('Send second call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited2, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited2)
                     spare2->spare3:
                         condition: and(after(param('deadlineCallLast')),role('admin'))
                         label: _('Send last call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare3, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare3)
                     invited2->invited3:
                         condition: and(after(param('deadlineCallLast')),role('admin'))
                         label: _('Send last call')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited3, self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited3)
                     interested->applied:
                         condition: role('admin')
                         label: _('Validate as a participant')
@@ -168,11 +165,6 @@ events:
                     out_of_db->cancelled:
                         condition: role('admin')
                         label: _('Return to DB as Cancelled')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -201,12 +193,8 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
+            baseMachine:
                     label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")

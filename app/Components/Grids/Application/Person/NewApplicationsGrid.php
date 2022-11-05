@@ -8,8 +8,9 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -58,20 +59,17 @@ class NewApplicationsGrid extends BaseGrid
                         ->link(':Event:TeamApplication:create', ['eventId' => $event->event_id]);
                 }
                 return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $event->event_id]);
-            })
-            ->setShow(function (EventModel $event): bool {
-                if ($event->isTeamEvent()) {
-                    return true;
+            })->setShow(function (EventModel $modelEvent): bool {
+                try {
+                    return (bool)count(
+                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
+                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
+                        )
+                    );
+                } catch (\Throwable $exception) {
+                    return $modelEvent->isRegistrationOpened();
                 }
-                $holder = $this->eventDispatchFactory->getDummyHolder($event);
-                $machine = $this->eventDispatchFactory->getEventMachine($event);
-                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions(
-                    $holder,
-                    AbstractMachine::STATE_INIT,
-                    true,
-                    true
-                );
-                return (bool)count($transitions);
             });
     }
 }

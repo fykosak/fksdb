@@ -2852,7 +2852,7 @@ msgstr "Škola byla aktualizována."
 
 #: ../app/Components/EntityForms/SchoolFormComponent.php:79
 msgid "School has been created"
-msgstr "Učitel byl vytvořen."
+msgstr "Škola byla vytvořena."
 
 #: ../app/Components/EntityForms/OrgFormComponent.php:75
 msgid "Org has been updated."

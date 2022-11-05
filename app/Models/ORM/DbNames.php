@@ -28,8 +28,9 @@ class DbNames
     public const TAB_PERSON_INFO = 'person_info';
     public const TAB_POST_CONTACT = 'post_contact';
     public const TAB_PSC_REGION = 'psc_region';
+    public const TAB_COUNTRY = 'country';
+    public const TAB_COUNTRY_SUBDIVISION = 'country_subdivision';
     public const TAB_SUBMIT_QUESTION = 'submit_question';
-    public const TAB_REGION = 'region';
     public const TAB_ROLE = 'role';
     public const TAB_SCHOOL = 'school';
     public const TAB_STORED_QUERY = 'stored_query';
@@ -48,8 +49,6 @@ class DbNames
     public const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */
-    public const TAB_E_DSEF_GROUP = 'e_dsef_group';
-    public const TAB_E_DSEF_PARTICIPANT = 'e_dsef_participant';
     public const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     public const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
 

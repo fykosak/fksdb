@@ -6,9 +6,9 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -41,7 +41,10 @@ class TeamsPerSchool extends SchoolCheck
     public function getTeamsPerSchool(): int
     {
         if (!isset($this->teamsPerSchoolValue)) {
-            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
+            $this->teamsPerSchoolValue = $this->evaluator->evaluate(
+                $this->teamsPerSchool,
+                $this->holder
+            );
         }
         return $this->teamsPerSchoolValue;
     }
@@ -54,9 +57,12 @@ class TeamsPerSchool extends SchoolCheck
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
-        $this->setHolder($holder);
+        $this->holder = $holder;
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
@@ -83,13 +89,7 @@ class TeamsPerSchool extends SchoolCheck
 
     private function checkMulti(bool $first, ?Control $control, array $schools): bool
     {
-        $team = $this->getHolder()->primaryHolder->getModel2();
-        $event = $this->getHolder()->primaryHolder->event;
-        $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
-        $group = reset($secondaryGroups);
-        $baseHolders = $group['holders'];
-        /** @var BaseHolder $baseHolder */
-        $baseHolder = reset($baseHolders);
+        $team = $this->holder->getModel();
 
         if (!isset($this->cache) || $first) {
             /*
@@ -101,8 +101,8 @@ class TeamsPerSchool extends SchoolCheck
                     "GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name 
                     ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams"
                 )
-                ->where($baseHolder->eventIdColumn, $event->getPrimary())
-                ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
+                ->where('event_participant.event_id', $this->holder->event->getPrimary())
+                ->where('person.person_history:ac_year', $this->holder->event->getContestYear()->ac_year)
                 ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?

@@ -34,7 +34,7 @@ class SingleEvent extends EventModuleTestCase
             ['Event:Chart', 'participantAcquaintance'],
             ['Event:Chart', 'singleApplicationProgress'],
             ['Event:Chart', 'teamApplicationProgress'],
-            ['Event:Chart', 'model'],
+            /* ['Event:Chart', 'model'],*/
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],

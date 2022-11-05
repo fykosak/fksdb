@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Nette\DI\Container;
 
@@ -15,9 +15,9 @@ class TransitionButtonsComponent extends BaseComponent
 {
 
     private ApplicationHandler $handler;
-    private Holder $holder;
+    private BaseHolder $holder;
 
-    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
+    public function __construct(Container $container, ApplicationHandler $handler, BaseHolder $holder)
     {
         parent::__construct($container);
         $this->handler = $handler;
@@ -26,11 +26,9 @@ class TransitionButtonsComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions(
+        $this->template->transitions = $this->handler->getMachine()->getAvailableTransitions(
             $this->holder,
-            $this->holder->primaryHolder->getModelState(),
-            true,
-            true
+            $this->holder->getModelState()
         );
         $this->template->holder = $this->holder;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');

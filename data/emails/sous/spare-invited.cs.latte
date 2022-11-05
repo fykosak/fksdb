@@ -1,14 +1,14 @@
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 
 <p>
-    {if $person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo na {$event->event_type->name} v obci {$holder->getParameter('letterWhere')} v termínu od {$event->begin|date:'j. n.'} do {$event->end|date:'j. n. Y'}, jsi
+    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo na {$holder->event->event_type->name} v obci {$holder->getParameter('letterWhere')} v termínu od {$holder->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
+    , jsi
     nyní mezi pozvanými. Gratulujeme.
 </p>
 <p>
-    Připomínáme, že stále čekáme na Tvou odpověď. Pokud bys měl{if $person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+    Připomínáme, že stále čekáme na Tvou odpověď. Pokud bys měl{if $holder->getPerson()->gender->value == 'F'}a{/if} jakýkoliv dotaz,
+    neváhej se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>
     Za organizátory<br>
