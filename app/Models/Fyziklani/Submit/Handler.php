@@ -28,10 +28,8 @@ class Handler
     private EventModel $event;
     private TaskCodePreprocessor $taskCodePreprocessor;
 
-    public function __construct(
-        EventModel $event,
-        Container $container
-    ) {
+    public function __construct(EventModel $event, Container $container)
+    {
         $this->event = $event;
         $container->callInjects($this);
     }
