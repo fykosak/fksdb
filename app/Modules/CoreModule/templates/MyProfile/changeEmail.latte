@@ -1,16 +1,4 @@
-{varType bool $changeActive}
-{varType string $lang}
 {block content}
-    {if $changeActive}
-        <p class="alert alert-info">{_'Changing in progress, please check yout email and confirm you new mail.'}</p>
-    {else}
-        <p class="alert alert-info">
-            {switch $lang}
-                {cache 'cs'}{/cache}
-                {cache 'en'}{/cache}
-            {/switch}
-        </p>
-        {control changeEmail}
-    {/if}
+    {control changeEmail}
 {/block}
 

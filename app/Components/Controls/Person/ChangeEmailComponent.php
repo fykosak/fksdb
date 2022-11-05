@@ -10,10 +10,13 @@ use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -42,6 +45,9 @@ class ChangeEmailComponent extends BaseComponent
 
     public function render(): void
     {
+        $login = $this->person->getLogin();
+        $this->template->lang = Language::from($this->lang);
+        $this->template->changeActive = $login && $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.email.latte');
     }
 
@@ -78,5 +84,12 @@ class ChangeEmailComponent extends BaseComponent
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');
+    }
+
+    public function changeEmail(): void
+    {
+        $logger = new MemoryLogger();
+        $this->accountManager->tryChangeEmail($this->person, $logger);
+        FlashMessageDump::dump($logger, $this->getPresenter());
     }
 }

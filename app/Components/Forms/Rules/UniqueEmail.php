@@ -34,7 +34,7 @@ class UniqueEmail
         $email = $control->getValue();
 
         $conflicts = $this->personInfoService->getTable()->where(['email' => $email]);
-        if ($this->ignoredPerson && $this->ignoredPerson->person_id) {
+        if (isset($this->ignoredPerson)) {
             $conflicts->where('NOT person_id = ?', $this->ignoredPerson->person_id);
         }
         if (count($conflicts) > 0) {

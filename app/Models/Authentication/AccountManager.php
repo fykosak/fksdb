@@ -15,7 +15,10 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
@@ -31,7 +34,9 @@ class AccountManager
         private readonly MailTemplateFactory $mailTemplateFactory,
         private readonly LoginService $loginService,
         private readonly AuthTokenService $authTokenService,
-        private readonly EmailMessageService $emailMessageService
+        private readonly EmailMessageService $emailMessageService,
+        private readonly TokenAuthenticator $tokenAuthenticator,
+        private readonly PersonInfoService $personInfoService,
     ) {
     }
 
@@ -98,16 +103,7 @@ class AccountManager
      */
     public function sendChangeEmail(PersonModel $person, string $newEmail, Language $lang): void
     {
-        Debugger::log(
-            sprintf(
-                'person %d (%s) with old email "%s" ask change to %s',
-                $person->person_id,
-                $person->getFullName(),
-                $person->getInfo()->email,
-                $newEmail
-            ),
-            'email-change'
-        );
+        self::logEmailChange($person, $newEmail, true);
         $login = $person->getLogin();
         if (!$login) {
             $this->createLogin($person);
@@ -140,6 +136,39 @@ class AccountManager
         ];
         $this->emailMessageService->addMessageToSend($oldData);
         $this->emailMessageService->addMessageToSend($newData);
+    }
+
+    public function tryChangeEmail(PersonModel $person, Logger $logger): void
+    {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::ChangeEmail)) {
+            try {
+                $newEmail = $this->tokenAuthenticator->getTokenData();
+                self::logEmailChange($person, $newEmail, false);
+                $this->personInfoService->storeModel([
+                    'email' => $this->tokenAuthenticator->getTokenData(),
+                ], $person->getInfo());
+                $logger->log(new Message(_('Email has ben changed'), Message::LVL_SUCCESS));
+                $this->tokenAuthenticator->disposeAuthToken();
+            } catch (\Throwable) {
+                $logger->log(new Message(_('Some error occurred! Please contact system admins.'), Message::LVL_ERROR));
+            }
+        }
+    }
+
+    private static function logEmailChange(PersonModel $person, string $newEmail, bool $request): void
+    {
+        Debugger::log(
+            sprintf(
+                $request
+                    ? 'request: person %d (%s) old: "%s" new: "%s"'
+                    : 'change: person %d (%s) old: "%s" new: "%s"',
+                $person->person_id,
+                $person->getFullName(),
+                $person->getInfo()->email,
+                $newEmail
+            ),
+            'email-change'
+        );
     }
 
     final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel

@@ -12,7 +12,7 @@ use Nette\Forms\Controls\BaseControl;
 class UniqueLogin
 {
     private LoginService $loginService;
-    private ?LoginModel $ignoredLogin;
+    private ?LoginModel $ignoredLogin = null;
 
     public function __construct(Container $container)
     {
@@ -24,7 +24,7 @@ class UniqueLogin
         $this->loginService = $loginService;
     }
 
-    public function setIgnoredLogin(?LoginModel $ignoredLogin): void
+    public function setIgnoredLogin(LoginModel $ignoredLogin): void
     {
         $this->ignoredLogin = $ignoredLogin;
     }
@@ -36,7 +36,7 @@ class UniqueLogin
             return true;
         }
         $conflicts = $this->loginService->getTable()->where(['login' => $login]);
-        if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
+        if (isset($this->ignoredLogin)) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }
         if (count($conflicts) > 0) {

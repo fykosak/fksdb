@@ -14,6 +14,10 @@ enum AuthTokenType: string implements EnumColumn
     case Recovery = 'recovery';
     case EventNotify = 'event_notify';
     case ChangeEmail = 'change_email';
+    /** @internal */
+    case EmailMessage = 'email_message';
+    /** @deprecated */
+    case SSO = 'sso';
 
     public function badge(): Html
     {

@@ -30,9 +30,8 @@ class SettingsPresenter extends BasePresenter
 
     private LoginService $loginService;
 
-    final public function injectQuarterly(
-        LoginService $loginService
-    ): void {
+    final public function injectQuarterly(LoginService $loginService): void
+    {
         $this->loginService = $loginService;
     }
 
@@ -86,18 +85,9 @@ class SettingsPresenter extends BasePresenter
             $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery);
 
         $group = $form->addGroup(_('Authentication'));
-        $rule = function (BaseControl $baseControl) use ($login): bool {
-            $uniqueLogin = new UniqueLogin($this->getContext());
-            $uniqueLogin->setIgnoredLogin($login);
-
-            $uniqueEmail = new UniqueEmail($this->getContext());
-            $uniqueEmail->setIgnoredPerson($login->person);
-
-            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
-        };
         $loginContainer = $this->createLogin(
             $group,
-            $rule,
+            $login,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
         );
@@ -124,7 +114,7 @@ class SettingsPresenter extends BasePresenter
 
     private function createLogin(
         ControlGroup $group,
-        callable $loginRule,
+        LoginModel $loginModel,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ModelContainer {
@@ -134,7 +124,15 @@ class SettingsPresenter extends BasePresenter
         $login = $container->addText('login', _('Username'));
         $login->setHtmlAttribute('autocomplete', 'username');
 
-        $login->addRule($loginRule, _('This username is already taken.'));
+        $login->addRule(function (BaseControl $baseControl) use ($loginModel): bool {
+            $uniqueLogin = new UniqueLogin($this->getContext());
+            $uniqueLogin->setIgnoredLogin($loginModel);
+
+            $uniqueEmail = new UniqueEmail($this->getContext());
+            $uniqueEmail->setIgnoredPerson($loginModel->person);
+
+            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
+        }, _('This username is already taken.'));
 
 
         if ($verifyOldPassword) {
