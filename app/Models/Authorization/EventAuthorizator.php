@@ -27,10 +27,7 @@ class EventAuthorizator
         $this->permission = $acl;
     }
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    public function isAllowed($resource, ?string $privilege, EventModel $event): bool
+    public function isAllowed(Resource | string | null $resource, ?string $privilege, EventModel $event): bool
     {
         if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest)) {
             return true;

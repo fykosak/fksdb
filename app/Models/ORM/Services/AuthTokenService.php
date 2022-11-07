@@ -75,13 +75,13 @@ class AuthTokenService extends Service
         return $token;
     }
 
-    public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
+    public function verifyToken(string $tokenData): ?AuthTokenModel
     {
-        $tokens = $this->getTable()->where('token', $tokenData);
-        if ($strict) {
-            $tokens->where('since <= NOW()')->where('until IS NULL OR until >= NOW()');
-        }
-        return $tokens->fetch();
+        return $this->getTable()
+            ->where('token', $tokenData)
+            ->where('since <= NOW()')
+            ->where('until IS NULL OR until >= NOW()')
+            ->fetch();
     }
 
     public function disposeToken(string $token): void

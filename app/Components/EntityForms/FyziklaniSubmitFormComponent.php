@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\Handler;
@@ -28,13 +27,10 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 'team_id' => $this->model->fyziklani_team_id,
                 'points' => $this->model->points,
             ]);

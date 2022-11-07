@@ -95,6 +95,10 @@ fksrouter:
 
         # Application itself (note the presenters w/out module are handled specially)
         -
+            mask: 'profile/[<presenter>[/<action=default>[/<id>]]]'
+            module: Profile
+            presenter: Default
+        -
             mask: '<module %eventModules%>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             module: Event
             presenter: Dashboard

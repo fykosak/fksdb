@@ -134,7 +134,7 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->machine->executeImplicitTransition($holder);
                 $model = $holder->getModel();
             }
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             $connection->rollBack();
             return;
         }
@@ -154,10 +154,7 @@ class PaymentFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
             $values = $this->model->toArray();
@@ -169,11 +166,11 @@ class PaymentFormComponent extends EntityFormComponent
                 $items[$key][$row->person_schedule_id] = true;
             }
             $values['payment_accommodation'] = $items;
-            $this->getForm()->setDefaults($values);
+            $form->setDefaults($values);
         } else {
             /** @var LoginModel $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 'person_id' => $login->person->person_id,
             ]);
         }

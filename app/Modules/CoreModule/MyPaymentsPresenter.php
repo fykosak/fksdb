@@ -10,24 +10,8 @@ use Fykosak\Utils\UI\PageTitle;
 
 class MyPaymentsPresenter extends BasePresenter
 {
-
-    public function authorizedDefault(): void
+    protected function startup(): void
     {
-        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getLoggedPerson());
-    }
-
-    public function titleDefault(): PageTitle
-    {
-        return new PageTitle(null, _('My payments'), 'fa fa-credit-card');
-    }
-
-    protected function createComponentMyPaymentGrid(): PersonRelatedGrid
-    {
-        return new PersonRelatedGrid(
-            'payment',
-            $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
-            $this->getContext()
-        );
+        $this->redirect(':Profile:Payments:');
     }
 }

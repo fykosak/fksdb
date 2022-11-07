@@ -1,0 +1,47 @@
+{varType FKSDB\Models\ORM\Models\AddressModel|null $permanentAddress}
+{varType FKSDB\Models\ORM\Models\AddressModel|null $deliveryAddress}
+{block content}
+    {var $addressPrinter = new FKSDB\Models\ValuePrinters\AddressPrinter()}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{_'Permanent address'}</h5>
+                    <p class="card-text">{$addressPrinter($permanentAddress)}</p>
+                    <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#address-p"
+                            type="button">
+                        {_'Edit'}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{_'Delivery addesss'}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{_'When different from delivery address. Mails will be send to permanent address.'}</h6>
+                    <p class="card-text">{$addressPrinter($deliveryAddress)}</p>
+                    <button class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#address-d"
+                            type="button">
+                        {_'Edit or remove'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="card collapse" id="address-p">
+        <h5 class="card-header">{_'Edit permanet address'}</h5>
+        <div class="card-body">
+            {control permanentPostContactForm}
+        </div>
+    </div>
+
+    <div class="card collapse" id="address-d">
+        <h5 class="card-header">{_'Edit delivery address'}</h5>
+        <div class="card-body">
+            {control deliveryPostContactForm}
+        </div>
+    </div>
+
+{/block}

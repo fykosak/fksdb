@@ -15,8 +15,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -84,12 +82,5 @@ class ChangeEmailComponent extends BaseComponent
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');
-    }
-
-    public function changeEmail(): void
-    {
-        $logger = new MemoryLogger();
-        $this->accountManager->tryChangeEmail($this->person, $logger);
-        FlashMessageDump::dump($logger, $this->getPresenter());
     }
 }

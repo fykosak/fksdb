@@ -223,14 +223,11 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     public static function mapAddressContainerNameToType(string $containerName): PostContactType
     {
-        switch ($containerName) {
-            case self::POST_CONTACT_PERMANENT:
-                return PostContactType::tryFrom(PostContactType::PERMANENT);
-            case self::POST_CONTACT_DELIVERY:
-                return PostContactType::tryFrom(PostContactType::DELIVERY);
-            default:
-                throw new InvalidArgumentException();
-        }
+        return match ($containerName) {
+            self::POST_CONTACT_PERMANENT => PostContactType::Permanent,
+            self::POST_CONTACT_DELIVERY => PostContactType::Delivery,
+            default => throw new InvalidArgumentException(),
+        };
     }
 
     private function storePerson(?PersonModel $person, array $personData): PersonModel
@@ -241,9 +238,6 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
-    /**
-     * @return mixed
-     */
     public static function getPersonValue(
         ?PersonModel $person,
         string $sub,
@@ -251,7 +245,7 @@ class ReferencedPersonHandler extends ReferencedHandler
         ContestYearModel $contestYear,
         bool $extrapolate = false,
         ?EventModel $event = null
-    ) {
+    ): mixed {
         if (!$person) {
             return null;
         }
@@ -271,9 +265,9 @@ class ReferencedPersonHandler extends ReferencedHandler
                 return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
                     : null;
             case 'post_contact_d':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+                return $person->getPostContact(PostContactType::Delivery);
             case 'post_contact_p':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
+                return $person->getPostContact(PostContactType::Permanent);
             case 'person_has_flag':
                 return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
             default:

@@ -68,10 +68,7 @@ class EventFormComponent extends EntityFormComponent
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @return never
-     */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleFormSuccess(Form $form): never
     {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
@@ -83,18 +80,17 @@ class EventFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws BadTypeException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters');
             $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $paramControl->setOption('description', $this->createParamDescription($holder));
             $paramControl->addRule(function (BaseControl $control) use ($holder): bool {

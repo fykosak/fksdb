@@ -38,11 +38,12 @@ class ContestAuthorizator
     /**
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
-     *
-     * @param Resource|string|null $resource
      */
-    public function isAllowed($resource, ?string $privilege, ?ContestModel $contest = null): bool
-    {
+    public function isAllowed(
+        Resource | string | null $resource,
+        ?string $privilege,
+        ?ContestModel $contest = null
+    ): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(RoleModel::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
@@ -52,12 +53,9 @@ class ContestAuthorizator
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
 
-    /**
-     * @param Resource|string $resource
-     */
     final public function isAllowedForLogin(
         LoginModel $login,
-        $resource,
+        Resource | string | null $resource,
         ?string $privilege,
         ?ContestModel $contest = null
     ): bool {

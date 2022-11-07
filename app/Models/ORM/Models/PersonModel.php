@@ -135,8 +135,8 @@ class PersonModel extends Model implements Resource
 
     public function getActivePostContact(): ?PostContactModel
     {
-        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
-            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->getPostContact(PostContactType::Permanent) ??
+            $this->getPostContact(PostContactType::Delivery);
     }
 
     public function getEventParticipants(): TypedGroupedSelection

@@ -40,10 +40,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
     }
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    protected function isAnyContestAuthorized($resource, ?string $privilege): bool
+    protected function isAnyContestAuthorized(Resource | string | null $resource, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($resource, $privilege);
     }

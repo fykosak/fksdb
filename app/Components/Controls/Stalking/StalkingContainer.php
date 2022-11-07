@@ -103,7 +103,7 @@ class StalkingContainer extends BaseComponent
             $this->getContext(),
             $this->person,
             $this->userPermission,
-            PostContactType::tryFrom(PostContactType::PERMANENT)
+            PostContactType::Permanent
         );
     }
 
@@ -113,7 +113,7 @@ class StalkingContainer extends BaseComponent
             $this->getContext(),
             $this->person,
             $this->userPermission,
-            PostContactType::tryFrom(PostContactType::DELIVERY)
+            PostContactType::Delivery
         );
     }
 

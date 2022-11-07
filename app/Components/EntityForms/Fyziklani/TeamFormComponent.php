@@ -25,7 +25,6 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -178,18 +177,15 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults(['team' => $this->model->toArray()]);
+            $form->setDefaults(['team' => $this->model->toArray()]);
             /** @var TeamMemberModel $member */
             $index = 0;
             foreach ($this->model->getMembers() as $member) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $this->getForm()->getComponent('member_' . $index);
+                $referencedId = $form->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
                 $index++;
             }

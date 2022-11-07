@@ -104,12 +104,9 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([
+        $form->setDefaults([
             self::CONT_CONTESTANT => [
                 'person_id' => isset($this->person) ? $this->person->person_id
                     : ReferencedId::VALUE_PROMISE,

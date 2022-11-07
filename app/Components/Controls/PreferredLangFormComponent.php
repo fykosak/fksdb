@@ -38,9 +38,8 @@ class PreferredLangFormComponent extends FormComponent
         return $form->addSubmit('submit', _('Save'));
     }
 
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             $this->personInfoService->storeModel(

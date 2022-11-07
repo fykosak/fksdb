@@ -85,10 +85,10 @@ class AddressFormComponent extends EntityFormComponent
         }
     }
 
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         /** @var AddressDataContainer $container */
-        $container = $this->getForm()->getComponent(self::CONTAINER);
+        $container = $form->getComponent(self::CONTAINER);
         $container->setModel(
             isset($this->model) ? $this->model->address : null,
             ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
@@ -101,7 +101,7 @@ class AddressFormComponent extends EntityFormComponent
             $this->flashMessage(_('Address does not exists'), Message::LVL_ERROR);
             return;
         }
-        if ($this->postContactType->value === PostContactType::PERMANENT) {
+        if ($this->postContactType === PostContactType::Permanent) {
             $this->flashMessage(_('Permanent address cannot be deleted'), Message::LVL_ERROR);
             return;
         }
