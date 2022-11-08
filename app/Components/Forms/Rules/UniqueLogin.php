@@ -12,9 +12,8 @@ use Nette\Forms\Controls\BaseControl;
 class UniqueLogin
 {
     private LoginService $loginService;
-    private ?LoginModel $ignoredLogin = null;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, private readonly ?LoginModel $ignoredLogin = null)
     {
         $container->callInjects($this);
     }
@@ -22,11 +21,6 @@ class UniqueLogin
     public function inject(LoginService $loginService): void
     {
         $this->loginService = $loginService;
-    }
-
-    public function setIgnoredLogin(LoginModel $ignoredLogin): void
-    {
-        $this->ignoredLogin = $ignoredLogin;
     }
 
     public function __invoke(BaseControl $control): bool

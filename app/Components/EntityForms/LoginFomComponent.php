@@ -23,7 +23,7 @@ class LoginFomComponent extends EntityFormComponent
     private LoginService $loginService;
     private const CONTAINER = 'login';
 
-    public function __construct(Container $container, LoginModel $model, private readonly bool $verifyOld = false)
+    public function __construct(Container $container, LoginModel $model)
     {
         parent::__construct($container, $model);
     }
@@ -38,50 +38,25 @@ class LoginFomComponent extends EntityFormComponent
         $container = new ModelContainer();
         $login = $container->addText('login', _('Username'));
         $login->setHtmlAttribute('autocomplete', 'username');
-        $login->addRule(function (BaseControl $baseControl): bool {
-            $uniqueLogin = new UniqueLogin($this->getContext());
-            $uniqueLogin->setIgnoredLogin($this->model);
-
-            $uniqueEmail = new UniqueEmail($this->getContext());
-            $uniqueEmail->setIgnoredPerson($this->model->person);
-
-            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
-        }, _('This username is already taken.'));
-
-        if ($this->verifyOld) {
-            $container->addPassword('old_password', _('Old password'))
-                ->setHtmlAttribute('autocomplete', 'current-password')
-                ->addRule(Form::FILLED)
-                ->addCondition(Form::FILLED)
-                ->addRule(
-                    fn(BaseControl $control): bool => $this->model->calculateHash($control->getValue()) ===
-                        $this->model->hash,
-                    _('Incorrect old password.')
-                );
-        }
+        $login->addRule(
+            fn(BaseControl $baseControl): bool => (new UniqueLogin($this->getContext(), $this->model))($baseControl)
+                && (new UniqueEmail($this->getContext(), $this->model->person))($baseControl),
+            _('This username is already taken.')
+        );
+        $form->addComponent($container, self::CONTAINER);
     }
 
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-
-        $loginData = FormUtils::emptyStrToNull2($values);
-        /* if ($loginData['password']) {
-             $loginData['hash'] = $login->calculateHash($loginData['password']);
-         }*/
-
+        $loginData = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->loginService->storeModel($loginData, $this->model);
-
         $this->getPresenter()->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);
-        /*   if ($tokenAuthentication) {
-               $this->flashMessage(_('Password changed.'), Message::LVL_SUCCESS);
-               $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
-           }*/
         $this->getPresenter()->redirect('this');
     }
 
     protected function setDefaults(Form $form): void
     {
-        $form->setDefaults($this->model->toArray());
+        $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
     }
 }

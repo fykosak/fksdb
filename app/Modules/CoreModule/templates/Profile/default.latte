@@ -1,0 +1,80 @@
+{varType FKSDB\Models\ORM\Models\AddressModel|null $permanentAddress}
+{varType FKSDB\Models\ORM\Models\AddressModel|null $deliveryAddress}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+
+{block content}
+    <hr/>
+    {var $addressPrinter = new FKSDB\Models\ValuePrinters\AddressPrinter()}
+    <div class="card">
+        <h3 class="card-header text-white bg-primary">{_'Address'}</h3>
+        <div class="card-body row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{_'Permanent address'}</h5>
+                        <p class="card-text">{$addressPrinter($permanentAddress)}</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="collapse"
+                                data-bs-target="#address-p"
+                                type="button">
+                            {_'Edit'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{_'Delivery addesss'}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{_'When different from delivery address. Mails will be send to permanent address.'}</h6>
+                        <p class="card-text">{$addressPrinter($deliveryAddress)}</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="collapse"
+                                data-bs-target="#address-d" type="button">
+                            {_'Edit or remove'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapse card-body" id="address-p">
+            <h4 class="card-title">{_'Edit permanet address'}</h4>
+            {control permanentPostContactForm}
+        </div>
+        <div class="collapse card-body" id="address-d">
+            <h4 class="card-title">{_'Edit delivery address'}</h4>
+            {control deliveryPostContactForm}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-header text-white bg-primary">{_'Account setting'}</h3>
+        <div class="card-body">
+            <h4 class="card-title text-primary">{_'Email address'}</h4>
+            {control changeEmail}
+        </div>
+        <hr/>
+        <div class="card-body">
+            <h4 class="card-title text-primary">{_'Preferred language'}</h4>
+            <p class="card-text text-muted">{_'Jazyk bude použíty vo všetkých mautomatický mailoch...'}</p>
+            {control preferredLangForm}
+        </div>
+        <hr/>
+        <div class="card-body">
+            <h4 class="card-title text-primary">{_'Username'}</h4>
+            <p class="card-text text-muted">{_'Uživateľske meno na prihlásenie do FKSDB a systémov využívajúci spoločný login'}</p>
+            {control loginForm}
+        </div>
+    </div>
+    <div class="card">
+        <h3 class="card-header text-white bg-primary">{_'Payments'}</h3>
+        <div class="card-body">
+            <p class="card-text">{_'Prehľad mojich platieb'}</p>
+            <a class="btn btn-outline-primary" href="{plink :Profile:Default:payments}">{_'List of my payments'}</a>
+        </div>
+    </div>
+    <div class="card">
+        <h3 class="card-header text-white bg-primary">{_'Events & applications'}</h3>
+        <div class="card-body">
+            <a class="btn btn-outline-primary" href="{plink :Profile:Default:applications}">{_'List of my applications for events'}</a>
+        </div>
+    </div>
+{/block}

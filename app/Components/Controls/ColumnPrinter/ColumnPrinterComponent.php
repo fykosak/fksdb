@@ -54,6 +54,20 @@ class ColumnPrinterComponent extends BaseComponent
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
+    final public function renderTitle(
+        string $field,
+        Model $model,
+        int $userPermission = FieldLevelPermission::ALLOW_FULL
+    ): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.title.latte');
+        $this->render($field, $model, $userPermission);
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     */
     final public function renderListItem(
         string $field,
         Model $model,

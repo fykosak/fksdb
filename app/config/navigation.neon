@@ -96,8 +96,3 @@ navigation:
             Warehouse.Producer.list: []
             Warehouse.Product.list: []
             Warehouse.Item.list: []
-        Profile.Default.default:
-            Profile.Applications.default: []
-            Profile.Email.default: []
-            Profile.Address.default: []
-            Profile.Payments.default: []

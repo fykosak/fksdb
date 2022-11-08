@@ -6,6 +6,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\PreferredLangFormComponent;
+use FKSDB\Components\EntityForms\LoginFomComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
@@ -66,10 +67,6 @@ class SettingsPresenter extends BasePresenter
         }
     }
 
-    protected function createComponentPreferredLangForm(): PreferredLangFormComponent
-    {
-        return new PreferredLangFormComponent($this->getContext(), $this->getLoggedPerson());
-    }
 
     /**
      * @throws BadTypeException
@@ -87,7 +84,6 @@ class SettingsPresenter extends BasePresenter
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
             $group,
-            $login,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
         );
@@ -114,26 +110,11 @@ class SettingsPresenter extends BasePresenter
 
     private function createLogin(
         ControlGroup $group,
-        LoginModel $loginModel,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
-
-        $login = $container->addText('login', _('Username'));
-        $login->setHtmlAttribute('autocomplete', 'username');
-
-        $login->addRule(function (BaseControl $baseControl) use ($loginModel): bool {
-            $uniqueLogin = new UniqueLogin($this->getContext());
-            $uniqueLogin->setIgnoredLogin($loginModel);
-
-            $uniqueEmail = new UniqueEmail($this->getContext());
-            $uniqueEmail->setIgnoredPerson($loginModel->person);
-
-            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
-        }, _('This username is already taken.'));
-
 
         if ($verifyOldPassword) {
             $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(

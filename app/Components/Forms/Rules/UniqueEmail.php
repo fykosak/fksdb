@@ -12,9 +12,8 @@ use Nette\Forms\Controls\BaseControl;
 class UniqueEmail
 {
     private PersonInfoService $personInfoService;
-    private ?PersonModel $ignoredPerson = null;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, private readonly ?PersonModel $ignoredPerson = null)
     {
         $container->callInjects($this);
     }
@@ -22,11 +21,6 @@ class UniqueEmail
     public function inject(PersonInfoService $personInfoService): void
     {
         $this->personInfoService = $personInfoService;
-    }
-
-    public function setIgnoredPerson(PersonModel $ignoredPerson): void
-    {
-        $this->ignoredPerson = $ignoredPerson;
     }
 
     public function __invoke(BaseControl $control): bool
