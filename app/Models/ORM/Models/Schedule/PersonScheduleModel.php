@@ -34,7 +34,7 @@ class PersonScheduleModel extends Model
         if (!$payment) {
             return false;
         }
-        if ($payment->state->value == PaymentState::CANCELED) {
+        if ($payment->state === PaymentState::Canceled) {
             return false;
         }
         return true;

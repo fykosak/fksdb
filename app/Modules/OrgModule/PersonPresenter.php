@@ -16,7 +16,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -39,7 +39,7 @@ class PersonPresenter extends BasePresenter
 
     private PersonService $personService;
     private PersonFactory $personFactory;
-    private int $userPermissions;
+    private FieldLevelPermissionValue $userPermissions;
 
     final public function injectQuarterly(
         PersonService $personService,
@@ -216,26 +216,26 @@ class PersonPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    private function getUserPermissions(bool $throw = true): int
+    private function getUserPermissions(bool $throw = true): FieldLevelPermissionValue
     {
         if (!isset($this->userPermissions)) {
-            $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
+            $this->userPermissions = FieldLevelPermissionValue::Basic;
             try {
                 $person = $this->getEntity();
                 if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
-                    $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
+                    $this->userPermissions = FieldLevelPermissionValue::Basic;
                 }
                 if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
-                    $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
+                    $this->userPermissions = FieldLevelPermissionValue::Restrict;
                 }
                 if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
-                    $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
+                    $this->userPermissions = FieldLevelPermissionValue::Full;
                 }
             } catch (ModelNotFoundException $exception) {
                 if ($throw) {
                     throw $exception;
                 }
-                $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
+                $this->userPermissions = FieldLevelPermissionValue::Full;
             }
         }
         return $this->userPermissions;

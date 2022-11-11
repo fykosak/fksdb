@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
@@ -68,7 +67,7 @@ class PaymentModel extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return $this->state->value == PaymentState::NEW;
+        return $this->state === PaymentState::New;
     }
 
     /**
@@ -88,11 +87,9 @@ class PaymentModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
-     * @return PaymentState|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key): mixed
     {
         $value = parent::__get($key);
         switch ($key) {

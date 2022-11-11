@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Utils\FakeStringEnum;
@@ -98,5 +99,10 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     public function __toString(): string
     {
         return $this->value;
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
 enum Language: string

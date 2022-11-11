@@ -1,0 +1,26 @@
+{layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block card-title}
+    {_'Address'}
+{/block}
+{block card-body}
+    {var $addressPrinter = new FKSDB\Models\ValuePrinters\AddressPrinter()}
+    <div class="card-body row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{_'Permanent address'}</h5>
+                    <p class="card-text">{$addressPrinter($person->getAddress(FKSDB\Models\ORM\Models\PostContactType::Permanent))}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{_'Delivery addesss'}</h5>
+                    <p class="card-text">{$addressPrinter($person->getAddress(FKSDB\Models\ORM\Models\PostContactType::Delivery))}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

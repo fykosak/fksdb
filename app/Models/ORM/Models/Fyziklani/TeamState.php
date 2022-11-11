@@ -99,4 +99,9 @@ class TeamState extends FakeStringEnum implements EnumColumn
             new self(self::CANCELLED),
         ];
     }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
 }

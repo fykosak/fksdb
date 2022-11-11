@@ -28,4 +28,9 @@ enum AuthTokenType: string implements EnumColumn
     {
         throw new NotImplementedException();
     }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
 }

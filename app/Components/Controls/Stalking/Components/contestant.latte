@@ -1,0 +1,32 @@
+{layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType bool $isOrg}
+{block card-title}{_'Contestatns'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\ContestantModel[] $contestants = $person->getContestants()}
+    {if count($contestants)}
+        {foreach $contestants as $contestant}
+            <div n:class="'alert alert-' . $contestant->contest->getContestSymbol()">
+                <div class="row">
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'contest.name', $contestant}</div>
+                        <div class="text text-muted">{\sprintf(_('Contest year %d'),$contestant->year)}</div>
+                    </div>
+                    <div class="col">
+                        {if $isOrg}
+                            <a href="{plink ':Org:Contestant:edit' contestId=>$contestant->contest_id, year => $contestant->year}"
+                               class="btn btn-outline-secondary float-end">{_'Edit'}</a>
+                            <a href="{plink ':Org:Contestant:detail' contestId=>$contestant->contest_id, year => $contestant->year}"
+                               class="btn btn-outline-secondary float-end">{_'Detail'}</a>
+                        {else}
+                            <a href="{plink ':Public:Dashboard:default' contestId=>$contestant->contest_id, year => $contestant->year}"
+                               class="btn btn-outline-secondary float-end">{_'Detail'}</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

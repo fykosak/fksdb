@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -60,7 +61,12 @@ class ItemState extends FakeStringEnum implements EnumColumn
             new self(self::NEW),
             new self(self::USED),
             new self(self::UNPACKED),
-            new self(self::DAMAGED)
+            new self(self::DAMAGED),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 }

@@ -9,6 +9,9 @@ orm:
             service: FKSDB\Models\ORM\Services\ContestService
             model: FKSDB\Models\ORM\Models\ContestModel
             columnFactories:
+                name:
+                    type: string
+                    title: _('Contest name')
                 contest:
                    type: class
                    class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
@@ -104,7 +107,7 @@ orm:
                     description: _('For one-day events it is identical to the beginning.')
                 registration_begin:
                     type: dateTime
-                    title:  _('Registration begin')
+                    title: _('Registration begin')
                 registration_end:
                     type: dateTime
                     title: _('Registration end')
@@ -142,7 +145,7 @@ orm:
                 event_org_id:
                     accessKey: e_org_id
                     type: primaryKey
-                    title:  _('Event org Id')
+                    title: _('Event org Id')
                 note:
                     type: string
                     title: _('Note')
@@ -182,7 +185,7 @@ orm:
                     title: _('Diet')
                 health_restrictions:
                     type: text
-                    title:  _('Health restrictions')
+                    title: _('Health restrictions')
                 used_drugs:
                     type: text
                     title: _('Used drugs')
@@ -202,7 +205,7 @@ orm:
                     title: _('Arrival ticket')
                 arrival_time:
                     type: time
-                    title:  _('Arrival time')
+                    title: _('Arrival time')
                     format: %H:%I
                 arrival_destination:
                     type: string
@@ -219,7 +222,7 @@ orm:
                     title: _('Departure ticket')
                 event_participant_id:
                     type: primaryKey
-                    title:  _('Event participant Id')
+                    title: _('Event participant Id')
                 lunch_count:
                     type: int
                     title: _('Number of baguettes for lunch')
@@ -254,7 +257,7 @@ orm:
                 login:
                     type: string
                     title: _('Login')
-                    permission: RESTRICT
+                    permission: Restrict
         org:
              service: FKSDB\Models\ORM\Services\OrgService
              model: FKSDB\Models\ORM\Models\OrgModel
@@ -375,11 +378,11 @@ orm:
                 person_id:
                     type: primaryKey
                     title: _('Person Id')
-                    permission: BASIC
+                    permission: Basic
                 gender:
                     type: enum
                     enumClassName: FKSDB\Models\ORM\Models\PersonGender
-                    permission: FULL
+                    permission: Full
                     title: _('Gender')
                 created:
                     type: dateTime
@@ -388,20 +391,20 @@ orm:
                     type: string
                     title: _('Born family name')
                     description: _('Only if different from surname.')
-                    permission: FULL
+                    permission: Full
                 display_name:
                     type: string
                     title: _('Display name')
                     description: _('Only if different from "Name Surname".')
-                    permission: BASIC
+                    permission: Basic
                 family_name:
                     type: string
                     title: _('Family name')
-                    permission: BASIC
+                    permission: Basic
                 other_name:
                     type: string
                     title: _('Other name')
-                    permission: BASIC
+                    permission: Basic
         person_has_flag:
             service: FKSDB\Models\ORM\Services\PersonHasFlagService
             model: FKSDB\Models\ORM\Models\PersonHasFlagModel
@@ -434,7 +437,7 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\EmailColumnFactory
                     permision: RESTRICT
-                    title:  _('E-mail')
+                    title: _('E-mail')
                 health_insurance:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HealthInsuranceColumnFactory
@@ -443,14 +446,14 @@ orm:
                 citizenship:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipColumnFactory
-                    permission: FULL
+                    permission: Full
                     title: _('Nationality')
                 account:
                     type: string
                     title: _('Bank account')
                     permission:
-                        read: FULL
-                        write: FULL
+                        read: Full
+                        write: Full
                 homepage:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HomepageColumnFactory
@@ -462,46 +465,46 @@ orm:
                     type: phone
                     title: _('Phone number (mother)')
                     permission:
-                       read: RESTRICT
-                       write: RESTRICT
+                       read: Restrict
+                       write: Restrict
                 phone_parent_d:
                     type: phone
                     title: _('Phone number (father)')
                     permission:
-                        read: RESTRICT
-                        write: RESTRICT
+                        read: Restrict
+                        write: Restrict
                 email_parent_m:
                     type: email
                     title: _('E-mail (mother)')
-                    permission: RESTRICT
+                    permission: Restrict
                 email_parent_d:
                     type: email
                     title: _('E-mail (father)')
-                    permission: RESTRICT
+                    permission: Restrict
                 id_number:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
                     description: _('Number of the ID which you will carry with you during the event')
                     title: _('Passport no.')
-                    permission: FULL
+                    permission: Full
                 born:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornColumnFactory
-                    permission: FULL
+                    permission: Full
                     title: _('Date of birth')
                 born_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory
                     title: _('Birth Id')
                     description: _('For foreigners empty.')
-                    permission: FULL
+                    permission: Full
                 birthplace:
                     type: string
                     title: _('Place of birth')
                     description: _('City and region (for diplomas).')
                     permission:
-                        read: FULL
-                        write: FULL
+                        read: Full
+                        write: Full
                 career:
                     title: _('Current role')
                     type: text
@@ -509,7 +512,7 @@ orm:
                 im:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImColumnFactory
-                    permission: RESTRICT
+                    permission: Restrict
                     title: _('ICQ, Jabber, etc.')
                 agreed:
                     type: class
@@ -518,40 +521,40 @@ orm:
                 uk_login:
                     type: string
                     title: Login UK
-                    permission: RESTRICT
+                    permission: Restrict
                 isic_number:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IsicNumberColumnFactory
                     title: ISIC
-                    permission: RESTRICT
+                    permission: Restrict
                 linkedin_id:
                     type: string
                     title: Linkedin Id
-                    permission: BASIC
+                    permission: Basic
                 employer:
                     type: string
                     title: Zaměstnavatel
-                    permission: FULL
+                    permission: Full
                 origin:
                     type: string
                     title: 'How did you came to know about us?'
-                    permission: BASIC
+                    permission: Basic
                 note:
                     type: string
                     title: Poznámka
-                    permission: BASIC
+                    permission: Basic
                 academic_degree_prefix:
                     type: string
                     title: Titul před jménem
-                    permission: RESTRICT
+                    permission: Restrict
                 academic_degree_suffix:
                     type: string
                     title: Titul za jménem
-                    permission: RESTRICT
+                    permission: Restrict
                 pizza:
                     type: string
                     title: Pizza
-                    permission: RESTRICT
+                    permission: Restrict
         post_contact:
             service: FKSDB\Models\ORM\Services\PostContactService
             model: FKSDB\Models\ORM\Models\PostContactModel

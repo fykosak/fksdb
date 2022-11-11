@@ -24,4 +24,9 @@ enum PostContactType: string implements EnumColumn
             self::Permanent => _('Permanent'),
         };
     }
+
+    public function getBehaviorType(): string
+    {
+        return 'badge bg-primary';
+    }
 }

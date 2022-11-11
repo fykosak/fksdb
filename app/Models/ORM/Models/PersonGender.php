@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -42,5 +43,10 @@ class PersonGender extends FakeStringEnum implements EnumColumn
             new static(self::MALE),
             new static(self::FEMALE),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 }

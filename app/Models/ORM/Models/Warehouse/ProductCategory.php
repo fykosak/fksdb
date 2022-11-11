@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -54,5 +55,10 @@ class ProductCategory extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return []; // TODO
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 }

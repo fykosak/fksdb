@@ -38,7 +38,7 @@ class SchedulePaymentService extends Service
         foreach ($newScheduleIds as $id) {
             /** @var SchedulePaymentModel $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
-                ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
+                ->where('payment.state !=? OR payment.state IS NULL', PaymentState::Canceled)
                 ->fetch();
             if ($model) {
                 throw new DuplicatePaymentException(

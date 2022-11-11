@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Badges\PermissionDeniedBadge;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -20,10 +21,6 @@ abstract class ColumnFactory
 {
     use SmartObject;
 
-    public const PERMISSION_ALLOW_ANYBODY = 1;
-    public const PERMISSION_ALLOW_BASIC = 16;
-    public const PERMISSION_ALLOW_RESTRICT = 128;
-    public const PERMISSION_ALLOW_FULL = 1024;
     private string $title;
     private string $tableName;
     private string $modelAccessKey;
@@ -38,7 +35,10 @@ abstract class ColumnFactory
     public function __construct(MetaDataFactory $metaDataFactory)
     {
         $this->metaDataFactory = $metaDataFactory;
-        $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
+        $this->permission = new FieldLevelPermission(
+            FieldLevelPermissionValue::NoAccess,
+            FieldLevelPermissionValue::NoAccess
+        );
     }
 
     final public function setUp(
@@ -76,8 +76,8 @@ abstract class ColumnFactory
     final public function setPermissionValue(array $values): void
     {
         $this->permission = new FieldLevelPermission(
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
+            $values['read'],
+            $values['write'],
         );
     }
 
@@ -141,7 +141,7 @@ abstract class ColumnFactory
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
-    final public function render(Model $originalModel, int $userPermissionsLevel): Html
+    final public function render(Model $originalModel, FieldLevelPermissionValue $userPermissionsLevel): Html
     {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
@@ -171,14 +171,14 @@ abstract class ColumnFactory
         return $modelSingle->getReferencedModel($this->modelClassName);
     }
 
-    final public function hasReadPermissions(int $userValue): bool
+    final public function hasReadPermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue >= $this->getPermission()->read;
+        return $userValue->value >= $this->getPermission()->read->value;
     }
 
-    final public function hasWritePermissions(int $userValue): bool
+    final public function hasWritePermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue >= $this->getPermission()->write;
+        return $userValue->value >= $this->getPermission()->write->value;
     }
 
     protected function renderNullModel(): Html

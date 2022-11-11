@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Stalking\Components;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
@@ -17,9 +17,9 @@ class StalkingContainer extends BaseComponent
 {
 
     private PersonModel $person;
-    private int $userPermission;
+    private FieldLevelPermissionValue $userPermission;
 
-    public function __construct(Container $container, PersonModel $person, int $userPermission)
+    public function __construct(Container $container, PersonModel $person, FieldLevelPermissionValue $userPermission)
     {
         parent::__construct($container);
         $this->person = $person;
@@ -42,19 +42,9 @@ class StalkingContainer extends BaseComponent
         return new PersonRelatedGrid('event_org', $this->person, $this->userPermission, $this->getContext());
     }
 
-    protected function createComponentPaymentsGrid(): PersonRelatedGrid
-    {
-        return new PersonRelatedGrid('payment', $this->person, $this->userPermission, $this->getContext());
-    }
-
     protected function createComponentContestantBasesGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('contestant', $this->person, $this->userPermission, $this->getContext());
-    }
-
-    protected function createComponentTaskContributionsGrid(): PersonRelatedGrid
-    {
-        return new PersonRelatedGrid('task_contribution', $this->person, $this->userPermission, $this->getContext());
     }
 
     protected function createComponentEventTeachersGrid(): PersonRelatedGrid
@@ -97,23 +87,61 @@ class StalkingContainer extends BaseComponent
         return new StalkingComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
-    protected function createComponentPermanentAddress(): Components\AddressComponent
+    protected function createComponentAddresses(): Components\AddressComponent
     {
         return new Components\AddressComponent(
             $this->getContext(),
             $this->person,
-            $this->userPermission,
-            PostContactType::Permanent
+            $this->userPermission
         );
     }
 
-    protected function createComponentDeliveryAddress(): Components\AddressComponent
+    protected function createComponentPaymentList(): Components\PaymentListComponent
     {
-        return new Components\AddressComponent(
+        return new Components\PaymentListComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission
+        );
+    }
+
+    protected function createComponentContestantList(): Components\ContestantListComponent
+    {
+        return new Components\ContestantListComponent(
             $this->getContext(),
             $this->person,
             $this->userPermission,
-            PostContactType::Delivery
+            true
+        );
+    }
+
+    protected function createComponentOrgList(): Components\OrgListComponent
+    {
+        return new Components\OrgListComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission,
+            true
+        );
+    }
+
+    protected function createComponentHistoryList(): Components\HistoryListComponent
+    {
+        return new Components\HistoryListComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission,
+            true
+        );
+    }
+
+    protected function createComponentTaskContributionList(): Components\TaskContributionListComponent
+    {
+        return new Components\TaskContributionListComponent(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission,
+            true
         );
     }
 

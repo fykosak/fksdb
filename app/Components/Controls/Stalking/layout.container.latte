@@ -1,5 +1,5 @@
 {layout '../@layout.latte'}
-{varType int $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue $userPermission}
 {define person}
     <div class="row row-cols-1 row-cols-md-2 g-4">
         <div class="col">
@@ -17,12 +17,10 @@
         <div class="col">
             {control flag}
         </div>
+        <div class="col">
+            {control historyList}
+        </div>
     </div>
-{/define}
-
-{define personHistory}
-    <h3>{_'Person history'}</h3>
-    {control personHistoryGrid}
 {/define}
 
 {define contact}
@@ -34,10 +32,7 @@
             {control stalkingComponent "contact_parents"}
         </div>
         <div class="col">
-            {control deliveryAddress}
-        </div>
-        <div class="col">
-            {control permanentAddress}
+            {control addresses}
         </div>
     </div>
     <h3>{_'Emails'}</h3>
@@ -45,14 +40,19 @@
 {/define}
 
 {define contests}
-    <h3>{_'Contestants'}</h3>
-    {control contestantBasesGrid}
-    <h3>{_'Task contribution'}</h3>
-    {control taskContributionsGrid}
-    <div class="card-columns mt-3">
-
-        {control stalkingComponent "org"}
-        {control role}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control contestantList}
+        </div>
+        <div class="col">
+            {control orgList}
+        </div>
+        <div class="col">
+            {control role}
+        </div>
+        <div class="col">
+            {control taskContributionList}
+        </div>
     </div>
 {/define}
 
@@ -61,15 +61,15 @@
     {control eventParticipantsGrid}
     <h3>{_'Team members'}</h3>
     {control teamMembersGrid}
-    <h3>{_'Payments'}</h3>
-    {control paymentsGrid}
+
     <h3>{_'Event orgs'}</h3>
     {control eventOrgsGrid}
     <h3>{_'Event teachers'}</h3>
     {control eventTeachersGrid}
     <h3>{_'Schedule'}</h3>
     {control eventScheduleGrid}
-
+    <hr/>
+    {control paymentList}
 {/define}
 
 {define validation}
@@ -84,8 +84,6 @@
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <a class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-person"
            role="tab"><i class="fa fa-user me-1"></i>{_'Person'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-person-history"
-           role="tab"><i class="fa fa-university me-1"></i>{_'Person history'}</a>
         <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contact"
            role="tab"><i class="fa fa-phone me-1"></i>{_'Contact'}</a>
         <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contests"
@@ -102,9 +100,6 @@
         <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-home-tab">
             {include person}
         </div>
-        <div class="tab-pane fade show" id="nav-person-history" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include personHistory}
-        </div>
         <div class="tab-pane fade show" id="nav-contact" role="tabpanel" aria-labelledby="nav-home-tab">
             {include contact}
         </div>
@@ -118,7 +113,7 @@
             {include validation}
         </div>
         <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
-            {if $userPermission < FKSDB\Models\ORM\FieldLevelPermission::ALLOW_RESTRICT}
+            {if $userPermission->value < FKSDB\Models\ORM\FieldLevelPermissionValue::Restrict->value}
                 {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
             {else}
                 {control timeline}

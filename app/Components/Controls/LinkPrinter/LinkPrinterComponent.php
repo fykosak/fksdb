@@ -27,11 +27,12 @@ class LinkPrinterComponent extends BaseComponent
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    final public function render(string $linkId, Model $model): void
+    final public function render(string $linkId, Model $model, ?string $class = null): void
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);
+        $this->template->class = $class;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
     }
 }

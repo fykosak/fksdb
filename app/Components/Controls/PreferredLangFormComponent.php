@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\Language;

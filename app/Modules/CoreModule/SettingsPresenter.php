@@ -5,17 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Components\EntityForms\LoginFomComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
-use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;

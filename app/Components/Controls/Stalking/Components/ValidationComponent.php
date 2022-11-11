@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\DataTesting\DataTestingFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\Utils\Logging\MemoryLogger;
 
 class ValidationComponent extends BaseStalkingComponent
@@ -27,12 +27,12 @@ class ValidationComponent extends BaseStalkingComponent
             }
 
             $this->template->logs = $logger->getMessages();
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'validation.latte');
         }
     }
 
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermissions(): FieldLevelPermissionValue
     {
-        return FieldLevelPermission::ALLOW_FULL;
+        return FieldLevelPermissionValue::Full;
     }
 }

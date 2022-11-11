@@ -21,7 +21,6 @@ use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;

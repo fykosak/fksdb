@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -22,10 +23,14 @@ class PersonRelatedGrid extends BaseGrid
 
     protected PersonModel $person;
     protected array $definition;
-    protected int $userPermissions;
+    protected FieldLevelPermissionValue $userPermissions;
 
-    public function __construct(string $section, PersonModel $person, int $userPermissions, Container $container)
-    {
+    public function __construct(
+        string $section,
+        PersonModel $person,
+        FieldLevelPermissionValue $userPermissions,
+        Container $container
+    ) {
         $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
         $this->person = $person;
@@ -42,7 +47,7 @@ class PersonRelatedGrid extends BaseGrid
         if (!$query instanceof TypedGroupedSelection) {
             throw new BadTypeException(TypedGroupedSelection::class, $query);
         }
-        if ($this->definition['minimalPermission'] > $this->userPermissions) {
+        if ($this->definition['minimalPermission'] > $this->userPermissions->value) {
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }

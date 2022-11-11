@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 
 class RoleComponent extends BaseStalkingComponent
 {
@@ -15,12 +15,12 @@ class RoleComponent extends BaseStalkingComponent
         if ($this->beforeRender()) {
             $login = $this->person->getLogin();
             $this->template->roles = $login ? $login->createGrantModels() : [];
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'role.latte');
         }
     }
 
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermissions(): FieldLevelPermissionValue
     {
-        return FieldLevelPermission::ALLOW_FULL;
+        return FieldLevelPermissionValue::Full;
     }
 }

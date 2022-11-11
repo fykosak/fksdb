@@ -1,0 +1,35 @@
+{layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block card-title}{_'Organisers'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\OrgModel[] $organisers = $person->getOrganisers()}
+    {if count($organisers)}
+        {foreach $organisers as $organiser}
+            <div n:class="'alert alert-' . $organiser->contest->getContestSymbol()">
+                <div class="row">
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'contest.name', $organiser}</div>
+                        <div class="text text-muted">
+                            {sprintf(_('Since %d'),$organiser->since)}
+                            {$organiser->until?sprintf(_('until %d'),$organiser->since):''}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'org.domain_alias', $organiser}</div>
+                        <div class="text text-muted">
+                            \siganture{l}{$organiser->tex_signature}{r}
+                        </div>
+                    </div>
+                    <div class="col">
+                        <a href="{plink ':Org:Org:edit' contestId=>$organiser->contest_id}"
+                           class="btn btn-outline-secondary float-end">{_'Edit'}</a>
+                        <a href="{plink ':Org:Org:detail' contestId=>$organiser->contest_id}"
+                           class="btn btn-outline-secondary float-end">{_'Detail'}</a>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

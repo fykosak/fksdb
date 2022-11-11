@@ -71,55 +71,7 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = '';
-        switch ($this->value) {
-            case self::APPLIED:
-            case self::APPLIED_NODSEF:
-            case self::APPLIED_NOTSAF:
-            case self::APPLIED_TSAF:
-            case self::APPROVED:
-                $badge = 'badge bg-color-1';
-                break;
-            case self::INTERESTED:
-            case self::PENDING:
-                $badge = 'badge bg-color-2';
-                break;
-            case self::PARTICIPATED:
-                $badge = 'badge bg-color-3';
-                break;
-            case self::MISSED:
-                $badge = 'badge bg-color-4';
-                break;
-            case self::DISQUALIFIED:
-                $badge = 'badge bg-color-5';
-                break;
-            case self::REJECTED:
-            case self::CANCELLED:
-                $badge = 'badge bg-color-6';
-                break;
-            case self::PAID:
-                $badge = 'badge bg-color-7';
-                break;
-            case self::OUT_OF_DB:
-                $badge = 'badge bg-color-8';
-                break;
-            case self::SPARE:
-            case self::SPARE1:
-            case self::SPARE2:
-            case self::SPARE3:
-            case self::SPARE_TSAF:
-            case self::AUTO_SPARE:
-                $badge = 'badge bg-color-9';
-                break;
-            case self::INVITED:
-            case self::INVITED1:
-            case self::INVITED2:
-            case self::INVITED3:
-            case self::AUTO_INVITED:
-                $badge = 'badge bg-color-10';
-                break;
-        }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+        return Html::el('span')->addAttributes(['class' => $this->getBehaviorType()])->addText($this->label());
     }
 
     /**
@@ -180,5 +132,46 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
                 return _('Spare 3');
         }
         throw new NotImplementedException();
+    }
+
+    public function getBehaviorType(): string
+    {
+        switch ($this->value) {
+            case self::APPLIED:
+            case self::APPLIED_NODSEF:
+            case self::APPLIED_NOTSAF:
+            case self::APPLIED_TSAF:
+            case self::APPROVED:
+                return 'badge bg-color-1';
+            case self::INTERESTED:
+            case self::PENDING:
+                return 'badge bg-color-2';
+            case self::PARTICIPATED:
+                return 'badge bg-color-3';
+            case self::MISSED:
+                return 'badge bg-color-4';
+            case self::DISQUALIFIED:
+                return 'badge bg-color-5';
+            case self::REJECTED:
+            case self::CANCELLED:
+                return 'badge bg-color-6';
+            case self::PAID:
+                return 'badge bg-color-7';
+            case self::OUT_OF_DB:
+                return 'badge bg-color-8';
+            case self::SPARE:
+            case self::SPARE1:
+            case self::SPARE2:
+            case self::SPARE3:
+            case self::SPARE_TSAF:
+            case self::AUTO_SPARE:
+                return 'badge bg-color-9';
+            case self::INVITED:
+            case self::INVITED1:
+            case self::INVITED2:
+            case self::INVITED3:
+            case self::AUTO_INVITED:
+                return 'badge bg-color-10';
+        }
     }
 }

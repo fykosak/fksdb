@@ -203,6 +203,15 @@ class PersonModel extends Model implements Resource
         return $related;
     }
 
+    public function getPayments(?EventModel $event = null): TypedGroupedSelection
+    {
+        $related = $this->related(DbNames::TAB_PAYMENT, 'person_id');
+        if ($event) {
+            $related->where('event_id', $event->event_id);
+        }
+        return $related;
+    }
+
     public function getActiveOrgsAsQuery(ContestModel $contest): TypedGroupedSelection
     {
         $year = $contest->getCurrentContestYear()->year;
@@ -299,7 +308,7 @@ class PersonModel extends Model implements Resource
         /** @var PersonScheduleModel $pSchedule */
         foreach ($schedule as $pSchedule) {
             $payment = $pSchedule->getPayment();
-            if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
+            if (!$payment || $payment->state !== PaymentState::Received) {
                 $toPay[] = $pSchedule;
             }
         }

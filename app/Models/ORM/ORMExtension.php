@@ -403,10 +403,17 @@ class ORMExtension extends Extension
             isset($field['description']) ? $this->translate($field['description']) : null,
         ]);
         if (isset($field['permission'])) {
+            $reflection = new \ReflectionEnum(FieldLevelPermissionValue::class);
             if (is_array($field['permission'])) {
-                $permission = $field['permission'];
+                $permission = [
+                    'read' => $reflection->getCase($field['permission']['read'])->getValue(),
+                    'write' => $reflection->getCase($field['permission']['write'])->getValue(),
+                ];
             } else {
-                $permission = ['read' => $field['permission'], 'write' => $field['permission']];
+                $permission = [
+                    'read' => $reflection->getCase($field['permission'])->getValue(),
+                    'write' => $reflection->getCase($field['permission'])->getValue(),
+                ];
             }
             $factory->addSetup('setPermissionValue', [$permission]);
         }

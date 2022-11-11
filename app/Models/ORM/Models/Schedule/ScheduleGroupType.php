@@ -141,4 +141,9 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         }
         throw new NotImplementedException();
     }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
 }

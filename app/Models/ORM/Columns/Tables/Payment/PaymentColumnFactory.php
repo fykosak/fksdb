@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -57,7 +57,7 @@ class PaymentColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
-        $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
+        $html = $factory->render($model, FieldLevelPermissionValue::Full);
         $text = $html->getText();
         $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
         return $html;

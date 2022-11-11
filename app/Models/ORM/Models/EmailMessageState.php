@@ -17,30 +17,28 @@ class EmailMessageState extends FakeStringEnum implements EnumColumn
     public const CANCELED = 'canceled'; // posielanie zrušené
     public const REJECTED = 'rejected'; // zastavené kvôli GDPR
 
-    public function badge(): Html
+    public function getBehaviorType(): string
     {
         switch ($this->value) {
             default:
             case self::CANCELED:
-                $badge = 'badge bg-color-6';
-                break;
+                return 'badge bg-color-6';
             case self::FAILED:
-                $badge = 'badge bg-color-4';
-                break;
+                return 'badge bg-color-4';
             case self::REJECTED:
-                $badge = 'badge bg-color-7';
-                break;
+                return 'badge bg-color-7';
             case self::SAVED:
-                $badge = 'badge bg-color-1';
-                break;
+                return 'badge bg-color-1';
             case self::SENT:
-                $badge = 'badge bg-color-3';
-                break;
+                return 'badge bg-color-3';
             case self::WAITING:
-                $badge = 'badge bg-color-2';
-                break;
+                return 'badge bg-color-2';
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')->addAttributes(['class' => $this->getBehaviorType()])->addText($this->label());
     }
 
     public function label(): string

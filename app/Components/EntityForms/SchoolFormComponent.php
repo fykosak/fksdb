@@ -6,7 +6,6 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;

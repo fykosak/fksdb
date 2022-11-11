@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmail;

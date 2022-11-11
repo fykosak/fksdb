@@ -1,13 +1,13 @@
 {layout '../@layout.latte'}
-{block headline}{$headline}{/block}
-{block content}
+{block card-title}{$headline}{/block}
+{block card-body}
     {if is_null($model)}
         <div class="card-body">
             {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
         </div>
     {else}
         {foreach $rows as $field}
-            {control valuePrinter:listItem $field, $model,$userPermission}
+            {control valuePrinter:row $field, $model,$userPermission}
         {/foreach}
     {/if}
 {/block}

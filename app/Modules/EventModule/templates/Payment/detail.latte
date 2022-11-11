@@ -4,12 +4,12 @@
     {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
     <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
     {var $progress = 0}
-    {switch $model->state->value}
-        {case FKSDB\Models\ORM\Models\PaymentState::NEW}
+    {switch $model->state}
+        {case FKSDB\Models\ORM\Models\PaymentState::New}
         {php $progress = 1}
-        {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
+        {case FKSDB\Models\ORM\Models\PaymentState::Waiting}
         {php $progress = 2}
-        {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+        {case FKSDB\Models\ORM\Models\PaymentState::Received}
         {php $progress = 3}
     {/switch}
     <div class="state-line mt-3 mb-3">

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\SQL\SearchableDataSource;
 use FKSDB\Modules\Core\BasePresenter;
@@ -197,7 +197,7 @@ abstract class BaseGrid extends Grid
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    private function addReflectionColumn(string $field, int $userPermission): Column
+    private function addReflectionColumn(string $field, FieldLevelPermissionValue $userPermission): Column
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
@@ -213,7 +213,7 @@ abstract class BaseGrid extends Grid
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $factoryName));
         return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(
-            fn(Model $row) => $factory->render($accessCallback($row), 1)
+            fn(Model $row) => $factory->render($accessCallback($row), FieldLevelPermissionValue::NoAccess)
         );
     }
 
@@ -221,8 +221,10 @@ abstract class BaseGrid extends Grid
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields, int $userPermissions = FieldLevelPermission::ALLOW_FULL): void
-    {
+    protected function addColumns(
+        array $fields,
+        FieldLevelPermissionValue $userPermissions = FieldLevelPermissionValue::Full
+    ): void {
         foreach ($fields as $name) {
             $this->addReflectionColumn($name, $userPermissions);
         }
