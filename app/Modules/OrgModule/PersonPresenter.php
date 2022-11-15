@@ -5,13 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Person\Detail\ContainerComponent;
+use FKSDB\Components\Controls\Person\Detail\AddressComponent;
+use FKSDB\Components\Controls\Person\Detail\Component;
+use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\FlagComponent;
+use FKSDB\Components\Controls\Person\Detail\FyziklaniTeamTeacherListComponent;
+use FKSDB\Components\Controls\Person\Detail\HistoryListComponent;
+use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
+use FKSDB\Components\Controls\Person\Detail\PaymentListComponent;
+use FKSDB\Components\Controls\Person\Detail\RoleComponent;
+use FKSDB\Components\Controls\Person\Detail\TaskContributionListComponent;
+use FKSDB\Components\Controls\Person\Detail\Timeline\TimelineComponent;
+use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
 use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -136,12 +148,200 @@ class PersonPresenter extends BasePresenter
     /* ******************* COMPONENTS *******************/
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
      */
-    public function createComponentDetailContainer(): ContainerComponent
+    protected function createComponentEventOrgsGrid(): PersonRelatedGrid
     {
-        return new ContainerComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+        return new PersonRelatedGrid('event_org', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentContestantBasesGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'contestant',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentFyziklaniTeacherList(): FyziklaniTeamTeacherListComponent
+    {
+        return new FyziklaniTeamTeacherListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            false
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'event_participant',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEventScheduleGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'schedule_item',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEmailMessageGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'email_message',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentDetailComponent(): Component
+    {
+        return new Component($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentAddresses(): AddressComponent
+    {
+        return new AddressComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentPaymentList(): PaymentListComponent
+    {
+        return new PaymentListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentContestantList(): ContestantListComponent
+    {
+        return new ContestantListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentOrgList(): OrgListComponent
+    {
+        return new OrgListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentHistoryList(): HistoryListComponent
+    {
+        return new HistoryListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTaskContributionList(): TaskContributionListComponent
+    {
+        return new TaskContributionListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            true
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentRole(): RoleComponent
+    {
+        return new RoleComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentFlag(): FlagComponent
+    {
+        return new FlagComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentValidation(): ValidationComponent
+    {
+        return new ValidationComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTimeline(): TimelineComponent
+    {
+        return new TimelineComponent($this->getContext(), $this->getEntity());
     }
 
     /**

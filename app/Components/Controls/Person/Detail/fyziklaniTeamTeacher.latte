@@ -6,7 +6,7 @@
         {foreach $data as $datum}
             {var FKSDB\Models\ORM\Models\EventModel $event = $datum['event']}
             {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams = $datum['teams']}
-            <div n:class="'alert alert-' . ($event->event_type_id === 1?'fof':'fol')">
+            <div n:class="'alert alert-' . ($event->event_type->getSymbol())">
                 <strong class="mb-3">{control valuePrinter:onlyValue 'event.name', $event}</strong>
                 <ul class="list-group list-group-flush">
                     {foreach $teams as $team}

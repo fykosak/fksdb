@@ -22,4 +22,15 @@ class EventTypeModel extends Model
     {
         return $this->related(DbNames::TAB_EVENT, 'event_type_id');
     }
+
+    public function getSymbol(): string
+    {
+        return match ($this->event_type_id) {
+            1 => 'fof',
+            9 => 'fol',
+            2, 14 => 'dsef',
+            16 => 'fov',
+            default => 'secondary'
+        };
+    }
 }

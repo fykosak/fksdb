@@ -1,9 +1,5 @@
 import { translator } from '@translator/translator';
-import {
-    scaleLinear,
-    scaleOrdinal,
-} from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { scaleLinear } from 'd3-scale';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
@@ -40,8 +36,9 @@ export default class CommonChart extends React.Component<OwnProps> {
         let minTime = 0;
         let max = 0;
         const lineChartData: LineChartData<number> = [];
+        const seed = Math.random();
+        const colorScale = (eventId: number) => '#' + Math.floor((seed * 16777215 * eventId) % 16777215).toString(16)
 
-        const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {
             if (data[accessKey].hasOwnProperty(eventId) && data.events.hasOwnProperty(eventId)) {
                 const event = data.events[eventId];
@@ -69,7 +66,7 @@ export default class CommonChart extends React.Component<OwnProps> {
                 });
                 max = max > eventData.length ? max : eventData.length;
                 lineChartData.push({
-                    color: colorScale(eventId),
+                    color: colorScale(+eventId),
                     display: {
                         area: false,
                         lines: true,

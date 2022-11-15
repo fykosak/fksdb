@@ -1,7 +1,7 @@
 @import "../../../../../css/colors";
 
 .fyziklani-presentation {
-  background-color: var(--color-fof-main);
+  background-color: var(--color-fof);
 
   .subheader {
     font-weight: bold;
@@ -9,15 +9,15 @@
   }
 
   h1 {
-    color: var(--color-fof-main);
+    color: var(--color-fof);
     font-weight: bold;
   }
 
   .head-row {
     padding: 0 .5rem;
-    color: var(--color-fof-main);
+    color: var(--color-fof);
     font-weight: bold;
-    border-bottom: solid var(--color-fof-main) 1px;
+    border-bottom: solid var(--color-fof) 1px;
   }
 
   .team-row {

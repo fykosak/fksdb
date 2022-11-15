@@ -2,6 +2,13 @@ $border-radius: 0;
 $btn-border-radius-sm: 0;
 $btn-border-radius-lg: 0;
 $input-border-radius-lg: 0;
+@import "colors";
+$colors: (
+        'fof': $fofColor,
+        'fol': $folColor,
+        'fykos': $fykosColor,
+        'dsef': $dsefColor,
+);
 @import "node_modules/bootstrap/scss/bootstrap";
 @import 'node_modules/flag-icon-css/sass/flag-icon';
 @import 'node_modules/codemirror/lib/codemirror.css';
@@ -10,13 +17,17 @@ $input-border-radius-lg: 0;
 @import "../Modules/CoreModule/templates/Authentication/login";
 @import "../Components/Charts/style";
 @import "../Components/Charts/legend";
-@import "colors";
+
 @import "points";
 @import "contests";
 @import "callout";
 @import "payment";
 @import "../Components/PDFGenerators/TeamSeating/seating";
 @import "../Components/PDFGenerators/Providers/print";
+
+@each $name, $color in $colors {
+  @include color-variant($color, $name);
+}
 
 @include color-variant(#1f77b4, color-1);
 @include color-variant(#ff7f0e, color-2);
@@ -30,10 +41,11 @@ $input-border-radius-lg: 0;
 @include color-variant(#17becf, color-10);
 @include color-variant(#000000, color-11);
 :root {
-  --color-fof-main: #{$fOFMainColor};
-  --color-fol-main: #{$fOLMainColor};
-  --color-fykos-main: #{$fykosMainColor};
-  --color-vyfuk-main: #{$vyfukMainColor};
+  --color-fof: #{$fofColor};
+  --color-fol: #{$folColor};
+  --color-fykos: #{$fykosColor};
+  --color-dsef: #{$dsefColor};
+  --color-vyfuk: #{$vyfukMainColor};
 
   --color-fof-points-5: #{$fyziklaniPoints5};
   --color-fof-points-3: #{$fyziklaniPoints3};
@@ -53,19 +65,14 @@ $input-border-radius-lg: 0;
   --color-variant-color-11: #000000;
 }
 
-@include color-variant($fykosMainColor, "fykos");
 @include color-variant($vyfukMainColor, "vyfuk");
 
 @include color-variant(deeppink, 'pink');
 @include color-variant(#dc3545, 'error');
 
-@include color-variant($fOLMainColor, "fol");
-@include color-variant($fOFMainColor, "fof");
-
-
 .fyziklani-header {
   .subheader {
-    color: var(--color-fof-main);
+    color: var(--color-fof);
     font-weight: bold;
   }
 

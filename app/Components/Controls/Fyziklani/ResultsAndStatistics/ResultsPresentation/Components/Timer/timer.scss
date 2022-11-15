@@ -1,6 +1,6 @@
 .fyziklani-presentation-timer {
   color: white;
-  background-color: var(--color-fof-main);
+  background-color: var(--color-fof);
   justify-content: space-between;
   padding: .25em;
   font-weight: bold;
@@ -16,7 +16,7 @@
     display: flex;
     flex-wrap: wrap;
     color: white;
-    //color: var(--color-fof-main);;
+    //color: var(--color-fof);;
   }
 
   &.timer-small {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ProfileModule;
 
 use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\FyziklaniTeamTeacherListComponent;
 use FKSDB\Components\Controls\Person\Detail\HistoryListComponent;
 use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
 use FKSDB\Components\Controls\Person\Detail\PaymentListComponent;
@@ -46,6 +47,16 @@ class DetailPresenter extends BasePresenter
     protected function createComponentOrgList(): OrgListComponent
     {
         return new OrgListComponent(
+            $this->getContext(),
+            $this->getLoggedPerson(),
+            FieldLevelPermissionValue::Full,
+            false,
+        );
+    }
+
+    protected function createComponentFyziklaniTeacherList(): FyziklaniTeamTeacherListComponent
+    {
+        return new FyziklaniTeamTeacherListComponent(
             $this->getContext(),
             $this->getLoggedPerson(),
             FieldLevelPermissionValue::Full,

@@ -3,23 +3,27 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
 .navigation-item {
-  @include navigation-item(var(--color-fykos-main), white, false, false);
+  @include navigation-item(var(--color-fykos), white, false, false);
 }
 
 [data-style-id~="fykos"] {
-  @include page-theme(var(--color-fykos-main));
+  @include page-theme(var(--color-fykos));
 }
 
 [data-style-id~="vyfuk"] {
-  @include page-theme(var(--color-vyfuk-main));
+  @include page-theme(var(--color-vyfuk));
 }
 
 [data-style-id~="event-type-1"] {
-  @include page-theme(var(--color-fof-main));
+  @include page-theme(var(--color-fof));
 }
 
 [data-style-id~="event-type-9"] {
-  @include page-theme(var(--color-fol-main));
+  @include page-theme(var(--color-fol));
+}
+
+[data-style-id~="event-type-2"], [data-style-id~="event-type-14"] {
+  @include page-theme(var(--color-dsef));
 }
 
 [data-style-id~="error"] {

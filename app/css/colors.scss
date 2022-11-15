@@ -1,12 +1,13 @@
 /* general setting */
-@import "/node_modules/bootstrap/scss/mixins/buttons";
-@import "/node_modules/bootstrap/scss/functions";
+@import "/node_modules/bootstrap/scss/bootstrap";
 @import "./mixins/navigation-item";
 
-$fOFMainColor: #e6060d;
-$fOLMainColor: rgb(0, 174, 107);
-$fykosMainColor: #1175da;
 $vyfukMainColor: #ff4800;
+
+$fofColor: #e6060d;
+$folColor: #00ae6b;
+$fykosColor: #1175da;
+$dsefColor: #f2b72b;
 
 $fyziklaniPoints5: #2d7dd2;
 $fyziklaniPoints3: #98cc04;
