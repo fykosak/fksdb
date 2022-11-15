@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Person\Detail\ContainerComponent;
 use FKSDB\Components\Controls\Person\PizzaComponent;
-use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -129,7 +129,7 @@ class PersonPresenter extends BasePresenter
                 $person->getFullName(),
                 $person->person_id
             ),
-            'stalking-log'
+            'person-detail-log'
         );
     }
 
@@ -139,9 +139,9 @@ class PersonPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    public function createComponentStalkingContainer(): StalkingContainer
+    public function createComponentDetailContainer(): ContainerComponent
     {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+        return new ContainerComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
     /**

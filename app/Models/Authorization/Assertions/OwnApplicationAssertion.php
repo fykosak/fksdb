@@ -21,7 +21,7 @@ class OwnApplicationAssertion implements Assertion
         $application = $acl->getQueriedResource();
         if ($application instanceof TeamModel2) {
             return $this->isTeamMember($queriedRole, $application) &&
-                $application->state->value !== TeamState::DISQUALIFIED;
+                $application->state !== TeamState::Disqualified;
         } elseif ($application instanceof EventParticipantModel) {
             if ($queriedRole instanceof ParticipantRole) {
                 return $queriedRole->eventParticipant->event_participant_id === $application->event_participant_id;

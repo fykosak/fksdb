@@ -1,0 +1,32 @@
+{layout '@layout.latte'}
+{varType array $data}
+{block card-title}{_'Event teachers'}{/block}
+{block card-body}
+    {if count($data)}
+        {foreach $data as $datum}
+            {var FKSDB\Models\ORM\Models\EventModel $event = $datum['event']}
+            {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams = $datum['teams']}
+            <div n:class="'alert alert-' . ($event->event_type_id === 1?'fof':'fol')">
+                <strong class="mb-3">{control valuePrinter:onlyValue 'event.name', $event}</strong>
+                <ul class="list-group list-group-flush">
+                    {foreach $teams as $team}
+                        <div class="list-group-item bg-transparent">
+                            <div class="row">
+                                <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.name', $team}</span>
+                                <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.state', $team}</span>
+                                <span class="col">
+                                    <a class="btn btn-sm btn-outline-secondary"
+                                       href="{plink :Event:TeamApplication:detail eventId=>$team->event->event_id,id=>$team->fyziklani_team_id}">
+                                        {_'Detail'}
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    {/foreach}
+                </ul>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

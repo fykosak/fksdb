@@ -10,7 +10,7 @@ parameters:
         org: fykos.org
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|my-payments|my-applications|profile
+    rootPresenters: settings|my-payments|my-applications
 
     # Pipe-separated list of modules
     constestModules: org|public|warehouse
@@ -41,6 +41,12 @@ fksrouter:
             mask: 'web-service/<action>'
             module: Org
             presenter: WebService
+            action: default
+            flags: [ONE_WAY]
+        -
+            mask: 'my-<applications|payments>/'
+            module: Profile
+            presenter: Detail
             action: default
             flags: [ONE_WAY]
 
@@ -87,6 +93,10 @@ fksrouter:
             module: Core
             presenter: Dispatch
             action: default
+        -
+            mask: 'profile/<presenter>/<action=default>'
+            module: Profile
+            presenter: Default
 
         # Application itself (note the presenters w/out module are handled specially)
         -

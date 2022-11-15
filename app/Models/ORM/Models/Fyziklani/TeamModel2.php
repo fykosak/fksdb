@@ -135,11 +135,10 @@ class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @param string $key
      * @return GameLang|TeamCategory|TeamState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key): mixed
     {
         $value = parent::__get($key);
         switch ($key) {

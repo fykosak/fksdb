@@ -96,3 +96,11 @@ navigation:
             Warehouse.Producer.list: []
             Warehouse.Product.list: []
             Warehouse.Item.list: []
+        Profile.Detail.default:
+            Profile.Detail.default: []
+            Profile.Detail.applications: []
+            Profile.Edit.login: []
+            Profile.Edit.email: []
+            Profile.Edit.lang: []
+            Profile.Edit.addressDelivery: []
+            Profile.Edit.addressPermanent: []

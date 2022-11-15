@@ -1,0 +1,26 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block card-title}{_'Flags'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\PersonHasFlagModel[] $flags = $person->getFlags()}
+    {if count($flags)}
+        {foreach $flags as $flag}
+            <div class="alert alert-secondary">
+                <div class="row">
+                    <div class="col">
+                        <div><strong>{$flag->flag->name}</strong></div>
+                        {if $flag->contest_id}
+                            {control contestBadge $flag->contest_id}
+                        {/if}
+                    </div>
+                    <div class="col">
+                        <div>{_'Value'}: {$flag->value}</div>
+                        <div>{$flag->modified}</div>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

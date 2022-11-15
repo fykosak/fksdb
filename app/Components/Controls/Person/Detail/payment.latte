@@ -1,0 +1,27 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block card-title}{_'Payments'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\PaymentModel[] $payments = $person->getPayments()}
+    {if count($payments)}
+        {foreach $payments as $payment}
+            <div n:class="'alert alert-' . $payment->state->getBehaviorType()">
+                <div class="row">
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'payment.payment_uid', $payment}</div>
+                        <div>{control valuePrinter:onlyValue 'event.name', $payment}</div>
+                    </div>
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'payment.price', $payment}</div>
+                    </div>
+                    <div class="col">
+                        <a href="{plink ':Event:Payment:detail' eventId=>$payment->event_id, id=>$payment->payment_id}"
+                           class="btn btn-sm btn-outline-secondary float-end">{_'Detail'}</a>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

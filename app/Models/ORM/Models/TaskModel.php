@@ -99,4 +99,9 @@ class TaskModel extends Model
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
     }
+
+    public function createUniqueKey(): string
+    {
+        return $this->contest_id . '-' . $this->year . '-' . $this->series . '-' . $this->label;
+    }
 }

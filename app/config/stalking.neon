@@ -74,27 +74,6 @@ parameters:
                  - login.login_id
                  - login.hash
                  - login.last_login
-
-        person_history:
-            layout: grid
-            minimalPermission: 128
-            table: person_history
-            links: []
-            rows:
-                - person_history.ac_year
-                - school.school
-                - person_history.study_year
-                - person_history.class
-        contestant:
-            layout: grid
-            minimalPermission: 128
-            table: contestant
-            links:
-                - contestant.edit
-            rows:
-                - contestant.contestant_id
-                - contestant.year
-                - contest.contest
         event_participant:
             layout: grid
             minimalPermission: 128

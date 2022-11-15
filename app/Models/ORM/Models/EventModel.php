@@ -33,12 +33,6 @@ class EventModel extends Model implements Resource, NodeCreator
 
     private const TEAM_EVENTS = [1, 9, 13];
     public const RESOURCE_ID = 'event';
-    private const POSSIBLY_ATTENDING_STATES = [
-        TeamState::PARTICIPATED,
-        TeamState::APPROVED,
-        TeamState::SPARE,
-        TeamState::APPLIED,
-    ];
 
     public function getContestYear(): ContestYearModel
     {
@@ -84,7 +78,12 @@ class EventModel extends Model implements Resource, NodeCreator
 
     public function getPossiblyAttendingParticipants(): TypedGroupedSelection
     {
-        return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
+        return $this->getParticipants()->where('status', [
+            TeamState::Participated->value,
+            TeamState::Approved->value,
+            TeamState::Spare->value,
+            TeamState::Applied->value,
+        ]);
     }
 
     public function getFyziklaniTeams(): TypedGroupedSelection
@@ -94,13 +93,18 @@ class EventModel extends Model implements Resource, NodeCreator
 
     public function getParticipatingFyziklaniTeams(): TypedGroupedSelection
     {
-        return $this->getFyziklaniTeams()->where('state', TeamState::PARTICIPATED);
+        return $this->getFyziklaniTeams()->where('state', TeamState::Participated->value);
     }
 
     public function getPossiblyAttendingFyziklaniTeams(): TypedGroupedSelection
     {
         // TODO
-        return $this->getFyziklaniTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
+        return $this->getFyziklaniTeams()->where('state', [
+            TeamState::Participated->value,
+            TeamState::Approved->value,
+            TeamState::Spare->value,
+            TeamState::Applied->value,
+        ]);
     }
 
     public function getEventOrgs(): TypedGroupedSelection

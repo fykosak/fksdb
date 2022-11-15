@@ -11,6 +11,7 @@ use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Tracy\Debugger;
 
 /**
  * @method BasePresenter getPresenter()
@@ -45,6 +46,14 @@ final class NavigationChooserComponent extends NavigationItemComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
+    final public function renderAsideList(string $root, bool $subTitle = false): void
+    {
+        $structure = $this->navigationFactory->getStructure($root);
+        $this->template->items = $structure['parents'];
+        $this->template->subTitle = $subTitle;
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.asideList.latte');
+    }
+
     /**
      * @throws BadRequestException
      * @throws BadTypeException
@@ -69,17 +78,13 @@ final class NavigationChooserComponent extends NavigationItemComponent
 
     public function isItemActive(array $item): bool
     {
-        if ($item instanceof NavItem) {
-            return false;
-        }
         if (isset($item['linkPresenter'])) {
             try {
                 $this->getPresenter()->link(
                     ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
                     array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
                 );
-            } catch (\Throwable $exception) {
-                /* empty */
+            } catch (\Throwable) {
             }
             $result = $this->getPresenter()->getLastCreatedRequestFlag('current');
             if ($result) {
@@ -129,9 +134,6 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     public function isItemVisible(array $item): bool
     {
-        if ($item instanceof NavItem) {
-            return true;
-        }
         if (isset($item['visible'])) {
             return $item['visible'];
         }
