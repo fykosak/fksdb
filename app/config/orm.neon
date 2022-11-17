@@ -794,6 +794,7 @@ orm:
                 force_a:
                     type: logic
                     title: _('Force A')
+                    description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
                 password:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
@@ -827,7 +828,7 @@ orm:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
         fyziklani_team_teacher:
-            service: Fykosak\NetteORM\DummyService
+            service: FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
 #schedule
         person_schedule:

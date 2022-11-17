@@ -18,6 +18,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Model;
@@ -25,7 +26,6 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @property TeamModel2 $model
@@ -38,6 +38,7 @@ abstract class TeamFormComponent extends EntityFormComponent
     protected EventModel $event;
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
+    protected TeamTeacherService $teacherService;
 
     public function __construct(
         FyziklaniTeamMachine $machine,
@@ -53,6 +54,7 @@ abstract class TeamFormComponent extends EntityFormComponent
     final public function injectPrimary(
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
+        TeamTeacherService $teacherService,
         SingleReflectionFormFactory $reflectionFormFactory,
         ReferencedPersonFactory $referencedPersonFactory
     ): void {
@@ -60,6 +62,7 @@ abstract class TeamFormComponent extends EntityFormComponent
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->teamService = $teamService;
         $this->teamMemberService = $teamMemberService;
+        $this->teacherService = $teacherService;
     }
 
     /**
@@ -86,6 +89,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 ]),
                 $this->model
             );
+            $this->saveTeachers($team, $form);
 
             $this->saveTeamMembers($team, $form);
             if (!isset($this->model)) {
@@ -134,6 +138,22 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
+    protected function saveTeachers(TeamModel2 $team, Form $form): void
+    {
+        $person = self::getTeachersFromForm($form);
+        /** @var TeamMemberModel $oldTeacher */
+        foreach ($team->getTeachers()->where('person_id !=', $person->person_id) as $oldTeacher) {
+            $this->teacherService->disposeModel($oldTeacher);
+        }
+        $oldTeacher = $team->getMembers()->where('person_id', $person->person_id)->fetch();
+        if (!$oldTeacher) {
+            $this->teacherService->storeModel([
+                'person_id' => $person->getPrimary(),
+                'fyziklani_team_id' => $team->fyziklani_team_id,
+            ]);
+        }
+    }
+
     /**
      * @return PersonModel[]
      */
@@ -150,6 +170,15 @@ abstract class TeamFormComponent extends EntityFormComponent
             }
         }
         return $persons;
+    }
+
+    public static function getTeachersFromForm(Form $form): ?PersonModel
+    {
+        /** @var ReferencedId $referencedId */
+        $referencedId = $form->getComponent('teacher');
+        /** @var PersonModel $person */
+        $person = $referencedId->getModel();
+        return $person;
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void
@@ -193,23 +222,24 @@ abstract class TeamFormComponent extends EntityFormComponent
                 $referencedId->setDefaultValue($member->person);
                 $index++;
             }
+            $teacher = $this->model->getTeachers()->fetch();
+            if ($teacher) {
+                /** @var ReferencedId $referencedId */
+                $referencedId = $this->getForm()->getComponent('teacher');
+                $referencedId->setDefaultValue($member->person);
+            }
         }
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws OmittedControlException
-     */
-    protected function configureForm(Form $form): void
+    protected function appendTeacherField(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainer(
-            'fyziklani_team',
-            ['name']
-        );
-        $form->addComponent($teamContainer, 'team');
+    }
+
+    protected function appendMemberFields(Form $form): void
+    {
         for ($member = 0; $member < 5; $member++) {
             $memberContainer = $this->referencedPersonFactory->createReferencedPerson(
-                $this->getFieldsDefinition(),
+                $this->getMemberFieldsDefinition(),
                 $this->event->getContestYear(),
                 'email',
                 true,
@@ -225,13 +255,34 @@ abstract class TeamFormComponent extends EntityFormComponent
             $memberContainer->referencedContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
             $form->addComponent($memberContainer, 'member_' . $member);
         }
+    }
+
+    abstract protected function getTeamFields(): array;
+
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    protected function configureForm(Form $form): void
+    {
+        $teamContainer = $this->reflectionFormFactory->createContainer(
+            'fyziklani_team',
+            $this->getTeamFields()
+        );
+        $form->addComponent($teamContainer, 'team');
+
+        $this->appendTeacherField($form);
+        $this->appendMemberFields($form);
+
         $privacyControl = $this->reflectionFormFactory->createField('person_info', 'agreed');
         $privacyControl->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
         $form->addComponent($privacyControl, 'privacy');
         $form->addComponent(new CaptchaBox(), 'captcha');
     }
 
-    abstract protected function getFieldsDefinition(): array;
+    abstract protected function getMemberFieldsDefinition(): array;
+
+    abstract protected function getTeacherFieldsDefinition(): array;
 
     abstract protected function getProcessing(): array;
 }

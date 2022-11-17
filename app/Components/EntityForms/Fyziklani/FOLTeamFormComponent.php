@@ -5,52 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\Forms\FormProcessing\FOLCategoryProcessing;
+use Nette\Neon\Exception;
+use Nette\Neon\Neon;
 
 class FOLTeamFormComponent extends TeamFormComponent
 {
-    protected function getFieldsDefinition(): array
+    /**
+     * @throws Exception
+     */
+    protected function getMemberFieldsDefinition(): array
     {
-        return [
-            'person' => [
-                'other_name' => [
-                    'required' => true,
-                ],
-                'family_name' => [
-                    'required' => true,
-                ],
-            ],
-            'person_info' => [
-                'email' => [
-                    'required' => true,
-                ],
-                'born' => [
-                    'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
-                ],
-            ],
-            'person_history' => [
-                'school_id' => [
-                    'required' => true,
-                    'description' => _(
-                        'Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. 
-                        Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz údaje o vaší škole jako název,
-                        adresu a pokud možno i odkaz na webovou stránku.
-                        Školu založíme a pošleme vám odpověď. Pak budete schopni dokončit 
-                        registraci. Pokud nejste student, vyplňte "not a student".'
-                    ),
-                ],
-                'study_year' => [
-                    'required' => false,
-                    'description' => _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.'),
-                ],
-            ],
-            'person_has_flag' => [
-                'spam_mff' => [
-                    'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
-                ],
-            ],
-        ];
+        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'fol.member.neon');
     }
 
     protected function getProcessing(): array
@@ -69,5 +34,15 @@ class FOLTeamFormComponent extends TeamFormComponent
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+    }
+
+    protected function getTeamFields(): array
+    {
+        return ['name'];
+    }
+
+    protected function getTeacherFieldsDefinition(): array
+    {
+        return [];
     }
 }

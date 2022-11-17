@@ -4,54 +4,64 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\Forms\FormProcessing\FOFCategoryProcessing;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use Nette\Forms\Form;
+use Nette\Neon\Exception;
+use Nette\Neon\Neon;
+
 class FOFTeamFormComponent extends TeamFormComponent
 {
-    protected function getFieldsDefinition(): array
+    /**
+     * @throws Exception
+     */
+    protected function getMemberFieldsDefinition(): array
     {
-        return [
-            'person' => [
-                'other_name' => [
-                    'required' => true,
-                ],
-                'family_name' => [
-                    'required' => true,
-                ],
-            ],
-            'person_info' => [
-                'email' => [
-                    'required' => true,
-                ],
-                'born' => [
-                    'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
-                ],
-            ],
-            'person_history' => [
-                'school_id' => [
-                    'required' => true,
-                    'description' => _(
-                        'Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu.
-                        Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz údaje o vaší škole jako název,
-                        adresu a pokud možno i odkaz na webovou stránku. Školu založíme a pošleme vám odpověď.
-                        Pak budete schopni dokončit registraci. Pokud nejste student, vyplňte "not a student".'
-                    ),
-                ],
-                'study_year' => [
-                    'required' => false,
-                    'description' => _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.'),
-                ],
-            ],
-            /*  'person_has_flag' => [
-                  'spam_mff' => [
-                      'required' => false,
-                      'description' => _('Pouze pro české a slovenské studenty.'),
-                  ],
-              ],*/
-        ];
+        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'fof.member.neon');
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function getTeacherFieldsDefinition(): array
+    {
+        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'fof.teacher.neon');
     }
 
     protected function getProcessing(): array
     {
-        return [];
+        return [
+            new FOFCategoryProcessing($this->container),
+        ];
     }
+
+    /**
+     * @throws Exception
+     */
+    protected function appendTeacherField(Form $form): void
+    {
+        $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getTeacherFieldsDefinition(),
+            $this->event->getContestYear(),
+            'email',
+            true,
+            new SelfACLResolver(
+                $this->model ?? TeamModel2::RESOURCE_ID,
+                $this->model ? 'org-edit' : 'org-create',
+                $this->event->event_type->contest,
+                $this->container
+            ),
+            $this->event
+        );
+        $teacherContainer->searchContainer->setOption('label', _('Teacher'));
+        $teacherContainer->referencedContainer->setOption('label', _('Teacher'));
+        $form->addComponent($teacherContainer, 'teacher');
+    }
+
+    protected function getTeamFields(): array
+    {
+        return ['name', 'game_lang', 'phone', 'force_a'];
+    }
+
 }

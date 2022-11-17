@@ -36,4 +36,33 @@ transitions:
         machine: fof.default.machine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null
-        transitions: []
+        transitions:
+            init->pending:
+                label: _('Register team')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamMemberMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamTeacherMailCallback()
+            pending->approved:
+                behaviorType: success
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
+                label: _('Schválit účast')
+            pending->spare:
+                behaviorType: warning
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
+                label: _('Potvrdit jako náhradníka')
+            approved|spare->participated:
+                condition: FKSDB\Models\Expressions\Logic\LogicAnd(
+                    FKSDB\Models\Expressions\Predicates\After('2023-02-10 07:00:00')
+                    FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit'),
+                )
+                label: _('Prezentovat')
+            approved|spare->missed:
+                condition: FKSDB\Models\Expressions\Logic\LogicAnd(
+                    FKSDB\Models\Expressions\Predicates\After('2023-02-10 07:00:00')
+                    FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit'),
+                )
+                label: _('Nepřijel')
+            pending|spare|approved->cancelled:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
+                label: _('Zrušit tým')
+                behaviorType: danger
