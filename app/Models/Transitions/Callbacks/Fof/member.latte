@@ -2,7 +2,7 @@
 {varType string[]|string[][] $linkArgs}
 {varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
 {block body}
-    {var $link = $control->link(...$linkArgs)}
+    {*var $link = $control->link(...$linkArgs)*}
     {if $holder->getModel()->game_lang->value == 'cs'}
         <p>
             Ahoj,<br/>
@@ -11,7 +11,7 @@
             Všechny údaje, které jste zadali do přihlášky, si můžeš zkontrolovat ve <a
                     href="https://db.fykos.cz/my-applications/">FKSDB</a> po kliknutí na Detail příslušné přihlášky,
             případně upravit pomocí odkazu
-            <a href="{$link}">zde</a>. Údaje o složení týmu můžeš změnit kdykoliv před uzavřením registrace.
+            <a href="{*$link*}">zde</a>. Údaje o složení týmu můžeš změnit kdykoliv před uzavřením registrace.
         </p>
 
         <p>
@@ -39,7 +39,7 @@
             thank you for your registration into our competition Fyziklani which takes place on 11 Feb 2022 in Prague in
             the Czech Republic. You can check all the data you have filled in the application in the <a
                     href="https://db.fykos.cz/my-applications/">FKSDB</a> by clicking on the Detail of the application,
-            or edit it using the link <a href="{$link}">here</a>. Data concerning team composition can be edited anytime
+            or edit it using the link <a href="{*$link*}">here</a>. Data concerning team composition can be edited anytime
             before the end of the registration.
         </p>
 

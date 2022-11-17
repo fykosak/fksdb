@@ -26,5 +26,3 @@ person_schedule:
         required: false
     weekend:
         required: false
-    vaccination_covid:
-        required: true
