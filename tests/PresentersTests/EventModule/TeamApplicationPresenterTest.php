@@ -23,7 +23,7 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
-class TeamApplicationPresenterTest extends EntityPresenterTestCase
+abstract class TeamApplicationPresenterTest extends EntityPresenterTestCase
 {
     private PersonModel $personA;
     private PersonModel $personB;
@@ -54,17 +54,10 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
         $this->personE = $this->createPerson('E', 'E', ['email' => 'e@e.e'], ['login' => 'EEEEEE', 'hash' => 'EEEEEE']);
         $this->createPersonHistory($this->personE, ContestYearService::getCurrentAcademicYear(), $school, 9, '9D');
 
-        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
-            'event_type_id' => 9,
-            'year' => 1,
-            'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
-            'registration_begin' => (new \DateTime())->sub(new \DateInterval('P1D')),
-            'registration_end' => (new \DateTime())->add(new \DateInterval('P1D')),
-            'name' => 'Test FOL opened',
-        ]);
+        $this->event = $this->createEvent();
     }
+
+    abstract protected function createEvent(): EventModel;
 
     public function testCreateAnonymous(): void
     {
@@ -501,8 +494,3 @@ class TeamApplicationPresenterTest extends EntityPresenterTestCase
         return 'Event:TeamApplication';
     }
 }
-
-// phpcs:disable
-$testCase = new TeamApplicationPresenterTest($container);
-$testCase->run();
-// phpcs:enable

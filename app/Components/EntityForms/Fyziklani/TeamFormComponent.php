@@ -107,7 +107,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
         } catch (AbortException $exception) {
             throw $exception;
-        } catch (DuplicateTeamNameException | DuplicateMemberException $exception) {
+        } catch (DuplicateTeamNameException | DuplicateMemberException | TooManySchoolsException $exception) {
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
@@ -127,31 +127,37 @@ abstract class TeamFormComponent extends EntityFormComponent
             $this->teamMemberService->disposeModel($oldMember);
         }
         foreach ($persons as $person) {
-            $oldTeamMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
-            if (!$oldTeamMember) {
+            $oldMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
+            if (!$oldMember) {
                 $this->checkUniqueMember($team, $person);
-                $data = [
+                $this->teamMemberService->storeModel([
                     'person_id' => $person->getPrimary(),
                     'fyziklani_team_id' => $team->fyziklani_team_id,
-                ];
-                $this->teamMemberService->storeModel($data);
+                ]);
             }
         }
     }
 
     protected function saveTeachers(TeamModel2 $team, Form $form): void
     {
-        $person = self::getTeachersFromForm($form);
+        $persons = self::getTeacherFromForm($form);
+
+        $oldMemberQuery = $team->getTeachers();
+        if (count($persons)) {
+            $oldMemberQuery->where('person_id NOT IN', array_keys($persons));
+        }
         /** @var TeamMemberModel $oldTeacher */
-        foreach ($team->getTeachers()->where('person_id !=', $person->person_id) as $oldTeacher) {
+        foreach ($oldMemberQuery as $oldTeacher) {
             $this->teacherService->disposeModel($oldTeacher);
         }
-        $oldTeacher = $team->getMembers()->where('person_id', $person->person_id)->fetch();
-        if (!$oldTeacher) {
-            $this->teacherService->storeModel([
-                'person_id' => $person->getPrimary(),
-                'fyziklani_team_id' => $team->fyziklani_team_id,
-            ]);
+        foreach ($persons as $person) {
+            $oldTeacher = $team->getTeachers()->where('person_id', $person->person_id)->fetch();
+            if (!$oldTeacher) {
+                $this->teacherService->storeModel([
+                    'person_id' => $person->getPrimary(),
+                    'fyziklani_team_id' => $team->fyziklani_team_id,
+                ]);
+            }
         }
     }
 
@@ -173,13 +179,16 @@ abstract class TeamFormComponent extends EntityFormComponent
         return $persons;
     }
 
-    public static function getTeachersFromForm(Form $form): ?PersonModel
+    /**
+     * @return PersonModel[]
+     */
+    public static function getTeacherFromForm(Form $form): array
     {
         /** @var ReferencedId $referencedId */
         $referencedId = $form->getComponent('teacher');
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
-        return $person;
+        return $person ? [$person->person_id => $person] : [];
     }
 
     protected function checkUniqueMember(TeamModel2 $team, PersonModel $person): void

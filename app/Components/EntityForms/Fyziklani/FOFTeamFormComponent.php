@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\Forms\FormProcessing\FOFCategoryProcessing;
+use FKSDB\Components\Forms\FormProcessing\SchoolsPerTeamProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use Nette\Forms\Form;
@@ -33,6 +34,7 @@ class FOFTeamFormComponent extends TeamFormComponent
     {
         return [
             new FOFCategoryProcessing($this->container),
+            new SchoolsPerTeamProcessing($this->container),
         ];
     }
 
