@@ -21,7 +21,7 @@ person_history :
         )
     study_year :
         required : false
-        description : _(Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.),
+        description : _(Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.)
 person_has_flag :
     spam_mff :
         required : false
