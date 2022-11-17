@@ -1,129 +1,112 @@
 {varType bool $isSelf}
 {varType FKSDB\Models\ORM\FieldLevelPermissionValue $userPermission}
-{define person}
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            {control detailComponent "base_info"}
-        </div>
-        <div class="col">
-            {control detailComponent "extended_info"}
-        </div>
-        <div class="col">
-            {control detailComponent "academic_degree"}
-        </div>
-        <div class="col">
-            {control detailComponent "login"}
-        </div>
-        <div class="col">
-            {control flag}
-        </div>
-        <div class="col">
-            {control historyList}
-        </div>
-    </div>
-{/define}
-
-{define contact}
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            {control detailComponent "contact_info"}
-        </div>
-        <div class="col">
-            {control detailComponent "contact_parents"}
-        </div>
-        <div class="col">
-            {control addresses}
-        </div>
-    </div>
-    <h3>{_'Emails'}</h3>
-    {control emailMessageGrid}
-{/define}
-
-{define contests}
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            {control contestantList}
-        </div>
-        <div class="col">
-            {control orgList}
-        </div>
-        <div class="col">
-            {control role}
-        </div>
-        <div class="col">
-            {control taskContributionList}
-        </div>
-    </div>
-{/define}
-
-{define events}
-    <h3>{_'Event participants'}</h3>
-    {control eventParticipantsGrid}
-    <h3>{_'Team members'}</h3>
-    {control teamMembersGrid}
-
-    <h3>{_'Event orgs'}</h3>
-    {control eventOrgsGrid}
-    <h3>{_'Schedule'}</h3>
-    {control eventScheduleGrid}
-    <hr/>
-    {control fyziklaniTeacherList}
-    <hr/>
-    {control paymentList}
-{/define}
-
-{define validation}
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            {control validation}
-        </div>
-    </div>
-{/define}
-
 {block content}
     {if $isSelf}
         <p class="alert alert-info">
             <a href="https://9gag.com/gag/agVYA4g/this-is-you-liking-your-own-fb-status">
-                {_'This is how you look, when you stalk yourself'}</a>
+                {_'This is how you look, when you show yourself'}</a>
         </p>
     {/if}
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-person"
-           role="tab"><i class="fa fa-user me-1"></i>{_'Person'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contact"
-           role="tab"><i class="fa fa-phone me-1"></i>{_'Contact'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contests"
-           role="tab"><i class="fa fa-trophy me-1"></i>{_'Contests'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-events"
-           role="tab"><i class="fa fa-calendar me-1"></i>{_'Events'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-validation"
-           role="tab"><i class="fa fa-check me-1"></i>{_'Validation'}</a>
-        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-timeline"
-           role="tab"><i class="fa fa-clock-o me-1"></i>{_'Timeline'}</a>
-    </div>
+    <div class="row">
+        <div class="tab-content mt-3 col-9" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        {control detailComponent "base_info"}
+                    </div>
+                    <div class="col">
+                        {control detailComponent "extended_info"}
+                    </div>
+                    <div class="col">
+                        {control detailComponent "academic_degree"}
+                    </div>
+                    <div class="col">
+                        {control detailComponent "login"}
+                    </div>
+                    <div class="col">
+                        {control flag}
+                    </div>
+                    <div class="col">
+                        {control historyList}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="nav-contact" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        {control detailComponent "contact_info"}
+                    </div>
+                    <div class="col">
+                        {control detailComponent "contact_parents"}
+                    </div>
+                    <div class="col">
+                        {control addresses}
+                    </div>
+                    <div class="col">
+                        {control emailMessageList}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="nav-contests" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        {control contestantList}
+                    </div>
+                    <div class="col">
+                        {control orgList}
+                    </div>
+                    <div class="col">
+                        {control role}
+                    </div>
+                    <div class="col">
+                        {control taskContributionList}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
+                <h3>{_'Event participants'}</h3>
+                {control eventParticipantsGrid}
+                <h3>{_'Team members'}</h3>
+                {control teamMembersGrid}
 
-    <div class="tab-content mt-3" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include person}
+                <h3>{_'Schedule'}</h3>
+                {control eventScheduleGrid}
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <div class="col">
+                        {control eventOrgList}
+                    </div>
+                    <div class="col">
+                        {control fyziklaniTeacherList}
+                    </div>
+                    <div class="col">
+                        {control paymentList}
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade show" id="nav-validation" role="tabpanel" aria-labelledby="nav-home-tab">
+                {control validation}
+            </div>
+            <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
+                {if $userPermission->value < FKSDB\Models\ORM\FieldLevelPermissionValue::Restrict->value}
+                    {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
+                {else}
+                    {control timeline}
+                {/if}
+            </div>
         </div>
-        <div class="tab-pane fade show" id="nav-contact" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include contact}
-        </div>
-        <div class="tab-pane fade show" id="nav-contests" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include contests}
-        </div>
-        <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include events}
-        </div>
-        <div class="tab-pane fade show" id="nav-validation" role="tabpanel" aria-labelledby="nav-home-tab">
-            {include validation}
-        </div>
-        <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
-            {if $userPermission->value < FKSDB\Models\ORM\FieldLevelPermissionValue::Restrict->value}
-                {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
-            {else}
-                {control timeline}
-            {/if}
+        <div class="col-3 list-group">
+            <a class="ist-group-item-action list-group-item active" data-bs-toggle="tab" data-bs-target="#nav-person"
+               role="tab"><i class="fa fa-user me-1"></i>{_'Person'}</a>
+            <a class="ist-group-item-action list-group-item" data-bs-toggle="tab" data-bs-target="#nav-contact"
+               role="tab"><i class="fa fa-phone me-1"></i>{_'Contact'}</a>
+            <a class="ist-group-item-action list-group-item" data-bs-toggle="tab" data-bs-target="#nav-contests"
+               role="tab"><i class="fa fa-trophy me-1"></i>{_'Contests'}</a>
+            <a class="ist-group-item-action list-group-item" data-bs-toggle="tab" data-bs-target="#nav-events"
+               role="tab"><i class="fa fa-calendar me-1"></i>{_'Events'}</a>
+            <a class="ist-group-item-action list-group-item" data-bs-toggle="tab" data-bs-target="#nav-validation"
+               role="tab"><i class="fa fa-check me-1"></i>{_'Validation'}</a>
+            <a class="ist-group-item-action list-group-item" data-bs-toggle="tab" data-bs-target="#nav-timeline"
+               role="tab"><i class="fa fa-clock-o me-1"></i>{_'Timeline'}</a>
         </div>
     </div>
 {/block}

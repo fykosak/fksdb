@@ -8,6 +8,8 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\Detail\AddressComponent;
 use FKSDB\Components\Controls\Person\Detail\Component;
 use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\EmailMessageListComponent;
+use FKSDB\Components\Controls\Person\Detail\EventOrgListComponent;
 use FKSDB\Components\Controls\Person\Detail\FlagComponent;
 use FKSDB\Components\Controls\Person\Detail\FyziklaniTeamTeacherListComponent;
 use FKSDB\Components\Controls\Person\Detail\HistoryListComponent;
@@ -102,7 +104,7 @@ class PersonPresenter extends BasePresenter
     /* *********** AUTH ***************/
     public function authorizedSearch(): void
     {
-        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'detail.search'));
     }
 
     public function authorizedEdit(): void
@@ -116,9 +118,9 @@ class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): void
     {
-        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
-        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
-        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
+        $full = $this->isAnyContestAuthorized($this->getEntity(), 'detail.full');
+        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'detail.restrict');
+        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'detail.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
@@ -133,9 +135,10 @@ class PersonPresenter extends BasePresenter
     {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getLoggedPerson()->person_id === $person->person_id;
+        $this->template->userPermission = $this->getUserPermissions();
         Debugger::log(
             sprintf(
-                '%s (%d) stalk %s (%d)',
+                '%s (%d) shows %s (%d)',
                 $this->getLoggedPerson()->getFullName(),
                 $this->getLoggedPerson()->person_id,
                 $person->getFullName(),
@@ -146,28 +149,13 @@ class PersonPresenter extends BasePresenter
     }
 
     /* ******************* COMPONENTS *******************/
-
     /**
      * @throws GoneException
      * @throws ModelNotFoundException
      */
-    protected function createComponentEventOrgsGrid(): PersonRelatedGrid
+    protected function createComponentEventOrgList(): EventOrgListComponent
     {
-        return new PersonRelatedGrid('event_org', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentContestantBasesGrid(): PersonRelatedGrid
-    {
-        return new PersonRelatedGrid(
-            'contestant',
-            $this->getEntity(),
-            $this->getUserPermissions(),
-            $this->getContext()
-        );
+        return new EventOrgListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
     }
 
     /**
@@ -230,20 +218,6 @@ class PersonPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      */
-    protected function createComponentEmailMessageGrid(): PersonRelatedGrid
-    {
-        return new PersonRelatedGrid(
-            'email_message',
-            $this->getEntity(),
-            $this->getUserPermissions(),
-            $this->getContext()
-        );
-    }
-
-    /**
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     */
     protected function createComponentDetailComponent(): Component
     {
         return new Component($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
@@ -274,6 +248,20 @@ class PersonPresenter extends BasePresenter
     protected function createComponentContestantList(): ContestantListComponent
     {
         return new ContestantListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEmailMessageList(): EmailMessageListComponent
+    {
+        return new EmailMessageListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            true
+        );
     }
 
     /**
@@ -356,7 +344,7 @@ class PersonPresenter extends BasePresenter
             'person_id'
         );
 
-        $form->addSubmit('stalk', _('Let\'s stalk'))
+        $form->addSubmit('show', _('Show detail'))
             ->onClick[] =
             function (SubmitButton $button) {
                 $values = $button->getForm()->getValues();
@@ -422,13 +410,13 @@ class PersonPresenter extends BasePresenter
             $this->userPermissions = FieldLevelPermissionValue::Basic;
             try {
                 $person = $this->getEntity();
-                if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
+                if ($this->isAnyContestAuthorized($person, 'detail.basic')) {
                     $this->userPermissions = FieldLevelPermissionValue::Basic;
                 }
-                if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
+                if ($this->isAnyContestAuthorized($person, 'detail.restrict')) {
                     $this->userPermissions = FieldLevelPermissionValue::Restrict;
                 }
-                if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
+                if ($this->isAnyContestAuthorized($person, 'detail.full')) {
                     $this->userPermissions = FieldLevelPermissionValue::Full;
                 }
             } catch (ModelNotFoundException $exception) {

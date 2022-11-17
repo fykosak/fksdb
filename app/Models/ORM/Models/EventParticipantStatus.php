@@ -71,7 +71,9 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => $this->getBehaviorType()])->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addText($this->label());
     }
 
     /**
@@ -142,36 +144,36 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             case self::APPLIED_NOTSAF:
             case self::APPLIED_TSAF:
             case self::APPROVED:
-                return 'badge bg-color-1';
+                return 'color-1';
             case self::INTERESTED:
             case self::PENDING:
-                return 'badge bg-color-2';
+                return 'color-2';
             case self::PARTICIPATED:
-                return 'badge bg-color-3';
+                return 'color-3';
             case self::MISSED:
-                return 'badge bg-color-4';
+                return 'color-4';
             case self::DISQUALIFIED:
-                return 'badge bg-color-5';
+                return 'color-5';
             case self::REJECTED:
             case self::CANCELLED:
-                return 'badge bg-color-6';
+                return 'color-6';
             case self::PAID:
-                return 'badge bg-color-7';
+                return 'color-7';
             case self::OUT_OF_DB:
-                return 'badge bg-color-8';
+                return 'color-8';
             case self::SPARE:
             case self::SPARE1:
             case self::SPARE2:
             case self::SPARE3:
             case self::SPARE_TSAF:
             case self::AUTO_SPARE:
-                return 'badge bg-color-9';
+                return 'color-9';
             case self::INVITED:
             case self::INVITED1:
             case self::INVITED2:
             case self::INVITED3:
             case self::AUTO_INVITED:
-                return 'badge bg-color-10';
+                return 'color-10';
         }
     }
 }

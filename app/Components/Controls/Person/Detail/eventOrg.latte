@@ -1,0 +1,30 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType bool $isOrg}
+{block card-title}{_'Event orgs'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\EventOrgModel[] $orgs = $person->getEventOrgs()}
+    {if count($orgs)}
+        {foreach $orgs as $org}
+            <div n:class="'alert alert-' . ($org->event->event_type->getSymbol() !== 'secondary'?$org->event->event_type->getSymbol():$org->event->event_type->contest->getContestSymbol())">
+                <div class="mb-3">
+                    <strong>{control valuePrinter:onlyValue 'event.name', $org}</strong>
+                    <small class="text-muted">{control valuePrinter:onlyValue 'event.event_type', $org}</small>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'event_org.note', $org}</div>
+                    </div>
+                    {if $isOrg}
+                        <div class="col">
+                            {control linkPrinter 'event_org.detail', $org, 'btn btn-sm btn-outline-secondary float-end'}
+                            {control linkPrinter 'event_org.edit', $org, 'btn btn-sm btn-outline-secondary float-end'}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

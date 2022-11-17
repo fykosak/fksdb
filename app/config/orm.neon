@@ -136,8 +136,6 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
                     title: _('Event')
-            linkFactories:
-                 application.list: FKSDB\Models\ORM\Links\ParticipantListLink
         event_org:
              service: FKSDB\Models\ORM\Services\EventOrgService
              model: FKSDB\Models\ORM\Models\EventOrgModel
@@ -163,9 +161,9 @@ orm:
                          id: e_org_id
                      title: Detail
         event_participant:
-             service: FKSDB\Models\ORM\Services\EventParticipantService
-             model: FKSDB\Models\ORM\Models\EventParticipantModel
-             columnFactories:
+            service: FKSDB\Models\ORM\Services\EventParticipantService
+            model: FKSDB\Models\ORM\Models\EventParticipantModel
+            columnFactories:
                 status:
                     type: enum
                     title: _('State')
@@ -226,9 +224,19 @@ orm:
                 lunch_count:
                     type: int
                     title: _('Number of baguettes for lunch')
-             linkFactories:
-                   detail: FKSDB\Models\ORM\Links\ParticipantDetailLink
-                   edit: FKSDB\Models\ORM\Links\ApplicationEditLink
+            linkFactories:
+                detail:
+                    destination: ':Event:Application:detail'
+                    params:
+                        eventId: event_id
+                        id: event_participant_id
+                    title: Detail
+                edit:
+                    destination: ':Public:Application:default'
+                    params:
+                        eventId: event_id
+                        id: event_participant_id
+                    title: Detail
         event_type:
             service: FKSDB\Models\ORM\Services\EventTypeService
             model: FKSDB\Models\ORM\Models\EventTypeModel

@@ -63,7 +63,6 @@ navigation:
             Core.Dispatch.default: []
             Public.Submit.ajax:
                 visible: true
-            Core.MyApplications.default: []
         Fyziklani.Dashboard.default:
             Fyziklani.Submit.create: []
             Fyziklani.Submit.list: []

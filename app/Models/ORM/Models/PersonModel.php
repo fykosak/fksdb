@@ -159,6 +159,12 @@ class PersonModel extends Model implements Resource
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
+    public function getMessages(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_EMAIL_MESSAGE, 'recipient_person_id');
+    }
+
+
     /**
      * @return null|PersonHistoryModel the most recent person's history record (if any)
      */

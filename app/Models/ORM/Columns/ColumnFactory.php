@@ -29,12 +29,10 @@ abstract class ColumnFactory
     private bool $required = false;
     private bool $omitInputField = false;
     private FieldLevelPermission $permission;
-    private MetaDataFactory $metaDataFactory;
     private string $modelClassName;
 
-    public function __construct(MetaDataFactory $metaDataFactory)
+    public function __construct(private readonly MetaDataFactory $metaDataFactory)
     {
-        $this->metaDataFactory = $metaDataFactory;
         $this->permission = new FieldLevelPermission(
             FieldLevelPermissionValue::NoAccess,
             FieldLevelPermissionValue::NoAccess

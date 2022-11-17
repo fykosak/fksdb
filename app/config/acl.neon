@@ -43,7 +43,7 @@ acl:
     - addResource(submit)        # revoke, upload, download, edit
     - addResource(points)        # detail, entry
     - addResource(task)          # insert, dispatch
-    - addResource(person)        # create, edit, list, delete, merge, stalk.restrict, stalk.search, stalk.search, stalk.full, validation
+    - addResource(person)        # create, edit, list, delete, merge, detail.restrict, detail.search, detail.search, detail.full, validation
     - addResource(contestant)    # create, edit, list, delete
     - addResource(school)        # create, edit, list, delete
     - addResource(storedQuery)   # create, edit, list, delete, detial
@@ -102,10 +102,10 @@ acl:
     - allow(org, org, list)
     - allow(org, org, edit, @selfAssertion)
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, person, stalk.search)
+    - allow(org, person, detail.search)
     - allow(org, person, edit, @selfAssertion)
-    - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(org, person, stalk.full, @selfAssertion)
+    - allow(org, person, detail.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(org, person, detail.full, @selfAssertion)
     - allow(org, chart, ::constant(Nette\Security\Permission::ALL))
 
     - allow(inboxManager, export, execute)
@@ -115,7 +115,7 @@ acl:
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(inboxManager, person, detail.restrict, [@ownerAssertion, 'existsOwnContestant'])
 
     - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
@@ -130,12 +130,12 @@ acl:
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
-    - allow(eventManager, person, stalk.full)
+    - allow(eventManager, person, detail.full)
     - allow(eventManager, person, edit)
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit)
-    - allow(boss, person, stalk.full)
+    - allow(boss, person, detail.full)
     - allow(boss, emailMessage, list)
 
     # robot role

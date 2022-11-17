@@ -1,0 +1,22 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType bool $isOrg}
+{block card-title}{_'Emails'}{/block}
+{block card-body}
+    {var FKSDB\Models\ORM\Models\EmailMessageModel[] $messages = $person->getMessages()}
+    {if count($messages)}
+        {foreach $messages as $message}
+            <div n:class="'alert alert-' . $message->state->getBehaviorType()">
+                <strong>{control valuePrinter:onlyValue 'email_message.subject', $message}</strong>
+                <div class="row">
+                    <div class="col">
+                        <div>{control valuePrinter:onlyValue 'email_message.state', $message}</div>
+                        <div class="text text-muted">{_'Sent'}: {if $message->sent}{$message->sent->format('d. M Y H:i:s')}{/if}</div>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

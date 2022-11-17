@@ -6,7 +6,7 @@
         {foreach $data as $datum}
             {var FKSDB\Models\ORM\Models\EventModel $event = $datum['event']}
             {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams = $datum['teams']}
-            <div n:class="'alert alert-' . ($event->event_type->getSymbol())">
+            <div class="alert alert-secondary">
                 <strong class="mb-3">{control valuePrinter:onlyValue 'event.name', $event}</strong>
                 <ul class="list-group list-group-flush">
                     {foreach $teams as $team}
@@ -15,10 +15,7 @@
                                 <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.name', $team}</span>
                                 <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.state', $team}</span>
                                 <span class="col">
-                                    <a class="btn btn-sm btn-outline-secondary"
-                                       href="{plink :Event:TeamApplication:detail eventId=>$team->event->event_id,id=>$team->fyziklani_team_id}">
-                                        {_'Detail'}
-                                    </a>
+                                    {control linkPrinter 'fyziklani_team.detail',$team,'btn btn-sm btn-outline-secondary'}
                                 </span>
                             </div>
                         </div>

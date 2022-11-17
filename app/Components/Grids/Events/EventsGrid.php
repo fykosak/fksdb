@@ -42,9 +42,5 @@ class EventsGrid extends EntityGrid
 
         $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
-
-        $this->addLink('event.application.list');
-
-        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
     }
 }

@@ -14,8 +14,7 @@
                     </div>
                     <div class="col">
                         {if $isOrg}
-                            <a href="{plink ':Org:Contestant:edit' contestId=>$contestant->contest_id, year => $contestant->year}"
-                               class="btn btn-sm btn-outline-secondary float-end">{_'Edit'}</a>
+                            {control linkPrinter 'contestant.edit', $contestant,'btn btn-sm btn-outline-secondary float-end'}
                             <a href="{plink ':Org:Contestant:detail' contestId=>$contestant->contest_id, year => $contestant->year}"
                                class="btn btn-sm btn-outline-secondary float-end">{_'Detail'}</a>
                         {else}
