@@ -2,17 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Forms\FormProcessing;
+namespace FKSDB\Components\EntityForms\Fyziklani;
 
-use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
-use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
 class FOFCategoryProcessing extends FormProcessing
 {

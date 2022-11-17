@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
-use FKSDB\Components\Forms\FormProcessing\FOLCategoryProcessing;
 use Nette\Neon\Exception;
 use Nette\Neon\Neon;
 
