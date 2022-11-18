@@ -50,6 +50,15 @@ class FOFTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
             'name' => 'Test FOL opened',
         ]);
     }
+
+    protected function getDefaultTeamData(): array
+    {
+        return [
+            'game_lang' => 'cs',
+            'force_a' => '0',
+            'phone' => '+420123456789',
+        ];
+    }
 }
 
 // phpcs:disable
