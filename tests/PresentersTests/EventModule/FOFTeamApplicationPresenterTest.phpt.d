@@ -13,7 +13,7 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 
-class FOFTeamApplicationPresenterTest extends TeamApplicationPresenterTest
+class FOFTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 {
     private PersonModel $teacherA;
     private PersonModel $teacherB;
@@ -33,7 +33,7 @@ class FOFTeamApplicationPresenterTest extends TeamApplicationPresenterTest
             'TB',
             'TBS',
             ['email' => 'b@skola.a'],
-            ['login' => 'TAAAAAA', 'hash' => 'TAAAAAA']
+            ['login' => 'TBBBBB', 'hash' => 'TBBBBB']
         );
     }
 
