@@ -116,7 +116,11 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-light');
+                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-dark');
+                break;
+            case 17:
+                $this->getPageStyleContainer()->setNavBarClassName('bg-ctyrboj navbar-dark');
+                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             default:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');

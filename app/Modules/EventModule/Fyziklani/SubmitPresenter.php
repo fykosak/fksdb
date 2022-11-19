@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
+use FKSDB\Components\Controls\Fyziklani\Submit\CtyrbojPointsEntryComponent;
+use FKSDB\Components\Controls\Fyziklani\Submit\FOFPointsEntryComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\PointsEntryComponent;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -104,8 +106,8 @@ class SubmitPresenter extends BasePresenter
     public function handleCheck(): void
     {
         $logger = new MemoryLogger();
-        $handler = new Handler($this->getEvent(), $this->getContext());
-        $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
+        $handler = $this->getEvent()->createGameHandler($this->getContext());
+        $handler->check($logger, $this->getEntity(), $this->getEntity()->points);
         FlashMessageDump::dump($logger, $this);
         $this->redirect('this');
     }
@@ -131,10 +133,17 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): PointsEntryComponent
     {
-        return new PointsEntryComponent($this->getContext(), $this->getEvent());
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                return new FOFPointsEntryComponent($this->getContext(), $this->getEvent());
+            case 17:
+                return new CtyrbojPointsEntryComponent($this->getContext(), $this->getEvent());
+        }
+        throw new NotImplementedException();
     }
 
     /**

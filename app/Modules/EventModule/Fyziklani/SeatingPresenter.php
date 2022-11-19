@@ -10,11 +10,13 @@ use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -26,6 +28,19 @@ class SeatingPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private RoomService $roomService;
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NotImplementedException
+     * @throws ForbiddenRequestException
+     */
+    protected function startup(): void
+    {
+        parent::startup();
+        if ($this->getEvent()->event_type_id !== 1) {
+            throw new NotImplementedException();
+        }
+    }
 
     public function injectRoomService(RoomService $roomService): void
     {
