@@ -74,11 +74,12 @@ abstract class TeamFormComponent extends EntityFormComponent
         $form->addComponent($teamContainer, 'team');
         $this->appendPersonsFields($form);
 
-
-        $privacyControl = $this->reflectionFormFactory->createField('person_info', 'agreed');
-        $privacyControl->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
-        $form->addComponent($privacyControl, 'privacy');
-        $form->addComponent(new CaptchaBox(), 'captcha');
+        if (!isset($this->model)) {
+            $privacyControl = $this->reflectionFormFactory->createField('person_info', 'agreed');
+            $privacyControl->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
+            $form->addComponent($privacyControl, 'privacy');
+            $form->addComponent(new CaptchaBox(), 'captcha');
+        }
     }
 
     protected function appendPersonsFields(Form $form): void
