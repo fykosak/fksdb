@@ -22,7 +22,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use Tracy\Debugger;
 
 class TeamApplicationsGrid extends BaseGrid
 {
