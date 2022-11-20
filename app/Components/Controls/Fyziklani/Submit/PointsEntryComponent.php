@@ -5,34 +5,28 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\Handler;
+use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-class PointsEntryComponent extends AjaxComponent
+abstract class PointsEntryComponent extends AjaxComponent
 {
-    private EventModel $event;
+    protected EventModel $event;
 
-    public function __construct(Container $container, EventModel $event)
+    public function __construct(Container $container, EventModel $event, string $frontendId)
     {
-        parent::__construct($container, 'fyziklani.submit-form');
+        parent::__construct($container, $frontendId);
         $this->event = $event;
     }
 
-    /**
-     * @throws NotSetGameParametersException
-     */
     protected function getData(): array
     {
         return [
-            'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => TaskService::serialiseTasks($this->event),
             'teams' => TeamService2::serialiseTeams($this->event),
         ];
@@ -50,11 +44,15 @@ class PointsEntryComponent extends AjaxComponent
     {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
-            $handler = new Handler($this->event, $this->getContext());
-            $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
+            $this->innerHandleSave($data);
         } catch (TaskCodeException | ClosedSubmittingException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
     }
+
+    /**
+     * @throws ClosedSubmittingException
+     */
+    abstract protected function innerHandleSave(array $data): void;
 }

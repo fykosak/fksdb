@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Fyziklani\Submit\Handler;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Logging\FlashMessageDump;
@@ -65,8 +64,16 @@ class AllSubmitsGrid extends SubmitsGrid
             'fyziklani_submit.points',
             'fyziklani_submit.created',
         ]);
-        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        if ($this->event->event_type_id === 1) {
+            $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addLinkButton(
+                ':Fyziklani:Submit:detail',
+                'detail',
+                _('Detail'),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
+        }
 
         $this->addButton('delete')
             ->setClass('btn btn-sm btn-outline-danger')
@@ -122,7 +129,7 @@ class AllSubmitsGrid extends SubmitsGrid
         }
         try {
             $logger = new MemoryLogger();
-            $handler = new Handler($this->event, $this->getContext());
+            $handler = $this->event->createGameHandler($this->getContext());
             $handler->revokeSubmit($logger, $submit);
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');

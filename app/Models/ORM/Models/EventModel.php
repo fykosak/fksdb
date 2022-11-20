@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\CtyrbojHandler;
+use FKSDB\Models\Fyziklani\Submit\FOFHandler;
+use FKSDB\Models\Fyziklani\Submit\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -12,6 +15,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -146,5 +150,15 @@ class EventModel extends Model implements Resource, NodeCreator
     {
         return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
             && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+    }
+
+    public function createGameHandler(Container $container): Handler
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return new FOFHandler($this, $container);
+            case 17:
+                return new CtyrbojHandler($this, $container);
+        }
     }
 }
