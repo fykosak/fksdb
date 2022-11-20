@@ -22,6 +22,7 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
+use Tracy\Debugger;
 
 class TeamApplicationsGrid extends BaseGrid
 {
@@ -71,13 +72,13 @@ class TeamApplicationsGrid extends BaseGrid
     {
         return function (Selection $table, array $value): void {
             $states = [];
-            foreach ($value['status'] as $state => $value) {
+            foreach ($value['state'] as $state => $value) {
                 if ($value) {
                     $states[] = str_replace('__', '.', $state);
                 }
             }
             if (count($states)) {
-                $table->where('status IN ?', $states);
+                $table->where('state IN ?', $states);
             }
         };
     }
