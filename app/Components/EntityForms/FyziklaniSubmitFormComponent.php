@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -46,8 +45,8 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
-            $handler = new Handler($this->model->fyziklani_team->event, $this->getContext());
-            $handler->changePoints($logger, $this->model, $values['points']);
+            $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
+            $handler->edit($logger, $this->model, $values['points']);
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {

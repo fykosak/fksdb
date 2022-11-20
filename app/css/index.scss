@@ -55,6 +55,7 @@ $input-border-radius-lg: 0;
 
 @include color-variant($fykosMainColor, "fykos");
 @include color-variant($vyfukMainColor, "vyfuk");
+@include color-variant($ctyrbojColor, "ctyrboj");
 
 @include color-variant(deeppink, 'pink');
 @include color-variant(#dc3545, 'error');
