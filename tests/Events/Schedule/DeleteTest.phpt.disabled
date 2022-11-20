@@ -10,7 +10,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\GrantService;
@@ -44,7 +43,8 @@ class DeleteTest extends ScheduleTestCase
             'event_id' => $this->event->event_id,
             'status' => 'cancelled',
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel(
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel(
             [
                 'event_participant_id' => $this->dsefApp->event_participant_id,
                 'e_dsef_group_id' => 2,

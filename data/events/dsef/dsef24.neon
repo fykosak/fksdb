@@ -27,12 +27,9 @@ events:
         eventYears: [24]
         formLayout: dsef.form
         paramScheme: %events.defaultDsef.paramScheme%
-
         baseMachine:
-                service: @event.ServiceMDsefParticipant
-
+                service: @orm.event_participant.service
                 transitions: %events.defaultDsef.transitions%
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -40,11 +37,6 @@ events:
                         modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef24.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        factory: Chooser(_('Zvolit skupinu'), FKSDB\Models\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
                         description:  _('à 30 Kč')

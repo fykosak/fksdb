@@ -77,6 +77,7 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
             'personId' => $this->person_id,
             'status' => $this->status->value,
             'created' => $this->created,
+            'lunchCount' => $this->lunch_count,
         ];
     }
 
