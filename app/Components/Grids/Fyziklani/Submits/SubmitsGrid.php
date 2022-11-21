@@ -26,9 +26,9 @@ abstract class SubmitsGrid extends BaseGrid
      */
     protected function addColumnTask(): void
     {
-        $this->addColumn('label', _('Task'))->setRenderer(
-            fn(SubmitModel $model): string => $model->fyziklani_task->label
-        )->setSortable(false);
+        $this->addColumn('label', _('Task'))
+            ->setRenderer(fn(SubmitModel $model): string => $model->fyziklani_task->label)
+            ->setSortable(false);
     }
 
     /**

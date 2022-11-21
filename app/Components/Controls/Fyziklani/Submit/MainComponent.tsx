@@ -3,7 +3,8 @@ import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
-import Container from './Components/Container';
+import CtyrbojForm from './Components/CtyrbojForm';
+import FOFForm from './Components/FOFForm';
 import { app } from './reducer';
 
 interface OwnProps {
@@ -13,15 +14,18 @@ interface OwnProps {
         teams: ModelFyziklaniTeam[];
     };
     actions: NetteActions;
-
+    event: 'fof' | 'ctyrboj'
 }
 
-export default class PointsEntryComponent extends React.Component<OwnProps> {
+export default class FOFComponent extends React.Component<OwnProps> {
     public render() {
-        const {data, actions} = this.props;
+        const {data, actions, event} = this.props;
         const {tasks, teams, availablePoints} = data;
         return <StoreCreator app={app}>
-            <Container tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
+            {event === 'fof' ?
+                <FOFForm tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/> :
+                <CtyrbojForm tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
+            }
         </StoreCreator>;
     }
 }

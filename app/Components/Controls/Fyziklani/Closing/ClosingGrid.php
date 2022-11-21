@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani\Closing;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\Fyziklani\FyziklaniException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -15,7 +16,7 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class CloseTeamsGrid extends BaseGrid
+class ClosingGrid extends BaseGrid
 {
 
     private EventModel $event;
@@ -53,6 +54,13 @@ class CloseTeamsGrid extends BaseGrid
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(fn(TeamModel2 $row): bool => $row->canClose(false));
+        ])->setShow(function (TeamModel2 $row): bool {
+            try {
+                $row->canClose();
+                return true;
+            } catch (FyziklaniException $exception) {
+                return false;
+            }
+        });
     }
 }

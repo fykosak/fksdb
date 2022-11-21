@@ -33,13 +33,13 @@ interface StateProps {
     messages: Message[];
 }
 
-class Container extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
+class CtyrbojForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
 
     public render() {
-        const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
+        const {handleSubmit, onSubmit, tasks, teams, messages, code} = this.props;
 
         return (
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} onChange={handleSubmit(onSubmit)}>
                 {messages.map((message, key) => {
                     return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
                 })}
@@ -56,16 +56,6 @@ class Container extends React.Component<StateProps & OwnProps & DispatchProps & 
                     <div className="col-lg-6 col-md-12 mb-3">
                         <Field name="code" component={ScanInput}/>
                     </div>
-
-                    <div className="col-12">
-                        <SubmitButtons
-                            availablePoints={availablePoints}
-                            valid={valid}
-                            submitting={submitting}
-                            handleSubmit={handleSubmit}
-                            onSubmit={onSubmit}/>
-                    </div>
-
                 </div>
                 <hr/>
                 <ValueDisplay code={code} tasks={tasks} teams={teams}/>
@@ -94,5 +84,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     reduxForm<{ code: string }, OwnProps, string>({
         form: FORM_NAME,
         validate,
-    })(Container),
+    })(CtyrbojForm),
 );

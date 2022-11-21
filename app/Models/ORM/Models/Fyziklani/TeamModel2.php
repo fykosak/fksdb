@@ -84,18 +84,12 @@ class TeamModel2 extends Model implements Resource
      * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(bool $throws = true): bool
+    public function canClose(): bool
     {
         if (!$this->hasOpenSubmitting()) {
-            if (!$throws) {
-                return false;
-            }
             throw new AlreadyClosedException($this);
         }
         if (!$this->hasAllSubmitsChecked()) {
-            if (!$throws) {
-                return false;
-            }
             throw new NotCheckedSubmitsException($this);
         }
         return true;

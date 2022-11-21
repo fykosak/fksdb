@@ -1,4 +1,4 @@
-import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Container';
+import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/FOFForm';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { FormErrors } from 'redux-form';
@@ -25,21 +25,6 @@ const isValidFullCode = (code: string): boolean => {
 };
 
 const getControl = (subCode: Array<string | number>): number => {
-    // Hotfix for Fyziklani2022
-    // Decrement task number by 1 and handle special case for 11 => 18
-    let taskNumber = [+subCode[6], +subCode[7]]; // task code as number
-    taskNumber[1]--;
-    if (taskNumber[1] === 0) {
-        taskNumber[0]--;
-        if (taskNumber[0] === 0) {
-            taskNumber[0] = 1;
-        }
-        taskNumber[1] = 8;
-    }
-    subCode[6] = String(taskNumber[0]);
-    subCode[7] = String(taskNumber[1]);
-    // End of hotfix for Fyziklani2022
-
     return (+subCode[0] + +subCode[3] + +subCode[6]) * 3 +
         (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
         (+subCode[2] + +subCode[5] + +subCode[8]);

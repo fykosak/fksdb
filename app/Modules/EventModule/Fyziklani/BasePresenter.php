@@ -24,6 +24,12 @@ abstract class BasePresenter extends EventBasePresenter
         $this->teamService = $teamService;
     }
 
+    protected function beforeRender(): void
+    {
+        $this->template->event = $this->getEvent();
+        parent::beforeRender();
+    }
+
     /**
      * @throws EventNotFoundException
      */

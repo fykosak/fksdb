@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
+use FKSDB\Models\Fyziklani\FyziklaniException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-class ClosedSubmittingException extends BadRequestException
+class ClosedSubmittingException extends FyziklaniException
 {
     public function __construct(TeamModel2 $team, ?\Throwable $previous = null)
     {

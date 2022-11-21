@@ -5,7 +5,7 @@ import {
     Dispatch,
 } from 'redux';
 import { reset } from 'redux-form';
-import { FORM_NAME } from './Components/Container';
+import { FORM_NAME } from './Components/FOFForm';
 import { getFullCode } from './middleware';
 
 export interface SubmitFormRequest {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
@@ -14,6 +15,16 @@ class CtyrbojPointsEntryComponent extends PointsEntryComponent
     public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container, $event, 'ctyrboj.submit-form');
+    }
+
+    /**
+     * @throws NotSetGameParametersException
+     */
+    protected function getData(): array
+    {
+        $data = parent::getData();
+        $data['availablePoints'] = [];
+        return $data;
     }
 
     /**

@@ -14,7 +14,7 @@ import ResultsPresentationComponent
 import ResultsTableComponent
     from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
 import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
-import PointsEntryComponent from './Components/Controls/Fyziklani/Submit/PointsEntryComponent';
+import MainComponent from './Components/Controls/Fyziklani/Submit/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
@@ -38,7 +38,8 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', Sta
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent, {event: 'fof'});
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {event: 'ctyrboj'});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);

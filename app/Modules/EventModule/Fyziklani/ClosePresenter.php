@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
+use FKSDB\Components\Controls\Fyziklani\Closing\ClosingGrid;
+use FKSDB\Components\Controls\Fyziklani\Closing\ClosingComponent;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -17,15 +16,14 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * @property FormControl closeCategoryAForm
  * @method TeamModel2 getEntity()
  */
 class ClosePresenter extends BasePresenter
@@ -135,9 +133,9 @@ class ClosePresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentCloseTeamControl(): CloseTeamComponent
+    protected function createComponentCloseTeamControl(): ClosingComponent
     {
-        return new CloseTeamComponent($this->getContext(), $this->getEntity());
+        return new ClosingComponent($this->getContext(), $this->getEntity());
     }
 
     /**
@@ -163,7 +161,7 @@ class ClosePresenter extends BasePresenter
      */
     protected function createComponentGrid(): BaseGrid
     {
-        return new CloseTeamsGrid($this->getEvent(), $this->getContext());
+        return new ClosingGrid($this->getEvent(), $this->getContext());
     }
 
     /**

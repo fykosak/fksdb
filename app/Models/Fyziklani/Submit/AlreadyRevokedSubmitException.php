@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use Nette\Application\BadRequestException;
+use FKSDB\Models\Fyziklani\FyziklaniException;
 use Nette\Http\IResponse;
 
-class AlreadyRevokedSubmitException extends BadRequestException
+class AlreadyRevokedSubmitException extends FyziklaniException
 {
     public function __construct(?\Throwable $previous = null)
     {
