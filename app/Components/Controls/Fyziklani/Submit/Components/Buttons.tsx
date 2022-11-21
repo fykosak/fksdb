@@ -12,7 +12,7 @@ interface OwnProps {
     onSubmit?(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
-export default class SubmitButtons extends React.Component<OwnProps> {
+export default class Buttons extends React.Component<OwnProps> {
 
     public render() {
         const {valid, submitting, handleSubmit, onSubmit, availablePoints} = this.props;

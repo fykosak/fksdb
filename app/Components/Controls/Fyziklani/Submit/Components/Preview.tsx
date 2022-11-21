@@ -14,7 +14,7 @@ interface OwnProps {
     teams: ModelFyziklaniTeam[];
 }
 
-export default class ValueDisplay extends React.Component<OwnProps> {
+export default class Preview extends React.Component<OwnProps> {
 
     public render() {
         const {code: value, tasks, teams} = this.props;

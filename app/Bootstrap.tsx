@@ -38,8 +38,8 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', Sta
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent, {event: 'fof'});
-renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {event: 'ctyrboj'});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent);
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent);
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);

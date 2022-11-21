@@ -18,16 +18,6 @@ class CtyrbojPointsEntryComponent extends PointsEntryComponent
     }
 
     /**
-     * @throws NotSetGameParametersException
-     */
-    protected function getData(): array
-    {
-        $data = parent::getData();
-        $data['availablePoints'] = [];
-        return $data;
-    }
-
-    /**
      * @throws ClosedSubmittingException
      */
     protected function innerHandleSave(array $data): void

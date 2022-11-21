@@ -1,10 +1,10 @@
 import { translator } from '@translator/translator';
 import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Controls/Fyziklani/Submit/actions';
-import ScanInput from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput';
-import SubmitButtons from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/SubmitButtons';
-import TextInput from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/TextInput';
-import ErrorBlock from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ErrorBlock';
-import ValueDisplay from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay';
+import Scan from './Scan';
+import Buttons from './Buttons';
+import Code from './Code';
+import Errors from './Errors';
+import ValueDisplay from './Preview';
 import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit/reducer';
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
@@ -21,7 +21,7 @@ export interface OwnProps {
     tasks: ModelFyziklaniTask[];
     teams: ModelFyziklaniTeam[];
     actions: NetteActions;
-    availablePoints: number[];
+    availablePoints: number[] | null;
 }
 
 interface DispatchProps {
@@ -33,13 +33,13 @@ interface StateProps {
     messages: Message[];
 }
 
-class CtyrbojForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
+class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
 
     public render() {
-        const {handleSubmit, onSubmit, tasks, teams, messages, code} = this.props;
-
+        const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
+        const hasButtons = availablePoints && availablePoints.length;
         return (
-            <Form onSubmit={handleSubmit(onSubmit)} onChange={handleSubmit(onSubmit)}>
+            <Form onChange={hasButtons && handleSubmit(onSubmit)}>
                 {messages.map((message, key) => {
                     return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
                 })}
@@ -47,15 +47,23 @@ class CtyrbojForm extends React.Component<StateProps & OwnProps & DispatchProps 
                     <div className="col-lg-6 col-md-12 mb-3">
                         <h3>{translator.getText('Code')}</h3>
                         <div className="form-group">
-                            <Field name="code" component={TextInput}/>
+                            <Field name="code" component={Code}/>
                         </div>
                         <div className="form-group">
-                            <Field name="code" component={ErrorBlock}/>
+                            <Field name="code" component={Errors}/>
                         </div>
                     </div>
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <Field name="code" component={ScanInput}/>
+                        <Field name="code" component={Scan}/>
                     </div>
+                    {hasButtons && <div className="col-12">
+                        <Buttons
+                            availablePoints={availablePoints}
+                            valid={valid}
+                            submitting={submitting}
+                            handleSubmit={handleSubmit}
+                            onSubmit={onSubmit}/>
+                    </div>}
                 </div>
                 <hr/>
                 <ValueDisplay code={code} tasks={tasks} teams={teams}/>
@@ -84,5 +92,5 @@ export default connect(mapStateToProps, mapDispatchToProps)(
     reduxForm<{ code: string }, OwnProps, string>({
         form: FORM_NAME,
         validate,
-    })(CtyrbojForm),
+    })(MainForm),
 );

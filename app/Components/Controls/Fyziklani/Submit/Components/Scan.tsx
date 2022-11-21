@@ -4,7 +4,7 @@ import { WrappedFieldProps } from 'redux-form';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Html5QrcodeError } from 'html5-qrcode/esm/core';
 
-export default class ScanInput extends React.Component<WrappedFieldProps & Record<string, never>, { processing: boolean; error: Html5QrcodeError }> {
+export default class Scan extends React.Component<WrappedFieldProps & Record<string, never>, { processing: boolean; error: Html5QrcodeError }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, error: null};
