@@ -8,6 +8,6 @@ class NotSetGameParametersException extends FyziklaniException
 {
     public function __construct(?\Throwable $previous = null)
     {
-        parent::__construct(_('Game parameters not set.'), $previous);
+        parent::__construct(_('Game parameters not set.'), 0, $previous);
     }
 }

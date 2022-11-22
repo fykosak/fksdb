@@ -14,7 +14,7 @@ import ResultsPresentationComponent
 import ResultsTableComponent
     from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
 import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
-import MainComponent from './Components/Controls/Fyziklani/Submit/MainComponent';
+import MainComponent from './Components/Controls/Fyziklani/SubmitForm/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';

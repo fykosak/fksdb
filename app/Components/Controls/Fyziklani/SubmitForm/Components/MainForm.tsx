@@ -1,11 +1,11 @@
 import { translator } from '@translator/translator';
-import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Controls/Fyziklani/Submit/actions';
+import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/actions';
 import Scan from './Scan';
 import Buttons from './Buttons';
 import Code from './Code';
 import Errors from './Errors';
 import ValueDisplay from './Preview';
-import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit/reducer';
+import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/reducer';
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import { validate } from '../middleware';
+import AutoButton from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/Components/AutoButton';
 
 export interface OwnProps {
     tasks: ModelFyziklaniTask[];
@@ -39,7 +40,7 @@ class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & I
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
         const hasButtons = availablePoints && availablePoints.length;
         return (
-            <Form onChange={hasButtons && handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
                 {messages.map((message, key) => {
                     return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
                 })}
@@ -56,14 +57,23 @@ class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & I
                     <div className="col-lg-6 col-md-12 mb-3">
                         <Field name="code" component={Scan}/>
                     </div>
-                    {hasButtons && <div className="col-12">
-                        <Buttons
-                            availablePoints={availablePoints}
-                            valid={valid}
-                            submitting={submitting}
-                            handleSubmit={handleSubmit}
-                            onSubmit={onSubmit}/>
-                    </div>}
+                    <div className="col-12">
+                        {hasButtons ?
+                            <Buttons
+                                availablePoints={availablePoints}
+                                valid={valid}
+                                submitting={submitting}
+                                handleSubmit={handleSubmit}
+                                onSubmit={onSubmit}
+                            /> :
+                            <AutoButton
+                                valid={valid}
+                                submitting={submitting}
+                                handleSubmit={handleSubmit}
+                                onSubmit={onSubmit}
+                            />
+                        }
+                    </div>
                 </div>
                 <hr/>
                 <ValueDisplay code={code} tasks={tasks} teams={teams}/>

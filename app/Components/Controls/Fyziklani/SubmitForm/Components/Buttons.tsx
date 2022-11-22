@@ -1,4 +1,4 @@
-import { SubmitFormRequest } from 'FKSDB/Components/Controls/Fyziklani/Submit/actions';
+import { SubmitFormRequest } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';

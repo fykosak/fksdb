@@ -1,4 +1,4 @@
-import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/MainForm';
+import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/Components/MainForm';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { FormErrors } from 'redux-form';

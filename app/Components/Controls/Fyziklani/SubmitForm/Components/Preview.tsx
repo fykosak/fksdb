@@ -3,7 +3,7 @@ import {
     getFullCode,
     getTask,
     getTeam,
-} from 'FKSDB/Components/Controls/Fyziklani/Submit/middleware';
+} from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/middleware';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
