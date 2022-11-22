@@ -6034,6 +6034,14 @@ msgstr "Načítání"
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
 
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:18
+msgid "Usually the first part of your name. For example, \"Albert\"."
+msgstr " "
+
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:24
+msgid "The second part of your name. For example, \"Einstein\"."
+msgstr " "
+
 #~ msgid "Payment is not allowed in this time!"
 #~ msgstr "Platba není v tuto chvíli povolena!"
 
