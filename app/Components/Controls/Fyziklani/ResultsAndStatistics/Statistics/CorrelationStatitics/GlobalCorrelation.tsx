@@ -1,20 +1,20 @@
 import { translator } from '@translator/translator';
 import { scaleLinear } from 'd3-scale';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { setNewState } from '../actions';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
-    tasks: ModelFyziklaniTask[];
-    teams: ModelFyziklaniTeam[];
+    tasks: TaskModel[];
+    teams: TeamModel[];
     firstTeamId: number;
     secondTeamId: number;
 }
@@ -75,7 +75,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

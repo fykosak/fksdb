@@ -1,4 +1,4 @@
-export interface ModelFyziklaniTeam {
+export interface TeamModel {
     teamId: number;
     category: string;
     name: string;

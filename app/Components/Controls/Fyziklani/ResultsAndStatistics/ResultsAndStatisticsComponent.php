@@ -72,7 +72,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent
             'isOrg' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
-            'submits' => [],
         ];
 
         $result['submits'] = $this->submitService->serialiseSubmits($this->getEvent(), $this->lastUpdated);

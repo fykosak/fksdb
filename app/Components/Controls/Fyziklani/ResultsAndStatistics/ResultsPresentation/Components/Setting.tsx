@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniPresentationStore } from '../Reducers';
+import { PresentationStore } from '../reducers';
 import { Action, Dispatch } from 'redux';
 import {
     Params,
@@ -124,7 +124,7 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
     }
 }
 
-const mapStateToPros = (state: FyziklaniPresentationStore): StateProps => {
+const mapStateToPros = (state: PresentationStore): StateProps => {
     return {
         isOrg: state.presentation.isOrg,
         cols: state.presentation.cols,

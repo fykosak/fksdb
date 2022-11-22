@@ -1,5 +1,5 @@
 import { translator } from '@translator/translator';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 
 export class Filter {
     public name: string;
@@ -12,7 +12,7 @@ export class Filter {
         this.name = name;
     }
 
-    public match(team: ModelFyziklaniTeam): boolean {
+    public match(team: TeamModel): boolean {
         const {category} = team;
         return !(this.category && this.category !== category);
     }

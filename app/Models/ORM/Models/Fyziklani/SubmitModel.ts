@@ -1,4 +1,4 @@
-export interface ModelFyziklaniSubmit {
+export interface SubmitModel {
     points: number | null;
     taskId: number;
     teamId: number;
@@ -6,5 +6,5 @@ export interface ModelFyziklaniSubmit {
 }
 
 export interface Submits {
-    [id: number]: ModelFyziklaniSubmit;
+    [id: number]: SubmitModel;
 }

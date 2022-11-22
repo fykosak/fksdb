@@ -1,17 +1,17 @@
 import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 
 export interface State {
     submits: Submits;
-    tasks: ModelFyziklaniTask[];
-    teams: ModelFyziklaniTeam[];
+    tasks: TaskModel[];
+    teams: TeamModel[];
     // rooms?: Room[];
     categories?: string[];
     availablePoints?: number[];
@@ -34,7 +34,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
     };
 };
 
-export const fyziklaniData = (state: State = {tasks: [], teams: [], submits: {}}, action): State => {
+export const data = (state: State = {tasks: [], teams: [], submits: {}}, action): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);

@@ -9,10 +9,10 @@ import ParticipantAcquaintanceChart
     from './Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart';
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
-import ResultsPresentationComponent
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/ResultsPresentationComponent';
-import ResultsTableComponent
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
+import ResultsPresentation
+    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Main';
+import ResultsTable
+    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Main';
 import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
 import MainComponent from './Components/Controls/Fyziklani/SubmitForm/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
@@ -33,11 +33,12 @@ const renderer = new Renderer();
 renderer.hashMapLoader.register('event.schedule', eventSchedule);
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable);
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentation, {event: 'fof'});
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.results.presentation', ResultsPresentation, {event: 'ctyrboj'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent);
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent);
 

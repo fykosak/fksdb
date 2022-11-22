@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentDelta } from './middleware';
 import './timer.scss';
-import { FyziklaniPresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers';
+import {
+    PresentationStore,
+} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/reducers';
 
 interface OwnProps {
     mode: 'big' | 'small';
@@ -13,6 +14,25 @@ interface StateProps {
     toEnd: number;
     inserted: Date;
 }
+
+export const getCurrentDelta = (toStart: number, toEnd: number, inserted: Date): {
+    toStart: number;
+    toEnd: number;
+} => {
+    if (!inserted) {
+        return {
+            toEnd: 0,
+            toStart: 0,
+        };
+    }
+    const now = new Date();
+    const delta = now.getTime() - inserted.getTime();
+    return {
+        toEnd: toEnd - delta,
+        toStart: toStart - delta,
+    };
+};
+
 
 class Timer extends React.Component<StateProps & OwnProps> {
     private timerId;
@@ -41,7 +61,7 @@ class Timer extends React.Component<StateProps & OwnProps> {
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'row fyziklani-presentation-timer timer-' + mode}>
+            <div className={'row presentation-timer timer-' + mode}>
                 <span className="col">
                     <span className="time-value">{(h < 10 ? '0' + h : '' + h)}</span>
                     <span className="time-label">Hours/Hodin</span>
@@ -59,7 +79,7 @@ class Timer extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
+const mapStateToProps = (state: PresentationStore): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

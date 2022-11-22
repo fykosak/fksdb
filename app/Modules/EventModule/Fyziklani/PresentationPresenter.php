@@ -31,7 +31,7 @@ class PresentationPresenter extends BasePresenter
         return new ResultsAndStatisticsComponent(
             $this->getContext(),
             $this->getEvent(),
-            'fyziklani.results.presentation'
+            $this->getEvent()->event_type_id === 1 ? 'fyziklani.results.presentation' : 'ctyrboj.results.presentation'
         );
     }
 

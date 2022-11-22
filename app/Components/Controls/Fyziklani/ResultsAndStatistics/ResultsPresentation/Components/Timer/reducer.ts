@@ -28,7 +28,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
     };
 };
 
-export const fyziklaniTimer = (state: State = {}, action: Action<string>): State => {
+export const timer = (state: State = {}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, <ActionFetchSuccess<DataResponse<ResponseData>>>action);

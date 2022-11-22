@@ -1,12 +1,12 @@
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 
 interface OwnProps {
     submits: Submits;
-    team: ModelFyziklaniTeam;
-    tasks: ModelFyziklaniTask[];
+    team: TeamModel;
+    tasks: TaskModel[];
     visible: boolean;
 }
 

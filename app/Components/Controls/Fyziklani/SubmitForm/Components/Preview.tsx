@@ -4,14 +4,14 @@ import {
     getTask,
     getTeam,
 } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/middleware';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 
 interface OwnProps {
     code: string;
-    tasks: ModelFyziklaniTask[];
-    teams: ModelFyziklaniTeam[];
+    tasks: TaskModel[];
+    teams: TeamModel[];
 }
 
 export default class Preview extends React.Component<OwnProps> {

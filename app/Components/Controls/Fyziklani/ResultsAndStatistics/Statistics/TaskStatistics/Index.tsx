@@ -2,7 +2,7 @@ import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 import Options from './Options';
 import TimeHistogram from './BarHistogram';
 import TimeHistogramLines from './TimeHistogramLinesChart';
@@ -53,7 +53,7 @@ class TaskStats extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         taskId: state.statistics.taskId,

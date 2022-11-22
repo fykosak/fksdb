@@ -1,4 +1,4 @@
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -6,13 +6,13 @@ import {
     Dispatch,
 } from 'redux';
 import { Params, setParams } from '../actions';
-import { FyziklaniPresentationStore } from '../Reducers';
+import { PresentationStore } from '../reducers';
 
 interface StateProps {
     categories: string[];
     category: string;
     cols: number;
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
     rows: number;
     delay: number;
     position: number;
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
         onSetParams: (data) => dispatch(setParams(data)),
     };
 };
-const mapStateToPros = (state: FyziklaniPresentationStore): StateProps => {
+const mapStateToPros = (state: PresentationStore): StateProps => {
     return {
         categories: state.data.categories,
         category: state.presentation.category,

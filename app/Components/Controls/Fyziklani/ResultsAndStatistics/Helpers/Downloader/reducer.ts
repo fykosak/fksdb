@@ -28,7 +28,7 @@ const fetchFail = (state: State): State => {
     };
 };
 
-export const fyziklaniDownloader = (state: State = {lastUpdated: null}, action): State => {
+export const downloader = (state: State = {lastUpdated: null}, action): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);

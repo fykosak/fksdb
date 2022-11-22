@@ -1,6 +1,6 @@
 import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/Components/MainForm';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import { FormErrors } from 'redux-form';
 
 export const getFullCode = (code: string): string => {
@@ -29,7 +29,7 @@ const getControl = (subCode: Array<string | number>): number => {
         (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
         (+subCode[2] + +subCode[5] + +subCode[8]);
 };
-export const getTeam = (fullCode: string, teams: ModelFyziklaniTeam[]): ModelFyziklaniTeam => {
+export const getTeam = (fullCode: string, teams: TeamModel[]): TeamModel => {
     const matchedTeam = fullCode.match(/^([0-9]+)/);
     if (!matchedTeam) {
         return null;
@@ -39,7 +39,7 @@ export const getTeam = (fullCode: string, teams: ModelFyziklaniTeam[]): ModelFyz
     })[0];
 };
 
-export const getTask = (fullCode: string, tasks: ModelFyziklaniTask[]): ModelFyziklaniTask => {
+export const getTask = (fullCode: string, tasks: TaskModel[]): TaskModel => {
     const matchedLabel = fullCode.match(/^[0-9]+([a-zA-Z]{2})/);
 
     if (!matchedLabel) {

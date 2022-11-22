@@ -1,6 +1,6 @@
 import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -8,14 +8,14 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
 import PointsPie from './PieChart';
 import TimeLine from './Timeline';
 
 interface StateProps {
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
     teamId: number;
 }
 
@@ -74,7 +74,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,

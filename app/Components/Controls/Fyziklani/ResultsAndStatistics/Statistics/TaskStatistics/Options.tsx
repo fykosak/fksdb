@@ -1,5 +1,5 @@
 import { translator } from '@translator/translator';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import TimeDisplay from 'FKSDB/Models/ValuePrinters/TimePrinter';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,12 +8,12 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
 
 interface StateProps {
     aggregationTime: number;
-    tasks: ModelFyziklaniTask[];
+    tasks: TaskModel[];
     taskId: number;
     fromDate: Date;
     toDate: Date;
@@ -111,7 +111,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.timer.gameStart,

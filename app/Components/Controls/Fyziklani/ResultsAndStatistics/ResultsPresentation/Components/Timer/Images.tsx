@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getCurrentDelta } from './middleware';
+import { getCurrentDelta } from './Timer';
 import './images.scss';
-import { FyziklaniPresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers';
+import { PresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/reducers';
 
 interface StateProps {
     toStart: number;
@@ -29,7 +29,7 @@ class Images extends React.Component<StateProps> {
             return null;
         }
         return (
-            <div className="fyziklani-presentation-images">
+            <div className="presentation-images">
                 {this.getLabel(toStart, toEnd)}
             </div>
         );
@@ -40,7 +40,7 @@ class Images extends React.Component<StateProps> {
             return 'Have not begun yet/Ješte nezačalo';
         }
         if (toStart > 0) {
-            return 'Will soon begin/Brzo začne';
+            return 'Will soon begin/Brzy začne';
         }
         if (toStart > -120 * 1000) {
             return 'Start!';
@@ -55,7 +55,7 @@ class Images extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
+const mapStateToProps = (state: PresentationStore): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

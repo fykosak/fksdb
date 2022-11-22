@@ -1,23 +1,19 @@
 @import "../../../../../css/colors";
 
-.fyziklani-presentation {
-  background-color: var(--color-fof-main);
 
+.game-presentation {
   .subheader {
     font-weight: bold;
     color: black;
   }
 
   h1 {
-    color: var(--color-fof-main);
     font-weight: bold;
   }
 
   .head-row {
     padding: 0 .5rem;
-    color: var(--color-fof-main);
     font-weight: bold;
-    border-bottom: solid var(--color-fof-main) 1px;
   }
 
   .team-row {
@@ -46,25 +42,77 @@
     padding: 0.3rem 0;
   }
 
-  .progress {
-    width: 100%;
 
-    .progress-bar {
-      &[data-points="5"] {
-        background-color: var(--color-fof-points-5);
-      }
+  &.game-fof {
+    background-color: var(--color-fof-main);
 
-      &[data-points="3"] {
-        background-color: var(--color-fof-points-3);
-      }
+    h1 {
+      color: var(--color-fof-main);
+    }
 
-      &[data-points="2"] {
-        background-color: var(--color-fof-points-2);
-      }
+    .head-row {
+      color: var(--color-fof-main);
+      border-bottom: solid var(--color-fof-main) 1px;
+    }
 
-      &[data-points="1"] {
-        background-color: var(--color-fof-points-1);
+    .progress {
+      width: 100%;
+
+      .progress-bar {
+        &[data-points="5"] {
+          background-color: var(--color-fof-points-5);
+        }
+
+        &[data-points="3"] {
+          background-color: var(--color-fof-points-3);
+        }
+
+        &[data-points="2"] {
+          background-color: var(--color-fof-points-2);
+        }
+
+        &[data-points="1"] {
+          background-color: var(--color-fof-points-1);
+        }
       }
     }
   }
+
+  &.game-ctyrboj {
+    background-color: $ctyrbojColor;
+
+    h1 {
+      color: $ctyrbojColor;
+    }
+
+    .head-row {
+      color: $ctyrbojColor;
+      border-bottom: solid $ctyrbojColor 1px;
+    }
+
+    .progress {
+      width: 100%;
+
+      .progress-bar {
+        &[data-points="5"] {
+          background-color: var(--color-fof-points-5);
+        }
+
+        &[data-points="3"] {
+          background-color: var(--color-fof-points-3);
+        }
+
+        &[data-points="2"] {
+          background-color: var(--color-fof-points-2);
+        }
+
+        &[data-points="1"] {
+          background-color: var(--color-fof-points-1);
+        }
+      }
+    }
+  }
+
 }
+
+

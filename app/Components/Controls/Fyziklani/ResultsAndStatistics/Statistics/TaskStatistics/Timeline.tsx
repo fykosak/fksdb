@@ -4,22 +4,22 @@ import {
     scaleTime,
 } from 'd3-scale';
 import { select } from 'd3-selection';
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 import './timeline.scss';
 
 interface StateProps {
     submits: Submits;
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
     fromDate: Date;
     toDate: Date;
 }
 
-interface ExtendedSubmit extends ModelFyziklaniSubmit {
-    currentTeam: ModelFyziklaniTeam;
+interface ExtendedSubmit extends SubmitModel {
+    currentTeam: TeamModel;
 }
 
 interface OwnProps {
@@ -54,7 +54,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ModelFyziklaniSubmit = submits[index];
+                const submit: SubmitModel = submits[index];
                 if (submit.taskId === taskId) {
                     const currentTeam = teams.filter((team) => {
                         return submit.teamId === team.teamId;
@@ -95,7 +95,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         });
         return (
             <div className="col-lg-12">
-                <svg viewBox="0 0 600 100" className="chart chart-fyziklani-task-timeline">
+                <svg viewBox="0 0 600 100" className="chart chart-game-task-timeline">
                     <g transform="translate(0,70)" className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}
@@ -110,7 +110,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         fromDate: state.timer.gameStart,
         submits: state.data.submits,

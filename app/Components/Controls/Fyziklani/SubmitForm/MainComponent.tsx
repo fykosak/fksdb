@@ -1,7 +1,7 @@
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import MainForm from './Components/MainForm';
 import { app } from './reducer';
@@ -9,8 +9,8 @@ import { app } from './reducer';
 interface OwnProps {
     data: {
         availablePoints: number[] | null;
-        tasks: ModelFyziklaniTask[];
-        teams: ModelFyziklaniTeam[];
+        tasks: TaskModel[];
+        teams: TeamModel[];
     };
     actions: NetteActions;
 }

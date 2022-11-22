@@ -2,20 +2,20 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { StatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
-    tasks: ModelFyziklaniTask[];
+    tasks: TaskModel[];
     gameStart: Date;
     gameEnd: Date;
     activePoints: number;
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
 }
 
 interface OwnProps {
@@ -54,7 +54,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ModelFyziklaniSubmit = submits[index];
+                const submit: SubmitModel = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 meanPoints += (submit.points / numberOfTeams);
                 meanTeamData.push({
@@ -124,7 +124,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: StatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

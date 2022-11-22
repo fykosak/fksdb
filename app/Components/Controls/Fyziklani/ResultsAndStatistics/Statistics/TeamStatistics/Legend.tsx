@@ -45,7 +45,7 @@ class Legend extends React.Component<StateProps> {
         });
 
         return (
-            <div className="chart-legend chart-legend-fyziklani align-content-center col-lg-4 d-flex flex-wrap">
+            <div className="chart-legend chart-legend-game align-content-center col-lg-4 d-flex flex-wrap">
                 {legend}
             </div>
         );

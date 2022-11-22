@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticsTableStore } from '../../ResultsTable/reducers';
+import { StatisticsTableStore } from '../../ResultsTable/reducers';
 import { createFilters } from '../filter';
 import FilterComponent from './Filter';
 
@@ -23,7 +23,7 @@ class FilterSelect extends React.Component<StateProps> {
     }
 }
 
-const mapStateToPros = (state: FyziklaniStatisticsTableStore): StateProps => {
+const mapStateToPros = (state: StatisticsTableStore): StateProps => {
     return {
         categories: state.data.categories,
     };

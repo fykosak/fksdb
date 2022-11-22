@@ -9,8 +9,8 @@ import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
@@ -19,8 +19,8 @@ import { validate } from '../middleware';
 import AutoButton from 'FKSDB/Components/Controls/Fyziklani/SubmitForm/Components/AutoButton';
 
 export interface OwnProps {
-    tasks: ModelFyziklaniTask[];
-    teams: ModelFyziklaniTeam[];
+    tasks: TaskModel[];
+    teams: TeamModel[];
     actions: NetteActions;
     availablePoints: number[] | null;
 }
