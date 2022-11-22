@@ -15,13 +15,13 @@ class FOLTeamFormComponent extends TeamFormComponent
                 'other_name' => [
                     'required' => true,
                     'description' => _(
-                        'first name, f.E. Albert'
+                        'Usually the first part of your name. For example, "Albert".'
                     ),
                 ],
                 'family_name' => [
                     'required' => true,
                      'description' => _(
-                        'f.E. Einstein'
+                        'The second part of your name. For example, "Einstein".'
                     ),
                 ],
             ],
