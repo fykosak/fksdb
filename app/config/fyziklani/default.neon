@@ -55,10 +55,7 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Prezentovat')
             approved|spare->missed:
-                condition: FKSDB\Models\Expressions\Logic\LogicAnd(
-                    FKSDB\Models\Expressions\Predicates\After('2023-02-10 07:00:00')
-                    FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit'),
-                )
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Nepřijel')
             pending|spare|approved->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
