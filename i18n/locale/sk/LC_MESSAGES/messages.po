@@ -5615,6 +5615,14 @@ msgstr ""
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
 
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:18
+msgid "usually the first part of your name, for example, \"Albert\""
+msgstr " "
+
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:24
+msgid "the second part of your name, for example, \"Einstein\""
+msgstr " "
+
 #, fuzzy
 #~ msgid "Application deleted."
 #~ msgstr "Časový vývoj prihlášiek"

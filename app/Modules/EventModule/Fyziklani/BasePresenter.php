@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 
 abstract class BasePresenter extends EventBasePresenter
 {
+    public const GAME_EVENTS = [1, 17];
 
     protected TeamService2 $teamService;
     protected SubmitService $submitService;
@@ -29,7 +29,7 @@ abstract class BasePresenter extends EventBasePresenter
      */
     protected function isEnabled(): bool
     {
-        return $this->getEvent()->event_type_id === EventTypeModel::FYZIKLANI;
+        return in_array($this->getEvent()->event_type_id, self::GAME_EVENTS);
     }
 
     /**
