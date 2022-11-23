@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -67,9 +68,10 @@ abstract class TeamFormComponent extends EntityFormComponent
      */
     final protected function configureForm(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainer(
+        $teamContainer = $this->reflectionFormFactory->createContainerWithMetadata(
             'fyziklani_team',
-            $this->getTeamFieldsDefinition()
+            $this->getTeamFieldsDefinition(),
+            new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
         );
         $form->addComponent($teamContainer, 'team');
         $this->appendPersonsFields($form);

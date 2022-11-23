@@ -761,7 +761,6 @@ orm:
                     enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamState
                 phone:
                     type: phone
-                    required: true
                     title: _('Phone')
                     writeOnly: false
                 note:
@@ -802,7 +801,6 @@ orm:
                     title: _('Password')
                 name:
                     type: class
-                    required: true
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
                     title: _('Team name')
                 name_n_id:

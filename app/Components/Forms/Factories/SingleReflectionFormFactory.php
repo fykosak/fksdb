@@ -41,45 +41,31 @@ class SingleReflectionFormFactory
     }
 
     /**
-     * @param array $args
-     * @throws BadTypeException
-     * @throws OmittedControlException
-     */
-    public function createContainer(string $tableName, array $fields, ...$args): ModelContainer
-    {
-        $container = new ModelContainer();
-
-        foreach ($fields as $fieldName) {
-            $container->addComponent($this->createField($tableName, $fieldName, ...$args), $fieldName);
-        }
-        return $container;
-    }
-
-    /**
      * @throws BadTypeException
      * @throws OmittedControlException
      */
     public function createContainerWithMetadata(
         string $table,
         array $fields,
-        FieldLevelPermission $userPermissions,
+        ?FieldLevelPermission $userPermissions = null,
         ...$args
     ): ModelContainer {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);
             $control = $factory->createField(...$args);
-            $canWrite = $factory->hasWritePermissions($userPermissions->write);
-            $canRead = $factory->hasReadPermissions($userPermissions->read);
-            if ($control instanceof WriteOnly) {
-                $control->setWriteOnly(!$canRead);
-            } elseif ($canRead) {
+            if ($userPermissions) {
+                $canWrite = $factory->hasWritePermissions($userPermissions->write);
+                $canRead = $factory->hasReadPermissions($userPermissions->read);
+                if ($control instanceof WriteOnly) {
+                    $control->setWriteOnly(!$canRead);
+                } elseif ($canRead) {
 // do nothing
-            } else {
-                continue;
+                } else {
+                    continue;
+                }
+                $control->setDisabled(!$canWrite);
             }
-            $control->setDisabled(!$canWrite);
-
             $this->appendMetadata($control, $metadata);
             $container->addComponent($control, $field);
         }

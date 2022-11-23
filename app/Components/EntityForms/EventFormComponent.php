@@ -118,17 +118,17 @@ class EventFormComponent extends EntityFormComponent
      */
     private function createEventContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainer('event', [
-            'event_type_id',
-            'event_year',
-            'name',
-            'begin',
-            'end',
-            'registration_begin',
-            'registration_end',
-            'report',
-            'parameters',
-        ], $this->contestYear->contest);
+        return $this->singleReflectionFormFactory->createContainerWithMetadata('event', [
+            'event_type_id' => ['required' => true],
+            'event_year' => ['required' => true],
+            'name' => ['required' => true],
+            'begin' => ['required' => true],
+            'end' => ['required' => true],
+            'registration_begin' => ['required' => false],
+            'registration_end' => ['required' => false],
+            'report' => ['required' => false],
+            'parameters' => ['required' => false],
+        ], null, $this->contestYear->contest);
     }
 
     private function createParamDescription(BaseHolder $holder): Html

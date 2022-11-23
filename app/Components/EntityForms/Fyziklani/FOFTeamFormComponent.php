@@ -112,7 +112,12 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     protected function getTeamFieldsDefinition(): array
     {
-        return ['name', 'game_lang', 'phone', 'force_a'];
+        return [
+            'name' => ['required' => true],
+            'game_lang' => ['required' => true],
+            'phone' => ['required' => true],
+            'force_a' => ['required' => false],
+        ];
     }
 
     /**

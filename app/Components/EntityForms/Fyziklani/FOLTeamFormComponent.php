@@ -38,7 +38,7 @@ class FOLTeamFormComponent extends TeamFormComponent
                 ],
                 'family_name' => [
                     'required' => true,
-                     'description' => _(
+                    'description' => _(
                         'The second part of your name. For example, "Einstein".'
                     ),
                 ],
@@ -79,7 +79,7 @@ class FOLTeamFormComponent extends TeamFormComponent
 
     protected function getTeamFieldsDefinition(): array
     {
-        return ['name'];
+        return ['name' => ['required' => true]];
     }
 
     protected function getTeacherFieldsDefinition(): array
