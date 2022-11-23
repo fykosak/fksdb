@@ -69,9 +69,15 @@ class ScheduleGroupFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer(
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata(
             'schedule_group',
-            ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']
+            [
+                'name_cs' => ['required' => true],
+                'name_en' => ['required' => true],
+                'start' => ['required' => true],
+                'end' => ['required' => true],
+                'schedule_group_type' => ['required' => true],
+            ]
         );
         $form->addComponent($container, self::CONTAINER);
     }
