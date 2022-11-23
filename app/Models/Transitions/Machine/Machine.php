@@ -156,7 +156,9 @@ abstract class Machine
             $holder->updateState($transition->target);
             $transition->callAfterExecute($holder);
         } catch (\Throwable $exception) {
-            $this->explorer->getConnection()->rollBack();
+            if (!$outerTransition) {
+                $this->explorer->getConnection()->rollBack();
+            }
             throw $exception;
         }
         if (!$outerTransition) {

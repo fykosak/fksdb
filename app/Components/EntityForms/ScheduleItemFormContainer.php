@@ -70,15 +70,15 @@ class ScheduleItemFormContainer extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('schedule_item', [
-            'name_cs',
-            'name_en',
-            'description_cs',
-            'description_en',
-            'require_id_number',
-            'capacity',
-            'price_czk',
-            'price_eur',
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('schedule_item', [
+            'name_cs' => ['required' => true],
+            'name_en' => ['required' => true],
+            'description_cs' => ['required' => false],
+            'description_en' => ['required' => false],
+            'require_id_number' => ['required' => true],
+            'capacity' => ['required' => false],
+            'price_czk' => ['required' => false],
+            'price_eur' => ['required' => false],
         ]);
         $items = [];
         /** @var ScheduleGroupModel $group */

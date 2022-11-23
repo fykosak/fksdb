@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Forms\FormProcessing;
+namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;

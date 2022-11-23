@@ -4,11 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
-use FKSDB\Components\Forms\FormProcessing\FOLCategoryProcessing;
-
 class FOLTeamFormComponent extends TeamFormComponent
 {
-    protected function getFieldsDefinition(): array
+
+
+    protected function getProcessing(): array
+    {
+        return [
+            new FOLCategoryProcessing($this->container),
+        ];
+    }
+
+    public function render(): void
+    {
+        $this->template->event = $this->event;
+        parent::render();
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+    }
+
+    protected function getMemberFieldsDefinition(): array
     {
         return [
             'person' => [
@@ -20,7 +38,7 @@ class FOLTeamFormComponent extends TeamFormComponent
                 ],
                 'family_name' => [
                     'required' => true,
-                     'description' => _(
+                    'description' => _(
                         'The second part of your name. For example, "Einstein".'
                     ),
                 ],
@@ -59,21 +77,13 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
-    protected function getProcessing(): array
+    protected function getTeamFieldsDefinition(): array
     {
-        return [
-            new FOLCategoryProcessing($this->container),
-        ];
+        return ['name' => ['required' => true]];
     }
 
-    public function render(): void
+    protected function getTeacherFieldsDefinition(): array
     {
-        $this->template->event = $this->event;
-        parent::render();
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+        return [];
     }
 }
