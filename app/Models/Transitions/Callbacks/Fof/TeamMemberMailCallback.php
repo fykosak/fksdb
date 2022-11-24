@@ -20,9 +20,9 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
     protected function getData(ModelHolder $holder): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Registrace týmu na Fyziklání';
+            $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
         } else {
-            $subject = 'Fyziklani Team Registration';
+            $subject = 'Fyziklani Team Registration – ' . $holder->getModel()->name;
         }
         return [
             'subject' => $subject,
