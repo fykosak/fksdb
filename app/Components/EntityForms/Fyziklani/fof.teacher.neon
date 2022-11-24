@@ -1,0 +1,28 @@
+person:
+    other_name:
+        required: true
+    family_name:
+        required: true
+person_info:
+    email:
+        required: true
+    id_number:
+        required: false
+    academic_degree_prefix:
+        required: false
+    academic_degree_suffix:
+        required: false
+person_has_flag:
+    spam_mff:
+        required: true
+person_schedule:
+    accommodation:
+        required: false
+    accommodation_teacher:
+        required: false
+    visa:
+        required: false
+    teacher_present:
+        required: false
+    weekend:
+        required: false
