@@ -1,14 +1,14 @@
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setNewState } from '../actions';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { setNewState } from '../../actions/stats';
 import './progress.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
-    tasks: ModelFyziklaniTask[];
+    tasks: TaskModel[];
     submits: Submits;
 }
 
@@ -16,7 +16,7 @@ interface DispatchProps {
     onChangeTask(taskId: number): void;
 }
 
-interface StatItem extends ModelFyziklaniTask {
+interface StatItem extends TaskModel {
     5: number;
     3: number;
     2: number;
@@ -51,7 +51,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
         let max = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ModelFyziklaniSubmit = submits[index];
+                const submit: SubmitModel = submits[index];
                 const {taskId, points} = submit;
                 if (tasksSubmits.hasOwnProperty(taskId)) {
                     tasksSubmits[taskId][points]++;
@@ -96,11 +96,11 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
 
             }
         }
-        return (<div className="chart chart-fyziklani-task-progress">{rows}</div>);
+        return (<div className="chart chart-game-task-progress">{rows}</div>);
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         submits: state.data.submits,
         tasks: state.data.tasks,

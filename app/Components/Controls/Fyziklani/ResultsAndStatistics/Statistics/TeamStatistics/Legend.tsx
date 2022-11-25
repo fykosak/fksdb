@@ -5,8 +5,8 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setNewState } from '../actions';
-import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
+import { setNewState } from '../../actions/stats';
+import { State } from '../../reducers/stats';
 import './legend.scss';
 
 interface StateProps {
@@ -45,7 +45,7 @@ class Legend extends React.Component<StateProps> {
         });
 
         return (
-            <div className="chart-legend chart-legend-fyziklani align-content-center col-lg-4 d-flex flex-wrap">
+            <div className="chart-legend chart-legend-game align-content-center col-lg-4 d-flex flex-wrap">
                 {legend}
             </div>
         );

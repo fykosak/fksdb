@@ -1,4 +1,4 @@
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 
 export interface SubmitsByTask {
     [time: number]: {
@@ -15,7 +15,7 @@ export const submitsByTask = (
     const taskTimeSubmits: SubmitsByTask = {};
     for (const index in submits) {
         if (submits.hasOwnProperty(index)) {
-            const submit: ModelFyziklaniSubmit = submits[index];
+            const submit: SubmitModel = submits[index];
             if (submit.taskId === activeTaskId) {
                 if (submit.points > 0) {
                     if (!activePoints || activePoints === submit.points) {

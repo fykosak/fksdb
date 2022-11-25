@@ -1007,6 +1007,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task`
     `fyziklani_task_id` INT                                                 NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `event_id`          INT                                                 NOT NULL,
     `label`             CHAR(2) CHARACTER SET 'utf8' COLLATE 'utf8_bin'     NOT NULL,
+    `points`            INT                                                 NULL DEFAULT NULL COMMENT 'points for non user points',
     `name`              VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
     INDEX `idx_fyziklani_task__event` (`event_id` ASC),
     UNIQUE INDEX `uq_fyziklani_task__event__label` (`event_id` ASC, `label` ASC),

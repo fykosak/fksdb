@@ -19,7 +19,7 @@ class SubmitService extends Service
 
     public function findByTaskAndTeam(TaskModel $task, TeamModel2 $team): ?SubmitModel
     {
-        return $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        return $team->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
     }
 
     public function findAll(EventModel $event): TypedSelection

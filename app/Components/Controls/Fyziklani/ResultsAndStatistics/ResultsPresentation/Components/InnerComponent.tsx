@@ -1,19 +1,19 @@
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { calculate, Item } from '../../Helpers/calculateData';
-import { FyziklaniPresentationStore } from '../Reducers';
 import Headline from './Headline';
 import TeamRow from './TeamRow';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     availablePoints: number[];
     category: string;
     submits: Submits;
-    teams: ModelFyziklaniTeam[];
-    tasks: ModelFyziklaniTask[];
+    teams: TeamModel[];
+    tasks: TaskModel[];
     cols: number;
     rows: number;
     position: number;
@@ -88,7 +88,7 @@ class InnerComponent extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         category: state.presentation.category,

@@ -5,16 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 abstract class SubmitsGrid extends BaseGrid
 {
-
     protected SubmitService $submitService;
+    protected EventModel $event;
+
+    public function __construct(Container $container, EventModel $event)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
 
     final public function injectServiceFyziklaniSubmit(SubmitService $submitService): void
     {
@@ -22,21 +30,14 @@ abstract class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @throws DuplicateColumnException
+     * @throws DuplicateButtonException
      */
-    protected function addColumnTask(): void
+    protected function configure(Presenter $presenter): void
     {
-        $this->addColumn('label', _('Task'))->setRenderer(
-            fn(SubmitModel $model): string => $model->fyziklani_task->label
-        )->setSortable(false);
-    }
-
-    /**
-     * @throws DuplicateColumnException
-     * @throws BadTypeException
-     */
-    protected function addColumnTeam(): void
-    {
-        $this->addJoinedColumn('fyziklani_team.name_n_id', fn(SubmitModel $row): TeamModel2 => $row->fyziklani_team);
+        parent::configure($presenter);
+        if ($this->event->event_type_id === 1) {
+            $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addLinkButton(':Game:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        }
     }
 }

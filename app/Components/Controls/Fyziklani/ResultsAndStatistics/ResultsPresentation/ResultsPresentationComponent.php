@@ -10,8 +10,8 @@ use Nette\DI\Container;
 
 class ResultsPresentationComponent extends ResultsAndStatisticsComponent
 {
-    public function __construct(Container $container, EventModel $event)
+    public function __construct(Container $container, EventModel $event, string $eventString)
     {
-        parent::__construct($container, $event, 'fyziklani.results.presentation');
+        parent::__construct($container, $event, $eventString . '.results.presentation');
     }
 }

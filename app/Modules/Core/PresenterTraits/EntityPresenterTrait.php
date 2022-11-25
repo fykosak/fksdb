@@ -177,5 +177,5 @@ trait EntityPresenterTrait
     /**
      * @throws NotImplementedException
      */
-    abstract protected function createComponentGrid(): BaseGrid;
+    abstract protected function createComponentGrid(): Control;
 }

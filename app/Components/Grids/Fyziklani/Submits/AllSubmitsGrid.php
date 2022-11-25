@@ -28,12 +28,9 @@ use NiftyGrid\DuplicateColumnException;
 class AllSubmitsGrid extends SubmitsGrid
 {
 
-    private EventModel $event;
-
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container);
-        $this->event = $event;
+        parent::__construct($container, $event);
     }
 
     protected function getData(): IDataSource
@@ -55,31 +52,27 @@ class AllSubmitsGrid extends SubmitsGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
+        $this->addColumns(
+            $this->event->event_type_id === 1
+                ? [
+                'fyziklani_team.name_n_id',
+                'fyziklani_task.label',
+                'fyziklani_submit.state',
+                'fyziklani_submit.points',
+                'fyziklani_submit.created',
+            ]
+                : [
+                'fyziklani_team.name_n_id',
+                'fyziklani_task.label',
+                'fyziklani_submit.points',
+            ]
+        );
 
-        $this->addColumnTeam();
-        $this->addColumnTask();
-
-        $this->addColumns([
-            'fyziklani_submit.state',
-            'fyziklani_submit.points',
-            'fyziklani_submit.created',
-        ]);
-        if ($this->event->event_type_id === 1) {
-            $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-            $this->addLinkButton(
-                ':Fyziklani:Submit:detail',
-                'detail',
-                _('Detail'),
-                false,
-                ['id' => 'fyziklani_submit_id']
-            );
-        }
-
-        $this->addButton('delete')
+        $this->addButton('revoke')
             ->setClass('btn btn-sm btn-outline-danger')
-            ->setLink(fn(SubmitModel $row): string => $this->link('delete!', $row->fyziklani_submit_id))
+            ->setLink(fn(SubmitModel $row): string => $this->link('revoke!', $row->fyziklani_submit_id))
             ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
-            ->setText(_('Delete'))
+            ->setText(_('Revoke'))
             ->setShow(fn(SubmitModel $row): bool => $row->canRevoke(false));
     }
 
@@ -119,7 +112,7 @@ class AllSubmitsGrid extends SubmitsGrid
         };
     }
 
-    public function handleDelete(int $id): void
+    public function handleRevoke(int $id): void
     {
         /** @var SubmitModel $submit */
         $submit = $this->submitService->findByPrimary($id);
@@ -130,7 +123,7 @@ class AllSubmitsGrid extends SubmitsGrid
         try {
             $logger = new MemoryLogger();
             $handler = $this->event->createGameHandler($this->getContext());
-            $handler->revokeSubmit($logger, $submit);
+            $handler->revoke($logger, $submit);
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {

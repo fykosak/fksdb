@@ -1,10 +1,10 @@
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 
 export interface Item {
-    team: ModelFyziklaniTeam;
+    team: TeamModel;
     submits: {
-        [taskId: number]: ModelFyziklaniSubmit;
+        [taskId: number]: SubmitModel;
     };
     points: number;
     groups: {
@@ -16,7 +16,7 @@ export interface Item {
     count: number;
 }
 
-export const calculate = (submits: Submits, teams: ModelFyziklaniTeam[] = []): { [teamId: number]: Item } => {
+export const calculate = (submits: Submits, teams: TeamModel[] = []): { [teamId: number]: Item } => {
     const submitsForTeams: {
         [teamId: number]: Item;
     } = {};
@@ -37,7 +37,7 @@ export const calculate = (submits: Submits, teams: ModelFyziklaniTeam[] = []): {
             }
 
             const {teamId, taskId: taskId} = submit;
-            const [selectedTeam] = teams.filter((team: ModelFyziklaniTeam) => {
+            const [selectedTeam] = teams.filter((team: TeamModel) => {
                 return team.teamId === submit.teamId;
             });
             if (!selectedTeam) {

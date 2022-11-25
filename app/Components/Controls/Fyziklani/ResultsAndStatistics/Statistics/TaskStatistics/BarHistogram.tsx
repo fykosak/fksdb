@@ -10,12 +10,12 @@ import {
 } from 'd3-scale';
 import { select } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { submitsByTask } from '../Middleware/submitsByTask';
-import { FyziklaniStatisticStore } from '../Reducers';
 import './bar-histrogram.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     submits: Submits;
@@ -98,7 +98,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
             }
         }
         return (
-            <svg viewBox={this.getViewBox()} className="chart chart-fyziklani-task-bar-histogram">
+            <svg viewBox={this.getViewBox()} className="chart chart-game-task-bar-histogram">
                 <g>
                     {bars}
                     <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
@@ -117,7 +117,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

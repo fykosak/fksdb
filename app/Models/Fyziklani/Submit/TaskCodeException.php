@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use Nette\InvalidStateException;
+use FKSDB\Models\Fyziklani\FyziklaniException;
 
-class TaskCodeException extends InvalidStateException
+class TaskCodeException extends FyziklaniException
 {
 }

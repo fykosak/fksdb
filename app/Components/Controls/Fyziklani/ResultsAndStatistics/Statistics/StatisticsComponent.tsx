@@ -1,7 +1,7 @@
 import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
 import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
 import * as React from 'react';
-import { app } from './Reducers';
+import { app } from '../reducers/store';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import TeamStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index';
 import TasksStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index';
