@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Filter } from '../filter';
 import { Action, Dispatch } from 'redux';
-import { setFilter } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/actions';
-import { StatisticsTableStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/reducers';
+import { setFilter } from '../../actions/table';
 import { connect } from 'react-redux';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface OwnProps {
     filter: Filter;
@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
         onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
     };
 };
-const mapStateToPros = (state: StatisticsTableStore, ownProps: OwnProps): StateProps => {
+const mapStateToPros = (state: Store, ownProps: OwnProps): StateProps => {
     return {
         categories: state.data.categories,
         active: ownProps.filter.same(state.tableFilter.filter),

@@ -6,8 +6,10 @@ import * as React from 'react';
 import App from './Components/InnerComponent';
 import PositionSwitcher from './Components/PositionSwitcher';
 import Setting from './Components/Setting';
-import { app } from './reducers';
+import { app } from '../reducers/store';
 import './style.scss';
+import CtyrbojTable
+    from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/CtyrbojTable';
 
 interface OwnProps {
     actions: NetteActions;
@@ -21,8 +23,15 @@ export default class Main extends React.Component<OwnProps> {
             <div className={'game-presentation fixed-top h-100 w-100 game-' + this.props.event}>
                 <Setting/>
                 <Toggler event={this.props.event}>
-                    <App/>
-                    <PositionSwitcher/>
+                    {this.props.event === 'fof'
+                        ? <>
+                            <App/>
+                            <PositionSwitcher/>
+                        </>
+                        : <>
+                            <CtyrbojTable/>
+                        </>
+                    }
                 </Toggler>
             </div>
         </MainComponent>;

@@ -1,5 +1,5 @@
-import { ACTION_SET_FILTER } from '../actions';
-import { Filter } from '../filter';
+import { ACTION_SET_FILTER } from '../actions/table';
+import { Filter } from '../ResultsTable/filter';
 
 export interface State {
     filter: Filter | null;
@@ -9,7 +9,7 @@ const initialState: State = {
     filter: null,
 };
 
-export const tableFilter = (state: State = initialState, action): State => {
+export const table = (state: State = initialState, action): State => {
 
     switch (action.type) {
         case ACTION_SET_FILTER:

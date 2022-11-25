@@ -16,7 +16,7 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class ClosingGrid extends BaseGrid
+class TeamsGrid extends BaseGrid
 {
 
     private EventModel $event;
@@ -43,20 +43,29 @@ class ClosingGrid extends BaseGrid
         parent::configure($presenter);
 
         $this->paginate = false;
+        if ($this->event->event_type_id === 17) {
+            $this->addColumns([
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.points',
+                'fyziklani_team.opened_submitting',
+            ]);
+        } else {
+            $this->addColumns([
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.category',
+                'fyziklani_team.points',
+                'fyziklani_team.opened_submitting',
+            ]);
+        }
 
-        $this->addColumns([
-            'fyziklani_team.name',
-            'fyziklani_team.fyziklani_team_id',
-            'fyziklani_team.points',
-            'fyziklani_team.category',
-            'fyziklani_team.opened_submitting',
-        ]);
-        $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
+        $this->addLinkButton(':Game:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(function (TeamModel2 $row): bool {
+        ])->setShow(function (TeamModel2 $team): bool {
             try {
-                $row->canClose();
+                $team->canClose();
                 return true;
             } catch (FyziklaniException $exception) {
                 return false;

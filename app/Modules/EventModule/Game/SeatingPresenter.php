@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Fyziklani;
+namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;

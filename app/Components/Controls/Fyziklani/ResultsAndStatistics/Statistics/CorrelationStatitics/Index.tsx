@@ -6,9 +6,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setNewState } from '../actions';
-import { StatisticStore } from '../Reducers';
+import { setNewState } from '../../actions/stats';
 import GlobalCorrelation from './GlobalCorrelation';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     teams: TeamModel[];
@@ -82,7 +82,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

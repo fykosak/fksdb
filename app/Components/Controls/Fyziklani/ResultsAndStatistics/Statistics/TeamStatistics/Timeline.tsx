@@ -7,8 +7,8 @@ import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitMo
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatisticStore } from '../Reducers';
 import './timeline.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     activePoints: number;
@@ -100,7 +100,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

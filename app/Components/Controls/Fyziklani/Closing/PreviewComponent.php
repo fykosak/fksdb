@@ -12,9 +12,9 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
-abstract class ClosingComponent extends BaseComponent
+abstract class PreviewComponent extends BaseComponent
 {
-    private TeamModel2 $team;
+    protected TeamModel2 $team;
     protected TeamService2 $teamService;
 
     public function __construct(Container $container, TeamModel2 $team)
@@ -39,30 +39,6 @@ abstract class ClosingComponent extends BaseComponent
         $this->getPresenter()->redirect('list', ['id' => null]);
     }
 
-    /**
-     * @throws NotSetGameParametersException
-     */
-    public function render(): void
-    {
-        $this->template->task = $this->getNextTask();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-    }
-
-    /**
-     * @throws NotSetGameParametersException
-     */
-    private function getNextTask(): string
-    {
-        $submits = $this->team->getNonRevokedSubmits()->count('*');
-        $tasksOnBoard = $this->team->event->getFyziklaniGameSetup()->tasks_on_board;
-        /** @var TaskModel|null $nextTask */
-        $nextTask = $this->team->event
-            ->getFyziklaniTasks()
-            ->order('label')
-            ->limit(1, $submits + $tasksOnBoard)
-            ->fetch();
-        return ($nextTask) ? $nextTask->label : '';
-    }
 
     protected function close(): int
     {

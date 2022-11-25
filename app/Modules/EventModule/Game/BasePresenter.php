@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Fyziklani;
+namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -43,6 +43,6 @@ abstract class BasePresenter extends EventBasePresenter
      */
     protected function getNavRoots(): array
     {
-        return ['Fyziklani.Dashboard.default', 'Fyziklani.Statistics.table'];
+        return ['Game.Dashboard.default', 'Game.Statistics.table'];
     }
 }

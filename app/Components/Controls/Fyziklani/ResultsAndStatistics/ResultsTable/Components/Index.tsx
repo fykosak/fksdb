@@ -4,9 +4,9 @@ import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatisticsTableStore } from '../../ResultsTable/reducers';
 import { Filter } from '../filter';
 import Row from './Row';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     filter: Filter | null;
@@ -58,7 +58,7 @@ class Index extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsTableStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         filter: state.tableFilter.filter,
         submits: state.data.submits,

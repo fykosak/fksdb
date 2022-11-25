@@ -7,9 +7,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setNewState } from '../actions';
-import { StatisticStore } from '../Reducers';
-import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
+import { setNewState } from '../../actions/stats';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
+import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/stats';
 
 interface StateProps {
     aggregationTime: number;
@@ -111,7 +111,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.timer.gameStart,

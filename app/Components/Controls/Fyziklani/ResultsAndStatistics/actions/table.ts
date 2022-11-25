@@ -1,4 +1,4 @@
-import { Filter } from './filter';
+import { Filter } from '../ResultsTable/filter';
 import { Action } from 'redux';
 
 export interface FilterAction extends Action<string> {

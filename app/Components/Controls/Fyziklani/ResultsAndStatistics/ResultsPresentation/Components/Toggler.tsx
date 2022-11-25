@@ -3,9 +3,7 @@ import Images
 import Timer from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Timer/Timer';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    PresentationStore,
-} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/reducers';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     visible: boolean;
@@ -43,7 +41,7 @@ class Toggler extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: PresentationStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         hardVisible: state.presentation.hardVisible,
         visible: state.timer.visible,

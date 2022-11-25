@@ -3,9 +3,9 @@ import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setNewState } from '../actions';
-import { StatisticStore } from '../Reducers';
+import { setNewState } from '../../actions/stats';
 import './progress.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     tasks: TaskModel[];
@@ -100,7 +100,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         submits: state.data.submits,
         tasks: state.data.tasks,

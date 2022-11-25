@@ -28,12 +28,9 @@ use NiftyGrid\DuplicateColumnException;
 class AllSubmitsGrid extends SubmitsGrid
 {
 
-    private EventModel $event;
-
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container);
-        $this->event = $event;
+        parent::__construct($container, $event);
     }
 
     protected function getData(): IDataSource
@@ -55,31 +52,21 @@ class AllSubmitsGrid extends SubmitsGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-
-        $this->addColumnTeam();
-        $this->addColumnTask();
-
         $this->addColumns(
             $this->event->event_type_id === 1
                 ? [
+                'fyziklani_team.name_n_id',
+                'fyziklani_task.label',
                 'fyziklani_submit.state',
                 'fyziklani_submit.points',
                 'fyziklani_submit.created',
             ]
                 : [
+                'fyziklani_team.name_n_id',
+                'fyziklani_task.label',
                 'fyziklani_submit.points',
             ]
         );
-        if ($this->event->event_type_id === 1) {
-            $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-            $this->addLinkButton(
-                ':Fyziklani:Submit:detail',
-                'detail',
-                _('Detail'),
-                false,
-                ['id' => 'fyziklani_submit_id']
-            );
-        }
 
         $this->addButton('revoke')
             ->setClass('btn btn-sm btn-outline-danger')

@@ -7,12 +7,12 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setNewState } from '../actions';
-import { StatisticStore } from '../Reducers';
+import { setNewState } from '../../actions/stats';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
 import PointsPie from './PieChart';
 import TimeLine from './Timeline';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     teams: TeamModel[];
@@ -74,7 +74,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,

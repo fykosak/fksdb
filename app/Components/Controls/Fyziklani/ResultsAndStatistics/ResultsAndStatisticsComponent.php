@@ -8,7 +8,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
+use FKSDB\Modules\EventModule\Game\BasePresenter;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;

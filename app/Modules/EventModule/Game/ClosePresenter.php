@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Fyziklani;
+namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Controls\Fyziklani\Closing\ClosingGrid;
-use FKSDB\Components\Controls\Fyziklani\Closing\ClosingComponent;
+use FKSDB\Components\Controls\Fyziklani\Closing\CtyrbojPreviewComponent;
+use FKSDB\Components\Controls\Fyziklani\Closing\TeamListComponent;
+use FKSDB\Components\Controls\Fyziklani\Closing\TeamsGrid;
+use FKSDB\Components\Controls\Fyziklani\Closing\PreviewComponent;
+use FKSDB\Components\Controls\Fyziklani\Closing\FOFPreviewComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -132,10 +135,17 @@ class ClosePresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NotImplementedException
      */
-    protected function createComponentCloseTeamControl(): ClosingComponent
+    protected function createComponentCloseTeamControl(): PreviewComponent
     {
-        return new ClosingComponent($this->getContext(), $this->getEntity());
+        switch ($this->getEvent()->event_type_id) {
+            case 1:
+                return new FOFPreviewComponent($this->getContext(), $this->getEntity());
+            case 17:
+                return new CtyrbojPreviewComponent($this->getContext(), $this->getEntity());
+        }
+        throw new NotImplementedException();
     }
 
     /**
@@ -159,9 +169,9 @@ class ClosePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): BaseGrid
+    protected function createComponentGrid(): TeamListComponent
     {
-        return new ClosingGrid($this->getEvent(), $this->getContext());
+        return new TeamListComponent($this->getContext(), $this->getEvent());
     }
 
     /**

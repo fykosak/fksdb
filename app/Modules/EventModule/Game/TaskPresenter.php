@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Fyziklani;
+namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;

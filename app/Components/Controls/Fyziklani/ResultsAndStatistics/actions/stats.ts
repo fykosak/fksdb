@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
+import { State } from '../reducers/stats';
 
 export const ACTION_SET_NEW_STATE = '@@game/ACTION_SET_NEW_STATE'
 

@@ -8,8 +8,8 @@ import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitMo
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatisticStore } from '../Reducers';
 import './timeline.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     submits: Submits;
@@ -110,7 +110,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         fromDate: state.timer.gameStart,
         submits: state.data.submits,

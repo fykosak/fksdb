@@ -2,12 +2,12 @@ import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatisticStore } from '../Reducers';
 import Options from './Options';
 import TimeHistogram from './BarHistogram';
 import TimeHistogramLines from './TimeHistogramLinesChart';
 import Timeline from './Timeline';
 import Progress from './Progress';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     taskId: number;
@@ -53,7 +53,7 @@ class TaskStats extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         taskId: state.statistics.taskId,

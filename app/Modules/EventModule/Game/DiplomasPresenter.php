@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Fyziklani;
+namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;

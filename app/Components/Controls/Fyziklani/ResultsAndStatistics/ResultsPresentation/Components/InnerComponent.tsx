@@ -4,9 +4,9 @@ import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { calculate, Item } from '../../Helpers/calculateData';
-import { PresentationStore } from '../reducers';
 import Headline from './Headline';
 import TeamRow from './TeamRow';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     availablePoints: number[];
@@ -88,7 +88,7 @@ class InnerComponent extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: PresentationStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         category: state.presentation.category,

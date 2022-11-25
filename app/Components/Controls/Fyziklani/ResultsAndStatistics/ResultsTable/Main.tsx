@@ -3,7 +3,7 @@ import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatist
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
 import App from './Components/Index';
-import { app } from './reducers';
+import { app } from '../reducers/store';
 import SingleSelect
     from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Components/FilterSelect';
 import './results-table.scss';

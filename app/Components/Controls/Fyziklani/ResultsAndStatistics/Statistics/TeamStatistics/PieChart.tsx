@@ -3,8 +3,8 @@ import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitMo
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatisticStore } from '../Reducers';
 import './pie.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     teams: TeamModel[];
@@ -96,7 +96,7 @@ const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieAr
     })(data);
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         submits: state.data.submits,

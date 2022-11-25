@@ -1,12 +1,12 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { PresentationStore } from '../reducers';
 import { Action, Dispatch } from 'redux';
 import {
     Params,
     setParams,
-} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/actions';
+} from '../../actions/presentation';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     isOrg: boolean;
@@ -32,13 +32,15 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
         //                data-bs-toggle="modal"
         //                 data-bs-target="#fyziklaniPresentationModal"
         return <>
-            <button
-                type="button"
-                className="btn btn-link fixed-bottom"
-                style={{zIndex: 10001}}
-                onClick={() => this.setState({show: !this.state.show})}
-
-            ><i className="fa fa-cogs"/></button>
+            <div className="fixed-bottom float-start" style={{zIndex: 10001}}>
+                <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={() => this.setState({show: !this.state.show})}
+                >
+                    <i className="fa fa-cogs"/>
+                </button>
+            </div>
             {this.state.show && <div
                 className="modal"
                 tabIndex={-1}
@@ -53,23 +55,23 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
                         </div>
                         <div className="modal-body">
                             {isOrg &&
-                            <div className="form-group">
-                                <p>
-                                    {translator.getText('Not public results')}
-                                </p>
-                                <p className="form-text text-danger">
-                                    {translator.getText('This function don\'t turn on if results are public!')}
-                                </p>
-                                <button
-                                    className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-outline-warning'}
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        onSetParams({hardVisible: !hardVisible});
-                                    }}>
-                                    {hardVisible ? translator.getText('Turn off') : translator.getText('Turn on')}
-                                </button>
+                                <div className="form-group">
+                                    <p>
+                                        {translator.getText('Not public results')}
+                                    </p>
+                                    <p className="form-text text-danger">
+                                        {translator.getText('This function don\'t turn on if results are public!')}
+                                    </p>
+                                    <button
+                                        className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-outline-warning'}
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            onSetParams({hardVisible: !hardVisible});
+                                        }}>
+                                        {hardVisible ? translator.getText('Turn off') : translator.getText('Turn on')}
+                                    </button>
 
-                            </div>}
+                                </div>}
                             <hr/>
                             <div className="form-group">
                                 <div className="form-group">
@@ -124,7 +126,7 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
     }
 }
 
-const mapStateToPros = (state: PresentationStore): StateProps => {
+const mapStateToPros = (state: Store): StateProps => {
     return {
         isOrg: state.presentation.isOrg,
         cols: state.presentation.cols,

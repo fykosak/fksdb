@@ -55,14 +55,14 @@ class TeamModel2 extends Model implements Resource
 
     /* ******************** SUBMITS ******************************* */
 
-    public function getAllSubmits(): TypedGroupedSelection
+    public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
     }
 
     public function getNonRevokedSubmits(): TypedGroupedSelection
     {
-        return $this->getAllSubmits()->where('points IS NOT NULL');
+        return $this->getSubmits()->where('points IS NOT NULL');
     }
 
     public function getNonCheckedSubmits(): TypedGroupedSelection
@@ -72,7 +72,7 @@ class TeamModel2 extends Model implements Resource
 
     public function hasAllSubmitsChecked(): bool
     {
-        return $this->getNonCheckedSubmits()->count() === 0;
+        return $this->getNonCheckedSubmits()->count('*') === 0;
     }
 
     public function hasOpenSubmitting(): bool
@@ -171,20 +171,7 @@ class TeamModel2 extends Model implements Resource
     {
         $node = $document->createElement('team');
         $node->setAttribute('teamId', (string)$this->fyziklani_team_id);
-        XMLHelper::fillArrayToNode([
-            'teamId' => $this->fyziklani_team_id,
-            'name' => $this->name,
-            'status' => $this->state->value,
-            'category' => $this->category->value,
-            'created' => $this->created->format('c'),
-            'phone' => $this->phone,
-            'password' => $this->password,
-            'points' => $this->points,
-            'rankCategory' => $this->rank_category,
-            'rankTotal' => $this->rank_total,
-            'forceA' => $this->force_a,
-            'gameLang' => $this->game_lang,
-        ], $document, $node);
+        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }
 

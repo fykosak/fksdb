@@ -1,5 +1,4 @@
 import { translator } from '@translator/translator';
-import { CoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
@@ -12,6 +11,7 @@ import {
     Dispatch,
 } from 'redux';
 import './downloader.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     error: Response | string | number | Error;
@@ -64,7 +64,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
     }
 }
 
-const mapStateToProps = (state: CoreStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         actions: state.fetch.actions,
         error: state.fetch.error,

@@ -1,4 +1,4 @@
-import { ACTION_SET_PARAMS } from '../actions';
+import { ACTION_SET_PARAMS } from '../actions/presentation';
 import { ACTION_FETCH_SUCCESS } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 
 export interface State {

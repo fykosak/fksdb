@@ -1,4 +1,4 @@
-import { ACTION_SET_NEW_STATE, ActionSetNewState } from '../actions';
+import { ACTION_SET_NEW_STATE, ActionSetNewState } from '../actions/stats';
 
 export interface State {
     activePoints?: number;

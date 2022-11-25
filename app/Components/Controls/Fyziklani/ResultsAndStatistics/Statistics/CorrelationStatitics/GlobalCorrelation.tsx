@@ -6,10 +6,10 @@ import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setNewState } from '../actions';
+import { setNewState } from '../../actions/stats';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { StatisticStore } from '../Reducers';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     submits: Submits;
@@ -75,7 +75,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

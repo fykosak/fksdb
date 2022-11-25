@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import './timer.scss';
-import {
-    PresentationStore,
-} from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/reducers';
+import { Store } from '../../../reducers/store';
 
 interface OwnProps {
     mode: 'big' | 'small';
@@ -79,7 +77,7 @@ class Timer extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: PresentationStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

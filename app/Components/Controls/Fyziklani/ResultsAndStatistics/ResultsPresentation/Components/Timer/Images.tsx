@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from './Timer';
 import './images.scss';
-import { PresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/reducers';
+import { Store } from '../../../reducers/store';
 
 interface StateProps {
     toStart: number;
@@ -55,7 +55,7 @@ class Images extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: PresentationStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,
