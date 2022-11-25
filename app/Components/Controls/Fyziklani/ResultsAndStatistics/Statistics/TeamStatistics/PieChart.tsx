@@ -1,13 +1,13 @@
 import { arc, pie, PieArcDatum } from 'd3-shape';
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticStore } from '../Reducers';
 import './pie.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
     submits: Submits;
     activePoints: number;
 }
@@ -36,7 +36,7 @@ class PieChart extends React.Component<StateProps & OwnProps> {
         let totalSubmits = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: ModelFyziklaniSubmit = submits[index];
+                const submit: SubmitModel = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
 
@@ -81,7 +81,7 @@ class PieChart extends React.Component<StateProps & OwnProps> {
                 </g>
             );
         });
-        return <svg viewBox="0 0 400 400" className="chart chart-fyziklani-team-pie">
+        return <svg viewBox="0 0 400 400" className="chart chart-game-team-pie">
             <g transform="translate(200,200)">
                 {paths}
                 {labels}
@@ -96,7 +96,7 @@ const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieAr
     })(data);
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         submits: state.data.submits,

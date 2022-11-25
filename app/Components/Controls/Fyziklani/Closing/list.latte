@@ -1,0 +1,28 @@
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{foreach $event->getFyziklaniTeams()->order('points') as $team}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team}
+    {var bool $canClose = false}
+    {try}
+        {php $team->canClose()}
+        {php $canClose = true}
+    {/try}
+    <div class="{$team->hasOpenSubmitting()?($canClose?'alert alert-warning':'alert alert-danger'):'alert alert-success'}">
+        <strong>(#{$team->fyziklani_team_id}) {$team->name}</strong>
+        <div class="row">
+            <div class="col">
+                {$team->category->label()}
+            </div>
+            <div class="col">
+                {if $team->hasOpenSubmitting()}
+                    {try}
+                        {php $team->canClose()}
+                        <a href="{plink team id=>$team->fyziklani_team_id}"
+                           class="btn btn-outline-success">{_'Close'}</a>
+                    {/try}
+                {else}
+                    {$team->points} {_'points'}
+                {/if}
+            </div>
+        </div>
+    </div>
+{/foreach}

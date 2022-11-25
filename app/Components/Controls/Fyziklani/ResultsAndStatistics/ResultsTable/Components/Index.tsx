@@ -1,18 +1,18 @@
 import { translator } from '@translator/translator';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticsTableStore } from '../../ResultsTable/reducers';
 import { Filter } from '../filter';
 import Row from './Row';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     filter: Filter | null;
     submits: Submits;
-    teams: ModelFyziklaniTeam[];
-    tasks: ModelFyziklaniTask[];
+    teams: TeamModel[];
+    tasks: TaskModel[];
 }
 
 class Index extends React.Component<StateProps> {
@@ -28,8 +28,8 @@ class Index extends React.Component<StateProps> {
                 submitsForTeams[teamId][taskId] = submit;
             }
         }
-        return <div className="mb-3 fyziklani-statistics-table">
-            <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
+        return <div className="mb-3 game-statistics-table">
+            <h1>{filter ? filter.getHeadline() : translator.getText('Results')}</h1>
             <table className="table-striped table-hover table table-sm bg-white">
                 <thead>
                 <tr>
@@ -38,12 +38,12 @@ class Index extends React.Component<StateProps> {
                     <th>∑</th>
                     <th>∑</th>
                     <th>x̄</th>
-                    {tasks.map((task: ModelFyziklaniTask, taskIndex) =>
+                    {tasks.map((task: TaskModel, taskIndex) =>
                         <th key={taskIndex} data-task-label={task.label}>{task.label}</th>)}
                 </tr>
                 </thead>
                 <tbody>
-                {teams.map((team: ModelFyziklaniTeam, teamIndex) =>
+                {teams.map((team: TeamModel, teamIndex) =>
                     <Row
                         tasks={tasks}
                         submits={submitsForTeams[team.teamId] || {}}
@@ -58,7 +58,7 @@ class Index extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticsTableStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         filter: state.tableFilter.filter,
         submits: state.data.submits,

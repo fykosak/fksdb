@@ -1,18 +1,18 @@
 import { translator } from '@translator/translator';
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getTimeLabel } from '../Middleware/correlation';
 import { getAverageNStandardDeviation } from '../Middleware/stdDev';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     submits: Submits;
-    tasks: ModelFyziklaniTask[];
-    teams: ModelFyziklaniTeam[];
+    tasks: TaskModel[];
+    teams: TeamModel[];
     firstTeamId: number;
     secondTeamId: number;
 }
@@ -22,8 +22,8 @@ class Table extends React.Component<StateProps> {
     public render() {
 
         const {firstTeamId, secondTeamId, submits, tasks} = this.props;
-        const firstTeamSubmits: ModelFyziklaniSubmit[] = [];
-        const secondTeamSubmits: ModelFyziklaniSubmit[] = [];
+        const firstTeamSubmits: SubmitModel[] = [];
+        const secondTeamSubmits: SubmitModel[] = [];
         for (const id in submits) {
             if (submits.hasOwnProperty(id)) {
                 const submit = submits[id];
@@ -41,7 +41,7 @@ class Table extends React.Component<StateProps> {
         let count = 0;
         const firstTeamData = submitsForTeams.hasOwnProperty(firstTeamId) ? submitsForTeams[firstTeamId] : {};
         const secondTeamData = submitsForTeams.hasOwnProperty(secondTeamId) ? submitsForTeams[secondTeamId] : {};
-        tasks.forEach((task: ModelFyziklaniTask, id) => {
+        tasks.forEach((task: TaskModel, id) => {
             const firstSubmit = firstTeamData.hasOwnProperty(task.taskId) ? firstTeamData[task.taskId] : null;
             const secondSubmit = secondTeamData.hasOwnProperty(task.taskId) ? secondTeamData[task.taskId] : null;
             let delta = 0;
@@ -83,7 +83,7 @@ class Table extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

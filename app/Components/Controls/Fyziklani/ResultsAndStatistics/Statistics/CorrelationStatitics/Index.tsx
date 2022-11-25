@@ -1,17 +1,17 @@
 import { translator } from '@translator/translator';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { setNewState } from '../actions';
-import { FyziklaniStatisticStore } from '../Reducers';
+import { setNewState } from '../../actions/stats';
 import GlobalCorrelation from './GlobalCorrelation';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
-    teams: ModelFyziklaniTeam[];
+    teams: TeamModel[];
     firstTeamId: number;
     secondTeamId: number;
 }
@@ -69,7 +69,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps> {
 
         const headline = (
             <h2>{translator.getText('Correlation ') +
-            ((firstSelectedTeam && secondSelectedTeam) ? (firstSelectedTeam.name + ' VS ' + secondSelectedTeam.name) : '')}</h2>
+                ((firstSelectedTeam && secondSelectedTeam) ? (firstSelectedTeam.name + ' VS ' + secondSelectedTeam.name) : '')}</h2>
         );
 
         return (
@@ -82,7 +82,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

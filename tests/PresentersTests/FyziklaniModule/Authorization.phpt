@@ -89,11 +89,11 @@ class Authorization extends FyziklaniTestCase
     public function getTestData(): array
     {
         return [
-            [fn() => null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perPerson, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perOrg, 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
-            [fn() => $this->perOrgOther, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perContestant, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perPerson, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perOrg, 'Game:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrgOther, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perContestant, 'Game:Submit', ['create', 'edit', 'list'], false],
         ];
     }
 

@@ -86,7 +86,7 @@ class ClosePresenter extends FyziklaniTestCase
         }
 
         /* Remaining setup stuff */
-        $this->fixture = $this->createPresenter('Fyziklani:Close');
+        $this->fixture = $this->createPresenter('Game:Close');
         $this->mockApplication();
 
         $this->authenticatePerson($this->userPerson, $this->fixture);
@@ -95,7 +95,7 @@ class ClosePresenter extends FyziklaniTestCase
     private function createCloseTeamRequest(array $formData, array $params = []): Request
     {
         return new Request(
-            'Fyziklani:Close:team',
+            'Game:Close:team',
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',
@@ -108,7 +108,7 @@ class ClosePresenter extends FyziklaniTestCase
     private function createPostDiplomasRequest(array $formData, array $params = []): Request
     {
         return new Request(
-            'Fyziklani:Diplomas:default',
+            'Game:Diplomas:default',
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',

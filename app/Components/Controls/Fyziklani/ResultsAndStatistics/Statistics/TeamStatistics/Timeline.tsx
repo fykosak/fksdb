@@ -3,23 +3,23 @@ import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import { timeMinute } from 'd3-time';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
-import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniStatisticStore } from '../Reducers';
 import './timeline.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     activePoints: number;
     submits: Submits;
-    tasks: ModelFyziklaniTask[];
+    tasks: TaskModel[];
     gameStart: Date;
     gameEnd: Date;
     tasksOnBoard: number;
 }
 
-interface ExtendedTask extends ModelFyziklaniTask {
+interface ExtendedTask extends TaskModel {
     from: Date;
 }
 
@@ -100,7 +100,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
     }
 }
 
-const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),
@@ -113,8 +113,8 @@ const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
 
 export default connect(mapStateToProps, null)(Timeline);
 
-const reconstructTeamGame = (submits: Submits, tasks: ModelFyziklaniTask[], tasksOnBoard: number, gameStart: Date, teamId: number):
-    { activeTasks: ExtendedTask[]; teamSubmits: ModelFyziklaniSubmit[] } => {
+const reconstructTeamGame = (submits: Submits, tasks: TaskModel[], tasksOnBoard: number, gameStart: Date, teamId: number):
+    { activeTasks: ExtendedTask[]; teamSubmits: SubmitModel[] } => {
     const taskBuffer = [...(tasks.slice(tasksOnBoard))];
     const teamSubmits = [];
     const activeTasks: ExtendedTask[] = [];
@@ -127,7 +127,7 @@ const reconstructTeamGame = (submits: Submits, tasks: ModelFyziklaniTask[], task
     }
     for (const index in submits) {
         if (submits.hasOwnProperty(index)) {
-            const submit: ModelFyziklaniSubmit = submits[index];
+            const submit: SubmitModel = submits[index];
             const {teamId: submitTeamId, created} = submit;
             if (teamId === submitTeamId) {
                 if (submit.points !== null && submit.points !== 0) {

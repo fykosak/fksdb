@@ -1,6 +1,8 @@
-.fyziklani-presentation-timer {
+@import "../../../../../../../css/colors";
+
+.game-presentation .presentation-timer {
   color: white;
-  background-color: var(--color-fof-main);
+
   justify-content: space-between;
   padding: .25em;
   font-weight: bold;
@@ -51,3 +53,12 @@
     }
   }
 }
+
+.game-presentation.game-ctyrboj .presentation-timer {
+  background-color: $ctyrbojColor;
+}
+
+.game-presentation.game-fyziklani .presentation-timer {
+  background-color: var(--color-fof-main);
+}
+

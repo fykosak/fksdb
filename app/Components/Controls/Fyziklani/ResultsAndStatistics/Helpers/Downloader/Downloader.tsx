@@ -1,10 +1,9 @@
 import { translator } from '@translator/translator';
-import { FyziklaniCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -12,6 +11,7 @@ import {
     Dispatch,
 } from 'redux';
 import './downloader.scss';
+import { Store } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
     error: Response | string | number | Error;
@@ -64,7 +64,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
     }
 }
 
-const mapStateToProps = (state: FyziklaniCoreStore): StateProps => {
+const mapStateToProps = (state: Store): StateProps => {
     return {
         actions: state.fetch.actions,
         error: state.fetch.error,
@@ -105,7 +105,7 @@ export interface ResponseData {
     tasksOnBoard: number;
 
     submits: Submits;
-    teams?: ModelFyziklaniTeam[];
-    tasks?: ModelFyziklaniTask[];
+    teams?: TeamModel[];
+    tasks?: TaskModel[];
     categories?: string[];
 }

@@ -8,7 +8,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
+use FKSDB\Modules\EventModule\Game\BasePresenter;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
@@ -72,7 +72,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent
             'isOrg' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
-            'submits' => [],
         ];
 
         $result['submits'] = $this->submitService->serialiseSubmits($this->getEvent(), $this->lastUpdated);

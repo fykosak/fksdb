@@ -45,21 +45,21 @@ class FyziklaniModule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Fyziklani:Close', 'list'],
-            ['Fyziklani:Dashboard', 'default'],
-            ['Fyziklani:Diplomas', 'default',],
-            ['Fyziklani:Diplomas', 'results'],
-            ['Fyziklani:GameSetup', 'default'],
-            ['Fyziklani:Statistics', 'table'],
-            ['Fyziklani:Statistics', 'team'],
-            ['Fyziklani:Statistics', 'task'],
-            ['Fyziklani:Statistics', 'correlation'],
-            ['Fyziklani:Presentation', 'default'],
-            ['Fyziklani:Submit', 'create'],
-            ['Fyziklani:Submit', 'list'],
-            ['Fyziklani:Task', 'list'],
-            ['Fyziklani:Seating', 'list'],
-            ['Fyziklani:Seating', 'print'],
+            ['Game:Close', 'list'],
+            ['Game:Dashboard', 'default'],
+            ['Game:Diplomas', 'default',],
+            ['Game:Diplomas', 'results'],
+            ['Game:GameSetup', 'default'],
+            ['Game:Statistics', 'table'],
+            ['Game:Statistics', 'team'],
+            ['Game:Statistics', 'task'],
+            ['Game:Statistics', 'correlation'],
+            ['Game:Presentation', 'default'],
+            ['Game:Submit', 'create'],
+            ['Game:Submit', 'list'],
+            ['Game:Task', 'list'],
+            ['Game:Seating', 'list'],
+            ['Game:Seating', 'print'],
         ];
     }
 }

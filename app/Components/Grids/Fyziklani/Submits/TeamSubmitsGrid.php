@@ -21,33 +21,32 @@ class TeamSubmitsGrid extends SubmitsGrid
     public function __construct(TeamModel2 $team, Container $container)
     {
         $this->team = $team;
-        parent::__construct($container);
+        parent::__construct($container, $team->event);
     }
 
     protected function getData(): IDataSource
     {
-        $submits = $this->team->getAllSubmits()
+        $submits = $this->team->getSubmits()
             ->order('fyziklani_submit.created');
         return new NDataSource($submits);
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws DuplicateButtonException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumnTask();
 
         $this->addColumns([
+            'fyziklani_team.name',
+            'fyziklani_task.label',
             'fyziklani_submit.points',
             'fyziklani_submit.created',
             'fyziklani_submit.state',
         ]);
-        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
     }
 }
