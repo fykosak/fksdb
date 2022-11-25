@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
+use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -37,7 +37,7 @@ class GameSetupPresenter extends BasePresenter
     {
         static $gameSetup;
         if (!isset($gameSetup) || $this->getEvent()->event_id !== $gameSetup->event_id) {
-            $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+            $gameSetup = $this->getEvent()->getGameSetup();
         }
         return $gameSetup;
     }
@@ -47,6 +47,6 @@ class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.gameSetup', 'default'));
+        $this->setAuthorized($this->isAllowed('game.gameSetup', 'default'));
     }
 }

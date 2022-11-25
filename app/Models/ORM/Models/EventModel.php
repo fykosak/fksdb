@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\Fyziklani\Submit\CtyrbojHandler;
-use FKSDB\Models\Fyziklani\Submit\FOFHandler;
-use FKSDB\Models\Fyziklani\Submit\Handler;
+use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\Submits\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -67,7 +67,7 @@ class EventModel extends Model implements Resource, NodeCreator
     /**
      * @throws NotSetGameParametersException
      */
-    public function getFyziklaniGameSetup(): GameSetupModel
+    public function getGameSetup(): GameSetupModel
     {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
@@ -91,20 +91,20 @@ class EventModel extends Model implements Resource, NodeCreator
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
-    public function getFyziklaniTeams(): TypedGroupedSelection
+    public function getTeams(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
 
-    public function getParticipatingFyziklaniTeams(): TypedGroupedSelection
+    public function getParticipatingTeams(): TypedGroupedSelection
     {
-        return $this->getFyziklaniTeams()->where('state', TeamState::PARTICIPATED);
+        return $this->getTeams()->where('state', TeamState::PARTICIPATED);
     }
 
-    public function getPossiblyAttendingFyziklaniTeams(): TypedGroupedSelection
+    public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
         // TODO
-        return $this->getFyziklaniTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
+        return $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
     public function getEventOrgs(): TypedGroupedSelection
@@ -117,7 +117,7 @@ class EventModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
-    public function getFyziklaniTasks(): TypedGroupedSelection
+    public function getTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;

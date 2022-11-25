@@ -83,7 +83,7 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.seating', 'default'));
+        $this->setAuthorized($this->isAllowed('game.seating', 'default'));
     }
 
     final public function renderList(): void
@@ -100,7 +100,7 @@ class SeatingPresenter extends BasePresenter
         $offset = $this->getParameter('offset', 0);
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getFyziklaniTeams()->limit((int)$limit, (int)$offset),
+            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
             $this->getContext()
         );
     }

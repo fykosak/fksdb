@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;

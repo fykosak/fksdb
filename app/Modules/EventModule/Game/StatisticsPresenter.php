@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
+use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
+use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use Fykosak\Utils\UI\PageTitle;
 
 class StatisticsPresenter extends BasePresenter
@@ -17,7 +17,7 @@ class StatisticsPresenter extends BasePresenter
      */
     public function requiresLogin(): bool
     {
-        return !$this->getEvent()->getFyziklaniGameSetup()->result_hard_display;
+        return !$this->getEvent()->getGameSetup()->result_hard_display;
     }
 
     protected function beforeRender(): void
@@ -54,7 +54,7 @@ class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTasks(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.statistics', 'default'));
+        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
     }
 
     /**
@@ -62,7 +62,7 @@ class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTeam(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.statistics', 'default'));
+        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
     }
 
     /**
@@ -70,7 +70,7 @@ class StatisticsPresenter extends BasePresenter
      */
     public function authorizedCorrelation(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.statistics', 'default'));
+        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
     }
 
     /**
@@ -78,7 +78,7 @@ class StatisticsPresenter extends BasePresenter
      */
     public function authorizedResultsTable(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.statistics', 'default'));
+        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
     }
 
     /**

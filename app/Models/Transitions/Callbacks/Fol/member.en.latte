@@ -1,4 +1,4 @@
-{varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var $team = $holder->getModel()}
 {var $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}

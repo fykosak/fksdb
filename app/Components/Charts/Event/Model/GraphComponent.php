@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\Controls\Events\ExpressionPrinter;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;

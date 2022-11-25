@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
-use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
+use FKSDB\Components\Game\Closing\AlreadyClosedException;
+use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;

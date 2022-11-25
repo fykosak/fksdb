@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
+use FKSDB\Components\Game\Diplomas\FinalResultsComponent;
+use FKSDB\Components\Game\Diplomas\NotClosedTeamException;
+use FKSDB\Components\Game\Diplomas\RankingStrategy;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
-use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -31,7 +31,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'results'));
+        $this->setAuthorized($this->isAllowed('game.diplomas', 'results'));
     }
 
     /**
@@ -39,7 +39,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizeDefault(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'calculate'));
+        $this->setAuthorized($this->isAllowed('game.diplomas', 'calculate'));
     }
 
     /**
@@ -50,11 +50,11 @@ class DiplomasPresenter extends BasePresenter
         $items = [];
         foreach (TeamCategory::casesForEvent($this->getEvent()) as $category) {
             $items[$category->value] = [
-                'closed' => $this->getEvent()->getParticipatingFyziklaniTeams()
+                'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->getEvent()->getParticipatingFyziklaniTeams()
+                'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NULL')
                     ->count(),
