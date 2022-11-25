@@ -12,7 +12,7 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Fyziklani game'), 'fas fa-laptop-code');
+        return new PageTitle(null, _('Game'), 'fas fa-laptop-code');
     }
 
     /**
@@ -20,6 +20,6 @@ class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.dashboard', 'default'));
+        $this->setAuthorized($this->isAllowed('game.dashboard', 'default'));
     }
 }

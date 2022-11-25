@@ -1,0 +1,30 @@
+{varType FKSDB\Components\Game\Diplomas\FinalResultsComponent $control}
+<nav>
+    <div class="nav nav-tabs">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#total">{_('Global')}</button>
+        {foreach ['A','B','C'] as $category}
+            <button class="nav-link" data-bs-toggle="tab"
+                    data-bs-target="{('#category' . $category)}">{\sprintf(_('Category %s'),$category)}</button>
+        {/foreach}
+    </div>
+</nav>
+<div class="tab-content">
+    <div class="tab-pane fade active show" id="total">
+        <h2>{_('Global')}</h2>
+        {if $control->isClosedTotal()}
+            {control resultsTotalGrid}
+        {else}
+            <p class="alert-warning alert">{_'Results for some teams are not closed yet'}</p>
+        {/if}
+    </div>
+    {foreach ['A','B','C'] as $category}
+        <div class="tab-pane fade" id="{('category' . $category)}">
+            <h2>{\sprintf(_('Category %s'),$category)}</h2>
+            {if $control->isClosedCategory(FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category))}
+                {control 'resultsCategory' . $category . 'Grid'}
+            {else}
+                <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
+            {/if}
+        </div>
+    {/foreach}
+</div>

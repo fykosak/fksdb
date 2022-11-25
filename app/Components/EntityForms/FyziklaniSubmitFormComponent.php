@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
@@ -63,7 +63,7 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         $field = new RadioList(_('Number of points'));
         $items = [];
-        foreach ($this->model->fyziklani_team->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
+        foreach ($this->model->fyziklani_team->event->getGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);

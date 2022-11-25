@@ -1,5 +1,5 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {block body}
     {if $holder->getModel()->game_lang->value == 'cs'}
         <p>

@@ -10,11 +10,11 @@ import ParticipantAcquaintanceChart
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
 import ResultsPresentation
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Main';
+    from './Components/Game/ResultsAndStatistics/ResultsPresentation/Main';
 import ResultsTable
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Main';
-import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
-import MainComponent from './Components/Controls/Fyziklani/SubmitForm/MainComponent';
+    from './Components/Game/ResultsAndStatistics/ResultsTable/Main';
+import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
+import MainComponent from './Components/Game/Submits/Form/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';

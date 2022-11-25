@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Grids\Fyziklani\TaskGrid;
+use FKSDB\Components\Game\TaskGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -27,7 +27,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.task', 'list'));
+        $this->setAuthorized($this->isAllowed('game.task', 'list'));
     }
 
     /**

@@ -19,7 +19,7 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
@@ -32,14 +32,14 @@ use Nette\Forms\Form;
 abstract class TeamFormComponent extends EntityFormComponent
 {
     protected SingleReflectionFormFactory $reflectionFormFactory;
-    protected FyziklaniTeamMachine $machine;
+    protected TeamMachine $machine;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventModel $event;
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
 
     public function __construct(
-        FyziklaniTeamMachine $machine,
+        TeamMachine $machine,
         EventModel $event,
         Container $container,
         ?Model $model
