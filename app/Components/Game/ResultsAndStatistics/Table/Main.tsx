@@ -5,7 +5,7 @@ import * as React from 'react';
 import App from './Components/Index';
 import { app } from '../reducers/store';
 import SingleSelect
-    from 'FKSDB/Components/Game/ResultsAndStatistics/ResultsTable/Components/FilterSelect';
+    from 'FKSDB/Components/Game/ResultsAndStatistics/Table/Components/FilterSelect';
 import './results-table.scss';
 
 interface OwnProps {

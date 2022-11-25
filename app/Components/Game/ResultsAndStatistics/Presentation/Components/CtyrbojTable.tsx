@@ -28,8 +28,8 @@ class Index extends React.Component<StateProps> {
         }
 
         return <div className="p-3 h-100 bg-white">
-            <div className="row justify-content-md-center">
-                <h1>{translator.getText('Results')}</h1>
+            <div className="row text-center mb-3">
+                <h1>{translator.getText('Výsledkovky')}</h1>
             </div>
             <div className="container-fluid">
                 <table className="table">
