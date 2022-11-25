@@ -20,14 +20,19 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
     protected function getData(ModelHolder $holder): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Registrace týmu na Fyziklání';
+            $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
         } else {
-            $subject = 'Fyziklani Team Registration';
+            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
+        }
+        if ($holder->getModel()->game_lang->value === 'cs') {
+            $sender = 'Fyziklání <fyziklani@fykos.cz>';
+        } else {
+            $sender = 'Fyziklani <fyziklani@fykos.cz>';
         }
         return [
             'subject' => $subject,
             'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
-            'sender' => 'Fyziklání <fyziklani@fykos.cz>',
+            'sender' => $sender,
         ];
     }
 }
