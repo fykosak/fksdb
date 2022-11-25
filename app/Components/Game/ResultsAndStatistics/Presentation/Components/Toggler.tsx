@@ -1,6 +1,6 @@
 import Images
-    from 'FKSDB/Components/Game/ResultsAndStatistics/ResultsPresentation/Components/Timer/Images';
-import Timer from 'FKSDB/Components/Game/ResultsAndStatistics/ResultsPresentation/Components/Timer/Timer';
+    from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/Timer/Images';
+import Timer from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/Timer/Timer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';

@@ -9,7 +9,7 @@ import Setting from './Components/Setting';
 import { app } from '../reducers/store';
 import './style.scss';
 import CtyrbojTable
-    from 'FKSDB/Components/Game/ResultsAndStatistics/ResultsPresentation/Components/CtyrbojTable';
+    from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/CtyrbojTable';
 
 interface OwnProps {
     actions: NetteActions;

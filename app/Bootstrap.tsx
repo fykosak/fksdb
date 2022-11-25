@@ -10,9 +10,9 @@ import ParticipantAcquaintanceChart
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
 import ResultsPresentation
-    from './Components/Game/ResultsAndStatistics/ResultsPresentation/Main';
+    from './Components/Game/ResultsAndStatistics/Presentation/Main';
 import ResultsTable
-    from './Components/Game/ResultsAndStatistics/ResultsTable/Main';
+    from './Components/Game/ResultsAndStatistics/Table/Main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
 import MainComponent from './Components/Game/Submits/Form/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
