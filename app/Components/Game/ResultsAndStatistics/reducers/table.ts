@@ -1,5 +1,5 @@
 import { ACTION_SET_FILTER } from '../actions/table';
-import { Filter } from '../ResultsTable/filter';
+import { Filter } from '../Table/filter';
 
 export interface State {
     filter: Filter | null;
