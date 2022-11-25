@@ -16,7 +16,7 @@ class TaskService extends Service
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
-        return $event->getFyziklaniTasks()->where([
+        return $event->getTasks()->where([
             'label' => $label,
         ])->fetch();
     }
@@ -28,7 +28,7 @@ class TaskService extends Service
     {
         $tasks = [];
         /** @var TaskModel $model */
-        foreach ($event->getFyziklaniTasks()->order('label') as $model) {
+        foreach ($event->getTasks()->order('label') as $model) {
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

@@ -22,7 +22,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use Tracy\Debugger;
 
 class TeamApplicationsGrid extends BaseGrid
 {
@@ -62,7 +61,7 @@ class TeamApplicationsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $participants = $this->event->getFyziklaniTeams();
+        $participants = $this->event->getTeams();
         $source = new SearchableDataSource($participants);
         $source->setFilterCallback($this->getFilterCallBack());
         return $source;

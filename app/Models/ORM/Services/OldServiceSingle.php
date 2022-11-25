@@ -12,7 +12,6 @@ use Fykosak\NetteORM\Model;
  * Use singleton descendant implementations.
  *
  * @deprecated
- * @use ServiceSingle
  * @method Model storeModel(array $data, ?Model $model = null)
  */
 abstract class OldServiceSingle extends Service

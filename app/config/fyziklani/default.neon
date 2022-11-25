@@ -1,9 +1,9 @@
 
 services:
     fol.default.machine:
-        factory: FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine
+        factory: FKSDB\Models\Transitions\Machine\TeamMachine
     fof.default.machine:
-        factory: FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine
+        factory: FKSDB\Models\Transitions\Machine\TeamMachine
 
 transitions:
     fol.default:

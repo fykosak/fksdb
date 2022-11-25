@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Fof;
 
-use FKSDB\Models\Transitions\Holder\FyziklaniTeamHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
@@ -15,7 +15,7 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
     }
 
     /**
-     * @param FyziklaniTeamHolder $holder
+     * @param TeamHolder $holder
      */
     protected function getData(ModelHolder $holder): array
     {

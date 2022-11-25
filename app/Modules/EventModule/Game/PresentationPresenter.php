@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
+use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -20,7 +20,7 @@ class PresentationPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.presentation', 'default'));
+        $this->setAuthorized($this->isAllowed('game.presentation', 'default'));
     }
 
     /**

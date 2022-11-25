@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Controls\Fyziklani\Closing\CtyrbojPreviewComponent;
-use FKSDB\Components\Controls\Fyziklani\Closing\TeamListComponent;
-use FKSDB\Components\Controls\Fyziklani\Closing\TeamsGrid;
-use FKSDB\Components\Controls\Fyziklani\Closing\PreviewComponent;
-use FKSDB\Components\Controls\Fyziklani\Closing\FOFPreviewComponent;
-use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
+use FKSDB\Components\Game\Closing\AlreadyClosedException;
+use FKSDB\Components\Game\Closing\CtyrbojPreviewComponent;
+use FKSDB\Components\Game\Closing\FOFPreviewComponent;
+use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
+use FKSDB\Components\Game\Closing\PreviewComponent;
+use FKSDB\Components\Game\Closing\TeamListComponent;
+use FKSDB\Components\Game\Closing\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
-use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -192,6 +190,6 @@ class ClosePresenter extends BasePresenter
 
     protected function getModelResource(): string
     {
-        return 'fyziklani.close';
+        return 'game.close';
     }
 }
