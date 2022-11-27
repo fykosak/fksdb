@@ -15,10 +15,9 @@ for i in `seq 1 $COUNT` ; do
 
 	mysql -e "CREATE DATABASE \`$INS_NAME\` CHARACTER SET utf8  COLLATE utf8_czech_ci"
 
-	mysql $INS_NAME <${SCRIPT_PATH}/../sql/schema.sql && echo "Created schema $INS_NAME"
+	for s in ${SCRIPT_PATH}/../sql/*.sql ; do
+		mysql -e $INS_NAME <$s && echo "Executed $s"
+	done
 
-	mysql $INS_NAME <${SCRIPT_PATH}/../sql/views.sql && echo "Created views $INS_NAME"
-
-	mysql $INS_NAME <${SCRIPT_PATH}/../sql/initval.sql && echo "Initialized data $INS_NAME"
 done
 
