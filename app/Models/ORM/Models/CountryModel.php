@@ -19,10 +19,13 @@ class CountryModel extends Model
 {
     public function matchPhone(string $number): bool
     {
-        if (\is_null($this->phone_nsn) || \is_null($this->phone_prefix)) {
+        if (\is_null($this->phone_prefix)) {
             return false;
         }
-        return !!\preg_match('/^\\' . $this->phone_prefix . '\d{' . $this->phone_nsn . '}$/', $number);
+        if (\is_null($this->phone_nsn)) {
+            return (bool)\preg_match('/^\\' . $this->phone_prefix . '\d+$/', $number);
+        }
+        return (bool)\preg_match('/^\\' . $this->phone_prefix . '\d{' . $this->phone_nsn . '}$/', $number);
     }
 
     /**
@@ -38,7 +41,7 @@ class CountryModel extends Model
                 $regExp = '(\d{2})(\d{4})(\d{4})';
                 break;
             default:
-                $regExp = '(\d{' . $this->phone_nsn . '})';
+                $regExp = '(\d+)';
         }
 
         if (preg_match('/^\\' . $this->phone_prefix . $regExp . '$/', $number, $matches)) {
