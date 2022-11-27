@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -11,6 +12,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Neon\Exception;
 use Nette\Neon\Neon;
@@ -48,6 +50,27 @@ class FOFTeamFormComponent extends TeamFormComponent
     {
         $this->appendTeacherField($form);
         $this->appendMemberFields($form);
+    }
+
+    protected function appendMemberFields(Form $form): void
+    {
+        parent::appendMemberFields($form);
+        foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
+            /** @var BaseControl $genderField */
+            $genderField = $component['person']['gender'];
+            /** @var BaseControl $idNumberField */
+            $idNumberField = $component['person_info']['id_number'];
+            /** @var BaseControl $accommodationField */
+            $accommodationField = $component['person_schedule']['accommodation'];
+            $genderField->addConditionOn($accommodationField, Form::FILLED)
+                ->addRule(Form::FILLED, _('Field %label is required.'));
+            $genderField->addConditionOn($accommodationField, Form::FILLED)
+                ->toggle($genderField->getHtmlId() . '-pair');
+            $idNumberField->addConditionOn($accommodationField, Form::FILLED)
+                ->addRule(Form::FILLED, _('Field %label is required.'));
+            $idNumberField->addConditionOn($accommodationField, Form::FILLED)
+                ->toggle($idNumberField->getHtmlId() . '-pair');
+        }
     }
 
     protected function getProcessing(): array
