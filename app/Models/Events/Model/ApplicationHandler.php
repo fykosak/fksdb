@@ -137,9 +137,7 @@ class ApplicationHandler
 
             if ($execute === self::STATE_OVERWRITE) {
                 if (isset($data[$holder->name]['status'])) {
-                    $holder->setModelState(
-                        $data[$holder->name]['status']
-                    );
+                    $holder->setModelState(EventParticipantStatus::tryFrom($data[$holder->name]['status']));
                 }
             }
 

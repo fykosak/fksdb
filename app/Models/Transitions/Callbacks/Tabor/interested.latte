@@ -1,0 +1,11 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+<p>
+    Ahoj,<br/>
+    Tvou přihlášku jsme zaevidovali. Rozhodnutí o tom, zda budeš na tábor vybrán,
+	budeme rozesílat okolo {$holder->event->registration_end|date:'j. n. Y'}.
+    Připomínáme, že o Tvé účasti na táboře rozhoduje Tvé pořadí v soutěži.
+</p>
+<p>
+    Za organizátory<br/>
+    {$holder->getParameter('letterSignature')}
+</p>
