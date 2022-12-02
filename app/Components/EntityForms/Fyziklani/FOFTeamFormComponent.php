@@ -50,11 +50,6 @@ class FOFTeamFormComponent extends TeamFormComponent
     {
         $this->appendTeacherField($form);
         $this->appendMemberFields($form);
-    }
-
-    protected function appendMemberFields(Form $form): void
-    {
-        parent::appendMemberFields($form);
         foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
             /** @var BaseControl $genderField */
             $genderField = $component['person']['gender'];
