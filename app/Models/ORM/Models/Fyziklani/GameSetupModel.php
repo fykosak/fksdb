@@ -22,12 +22,11 @@ class GameSetupModel extends Model
     /**
      * @return int[]
      */
-    public function getAvailablePoints(): array
-    {
-        return $this->available_points
-            ? \array_map(fn(string $value): int => +trim($value),
-                \explode(',', $this->available_points))
-            : [];
+    public function getAvailablePoints(): array {
+    return $this->available_points
+        ? \array_map(fn(string $value): int => +trim($value),
+        \explode(',', $this->available_points))
+        : [];
     }
 
     /**
