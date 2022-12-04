@@ -88,8 +88,9 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        // TODO
-        return Html::el('span')->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addText($this->label());
     }
 
     /**
@@ -101,8 +102,23 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
         return $this->value;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function getBehaviorType(): string
     {
+        switch ($this->value) {
+            case self::A:
+                return 'color-4';
+            case self::B:
+                return 'color-2';
+            case self::C:
+                return 'color-3';
+            case self::F:
+                return 'color-5';
+            case self::O:
+                return 'color-10';
+        }
         throw new NotImplementedException();
     }
 }

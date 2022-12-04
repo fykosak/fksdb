@@ -1,0 +1,50 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams}
+{block content}
+    {if count($teams)}
+        {foreach $teams as $team}
+            <div n:class="'alert alert-' . $team->state->getBehaviorType()">
+                <div class="row">
+                    <strong>
+                        {control valuePrinter:onlyValue 'fyziklani_team.name', $team}
+                        ({control valuePrinter:onlyValue 'fyziklani_team.fyziklani_team_id', $team})
+                    </strong>
+                </div>
+                <div class="row">
+                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.phone', $team}</div>
+                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.state', $team}</div>
+                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.category', $team}</div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {foreach $team->getMembers() as $member}
+                        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+                        <div class="list-group-item bg-transparent">
+                            <div class="row">
+                                <span class="col">{control valuePrinter:onlyValue 'person.full_name', $member}</span>
+                                <span class="col">{control valuePrinter:onlyValue 'school.school', $member->getPersonHistory()}</span>
+                                <span class="col">
+                                         {var $flagClass = 'flag-icon flag-icon-' . \strtolower($member->getPersonHistory()->school->address->country->alpha_2)}
+                        <i class="{$flagClass}"></i>
+                            </span>
+                            </div>
+                        </div>
+                    {/foreach}
+                </ul>
+                <strong>{_'Teacher'}</strong>
+                <div class="row">
+                    {foreach $team->getTeachers() as $teacher}
+                        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+                        <div class="col">{control valuePrinter:onlyValue 'person.full_name', $teacher}</div>
+                    {/}
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a href="{plink 'detail' id=>$team->getPrimary()}"
+                           class="btn btn-outline-secondary float-end">{_'Detail'}</a>
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

@@ -11,6 +11,7 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
+use FKSDB\Components\Grids\Application\TeamListComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -204,6 +205,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     protected function createComponentGrid(): TeamApplicationsGrid
     {
         return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+    }
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentList(): TeamListComponent
+    {
+        return new TeamListComponent($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent

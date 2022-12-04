@@ -20,17 +20,13 @@ enum TeamState: string implements EnumColumn
     case Cancelled = 'cancelled';
     case Init = 'init'; // virtual state for correct ORM
 
-    /**
-     * @throws NotImplementedException
-     */
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => $this->getBehaviorType()])->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addText($this->label());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function label(): string
     {
         return match ($this) {
@@ -42,21 +38,19 @@ enum TeamState: string implements EnumColumn
             self::Missed => _('missed'),
             self::Disqualified => _('disqualified'),
             self::Cancelled => _('canceled'),
-            default => throw new NotImplementedException(),
+            self::Init => _('init'),
         };
     }
 
     public function getBehaviorType(): string
     {
         return match ($this) {
-            self::Applied => 'badge bg-color-1',
-            self::Pending => 'badge bg-color-2',
-            self::Approved => 'badge bg-color-7',
-            self::Spare => 'badge bg-color-9',
-            self::Participated => 'badge bg-color-3',
-            self::Missed => 'badge bg-color-4',
-            self::Disqualified => 'badge bg-color-5',
-            self::Cancelled, self::Init => 'badge bg-color-6',
+            self::Applied, self::Approved => 'info',
+            self::Pending => 'warning',
+            self::Spare => 'primary',
+            self::Participated => 'success',
+            self::Missed, self::Cancelled, self::Init => 'secondary',
+            self::Disqualified => 'danger',
         };
     }
 }

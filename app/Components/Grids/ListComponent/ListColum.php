@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FKSDB\Components\Grids\ListComponent;
+
+class ListColum
+{
+    /** @var callable */
+    private $render = null;
+
+    public string $className = 'col';
+}
