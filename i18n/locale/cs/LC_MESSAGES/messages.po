@@ -1395,29 +1395,26 @@ msgstr ""
 msgid "DSEF afternoon"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:132
+#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:123
+#: ../app/Models/ORM/Models/Warehouse/ProductCategory.php:45
+msgid "Apparel"
+msgstr "Oblečení a doplňky"
+
+#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:125
+msgid "Transport"
+msgstr "Přeprava"
+
+#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:128
+msgid "Ticket"
+msgstr "Lístek"
+
 #: ../app/config/orm.neon.neon2php:195
 msgid "T-shirt color"
 msgstr "Barva trika"
 
-#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:134
 #: ../app/config/orm.neon.neon2php:199
 msgid "T-shirt size"
 msgstr "Velikost trika"
-
-#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:136
-msgid "Jumper size"
-msgstr ""
-
-#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:138
-#: ../app/config/orm.neon.neon2php:209
-msgid "Arrival destination"
-msgstr "Místo příjezdu"
-
-#: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:140
-#: ../app/config/orm.neon.neon2php:216
-msgid "Departure destination"
-msgstr "Místo odjezdu"
 
 #: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:93
 msgid "Unlimited capacity"
@@ -1689,10 +1686,6 @@ msgstr "Hra"
 #: ../app/Models/ORM/Models/Warehouse/ProductCategory.php:43
 msgid "Game extension"
 msgstr "Rozšíření hry"
-
-#: ../app/Models/ORM/Models/Warehouse/ProductCategory.php:45
-msgid "Apparel"
-msgstr ""
 
 #: ../app/Models/ORM/Models/Warehouse/ProductCategory.php:47
 msgid "Book"
