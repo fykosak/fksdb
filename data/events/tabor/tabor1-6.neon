@@ -34,7 +34,6 @@ parameters:
                 person_history:
                     school_id:
                         required: state('participated')
-                        description: "Pokud nelze školu nalézt, napiš správci."
             tshirt:
                 size:
                     M_S: S pánské
