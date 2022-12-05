@@ -1,12 +1,8 @@
 parameters:
     events:
         tabor12:
-            arrival:
-                destination:
-                    OWN: "Vlastní doprava"
-                    PHA: "Praha"
-                    BRN: "Brno"
-                    OVA: "Ostrava"
+            appCond: or(regOpen(), role('admin'))
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
             person:
                 person:
                     other_name:
@@ -17,34 +13,37 @@ parameters:
                     email:
                         required: true
                     born:
-                        required: %events.tabor.requiredCond%
+                        required: %events.tabor12.requiredCond%
                     born_id:
-                        required: %events.tabor.requiredCond%
+                        required: %events.tabor12.requiredCond%
                         description: "Kvůli pojišťovně."
-                    birthplace: state('participated')
+                    birthplace:
+                        required: %events.tabor12.requiredCond%
+                        description: "Město a okres"
                     phone:
-                        required: %events.tabor.requiredCond%
+                        required: %events.tabor12.requiredCond%
                         description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
                     phone_parent_m:
-                        required: false
+                        required: %events.tabor12.requiredCond%
                     phone_parent_d:
-                        required: false
+                        required: %events.tabor12.requiredCond%
                     email_parent_m:
                         required: false
                     email_parent_d:
                         required: false
                 post_contact_p:
-                    address: %events.tabor.requiredCond%
+                    address:
+                        required: %events.tabor12.requiredCond%
                 person_history:
                     school_id:
-                        required: state('participated')
+                        required: %events.tabor12.requiredCond%
                 person_schedule:
                     apparel:
-                        required: true
+                        required: %events.tabor12.requiredCond%
                     transport:
-                        required: true
+                        required: %events.tabor12.requiredCond%
                     ticket:
-                        required: true
+                        required: %events.tabor12.requiredCond%
 
 
 events:
@@ -57,6 +56,8 @@ events:
                 default: vyfuk@vyfuk.mff.cuni.cz
             notifyFrom:
                 default: Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>
+            capacity:
+                default: 30
             deadline:
                 default: 1970-01-01 00:00:00
 
@@ -133,7 +134,7 @@ events:
                 person_id:
                     label: _('Person')
                     required: true
-                    modifiable: %events.tabor.appCond%
+                    modifiable: %events.tabor12.appCond%
                     default: null
                     factory: RefPerson(%events.tabor12.person%, email, role('admin'), role('admin'), false)
                 diet:
