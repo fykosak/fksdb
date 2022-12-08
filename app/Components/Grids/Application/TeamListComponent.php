@@ -54,20 +54,11 @@ class TeamListComponent extends ListComponent
 
     protected function configure(): void
     {
-        $this->createRow()->setRender(function (TeamModel2 $model) {
-            return Html::el('strong')
-                ->addText(
-                    $this->tableReflectionFactory
-                        ->loadColumnFactory('fyziklani_team', 'name')
-                        ->render($model, FieldLevelPermissionValue::Full)
-                )
-                ->addText('(')
-                ->addText(
-                    $this->tableReflectionFactory
-                        ->loadColumnFactory('fyziklani_team', 'fyziklani_team_id')
-                        ->render($model, FieldLevelPermissionValue::Full)
-                )
-                ->addText(')');
-        });
+        $title = $this->createReferencedRow('fyziklani_team.name_n_id');
+        $title->className .= ' fw-bold';
+        $row = $this->createColumnsRow('row0');
+        $row->createReferencedRow('fyziklani_team.phone');
+        $row->createReferencedRow('fyziklani_team.state');
+        $row->createReferencedRow('fyziklani_team.category');
     }
 }

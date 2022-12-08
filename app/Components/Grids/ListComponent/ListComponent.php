@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\ListComponent;
 
+use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 
-abstract class ListComponent extends BaseComponent
+abstract class ListComponent extends BaseComponent implements IContainer
 {
-    /** @var ListRow[] */
-    protected array $rows = [];
+    protected ORMFactory $reflectionFactory;
 
     public function __construct(Container $container)
     {
@@ -21,12 +22,19 @@ abstract class ListComponent extends BaseComponent
         });
     }
 
-    public function createRow(): ListRow
+    abstract protected function configure(): void;
+
+    final public function createReferencedRow(string $name): ORMRow
     {
-        $row = new ListRow();
-        $this->rows[] = $row;
+        $row = new ORMRow($this->container, $name);
+        $this->addComponent($row, str_replace('.', '__', $name));
         return $row;
     }
 
-    abstract protected function configure(): void;
+    final public function createColumnsRow(string $name): ColumnsRow
+    {
+        $row = new ColumnsRow($this->container);
+        $this->addComponent($row, $name);
+        return $row;
+    }
 }

@@ -3,17 +3,11 @@
     {if count($teams)}
         {foreach $teams as $team}
             <div n:class="'alert alert-' . $team->state->getBehaviorType()">
-                <div class="row">
-                    <strong>
-                        {control valuePrinter:onlyValue 'fyziklani_team.name', $team}
-                        ({control valuePrinter:onlyValue 'fyziklani_team.fyziklani_team_id', $team})
-                    </strong>
-                </div>
-                <div class="row">
-                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.phone', $team}</div>
-                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.state', $team}</div>
-                    <div class="col">{control valuePrinter:onlyValue 'fyziklani_team.category', $team}</div>
-                </div>
+                {foreach $control->getComponents() as $component}
+                    {if $component instanceof FKSDB\Components\Grids\ListComponent\Row}
+                        {control $component $team}
+                    {/if}
+                {/foreach}
                 <ul class="list-group list-group-flush">
                     {foreach $team->getMembers() as $member}
                         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
