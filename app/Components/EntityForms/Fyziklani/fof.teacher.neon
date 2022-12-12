@@ -8,6 +8,8 @@ person:
 person_info:
     email:
         required: true
+    born:
+        required: false
     id_number:
         required: false
     academic_degree_prefix:

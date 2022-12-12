@@ -57,6 +57,8 @@ class FOFTeamFormComponent extends TeamFormComponent
             $idNumberField = $component['person_info']['id_number'];
             /** @var BaseControl $accommodationField */
             $accommodationField = $component['person_schedule']['accommodation'];
+            /** @var BaseControl $bornField */
+            $bornField = $component['person_info']['born'];
             $genderField->addConditionOn($accommodationField, Form::FILLED)
                 ->addRule(Form::FILLED, _('Field %label is required.'));
             $genderField->addConditionOn($accommodationField, Form::FILLED)
@@ -65,6 +67,10 @@ class FOFTeamFormComponent extends TeamFormComponent
                 ->addRule(Form::FILLED, _('Field %label is required.'));
             $idNumberField->addConditionOn($accommodationField, Form::FILLED)
                 ->toggle($idNumberField->getHtmlId() . '-pair');
+            $bornField->addConditionOn($accommodationField, Form::FILLED)
+                ->addRule(Form::FILLED, _('Field %label is required.'));
+            $bornField->addConditionOn($accommodationField, Form::FILLED)
+                ->toggle($bornField->getHtmlId() . '-pair');
         }
     }
 

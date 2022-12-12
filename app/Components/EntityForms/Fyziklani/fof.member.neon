@@ -9,7 +9,7 @@ person_info:
     email:
         required: true
     born:
-        required: true
+        required: false
     id_number:
         required: false
 person_history:
