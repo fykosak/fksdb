@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
 use Fykosak\NetteORM\Model;
+use Nette\Utils\Html;
 
 /**
  * @property-read int country_id
@@ -23,6 +24,12 @@ class CountryModel extends Model
             return false;
         }
         return !!\preg_match('/^\\' . $this->phone_prefix . '\d{' . $this->phone_nsn . '}$/', $number);
+    }
+
+    public function getHtmlFlag(?string $className): Html
+    {
+        $className = $className . ' flag-icon flag-icon-' . \strtolower($this->alpha_2);
+        return Html::el('i')->addAttributes(['class' => $className]);
     }
 
     /**

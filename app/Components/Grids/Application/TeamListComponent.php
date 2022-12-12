@@ -55,10 +55,13 @@ class TeamListComponent extends ListComponent
     protected function configure(): void
     {
         $title = $this->createReferencedRow('fyziklani_team.name_n_id');
-        $title->className .= ' fw-bold';
+        $title->className .= ' fw-bold h4';
         $row = $this->createColumnsRow('row0');
-        $row->createReferencedRow('fyziklani_team.phone');
         $row->createReferencedRow('fyziklani_team.state');
         $row->createReferencedRow('fyziklani_team.category');
+        $row->createReferencedRow('fyziklani_team.game_lang');
+        $row->createReferencedRow('fyziklani_team.phone');
+        $memberTitle = $this->createRendererRow('member_title', fn() => Html::el('strong')->addText(_('Members')));
+        $memberTitle->className .= ' h5';
     }
 }

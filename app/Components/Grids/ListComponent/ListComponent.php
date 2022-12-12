@@ -31,9 +31,24 @@ abstract class ListComponent extends BaseComponent implements IContainer
         return $row;
     }
 
+    final public function createRendererRow(string $name, callable $renderer): RendererRow
+    {
+        $row = new RendererRow($this->container, $renderer);
+        $this->addComponent($row, $name);
+        return $row;
+    }
+
+
     final public function createColumnsRow(string $name): ColumnsRow
     {
         $row = new ColumnsRow($this->container);
+        $this->addComponent($row, $name);
+        return $row;
+    }
+
+    final public function createListGroupRow(string $name): ListGroupRow
+    {
+        $row = new ListGroupRow($this->container);
         $this->addComponent($row, $name);
         return $row;
     }

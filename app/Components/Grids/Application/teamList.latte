@@ -15,21 +15,22 @@
                             <div class="row">
                                 <span class="col">{control valuePrinter:onlyValue 'person.full_name', $member}</span>
                                 <span class="col">{control valuePrinter:onlyValue 'school.school', $member->getPersonHistory()}</span>
-                                <span class="col">
-                                         {var $flagClass = 'flag-icon flag-icon-' . \strtolower($member->getPersonHistory()->school->address->country->alpha_2)}
-                        <i class="{$flagClass}"></i>
-                            </span>
+                                {*<span class="col">{control valuePrinter:onlyValue 'person_history.study_year', $member->getPersonHistory()}</span>*}
                             </div>
                         </div>
                     {/foreach}
                 </ul>
                 <strong>{_'Teacher'}</strong>
-                <div class="row">
+                <ul class="list-group list-group-flush">
                     {foreach $team->getTeachers() as $teacher}
                         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
-                        <div class="col">{control valuePrinter:onlyValue 'person.full_name', $teacher}</div>
-                    {/}
-                </div>
+                        <div class="list-group-item bg-transparent">
+                            <div class="row">
+                                <span class="col">{control valuePrinter:onlyValue 'person.full_name', $teacher}</span>
+                            </div>
+                        </div>
+                    {/foreach}
+                </ul>
                 <div class="row">
                     <div class="col">
                         <a href="{plink 'detail' id=>$team->getPrimary()}"
