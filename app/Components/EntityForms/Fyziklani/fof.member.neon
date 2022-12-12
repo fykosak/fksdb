@@ -3,9 +3,13 @@ person:
         required: true
     family_name:
         required: true
+    gender:
+        required: false
 person_info:
     email:
         required: true
+    born:
+        required: false
     id_number:
         required: false
 person_history:

@@ -34,7 +34,7 @@ class WriteOnlyDatePicker extends DateInput implements WriteOnly
      */
     public function setValue($value): self
     {
-        if ($value == self::VALUE_ORIGINAL) {
+        if ($value === self::VALUE_ORIGINAL) {
             $this->value = $value;
         } else {
             parent::setValue($value);
