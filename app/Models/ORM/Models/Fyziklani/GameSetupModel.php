@@ -24,10 +24,11 @@ class GameSetupModel extends Model
      */
     public function getAvailablePoints(): array
     {
-        return $this->available_points
-            ? \array_map(fn(string $value): int => +trim($value),
-                \explode(',', $this->available_points))
-            : [];
+        return $this->available_points ? \array_map(
+            fn(string $value): int => +trim($value),
+            \explode(',', $this->available_points)
+        )
+        : [];
     }
 
     /**

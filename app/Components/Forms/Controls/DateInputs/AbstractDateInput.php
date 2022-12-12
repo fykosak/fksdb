@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 abstract class AbstractDateInput extends TextInput
 {
@@ -44,7 +45,7 @@ abstract class AbstractDateInput extends TextInput
             $this->value = $value;
         } elseif ($value instanceof \DateInterval) {
             $this->value = (new DateTime())->setTime($value->h, $value->m, $value->s);
-        } elseif (is_string($value)) {
+        } elseif (is_string($value) && $value !== '') {
             $this->value = DateTime::from($value);
         } else {
             $this->value = null;
