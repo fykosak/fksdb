@@ -1,0 +1,13 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType string $className}
+<div class="{$className}">
+    {foreach $models as $listModel}
+        <div class="list-group-item bg-transparent">
+            <div class="row">
+                {foreach $control->getComponents() as $component}
+                    {control $component $listModel}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+</div>

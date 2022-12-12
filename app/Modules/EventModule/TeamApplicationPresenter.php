@@ -12,6 +12,7 @@ use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
+use FKSDB\Components\Grids\Application\TeamListComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -47,6 +48,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return new PageTitle(null, _('Create team'), 'fa fa-calendar-plus');
     }
 
+    public function titleDetailedList(): PageTitle
+    {
+        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -75,6 +81,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
                 && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
             )
         );
+    }
+
+    public function authorizedDetailedList(): void
+    {
+        $this->setAuthorized($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent()));
     }
 
     public function authorizedCreate(): void
@@ -204,6 +215,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     protected function createComponentGrid(): TeamApplicationsGrid
     {
         return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+    }
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentList(): TeamListComponent
+    {
+        return new TeamListComponent($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent

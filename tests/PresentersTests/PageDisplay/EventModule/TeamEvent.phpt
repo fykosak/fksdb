@@ -38,10 +38,12 @@ class TeamEvent extends EventModuleTestCase
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
             ['Event:TeamApplication', 'list'],
+            ['Event:TeamApplication', 'detailedList'],
             /* ['Event:TeamApplication', 'transitions'],*/
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new TeamEvent($container);
 $testCase->run();

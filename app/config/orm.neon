@@ -575,9 +575,9 @@ orm:
               model: FKSDB\Models\ORM\Models\SchoolModel
               columnFactories:
                   school:
-                      type: string
+                      type: class
                       title: _('School')
-                      accessKey: name_abbrev
+                      class: FKSDB\Models\ORM\Columns\Tables\SchoolColumnFactory
               linkFactories:
                   edit:
                       destination: :Org:School:edit
