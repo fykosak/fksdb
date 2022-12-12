@@ -50,7 +50,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     public function titleDetailedList(): PageTitle
     {
-        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
+        return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
     }
 
     /**
@@ -216,6 +216,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
     }
+
     /**
      * @throws EventNotFoundException
      */
