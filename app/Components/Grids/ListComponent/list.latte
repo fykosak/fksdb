@@ -1,0 +1,28 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType callable $classNameCallback}
+{block content}
+    {if count($models)}
+        {foreach $models as $model}
+            {var string $className = ($classNameCallback)($model)}
+            <div class="{$className}">
+                {foreach $control->getComponents() as $component}
+                    {if $component instanceof FKSDB\Components\Grids\ListComponent\Row\Row}
+                        {control $component $model}
+                    {/if}
+                {/foreach}
+                {var Nette\ComponentModel\Container|FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getComponent('buttons')}
+                {if count($buttons->getComponents())}
+                    {foreach $buttons->getComponents() as $button}
+                        <div class="row">
+                            <div class="col">
+                                {control $button $model}
+                            </div>
+                        </div>
+                    {/foreach}
+                {/if}
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}
