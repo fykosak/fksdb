@@ -83,6 +83,7 @@ navigation:
 
         Event.Dashboard.default:
             Event.TeamApplication.list: []
+            Event.TeamApplication.detailedList: []
             Event.Application.list: []
             Event.EventOrg.list: []
             Event.Payment.create: []
