@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent;
+namespace FKSDB\Components\Grids\ListComponent\Row;
 
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
@@ -23,6 +23,6 @@ class RendererRow extends Row
         $this->template->className = $this->className;
         $this->template->renderer = $this->renderer;
         $this->template->model = $model;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'row.renderer.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte');
     }
 }

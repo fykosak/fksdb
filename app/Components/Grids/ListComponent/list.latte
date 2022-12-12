@@ -1,11 +1,13 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams}
+{varType Fykosak\NetteORM\Model[] $models}
+{varType callable $classNameCallback}
 {block content}
-    {if count($teams)}
-        {foreach $teams as $team}
-            <div n:class="'alert alert-' . $team->state->getBehaviorType()">
+    {if count($models)}
+        {foreach $models as $model}
+            {var string $className = ($classNameCallback)($model)}
+            <div class="{$className}">
                 {foreach $control->getComponents() as $component}
                     {if $component instanceof FKSDB\Components\Grids\ListComponent\Row\Row}
-                        {control $component $team}
+                        {control $component $model}
                     {/if}
                 {/foreach}
                 {var Nette\ComponentModel\Container|FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getComponent('buttons')}
@@ -13,7 +15,7 @@
                     {foreach $buttons->getComponents() as $button}
                         <div class="row">
                             <div class="col">
-                                {control $button $team}
+                                {control $button $model}
                             </div>
                         </div>
                     {/foreach}

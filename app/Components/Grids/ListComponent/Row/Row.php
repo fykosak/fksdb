@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent;
+namespace FKSDB\Components\Grids\ListComponent\Row;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent;
+namespace FKSDB\Components\Grids\ListComponent\Row;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use Fykosak\NetteORM\Model;
@@ -23,7 +23,7 @@ class ORMRow extends Row
         $this->template->className = $this->className;
         $this->template->model = $model;
         $this->template->name = $this->name;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'row.orm.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'orm.latte');
     }
 
     protected function createComponentPrinter(): ColumnPrinterComponent

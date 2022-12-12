@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent;
+namespace FKSDB\Components\Grids\ListComponent\Column;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 
-class ORMColumn extends Colum
+class ORMColumn extends Column
 {
     protected string $name;
 
@@ -23,7 +23,7 @@ class ORMColumn extends Colum
         $this->template->className = $this->className;
         $this->template->model = $model;
         $this->template->name = $this->name;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'col.orm.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'orm.latte');
     }
 
     protected function createComponentPrinter(): ColumnPrinterComponent
