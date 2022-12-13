@@ -26,6 +26,11 @@
 	"forwardPorts": [
 		80
 	],
+	"portsAttributes": {
+		"80": {
+			"label": "Apache"
+		}
+	},
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {},
 		"ghcr.io/devcontainers/features/node:1": {},
