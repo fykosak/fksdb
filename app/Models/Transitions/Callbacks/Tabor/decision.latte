@@ -1,4 +1,5 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 
 <p>
     Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
@@ -9,8 +10,8 @@
     'at'=>$token->token,
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a><br/>
-    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline')|date:'j. n. Y'}.
+    Nejlépe ihned, nejpozději však do {$holder->event->registration_end|date:'j. n. Y'}.
     Další pokyny a podrobnosti Ti přijdou později v jiné zprávě.
     V případě, že máte Ty nebo Tví rodiče jakékoliv otázky, neváhejte nás kotaktovat
-    na vyfuk@vyfuk.mff.cuni.cz .
+    na <a href="vyfuk@vyfuk.mff.cuni.cz?subject=feedback">vyfuk@vyfuk.mff.cuni.cz</a>.
 </p>

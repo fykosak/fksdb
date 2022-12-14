@@ -123,14 +123,14 @@ class ScheduleField extends TextInput
     public function isFilled(): bool
     {
         $data = json_decode($this->getValue(), true);
-        if ($data == null || $data == [] || $data == '') {
+        if ($data === null || $data === [] || $data === '') {
             return false;
         }
 
         /** @var ScheduleGroupModel $group */
         foreach ($this->getData()['groups'] as $group) {
             $groupId = $group['scheduleGroupId'];
-            if (!array_key_exists($groupId,$data) || $data[$groupId] == null || $data[$groupId] == '') {
+            if (!isset($data[$groupId]) || $data[$groupId] == '') {
                 return false;
             }
         }

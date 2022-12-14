@@ -58,8 +58,6 @@ events:
                 default: Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>
             capacity:
                 default: 30
-            deadline:
-                default: 1970-01-01 00:00:00
 
             letterWhere:
                 default: nikde
@@ -92,12 +90,12 @@ events:
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
                 invited->applied:
-                    condition: or(before(param('deadline')),role('admin'))
+                    condition: or(regOpen(),role('admin'))
                     label: _('Potrvrdit učast')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
                 spare->interested:
-                    condition: before(param('deadline'))
+                    condition: or(regOpen(),role('admin'))
                     label: _('Chci jet')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
@@ -105,11 +103,11 @@ events:
                     condition: role('admin')
                     label: _('Zaplatil')
                 invited->rejected:
-                    condition: or(before(param('deadline')),role('admin'))
+                    condition: or(regOpen(),role('admin'))
                     label: _('Odmítnout účast')
                     behaviorType: danger
                 spare->rejected:
-                    condition: or(before(param('deadline')),role('admin'))
+                    condition: or(regOpen(),role('admin'))
                     label: _('Odmítnout účast')
                     behaviorType: warning
                 interested->applied:
