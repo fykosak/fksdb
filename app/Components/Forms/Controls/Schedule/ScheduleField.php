@@ -116,4 +116,17 @@ class ScheduleField extends TextInput
         $groupArray['items'] = $itemList;
         return $groupArray;
     }
+
+    public static function validationFilled(ScheduleField $input): bool {
+        $data = json_decode($input->getValue(), true);
+        Debugger::log($data);
+        $groups = $input->getData()['groups'];
+        foreach ($groups as $group) {
+            if (!array_key_exists($group['scheduleGroupId'],$data)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
