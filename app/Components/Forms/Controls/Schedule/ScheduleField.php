@@ -117,12 +117,20 @@ class ScheduleField extends TextInput
         return $groupArray;
     }
 
-    public static function validationFilled(ScheduleField $input): bool {
-        $data = json_decode($input->getValue(), true);
-        Debugger::log($data);
-        $groups = $input->getData()['groups'];
-        foreach ($groups as $group) {
-            if (!array_key_exists($group['scheduleGroupId'],$data)) {
+    /**
+     * Are all groups in ScheduleField filled?
+     */
+    public function isFilled(): bool
+    {
+        $data = json_decode($this->getValue(), true);
+        if ($data == null || $data == [] || $data == '') {
+            return false;
+        }
+
+        /** @var ScheduleGroupModel $group */
+        foreach ($this->getData()['groups'] as $group) {
+            $groupId = $group['scheduleGroupId'];
+            if (!array_key_exists($groupId,$data) || $data[$groupId] == null || $data[$groupId] == '') {
                 return false;
             }
         }

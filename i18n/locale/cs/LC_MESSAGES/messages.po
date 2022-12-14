@@ -2288,9 +2288,13 @@ msgstr "Trvalá adresa"
 msgid "(when different from delivery address)"
 msgstr "(pokud je odlišná od doručovací)"
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:223
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:224
 msgid "Confirmation is necessary to proceed."
 msgstr "Schválení je nutné pro pokračování"
+
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:228
+msgid "All fields in section %label are required."
+msgstr "Všechna pole v sekci %label jsou vyžadována"
 
 #: ../app/Components/Forms/Containers/Models/ReferencedContainer.php:104
 msgid "Field does not match an existing record."
