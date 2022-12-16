@@ -159,15 +159,15 @@ class FOFTeamFormComponent extends TeamFormComponent
         return $person ? [$person->person_id => $person] : [];
     }
 
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        parent::setDefaults();
+        parent::setDefaults($form);
         if (isset($this->model)) {
             $teacher = $this->model->getTeachers()->fetch();
             /** @var TeamTeacherModel $teacher */
             if ($teacher) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $this->getForm()->getComponent('teacher');
+                $referencedId = $form->getComponent('teacher');
                 $referencedId->setDefaultValue($teacher->person);
             }
         }

@@ -35,12 +35,6 @@ class CountryModel extends Model
         return Html::el('i')->addAttributes(['class' => $className]);
     }
 
-    public function getHtmlFlag(?string $className): Html
-    {
-        $className = $className . ' flag-icon flag-icon-' . \strtolower($this->alpha_2);
-        return Html::el('i')->addAttributes(['class' => $className]);
-    }
-
     /**
      * @throws InvalidPhoneNumberException
      */

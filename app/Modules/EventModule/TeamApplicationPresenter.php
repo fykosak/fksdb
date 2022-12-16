@@ -216,13 +216,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
     }
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentList(): TeamListComponent
-    {
-        return new TeamListComponent($this->getEvent(), $this->getContext());
-    }
 
     /**
      * @throws EventNotFoundException
