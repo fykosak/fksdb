@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\Submits\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -12,6 +15,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -31,7 +35,7 @@ use Nette\Security\Resource;
 class EventModel extends Model implements Resource, NodeCreator
 {
 
-    private const TEAM_EVENTS = [1, 9, 13];
+    private const TEAM_EVENTS = [1, 9, 13, 17];
     public const RESOURCE_ID = 'event';
 
     public function getContestYear(): ContestYearModel
@@ -57,7 +61,7 @@ class EventModel extends Model implements Resource, NodeCreator
     /**
      * @throws NotSetGameParametersException
      */
-    public function getFyziklaniGameSetup(): GameSetupModel
+    public function getGameSetup(): GameSetupModel
     {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
@@ -86,20 +90,19 @@ class EventModel extends Model implements Resource, NodeCreator
         ]);
     }
 
-    public function getFyziklaniTeams(): TypedGroupedSelection
+    public function getTeams(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
 
-    public function getParticipatingFyziklaniTeams(): TypedGroupedSelection
+    public function getParticipatingTeams(): TypedGroupedSelection
     {
-        return $this->getFyziklaniTeams()->where('state', TeamState::Participated->value);
+        return $this->getTeams()->where('state', TeamState::Participated->value);
     }
 
-    public function getPossiblyAttendingFyziklaniTeams(): TypedGroupedSelection
+    public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
-        // TODO
-        return $this->getFyziklaniTeams()->where('state', [
+        return $this->getTeams()->where('state', [
             TeamState::Participated->value,
             TeamState::Approved->value,
             TeamState::Spare->value,
@@ -117,7 +120,7 @@ class EventModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
-    public function getFyziklaniTasks(): TypedGroupedSelection
+    public function getTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
     }
@@ -150,5 +153,15 @@ class EventModel extends Model implements Resource, NodeCreator
     {
         return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
             && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+    }
+
+    public function createGameHandler(Container $container): Handler
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return new FOFHandler($this, $container);
+            case 17:
+                return new CtyrbojHandler($this, $container);
+        }
     }
 }

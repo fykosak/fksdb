@@ -95,9 +95,15 @@ class TeacherFormComponent extends EntityFormComponent
      */
     private function createTeacherContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainer(
+        return $this->singleReflectionFormFactory->createContainerWithMetadata(
             'teacher',
-            ['state', 'since', 'until', 'number_brochures', 'note']
+            [
+                'state' => ['required' => true],
+                'since' => ['required' => true],
+                'until' => ['required' => true],
+                'number_brochures' => ['required' => true],
+                'note' => ['required' => true],
+            ]
         );
     }
 }

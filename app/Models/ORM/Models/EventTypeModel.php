@@ -16,8 +16,6 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 class EventTypeModel extends Model
 {
-    public const FYZIKLANI = 1;
-
     public function getEvents(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT, 'event_type_id');

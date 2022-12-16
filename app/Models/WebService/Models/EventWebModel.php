@@ -146,7 +146,7 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('teams');
         /** @var TeamModel2 $team */
-        foreach ($event->getFyziklaniTeams() as $team) {
+        foreach ($event->getTeams() as $team) {
             $teamNode = $team->createXMLNode($doc);
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
@@ -173,7 +173,7 @@ class EventWebModel extends WebModel
     {
         $teamsData = [];
         /** @var TeamModel2 $team */
-        foreach ($event->getFyziklaniTeams() as $team) {
+        foreach ($event->getTeams() as $team) {
             $teamData = [
                 'teamId' => $team->fyziklani_team_id,
                 'name' => $team->name,

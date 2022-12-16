@@ -14,6 +14,8 @@ parameters:
                         required: true
                     born:
                         required: true
+                    phone:
+                        required: true
                 person_schedule:
                     dsef_morning:
                         required: true

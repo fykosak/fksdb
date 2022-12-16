@@ -1,0 +1,34 @@
+.chart.chart-game-team-pie {
+  path.arc {
+    stroke: white;
+    stroke-width: 5px;
+
+    &[data-points="5"] {
+      fill: var(--color-fof-points-5);
+    }
+
+    &[data-points="3"] {
+      fill: var(--color-fof-points-3);
+    }
+
+    &[data-points="2"] {
+      fill: var(--color-fof-points-2);
+    }
+
+    &[data-points="1"] {
+      fill: var(--color-fof-points-1);
+    }
+
+    &.active {
+      opacity: 1;
+    }
+
+    &.inactive {
+      opacity: 0.1;
+    }
+  }
+
+  text {
+    text-anchor: middle;
+  }
+}

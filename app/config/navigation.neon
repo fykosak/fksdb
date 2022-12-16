@@ -63,30 +63,32 @@ navigation:
             Core.Dispatch.default: []
             Public.Submit.ajax:
                 visible: true
-        Fyziklani.Dashboard.default:
-            Fyziklani.Submit.create: []
-            Fyziklani.Submit.list: []
-            Fyziklani.Close.list: []
-            Fyziklani.Diplomas.default: []
-            Fyziklani.Diplomas.results: []
-            Fyziklani.Task.list: []
-            Fyziklani.GameSetup.default: []
-            Fyziklani.Seating.list: []
-            Fyziklani.Presentation.default: []
+            Core.MyApplications.default: []
+        Game.Dashboard.default:
+            Game.Submit.create: []
+            Game.Submit.list: []
+            Game.Close.list: []
+            Game.Diplomas.default: []
+            Game.Diplomas.results: []
+            Game.Task.list: []
+            Game.GameSetup.default: []
+            Game.Seating.list: []
+            Game.Presentation.default: []
 
-        Fyziklani.Statistics.table:
-            Fyziklani.Statistics.task: []
-            Fyziklani.Statistics.team: []
-            Fyziklani.Statistics.correlation: []
-            Fyziklani.Statistics.table: []
+        Game.Statistics.table:
+            Game.Statistics.task: []
+            Game.Statistics.team: []
+            Game.Statistics.correlation: []
+            Game.Statistics.table: []
 
         Event.Dashboard.default:
             Event.TeamApplication.list: []
+            Event.TeamApplication.detailedList: []
             Event.Application.list: []
             Event.EventOrg.list: []
             Event.Payment.create: []
             Event.Payment.list: []
-            Fyziklani.Dashboard.default: []
+            Game.Dashboard.default: []
             Event.ScheduleGroup.list: []
             Event.Chart.list: []
             Event.Dispatch.default: []

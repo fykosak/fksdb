@@ -53,26 +53,4 @@ abstract class EventTestCase extends DatabaseTestCase
     }
 
     abstract protected function getEvent(): EventModel;
-
-    protected function assertApplication(EventModel $event, string $email): EventParticipantModel
-    {
-        $person = $this->getContainer()->getByType(PersonService::class)->findByEmail($email);
-        Assert::notEqual(null, $person);
-        $application = $this->getContainer()->getByType(EventParticipantService::class)->getTable()->where([
-            'event_id' => $event->event_id,
-            'person_id' => $person->person_id,
-        ])->fetch();
-        Assert::notEqual(null, $application);
-        return $application;
-    }
-
-    protected function assertExtendedApplication(EventParticipantModel $application, string $table): Row
-    {
-        $application = $this->explorer->fetch(
-            'SELECT * FROM `' . $table . '` WHERE event_participant_id = ?',
-            $application->event_participant_id
-        );
-        Assert::notEqual(null, $application);
-        return $application;
-    }
 }

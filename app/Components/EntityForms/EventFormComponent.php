@@ -6,11 +6,8 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -38,7 +35,6 @@ class EventFormComponent extends EntityFormComponent
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private AuthTokenService $authTokenService;
     private EventService $eventService;
-    private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ContestYearModel $contestYear, Container $container, ?EventModel $model)
     {
@@ -49,13 +45,11 @@ class EventFormComponent extends EntityFormComponent
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         AuthTokenService $authTokenService,
-        EventService $eventService,
-        EventDispatchFactory $eventDispatchFactory
+        EventService $eventService
     ): void {
         $this->authTokenService = $authTokenService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->eventService = $eventService;
-        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -79,10 +73,6 @@ class EventFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
@@ -90,10 +80,8 @@ class EventFormComponent extends EntityFormComponent
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters');
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
-            $paramControl->setOption('description', $this->createParamDescription($holder));
-            $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
+            $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $paramControl->addRule(function (BaseControl $control): bool {
                 $parameters = $control->getValue();
                 try {
                     if ($parameters) {
@@ -114,17 +102,17 @@ class EventFormComponent extends EntityFormComponent
      */
     private function createEventContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainer('event', [
-            'event_type_id',
-            'event_year',
-            'name',
-            'begin',
-            'end',
-            'registration_begin',
-            'registration_end',
-            'report',
-            'parameters',
-        ], $this->contestYear->contest);
+        return $this->singleReflectionFormFactory->createContainerWithMetadata('event', [
+            'event_type_id' => ['required' => true],
+            'event_year' => ['required' => true],
+            'name' => ['required' => true],
+            'begin' => ['required' => true],
+            'end' => ['required' => true],
+            'registration_begin' => ['required' => false],
+            'registration_end' => ['required' => false],
+            'report' => ['required' => false],
+            'parameters' => ['required' => false],
+        ], null, $this->contestYear->contest);
     }
 
     private function createParamDescription(BaseHolder $holder): Html

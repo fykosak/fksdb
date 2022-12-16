@@ -113,9 +113,14 @@ class StoredQueryFormComponent extends EntityFormComponent
      */
     private function createMetadata(?ControlGroup $group = null): ModelContainer
     {
-        $container = $this->reflectionFormFactory->createContainer(
+        $container = $this->reflectionFormFactory->createContainerWithMetadata(
             'stored_query',
-            ['name', 'qid', 'tags', 'description']
+            [
+                'name' => ['required' => true],
+                'qid' => ['required' => false],
+                'tags' => ['required' => false],
+                'description' => ['required' => false],
+            ]
         );
         $container->setCurrentGroup($group);
         return $container;

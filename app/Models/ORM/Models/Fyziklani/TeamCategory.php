@@ -82,6 +82,10 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
                     new self(self::O),
                     new self(self::F),
                 ];
+            case 17:
+                return [
+                    new self(self::A),
+                ];
         }
         return [];
     }

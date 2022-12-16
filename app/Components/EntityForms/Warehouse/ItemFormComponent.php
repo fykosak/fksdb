@@ -76,15 +76,15 @@ class ItemFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('warehouse_item', [
-            'state',
-            'description_cs',
-            'description_en',
-            'data',
-            'purchase_price',
-            'purchase_currency',
-            'placement',
-            'note',
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_item', [
+            'state' => ['required' => true],
+            'description_cs' => ['required' => true],
+            'description_en' => ['required' => true],
+            'data' => ['required' => true],
+            'purchase_price' => ['required' => true],
+            'purchase_currency' => ['required' => true],
+            'placement' => ['required' => true],
+            'note' => ['required' => true],
         ]);
         $products = [];
         /** @var ProductModel $product */

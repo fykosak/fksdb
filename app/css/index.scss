@@ -66,21 +66,13 @@ $colors: (
 }
 
 @include color-variant($vyfukMainColor, "vyfuk");
+@include color-variant($ctyrbojColor, "ctyrboj");
 
 @include color-variant(deeppink, 'pink');
 @include color-variant(#dc3545, 'error');
 
-.fyziklani-header {
-  .subheader {
-    color: var(--color-fof);
-    font-weight: bold;
-  }
-
-  h1 {
-    font-weight: 600;
-    margin-bottom: 2.1rem;
-  }
-}
+@include color-variant($fofColor, "fol");
+@include color-variant($folColor, "fof");
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);

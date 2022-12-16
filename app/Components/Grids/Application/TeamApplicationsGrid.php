@@ -61,7 +61,7 @@ class TeamApplicationsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $participants = $this->event->getFyziklaniTeams();
+        $participants = $this->event->getTeams();
         $source = new SearchableDataSource($participants);
         $source->setFilterCallback($this->getFilterCallBack());
         return $source;
@@ -71,13 +71,13 @@ class TeamApplicationsGrid extends BaseGrid
     {
         return function (Selection $table, array $value): void {
             $states = [];
-            foreach ($value['status'] as $state => $value) {
+            foreach ($value['state'] as $state => $value) {
                 if ($value) {
                     $states[] = str_replace('__', '.', $state);
                 }
             }
             if (count($states)) {
-                $table->where('status IN ?', $states);
+                $table->where('state IN ?', $states);
             }
         };
     }

@@ -9,13 +9,13 @@ import ParticipantAcquaintanceChart
     from './Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart';
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
-import ResultsPresentationComponent
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/ResultsPresentationComponent';
-import ResultsTableComponent
-    from './Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
-import StatisticsComponent from './Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
-import PointsEntryComponent from './Components/Controls/Fyziklani/Submit/PointsEntryComponent';
 import TimelineComponent from './Components/Controls/Person/Detail/Timeline/TimelineComponent';
+import ResultsPresentation
+    from './Components/Game/ResultsAndStatistics/Presentation/Main';
+import ResultsTable
+    from './Components/Game/ResultsAndStatistics/Table/Main';
+import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
+import MainComponent from './Components/Game/Submits/Form/MainComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
@@ -33,12 +33,14 @@ const renderer = new Renderer();
 renderer.hashMapLoader.register('event.schedule', eventSchedule);
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable);
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
 renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentation, {event: 'fof'});
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.results.presentation', ResultsPresentation, {event: 'ctyrboj'});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent);
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent);
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);

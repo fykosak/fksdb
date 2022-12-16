@@ -85,6 +85,6 @@ class TeamListComponent extends ListComponent
 
     protected function getModels(): iterable
     {
-        return $this->event->getFyziklaniTeams();
+        return $this->event->getTeams();
     }
 }

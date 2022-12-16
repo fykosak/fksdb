@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 
 class EnumColumnFactory extends ColumnFactory
 {
-    /** @var EnumColumn|string|enum */
+    /** @var EnumColumn|string */
     private string $className;
 
     public function setEnumClassName(string $className): void
@@ -30,6 +30,7 @@ class EnumColumnFactory extends ColumnFactory
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($items);
+        $control->setPrompt(_('-- select options --'));
         return $control;
     }
 
