@@ -35,7 +35,7 @@ class Role extends EvaluatedExpression
     {
         switch ($this->role) {
             case self::ADMIN:
-                return $this->eventAuthorizator->isAllowed($holder->event, 'application', $holder->event);
+                return $this->eventAuthorizator->isAllowed($holder->getModel(), 'edit', $holder->event);
             default:
                 return false;
         }

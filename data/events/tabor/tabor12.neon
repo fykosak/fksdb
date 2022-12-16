@@ -134,7 +134,7 @@ events:
                     required: true
                     modifiable: %events.tabor12.appCond%
                     default: null
-                    factory: RefPerson(%events.tabor12.person%, email, role('admin'), role('admin'), false)
+                    factory: RefPerson(%events.tabor12.person%, email, false, role('admin'), role('admin'))
                 diet:
                     label: _('Jídlo')
                     description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
