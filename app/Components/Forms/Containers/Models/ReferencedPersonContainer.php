@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -221,9 +222,13 @@ class ReferencedPersonContainer extends ReferencedContainer
                         if ($fieldName == 'agreed') {
                             // NOTE: this may need refactoring when more customization requirements occurre
                             $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
-                        } else {
-                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
+                            break;
                         }
+                        if ($control instanceof ScheduleField) {
+                            $conditioned->addRule(Form::FILLED, _('All fields in section %label are required.'));
+                            break;
+                        }
+                        $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
                     }
                     break;
                 case 'caption':

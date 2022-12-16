@@ -25,12 +25,10 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
     public const DSEF_MORNING = 'dsef_morning';
     public const DSEF_AFTERNOON = 'dsef_afternoon';
 
-    public const T_SHIRT_SIZE = 't-shirt_size';
-    public const T_SHIRT_COLOR = 't-shirt_color';
-    public const JUMPER_SIZE = 'jumper_size';
+    public const APPAREL = 'apparel';
 
-    public const ARRIVAL_DESTINATION = 'arrival_destination';
-    public const DEPARTURE_DESTINATION = 'departure_destination';
+    public const TRANSPORT = 'transport';
+    public const TICKET = 'ticket';
 
     /**
      * @return self[]
@@ -48,11 +46,9 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             new self(self::WEEKEND),
             new self(self::DSEF_MORNING),
             new self(self::DSEF_AFTERNOON),
-            new self(self::T_SHIRT_COLOR),
-            new self(self::T_SHIRT_SIZE),
-            new self(self::JUMPER_SIZE),
-            new self(self::ARRIVAL_DESTINATION),
-            new self(self::DEPARTURE_DESTINATION),
+            new self(self::APPAREL),
+            new self(self::TRANSPORT),
+            new self(self::TICKET)
         ];
     }
 
@@ -89,13 +85,11 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             case self::DSEF_MORNING:
                 $badge = 'badge bg-color-8';
                 break;
-            case self::T_SHIRT_SIZE:
-            case self::T_SHIRT_COLOR:
-            case self::JUMPER_SIZE:
+            case self::APPAREL:
                 $badge = 'badge bg-color-9';
                 break;
-            case self::ARRIVAL_DESTINATION:
-            case self::DEPARTURE_DESTINATION:
+            case self::TRANSPORT:
+            case self::TICKET:
                 $badge = 'badge bg-color-10';
                 break;
         }
@@ -128,16 +122,12 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return _('DSEF morning');
             case self::DSEF_AFTERNOON:
                 return _('DSEF afternoon');
-            case self::T_SHIRT_COLOR:
-                return _('T-shirt color');
-            case self::T_SHIRT_SIZE:
-                return _('T-shirt size');
-            case self::JUMPER_SIZE:
-                return _('Jumper size');
-            case self::ARRIVAL_DESTINATION:
-                return _('Arrival destination');
-            case self::DEPARTURE_DESTINATION:
-                return _('Departure destination');
+            case self::APPAREL:
+                return _('Apparel');
+            case self::TRANSPORT:
+                return _('Transport');
+            case self::TICKET:
+                return _('Ticket');
         }
         throw new NotImplementedException();
     }

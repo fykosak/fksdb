@@ -50,7 +50,7 @@ acl:
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
-    - addResource(event)         # create, edit, list, application
+    - addResource(event)         # create, edit, list
     - addResource(teacher)       # create, edit, list, detail
     - addResource(emailMessage)  # list, detail
     - addResource(chart)         # list, chart

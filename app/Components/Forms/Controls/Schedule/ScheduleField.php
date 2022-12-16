@@ -45,28 +45,7 @@ class ScheduleField extends TextInput
      */
     private function getDefaultLabel(string $type): string
     {
-        switch ($type) {
-            case ScheduleGroupType::ACCOMMODATION:
-                return _('Accommodation');
-            case ScheduleGroupType::ACCOMMODATION_GENDER:
-                return _('Accommodation with persons of the same gender');
-            case ScheduleGroupType::VISA:
-                return _('Visa');
-            case ScheduleGroupType::ACCOMMODATION_TEACHER:
-                return _('Teacher accommodation');
-            case ScheduleGroupType::WEEKEND:
-                return _('Weekend after competition');
-            case ScheduleGroupType::TEACHER_PRESENT:
-                return _('Program during competition');
-            case ScheduleGroupType::DSEF_MORNING:
-                return _('Morning');
-            case ScheduleGroupType::DSEF_AFTERNOON:
-                return _('Afternoon');
-            case ScheduleGroupType::VACCINATION_COVID:
-                return _('Covid-19 Vaccination');
-            default:
-                throw new NotImplementedException();
-        }
+        return ScheduleGroupType::tryFrom($type)->label();
     }
 
     protected function getData(): array
@@ -108,6 +87,19 @@ class ScheduleField extends TextInput
                 break;
             case ScheduleGroupType::WEEKEND:
                 $params['groupTime'] = true;
+                break;
+            case ScheduleGroupType::APPAREL:
+                $params['capacity'] = false;
+                $params['price'] = false;
+                $params['groupTime'] = false;
+                break;
+            case ScheduleGroupType::TRANSPORT:
+                $params['capacity'] = false;
+                $params['price'] = false;
+                break;
+            case ScheduleGroupType::TICKET:
+                $params['capacity'] = false;
+                break;
         }
         return $params;
     }
@@ -123,5 +115,25 @@ class ScheduleField extends TextInput
 
         $groupArray['items'] = $itemList;
         return $groupArray;
+    }
+
+    /**
+     * Are all groups in ScheduleField filled?
+     */
+    public function isFilled(): bool
+    {
+        $data = json_decode($this->getValue(), true);
+        if ($data === null || $data === [] || $data === '') {
+            return false;
+        }
+
+        /** @var ScheduleGroupModel $group */
+        foreach ($this->getData()['groups'] as $group) {
+            $groupId = $group['scheduleGroupId'];
+            if (!isset($data[$groupId]) || $data[$groupId] == '') {
+                return false;
+            }
+        }
+        return true;
     }
 }
