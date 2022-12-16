@@ -1,0 +1,7 @@
+{varType Fykosak\NetteORM\Model $model}
+{varType string $className}
+<div class="{$className}">
+    {foreach $control->getComponents() as $component}
+        {control $component $model}
+    {/foreach}
+</div>
