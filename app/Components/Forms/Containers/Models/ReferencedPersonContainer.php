@@ -224,7 +224,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                             $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                             break;
                         }
-                        if ($control instanceof ScheduleField){
+                        if ($control instanceof ScheduleField) {
                             $conditioned->addRule(Form::FILLED, _('All fields in section %label are required.'));
                             break;
                         }
