@@ -136,5 +136,4 @@ class ScheduleField extends TextInput
         }
         return true;
     }
-
 }
