@@ -6,12 +6,14 @@ namespace FKSDB\Components\Forms\Referenced\Address;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Controls\BaseControl;
 
 class AddressDataContainer extends ReferencedContainer
 {
@@ -59,8 +61,14 @@ class AddressDataContainer extends ReferencedContainer
         $this->addComponent($city, 'city');
 
         $postalCode = new WriteOnlyInput(_('postal code'));
-        $postalCode->addRule(Form::MAX_LENGTH, _('Max length reached'), 5)
-            ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
+        $postalCode->addRule(function (BaseControl $control) {
+            $value = $control->getValue();
+            if ($value === WriteOnly::VALUE_ORIGINAL) {
+                return true;
+            }
+            return preg_match('/^\d{5}$/', $value);
+        }, _('Postal code does not match.'));
+        $postalCode->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
         $postalCode->setWriteOnly($this->writeOnly);
         $this->addComponent($postalCode, 'postal_code');
 

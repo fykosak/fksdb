@@ -24,7 +24,6 @@ class PersonContainerResolver implements Resolver
     private ExpressionEvaluator $evaluator;
 
     /**
-     * PersonContainerResolver constructor.
      * @param callable|bool $modifiableCondition
      * @param callable|bool $visibleCondition
      */
