@@ -65,8 +65,11 @@
         <hr/>
     {/if}
     {if $event->event_type_id === 1}
+        {var $teacherCounter = 0;}
         <h2>{_'Teachers'}</h2>
         {foreach $model->getTeachers() as $teacher}
+            {php $teacherCounter++}
+            <h3>{_'Teacher'} #{$teacherCounter}</h3>
             {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
             {control valuePrinter:row 'person.person_link', $teacher}
             {include personSchedule, person => $teacher->person,event=> $model->event}
@@ -81,9 +84,7 @@
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         {php $counter++}
         {var $history = $member->getPersonHistory()}
-
-        <h3>{_'Parcipant'} {$counter}</h3>
-
+        <h3>{_'Parcipant'} #{$counter}</h3>
         {control valuePrinter:row 'person.person_link', $member}
         {control valuePrinter:row 'person_history.study_year', $history}
         {control valuePrinter:row 'school.school', $history}
@@ -98,8 +99,8 @@
     <h2>{_'Transitions'}</h2>
     {control applicationTransitions}
     <hr/>
-{*    {if $event->event_type_id === 1 && $isOrg}*}
-{*        <h2>{_'Seating'}</h2>*}
-{*        {control seating:preview}*}
-{*    {/if}*}
+    {*    {if $event->event_type_id === 1 && $isOrg}*}
+    {*        <h2>{_'Seating'}</h2>*}
+    {*        {control seating:preview}*}
+    {*    {/if}*}
 {/block}

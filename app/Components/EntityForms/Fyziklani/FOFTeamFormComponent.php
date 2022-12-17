@@ -48,7 +48,7 @@ class FOFTeamFormComponent extends TeamFormComponent
      */
     protected function appendPersonsFields(Form $form): void
     {
-        $this->appendTeacherField($form);
+        $this->appendTeacherFields($form);
         $this->appendMemberFields($form);
         foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
             /** @var BaseControl $genderField */
@@ -114,24 +114,28 @@ class FOFTeamFormComponent extends TeamFormComponent
     /**
      * @throws Exception
      */
-    private function appendTeacherField(Form $form): void
+    private function appendTeacherFields(Form $form): void
     {
-        $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
-            $this->getTeacherFieldsDefinition(),
-            $this->event->getContestYear(),
-            'email',
-            true,
-            new SelfACLResolver(
-                $this->model ?? TeamModel2::RESOURCE_ID,
-                $this->model ? 'org-edit' : 'org-create',
-                $this->event->event_type->contest,
-                $this->container
-            ),
-            $this->event
-        );
-        $teacherContainer->searchContainer->setOption('label', _('Teacher'));
-        $teacherContainer->referencedContainer->setOption('label', _('Teacher'));
-        $form->addComponent($teacherContainer, 'teacher');
+        $teacherCount = isset($this->model) ? max($this->model->getTeachers()->count('*'), 1) : 1;
+
+        for ($teacherIndex = 0; $teacherIndex < $teacherCount; $teacherIndex++) {
+            $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
+                $this->getTeacherFieldsDefinition(),
+                $this->event->getContestYear(),
+                'email',
+                true,
+                new SelfACLResolver(
+                    $this->model ?? TeamModel2::RESOURCE_ID,
+                    $this->model ? 'org-edit' : 'org-create',
+                    $this->event->event_type->contest,
+                    $this->container
+                ),
+                $this->event
+            );
+            $teacherContainer->searchContainer->setOption('label', sprintf(_('Teacher #%d'), $teacherIndex + 1));
+            $teacherContainer->referencedContainer->setOption('label', sprintf(_('Teacher #%d'), $teacherIndex + 1));
+            $form->addComponent($teacherContainer, 'teacher_' . $teacherIndex);
+        }
     }
 
     protected function getTeamFieldsDefinition(): array
@@ -149,26 +153,35 @@ class FOFTeamFormComponent extends TeamFormComponent
      */
     public static function getTeacherFromForm(Form $form): array
     {
-        /** @var ReferencedId $referencedId */
-        $referencedId = $form->getComponent('teacher');
-        if (!$referencedId) {
-            return [];
+        $persons = [];
+        $teacherIndex = 0;
+        while (true) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form->getComponent('teacher_' . $teacherIndex, false);
+            if (!$referencedId) {
+                break;
+            }
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            if ($person) {
+                $persons[$person->person_id] = $person;
+            }
+            $teacherIndex++;
         }
-        /** @var PersonModel $person */
-        $person = $referencedId->getModel();
-        return $person ? [$person->person_id => $person] : [];
+        return $persons;
     }
 
     protected function setDefaults(Form $form): void
     {
         parent::setDefaults($form);
         if (isset($this->model)) {
-            $teacher = $this->model->getTeachers()->fetch();
+            $index = 0;
             /** @var TeamTeacherModel $teacher */
-            if ($teacher) {
+            foreach ($this->model->getTeachers() as $teacher) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $form->getComponent('teacher');
+                $referencedId = $this->getForm()->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
+                $index++;
             }
         }
     }

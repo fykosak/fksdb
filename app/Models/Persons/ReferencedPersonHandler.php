@@ -211,6 +211,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         }
         $handler = new AddressHandler($this->container);
         $address = $handler->store($data['address'], $model ? $model->address : null);
+        if (!$address) {
+            return;
+        }
         if ($model) {
             $this->postContactService->storeModel($data, $model);
         } else {

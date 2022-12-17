@@ -34,10 +34,12 @@ class AddressHandler extends ReferencedHandler
         $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
-    public function store(array $values, ?Model $model = null): AddressModel
+    public function store(array $values, ?Model $model = null): ?AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
-
+        if (!isset($data['target']) || !isset($data['city'])) {
+            return null;
+        }
         if (!isset($data['country_id'])) {
             $countryData = $this->inferCountry($data['postal_code']);
             if ($countryData) {

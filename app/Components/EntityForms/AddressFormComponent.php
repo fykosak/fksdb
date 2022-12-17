@@ -18,6 +18,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * @property PostContactModel $model
@@ -61,6 +62,9 @@ class AddressFormComponent extends EntityFormComponent
                 $values[self::CONTAINER],
                 isset($this->model) ? $this->model->address : null
             );
+            if (!$address) {
+                throw new InvalidStateException(_('Address is required'));
+            }
             if (!isset($this->model)) {
                 $this->postContactService->storeModel(
                     [
