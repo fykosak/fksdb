@@ -6,21 +6,29 @@ namespace FKSDB\Components\Grids\ListComponent\Row;
 
 use FKSDB\Components\Grids\ListComponent\Column\Column;
 use FKSDB\Components\Grids\ListComponent\Column\ORMColumn;
+use FKSDB\Components\Grids\ListComponent\Column\RendererColumn;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 
 class ColumnsRow extends Row
 {
-    public function createReferencedRow(string $name): Column
+    public function createReferencedColumn(string $name): ORMColumn
     {
         $col = new ORMColumn($this->container, $name);
         $this->addComponent($col, str_replace('.', '__', $name));
         return $col;
     }
 
-    public function render(Model $model): void
+    public function createRendererColumn(string $name, callable $renderer): RendererColumn
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
+        $col = new RendererColumn($this->container, $renderer);
+        $this->addComponent($col, $name);
+        return $col;
+    }
+
+    public function render(Model $model, FieldLevelPermissionValue $userPermission): void
+    {
+        $this->beforeRender($model, $userPermission);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'columns.latte');
     }
 }

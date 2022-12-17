@@ -8,6 +8,7 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read string name
+ * @property-read string description
  */
 class RoleModel extends Model
 {

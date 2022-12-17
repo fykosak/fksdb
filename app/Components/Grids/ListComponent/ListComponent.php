@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\ListComponent\Row\ColumnsRow;
 use FKSDB\Components\Grids\ListComponent\Row\ListGroupRow;
 use FKSDB\Components\Grids\ListComponent\Row\ORMRow;
 use FKSDB\Components\Grids\ListComponent\Row\RendererRow;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Presenter;
@@ -21,10 +22,12 @@ abstract class ListComponent extends BaseComponent implements IContainer
     protected \Nette\ComponentModel\Container $buttons;
     /** @var callable */
     protected $classNameCallback = null;
+    protected FieldLevelPermissionValue $userPermission;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
     {
         parent::__construct($container);
+        $this->userPermission = $userPermission;
         $this->buttons = new \Nette\ComponentModel\Container();
         $this->addComponent($this->buttons, 'buttons');
         $this->monitor(Presenter::class, function () {
@@ -32,11 +35,17 @@ abstract class ListComponent extends BaseComponent implements IContainer
         });
     }
 
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+    }
+
     public function render(): void
     {
         $this->template->models = $this->getModels();
+        $this->template->userPermission = $this->userPermission;
         $this->template->classNameCallback = $this->classNameCallback ?? fn() => '';
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte');
+        $this->template->render($this->getTemplatePath());
     }
 
     abstract protected function getModels(): iterable;

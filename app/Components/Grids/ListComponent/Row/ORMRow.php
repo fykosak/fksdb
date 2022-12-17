@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\ListComponent\Row;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 
@@ -18,10 +19,9 @@ class ORMRow extends Row
         $this->name = $name;
     }
 
-    public function render(Model $model): void
+    public function render(Model $model, FieldLevelPermissionValue $userPermission): void
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
+        $this->beforeRender($model, $userPermission);
         $this->template->name = $this->name;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'orm.latte');
     }

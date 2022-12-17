@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\ListComponent\Row;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 
 class ListGroupRow extends ColumnsRow
@@ -17,10 +18,9 @@ class ListGroupRow extends ColumnsRow
         $this->modelToIterator = $callback;
     }
 
-    public function render(Model $model): void
+    public function render(Model $model, FieldLevelPermissionValue $userPermission): void
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
+        $this->beforeRender($model, $userPermission);
         $this->template->models = ($this->modelToIterator)($model);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte');
     }

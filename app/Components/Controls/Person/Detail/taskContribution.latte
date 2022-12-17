@@ -3,13 +3,17 @@
 {block card-title}{_'Task contributions'}{/block}
 {block card-body}
     {if count($data)}
-        {foreach $data as $key => $datum}
+        {foreach $data as $datum}
             {var FKSDB\Models\ORM\Models\TaskModel $task = $datum['task']}
             {var FKSDB\Models\ORM\Models\TaskContributionModel[] $contributions = $datum['contributions']}
             <div n:class="'alert alert-' . $task->contest->getContestSymbol()">
                 <div class="row">
                     <div class="col">
-                        <div><strong>{control valuePrinter:onlyValue 'task.fq_name', $task}</strong></div>
+                        <div>
+                            <strong>
+                                {control valuePrinter:onlyValue 'task.fq_name', $task}
+                            </strong>
+                        </div>
                         <div>
                             {control valuePrinter:onlyValue 'contest.name', $task} {$task->year}-{$task->series}-{$task->label}
                         </div>

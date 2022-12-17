@@ -8,6 +8,7 @@ use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -22,7 +23,7 @@ class TeamListComponent extends ListComponent
 
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container);
+        parent::__construct($container, FieldLevelPermissionValue::Full);
         $this->event = $event;
     }
 
