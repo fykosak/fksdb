@@ -32,11 +32,16 @@ abstract class ListComponent extends BaseComponent implements IContainer
         });
     }
 
+    protected function getTemplatePatch(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+    }
+
     public function render(): void
     {
         $this->template->models = $this->getModels();
         $this->template->classNameCallback = $this->classNameCallback ?? fn() => '';
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte');
+        $this->template->render($this->getTemplatePatch());
     }
 
     abstract protected function getModels(): iterable;

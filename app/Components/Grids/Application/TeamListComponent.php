@@ -7,15 +7,21 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
+use FKSDB\Components\Grids\ListComponent\FilterListComponent;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\ORMFactory;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
-class TeamListComponent extends ListComponent
+class TeamListComponent extends FilterListComponent
 {
     private EventModel $event;
     protected ORMFactory $tableReflectionFactory;
@@ -29,21 +35,6 @@ class TeamListComponent extends ListComponent
     final public function injectPrimary(ORMFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    protected function createComponentContestBadge(): ContestBadge
-    {
-        return new ContestBadge($this->getContext());
-    }
-
-    protected function createComponentValuePrinter(): ColumnPrinterComponent
-    {
-        return new ColumnPrinterComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
     }
 
     protected function configure(): void
@@ -85,6 +76,54 @@ class TeamListComponent extends ListComponent
 
     protected function getModels(): iterable
     {
-        return $this->event->getTeams();
+        $query = $this->event->getTeams();
+        foreach ($this->filterParams as $key => $value) {
+            if (is_null($value)) {
+                continue;
+            }
+            switch ($key) {
+                case 'category':
+                    $query->where('category', $value);
+                    break;
+                case 'game_lang':
+                    $query->where('game_lang', $value);
+                    break;
+                case 'name':
+                    $query->where('name LIKE ?', '%' . $value . '%');
+                    break;
+                case 'state':
+                    $query->where('state', $value);
+                    break;
+                case 'team_id':
+                    $query->where('fyziklani_team_id', $value);
+            }
+        }
+        return $query;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('name', _('Team name'))->setOption(
+            'description',
+            _('Works as %name%, characters "%" will be added automatically.')
+        );
+        $form->addText('team_id', _('Team Id'))->setHtmlType('number');
+        $categories = [];
+        foreach (TeamCategory::casesForEvent($this->event) as $teamCategory) {
+            $categories[$teamCategory->value] = $teamCategory->label();
+        }
+        $form->addSelect('category', _('Category'), $categories)->setPrompt(_('Select category'));
+
+        $gameLang = [];
+        foreach (GameLang::cases() as $lang) {
+            $gameLang[$lang->value] = $lang->label();
+        }
+        $form->addSelect('game_lang', _('Game lang'), $gameLang)->setPrompt(_('Select language'));
+
+        $states = [];
+        foreach (TeamState::cases() as $teamState) {
+            $states[$teamState->value] = $teamState->label();
+        }
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('Select state'));
     }
 }
