@@ -86,21 +86,21 @@ class TeamState extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::APPLIED:
-                return _('applied');
+                return _('Applied');
             case self::PENDING:
-                return _('pending');
+                return _('Pending');
             case self::APPROVED:
-                return _('approved');
+                return _('Approved');
             case self::SPARE:
-                return _('spare');
+                return _('Spare');
             case self::PARTICIPATED:
-                return _('participated');
+                return _('Participated');
             case self::MISSED:
-                return _('missed');
+                return _('Missed');
             case self::DISQUALIFIED:
-                return _('disqualified');
+                return _('Disqualified');
             case self::CANCELLED:
-                return _('canceled');
+                return _('Canceled');
         }
         throw new NotImplementedException();
     }
