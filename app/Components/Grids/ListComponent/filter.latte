@@ -1,0 +1,19 @@
+{layout '../../Controls/@layout.latte'}
+{varType array $filterParams}
+{block content}
+    <hr/>
+    <div class="mb-3">
+        {control filterForm}
+        {foreach $filterParams as $key =>$value}
+            {if $value}
+                <a href="{link delete! $key}"
+                   class="btn btn-secondary"
+                   title="{_'Remove parameter'}"
+                >{$control['filterForm']['form']->getComponent($key)->getCaption()}: {$value}
+                    <i class="ms-3 fas fa-times"></i></a>
+            {/if}
+        {/foreach}
+    </div>
+    <hr/>
+    {include content from './list.latte'}
+{/block}
