@@ -30,15 +30,15 @@ enum TeamState: string implements EnumColumn
     public function label(): string
     {
         return match ($this) {
-            self::Applied => _('applied'),
-            self::Pending => _('pending'),
-            self::Approved => _('approved'),
-            self::Spare => _('spare'),
-            self::Participated => _('participated'),
-            self::Missed => _('missed'),
-            self::Disqualified => _('disqualified'),
-            self::Cancelled => _('canceled'),
-            self::Init => _('init'),
+            self::Applied => _('Applied'),
+            self::Pending => _('Pending'),
+            self::Approved => _('Approved'),
+            self::Spare => _('Spare'),
+            self::Participated => _('Participated'),
+            self::Missed => _('Missed'),
+            self::Disqualified => _('Disqualified'),
+            self::Cancelled => _('Canceled'),
+            self::Init => _('Init'),
         };
     }
 

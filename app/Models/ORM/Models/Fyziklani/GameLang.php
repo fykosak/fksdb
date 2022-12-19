@@ -27,6 +27,9 @@ class GameLang extends FakeStringEnum implements EnumColumn
         };
     }
 
+    /**
+     * @return self[]
+     */
     public static function cases(): array
     {
         return [
