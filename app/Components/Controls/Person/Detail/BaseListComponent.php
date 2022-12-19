@@ -35,14 +35,14 @@ abstract class BaseListComponent extends ListComponent
     final public function render(): void
     {
         $this->template->title = $this->getTitle();
-        if ($this->userPermission < $this->getMinimalPermissions()) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
-        }
         parent::render();
     }
 
     protected function getTemplatePath(): string
     {
+        if ($this->userPermission < $this->getMinimalPermissions()) {
+            return __DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte';
+        }
         return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
     }
 
