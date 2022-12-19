@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\ListComponent\Button;
 
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
+use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
-class DefaultButton extends BaseComponent
+class DefaultButton extends ItemComponent
 {
     /** @var callable */
     private $linkCallback;
@@ -26,11 +26,13 @@ class DefaultButton extends BaseComponent
 
     public function render(Model $model, FieldLevelPermissionValue $userPermission): void
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
         $this->template->params = ($this->linkCallback)($model);
         $this->template->title = $this->title;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'default.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'default.latte';
     }
 }

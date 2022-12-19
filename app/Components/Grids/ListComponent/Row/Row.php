@@ -7,8 +7,9 @@ namespace FKSDB\Components\Grids\ListComponent\Row;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use FKSDB\Components\Grids\ListComponent\ItemComponent;
 
-abstract class Row extends BaseComponent
+abstract class Row extends ItemComponent
 {
     public string $className = 'row mb-2';
 

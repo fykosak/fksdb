@@ -6,7 +6,7 @@
         <div class="list-group-item bg-transparent">
             <div class="row">
                 {foreach $control->getComponents() as $component}
-                    {control $component $listModel,$userPermission}
+                    {control $component $listModel, $userPermission}
                 {/foreach}
             </div>
         </div>

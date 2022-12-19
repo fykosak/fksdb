@@ -19,10 +19,14 @@ class RendererColumn extends Column
         $this->renderer = $renderer;
     }
 
-    public function render(Model $model, FieldLevelPermissionValue $userPermission): void
+    public function render(Model $model, int $userPermission): void
     {
-        $this->beforeRender($model, $userPermission);
         $this->template->renderer = $this->renderer;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte';
     }
 }

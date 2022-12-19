@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\Utils\UI\Title;
 

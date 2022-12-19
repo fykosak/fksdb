@@ -1,6 +1,7 @@
 {varType Fykosak\NetteORM\Model $model}
 {varType string $className}
 {varType FKSDB\Models\ORM\FieldLevelPermissionValue $userPermission}
+{varType int $userPermission}
 <div class="{$className}">
     {foreach $control->getComponents() as $component}
         {control $component $model, $userPermission}

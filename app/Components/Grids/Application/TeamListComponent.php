@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Badges\ContestBadge;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -20,7 +18,6 @@ use FKSDB\Models\ORM\ORMFactory;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class TeamListComponent extends FilterListComponent
 {
@@ -45,10 +42,10 @@ class TeamListComponent extends FilterListComponent
         $title = $this->createReferencedRow('fyziklani_team.name_n_id');
         $title->className .= ' fw-bold h4';
         $row = $this->createColumnsRow('row0');
-        $row->createReferencedRow('fyziklani_team.state');
-        $row->createReferencedRow('fyziklani_team.category');
-        $row->createReferencedRow('fyziklani_team.game_lang');
-        $row->createReferencedRow('fyziklani_team.phone');
+        $row->createReferencedColumn('fyziklani_team.state');
+        $row->createReferencedColumn('fyziklani_team.category');
+        $row->createReferencedColumn('fyziklani_team.game_lang');
+        $row->createReferencedColumn('fyziklani_team.phone');
         $memberTitle = $this->createRendererRow('member_title', fn() => Html::el('strong')->addText(_('Members')));
         $memberTitle->className .= ' h5';
         $memberList = $this->createListGroupRow('members', function (TeamModel2 $team) {
@@ -59,14 +56,14 @@ class TeamListComponent extends FilterListComponent
             }
             return $members;
         });
-        $memberList->createReferencedRow('person.full_name');
-        $memberList->createReferencedRow('school.school');
+        $memberList->createReferencedColumn('person.full_name');
+        $memberList->createReferencedColumn('school.school');
 
 
         $teacherTitle = $this->createRendererRow('teacher_title', fn() => Html::el('strong')->addText(_('Teachers')));
         $teacherTitle->className .= ' h5';
         $teacherList = $this->createListGroupRow('teachers', fn(TeamModel2 $team) => $team->getTeachers());
-        $teacherList->createReferencedRow('person.full_name');
+        $teacherList->createReferencedColumn('person.full_name');
 
         $this->createDefaultButton(
             'detail',

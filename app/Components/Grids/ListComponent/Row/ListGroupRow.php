@@ -20,8 +20,12 @@ class ListGroupRow extends ColumnsRow
 
     public function render(Model $model, FieldLevelPermissionValue $userPermission): void
     {
-        $this->beforeRender($model, $userPermission);
         $this->template->models = ($this->modelToIterator)($model);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte';
     }
 }

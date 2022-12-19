@@ -21,9 +21,13 @@ class ORMRow extends Row
 
     public function render(Model $model, FieldLevelPermissionValue $userPermission): void
     {
-        $this->beforeRender($model, $userPermission);
         $this->template->name = $this->name;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'orm.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'orm.latte';
     }
 
     protected function createComponentPrinter(): ColumnPrinterComponent

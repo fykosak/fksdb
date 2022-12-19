@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Utils\Strings;
 
 /**
  * @property-read int contest_id
