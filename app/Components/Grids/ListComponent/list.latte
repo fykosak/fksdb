@@ -1,6 +1,6 @@
-{layout '../../Controls/@layout.latte'}
 {varType Fykosak\NetteORM\Model[] $models}
 {varType callable $classNameCallback}
+{varType int $userPermission}
 {block content}
     {if count($models)}
         {foreach $models as $model}
@@ -8,18 +8,16 @@
             <div class="{$className}">
                 {foreach $control->getComponents() as $component}
                     {if $component instanceof FKSDB\Components\Grids\ListComponent\Row\Row}
-                        {control $component $model}
+                        {control $component $model,$userPermission}
                     {/if}
                 {/foreach}
                 {var Nette\ComponentModel\Container|FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getComponent('buttons')}
                 {if count($buttons->getComponents())}
-                    {foreach $buttons->getComponents() as $button}
-                        <div class="row">
-                            <div class="col">
-                                {control $button $model}
-                            </div>
-                        </div>
-                    {/foreach}
+                    <div class="btn-group">
+                        {foreach $buttons->getComponents() as $button}
+                            {control $button $model,$userPermission}
+                        {/foreach}
+                    </div>
                 {/if}
             </div>
         {/foreach}

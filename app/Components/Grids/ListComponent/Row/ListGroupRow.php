@@ -17,11 +17,14 @@ class ListGroupRow extends ColumnsRow
         $this->modelToIterator = $callback;
     }
 
-    public function render(Model $model): void
+    public function render(Model $model, int $userPermission): void
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
         $this->template->models = ($this->modelToIterator)($model);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte';
     }
 }

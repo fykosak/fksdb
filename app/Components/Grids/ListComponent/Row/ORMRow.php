@@ -18,12 +18,15 @@ class ORMRow extends Row
         $this->name = $name;
     }
 
-    public function render(Model $model): void
+    public function render(Model $model, int $userPermission): void
     {
-        $this->template->className = $this->className;
-        $this->template->model = $model;
         $this->template->name = $this->name;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'orm.latte');
+        parent::render($model, $userPermission);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'orm.latte';
     }
 
     protected function createComponentPrinter(): ColumnPrinterComponent

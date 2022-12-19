@@ -21,10 +21,12 @@ abstract class ListComponent extends BaseComponent implements IContainer
     protected \Nette\ComponentModel\Container $buttons;
     /** @var callable */
     protected $classNameCallback = null;
+    protected int $userPermission;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, int $userPermission)
     {
         parent::__construct($container);
+        $this->userPermission = $userPermission;
         $this->buttons = new \Nette\ComponentModel\Container();
         $this->addComponent($this->buttons, 'buttons');
         $this->monitor(Presenter::class, function () {
@@ -32,7 +34,7 @@ abstract class ListComponent extends BaseComponent implements IContainer
         });
     }
 
-    protected function getTemplatePatch(): string
+    protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
     }
@@ -40,8 +42,9 @@ abstract class ListComponent extends BaseComponent implements IContainer
     public function render(): void
     {
         $this->template->models = $this->getModels();
+        $this->template->userPermission = $this->userPermission;
         $this->template->classNameCallback = $this->classNameCallback ?? fn() => '';
-        $this->template->render($this->getTemplatePatch());
+        $this->template->render($this->getTemplatePath());
     }
 
     abstract protected function getModels(): iterable;
