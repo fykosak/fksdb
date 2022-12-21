@@ -10,17 +10,17 @@ use Nette\DI\Container;
 
 class ORMRow extends Row
 {
-    protected string $name;
+    protected string $factory;
 
-    public function __construct(Container $container, string $name)
+    public function __construct(Container $container, string $factory)
     {
         parent::__construct($container);
-        $this->name = $name;
+        $this->factory = $factory;
     }
 
     public function render(Model $model, int $userPermission): void
     {
-        $this->template->name = $this->name;
+        $this->template->name = $this->factory;
         parent::render($model, $userPermission);
     }
 
