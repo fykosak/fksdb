@@ -13,20 +13,25 @@ class DefaultButton extends ItemComponent
     /** @var callable */
     private $linkCallback;
     private string $title;
+    private ?string $buttonClassName;
 
-    public string $className = 'btn btn-outline-secondary btn-sm float-end';
-
-    public function __construct(Container $container, string $title, callable $linkCallback)
-    {
+    public function __construct(
+        Container $container,
+        string $title,
+        callable $linkCallback,
+        ?string $buttonClassName = null
+    ) {
         parent::__construct($container);
         $this->title = $title;
         $this->linkCallback = $linkCallback;
+        $this->buttonClassName = $buttonClassName;
     }
 
     public function render(Model $model, int $userPermission): void
     {
         $this->template->params = ($this->linkCallback)($model);
         $this->template->title = $this->title;
+        $this->template->buttonClassName = $this->buttonClassName ?? 'btn btn-outline-secondary btn-sm';
         parent::render($model, $userPermission);
     }
 

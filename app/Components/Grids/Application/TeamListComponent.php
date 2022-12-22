@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
+use FKSDB\Components\Grids\ListComponent\Referenced\DefaultItem;
+use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
@@ -13,6 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -37,15 +40,16 @@ class TeamListComponent extends FilterListComponent
     {
 
         $this->classNameCallback = fn(TeamModel2 $team) => 'alert alert-' . $team->state->getBehaviorType();
-        $title = $this->createReferencedRow('fyziklani_team.name_n_id');
-        $title->className .= ' fw-bold h4';
+        $title = $this->addComponent(
+            new TemplateItem($this->container, '<h4>@fyziklani_team.name_n_id</h4>'),
+            'team_title'
+        );
         $row = $this->createColumnsRow('row0');
         $row->createReferencedColumn('fyziklani_team.state');
         $row->createReferencedColumn('fyziklani_team.category');
         $row->createReferencedColumn('fyziklani_team.game_lang');
         $row->createReferencedColumn('fyziklani_team.phone');
-        $memberTitle = $this->createRendererRow('member_title', fn() => Html::el('strong')->addText(_('Members')));
-        $memberTitle->className .= ' h5';
+
         $memberList = $this->createListGroupRow('members', function (TeamModel2 $team) {
             $members = [];
             /** @var TeamMemberModel $member */
@@ -53,14 +57,15 @@ class TeamListComponent extends FilterListComponent
                 $members[] = $member->getPersonHistory();
             }
             return $members;
-        });
+        }, new Title(null, _('Members')));
         $memberList->createReferencedColumn('person.full_name');
         $memberList->createReferencedColumn('school.school');
 
-
-        $teacherTitle = $this->createRendererRow('teacher_title', fn() => Html::el('strong')->addText(_('Teachers')));
-        $teacherTitle->className .= ' h5';
-        $teacherList = $this->createListGroupRow('teachers', fn(TeamModel2 $team) => $team->getTeachers());
+        $teacherList = $this->createListGroupRow(
+            'teachers',
+            fn(TeamModel2 $team) => $team->getTeachers(),
+            new Title(null, _('Teachers'))
+        );
         $teacherList->createReferencedColumn('person.full_name');
 
         $this->createDefaultButton(

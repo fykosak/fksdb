@@ -1,8 +1,18 @@
 {varType Fykosak\NetteORM\Model $model}
-{varType string $className}
 {varType int $userPermission}
-<div class="{$className}">
+
+{define subComponents}
+    {varType Fykosak\NetteORM\Model $model}
     {foreach $control->getComponents() as $component}
-        {control $component $model, $userPermission}
+        {varType FKSDB\Components\Grids\ListComponent\ItemComponent $component}
+        {if $component instanceof FKSDB\Components\Grids\ListComponent\ItemComponent}
+            {var $className = $component->getContainerClassName()}
+            <div class="{$className??'col'}">
+                {control $component $model, $userPermission}
+            </div>
+        {else}
+            {control $component $model, $userPermission}
+        {/if}
     {/foreach}
-</div>
+{/define}
+{include subComponents model=>$model}

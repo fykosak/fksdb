@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Column;
+namespace FKSDB\Components\Grids\ListComponent\Referenced;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 
-class ORMTemplateColumn extends Column
+class TemplateItem extends ItemComponent
 {
     protected string $templateString;
 
@@ -31,6 +32,6 @@ class ORMTemplateColumn extends Column
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'ormTemplate.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'template.latte';
     }
 }

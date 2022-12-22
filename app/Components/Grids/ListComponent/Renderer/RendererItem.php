@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Column;
+namespace FKSDB\Components\Grids\ListComponent\Renderer;
 
+use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 
-class RendererColumn extends Column
+class RendererItem extends ItemComponent
 {
     /** @var callable */
     protected $renderer;

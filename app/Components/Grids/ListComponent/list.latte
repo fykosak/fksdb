@@ -6,19 +6,16 @@
         {foreach $models as $model}
             {var string $className = ($classNameCallback)($model)}
             <div class="{$className}">
-                {foreach $control->getComponents() as $component}
-                    {if $component instanceof FKSDB\Components\Grids\ListComponent\Row\Row}
-                        {control $component $model,$userPermission}
+                {foreach $control->getComponents() as $name=> $component}
+                    {continueIf $name == 'buttons'}
+                    {if $component instanceof FKSDB\Components\Grids\ListComponent\ItemComponent}
+                        {var $className = $component->getContainerClassName()}
+                        <div class="{$className??'row'}">
+                            {control $component $model, $userPermission}
+                        </div>
                     {/if}
                 {/foreach}
-                {var Nette\ComponentModel\Container|FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getComponent('buttons')}
-                {if count($buttons->getComponents())}
-                    <div class="btn-group">
-                        {foreach $buttons->getComponents() as $button}
-                            {control $button $model,$userPermission}
-                        {/foreach}
-                    </div>
-                {/if}
+                {control $control->getComponent('buttons') $model,$userPermission}
             </div>
         {/foreach}
     {else}

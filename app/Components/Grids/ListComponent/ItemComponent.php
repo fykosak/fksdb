@@ -9,15 +9,17 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 
 abstract class ItemComponent extends BaseComponent
 {
-    public string $className = '';
-
     abstract protected function getTemplatePath(): string;
 
     public function render(Model $model, int $userPermission): void
     {
-        $this->template->className = $this->className;
         $this->template->model = $model;
         $this->template->userPermission = $userPermission;
         $this->template->render($this->getTemplatePath());
+    }
+
+    public function getContainerClassName(): ?string
+    {
+        return null;
     }
 }
