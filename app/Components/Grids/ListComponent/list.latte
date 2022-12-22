@@ -8,12 +8,9 @@
             <div class="{$className}">
                 {foreach $control->getComponents() as $name=> $component}
                     {continueIf $name == 'buttons'}
-                    {if $component instanceof FKSDB\Components\Grids\ListComponent\ItemComponent}
-                        {var $className = $component->getContainerClassName()}
-                        <div class="{$className??'row'}">
-                            {control $component $model, $userPermission}
-                        </div>
-                    {/if}
+                    <div class="row">
+                        {control $component $model, $userPermission}
+                    </div>
                 {/foreach}
                 {control $control->getComponent('buttons') $model,$userPermission}
             </div>

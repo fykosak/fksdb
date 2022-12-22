@@ -28,11 +28,6 @@ class ListGroupRow extends ColumnsRow
         parent::render($model, $userPermission);
     }
 
-    public function getContainerClassName(): ?string
-    {
-        return 'list-group list-group-flush col';
-    }
-
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte';

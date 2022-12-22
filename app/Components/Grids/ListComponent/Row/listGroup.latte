@@ -4,10 +4,12 @@
 {if $title}
     <strong class="mt-3">{$title->toHtml()}</strong>
 {/if}
-{foreach $models as $listModel}
-    <div class="list-group-item bg-transparent">
-        <div class="row">
-            {include subComponents from './columns.latte' model=>$listModel,userPermission=>$userPermission}
+<div class="list-group list-group-flush">
+    {foreach $models as $listModel}
+        <div class="list-group-item bg-transparent">
+            <div class="row">
+                {include subComponents from './columns.latte' model=>$listModel,userPermission=>$userPermission}
+            </div>
         </div>
-    </div>
-{/foreach}
+    {/foreach}
+</div>

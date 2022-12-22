@@ -4,15 +4,9 @@
 {define subComponents}
     {varType Fykosak\NetteORM\Model $model}
     {foreach $control->getComponents() as $component}
-        {varType FKSDB\Components\Grids\ListComponent\ItemComponent $component}
-        {if $component instanceof FKSDB\Components\Grids\ListComponent\ItemComponent}
-            {var $className = $component->getContainerClassName()}
-            <div class="{$className??'col'}">
-                {control $component $model, $userPermission}
-            </div>
-        {else}
+        <div class="col">
             {control $component $model, $userPermission}
-        {/if}
+        </div>
     {/foreach}
 {/define}
 {include subComponents model=>$model}
