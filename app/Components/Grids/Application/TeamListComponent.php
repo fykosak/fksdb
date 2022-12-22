@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
-use FKSDB\Components\Grids\ListComponent\Referenced\DefaultItem;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -18,7 +17,6 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
 
 class TeamListComponent extends FilterListComponent
 {
@@ -40,7 +38,7 @@ class TeamListComponent extends FilterListComponent
     {
 
         $this->classNameCallback = fn(TeamModel2 $team) => 'alert alert-' . $team->state->getBehaviorType();
-        $title = $this->addComponent(
+        $this->addComponent(
             new TemplateItem($this->container, '<h4>@fyziklani_team.name_n_id</h4>'),
             'team_title'
         );

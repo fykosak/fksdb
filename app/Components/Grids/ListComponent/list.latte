@@ -8,6 +8,7 @@
             <div class="{$className}">
                 {foreach $control->getComponents() as $name=> $component}
                     {continueIf $name == 'buttons'}
+                    {continueIf $name == 'filterForm'}
                     <div class="row">
                         {control $component $model, $userPermission}
                     </div>
