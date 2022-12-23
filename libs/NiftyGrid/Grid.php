@@ -7,6 +7,7 @@ namespace NiftyGrid;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
+use Nette\InvalidStateException;
 use Nette\Localization\Translator;
 use Nette\Utils\Paginator;
 use NiftyGrid\Components\Button;
@@ -160,9 +161,9 @@ abstract class Grid extends Control
             ) {
                 $this->dataSource->orderData($order[0], $order[1]);
             } else {
-                throw new InvalidOrderException('Neplatné seřazení.');
+                throw new InvalidStateException('Neplatné seřazení.');
             }
-        } catch (InvalidOrderException $e) {
+        } catch (InvalidStateException $e) {
             $this->flashMessage($e->getMessage(), 'grid-error');
             $this->redirect('this', ['order' => null]);
         }

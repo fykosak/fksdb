@@ -21,8 +21,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class AllSubmitsGrid extends SubmitsGrid
 {
@@ -45,8 +43,6 @@ class AllSubmitsGrid extends SubmitsGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {

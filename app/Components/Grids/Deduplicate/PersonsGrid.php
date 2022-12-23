@@ -12,8 +12,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
@@ -35,10 +33,6 @@ class PersonsGrid extends BaseGrid
         return new NDataSource($this->trunkPersons);
     }
 
-    /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);

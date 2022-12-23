@@ -37,7 +37,7 @@ class GridPaginator extends Control
     public function render(): void
     {
         $this->template->paginator = $this->paginator;
-        $this->template->render($this->templatePath ?? __DIR__ . '/../../templates/paginator.latte');
+        $this->template->render($this->templatePath);
     }
 
     /**

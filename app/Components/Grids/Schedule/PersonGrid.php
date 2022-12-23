@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\GridException;
 
 class PersonGrid extends BaseGrid
 {
@@ -24,7 +23,6 @@ class PersonGrid extends BaseGrid
 
     /**
      * @throws \InvalidArgumentException
-     * @throws GridException
      */
     final public function render(?PersonModel $person = null, ?EventModel $event = null): void
     {

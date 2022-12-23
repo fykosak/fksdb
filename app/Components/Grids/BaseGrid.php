@@ -25,7 +25,6 @@ use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\Grid;
-use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 
@@ -91,12 +90,6 @@ abstract class BaseGrid extends Grid
         return $template;
     }
 
-    /*     * *****************************
-     * Extended rendering for the paginator
-     * ***************************** */
-    /**
-     * @throws GridException
-     */
     public function render(): void
     {
         $paginator = $this->getPaginator();

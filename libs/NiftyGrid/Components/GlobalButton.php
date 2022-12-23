@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace NiftyGrid\Components;
 
 use Nette\Application\UI\Component;
-use Nette\Utils\Html,
-    NiftyGrid\Grid;
+use Nette\Utils\Html;
 
 /**
  * NiftyGrid - DataGrid for Nette

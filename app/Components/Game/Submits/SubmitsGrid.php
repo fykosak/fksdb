@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
 
 abstract class SubmitsGrid extends BaseGrid
 {
@@ -27,9 +26,6 @@ abstract class SubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
-    /**
-     * @throws DuplicateButtonException
-     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
