@@ -13,8 +13,6 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class SchoolsGrid extends EntityGrid
 {
@@ -39,21 +37,19 @@ class SchoolsGrid extends EntityGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
         $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'))->setRenderer(fn(SchoolModel $school) => $school->address->city);
+        $this->addColumn('city', _('City'))->setRenderer(fn(SchoolModel $school): string => $school->address->city);
         $this->addColumn('active', _('Active?'))->setRenderer(
             fn(SchoolModel $row): Html => Html::el('span')
                 ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
                 ->addText(($row->active))
         );
 
-        $this->addLink('school.edit');
-        $this->addLink('school.detail');
+        $this->addORMLink('school.edit');
+        $this->addORMLink('school.detail');
     }
 }

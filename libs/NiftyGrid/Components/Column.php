@@ -19,13 +19,13 @@ use NiftyGrid;
  */
 class Column extends Component
 {
-    public ?string $label;
+    public string $label;
     public ?int $truncate = null;
-    public bool $sortable = true;
+    public bool $sortable = false;
     /** @var callable */
     private $renderer;
 
-    public function __construct(?string $label)
+    public function __construct(string $label)
     {
         $this->label = $label;
     }

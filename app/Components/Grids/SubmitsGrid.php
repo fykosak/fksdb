@@ -17,8 +17,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 use Tracy\Debugger;
 
 class SubmitsGrid extends BaseGrid
@@ -43,10 +41,6 @@ class SubmitsGrid extends BaseGrid
         return new NDataSource($this->contestant->getSubmits());
     }
 
-    /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
@@ -57,24 +51,28 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn('source', _('Method of handing'))
             ->setRenderer(fn(SubmitModel $model): string => $model->source->value);
 
-        $this->addButton('revoke', _('Cancel'))
+        $this->addButton(
+            'revoke',
+            _('Cancel'),
+            fn(SubmitModel $submit): string => $this->link('revoke!', $submit->submit_id)
+        )
             ->setClass('btn btn-sm btn-outline-warning')
-            ->setText(_('Cancel'))
             ->setShow(fn(SubmitModel $submit): bool => $submit->canRevoke())
-            ->setLink(fn(SubmitModel $submit): string => $this->link('revoke!', $submit->submit_id))
             ->setConfirmationDialog(fn(SubmitModel $submit): string => sprintf(
                 _('Do you really want to take the solution of task %s back?'),
                 $submit->task->getFQName()
             ));
-        $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(
-                fn(SubmitModel $submit): string => $this->link('downloadUploaded!', $submit->submit_id)
-            )
+        $this->addButton(
+            'download_uploaded',
+            _('Download original'),
+            fn(SubmitModel $submit): string => $this->link('downloadUploaded!', $submit->submit_id)
+        )
             ->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz());
-        $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(
-                fn(SubmitModel $submit): string => $this->link('downloadCorrected!', $submit->submit_id)
-            )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected);
+        $this->addButton(
+            'download_corrected',
+            _('Download corrected'),
+            fn(SubmitModel $submit): string => $this->link('downloadCorrected!', $submit->submit_id)
+        )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected);
 
         $this->paginate = false;
         $this->enableSorting = false;

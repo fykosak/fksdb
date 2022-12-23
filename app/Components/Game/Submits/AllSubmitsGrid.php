@@ -21,8 +21,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class AllSubmitsGrid extends SubmitsGrid
 {
@@ -45,8 +43,6 @@ class AllSubmitsGrid extends SubmitsGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -67,11 +63,13 @@ class AllSubmitsGrid extends SubmitsGrid
             ]
         );
 
-        $this->addButton('revoke')
+        $this->addButton(
+            'revoke',
+            _('Revoke'),
+            fn(SubmitModel $row): string => $this->link('revoke!', $row->fyziklani_submit_id)
+        )
             ->setClass('btn btn-sm btn-outline-danger')
-            ->setLink(fn(SubmitModel $row): string => $this->link('revoke!', $row->fyziklani_submit_id))
             ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
-            ->setText(_('Revoke'))
             ->setShow(fn(SubmitModel $row): bool => $row->canRevoke(false));
     }
 

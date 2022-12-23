@@ -10,8 +10,6 @@ use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class StoredQueriesGrid extends BaseGrid
 {
@@ -37,8 +35,6 @@ class StoredQueriesGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {

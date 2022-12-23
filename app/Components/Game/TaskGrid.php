@@ -11,7 +11,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateColumnException;
 
 class TaskGrid extends BaseGrid
 {
@@ -41,9 +40,6 @@ class TaskGrid extends BaseGrid
         return $dataSource;
     }
 
-    /**
-     * @throws DuplicateColumnException
-     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);

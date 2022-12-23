@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Badges\ContestBadge;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
+use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
+use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
+use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
-use FKSDB\Components\Grids\ListComponent\ListComponent;
+use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -16,10 +18,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class TeamListComponent extends FilterListComponent
 {
@@ -28,7 +29,7 @@ class TeamListComponent extends FilterListComponent
 
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container);
+        parent::__construct($container, FieldLevelPermission::ALLOW_FULL);
         $this->event = $event;
     }
 
@@ -39,38 +40,42 @@ class TeamListComponent extends FilterListComponent
 
     protected function configure(): void
     {
-
-        $this->classNameCallback = fn(TeamModel2 $team) => 'alert alert-' . $team->state->getBehaviorType();
-        $title = $this->createReferencedRow('fyziklani_team.name_n_id');
-        $title->className .= ' fw-bold h4';
-        $row = $this->createColumnsRow('row0');
-        $row->createReferencedRow('fyziklani_team.state');
-        $row->createReferencedRow('fyziklani_team.category');
-        $row->createReferencedRow('fyziklani_team.game_lang');
-        $row->createReferencedRow('fyziklani_team.phone');
-        $memberTitle = $this->createRendererRow('member_title', fn() => Html::el('strong')->addText(_('Members')));
-        $memberTitle->className .= ' h5';
-        $memberList = $this->createListGroupRow('members', function (TeamModel2 $team) {
+        $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
+        $this->setTitle(
+            new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
+        );
+        $row = new RowContainer($this->container);
+        $this->addComponent($row, 'row0');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.game_lang'), 'lang');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.phone'), 'phone');
+        $memberList = new ListGroupContainer($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
                 $members[] = $member->getPersonHistory();
             }
             return $members;
-        });
-        $memberList->createReferencedRow('person.full_name');
-        $memberList->createReferencedRow('school.school');
+        }, new Title(null, _('Members')));
+        $this->addComponent($memberList, 'members');
+        $memberList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $memberList->addComponent(new TemplateItem($this->container, '@school.school'), 'school');
 
-
-        $teacherTitle = $this->createRendererRow('teacher_title', fn() => Html::el('strong')->addText(_('Teachers')));
-        $teacherTitle->className .= ' h5';
-        $teacherList = $this->createListGroupRow('teachers', fn(TeamModel2 $team) => $team->getTeachers());
-        $teacherList->createReferencedRow('person.full_name');
-
-        $this->createDefaultButton(
-            'detail',
-            _('Detail'),
-            fn(TeamModel2 $team) => ['detail', ['id' => $team->fyziklani_team_id]]
+        $teacherList = new ListGroupContainer(
+            $this->container,
+            fn(TeamModel2 $team): iterable => $team->getTeachers(),
+            new Title(null, _('Teachers'))
+        );
+        $this->addComponent($teacherList, 'teachers');
+        $teacherList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $this->addButton(
+            new DefaultButton(
+                $this->container,
+                _('Detail'),
+                fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
+            ),
+            'detail'
         );
     }
 
@@ -101,6 +106,9 @@ class TeamListComponent extends FilterListComponent
         return $query;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $form->addText('name', _('Team name'))->setOption(

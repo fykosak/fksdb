@@ -1,0 +1,12 @@
+{varType Fykosak\NetteORM\Model $model}
+{varType int $userPermission}
+
+{define subComponents}
+    {varType Fykosak\NetteORM\Model $model}
+    {foreach $control->getComponents() as $component}
+        <div class="col">
+            {control $component $model, $userPermission}
+        </div>
+    {/foreach}
+{/define}
+{include subComponents model=>$model}

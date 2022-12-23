@@ -14,8 +14,6 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class NewApplicationsGrid extends BaseGrid
 {
@@ -40,8 +38,6 @@ class NewApplicationsGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -51,25 +47,23 @@ class NewApplicationsGrid extends BaseGrid
             'event.name',
             'contest.contest',
         ]);
-        $this->addButton('create')
-            ->setText(_('Create application'))
-            ->setLink(function (EventModel $event): string {
-                if ($event->isTeamEvent()) {
-                    return $this->getPresenter()
-                        ->link(':Event:TeamApplication:create', ['eventId' => $event->event_id]);
-                }
-                return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $event->event_id]);
-            })->setShow(function (EventModel $modelEvent): bool {
-                try {
-                    return (bool)count(
-                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
-                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
-                        )
-                    );
-                } catch (\Throwable $exception) {
-                    return $modelEvent->isRegistrationOpened();
-                }
-            });
+        $this->addButton('create', _('Create application'), function (EventModel $event): string {
+            if ($event->isTeamEvent()) {
+                return $this->getPresenter()
+                    ->link(':Event:TeamApplication:create', ['eventId' => $event->event_id]);
+            }
+            return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $event->event_id]);
+        })->setShow(function (EventModel $modelEvent): bool {
+            try {
+                return (bool)count(
+                    $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                        $this->eventDispatchFactory->getDummyHolder($modelEvent),
+                        EventParticipantStatus::tryFrom(Machine::STATE_INIT)
+                    )
+                );
+            } catch (\Throwable $exception) {
+                return $modelEvent->isRegistrationOpened();
+            }
+        });
     }
 }
