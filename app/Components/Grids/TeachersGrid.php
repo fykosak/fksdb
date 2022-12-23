@@ -11,8 +11,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class TeachersGrid extends EntityGrid
 {
@@ -46,13 +44,11 @@ class TeachersGrid extends EntityGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addLink('teacher.edit');
-        $this->addLink('teacher.detail');
+        $this->addORMLink('teacher.edit');
+        $this->addORMLink('teacher.detail');
     }
 }

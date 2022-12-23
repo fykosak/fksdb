@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\ListComponent;
 
 use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
-use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
-use FKSDB\Components\Grids\ListComponent\Row\ColumnsRow;
-use FKSDB\Components\Grids\ListComponent\Row\ListGroupRow;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\UI\Title;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
@@ -43,7 +40,8 @@ abstract class ListComponent extends BaseComponent implements IContainer
     {
         $this->template->models = $this->getModels();
         $this->template->userPermission = $this->userPermission;
-        $this->template->classNameCallback = $this->classNameCallback ?? fn() => '';
+        $this->template->classNameCallback = $this->classNameCallback;
+        $this->template->title = $this->getComponent('title', false);
         $this->template->render($this->getTemplatePath());
     }
 
@@ -51,27 +49,13 @@ abstract class ListComponent extends BaseComponent implements IContainer
 
     abstract protected function configure(): void;
 
-    final public function createColumnsRow(string $name): ColumnsRow
+    protected function setTitle(Control $title): void
     {
-        $row = new ColumnsRow($this->container);
-        $this->addComponent($row, $name);
-        return $row;
+        $this->addComponent($title, 'title');
     }
 
-    final public function createListGroupRow(
-        string $name,
-        callable $modelToIterator,
-        ?Title $title = null
-    ): ListGroupRow {
-        $row = new ListGroupRow($this->container, $modelToIterator, $title);
-        $this->addComponent($row, $name);
-        return $row;
-    }
-
-    final public function createDefaultButton(string $name, string $title, callable $callback): DefaultButton
+    protected function addButton(ItemComponent $button, string $name): void
     {
-        $button = new DefaultButton($this->container, $title, $callback);
         $this->buttons->addComponent($button, $name);
-        return $button;
     }
 }

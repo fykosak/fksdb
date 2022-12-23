@@ -6,17 +6,17 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
 use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
-use FKSDB\Components\Grids\ListComponent\Column\ORMTemplateColumn;
+use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
+use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
-use FKSDB\Components\Grids\ListComponent\Row\ORMTemplateRow;
+use FKSDB\Components\Grids\ListComponent\Renderer\RendererItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
-use Nette\Utils\Html;
 
 class GroupListComponent extends ListComponent
 {
@@ -36,26 +36,30 @@ class GroupListComponent extends ListComponent
     protected function configure(): void
     {
         $this->classNameCallback = fn(ScheduleGroupModel $model) => 'alert alert-secondary';
-        $this->addComponent(
+        $this->setTitle(
             new TemplateItem(
                 $this->container,
-                '<strong>@schedule_group.name_cs:value / @schedule_group.name_en:value (@schedule_group.schedule_group_id:value)</strong>'
+                '@schedule_group.name_cs / @schedule_group.name_en (@schedule_group.schedule_group_id)'
+            )
+        );
+        $row0 = new RowContainer($this->container);
+        $this->addComponent($row0, 'row0');
+        $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
+        $row0->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
+                    ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
+                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i')
             ),
-            'title'
+            'duration'
         );
-        $row0 = $this->createColumnsRow('row0');
-        $row0->createReferencedColumn('schedule_group.schedule_group_type');
-        $row0->createRendererColumn(
-            'duration',
-            fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
-                ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
-                : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i')
-        );
-        $itemsRow = $this->createListGroupRow(
-            'items',
+        $itemsRow = new ListGroupContainer(
+            $this->container,
             fn(ScheduleGroupModel $model) => $model->getItems(),
             new Title(null, _('Items'))
         );
+        $this->addComponent($itemsRow, 'items');
         $itemsRow->addComponent(
             new TemplateItem(
                 $this->container,
@@ -66,7 +70,7 @@ class GroupListComponent extends ListComponent
         $itemsRow->addComponent(
             new TemplateItem(
                 $this->container,
-                '@schedule_item.price_czk / @schedule_item.price_eur</span>'
+                '@schedule_item.price_czk / @schedule_item.price_eur'
             ),
             'price'
         );
@@ -81,28 +85,36 @@ class GroupListComponent extends ListComponent
         $itemButtonContainer = new ButtonGroup($this->container);
         $itemsRow->addComponent($itemButtonContainer, 'buttons');
         $itemButtonContainer->addComponent(
-            new DefaultButton($this->container, _('Edit'), fn(ScheduleItemModel $model) => [
-                ':Event:ScheduleItem:detail',
-                ['id' => $model->getPrimary()],
-            ]),
+            new DefaultButton(
+                $this->container,
+                _('Edit'),
+                fn(ScheduleItemModel $model) => [':Event:ScheduleItem:edit', ['id' => $model->getPrimary()]]
+            ),
             'edit'
         );
         $itemButtonContainer->addComponent(
-            new DefaultButton($this->container, _('Detail'), fn(ScheduleItemModel $model) => [
-                ':Event:ScheduleItem:detail',
-                ['id' => $model->getPrimary()],
-            ]),
+            new DefaultButton(
+                $this->container,
+                _('Detail'),
+                fn(ScheduleItemModel $model) => [':Event:ScheduleItem:detail', ['id' => $model->getPrimary()]]
+            ),
             'detail'
         );
-        $this->createDefaultButton(
-            'detail',
-            _('Detail'),
-            fn(ScheduleGroupModel $model) => ['detail', ['id' => $model->getPrimary()]]
+        $this->addButton(
+            new DefaultButton(
+                $this->container,
+                _('Detail'),
+                fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:detail', ['id' => $model->getPrimary()]]
+            ),
+            'detail'
         );
-        $this->createDefaultButton(
-            'edit',
-            _('Edit'),
-            fn(ScheduleGroupModel $model) => ['edit', ['id' => $model->getPrimary()]]
+        $this->addButton(
+            new DefaultButton(
+                $this->container,
+                _('Edit'),
+                fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:edit', ['id' => $model->getPrimary()]]
+            ),
+            'edit'
         );
     }
 }

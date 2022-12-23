@@ -1,14 +1,20 @@
 {varType Fykosak\NetteORM\Model[] $models}
 {varType callable $classNameCallback}
+{varType Nette\Application\UI\Control $title}
 {varType int $userPermission}
 {block content}
     {if count($models)}
         {foreach $models as $model}
-            {var string $className = ($classNameCallback)($model)}
+            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+
             <div class="{$className}">
+                {if $title}
+                    <h4>{control $title $model,$userPermission}</h4>
+                {/if}
                 {foreach $control->getComponents() as $name=> $component}
                     {continueIf $name == 'buttons'}
                     {continueIf $name == 'filterForm'}
+                    {continueIf $name == 'title'}
                     <div class="row">
                         {control $component $model, $userPermission}
                     </div>

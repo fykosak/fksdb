@@ -61,7 +61,7 @@
                     </span>
                     </th>
                 {/foreach}
-            {if $control->hasButtons()}
+                {if $control->hasButtons()}
                     <th>{_'Actions'}</th>
                 {/if}
             </tr>
@@ -75,7 +75,8 @@
                     {/foreach}
                     <td n:if="$control->hasButtons()">
                         {foreach $buttons as $button}
-                            {control $button $row}
+                            {varType NiftyGrid\Components\Button $button}
+                            {$button->toHtml($row)}
                         {/foreach}
                     </td>
                 </tr>

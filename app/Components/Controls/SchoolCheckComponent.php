@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\DI\Container;
@@ -58,8 +58,8 @@ class SchoolCheckComponent extends BaseComponent
         return $schools;
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    protected function createComponentValuePrinter(): ColumnRendererComponent
     {
-        return new ColumnPrinterComponent($this->getContext());
+        return new ColumnRendererComponent($this->getContext());
     }
 }

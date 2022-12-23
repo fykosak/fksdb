@@ -5,7 +5,7 @@
     {if count($models)}
         {foreach $models as $model}
             <h3 class="card-header">
-                {control valuePrinter:onlyValue $itemHeadline, $model}
+                {control valuePrinter:templateString '@'.$itemHeadline, $model, 1024}
                 <div class="btn-group float-end" role="group" aria-label="Basic example" class="">
                     {foreach $links as $link}
                         {control linkPrinter $link, $model}

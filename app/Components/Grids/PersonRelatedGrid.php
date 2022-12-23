@@ -13,9 +13,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 class PersonRelatedGrid extends BaseGrid
 {
@@ -51,9 +48,6 @@ class PersonRelatedGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter): void
@@ -62,7 +56,7 @@ class PersonRelatedGrid extends BaseGrid
         parent::configure($presenter);
         $this->addColumns($this->definition['rows'], $this->userPermissions);
         foreach ($this->definition['links'] as $link) {
-            $this->addLink($link);
+            $this->addORMLink($link);
         }
         $this->addCSVDownloadButton();
     }

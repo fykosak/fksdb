@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
+use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
+use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
+use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
@@ -36,19 +40,17 @@ class TeamListComponent extends FilterListComponent
 
     protected function configure(): void
     {
-
-        $this->classNameCallback = fn(TeamModel2 $team) => 'alert alert-' . $team->state->getBehaviorType();
-        $this->addComponent(
-            new TemplateItem($this->container, '<h4>@fyziklani_team.name_n_id</h4>'),
-            'team_title'
+        $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
+        $this->setTitle(
+            new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
         );
-        $row = $this->createColumnsRow('row0');
-        $row->createReferencedColumn('fyziklani_team.state');
-        $row->createReferencedColumn('fyziklani_team.category');
-        $row->createReferencedColumn('fyziklani_team.game_lang');
-        $row->createReferencedColumn('fyziklani_team.phone');
-
-        $memberList = $this->createListGroupRow('members', function (TeamModel2 $team) {
+        $row = new RowContainer($this->container);
+        $this->addComponent($row, 'row0');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.game_lang'), 'lang');
+        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.phone'), 'phone');
+        $memberList = new ListGroupContainer($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
@@ -56,20 +58,24 @@ class TeamListComponent extends FilterListComponent
             }
             return $members;
         }, new Title(null, _('Members')));
-        $memberList->createReferencedColumn('person.full_name');
-        $memberList->createReferencedColumn('school.school');
+        $this->addComponent($memberList, 'members');
+        $memberList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $memberList->addComponent(new TemplateItem($this->container, '@school.school'), 'school');
 
-        $teacherList = $this->createListGroupRow(
-            'teachers',
-            fn(TeamModel2 $team) => $team->getTeachers(),
+        $teacherList = new ListGroupContainer(
+            $this->container,
+            fn(TeamModel2 $team): iterable => $team->getTeachers(),
             new Title(null, _('Teachers'))
         );
-        $teacherList->createReferencedColumn('person.full_name');
-
-        $this->createDefaultButton(
-            'detail',
-            _('Detail'),
-            fn(TeamModel2 $team) => ['detail', ['id' => $team->fyziklani_team_id]]
+        $this->addComponent($teacherList, 'teachers');
+        $teacherList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $this->addButton(
+            new DefaultButton(
+                $this->container,
+                _('Detail'),
+                fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
+            ),
+            'detail'
         );
     }
 
@@ -100,6 +106,9 @@ class TeamListComponent extends FilterListComponent
         return $query;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $form->addText('name', _('Team name'))->setOption(

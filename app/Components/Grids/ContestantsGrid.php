@@ -12,9 +12,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 class ContestantsGrid extends BaseGrid
 {
@@ -33,9 +30,6 @@ class ContestantsGrid extends BaseGrid
     }
 
     /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
@@ -55,8 +49,7 @@ class ContestantsGrid extends BaseGrid
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
 
-        $this->addGlobalButton('add', _('Create contestant'))
-            ->setLink($this->getPresenter()->link('create'));
+        $this->addGlobalButton('add', _('Create contestant'), $this->getPresenter()->link('create'));
 
         $this->paginate = false;
     }

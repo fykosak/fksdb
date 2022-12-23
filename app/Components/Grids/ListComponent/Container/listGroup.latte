@@ -1,14 +1,13 @@
 {varType Fykosak\NetteORM\Model[] $models}
 {varType ?Fykosak\Utils\UI\Title $title}
 {varType int $userPermission}
-{if $title}
-    <strong class="mt-3">{$title->toHtml()}</strong>
-{/if}
+
+<strong class="mt-3">{$title->toHtml()}</strong>
 <div class="list-group list-group-flush">
     {foreach $models as $listModel}
         <div class="list-group-item bg-transparent">
             <div class="row">
-                {include subComponents from './columns.latte' model=>$listModel,userPermission=>$userPermission}
+                {include subComponents from './row.latte' model=>$listModel,userPermission=>$userPermission}
             </div>
         </div>
     {/foreach}

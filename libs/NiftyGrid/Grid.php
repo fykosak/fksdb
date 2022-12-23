@@ -1,17 +1,10 @@
 <?php
-/**
- * NiftyGrid - DataGrid for Nette
- *
- * @author    Jakub Holub
- * @copyright    Copyright (c) 2012 Jakub Holub
- * @license     New BSD Licence
- * @link        http://addons.nette.org/cs/niftygrid
- */
+
+declare(strict_types=1);
 
 namespace NiftyGrid;
 
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
 use Nette\Localization\Translator;
@@ -20,6 +13,14 @@ use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
 use NiftyGrid\DataSource\IDataSource;
 
+/**
+ * NiftyGrid - DataGrid for Nette
+ *
+ * @author    Jakub Holub
+ * @copyright    Copyright (c) 2012 Jakub Holub
+ * @license     New BSD Licence
+ * @link        http://addons.nette.org/cs/niftygrid
+ */
 abstract class Grid extends Control
 {
     /** @persistent string */
@@ -69,53 +70,23 @@ abstract class Grid extends Control
 
     abstract protected function configure(Presenter $presenter): void;
 
-    /**
-     * @param string $name
-     * @param null|string $label
-     * @param null|int $truncate
-     * @return Components\Column
-     * @return Column
-     * @throws DuplicateColumnException
-     */
-    protected function addColumn(string $name, ?string $label = null, ?int $truncate = null): Components\Column
+    protected function addColumn(string $name, string $label): Components\Column
     {
-        if (isset($this->getColumnsContainer()->components[$name])) {
-            throw new DuplicateColumnException('Column $name already exists.');
-        }
         $column = new Components\Column($label);
-        $column->setTruncate($truncate);
         $this->getColumnsContainer()->addComponent($column, $name);
         return $column;
     }
 
-    /**
-     * @param string $name
-     * @param null|string $label
-     * @return Components\Button
-     * @throws DuplicateButtonException
-     */
-    protected function addButton(string $name, ?string $label = null): Button
+    protected function addButton(string $name, string $label, callable $link): Button
     {
-        if (isset($this->getButtonsContainer()->components[$name])) {
-            throw new DuplicateButtonException('Button $name already exists.');
-        }
-        $button = new Components\Button($label);
+        $button = new Components\Button($label, $link);
         $this->getButtonsContainer()->addComponent($button, $name);
         return $button;
     }
 
-    /**
-     * @param string $name
-     * @param null|string $label
-     * @return Components\GlobalButton
-     * @throws DuplicateGlobalButtonException
-     */
-    public function addGlobalButton(string $name, ?string $label = null): Components\GlobalButton
+    public function addGlobalButton(string $name, string $label, string $link): Components\GlobalButton
     {
-        if (isset($this->getGlobalButtonsContainer()->components[$name])) {
-            throw new DuplicateGlobalButtonException('Global button $name already exists.');
-        }
-        $globalButton = new Components\GlobalButton($label);
+        $globalButton = new Components\GlobalButton($label, $link);
         $this->getGlobalButtonsContainer()->addComponent($globalButton, $name);
         return $globalButton;
     }
@@ -129,9 +100,6 @@ abstract class Grid extends Control
         return $columns;
     }
 
-    /**
-     * @return int $count
-     */
     public function getColsCount(): int
     {
         $count = count($this->getColumnsContainer()->components);
@@ -154,12 +122,12 @@ abstract class Grid extends Control
 
     public function hasButtons(): bool
     {
-        return (bool)count($this->getButtonsContainer()->components);
+        return count($this->getButtonsContainer()->components) > 0;
     }
 
     public function hasGlobalButtons(): bool
     {
-        return (bool)count($this->getGlobalButtonsContainer()->components);
+        return count($this->getGlobalButtonsContainer()->components) > 0;
     }
 
     public function hasActiveOrder(): bool
@@ -200,15 +168,8 @@ abstract class Grid extends Control
         }
     }
 
-    /**
-     * @return int
-     * @throws GridException
-     */
     protected function getCount(): int
     {
-        if (!$this->dataSource) {
-            throw new GridException('DataSource not yet set');
-        }
         $count = $this->dataSource->getCount();
         $this->getPaginator()->setItemCount($count);
         if ($this->paginate) {
@@ -239,9 +200,6 @@ abstract class Grid extends Control
         $this->templatePath = $templatePath;
     }
 
-    /**
-     * @throws GridException
-     */
     public function render(): void
     {
         $count = $this->getCount();

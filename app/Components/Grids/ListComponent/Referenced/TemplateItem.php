@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\ListComponent\Referenced;
 
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
@@ -25,9 +25,9 @@ class TemplateItem extends ItemComponent
         parent::render($model, $userPermission);
     }
 
-    protected function createComponentPrinter(): ColumnPrinterComponent
+    protected function createComponentPrinter(): ColumnRendererComponent
     {
-        return new ColumnPrinterComponent($this->getContext());
+        return new ColumnRendererComponent($this->getContext());
     }
 
     protected function getTemplatePath(): string

@@ -17,33 +17,20 @@ use Nette\Utils\Html;
  */
 class Button extends Component
 {
-    private ?string $label;
+    private string $label;
 
     /** @var callback */
     private $link;
-    private string $text;
-    private string $target;
     private string $class;
     /** @var callback */
     private $dialog;
     /** @var callback */
     private $show;
 
-    public function __construct(?string $label)
+    public function __construct(string $label, callable $link)
     {
         $this->label = $label;
-    }
-
-    public function setLink(callable $link): self
-    {
         $this->link = $link;
-        return $this;
-    }
-
-    public function setText(string $text): self
-    {
-        $this->text = $text;
-        return $this;
     }
 
     public function setClass(string $class): self
@@ -60,53 +47,37 @@ class Button extends Component
 
     /**
      * @param mixed $row
-     * @return callback|mixed|string
      */
-    public function getConfirmationDialog($row)
+    public function getConfirmationDialog($row): string
     {
-        if (is_callable($this->dialog)) {
-            return ($this->dialog)($row);
-        }
-        return $this->dialog;
+        return ($this->dialog)($row);
     }
 
-    /**
-     * @param callback|string $show
-     */
     public function setShow(callable $show): self
     {
         $this->show = $show;
         return $this;
     }
 
-    public function setTarget(string $target): self
-    {
-        $this->target = $target;
-        return $this;
-    }
-
     /**
      * @param mixed $row
      */
-    public function render($row): void
+    public function toHtml($row): Html
     {
         if (isset($this->show) && !($this->show)($row)) {
-            return;
+            return Html::el('span');
         }
-
         $el = Html::el('a')
             ->href(($this->link)($row))
-            ->setText($this->text ?? null)
-            ->addClass('grid-button')
-            ->addClass($this->class ?? 'btn btn-secondary')
-            ->setTitle($this->label)
-            ->setTarget($this->target ?? null);
-
+            ->addText($this->label)
+            ->addAttributes([
+                'class' => 'grid-button ' . ($this->class ?? 'btn btn-secondary'),
+                'title' => $this->label,
+            ]);
         if (isset($this->dialog)) {
             $el->addClass('grid-confirm')
                 ->addData('grid-confirm', $this->getConfirmationDialog($row));
         }
-
-        echo $el;
+        return $el;
     }
 }

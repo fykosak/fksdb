@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Row;
+namespace FKSDB\Components\Grids\ListComponent\Container;
 
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class ListGroupRow extends ColumnsRow
+class ListGroupContainer extends RowContainer
 {
     /** @var callable */
     private $modelToIterator;
-    protected ?Title $title;
+    protected Title $title;
 
-    public function __construct(Container $container, callable $callback, ?Title $title = null)
+    public function __construct(Container $container, callable $callback, Title $title)
     {
         parent::__construct($container);
         $this->modelToIterator = $callback;
