@@ -39,6 +39,7 @@ class TeamEvent extends EventModuleTestCase
             ['Event:EventOrg', 'create'],
             ['Event:TeamApplication', 'list'],
             ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'detailedList'],
             /* ['Event:TeamApplication', 'transitions'],*/
         ];
     }

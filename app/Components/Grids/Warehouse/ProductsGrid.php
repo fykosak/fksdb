@@ -9,8 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class ProductsGrid extends EntityGrid
 {
@@ -29,9 +27,7 @@ class ProductsGrid extends EntityGrid
     /**
      * @param Presenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
-     * @throws DuplicateButtonException
      */
     protected function configure(Presenter $presenter): void
     {

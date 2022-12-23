@@ -10,9 +10,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 class EventPaymentGrid extends RelatedGrid
 {
@@ -24,9 +21,6 @@ class EventPaymentGrid extends RelatedGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter): void
@@ -40,7 +34,7 @@ class EventPaymentGrid extends RelatedGrid
             'payment.variable_symbol',
         ]);
 
-        $this->addLink('payment.detail', false);
+        $this->addORMLink('payment.detail');
         $this->paginate = false;
         $this->addCSVDownloadButton();
     }

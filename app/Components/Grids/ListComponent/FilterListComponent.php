@@ -14,7 +14,7 @@ abstract class FilterListComponent extends ListComponent
     /** @persistent */
     public array $filterParams = [];
 
-    protected function getTemplatePatch(): string
+    protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'filter.latte';
     }

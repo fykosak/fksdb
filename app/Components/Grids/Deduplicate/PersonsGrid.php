@@ -12,8 +12,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
@@ -35,10 +33,6 @@ class PersonsGrid extends BaseGrid
         return new NDataSource($this->trunkPersons);
     }
 
-    /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
@@ -68,34 +62,40 @@ class PersonsGrid extends BaseGrid
 
         /**** operations *****/
 
-        $this->addButton('mergeAB', _('Merge A<-B'))
-            ->setText(_('Merge A<-B'))
-            ->setClass('btn btn-sm btn-outline-primary')
-            ->setLink(fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:merge', [
+        $this->addButton(
+            'mergeAB',
+            _('Merge A<-B'),
+            fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:merge', [
                 'trunkId' => $row->person_id,
                 'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
-            ]))
+            ])
+        )
+            ->setClass('btn btn-sm btn-outline-primary')
             ->setShow(fn(PersonModel $row): bool => $this->getPresenter()->authorized('Deduplicate:merge', [
                 'trunkId' => $row->person_id,
                 'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
             ]));
-        $this->addButton('mergeBA', _('Merge B<-A'))
-            ->setText(_('Merge B<-A'))
-            ->setLink(fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:merge', [
+        $this->addButton(
+            'mergeBA',
+            _('Merge B<-A'),
+            fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:merge', [
                 'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 'mergedId' => $row->person_id,
-            ]))
+            ])
+        )
             ->setShow(fn(PersonModel $row): bool => $this->getPresenter()->authorized('Deduplicate:merge', [
                 'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 'mergedId' => $row->person_id,
             ]));
-        $this->addButton('dontMerge', _('It\'s not a duplicity'))
-            ->setText(_('It\'s not a duplicity'))
-            ->setClass('btn btn-sm btn-outline-primary')
-            ->setLink(fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:dontMerge', [
+        $this->addButton(
+            'dontMerge',
+            _('It\'s not a duplicity'),
+            fn(PersonModel $row): string => $this->getPresenter()->link('Deduplicate:dontMerge', [
                 'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 'mergedId' => $row->person_id,
-            ]))
+            ])
+        )
+            ->setClass('btn btn-sm btn-outline-primary')
             ->setShow(fn(PersonModel $row): bool => $this->getPresenter()->authorized('Deduplicate:dontMerge', [
                 'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 'mergedId' => $row->person_id,

@@ -16,7 +16,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
 class PersonsGrid extends BaseGrid
 {
@@ -38,7 +37,6 @@ class PersonsGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {

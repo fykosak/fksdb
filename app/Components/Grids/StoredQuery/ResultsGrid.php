@@ -12,8 +12,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 class ResultsGrid extends BaseGrid
 {
@@ -32,8 +30,6 @@ class ResultsGrid extends BaseGrid
     }
 
     /**
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter): void
@@ -58,9 +54,12 @@ class ResultsGrid extends BaseGrid
                         $parameters[ResultsComponent::PARAMETER_URL_PREFIX . $key] = $queryParameters[$key];
                     }
                 }
-                $this->addGlobalButton('qid', _('Link'))
-                    ->setClass('btn btn-sm btn-outline-secondary')
-                    ->setLink($this->getPresenter()->link(':Org:Export:execute', $parameters));
+                $this->addGlobalButton(
+                    'qid',
+                    _('Link'),
+                    $this->getPresenter()->link(':Org:Export:execute', $parameters)
+                )
+                    ->setClass('btn btn-sm btn-outline-secondary');
             }
         }
     }

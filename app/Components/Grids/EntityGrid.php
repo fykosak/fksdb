@@ -10,7 +10,6 @@ use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
 abstract class EntityGrid extends BaseGrid
 {
@@ -41,7 +40,6 @@ abstract class EntityGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {

@@ -1,26 +1,25 @@
-{layout '../../Controls/@layout.latte'}
 {varType Fykosak\NetteORM\Model[] $models}
 {varType callable $classNameCallback}
+{varType Nette\Application\UI\Control $title}
+{varType int $userPermission}
 {block content}
     {if count($models)}
         {foreach $models as $model}
-            {var string $className = ($classNameCallback)($model)}
+            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+
             <div class="{$className}">
-                {foreach $control->getComponents() as $component}
-                    {if $component instanceof FKSDB\Components\Grids\ListComponent\Row\Row}
-                        {control $component $model}
-                    {/if}
-                {/foreach}
-                {var Nette\ComponentModel\Container|FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getComponent('buttons')}
-                {if count($buttons->getComponents())}
-                    {foreach $buttons->getComponents() as $button}
-                        <div class="row">
-                            <div class="col">
-                                {control $button $model}
-                            </div>
-                        </div>
-                    {/foreach}
+                {if $title}
+                    <h4>{control $title $model,$userPermission}</h4>
                 {/if}
+                {foreach $control->getComponents() as $name=> $component}
+                    {continueIf $name == 'buttons'}
+                    {continueIf $name == 'filterForm'}
+                    {continueIf $name == 'title'}
+                    <div class="row">
+                        {control $component $model, $userPermission}
+                    </div>
+                {/foreach}
+                {control $control->getComponent('buttons') $model,$userPermission}
             </div>
         {/foreach}
     {else}

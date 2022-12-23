@@ -11,8 +11,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class OrgsGrid extends BaseGrid
 {
@@ -45,8 +43,6 @@ class OrgsGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -61,7 +57,7 @@ class OrgsGrid extends BaseGrid
             'org.role',
         ]);
 
-        $this->addLink('org.edit', true);
-        $this->addLink('org.detail', true);
+        $this->addORMLink('org.edit', true);
+        $this->addORMLink('org.detail', true);
     }
 }

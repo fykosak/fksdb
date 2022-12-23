@@ -8,8 +8,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class EmailsGrid extends EntityGrid
 {
@@ -27,8 +25,6 @@ class EmailsGrid extends EntityGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {

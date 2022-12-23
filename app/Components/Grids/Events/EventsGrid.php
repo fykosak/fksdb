@@ -10,8 +10,6 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class EventsGrid extends EntityGrid
 {
@@ -32,8 +30,6 @@ class EventsGrid extends EntityGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -43,7 +39,7 @@ class EventsGrid extends EntityGrid
         $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event.application.list');
+        $this->addORMLink('event.application.list');
 
         $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
     }

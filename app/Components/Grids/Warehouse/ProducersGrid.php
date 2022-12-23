@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateColumnException;
 
 class ProducersGrid extends EntityGrid
 {
@@ -22,7 +21,6 @@ class ProducersGrid extends EntityGrid
     }
 
     /**
-     * @throws DuplicateColumnException
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter): void

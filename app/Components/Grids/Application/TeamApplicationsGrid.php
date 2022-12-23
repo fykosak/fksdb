@@ -19,9 +19,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 class TeamApplicationsGrid extends BaseGrid
 {
@@ -35,9 +32,6 @@ class TeamApplicationsGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter): void

@@ -24,11 +24,7 @@ use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 use NiftyGrid\Grid;
-use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 
@@ -94,12 +90,6 @@ abstract class BaseGrid extends Grid
         return $template;
     }
 
-    /*     * *****************************
-     * Extended rendering for the paginator
-     * ***************************** */
-    /**
-     * @throws GridException
-     */
     public function render(): void
     {
         $paginator = $this->getPaginator();
@@ -152,7 +142,7 @@ abstract class BaseGrid extends Grid
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         //$form = new Form();
-        $form->setMethod(Form::GET);
+        $form->setMethod(\Nette\Forms\Form::GET);
         $form->addText('term')
             ->setDefaultValue($this->searchTerm['term'])
             ->setHtmlAttribute('placeholder', _('Find'));
@@ -168,58 +158,33 @@ abstract class BaseGrid extends Grid
         return $control;
     }
 
-    /*     * ***************************
-     * Apperance
-     * *************************** */
-
-    /**
-     * Adds button with Bootstrap CSS classes (default is 'default').
-     * @throws DuplicateButtonException
-     */
-    protected function addButton(string $name, ?string $label = null): Button
+    protected function addButton(string $name, string $label, callable $link): Button
     {
-        $button = parent::addButton($name, $label);
+        $button = parent::addButton($name, $label, $link);
         $button->setClass('btn btn-sm btn-outline-secondary');
         return $button;
     }
 
-    /**
-     * @throws DuplicateGlobalButtonException
-     */
-    public function addGlobalButton(string $name, ?string $label = null): GlobalButton
+    public function addGlobalButton(string $name, string $label, string $link): GlobalButton
     {
-        $button = parent::addGlobalButton($name, $label);
+        $button = parent::addGlobalButton($name, $label, $link);
         $button->setClass('btn btn-sm btn-outline-primary');
         return $button;
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
      */
-    private function addReflectionColumn(string $field, int $userPermission): Column
+    private function addReflectionColumn(string $field, int $userPermission): void
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
-        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
+        $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
             fn(Model $model): Html => $factory->render($model, $userPermission)
         )->setSortable(false);
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
-     */
-    protected function addJoinedColumn(string $factoryName, callable $accessCallback): Column
-    {
-        $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $factoryName));
-        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(
-            fn(Model $row) => $factory->render($accessCallback($row), 1)
-        );
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws DuplicateColumnException
      */
     protected function addColumns(array $fields, int $userPermissions = FieldLevelPermission::ALLOW_FULL): void
     {
@@ -228,12 +193,9 @@ abstract class BaseGrid extends Grid
         }
     }
 
-    /**
-     * @throws DuplicateButtonException
-     */
     protected function addLinkButton(
         string $destination,
-        string $id,
+        string $name,
         string $label,
         bool $checkACL = true,
         array $params = []
@@ -245,9 +207,11 @@ abstract class BaseGrid extends Grid
             }
             return $hrefParams;
         };
-        $button = $this->addButton($id, $label)
-            ->setText($label)
-            ->setLink(fn(Model $model): string => $this->getPresenter()->link($destination, $paramMapCallback($model)));
+        $button = $this->addButton(
+            $name,
+            $label,
+            fn(Model $model): string => $this->getPresenter()->link($destination, $paramMapCallback($model))
+        );
         if ($checkACL) {
             $button->setShow(
                 fn(Model $model): bool => $this->getPresenter()->authorized($destination, $paramMapCallback($model))
@@ -258,14 +222,15 @@ abstract class BaseGrid extends Grid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
      */
-    protected function addLink(string $linkId, bool $checkACL = false): Button
+    protected function addORMLink(string $linkId, bool $checkACL = false): Button
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-        $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
-            ->setText($factory->getText())
-            ->setLink(fn(Model $model): string => $factory->create($this->getPresenter(), $model));
+        $button = $this->addButton(
+            str_replace('.', '_', $linkId),
+            $factory->getText(),
+            fn(Model $model): string => $factory->create($this->getPresenter(), $model)
+        );
         if ($checkACL) {
             $button->setShow(
                 fn(Model $model) => $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
@@ -275,13 +240,11 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
     protected function addCSVDownloadButton(): GlobalButton
     {
-        return $this->addGlobalButton('csv', _('Download as csv'))
-            ->setLink($this->link('csv!'));
+        return $this->addGlobalButton('csv', _('Download as csv'), $this->link('csv!'));
     }
 
     public function handleCsv(): void

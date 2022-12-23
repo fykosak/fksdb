@@ -1,0 +1,6 @@
+{layout '@layout.latte'}
+{varType Fykosak\Utils\UI\Title $title}
+{block card-title}{$title->toHtml()}{/block}
+{block card-body}
+    {include '../../../Grids/ListComponent/list.latte'}
+{/block}
