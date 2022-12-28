@@ -11,10 +11,17 @@ class NewPaymentCallback extends MailCallback
 {
     protected function getData(ModelHolder $holder): array
     {
+        if ($holder->getModel()->game_lang->value === 'cs') {
+            $subject = 'Platba na Fyziklání';
+            $sender = 'Fyziklání <fyziklani@fykos.cz>';
+        } else {
+            $subject = 'Fyziklani Payment';
+            $sender = 'Fyziklani <fyziklani@fykos.org>';
+        }
         return [
             'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
-            'sender' => 'fyziklani@fykos.cz',
-            'subject' => 'Payment was created',
+            'sender' => $sender,
+            'subject' => $subject,
         ];
     }
 

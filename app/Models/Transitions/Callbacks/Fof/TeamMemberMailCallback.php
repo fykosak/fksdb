@@ -21,12 +21,9 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
             $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
-        } else {
-            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
-        }
-        if ($holder->getModel()->game_lang->value === 'cs') {
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {
+            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
             $sender = 'Fyziklani <fyziklani@fykos.cz>';
         }
         return [

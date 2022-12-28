@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-28 14:08+0100\n"
+"POT-Creation-Date: 2022-12-28 14:50+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3305,7 +3305,6 @@ msgid "Item"
 msgstr "Položka"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:54
-#: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:53
 #: ../app/config/orm.neon.neon2php:179 ../app/config/orm.neon.neon2php:347
 #: ../app/config/orm.neon.neon2php:1018
 #: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
@@ -3492,6 +3491,10 @@ msgstr "IBAN"
 #: ../app/config/orm.neon.neon2php:337
 msgid "SWIFT"
 msgstr "SWIFT"
+
+#: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:53
+msgid "Amount"
+msgstr "Částka"
 
 #: ../app/Components/PDFGenerators/TeamSeating/SingleTeam/layout.single.latte.latte2php:8
 msgid "Sector"

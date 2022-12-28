@@ -11,10 +11,17 @@ class ReceivedPaymentCallback extends MailCallback
 {
     protected function getData(ModelHolder $holder): array
     {
+        if ($holder->getModel()->game_lang->value === 'cs') {
+            $subject = 'Potvrzení přijetí platby';
+            $sender = 'Fyziklání <fyziklani@fykos.cz>';
+        } else {
+            $subject = 'Payment received';
+            $sender = 'Fyziklani <fyziklani@fykos.org>';
+        }
         return [
             'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
-            'sender' => 'fyziklani@fykos.cz',
-            'subject' => 'We are receive payment',
+            'sender' => $sender,
+            'subject' => $subject,
         ];
     }
 
