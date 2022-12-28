@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -19,7 +18,6 @@ use Nette\Utils\Html;
 
 class SingleApplicationsGrid extends FilterBaseGrid
 {
-
     protected EventModel $event;
     private BaseHolder $holder;
 
@@ -30,9 +28,9 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->holder = $holder;
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->event->getParticipants()->order('person.family_name');
+        $this->data = $this->event->getParticipants()->order('person.family_name');
     }
 
     protected function getFilterCallBack(): void

@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -36,9 +35,9 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
+        $this->data = $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
     }
 
     protected function configure(Presenter $presenter): void

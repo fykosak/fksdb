@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -28,9 +27,9 @@ class AllPersonsGrid extends BaseGrid
         $this->personScheduleService = $personScheduleService;
     }
 
-    protected function getData(): TypedSelection
+    protected function setData(): void
     {
-        return $this->personScheduleService->getTable()
+        $this->data = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
             ->order('person_schedule_id');
     }

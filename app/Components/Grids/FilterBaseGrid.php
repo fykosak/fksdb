@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Application\UI\Form;
-use Nette\InvalidStateException;
 
 abstract class FilterBaseGrid extends BaseGrid
 {

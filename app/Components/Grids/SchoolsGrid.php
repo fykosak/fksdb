@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -15,7 +14,6 @@ use Nette\Utils\Html;
 
 class SchoolsGrid extends FilterBaseGrid
 {
-
     private SchoolService $service;
 
     public function __construct(Container $container)
@@ -28,9 +26,9 @@ class SchoolsGrid extends FilterBaseGrid
         $this->service = $service;
     }
 
-    protected function getData(): TypedSelection
+    protected function setData(): void
     {
-        return $this->service->getTable();
+        $this->data = $this->service->getTable();
     }
 
     protected function getFilterCallback(): void

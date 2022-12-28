@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -21,9 +20,9 @@ class OrgsGrid extends FilterBaseGrid
         $this->contest = $contest;
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->contest->getOrganisers();
+        $this->data = $this->contest->getOrganisers();
     }
 
     protected function getFilterCallback(): void

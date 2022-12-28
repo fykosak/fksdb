@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\Presenter;
@@ -26,20 +25,13 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        $query = $this->person->related($this->definition['table']);
-        if (!$query instanceof TypedGroupedSelection) {
-            throw new BadTypeException(TypedGroupedSelection::class, $query);
-        }
+        $this->data = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
-            $query->where('1=0');
+            $this->data->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
-        return $query;
     }
 
     /**
@@ -50,7 +42,7 @@ class PersonRelatedGrid extends BaseGrid
     {
         $this->paginate = false;
         parent::configure($presenter);
-        $this->addColumns($this->definition['rows'], $this->userPermissions);
+        $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {
             $this->addORMLink($link);
         }

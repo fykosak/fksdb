@@ -10,7 +10,6 @@ use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
 use FKSDB\Components\Grids\ListComponent\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -22,7 +21,6 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container as DIContainer;
-use Nette\Utils\Html;
 use Nette\Utils\Paginator;
 use FKSDB\Components\Grids\Components\GlobalButton;
 use PePa\CSVResponse;
@@ -118,19 +116,10 @@ abstract class BaseGrid extends BaseComponent
 
     protected function configure(Presenter $presenter): void
     {
-        try {
-            $this->data = $this->getData();
-        } catch (NotImplementedException $exception) {
-        }
+        $this->setData();
     }
 
-    /**
-     * @throws NotImplementedException
-     */
-    protected function getData(): Selection
-    {
-        throw new NotImplementedException();
-    }
+    abstract protected function setData(): void;
 
     public function render(): void
     {
@@ -228,13 +217,13 @@ abstract class BaseGrid extends BaseComponent
             $datum = [];
             /** @var ItemComponent $column */
             foreach ($columns as $column) {
-                $column->render($row, 1024);
+                //$column->render($row, 1024);
                 // TODO
-                $item = $column->prepareValue($row);
-                if ($item instanceof Html) {
-                    $item = $item->getText();
-                }
-                $datum[$column->name] = $item;
+                //  $item = $column->prepareValue($row);
+                // if ($item instanceof Html) {
+                //    $item = $item->getText();
+                //}
+                //$datum[$column->name] = $item;
             }
             $data[] = $datum;
         }

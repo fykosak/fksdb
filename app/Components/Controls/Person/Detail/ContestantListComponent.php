@@ -7,6 +7,7 @@ namespace FKSDB\Components\Controls\Person\Detail;
 use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\Utils\UI\Title;
@@ -23,6 +24,10 @@ class ContestantListComponent extends BaseListComponent
         return $this->person->getContestants();
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .

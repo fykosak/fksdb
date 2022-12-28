@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
@@ -22,7 +21,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 class AllSubmitsGrid extends FilterBaseGrid
 {
@@ -40,9 +38,9 @@ class AllSubmitsGrid extends FilterBaseGrid
         $this->submitService = $submitService;
     }
 
-    protected function getData(): TypedSelection
+    protected function setData(): void
     {
-        return $this->submitService->findAll($this->event);
+        $this->data = $this->submitService->findAll($this->event);
     }
 
     /**

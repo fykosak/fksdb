@@ -7,6 +7,7 @@ namespace FKSDB\Components\Controls\Person\Detail;
 use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\Utils\UI\Title;
@@ -29,6 +30,10 @@ class EventOrgListComponent extends BaseListComponent
         return $this->person->getEventOrgs();
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(EventOrgModel $eventOrg) => 'alert alert-' .

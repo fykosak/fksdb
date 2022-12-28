@@ -11,7 +11,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -50,9 +49,9 @@ class TeamApplicationsGrid extends FilterBaseGrid
         parent::configure($presenter);
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->event->getTeams();
+        $this->data = $this->event->getTeams();
     }
 
     protected function getFilterCallBack(): void

@@ -14,10 +14,8 @@ use Nette\Application\UI\Presenter;
 
 class PersonGrid extends BaseGrid
 {
-
-    public function setData(EventModel $event, PersonModel $person): void
+    protected function setData(): void
     {
-        $this->data = $person->getScheduleForEvent($event);
     }
 
     /**
@@ -28,7 +26,7 @@ class PersonGrid extends BaseGrid
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }
-        $this->setData($event, $person);
+        $this->data = $person->getScheduleForEvent($event);
         parent::render();
     }
 
@@ -53,5 +51,9 @@ class PersonGrid extends BaseGrid
             'schedule_item.price_eur',
             'payment.payment',
         ]);
+    }
+
+    protected function getData(): void
+    {
     }
 }

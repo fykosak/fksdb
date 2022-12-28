@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -28,9 +27,9 @@ class TeamSubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->team->getSubmits()->order('fyziklani_submit.created');
+        $this->data = $this->team->getSubmits()->order('fyziklani_submit.created');
     }
 
     /**

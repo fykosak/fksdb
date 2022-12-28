@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -24,9 +23,9 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): TypedGroupedSelection
+    protected function setData(): void
     {
-        return $this->contestYear->getContestants()->order('person.other_name ASC');
+        $this->data = $this->contestYear->getContestants()->order('person.other_name ASC');
     }
 
     /**

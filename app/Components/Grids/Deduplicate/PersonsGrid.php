@@ -15,22 +15,18 @@ use Nette\DI\Container;
 
 class PersonsGrid extends BaseGrid
 {
-
-    private TypedSelection $trunkPersons;
-
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
 
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
         parent::__construct($container);
-        $this->trunkPersons = $trunkPersons;
+        $this->data = $trunkPersons;
         $this->pairs = $pairs;
     }
 
-    protected function getData(): TypedSelection
+    protected function setData(): void
     {
-        return $this->trunkPersons;
     }
 
     protected function configure(Presenter $presenter): void

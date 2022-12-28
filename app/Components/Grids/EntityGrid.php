@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -28,9 +27,9 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
-    protected function getData(): TypedSelection
+    protected function setData(): void
     {
-        return $this->service->getTable()->where($this->queryParams);
+        $this->data = $this->service->getTable()->where($this->queryParams);
     }
 
     /**

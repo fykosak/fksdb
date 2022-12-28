@@ -30,6 +30,10 @@ class StoredQueriesGrid extends BaseGrid
         $this->storedQueryService = $storedQueryService;
     }
 
+    public function setData(): void
+    {
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
