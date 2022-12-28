@@ -1,92 +1,74 @@
-{snippet}
-    {varType FKSDB\Components\Grids\BaseGrid $control}
+{varType FKSDB\Components\Grids\BaseGrid $control}
 
-    {varType int $results}
-    {varType bool $paginate}
-    {varType int $viewedFrom}
-    {varType int $viewedTo}
-    {varType array $flashes}
-    {varType iterable $rows}
-    {varType NiftyGrid\Components\Column[] $columns}
-    {varType NiftyGrid\Components\GlobalButton[] $globalButtons}
-    {varType NiftyGrid\Components\Button[] $buttons}
-    <div class="row mb-3">
-        <div class="col-8">
-            <div class="btn-toolbar" n:if="$control->hasGlobalButtons()">
+{varType int $resultsCount}
+{varType bool $paginate}
+{varType array $flashes}
+{varType iterable $rows}
+{var FKSDB\Components\Grids\Components\Column[] $columns = $control->getColumnsContainer()->getComponents()}
+{var FKSDB\Components\Grids\Components\GlobalButton[] $globalButtons = $control->getGlobalButtonsContainer()->getComponents()}
+{var FKSDB\Components\Grids\ListComponent\Button\DefaultButton[] $buttons = $control->getButtonsContainer()->getComponents()}
+<div class="row mb-3">
+    <div class="col-8">
+        {if $control->hasGlobalButtons()}
+            <div class="btn-group">
                 {foreach $globalButtons as $globalButton}
                     {control $globalButton}&nbsp;
                 {/foreach}
             </div>
-        </div>
-        <div class="col-4 text-right">
-            {_'Total'} {$results} {($results == 1) ? _('záznam') : (($results >= 2 && $results <= 4) ? _('záznamy') : _('záznamů'))}
-            {if $paginate}
-                {if (boolean)$results}
-                    {sprintf(_('(Zobrazeno %d až %d)'),$viewedFrom,$viewedTo)}
-                {/if}
-            {/if}
-        </div>
+        {/if}
     </div>
-    {if $control->isSearchable()}
-        <div class="mb-3">
-            {control searchForm}
-        </div>
-    {/if}
-
-    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+    <div class="col-4 text-right">
+        {_'Total'} {$resultsCount} {($resultsCount == 1) ? _('záznam') : (($resultsCount >= 2 && $resultsCount <= 4) ? _('záznamy') : _('záznamů'))}
+        {if $resultsCount && $paginate}
+            {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
+        {/if}
+    </div>
+</div>
+{if $control->isSearchable()}
+    <div class="mb-3">
+        {control searchForm}
+    </div>
+{/if}
+{foreach $flashes as $flash}
+    <div class="alert alert-{$flash->type}">
         {$flash->message}
     </div>
-    {if count($rows)}
-        <table class="table table-sm table-hover table-striped">
-            <thead>
+{/foreach}
+
+{if count($rows)}
+    <table class="table table-sm table-hover table-striped">
+        <thead>
+        <tr>
+            {foreach $columns as $column}
+                <th>
+                    {$column->label}
+                </th>
+            {/foreach}
+                {if $control->hasButtons()}
+                <th></th>
+            {/if}
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $rows as $row}
             <tr>
                 {foreach $columns as $column}
-                    <th>
-                        {if $control->hasEnabledSorting() && $column->isSortable()}
-                            {var $order = ($control->order == $column->name . ' ASC') ? " DESC" : " ASC"}
-                            <a n:href="this, 'order' => $column->name . $order"
-                                    title="Obrátit řazení">
-                                {$column->label}
-                            </a>
-                        {else}
-                            {$column->label}
-                        {/if}
-                        <span class="grid-order" n:if="$column->isSortable() && $control->hasEnabledSorting()">
-                        <a n:href="this, 'order' => $column->name . ' ASC'"
-                            n:class="grid-order-up ,($control->order && ($control->order == $column->name . ' ASC')) ? grid-order-active-up"
-                                title="{_'Řadit vzestupně'}"></a>
-                        <a n:href="this, 'order' => $column->name . ' DESC'"
-                            n:class="grid-order-down ,($control->order && ($control->order == $column->name . ' DESC')) ? grid-order-active-down"
-                                title="{_'Řadit sestupně'}"></a>
-                    </span>
-                    </th>
+                    <td>{$column->prepareValue($row)}</td>
                 {/foreach}
                 {if $control->hasButtons()}
-                    <th>{_'Actions'}</th>
-                {/if}
-            </tr>
-            </thead>
-            <tbody>
-
-            {foreach $rows as $row}
-                <tr>
-                    {foreach $columns as $column}
-                        <td>{$column->prepareValue($row)}</td>
-                    {/foreach}
-                    <td n:if="$control->hasButtons()">
+                    <td>
                         {foreach $buttons as $button}
-                            {varType NiftyGrid\Components\Button $button}
-                            {$button->toHtml($row)}
+                            {control $button $row,1024}
                         {/foreach}
                     </td>
-                </tr>
-            {/foreach}
-            </tbody>
-        </table>
-    {else}
-        {\FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
-    {/if}
-    {if $paginate}
-        {control paginator}
-    {/if}
-{/snippet}
+                {/if}
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{else}
+    {\FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+{/if}
+{if $paginate}
+    {control paginator}
+{/if}

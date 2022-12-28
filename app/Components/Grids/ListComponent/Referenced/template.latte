@@ -1,4 +1,8 @@
 {varType Fykosak\NetteORM\Model $model}
 {varType string $templateString}
 {varType int $userPermission}
-{control printer:templateString $templateString, $model, $userPermission}
+{varType Fykosak\Utils\UI\Title|null $title}
+<span title="{$title->title}">
+        {control printer:templateString $templateString, $model, $userPermission}
+</span>
+

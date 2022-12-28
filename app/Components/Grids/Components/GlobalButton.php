@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NiftyGrid\Components;
+namespace FKSDB\Components\Grids\Components;
 
 use Nette\Application\UI\Component;
 use Nette\Utils\Html;

@@ -4,51 +4,171 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\SQL\SearchableDataSource;
-use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
-use Nette\Application\UI\Form;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\Template;
-use Nette\DI\Container;
-use Nette\InvalidStateException;
-use Nette\Localization\Translator;
+use Nette\ComponentModel\Container;
+use Nette\DI\Container as DIContainer;
 use Nette\Utils\Html;
-use NiftyGrid\Components\Button;
-use NiftyGrid\Components\Column;
-use NiftyGrid\Components\GlobalButton;
+use Nette\Utils\Paginator;
+use FKSDB\Components\Grids\Components\Column;
+use FKSDB\Components\Grids\Components\GlobalButton;
 use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\Grid;
-use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 
-abstract class BaseGrid extends Grid
+/**
+ * Combination od old NiftyGrid - Base grid from Michal Koutny
+ *
+ * @author    Jakub Holub
+ * @copyright    Copyright (c) 2012 Jakub Holub
+ * @license     New BSD Licence
+ */
+abstract class BaseGrid extends BaseComponent
 {
+    /** @persistent int */
+    public ?int $perPage = 20;
 
-    /** @persistent string */
-    public ?array $searchTerm = null;
+    public bool $paginate = true;
+
+    protected ?string $defaultOrder = null;
+    protected IDataSource $dataSource;
+
+    protected string $templatePath;
+
     protected ORMFactory $tableReflectionFactory;
 
-    private Container $container;
-
-    public function __construct(Container $container)
+    public function __construct(DIContainer $container)
     {
-        parent::__construct();
-        $this->container = $container;
-        $container->callInjects($this);
+        parent::__construct($container);
+        $this->monitor(Presenter::class, function (Presenter $presenter) {
+            $this->addComponent(new Container(), 'columns');
+            $this->addComponent(new Container(), 'buttons');
+            $this->addComponent(new Container(), 'globalButtons');
+
+            $this->configure($presenter);
+
+            if ($this->paginate) {
+                $this->getPaginator()->itemsPerPage = $this->perPage;
+            }
+            if (isset($this->defaultOrder)) {
+                $this->dataSource->orderData($this->defaultOrder);
+            }
+        });
     }
 
-    final public function injectBase(ORMFactory $tableReflectionFactory, Translator $translator): void
+    final public function injectBase(ORMFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->setTranslator($translator);
     }
+
+    protected function addColumn(string $name, string $label, callable $renderer): Column
+    {
+        $column = new Column($label, $renderer);
+        $this->getColumnsContainer()->addComponent($column, $name);
+        return $column;
+    }
+
+    public function addGlobalButton(string $name, string $label, string $link): GlobalButton
+    {
+        $button = new GlobalButton($label, $link);
+        $this->getGlobalButtonsContainer()->addComponent($button, $name);
+        $button->setClass('btn btn-sm btn-outline-primary');
+        return $button;
+    }
+
+    public function getColumnNames(): array
+    {
+        $columns = [];
+        foreach ($this->getColumnsContainer()->components as $column) {
+            $columns[] = $column->name;
+        }
+        return $columns;
+    }
+
+    public function getColsCount(): int
+    {
+        $count = count($this->getColumnsContainer()->components);
+        if ($this->hasButtons()) {
+            $count++;
+        }
+
+        return $count;
+    }
+
+    protected function setDataSource(IDataSource $dataSource): void
+    {
+        $this->dataSource = $dataSource;
+    }
+
+    public function setDefaultOrder(string $order): void
+    {
+        $this->defaultOrder = $order;
+    }
+
+    public function hasButtons(): bool
+    {
+        return count($this->getButtonsContainer()->components) > 0;
+    }
+
+    public function hasGlobalButtons(): bool
+    {
+        return count($this->getGlobalButtonsContainer()->components) > 0;
+    }
+
+    protected function getCount(): int
+    {
+        $count = $this->dataSource->getCount();
+        $this->getPaginator()->setItemCount($count);
+        if ($this->paginate) {
+            $this->dataSource->limitData($this->getPaginator()->getItemsPerPage(), $this->getPaginator()->getOffset());
+        }
+        return $count;
+    }
+
+    protected function createComponentPaginator(): GridPaginator
+    {
+        return new GridPaginator($this->container);
+    }
+
+    public function getPaginator(): Paginator
+    {
+        return $this->getComponent('paginator')->paginator;
+    }
+
+    public function handleChangeCurrentPage(int $page): void
+    {
+        if ($this->presenter->isAjax()) {
+            $this->redirect('this', ['paginator-page' => $page]);
+        }
+    }
+
+    protected function setTemplate(string $templatePath): void
+    {
+        $this->templatePath = $templatePath;
+    }
+
+    public function getColumnsContainer(): Container
+    {
+        return $this->getComponent('columns');
+    }
+
+    public function getButtonsContainer(): Container
+    {
+        return $this->getComponent('buttons');
+    }
+
+    public function getGlobalButtonsContainer(): Container
+    {
+        return $this->getComponent('globalButtons');
+    }
+
 
     protected function configure(Presenter $presenter): void
     {
@@ -56,10 +176,6 @@ abstract class BaseGrid extends Grid
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
         }
-        $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
-        /** @var GridPaginator $paginator */
-        $paginator = $this->getComponent('paginator');
-        $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
     /**
@@ -70,34 +186,9 @@ abstract class BaseGrid extends Grid
         throw new NotImplementedException();
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function createTemplate(): Template
-    {
-        $presenter = $this->getPresenter();
-        if (!$presenter instanceof BasePresenter) {
-            throw new BadTypeException(BasePresenter::class, $presenter);
-        }
-        /**
-         * @var GridPaginator $paginator
-         * @var Template $template
-         */
-        $paginator = $this->getComponent('paginator');
-        $paginator->template->setTranslator($this->getTranslator());
-        $template = parent::createTemplate();
-        $template->setTranslator($this->getTranslator());
-        return $template;
-    }
-
     public function render(): void
     {
         $paginator = $this->getPaginator();
-
-        // this has to be done already here (and in the parent call again :-( )
-        if (isset($this->searchTerm)) {
-            $this->dataSource->applyFilter($this->searchTerm);
-        }
         $count = $this->getCount();
         $this->getPaginator()->itemCount = $count;
         /*
@@ -118,8 +209,13 @@ abstract class BaseGrid extends Grid
             $steps = array_values(array_unique($arr));
         }
         $this->getComponent('paginator')->template->steps = $steps;
-
-        parent::render();
+        $this->template->resultsCount = $this->getCount();
+        $this->template->columns = $this->getColumnsContainer()->components;
+        $this->template->buttons = $this->getButtonsContainer()->components;
+        $this->template->globalButtons = $this->getGlobalButtonsContainer()->components;
+        $this->template->paginate = $this->paginate;
+        $this->template->rows = $this->dataSource->getData();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
     }
 
     /*     * ******************************
@@ -128,49 +224,10 @@ abstract class BaseGrid extends Grid
 
     public function isSearchable(): bool
     {
-        return $this->dataSource instanceof SearchableDataSource;
+        return false;
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function createComponentSearchForm(): FormControl
-    {
-        if (!$this->isSearchable()) {
-            throw new InvalidStateException('Cannot create search form without searchable data source.');
-        }
-        $control = new FormControl($this->getContext());
-        $form = $control->getForm();
-        //$form = new Form();
-        $form->setMethod(\Nette\Forms\Form::GET);
-        $form->addText('term')
-            ->setDefaultValue($this->searchTerm['term'])
-            ->setHtmlAttribute('placeholder', _('Find'));
-        $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues('array');
-            $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
-            // TODO is this vv needed? vv
-            $count = $this->dataSource->getCount();
-            $this->getPaginator()->itemCount = $count;
-        };
-        return $control;
-    }
 
-    protected function addButton(string $name, string $label, callable $link): Button
-    {
-        $button = parent::addButton($name, $label, $link);
-        $button->setClass('btn btn-sm btn-outline-secondary');
-        return $button;
-    }
-
-    public function addGlobalButton(string $name, string $label, string $link): GlobalButton
-    {
-        $button = parent::addGlobalButton($name, $label, $link);
-        $button->setClass('btn btn-sm btn-outline-primary');
-        return $button;
-    }
 
     /**
      * @throws BadTypeException
@@ -178,9 +235,11 @@ abstract class BaseGrid extends Grid
     private function addReflectionColumn(string $field, int $userPermission): void
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
-        $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
+        $this->addColumn(
+            str_replace('.', '__', $field),
+            $factory->getTitle(),
             fn(Model $model): Html => $factory->render($model, $userPermission)
-        )->setSortable(false);
+        );
     }
 
     /**
@@ -193,13 +252,14 @@ abstract class BaseGrid extends Grid
         }
     }
 
-    protected function addLinkButton(
+    protected function addPresenterButton(
         string $destination,
         string $name,
         string $label,
         bool $checkACL = true,
-        array $params = []
-    ): Button {
+        array $params = [],
+        ?string $className = null
+    ): PresenterButton {
         $paramMapCallback = function (Model $model) use ($params): array {
             $hrefParams = [];
             foreach ($params as $key => $value) {
@@ -207,35 +267,37 @@ abstract class BaseGrid extends Grid
             }
             return $hrefParams;
         };
-        $button = $this->addButton(
-            $name,
-            $label,
-            fn(Model $model): string => $this->getPresenter()->link($destination, $paramMapCallback($model))
+        $button = new PresenterButton(
+            $this->container,
+            new Title(null, _($label)),
+            fn(Model $model): array => [$destination, $paramMapCallback($model)],
+            $className,
+            fn(Model $model): bool => $checkACL ? $this->getPresenter()->authorized(
+                $destination,
+                $paramMapCallback($model)
+            ) : true
         );
-        if ($checkACL) {
-            $button->setShow(
-                fn(Model $model): bool => $this->getPresenter()->authorized($destination, $paramMapCallback($model))
-            );
-        }
+        $this->getButtonsContainer()->addComponent($button, $name);
         return $button;
     }
 
     /**
      * @throws BadTypeException
      */
-    protected function addORMLink(string $linkId, bool $checkACL = false): Button
+    protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-        $button = $this->addButton(
-            str_replace('.', '_', $linkId),
-            $factory->getText(),
-            fn(Model $model): string => $factory->create($this->getPresenter(), $model)
+
+        $button = new PresenterButton(
+            $this->container,
+            new Title(null, $factory->getText()),
+            fn(Model $model): array => $factory->createLinkParameters($model),
+            $className,
+            fn(Model $model): bool => $checkACL
+                ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
+                : true
         );
-        if ($checkACL) {
-            $button->setShow(
-                fn(Model $model) => $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
-            );
-        }
+        $this->getButtonsContainer()->addComponent($button, str_replace('.', '_', $linkId));
         return $button;
     }
 
@@ -269,10 +331,5 @@ abstract class BaseGrid extends Grid
         $response->setQuotes(true);
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
-    }
-
-    protected function getContext(): Container
-    {
-        return $this->container;
     }
 }

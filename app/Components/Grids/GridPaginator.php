@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace NiftyGrid;
+namespace FKSDB\Components\Grids;
 
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\Utils\Paginator;
 
 /**
@@ -17,31 +18,25 @@ use Nette\Utils\Paginator;
  * @license    New BSD Licence
  * @link    http://addons.nette.org/cs/niftygrid
  */
-class GridPaginator extends Control
+class GridPaginator extends BaseComponent
 {
     /** @persistent */
     public int $page = 1;
     public Paginator $paginator;
-    private string $templatePath;
 
-    public function setTemplate(string $templatePath)
+    public function __construct(Container $container)
     {
-        $this->templatePath = $templatePath;
-    }
-
-    public function __construct()
-    {
+        parent::__construct($container);
         $this->paginator = new Paginator();
     }
 
     public function render(): void
     {
         $this->template->paginator = $this->paginator;
-        $this->template->render($this->templatePath);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
     }
 
     /**
-     * @param array $params
      * @throws BadRequestException
      */
     public function loadState(array $params): void

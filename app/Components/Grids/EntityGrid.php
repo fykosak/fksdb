@@ -34,8 +34,7 @@ abstract class EntityGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $source = $this->service->getTable()->where($this->queryParams);
-        return new NDataSource($source);
+        return new NDataSource($this->service->getTable()->where($this->queryParams));
     }
 
     /**

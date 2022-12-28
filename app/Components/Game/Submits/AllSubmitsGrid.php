@@ -5,38 +5,45 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\FilterBaseGrid;
+use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use NiftyGrid\DataSource\IDataSource;
 
-class AllSubmitsGrid extends SubmitsGrid
+class AllSubmitsGrid extends FilterBaseGrid
 {
+    protected SubmitService $submitService;
+    protected EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container, $event);
+        parent::__construct($container);
+        $this->event = $event;
     }
 
-    protected function getData(): IDataSource
+    final public function injectServiceFyziklaniSubmit(SubmitService $submitService): void
     {
-        $submits = $this->submitService->findAll(
-            $this->event
-        )/*->where('fyziklani_submit.points IS NOT NULL')*/
-        ->select('fyziklani_submit.*,fyziklani_task.label,fyziklani_team.name');
-        $dataSource = new SearchableDataSource($submits);
+        $this->submitService = $submitService;
+    }
+
+    protected function getData(): SearchableDataSource
+    {
+        $dataSource = new SearchableDataSource($this->submitService->findAll($this->event));
         $dataSource->setFilterCallback($this->getFilterCallBack());
         return $dataSource;
     }
@@ -62,15 +69,27 @@ class AllSubmitsGrid extends SubmitsGrid
                 'fyziklani_submit.points',
             ]
         );
-
-        $this->addButton(
-            'revoke',
-            _('Revoke'),
-            fn(SubmitModel $row): string => $this->link('revoke!', $row->fyziklani_submit_id)
-        )
-            ->setClass('btn btn-sm btn-outline-danger')
-            ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
-            ->setShow(fn(SubmitModel $row): bool => $row->canRevoke(false));
+        if ($this->event->event_type_id === 1) {
+            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:detail',
+                'detail',
+                _('Detail'),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
+        }
+        $this->getButtonsContainer()->addComponent(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Revoke')),
+                fn(SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
+                'btn btn-sm btn-outline-danger',
+                fn(SubmitModel $row): bool => $row->canRevoke(false)
+            ),
+            'revoke'
+        );
     }
 
     private function getFilterCallBack(): callable
@@ -119,7 +138,7 @@ class AllSubmitsGrid extends SubmitsGrid
         }
         try {
             $logger = new MemoryLogger();
-            $handler = $this->event->createGameHandler($this->getContext());
+            $handler = $this->event->createGameHandler($this->container);
             $handler->revoke($logger, $submit);
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
@@ -137,7 +156,7 @@ class AllSubmitsGrid extends SubmitsGrid
         if (!$this->isSearchable()) {
             throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
-        $control = new FormControl($this->getContext());
+        $control = new FormControl($this->container);
         $form = $control->getForm();
         $form->setMethod(Form::GET);
 
@@ -161,15 +180,7 @@ class AllSubmitsGrid extends SubmitsGrid
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues('array');
-            $this->searchTerm = $values;
-            if ($this->dataSource instanceof SearchableDataSource) {
-                $this->dataSource->applyFilter($values);
-            }
-
-            // TODO is this vv needed? vv
-            $count = $this->dataSource->getCount();
-            $this->getPaginator()->itemCount = $count;
+            $this->searchTerm = $form->getValues('array');
         };
         return $control;
     }

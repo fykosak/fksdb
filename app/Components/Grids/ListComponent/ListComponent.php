@@ -26,7 +26,7 @@ abstract class ListComponent extends BaseComponent implements IContainer
         $this->userPermission = $userPermission;
         $this->buttons = new ButtonGroup($this->container);
         $this->addComponent($this->buttons, 'buttons');
-        $this->monitor(Presenter::class, function () {
+        $this->monitor(Presenter::class, function (): void {
             $this->configure();
         });
     }

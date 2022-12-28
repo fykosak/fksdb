@@ -25,9 +25,7 @@ class ResultsTotalGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $teams = $this->event->getParticipatingTeams()
-            ->order('name');
-        return new NDataSource($teams);
+        return new NDataSource($this->event->getParticipatingTeams()->order('name'));
     }
 
     /**

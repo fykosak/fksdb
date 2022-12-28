@@ -25,13 +25,11 @@ class ProductsGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addLinkButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
+        $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }
 }

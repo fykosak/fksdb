@@ -42,11 +42,16 @@ class ContestantsGrid extends BaseGrid
             'person.full_name',
             'person_history.study_year',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(
-            fn(ContestantModel $row) => $row->getPersonHistory()->school->name_abbrev
+        $this->addColumn(
+            'school_name',
+            _('School'),
+            fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory('school', 'school')->render(
+                $row->getPersonHistory(),
+                1024
+            )
         );
 
-        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
 
         $this->addGlobalButton('add', _('Create contestant'), $this->getPresenter()->link('create'));

@@ -35,7 +35,7 @@ class ItemsGrid extends RelatedGrid
             'schedule_item.require_id_number',
         ]);
         $this->paginate = false;
-        $this->addLinkButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
-        $this->addLinkButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
+        $this->addPresenterButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addPresenterButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
     }
 }

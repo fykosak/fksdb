@@ -16,8 +16,7 @@ class PersonGrid extends BaseGrid
 
     public function setData(EventModel $event, PersonModel $person): void
     {
-        $query = $person->getScheduleForEvent($event);
-        $dataSource = new NDataSource($query);
+        $dataSource = new NDataSource($person->getScheduleForEvent($event));
         $this->setDataSource($dataSource);
     }
 

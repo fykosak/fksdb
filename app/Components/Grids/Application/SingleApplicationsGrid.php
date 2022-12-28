@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\FilterBaseGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
@@ -21,7 +21,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 
-class SingleApplicationsGrid extends BaseGrid
+class SingleApplicationsGrid extends FilterBaseGrid
 {
 
     protected EventModel $event;
@@ -34,10 +34,9 @@ class SingleApplicationsGrid extends BaseGrid
         $this->holder = $holder;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): SearchableDataSource
     {
-        $participants = $this->getSource();
-        $source = new SearchableDataSource($participants);
+        $source = new SearchableDataSource($this->getSource());
         $source->setFilterCallback($this->getFilterCallBack());
         return $source;
     }
@@ -117,7 +116,7 @@ class SingleApplicationsGrid extends BaseGrid
             'person.full_name',
             'event_participant.status',
         ]);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();
         $this->addHolderColumns();
         parent::configure($presenter);
@@ -143,9 +142,9 @@ class SingleApplicationsGrid extends BaseGrid
      */
     protected function createComponentSearchForm(): FormControl
     {
-        $control = new FormControl($this->getContext());
+        $control = new FormControl($this->container);
         $form = $control->getForm();
-        $stateContainer = new ContainerWithOptions($this->getContext());
+        $stateContainer = new ContainerWithOptions($this->container);
         $stateContainer->setOption('label', _('States'));
         foreach ($this->getStateCases() as $state) {
             $label = Html::el('span')
@@ -158,11 +157,7 @@ class SingleApplicationsGrid extends BaseGrid
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
         $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues('array');
-            $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
-            $count = $this->dataSource->getCount();
-            $this->getPaginator()->itemCount = $count;
+            $this->searchTerm = $form->getValues('array');
         };
         return $control;
     }

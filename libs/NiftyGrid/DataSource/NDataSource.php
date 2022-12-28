@@ -33,9 +33,9 @@ class NDataSource implements IDataSource
         return $this->table->count($column);
     }
 
-    public function orderData(?string $by, ?string $way): void
+    public function orderData(string $order): void
     {
-        $this->table->order($by . ' ' . $way);
+        $this->table->order($order);
     }
 
     public function limitData(int $limit, ?int $offset = null): void

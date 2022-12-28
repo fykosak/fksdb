@@ -49,16 +49,34 @@ class StoredQueriesGrid extends BaseGrid
         $this->addColumns([
             'stored_query.query_id',
             'stored_query.name',
+            'stored_query.description',
             'stored_query.qid',
             'stored_query.tags',
         ]);
-        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
 
-        $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-primary');
-        $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-info');
-        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-success');
+        $this->addPresenterButton(
+            'StoredQuery:edit',
+            'edit',
+            _('Edit'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-primary'
+        );
+        $this->addPresenterButton(
+            'StoredQuery:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-info'
+        );
+        $this->addPresenterButton(
+            'Export:execute',
+            'execute',
+            _('Execute export'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-success'
+        );
     }
 }

@@ -14,7 +14,7 @@
             {/if}
 
             {foreach $steps as $step}
-                {if $step == $paginator->page}
+                {if $step == $paginator->getPage()}
                     <li class="page-item active">
                         <span class="page-link">{$step}<span class="sr-only">(current)</span></span>
                     </li>
@@ -36,7 +36,7 @@
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->page + 1}">{_('Next')}</a>
+                    <a class="page-link" href="{link this, 'page' => $paginator->getPage() + 1}">{_('Next')}</a>
                 </li>
             {/if}
         </ul>

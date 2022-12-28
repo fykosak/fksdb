@@ -31,8 +31,8 @@ class ContestantsFromSchoolGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addLinkButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
-        $this->addLinkButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
         $this->paginate = false;
     }
 }

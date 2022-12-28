@@ -38,8 +38,11 @@ class ResultsGrid extends BaseGrid
         $this->paginate = false;
         try {
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)
-                    ->setRenderer(fn(\stdClass $row) => ((array)$row)[$name]);
+                $this->addColumn(
+                    str_replace('-', '_', Strings::webalize($name)),
+                    $name,
+                    fn(\stdClass $row) => ((array)$row)[$name]
+                );
             }
         } catch (\PDOException $exception) {
             // pass, exception should be handled inn parent components

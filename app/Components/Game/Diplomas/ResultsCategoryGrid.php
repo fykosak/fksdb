@@ -28,10 +28,11 @@ class ResultsCategoryGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $teams = $this->event->getParticipatingTeams()
-            ->where('category', $this->category->value)
-            ->order('name');
-        return new NDataSource($teams);
+        return new NDataSource(
+            $this->event->getParticipatingTeams()
+                ->where('category', $this->category->value)
+                ->order('name')
+        );
     }
 
     /**

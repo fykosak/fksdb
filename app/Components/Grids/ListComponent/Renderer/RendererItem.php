@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids\ListComponent\Renderer;
 
 use FKSDB\Components\Grids\ListComponent\ItemComponent;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class RendererItem extends ItemComponent
@@ -13,9 +14,9 @@ class RendererItem extends ItemComponent
     /** @var callable */
     protected $renderer;
 
-    public function __construct(Container $container, callable $renderer)
+    public function __construct(Container $container, callable $renderer, ?Title $title = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $title);
         $this->renderer = $renderer;
     }
 

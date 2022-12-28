@@ -1,0 +1,8 @@
+{varType Fykosak\Utils\UI\Title $title}
+{varType string $buttonClassName}
+{varType array $params}
+{varType bool $show}
+{varType Nette\Application\UI\Control $linkControl}
+{if $show}
+    <a href="{$linkControl->link($params[0],$params[1])}" class="{$buttonClassName}">{$title->toHtml()}</a>
+{/if}

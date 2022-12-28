@@ -45,7 +45,7 @@ class PersonsGrid extends BaseGrid
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->id, $test->title)->setRenderer(function ($person) use ($test): Html {
+            $this->addColumn($test->id, $test->title, function ($person) use ($test): Html {
                 $logger = new MemoryLogger();
                 $test->run($logger, $person);
                 return self::createHtmlLog($logger->getMessages());

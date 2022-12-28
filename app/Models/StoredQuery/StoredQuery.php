@@ -174,7 +174,7 @@ class StoredQuery implements IDataSource, Resource
         if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . '';
+            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
 
             $statement = $this->bindParams($sql);
             $statement->execute();
@@ -285,16 +285,10 @@ class StoredQuery implements IDataSource, Resource
 
     /**
      * Implements only single column sorting.
-     *
-     * @param string|null $by column name
-     * @param string|null $way DESC|ASC
      */
-    public function orderData(?string $by, ?string $way): void
+    public function orderData(string $order): void
     {
-        if (!is_numeric($by)) {
-            $by = "`$by`";
-        }
-        $this->orders[0] = "$by $way";
+        $this->orders[0] = "$order";
         $this->invalidateData();
     }
 

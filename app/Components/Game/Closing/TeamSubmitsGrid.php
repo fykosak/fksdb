@@ -4,30 +4,33 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Closing;
 
-use FKSDB\Components\Game\Submits\SubmitsGrid;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 
-class TeamSubmitsGrid extends SubmitsGrid
+class TeamSubmitsGrid extends BaseGrid
 {
-
+    protected SubmitService $submitService;
     private TeamModel2 $team;
 
     public function __construct(TeamModel2 $team, Container $container)
     {
         $this->team = $team;
-        parent::__construct($container, $team->event);
+        parent::__construct($container);
     }
 
-    protected function getData(): IDataSource
+    final public function injectServiceFyziklaniSubmit(SubmitService $submitService): void
     {
-        $submits = $this->team->getSubmits()
-            ->order('fyziklani_submit.created');
-        return new NDataSource($submits);
+        $this->submitService = $submitService;
+    }
+
+    protected function getData(): NDataSource
+    {
+        return new NDataSource($this->team->getSubmits()->order('fyziklani_submit.created'));
     }
 
     /**
@@ -45,5 +48,15 @@ class TeamSubmitsGrid extends SubmitsGrid
             'fyziklani_submit.created',
             'fyziklani_submit.state',
         ]);
+        if ($this->team->event->event_type_id === 1) {
+            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:detail',
+                'detail',
+                _('Detail'),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
+        }
     }
 }

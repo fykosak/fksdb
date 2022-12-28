@@ -36,11 +36,11 @@ class EventsGrid extends EntityGrid
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 
-        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addORMLink('event.application.list');
 
-        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
     }
 }

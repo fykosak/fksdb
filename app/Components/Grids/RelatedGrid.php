@@ -24,7 +24,6 @@ abstract class RelatedGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $query = $this->model->related($this->tableName);
-        return new NDataSource($query);
+        return new NDataSource($this->model->related($this->tableName));
     }
 }

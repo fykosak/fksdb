@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
-use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
+use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
@@ -85,33 +85,33 @@ class GroupListComponent extends ListComponent
         $itemButtonContainer = new ButtonGroup($this->container);
         $itemsRow->addComponent($itemButtonContainer, 'buttons');
         $itemButtonContainer->addComponent(
-            new DefaultButton(
+            new PresenterButton(
                 $this->container,
-                _('Edit'),
+                new Title(null, _('Edit')),
                 fn(ScheduleItemModel $model) => [':Event:ScheduleItem:edit', ['id' => $model->getPrimary()]]
             ),
             'edit'
         );
         $itemButtonContainer->addComponent(
-            new DefaultButton(
+            new PresenterButton(
                 $this->container,
-                _('Detail'),
+                new Title(null, _('Detail')),
                 fn(ScheduleItemModel $model) => [':Event:ScheduleItem:detail', ['id' => $model->getPrimary()]]
             ),
             'detail'
         );
         $this->addButton(
-            new DefaultButton(
+            new PresenterButton(
                 $this->container,
-                _('Detail'),
+                new Title(null, _('Detail')),
                 fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:detail', ['id' => $model->getPrimary()]]
             ),
             'detail'
         );
         $this->addButton(
-            new DefaultButton(
+            new PresenterButton(
                 $this->container,
-                _('Edit'),
+                new Title(null, _('Edit')),
                 fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:edit', ['id' => $model->getPrimary()]]
             ),
             'edit'

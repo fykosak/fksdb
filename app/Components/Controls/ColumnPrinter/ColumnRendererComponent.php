@@ -24,9 +24,19 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderTemplateString(string $templateString, Model $model, int $userPermission): void
+    final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
     {
-        $this->template->html = preg_replace_callback(
+        $this->template->html = $this->renderToString($templateString, $model, $userPermission);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
+    final public function renderToString(string $templateString, ?Model $model, ?int $userPermission): string
+    {
+        return preg_replace_callback(
             '/@([a-z_]+).([a-z_]+)(:([a-zA-Z]+))?/',
             function (array $match) use ($model, $userPermission) {
                 [, $table, $field, , $render] = $match;
@@ -43,7 +53,6 @@ class ColumnRendererComponent extends BaseComponent
             },
             $templateString
         );
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
     }
 
     /**

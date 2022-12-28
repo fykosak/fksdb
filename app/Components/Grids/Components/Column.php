@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NiftyGrid\Components;
+namespace FKSDB\Components\Grids\Components;
 
 use Nette;
 use Nette\Application\UI\Component;
@@ -25,15 +25,10 @@ class Column extends Component
     /** @var callable */
     private $renderer;
 
-    public function __construct(string $label)
+    public function __construct(string $label, callable $renderer)
     {
         $this->label = $label;
-    }
-
-    public function setTruncate(?int $truncate): self
-    {
-        $this->truncate = $truncate;
-        return $this;
+        $this->renderer = $renderer;
     }
 
     /**
@@ -47,22 +42,10 @@ class Column extends Component
         } else {
             $value = $row[$this->getName()];
         }
-
-        if (isset($this->truncate)) {
-            return Strings::truncate($value ?? '', $this->truncate);
-        } else {
-            return $value;
-        }
+        return $value;
     }
 
-
-    public function setRenderer(callable $renderer): self
-    {
-        $this->renderer = $renderer;
-        return $this;
-    }
-
-    public function setSortable(bool $sortable = true): self
+    public function setSortable(bool $sortable = false): self
     {
         $this->sortable = $sortable;
         return $this;

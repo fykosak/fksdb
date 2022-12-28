@@ -30,7 +30,6 @@ class PersonRelatedGrid extends BaseGrid
     }
 
     /**
-     * @return IDataSource
      * @throws BadTypeException
      */
     protected function getData(): IDataSource

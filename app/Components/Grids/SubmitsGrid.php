@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -11,6 +12,7 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
@@ -44,38 +46,51 @@ class SubmitsGrid extends BaseGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->setDefaultOrder('series DESC, tasknr ASC');
-        $this->addColumn('task', _('Task'))
-            ->setRenderer(fn(SubmitModel $submit): string => $submit->task->getFQName());
-        $this->addColumn('submitted_on', _('Timestamp'));
-        $this->addColumn('source', _('Method of handing'))
-            ->setRenderer(fn(SubmitModel $model): string => $model->source->value);
+        $this->setDefaultOrder('task.series DESC, tasknr ASC');
+        $this->addColumn('task', _('Task'), fn(SubmitModel $submit): string => $submit->task->getFQName());
+        $this->addColumn(
+            'submitted_on',
+            _('Timestamp'),
+            fn(SubmitModel $model): string => $model->submitted_on->format('c')
+        );
+        $this->addColumn('source', _('Method of handing'), fn(SubmitModel $model): string => $model->source->value);
 
-        $this->addButton(
-            'revoke',
-            _('Cancel'),
-            fn(SubmitModel $submit): string => $this->link('revoke!', $submit->submit_id)
-        )
-            ->setClass('btn btn-sm btn-outline-warning')
-            ->setShow(fn(SubmitModel $submit): bool => $submit->canRevoke())
-            ->setConfirmationDialog(fn(SubmitModel $submit): string => sprintf(
-                _('Do you really want to take the solution of task %s back?'),
-                $submit->task->getFQName()
-            ));
-        $this->addButton(
-            'download_uploaded',
-            _('Download original'),
-            fn(SubmitModel $submit): string => $this->link('downloadUploaded!', $submit->submit_id)
-        )
-            ->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz());
-        $this->addButton(
-            'download_corrected',
-            _('Download corrected'),
-            fn(SubmitModel $submit): string => $this->link('downloadCorrected!', $submit->submit_id)
-        )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected);
+        $this->getButtonsContainer()->addComponent(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Cancel')),
+                fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
+                'btn btn-sm btn-outline-warning',
+                fn(SubmitModel $submit): bool => $submit->canRevoke()
+            ),
+            'revoke'
+        );
 
+        $this->getButtonsContainer()->addComponent(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Download original')),
+                fn(SubmitModel $submit): array => ['downloadUploaded!', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => !$submit->isQuiz()
+            ),
+            'download_uploaded'
+        );
+
+        $this->getButtonsContainer()->addComponent(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Download corrected')),
+                fn(SubmitModel $submit): array => ['downloadCorrected!', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected
+            ),
+            'download_corrected'
+        );
         $this->paginate = false;
-        $this->enableSorting = false;
     }
 
     public function handleRevoke(int $id): void

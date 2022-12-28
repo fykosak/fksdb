@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
+use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
@@ -46,10 +46,22 @@ class TeamListComponent extends FilterListComponent
         );
         $row = new RowContainer($this->container);
         $this->addComponent($row, 'row0');
-        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
-        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
-        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.game_lang'), 'lang');
-        $row->addComponent(new TemplateItem($this->container, '@fyziklani_team.phone'), 'phone');
+        $row->addComponent(
+            new TemplateItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),
+            'state'
+        );
+        $row->addComponent(
+            new TemplateItem($this->container, '@fyziklani_team.category', '@fyziklani_team.category:title'),
+            'category'
+        );
+        $row->addComponent(
+            new TemplateItem($this->container, '@fyziklani_team.game_lang', '@fyziklani_team.game_lang:title'),
+            'lang'
+        );
+        $row->addComponent(
+            new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
+            'phone'
+        );
         $memberList = new ListGroupContainer($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */
@@ -70,9 +82,9 @@ class TeamListComponent extends FilterListComponent
         $this->addComponent($teacherList, 'teachers');
         $teacherList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
         $this->addButton(
-            new DefaultButton(
+            new PresenterButton(
                 $this->container,
-                _('Detail'),
+                new Title(null, _('Detail')),
                 fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
             ),
             'detail'

@@ -32,10 +32,11 @@ class AllPersonsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
-            ->order('person_schedule_id');//->limit(10, 140);
-        return new NDataSource($query);
+        return new NDataSource(
+            $this->personScheduleService->getTable()
+                ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
+                ->order('person_schedule_id')
+        );
     }
 
     /**
@@ -45,7 +46,6 @@ class AllPersonsGrid extends BaseGrid
     {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('person_schedule_id', _('#'));
         $this->addColumns(
             [
                 'person.full_name',

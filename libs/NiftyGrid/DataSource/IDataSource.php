@@ -1,4 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
+namespace NiftyGrid\DataSource;
+
 /**
  * NiftyGrid - DataGrid for Nette
  *
@@ -7,20 +12,13 @@
  * @license     New BSD Licence
  * @link        http://addons.nette.org/cs/niftygrid
  */
-
-namespace NiftyGrid\DataSource;
-
 interface IDataSource
 {
-
-    /**
-     * Returns data
-     */
     public function getData(): iterable;
 
     public function getCount(string $column = "*"): int;
 
-    public function orderData(?string $by, ?string $way): void;
+    public function orderData(string $order): void;
 
-    public function limitData(int $limit, ?int $offset = null): void;
+    public function limitData(int $limit, int $offset): void;
 }

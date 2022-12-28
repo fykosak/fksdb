@@ -30,7 +30,7 @@ class EmailsGrid extends EntityGrid
     {
         parent::configure($presenter);
         $this->setDefaultOrder('created DESC');
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }
 }

@@ -37,6 +37,6 @@ class ItemsGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addLinkButton(':Warehouse:Item:edit', 'edit', _('Edit'), false, ['id' => 'item_id']);
+        $this->addPresenterButton(':Warehouse:Item:edit', 'edit', _('Edit'), false, ['id' => 'item_id']);
     }
 }

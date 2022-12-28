@@ -10,9 +10,8 @@ use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
 
-class OrgsGrid extends BaseGrid
+class OrgsGrid extends FilterBaseGrid
 {
 
     private ContestModel $contest;
@@ -23,11 +22,9 @@ class OrgsGrid extends BaseGrid
         $this->contest = $contest;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): SearchableDataSource
     {
-        $orgs = $this->contest->getOrganisers();
-
-        $dataSource = new SearchableDataSource($orgs);
+        $dataSource = new SearchableDataSource($this->contest->getOrganisers());
         $dataSource->setFilterCallback(function (Selection $table, array $value) {
             $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {

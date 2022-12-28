@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\ListComponent\Button\DefaultButton;
+use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
 use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -43,7 +43,7 @@ class EventOrgListComponent extends BaseListComponent
         $this->addComponent($row1, 'row1');
         $row1->addComponent(new TemplateItem($this->container, '@event_org.note'), 'event_org_note');
         $this->addButton(
-            new DefaultButton($this->container, _('Edit'), fn(EventOrgModel $eventOrg) => [
+            new PresenterButton($this->container, new Title(null, _('Edit')), fn(EventOrgModel $eventOrg) => [
                 ':Event:EventOrg:edit',
                 [
                     'eventId' => $eventOrg->event_id,
@@ -53,7 +53,7 @@ class EventOrgListComponent extends BaseListComponent
             'edit'
         );
         $this->addButton(
-            new DefaultButton($this->container, _('Detail'), fn(EventOrgModel $eventOrg) => [
+            new PresenterButton($this->container, new Title(null, _('Detail')), fn(EventOrgModel $eventOrg) => [
                 ':Event:EventOrg:detail',
                 [
                     'eventId' => $eventOrg->event_id,

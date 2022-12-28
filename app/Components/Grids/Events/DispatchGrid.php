@@ -35,6 +35,6 @@ class DispatchGrid extends EntityGrid
     {
         parent::configure($presenter);
         $this->setDefaultOrder('begin DESC');
-        $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+        $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 }

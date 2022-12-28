@@ -14,18 +14,24 @@ use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 
-class SchoolsGrid extends EntityGrid
+class SchoolsGrid extends FilterBaseGrid
 {
+
+    private SchoolService $service;
 
     public function __construct(Container $container)
     {
-        parent::__construct($container, SchoolService::class, [], []);
+        parent::__construct($container);
     }
 
-    protected function getData(): IDataSource
+    public function injectService(SchoolService $service): void
     {
-        $schools = $this->service->getTable();
-        $dataSource = new SearchableDataSource($schools);
+        $this->service = $service;
+    }
+
+    protected function getData(): SearchableDataSource
+    {
+        $dataSource = new SearchableDataSource($this->service->getTable());
         $dataSource->setFilterCallback(function (Selection $table, array $value) {
             $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
@@ -41,9 +47,11 @@ class SchoolsGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'))->setRenderer(fn(SchoolModel $school): string => $school->address->city);
-        $this->addColumn('active', _('Active?'))->setRenderer(
+        $this->addColumn('name', _('Name'), fn(SchoolModel $model) => $model->name);
+        $this->addColumn('city', _('City'), fn(SchoolModel $school): string => $school->address->city);
+        $this->addColumn(
+            'active',
+            _('Active?'),
             fn(SchoolModel $row): Html => Html::el('span')
                 ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
                 ->addText(($row->active))

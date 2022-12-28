@@ -11,6 +11,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DataSource\NDataSource;
 
 class TeachersGrid extends EntityGrid
 {
@@ -30,15 +31,15 @@ class TeachersGrid extends EntityGrid
 
     protected function getData(): IDataSource
     {
-        $teachers = $this->service->getTable()->select('teacher.*, person.family_name AS display_name');
-
-        $dataSource = new SearchableDataSource($teachers);
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
+        $dataSource = new NDataSource(
+            $this->service->getTable()->select('teacher.*, person.family_name AS display_name')
+        );
+        /*    $dataSource->setFilterCallback(function (Selection $table, array $value) {
+                $tokens = preg_split('/\s+/', $value['term']);
+                foreach ($tokens as $token) {
+                    $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                }
+            });*/
         return $dataSource;
     }
 

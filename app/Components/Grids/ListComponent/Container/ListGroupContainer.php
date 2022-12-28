@@ -12,19 +12,16 @@ class ListGroupContainer extends RowContainer
 {
     /** @var callable */
     private $modelToIterator;
-    protected Title $title;
 
     public function __construct(Container $container, callable $callback, Title $title)
     {
-        parent::__construct($container);
+        parent::__construct($container, $title);
         $this->modelToIterator = $callback;
-        $this->title = $title;
     }
 
     public function render(Model $model, int $userPermission): void
     {
         $this->template->models = ($this->modelToIterator)($model);
-        $this->template->title = $this->title;
         parent::render($model, $userPermission);
     }
 

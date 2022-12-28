@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\FilterBaseGrid;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
 
-class TaskGrid extends BaseGrid
+class TaskGrid extends FilterBaseGrid
 {
 
     private EventModel $event;
@@ -23,10 +23,9 @@ class TaskGrid extends BaseGrid
         $this->event = $event;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): SearchableDataSource
     {
-        $submits = $this->event->getTasks();
-        $dataSource = new SearchableDataSource($submits);
+        $dataSource = new SearchableDataSource($this->event->getTasks());
         $dataSource->setFilterCallback(function (Selection $table, array $value) {
             $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
@@ -40,11 +39,12 @@ class TaskGrid extends BaseGrid
         return $dataSource;
     }
 
+    /**
+     * @throws BadTypeException
+     */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addColumn('fyziklani_task_id', _('Task Id'));
-        $this->addColumn('label', _('#'));
-        $this->addColumn('name', _('Task name'));
+        $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);
     }
 }
