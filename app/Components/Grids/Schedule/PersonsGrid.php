@@ -8,10 +8,10 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class PersonsGrid extends BaseGrid
 {
@@ -24,19 +24,24 @@ class PersonsGrid extends BaseGrid
         $this->item = $item;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        return new NDataSource($this->item->getInterested());
+        return $this->item->getInterested();
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('person_schedule_id', _('#'), fn(PersonScheduleModel $model) => $model->person_schedule_id);
+        $this->addColumn(
+            'person_schedule_id',
+            new Title(null, _('#')),
+            fn(PersonScheduleModel $model) => $model->person_schedule_id
+        );
         $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
     }
 }

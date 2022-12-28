@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
 use FKSDB\Models\Exceptions\NotFoundException;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -17,13 +18,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 use Tracy\Debugger;
 
 class SubmitsGrid extends BaseGrid
 {
-
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 
@@ -38,24 +36,32 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        return new NDataSource($this->contestant->getSubmits());
+        return $this->contestant->getSubmits();
     }
 
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
         $this->setDefaultOrder('task.series DESC, tasknr ASC');
-        $this->addColumn('task', _('Task'), fn(SubmitModel $submit): string => $submit->task->getFQName());
+        $this->addColumn(
+            'task',
+            new Title(null, _('Task')),
+            fn(SubmitModel $submit): string => $submit->task->getFQName()
+        );
         $this->addColumn(
             'submitted_on',
-            _('Timestamp'),
+            new Title(null, _('Timestamp')),
             fn(SubmitModel $model): string => $model->submitted_on->format('c')
         );
-        $this->addColumn('source', _('Method of handing'), fn(SubmitModel $model): string => $model->source->value);
+        $this->addColumn(
+            'source',
+            new Title(null, _('Method of handing')),
+            fn(SubmitModel $model): string => $model->source->value
+        );
 
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,
@@ -67,7 +73,7 @@ class SubmitsGrid extends BaseGrid
             'revoke'
         );
 
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,
@@ -79,7 +85,7 @@ class SubmitsGrid extends BaseGrid
             'download_uploaded'
         );
 
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,

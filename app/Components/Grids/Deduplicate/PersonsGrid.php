@@ -12,8 +12,6 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class PersonsGrid extends BaseGrid
 {
@@ -30,24 +28,32 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        return new NDataSource($this->trunkPersons);
+        return $this->trunkPersons;
     }
 
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
 
-        $this->addColumn('display_name_a', _('Person A'), fn(PersonModel $row): string => $this->renderPerson($row));
-        $this->addColumn('display_name_b', _('Person B'), fn(PersonModel $row): string => $this->renderPerson(
-            $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
-        ));
-        $this->addColumn('score', _('Similarity'), fn(PersonModel $row): string => sprintf(
+        $this->addColumn(
+            'display_name_a',
+            new Title(null, _('Person A')),
+            fn(PersonModel $row): string => $this->renderPerson($row)
+        );
+        $this->addColumn(
+            'display_name_b',
+            new Title(null, _('Person B')),
+            fn(PersonModel $row): string => $this->renderPerson(
+                $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
+            )
+        );
+        $this->addColumn('score', new Title(null, _('Similarity')), fn(PersonModel $row): string => sprintf(
             '%0.2f',
             $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]
         ));
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge A<-B')),
@@ -62,7 +68,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeAB'
         );
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge B<-A')),
@@ -76,7 +82,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeBA'
         );
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('It\'s not a duplicity')),

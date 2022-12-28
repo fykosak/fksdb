@@ -1,0 +1,21 @@
+{varType FKSDB\Models\StoredQuery\StoredQuery $storedQuery}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        {foreach $storedQuery->getColumnNames() as $name}
+            <th>{$name}</th>
+        {/foreach}
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $storedQuery->getData() as $row}
+        <tr>
+            {foreach $storedQuery->getColumnNames() as $colName}
+                <td>
+                    {$row[$colName]}
+                </td>
+            {/foreach}
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

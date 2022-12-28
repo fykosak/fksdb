@@ -22,6 +22,7 @@ class EventPaymentGrid extends RelatedGrid
     /**
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -36,6 +37,6 @@ class EventPaymentGrid extends RelatedGrid
 
         $this->addORMLink('payment.detail');
         $this->paginate = false;
-        $this->addCSVDownloadButton();
+       // $this->addCSVDownloadButton();
     }
 }

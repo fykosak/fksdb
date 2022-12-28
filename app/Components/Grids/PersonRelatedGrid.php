@@ -11,8 +11,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class PersonRelatedGrid extends BaseGrid
 {
@@ -32,7 +30,7 @@ class PersonRelatedGrid extends BaseGrid
     /**
      * @throws BadTypeException
      */
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
         $query = $this->person->related($this->definition['table']);
         if (!$query instanceof TypedGroupedSelection) {
@@ -42,12 +40,13 @@ class PersonRelatedGrid extends BaseGrid
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
-        return new NDataSource($query);
+        return $query;
     }
 
     /**
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -57,6 +56,6 @@ class PersonRelatedGrid extends BaseGrid
         foreach ($this->definition['links'] as $link) {
             $this->addORMLink($link);
         }
-        $this->addCSVDownloadButton();
+        // $this->addCSVDownloadButton();
     }
 }

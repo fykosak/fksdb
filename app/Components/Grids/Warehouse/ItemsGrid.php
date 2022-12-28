@@ -33,6 +33,7 @@ class ItemsGrid extends EntityGrid
      * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

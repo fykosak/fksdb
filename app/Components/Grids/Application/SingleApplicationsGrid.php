@@ -11,15 +11,12 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
 
 class SingleApplicationsGrid extends FilterBaseGrid
 {
@@ -34,11 +31,9 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->holder = $holder;
     }
 
-    protected function getData(): SearchableDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        $source = new SearchableDataSource($this->getSource());
-        $source->setFilterCallback($this->getFilterCallBack());
-        return $source;
+        return $this->getSource();
     }
 
     protected function getSource(): TypedGroupedSelection
@@ -46,19 +41,17 @@ class SingleApplicationsGrid extends FilterBaseGrid
         return $this->event->getParticipants();
     }
 
-    public function getFilterCallBack(): callable
+    public function getFilterCallBack(): void
     {
-        return function (Selection $table, array $value): void {
-            $states = [];
-            foreach ($value['status'] as $state => $value) {
-                if ($value) {
-                    $states[] = str_replace('__', '.', $state);
-                }
+        $states = [];
+        foreach ($this->searchTerm['status'] as $state => $value) {
+            if ($value) {
+                $states[] = str_replace('__', '.', $state);
             }
-            if (count($states)) {
-                $table->where('status IN ?', $states);
-            }
-        };
+        }
+        if (count($states)) {
+            $this->data->where('status IN ?', $states);
+        }
     }
 
     protected function getHoldersColumns(): array
@@ -85,6 +78,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function addHolderColumns(): void
     {
@@ -106,6 +100,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
     /**
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -117,7 +112,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
             'event_participant.status',
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
-        $this->addCSVDownloadButton();
+        // $this->addCSVDownloadButton();
         $this->addHolderColumns();
         parent::configure($presenter);
     }

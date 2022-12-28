@@ -6,12 +6,9 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\TeacherService;
-use FKSDB\Models\SQL\SearchableDataSource;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class TeachersGrid extends EntityGrid
 {
@@ -29,22 +26,14 @@ class TeachersGrid extends EntityGrid
         ]);
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        $dataSource = new NDataSource(
-            $this->service->getTable()->select('teacher.*, person.family_name AS display_name')
-        );
-        /*    $dataSource->setFilterCallback(function (Selection $table, array $value) {
-                $tokens = preg_split('/\s+/', $value['term']);
-                foreach ($tokens as $token) {
-                    $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
-                }
-            });*/
-        return $dataSource;
+        return $this->service->getTable();
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

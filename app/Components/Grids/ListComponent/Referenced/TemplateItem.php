@@ -27,7 +27,7 @@ class TemplateItem extends ItemComponent
             $container,
             $titleString
                 ? new Title(null, $printer->renderToString($titleString, null, null))
-                : null
+                : new Title(null, '')
         );
         $this->templateString = $templateString;
         $this->titleString = $titleString;

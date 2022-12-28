@@ -9,13 +9,10 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\NDataSource;
 
 class StoredQueriesGrid extends BaseGrid
 {
-
     /** @const No. of characters that are showed from query description. */
-
     public const DESCRIPTION_TRUNC = 80;
 
     private QueryService $storedQueryService;
@@ -35,6 +32,7 @@ class StoredQueriesGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -45,7 +43,7 @@ class StoredQueriesGrid extends BaseGrid
         } else {
             $queries = $this->storedQueryService->getTable()->order('name');
         }
-        $this->setDataSource(new NDataSource($queries));
+        $this->data = $queries;
         $this->addColumns([
             'stored_query.query_id',
             'stored_query.name',

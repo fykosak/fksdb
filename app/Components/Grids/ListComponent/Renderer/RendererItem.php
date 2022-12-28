@@ -14,7 +14,7 @@ class RendererItem extends ItemComponent
     /** @var callable */
     protected $renderer;
 
-    public function __construct(Container $container, callable $renderer, ?Title $title = null)
+    public function __construct(Container $container, callable $renderer, Title $title)
     {
         parent::__construct($container, $title);
         $this->renderer = $renderer;

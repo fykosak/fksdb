@@ -7,10 +7,9 @@ namespace FKSDB\Components\Game\Diplomas;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class ResultsTotalGrid extends BaseGrid
 {
@@ -23,13 +22,14 @@ class ResultsTotalGrid extends BaseGrid
         $this->event = $event;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        return new NDataSource($this->event->getParticipatingTeams()->order('name'));
+        return $this->event->getParticipatingTeams()->order('name');
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

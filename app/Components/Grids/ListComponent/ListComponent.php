@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids\ListComponent;
 use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
@@ -24,7 +25,7 @@ abstract class ListComponent extends BaseComponent implements IContainer
     {
         parent::__construct($container);
         $this->userPermission = $userPermission;
-        $this->buttons = new ButtonGroup($this->container);
+        $this->buttons = new ButtonGroup($this->container, new Title(null, ''));
         $this->addComponent($this->buttons, 'buttons');
         $this->monitor(Presenter::class, function (): void {
             $this->configure();

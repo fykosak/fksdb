@@ -6,10 +6,9 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 abstract class EntityGrid extends BaseGrid
 {
@@ -32,13 +31,14 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        return new NDataSource($this->service->getTable()->where($this->queryParams));
+        return $this->service->getTable()->where($this->queryParams);
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

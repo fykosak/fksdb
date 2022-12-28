@@ -8,10 +8,9 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class ResultsCategoryGrid extends BaseGrid
 {
@@ -26,17 +25,16 @@ class ResultsCategoryGrid extends BaseGrid
         $this->category = $category;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        return new NDataSource(
-            $this->event->getParticipatingTeams()
-                ->where('category', $this->category->value)
-                ->order('name')
-        );
+        return $this->event->getParticipatingTeams()
+            ->where('category', $this->category->value)
+            ->order('name');
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

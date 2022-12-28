@@ -9,13 +9,13 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class PersonsGrid extends BaseGrid
 {
@@ -30,13 +30,14 @@ class PersonsGrid extends BaseGrid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        return new NDataSource($this->personService->getTable());
+        return $this->personService->getTable();
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -45,7 +46,7 @@ class PersonsGrid extends BaseGrid
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->id, $test->title, function ($person) use ($test): Html {
+            $this->addColumn($test->id, new Title(null, $test->title), function ($person) use ($test): Html {
                 $logger = new MemoryLogger();
                 $test->run($logger, $person);
                 return self::createHtmlLog($logger->getMessages());

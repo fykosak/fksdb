@@ -12,14 +12,12 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class NewApplicationsGrid extends BaseGrid
 {
-
     protected EventService $eventService;
 
     protected EventDispatchFactory $eventDispatchFactory;
@@ -30,17 +28,16 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        return new NDataSource(
-            $this->eventService->getTable()
-                ->where('registration_begin <= NOW()')
-                ->where('registration_end >= NOW()')
-        );
+        return $this->eventService->getTable()
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -70,6 +67,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->getButtonsContainer()->addComponent($button, 'create');
+        $this->getColumnsContainer()->getButtonContainer()->addComponent($button, 'create');
     }
 }

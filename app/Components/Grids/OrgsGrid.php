@@ -6,9 +6,8 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\SQL\SearchableDataSource;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class OrgsGrid extends FilterBaseGrid
@@ -22,24 +21,26 @@ class OrgsGrid extends FilterBaseGrid
         $this->contest = $contest;
     }
 
-    protected function getData(): SearchableDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        $dataSource = new SearchableDataSource($this->contest->getOrganisers());
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where(
-                    'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
+        return $this->contest->getOrganisers();
+    }
+
+    public function getFilterCallback(): void
+    {
+        $tokens = preg_split('/\s+/', $this->searchTerm['term']);
+        foreach ($tokens as $token) {
+            $this->data->where(
+                'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
                             LIKE CONCAT(\'%\', ? , \'%\')',
-                    $token
-                );
-            }
-        });
-        return $dataSource;
+                $token
+            );
+        }
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

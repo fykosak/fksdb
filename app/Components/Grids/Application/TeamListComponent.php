@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
 use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\FilterListComponent;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -38,13 +39,17 @@ class TeamListComponent extends FilterListComponent
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
         $this->setTitle(
             new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
         );
-        $row = new RowContainer($this->container);
+        $row = new RowContainer($this->container, new Title(null, ''));
         $this->addComponent($row, 'row0');
         $row->addComponent(
             new TemplateItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),

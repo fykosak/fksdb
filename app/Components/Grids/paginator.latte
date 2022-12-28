@@ -9,7 +9,7 @@
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->page - 1}">{_('Previous')}</a>
+                    <a class="page-link" href="{link this, 'page' => $paginator->getPage() - 1}">{_('Previous')}</a>
                 </li>
             {/if}
 

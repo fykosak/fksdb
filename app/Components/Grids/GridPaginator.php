@@ -33,7 +33,7 @@ class GridPaginator extends BaseComponent
     public function render(): void
     {
         $this->template->paginator = $this->paginator;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'paginator.latte');
     }
 
     /**

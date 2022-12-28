@@ -6,8 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
 
@@ -20,17 +18,9 @@ abstract class FilterBaseGrid extends BaseGrid
     {
         // this has to be done already here (and in the parent call again :-( )
         if (isset($this->searchTerm)) {
-            $this->dataSource->applyFilter($this->searchTerm);
+            $this->getFilterCallback($this->data, $this->searchTerm);
         }
         parent::render();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function getData(): SearchableDataSource
-    {
-        return parent::getData();
     }
 
     public function isSearchable(): bool
@@ -58,4 +48,6 @@ abstract class FilterBaseGrid extends BaseGrid
         };
         return $control;
     }
+
+    abstract public function getFilterCallback(): void;
 }

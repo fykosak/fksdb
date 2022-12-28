@@ -11,9 +11,9 @@ use Nette\DI\Container;
 
 abstract class ItemComponent extends BaseComponent
 {
-    protected ?Title $title;
+    public Title $title;
 
-    public function __construct(Container $container, ?Title $title = null)
+    public function __construct(Container $container, Title $title)
     {
         parent::__construct($container);
         $this->title = $title;

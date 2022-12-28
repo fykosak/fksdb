@@ -20,6 +20,7 @@ class ItemsGrid extends RelatedGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

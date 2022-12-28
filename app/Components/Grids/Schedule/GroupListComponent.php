@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
 use FKSDB\Components\Grids\ListComponent\ListComponent;
 use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
 use FKSDB\Components\Grids\ListComponent\Renderer\RendererItem;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
@@ -33,6 +34,10 @@ class GroupListComponent extends ListComponent
         return $this->event->getScheduleGroups();
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(ScheduleGroupModel $model) => 'alert alert-secondary';
@@ -42,7 +47,7 @@ class GroupListComponent extends ListComponent
                 '@schedule_group.name_cs / @schedule_group.name_en (@schedule_group.schedule_group_id)'
             )
         );
-        $row0 = new RowContainer($this->container);
+        $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addComponent($row0, 'row0');
         $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
         $row0->addComponent(
@@ -50,7 +55,8 @@ class GroupListComponent extends ListComponent
                 $this->container,
                 fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
                     ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
-                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i')
+                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i'),
+                new Title(null, '')
             ),
             'duration'
         );
@@ -82,7 +88,7 @@ class GroupListComponent extends ListComponent
             ),
             'capacity'
         );
-        $itemButtonContainer = new ButtonGroup($this->container);
+        $itemButtonContainer = new ButtonGroup($this->container, new Title(null, ''));
         $itemsRow->addComponent($itemButtonContainer, 'buttons');
         $itemButtonContainer->addComponent(
             new PresenterButton(

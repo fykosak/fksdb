@@ -8,16 +8,16 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
-use NiftyGrid\DataSource\NDataSource;
 
 class PersonGrid extends BaseGrid
 {
 
     public function setData(EventModel $event, PersonModel $person): void
     {
-        $dataSource = new NDataSource($person->getScheduleForEvent($event));
-        $this->setDataSource($dataSource);
+        $this->data = $person->getScheduleForEvent($event);
     }
 
     /**
@@ -34,13 +34,18 @@ class PersonGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
         $this->paginate = false;
 
-        $this->addColumn('person_schedule_id', _('#'));
+        $this->addColumn(
+            'person_schedule_id',
+            new Title(null, _('#')),
+            fn(PersonScheduleModel $model) => $model->person_schedule_id
+        );
         $this->addColumns([
             'schedule_group.name',
             'schedule_item.name',

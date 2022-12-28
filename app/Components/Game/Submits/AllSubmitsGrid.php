@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use FKSDB\Models\SQL\SearchableDataSource;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
@@ -41,15 +41,14 @@ class AllSubmitsGrid extends FilterBaseGrid
         $this->submitService = $submitService;
     }
 
-    protected function getData(): SearchableDataSource
+    protected function getData(): TypedSelection
     {
-        $dataSource = new SearchableDataSource($this->submitService->findAll($this->event));
-        $dataSource->setFilterCallback($this->getFilterCallBack());
-        return $dataSource;
+        return $this->submitService->findAll($this->event);
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -79,7 +78,7 @@ class AllSubmitsGrid extends FilterBaseGrid
                 ['id' => 'fyziklani_submit_id']
             );
         }
-        $this->getButtonsContainer()->addComponent(
+        $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,

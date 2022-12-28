@@ -7,11 +7,11 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
 class ContestantsGrid extends BaseGrid
 {
@@ -24,14 +24,15 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        return new NDataSource($this->contestYear->getContestants());
+        return $this->contestYear->getContestants();
     }
 
     /**
      * @throws InvalidLinkException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -44,7 +45,7 @@ class ContestantsGrid extends BaseGrid
         ]);
         $this->addColumn(
             'school_name',
-            _('School'),
+            new Title(null, _('School')),
             fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory('school', 'school')->render(
                 $row->getPersonHistory(),
                 1024

@@ -9,12 +9,11 @@ use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
-use NiftyGrid\DataSource\IDataSource;
 
 /**
  * Represents instantiotion (in term of parameters) of \FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
  */
-class StoredQuery implements IDataSource, Resource
+class StoredQuery implements Resource
 {
 
     private const INNER_QUERY = 'sub';
@@ -229,25 +228,6 @@ class StoredQuery implements IDataSource, Resource
         $this->data = null;
     }
 
-    /*     * ******************************
-     * Interface IDataSource
-     * ****************************** */
-
-    /**
-     * @throws \PDOException
-     */
-    public function getCount(string $column = '*'): int
-    {
-        if (!isset($this->count)) {
-            $innerSql = $this->getSQL();
-            $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
-            $statement = $this->bindParams($sql);
-            $statement->execute();
-            $this->count = (int)$statement->fetchColumn();
-        }
-        return $this->count;
-    }
-
     /**
      * @throws \PDOException
      */
@@ -274,22 +254,6 @@ class StoredQuery implements IDataSource, Resource
             $this->data = $statement;
         }
         return $this->data; // lazy load during iteration?
-    }
-
-    public function limitData(int $limit, ?int $offset = null): void
-    {
-        $this->limit = $limit;
-        $this->offset = $offset;
-        $this->invalidateData();
-    }
-
-    /**
-     * Implements only single column sorting.
-     */
-    public function orderData(string $order): void
-    {
-        $this->orders[0] = "$order";
-        $this->invalidateData();
     }
 
     public function getResourceId(): string

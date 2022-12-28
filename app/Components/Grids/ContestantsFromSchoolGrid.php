@@ -27,6 +27,7 @@ class ContestantsFromSchoolGrid extends EntityGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {

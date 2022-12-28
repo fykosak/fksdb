@@ -11,14 +11,12 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use FKSDB\Models\SQL\SearchableDataSource;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
 
 class TeamApplicationsGrid extends FilterBaseGrid
 {
@@ -32,7 +30,7 @@ class TeamApplicationsGrid extends FilterBaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
@@ -49,30 +47,26 @@ class TeamApplicationsGrid extends FilterBaseGrid
             'fyziklani_team.phone',
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
-        $this->addCSVDownloadButton();
+        //$this->addCSVDownloadButton();
         parent::configure($presenter);
     }
 
-    protected function getData(): SearchableDataSource
+    protected function getData(): TypedGroupedSelection
     {
-        $source = new SearchableDataSource($this->event->getTeams());
-        $source->setFilterCallback($this->getFilterCallBack());
-        return $source;
+        return $this->event->getTeams();
     }
 
-    public function getFilterCallBack(): callable
+    public function getFilterCallBack(): void
     {
-        return function (Selection $table, array $value): void {
-            $states = [];
-            foreach ($value['state'] as $state => $value) {
-                if ($value) {
-                    $states[] = str_replace('__', '.', $state);
-                }
+        $states = [];
+        foreach ($this->searchTerm['state'] as $state => $value) {
+            if ($value) {
+                $states[] = str_replace('__', '.', $state);
             }
-            if (count($states)) {
-                $table->where('state IN ?', $states);
-            }
-        };
+        }
+        if (count($states)) {
+            $this->data->where('state IN ?', $states);
+        }
     }
 
     /**
