@@ -26,7 +26,7 @@ class ContestantsGrid extends BaseGrid
 
     protected function getData(): TypedGroupedSelection
     {
-        return $this->contestYear->getContestants();
+        return $this->contestYear->getContestants()->order('person.other_name ASC');
     }
 
     /**
@@ -37,8 +37,6 @@ class ContestantsGrid extends BaseGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-
-        $this->setDefaultOrder('person.other_name ASC');
         $this->addColumns([
             'person.full_name',
             'person_history.study_year',

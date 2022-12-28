@@ -32,12 +32,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
 
     protected function getData(): TypedGroupedSelection
     {
-        return $this->getSource();
-    }
-
-    protected function getSource(): TypedGroupedSelection
-    {
-        return $this->event->getParticipants();
+        return $this->event->getParticipants()->order('person.family_name');
     }
 
     protected function getFilterCallBack(): void
@@ -85,15 +80,10 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $fields = [];
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = $this->getTableName() . '.' . $name;
+                $fields[] = DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
             }
         }
         $this->addColumns($fields);
-    }
-
-    protected function getTableName(): string
-    {
-        return DbNames::TAB_EVENT_PARTICIPANT;
     }
 
     /**
@@ -102,7 +92,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        $this->setDefaultOrder('person.family_name');
         $this->paginate = false;
 
         $this->addColumns([
@@ -117,7 +106,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
 
     protected function getStateCases(): array
     {
-        $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
+        $query = $this->data->select('count(*) AS count,status.*')->group('status');
 
         $states = [];
         foreach ($query as $row) {

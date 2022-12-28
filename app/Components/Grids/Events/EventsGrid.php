@@ -35,7 +35,7 @@ class EventsGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->setDefaultOrder('event.begin ASC');
+        $this->data->order('event.begin ASC');
 
         $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);

@@ -46,7 +46,7 @@ class OrgsGrid extends FilterBaseGrid
     {
         parent::configure($presenter);
 
-        $this->setDefaultOrder('since DESC');
+        $this->data->order('since DESC');
 
         $this->addColumns([
             'person.full_name',

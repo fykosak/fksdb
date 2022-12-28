@@ -27,6 +27,6 @@ class ProducersGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->setDefaultOrder('name');
+        $this->data->order('name');
     }
 }

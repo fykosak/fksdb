@@ -17,13 +17,18 @@
         {/if}
     </div>
     <div class="col-4 text-right">
-        {_'Total'} {$resultsCount} {($resultsCount == 1) ? _('záznam') : (($resultsCount >= 2 && $resultsCount <= 4) ? _('záznamy') : _('záznamů'))}
+        {_'Total'} {$resultsCount}
+        {switch $resultsCount}
+            {case 1}{_'záznam'}
+            {case 2,3,4}{_'záznamy'}
+            {default}{_'záznamů'}
+        {/switch}
         {if $resultsCount && $paginate}
             {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
         {/if}
     </div>
 </div>
-{if $control->isSearchable()}
+{if $control instanceof FKSDB\Components\Grids\FilterBaseGrid}
     <div class="mb-3">
         {control searchForm}
     </div>

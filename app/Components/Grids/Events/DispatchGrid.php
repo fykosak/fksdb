@@ -35,7 +35,7 @@ class DispatchGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->setDefaultOrder('begin DESC');
+        $this->data->order('begin DESC');
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 }

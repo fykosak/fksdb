@@ -36,14 +36,7 @@ use PePa\CSVResponse;
  */
 abstract class BaseGrid extends BaseComponent
 {
-    /** @persistent int */
-    public ?int $perPage = 20;
-
     public bool $paginate = true;
-
-    protected ?string $defaultOrder = null;
-
-    protected string $templatePath;
 
     protected ORMFactory $tableReflectionFactory;
     /** @var TypedSelection|TypedGroupedSelection */
@@ -52,18 +45,11 @@ abstract class BaseGrid extends BaseComponent
     public function __construct(DIContainer $container)
     {
         parent::__construct($container);
-        $this->monitor(Presenter::class, function (Presenter $presenter) {
-            $this->addComponent(new TableRow($this->container, new Title(null, '')), 'columns');
-            $this->addComponent(new Container(), 'globalButtons');
+        $this->addComponent(new TableRow($this->container, new Title(null, '')), 'columns');
+        $this->addComponent(new Container(), 'globalButtons');
 
+        $this->monitor(Presenter::class, function (Presenter $presenter): void {
             $this->configure($presenter);
-
-            if ($this->paginate) {
-                $this->getPaginator()->itemsPerPage = $this->perPage;
-            }
-            if (isset($this->defaultOrder)) {
-                $this->data->order($this->defaultOrder);
-            }
         });
     }
 
@@ -85,35 +71,6 @@ abstract class BaseGrid extends BaseComponent
         $this->getGlobalButtonsContainer()->addComponent($button, $name);
         $button->setClass('btn btn-sm btn-outline-primary');
         return $button;
-    }
-
-    public function getColumnNames(): array
-    {
-        $columns = [];
-        foreach ($this->getColumnsContainer()->components as $column) {
-            $columns[] = $column->name;
-        }
-        return $columns;
-    }
-
-    public function getColsCount(): int
-    {
-        $count = count($this->getColumnsContainer()->components);
-        if ($this->hasButtons()) {
-            $count++;
-        }
-
-        return $count;
-    }
-
-    public function setDefaultOrder(string $order): void
-    {
-        $this->defaultOrder = $order;
-    }
-
-    public function hasButtons(): bool
-    {
-        return count($this->getColumnsContainer()->getButtonContainer()->getComponents()) > 0;
     }
 
     public function hasGlobalButtons(): bool
@@ -148,11 +105,6 @@ abstract class BaseGrid extends BaseComponent
         }
     }
 
-    protected function setTemplate(string $templatePath): void
-    {
-        $this->templatePath = $templatePath;
-    }
-
     public function getColumnsContainer(): TableRow
     {
         return $this->getComponent('columns');
@@ -182,42 +134,11 @@ abstract class BaseGrid extends BaseComponent
 
     public function render(): void
     {
-        $paginator = $this->getPaginator();
-        $count = $this->getCount();
-        $this->getPaginator()->itemCount = $count;
-        /*
-         * Credits David Grudl.
-         * @see http://addons.nette.org/cs/visualpaginator
-         */
-        $page = $paginator->page;
-        if ($paginator->pageCount < 2) {
-            $steps = [$page];
-        } else {
-            $arr = range(max($paginator->firstPage, $page - 3), min($paginator->lastPage, $page + 3));
-            $count = 4;
-            $quotient = ($paginator->pageCount - 1) / $count;
-            for ($i = 0; $i <= $count; $i++) {
-                $arr[] = round($quotient * $i) + $paginator->firstPage;
-            }
-            sort($arr);
-            $steps = array_values(array_unique($arr));
-        }
-        $this->getComponent('paginator')->template->steps = $steps;
+        $this->getPaginator()->itemCount = $this->getCount();
         $this->template->resultsCount = $this->getCount();
-        $this->template->paginate = $this->paginate;
         $this->template->rows = $this->data;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
-
-    /*     * ******************************
-     * Search
-     * ****************************** */
-
-    public function isSearchable(): bool
-    {
-        return false;
-    }
-
 
     /**
      * @throws BadTypeException

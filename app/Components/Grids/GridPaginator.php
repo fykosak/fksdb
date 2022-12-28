@@ -28,11 +28,28 @@ class GridPaginator extends BaseComponent
     {
         parent::__construct($container);
         $this->paginator = new Paginator();
+        $this->paginator->setItemsPerPage(20);
     }
 
     public function render(): void
     {
-        $this->template->paginator = $this->paginator;
+        $page = $this->paginator->page;
+        if ($this->paginator->getPageCount() < 2) {
+            $steps = [$page];
+        } else {
+            $arr = range(
+                max($this->paginator->getFirstPage(), $page - 3),
+                min($this->paginator->getLastPage(), $page + 3)
+            );
+            $count = 4;
+            $quotient = ($this->paginator->getPageCount() - 1) / $count;
+            for ($i = 0; $i <= $count; $i++) {
+                $arr[] = round($quotient * $i) + $this->paginator->getFirstPage();
+            }
+            sort($arr);
+            $steps = array_values(array_unique($arr));
+        }
+        $this->template->steps = $steps;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'paginator.latte');
     }
 

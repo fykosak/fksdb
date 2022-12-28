@@ -12,11 +12,8 @@ use Nette\DI\Container;
 
 abstract class EntityGrid extends BaseGrid
 {
-
     protected Service $service;
-
     private array $queryParams;
-
     private array $columns;
 
     public function __construct(

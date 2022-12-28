@@ -18,14 +18,9 @@ abstract class FilterBaseGrid extends BaseGrid
     {
         // this has to be done already here (and in the parent call again :-( )
         if (isset($this->searchTerm)) {
-            $this->getFilterCallback($this->data, $this->searchTerm);
+            $this->getFilterCallback();
         }
         parent::render();
-    }
-
-    public function isSearchable(): bool
-    {
-        return true;
     }
 
     /**
@@ -33,9 +28,6 @@ abstract class FilterBaseGrid extends BaseGrid
      */
     protected function createComponentSearchForm(): FormControl
     {
-        if (!$this->isSearchable()) {
-            throw new InvalidStateException('Cannot create search form without searchable data source.');
-        }
         $control = new FormControl($this->container);
         $form = $control->getForm();
         $form->setMethod(\Nette\Forms\Form::GET);

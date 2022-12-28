@@ -1,20 +1,21 @@
-{varType Nette\Utils\Paginator $paginator}
+
+{varType FKSDB\Components\Grids\GridPaginator $control}
 {varType array $steps}
-{if $paginator->pageCount > 1}
+{if $control->paginator->pageCount > 1}
     <nav>
         <ul class="pagination justify-content-center">
-            {if $paginator->isFirst()}
+            {if $control->paginator->isFirst()}
                 <li class="page-item disabled">
                     <span class="page-link">{_('Previous')}</span>
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->getPage() - 1}">{_('Previous')}</a>
+                    <a class="page-link" href="{link this, 'page' => $control->paginator->getPage() - 1}">{_('Previous')}</a>
                 </li>
             {/if}
 
             {foreach $steps as $step}
-                {if $step == $paginator->getPage()}
+                {if $step == $control->paginator->getPage()}
                     <li class="page-item active">
                         <span class="page-link">{$step}<span class="sr-only">(current)</span></span>
                     </li>
@@ -30,13 +31,13 @@
                 {/if}
             {/foreach}
 
-            {if $paginator->isLast()}
+            {if $control->paginator->isLast()}
                 <li class="page-item disabled">
                     <span class="page-link">{_('Next')}</span>
                 </li>
             {else}
                 <li class="page-item">
-                    <a class="page-link" href="{link this, 'page' => $paginator->getPage() + 1}">{_('Next')}</a>
+                    <a class="page-link" href="{link this, 'page' => $control->paginator->getPage() + 1}">{_('Next')}</a>
                 </li>
             {/if}
         </ul>

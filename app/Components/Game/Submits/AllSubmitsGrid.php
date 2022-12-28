@@ -149,9 +149,6 @@ class AllSubmitsGrid extends FilterBaseGrid
      */
     protected function createComponentSearchForm(): FormControl
     {
-        if (!$this->isSearchable()) {
-            throw new InvalidStateException('Cannot create search form without searchable data source.');
-        }
         $control = new FormControl($this->container);
         $form = $control->getForm();
         $form->setMethod(Form::GET);
