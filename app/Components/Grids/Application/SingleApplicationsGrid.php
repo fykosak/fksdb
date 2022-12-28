@@ -12,7 +12,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -99,7 +98,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void

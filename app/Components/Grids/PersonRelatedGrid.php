@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -45,7 +44,6 @@ class PersonRelatedGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void

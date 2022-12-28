@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
@@ -21,7 +20,6 @@ class EventPaymentGrid extends RelatedGrid
 
     /**
      * @throws BadTypeException
-     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
