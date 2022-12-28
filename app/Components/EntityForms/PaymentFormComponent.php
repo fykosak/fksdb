@@ -98,6 +98,7 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->machine,
+                $this->event,
                 !$this->isCreating()
             ),
             'payment_accommodation'

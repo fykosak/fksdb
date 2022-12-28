@@ -22,7 +22,12 @@ class PersonPaymentContainer extends ContainerWithOptions
     /**
      * @throws NotImplementedException
      */
-    public function __construct(Container $container, PaymentMachine $machine, EventModel $event, bool $showAll = true)
+    public function __construct(
+        Container $container,
+        PaymentMachine $machine,
+        EventModel $event,
+        bool $showAll = true
+    )
     {
         parent::__construct($container);
         $this->machine = $machine;

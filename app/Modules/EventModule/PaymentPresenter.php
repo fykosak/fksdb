@@ -243,6 +243,7 @@ class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
+            $this->getEvent(),
             null
         );
     }

@@ -2470,7 +2470,7 @@ msgstr "Nenastaveno"
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:74
 msgid "Proceed to summary"
-msgstr "Pokračuj na souhrn"
+msgstr "Pokračovat na souhrn"
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:74
 msgid "Save payment"
