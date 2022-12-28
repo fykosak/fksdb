@@ -49,5 +49,5 @@ abstract class FilterBaseGrid extends BaseGrid
         return $control;
     }
 
-    abstract public function getFilterCallback(): void;
+    abstract protected function getFilterCallback(): void;
 }

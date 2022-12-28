@@ -56,7 +56,7 @@ class TeamApplicationsGrid extends FilterBaseGrid
         return $this->event->getTeams();
     }
 
-    public function getFilterCallBack(): void
+    protected function getFilterCallBack(): void
     {
         $states = [];
         foreach ($this->searchTerm['state'] as $state => $value) {

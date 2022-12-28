@@ -33,7 +33,7 @@ class SchoolsGrid extends FilterBaseGrid
         return $this->service->getTable();
     }
 
-    public function getFilterCallback(): void
+    protected function getFilterCallback(): void
     {
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
         foreach ($tokens as $token) {

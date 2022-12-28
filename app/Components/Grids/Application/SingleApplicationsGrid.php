@@ -41,7 +41,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
         return $this->event->getParticipants();
     }
 
-    public function getFilterCallBack(): void
+    protected function getFilterCallBack(): void
     {
         $states = [];
         foreach ($this->searchTerm['status'] as $state => $value) {

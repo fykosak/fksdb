@@ -20,7 +20,6 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -91,40 +90,38 @@ class AllSubmitsGrid extends FilterBaseGrid
         );
     }
 
-    private function getFilterCallBack(): callable
+    protected function getFilterCallBack(): void
     {
-        return function (Selection $table, array $value): void {
-            foreach ($value as $key => $condition) {
-                if (!$condition) {
-                    continue;
-                }
-                switch ($key) {
-                    case 'team':
-                        $table->where('fyziklani_submit.fyziklani_team_id', $condition);
-                        break;
-                    case 'code':
-                        $fullCode = TaskCodePreprocessor::createFullCode($condition);
-                        if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
-                            $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
-                            $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
-                            $table->where(
-                                'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.label =? ',
-                                $teamId,
-                                $taskLabel
-                            );
-                        } else {
-                            $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
-                        }
-                        break;
-                    case 'not_null':
-                        $table->where('fyziklani_submit.points IS NOT NULL');
-                        break;
-                    case 'task':
-                        $table->where('fyziklani_submit.fyziklani_task_id', $condition);
-                        break;
-                }
+        foreach ($this->searchTerm as $key => $condition) {
+            if (!$condition) {
+                continue;
             }
-        };
+            switch ($key) {
+                case 'team':
+                    $this->data->where('fyziklani_submit.fyziklani_team_id', $condition);
+                    break;
+                case 'code':
+                    $fullCode = TaskCodePreprocessor::createFullCode($condition);
+                    if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
+                        $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
+                        $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
+                        $this->data->where(
+                            'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.label =? ',
+                            $teamId,
+                            $taskLabel
+                        );
+                    } else {
+                        $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
+                    }
+                    break;
+                case 'not_null':
+                    $this->data->where('fyziklani_submit.points IS NOT NULL');
+                    break;
+                case 'task':
+                    $this->data->where('fyziklani_submit.fyziklani_task_id', $condition);
+                    break;
+            }
+        }
     }
 
     public function handleRevoke(int $id): void

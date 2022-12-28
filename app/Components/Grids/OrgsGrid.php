@@ -26,7 +26,7 @@ class OrgsGrid extends FilterBaseGrid
         return $this->contest->getOrganisers();
     }
 
-    public function getFilterCallback(): void
+    protected function getFilterCallback(): void
     {
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
         foreach ($tokens as $token) {
