@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\StoredQuery;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class StoredQueriesGrid extends BaseGrid
@@ -34,7 +33,7 @@ class StoredQueriesGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         if (count($this->activeTagIds)) {
             $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');

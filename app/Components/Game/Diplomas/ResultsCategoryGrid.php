@@ -8,12 +8,10 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ResultsCategoryGrid extends BaseGrid
 {
-
     private EventModel $event;
     private TeamCategory $category;
 
@@ -28,7 +26,7 @@ class ResultsCategoryGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->event->getParticipatingTeams()
             ->where('category', $this->category->value)

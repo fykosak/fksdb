@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class AllPersonsGrid extends BaseGrid
@@ -31,7 +30,7 @@ class AllPersonsGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)

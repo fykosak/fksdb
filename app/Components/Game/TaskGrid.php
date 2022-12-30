@@ -7,7 +7,6 @@ namespace FKSDB\Components\Game;
 use FKSDB\Components\Grids\FilterBaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class TaskGrid extends FilterBaseGrid
@@ -36,7 +35,7 @@ class TaskGrid extends FilterBaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->event->getTasks();
         $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);

@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 
 class PersonGrid extends BaseGrid
 {
@@ -30,7 +29,7 @@ class PersonGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->paginate = false;
 

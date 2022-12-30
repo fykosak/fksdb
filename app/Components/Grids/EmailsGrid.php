@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class EmailsGrid extends EntityGrid
@@ -27,9 +26,9 @@ class EmailsGrid extends EntityGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->data->order('created DESC');
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;

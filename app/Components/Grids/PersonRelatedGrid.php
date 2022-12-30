@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class PersonRelatedGrid extends BaseGrid
@@ -28,7 +27,7 @@ class PersonRelatedGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {

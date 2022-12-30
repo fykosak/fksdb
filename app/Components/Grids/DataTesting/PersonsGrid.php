@@ -13,7 +13,6 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 
 class PersonsGrid extends BaseGrid
@@ -33,7 +32,7 @@ class PersonsGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->personService->getTable();
         $this->addColumns(['person.person_link']);

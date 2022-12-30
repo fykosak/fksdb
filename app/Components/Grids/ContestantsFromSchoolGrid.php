@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ContestantsFromSchoolGrid extends EntityGrid
@@ -25,7 +23,7 @@ class ContestantsFromSchoolGrid extends EntityGrid
         ]);
     }
 
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->addPresenterButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         $this->addPresenterButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);

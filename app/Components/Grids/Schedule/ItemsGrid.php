@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Schedule;
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ItemsGrid extends RelatedGrid
@@ -22,9 +21,9 @@ class ItemsGrid extends RelatedGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->addColumns([
             'schedule_item.schedule_item_id',
             'schedule_item.name_cs',

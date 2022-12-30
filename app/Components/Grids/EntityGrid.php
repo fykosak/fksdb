@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 abstract class EntityGrid extends BaseGrid
@@ -31,9 +30,9 @@ abstract class EntityGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->data = $this->service->getTable()->where($this->queryParams);
         $this->addColumns($this->columns);
     }

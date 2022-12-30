@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Events;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class DispatchGrid extends EntityGrid
@@ -32,9 +31,9 @@ class DispatchGrid extends EntityGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->data->order('begin DESC');
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }

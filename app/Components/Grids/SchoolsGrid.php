@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -37,7 +36,7 @@ class SchoolsGrid extends FilterBaseGrid
     /**
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->service->getTable();
         $this->addColumn('name', new Title(null, _('Name')), fn(SchoolModel $model) => $model->name);

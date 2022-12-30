@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Warehouse;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ProductsGrid extends EntityGrid
@@ -28,9 +27,9 @@ class ProductsGrid extends EntityGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }
 }

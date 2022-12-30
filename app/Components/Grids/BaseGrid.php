@@ -46,9 +46,7 @@ abstract class BaseGrid extends BaseComponent
         $this->addComponent(new TableRow($this->container, new Title(null, '')), 'columns');
         $this->addComponent(new Container(), 'globalButtons');
 
-        $this->monitor(Presenter::class, function (Presenter $presenter): void {
-            $this->configure($presenter);
-        });
+        $this->monitor(Presenter::class, fn() => $this->configure());
     }
 
     final public function injectBase(ORMFactory $tableReflectionFactory): void
@@ -114,7 +112,7 @@ abstract class BaseGrid extends BaseComponent
     }
 
 
-    abstract protected function configure(Presenter $presenter): void;
+    abstract protected function configure(): void;
 
     public function render(): void
     {

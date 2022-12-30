@@ -18,7 +18,6 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -42,7 +41,7 @@ class AllSubmitsGrid extends FilterBaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->submitService->findAll($this->event);
         $this->addColumns(

@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 
 class NewApplicationsGrid extends BaseGrid
 {
@@ -31,7 +30,7 @@ class NewApplicationsGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->eventService->getTable()
             ->where('registration_begin <= NOW()')
@@ -57,7 +56,7 @@ class NewApplicationsGrid extends BaseGrid
                         )
                     );
                 } catch (\Throwable $exception) {
-                    return $modelEvent->isRegistrationOpened();
+                    return true;
                 }
             }
         );

@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class PersonsGrid extends BaseGrid
@@ -25,7 +24,7 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->addColumn(
             'display_name_a',

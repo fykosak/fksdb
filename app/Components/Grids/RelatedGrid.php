@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use Fykosak\NetteORM\Model;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 abstract class RelatedGrid extends BaseGrid
@@ -21,9 +20,9 @@ abstract class RelatedGrid extends BaseGrid
         $this->model = $model;
     }
 
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->model->related($this->tableName);
-        parent::configure($presenter);
+        parent::configure();
     }
 }

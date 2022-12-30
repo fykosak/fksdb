@@ -7,12 +7,10 @@ namespace FKSDB\Components\Game\Diplomas;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ResultsTotalGrid extends BaseGrid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
@@ -25,7 +23,7 @@ class ResultsTotalGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->event->getParticipatingTeams()->order('name');
         $this->paginate = false;

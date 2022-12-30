@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ContestantsGrid extends BaseGrid
@@ -28,7 +27,7 @@ class ContestantsGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->contestYear->getContestants()->order('person.other_name ASC');
         $this->addColumns([

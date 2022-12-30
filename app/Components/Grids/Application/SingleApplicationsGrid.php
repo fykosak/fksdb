@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -83,7 +82,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->paginate = false;
         $this->data = $this->event->getParticipants()->order('person.family_name');

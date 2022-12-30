@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
@@ -35,7 +34,7 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
         $this->addColumn(

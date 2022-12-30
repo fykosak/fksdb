@@ -11,7 +11,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -30,7 +29,7 @@ class TeamApplicationsGrid extends FilterBaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->event->getTeams();
         $this->paginate = false;

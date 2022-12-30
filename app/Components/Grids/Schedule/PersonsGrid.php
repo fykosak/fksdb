@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class PersonsGrid extends BaseGrid
@@ -27,7 +26,7 @@ class PersonsGrid extends BaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->item->getInterested();
         $this->paginate = false;

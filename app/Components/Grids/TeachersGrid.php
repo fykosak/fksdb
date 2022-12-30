@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\NetteORM\TypedSelection;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class TeachersGrid extends EntityGrid
@@ -35,9 +34,9 @@ class TeachersGrid extends EntityGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->addORMLink('teacher.edit');
         $this->addORMLink('teacher.detail');
     }

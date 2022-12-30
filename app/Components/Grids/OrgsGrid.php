@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class OrgsGrid extends FilterBaseGrid
@@ -36,7 +35,7 @@ class OrgsGrid extends FilterBaseGrid
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->data = $this->contest->getOrganisers();
         $this->data->order('since DESC');
