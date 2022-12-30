@@ -154,29 +154,28 @@ abstract class BaseGrid extends BaseListComponent
         // return $this->addGlobalButton('csv', new Title(null, _('Download as csv')), 'csv!');
      }*/
 
-    public function handleCsv(): void
-    {
-        $columns = $this->tableRow->components;
-        $rows = $this->getModels();
-        $data = [];
-        foreach ($rows as $row) {
-            $datum = [];
-            /** @var ItemComponent $column */
-            foreach ($columns as $column) {
-                //$column->render($row, 1024);
-                // TODO
-                //  $item = $column->prepareValue($row);
-                // if ($item instanceof Html) {
-                //    $item = $item->getText();
-                //}
-                //$datum[$column->name] = $item;
-            }
-            $data[] = $datum;
-        }
-        $response = new CSVResponse($data, 'test.csv');
-        $response->setAddHeading(true);
-        $response->setQuotes(true);
-        $response->setGlue(',');
-        $this->getPresenter()->sendResponse($response);
-    }
+    /* public function handleCsv(): void
+     {
+         $columns = $this->tableRow->components;
+         $rows = $this->getModels();
+         $data = [];
+         foreach ($rows as $row) {
+             $datum = [];
+             foreach ($columns as $column) {
+                 //$column->render($row, 1024);
+                 // TODO
+                 //  $item = $column->prepareValue($row);
+                 // if ($item instanceof Html) {
+                 //    $item = $item->getText();
+                 //}
+                 //$datum[$column->name] = $item;
+             }
+             $data[] = $datum;
+         }
+         $response = new CSVResponse($data, 'test.csv');
+         $response->setAddHeading(true);
+         $response->setQuotes(true);
+         $response->setGlue(',');
+         $this->getPresenter()->sendResponse($response);
+     }*/
 }

@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Modules\OrgModule\BasePresenter;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
@@ -75,7 +74,6 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     /**
      * @param StoredQuery $dataSource
-     * @throws BadRequestException
      * @throws \DOMException
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void

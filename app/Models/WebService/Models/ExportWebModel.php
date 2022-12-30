@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Nette\Application\BadRequestException;
 
 class ExportWebModel extends WebModel
 {
@@ -28,7 +27,6 @@ class ExportWebModel extends WebModel
     }
 
     /**
-     * @throws BadRequestException
      * @throws \SoapFault
      * @throws \DOMException
      */
