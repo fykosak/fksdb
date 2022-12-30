@@ -40,16 +40,6 @@ abstract class Grid extends BaseListComponent
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    protected function getCount(): int
-    {
-        $count = $this->getModels()->count('*');
-        $this->getPaginator()->setItemCount($count);
-        if ($this->paginate) {
-            $this->getModels()->limit($this->getPaginator()->getItemsPerPage(), $this->getPaginator()->getOffset());
-        }
-        return $count;
-    }
-
     protected function createComponentPaginator(): Paginator
     {
         return new Paginator($this->container);
@@ -57,14 +47,9 @@ abstract class Grid extends BaseListComponent
 
     public function getPaginator(): NettePaginator
     {
-        return $this->getComponent('paginator')->paginator;
-    }
-
-    public function handleChangeCurrentPage(int $page): void
-    {
-        if ($this->presenter->isAjax()) {
-            $this->redirect('this', ['paginator-page' => $page]);
-        }
+        /** @var Paginator $control */
+        $control = $this->getComponent('paginator');
+        return $control->paginator;
     }
 
     public function getColumnsContainer(): TableRow
@@ -79,9 +64,7 @@ abstract class Grid extends BaseListComponent
 
     public function render(): void
     {
-        $this->getPaginator()->itemCount = $this->getCount();
         $this->template->paginate = $this->paginate;
-        $this->template->resultsCount = $this->getCount();
         parent::render();
     }
 

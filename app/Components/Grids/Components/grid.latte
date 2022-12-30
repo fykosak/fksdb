@@ -1,10 +1,10 @@
 {varType FKSDB\Components\Grids\Components\Grid $control}
-{varType int $resultsCount}
 {varType bool $paginate}
 {varType array $flashes}
 {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
 {varType int $userPermission}
-{php $models->limit($control->getPaginator()->getItemsPerPage(), $control->getPaginator()->getOffset())}
+{php $control->getPaginator()->setItemCount($models->count('*'))}
+{php $models->limit($control->getPaginator()->getItemsPerPage(),$control->getPaginator()->getOffset())}
 {foreach $flashes as $flash}
     <div class="alert alert-{$flash->type}">
         {$flash->message}
@@ -18,13 +18,13 @@
 {/if}
 <div class="row mt-3">
     <div class="offset-8 col-4">
-        {_'Total'} {$resultsCount}
-        {switch $resultsCount}
+        {_'Total'} {$control->getPaginator()->getItemCount()}
+        {switch $control->getPaginator()->getItemCount()}
             {case 1}{_'záznam'}
             {case 2,3,4}{_'záznamy'}
             {default}{_'záznamů'}
         {/switch}
-        {if $resultsCount && $paginate}
+        {if $control->getPaginator()->getItemCount() && $paginate}
             {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
         {/if}
     </div>
