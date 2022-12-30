@@ -32,7 +32,6 @@ abstract class EntityGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        parent::configure();
         $this->data = $this->service->getTable()->where($this->queryParams);
         $this->addColumns($this->columns);
     }

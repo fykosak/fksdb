@@ -85,7 +85,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->data = $this->event->getParticipants()->order('person.family_name');
+        $this->data = $this->event->getParticipants();
         $this->addColumns([
             'person.full_name',
             'event_participant.status',

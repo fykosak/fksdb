@@ -9,7 +9,6 @@ use Nette\DI\Container;
 
 abstract class RelatedGrid extends BaseGrid
 {
-
     protected Model $model;
     protected string $tableName;
 
@@ -23,6 +22,5 @@ abstract class RelatedGrid extends BaseGrid
     protected function configure(): void
     {
         $this->data = $this->model->related($this->tableName);
-        parent::configure();
     }
 }
