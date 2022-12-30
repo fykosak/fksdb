@@ -1,7 +1,7 @@
-{varType FKSDB\Components\Grids\ListComponent\Container\TableRow $control}
+{varType FKSDB\Components\Grids\Components\Container\TableRow $control}
 
 {foreach $control->getComponents() as $name=> $component}
-    {varType FKSDB\Components\Grids\ListComponent\ItemComponent $component}
+    {varType FKSDB\Components\Grids\Components\ItemComponent $component}
     {continueIf $name === 'buttons'}
     <th>
         {$component->title->toHtml()}

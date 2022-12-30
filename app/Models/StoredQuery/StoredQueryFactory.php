@@ -89,7 +89,7 @@ class StoredQueryFactory implements XMLNodeSerializer
         // parameters
         $parametersNode = $doc->createElement('parameters');
         $node->appendChild($parametersNode);
-        foreach ($dataSource->getImplicitParameters() as $name => $value) {
+        foreach ($dataSource->implicitParameterValues as $name => $value) {
             $parameterNode = $doc->createElement('parameter', (string)$value);
             $parameterNode->setAttribute('name', (string)$name);
             $parametersNode->appendChild($parameterNode);
@@ -116,10 +116,8 @@ class StoredQueryFactory implements XMLNodeSerializer
                 }
                 if ($formatVersion == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
-                } elseif ($formatVersion == self::EXPORT_FORMAT_2) {
-                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 } else {
-                    throw new BadRequestException(_('Unsupported format'));
+                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 }
                 $textNode = $doc->createTextNode((string)$value);
                 $colNode->appendChild($textNode);

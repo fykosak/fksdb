@@ -27,7 +27,7 @@ class StoredQueryTagAssertion implements Assertion
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        foreach ($storedQuery->getQueryPattern()->getStoredQueryTagTypes() as $tagType) {
+        foreach ($storedQuery->queryPattern->getStoredQueryTagTypes() as $tagType) {
             if (in_array($tagType->name, $this->tagNames)) {
                 return true;
             }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-use Nette\Forms\Form;
-
 abstract class FilterListComponent extends ListComponent
 {
     use FilterComponentTrait;

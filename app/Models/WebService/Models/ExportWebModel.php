@@ -87,15 +87,14 @@ class ExportWebModel extends WebModel
 
     private function isAuthorizedExport(StoredQuery $query): bool
     {
-        $implicitParameters = $query->getImplicitParameters();
-        if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
+        if (!isset($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
         return $this->contestAuthorizator->isAllowedForLogin(
             $this->authenticatedLogin,
             $query,
             'execute',
-            $this->contestService->findByPrimary($implicitParameters[StoredQueryFactory::PARAM_CONTEST])
+            $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }
 }

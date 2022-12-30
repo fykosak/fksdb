@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
-use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 

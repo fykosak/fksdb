@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
@@ -30,7 +29,6 @@ class ContestantsGrid extends BaseGrid
     }
 
     /**
-     * @throws InvalidLinkException
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -57,8 +55,6 @@ class ContestantsGrid extends BaseGrid
 
         $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
-
-        $this->addGlobalButton('add', _('Create contestant'), $this->getPresenter()->link('create'));
 
         $this->paginate = false;
     }

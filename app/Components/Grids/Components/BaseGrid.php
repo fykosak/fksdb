@@ -12,8 +12,6 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\ComponentModel\Container;
 use Nette\DI\Container as DIContainer;
 use Nette\Utils\Paginator;
 use PePa\CSVResponse;
@@ -38,25 +36,11 @@ abstract class BaseGrid extends BaseListComponent
         parent::__construct($container, $userPermission);
         $this->tableRow = new TableRow($this->container, new Title(null, ''));
         $this->addComponent($this->tableRow, 'columns');
-        $this->addComponent(new Container(), 'globalButtons');
     }
 
     final public function injectBase(ORMFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    public function addGlobalButton(string $name, string $label, string $link): GlobalButton
-    {
-        $button = new GlobalButton($label, $link);
-        $this->getGlobalButtonsContainer()->addComponent($button, $name);
-        $button->setClass('btn btn-sm btn-outline-primary');
-        return $button;
-    }
-
-    public function hasGlobalButtons(): bool
-    {
-        return count($this->getGlobalButtonsContainer()->components) > 0;
     }
 
     protected function getCount(): int
@@ -89,11 +73,6 @@ abstract class BaseGrid extends BaseListComponent
     public function getColumnsContainer(): TableRow
     {
         return $this->tableRow;
-    }
-
-    public function getGlobalButtonsContainer(): Container
-    {
-        return $this->getComponent('globalButtons');
     }
 
     protected function getTemplatePath(): string
@@ -170,13 +149,10 @@ abstract class BaseGrid extends BaseListComponent
         return $button;
     }
 
-    /**
-     * @throws InvalidLinkException
-     */
-    protected function addCSVDownloadButton(): GlobalButton
-    {
-        return $this->addGlobalButton('csv', _('Download as csv'), $this->link('csv!'));
-    }
+    /* protected function addCSVDownloadButton(): GlobalButton
+     {
+        // return $this->addGlobalButton('csv', new Title(null, _('Download as csv')), 'csv!');
+     }*/
 
     public function handleCsv(): void
     {

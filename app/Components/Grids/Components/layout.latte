@@ -5,17 +5,12 @@
 {varType Fykosak\NetteORM\Model[] $models}
 {varType int $userPermission}
 {var FKSDB\Components\Grids\Components\ItemComponent[] $columns = $control->getColumnsContainer()->getComponents()}
-{var FKSDB\Components\Grids\Components\GlobalButton[] $globalButtons = $control->getGlobalButtonsContainer()->getComponents()}
 <div class="row mb-3">
-    <div class="col-8">
-        {if $control->hasGlobalButtons()}
-            <div class="btn-group">
-                {foreach $globalButtons as $globalButton}
-                    {control $globalButton}&nbsp;
-                {/foreach}
-            </div>
-        {/if}
-    </div>
+    {if $control instanceof FKSDB\Components\Grids\Components\FilterBaseGrid}
+        <div class="mb-3">
+            {include filter from './filter.latte'}
+        </div>
+    {/if}
     <div class="col-4 text-right">
         {_'Total'} {$resultsCount}
         {switch $resultsCount}
@@ -28,11 +23,7 @@
         {/if}
     </div>
 </div>
-{if $control instanceof FKSDB\Components\Grids\Components\FilterBaseGrid}
-    <div class="mb-3">
-        {include filter from './filter.latte'}
-    </div>
-{/if}
+
 {foreach $flashes as $flash}
     <div class="alert alert-{$flash->type}">
         {$flash->message}

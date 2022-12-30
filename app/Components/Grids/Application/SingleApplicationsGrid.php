@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class SingleApplicationsGrid extends FilterBaseGrid
 {
@@ -98,6 +96,9 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->addHolderColumns();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $items = [];

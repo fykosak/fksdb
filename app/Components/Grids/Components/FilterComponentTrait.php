@@ -44,7 +44,7 @@ trait FilterComponentTrait
 
     public function handleDelete(string $param): void
     {
-        $this->filterParams[$param] = null;
+        unset($this->filterParams[$param]);
         $this->redirect('this');
     }
 

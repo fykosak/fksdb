@@ -1,6 +1,6 @@
 {varType Fykosak\NetteORM\Model $model}
 {varType int $userPermission}
-{varType FKSDB\Components\Grids\ListComponent\Container\TableRow $control}
+{varType FKSDB\Components\Grids\Components\Container\TableRow $control}
 {foreach $control->getComponents() as $name=> $component}
     {continueIf $name === 'buttons'}
     <td>
