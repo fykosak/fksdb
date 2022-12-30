@@ -100,6 +100,9 @@ class TeamListComponent extends FilterListComponent
     protected function getModels(): Selection
     {
         $query = $this->event->getTeams();
+        if (!isset($this->filterParams)) {
+            return $query;
+        }
         foreach ($this->filterParams as $key => $value) {
             if (is_null($value)) {
                 continue;

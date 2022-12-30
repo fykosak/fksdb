@@ -41,7 +41,7 @@ class PersonGrid extends BaseGrid
     {
         $this->paginate = false;
 
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,

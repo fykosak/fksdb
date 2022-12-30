@@ -65,6 +65,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent($button, 'create');
+        $this->tableRow->getButtonContainer()->addComponent($button, 'create');
     }
 }

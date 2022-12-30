@@ -11,19 +11,22 @@ use Nette\DI\Container;
 
 class TableRow extends ItemComponent
 {
+    public ButtonGroup $buttons;
+
     public function __construct(Container $container, Title $title)
     {
         parent::__construct($container, $title);
-        $this->addComponent(new ButtonGroup($container, new Title(null, _('Actions'))), 'buttons');
+        $this->buttons = new ButtonGroup($container, new Title(null, _('Actions')));
+        $this->addComponent($this->buttons, 'buttons');
     }
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'tableRow.latte';
     }
 
     public function getButtonContainer(): ButtonGroup
     {
-        return $this->getComponent('buttons');
+        return $this->buttons;
     }
 }

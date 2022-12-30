@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -69,7 +68,7 @@ class AllSubmitsGrid extends FilterBaseGrid
                 ['id' => 'fyziklani_submit_id']
             );
         }
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,
@@ -85,7 +84,10 @@ class AllSubmitsGrid extends FilterBaseGrid
     protected function getModels(): Selection
     {
         $query = $this->submitService->findAll($this->event);
-        foreach ($this->searchTerm as $key => $condition) {
+        if (!isset($this->filterParams)) {
+            return $query;
+        }
+        foreach ($this->filterParams as $key => $condition) {
             if (!$condition) {
                 continue;
             }
@@ -138,15 +140,8 @@ class AllSubmitsGrid extends FilterBaseGrid
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function createComponentSearchForm(): FormControl
+    protected function configureForm(Form $form): void
     {
-        $control = new FormControl($this->container);
-        $form = $control->getForm();
-        $form->setMethod(Form::GET);
-
         $rows = $this->event->getPossiblyAttendingTeams();
         $teams = [];
         /** @var TeamModel2 $team */
@@ -165,10 +160,5 @@ class AllSubmitsGrid extends FilterBaseGrid
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
-        $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form): void {
-            $this->searchTerm = $form->getValues('array');
-        };
-        return $control;
     }
 }

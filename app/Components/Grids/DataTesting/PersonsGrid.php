@@ -43,7 +43,7 @@ class PersonsGrid extends BaseGrid
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->getColumnsContainer()->addComponent(
+            $this->tableRow->addComponent(
                 new RendererItem(
                     $this->container,
                     function ($person) use ($test): Html {

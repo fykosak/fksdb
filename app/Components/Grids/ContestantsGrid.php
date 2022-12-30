@@ -40,7 +40,7 @@ class ContestantsGrid extends BaseGrid
             'person.full_name',
             'person_history.study_year',
         ]);
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(

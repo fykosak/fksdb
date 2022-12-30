@@ -28,9 +28,4 @@ abstract class ItemComponent extends BaseComponent
         $this->template->userPermission = $userPermission;
         $this->template->render($this->getTemplatePath());
     }
-
-    public function getContainerClassName(): ?string
-    {
-        return null;
-    }
 }

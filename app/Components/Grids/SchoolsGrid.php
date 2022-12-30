@@ -12,26 +12,30 @@ use FKSDB\Models\ORM\Services\SchoolService;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 class SchoolsGrid extends FilterBaseGrid
 {
     private SchoolService $service;
 
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-    }
-
     public function injectService(SchoolService $service): void
     {
         $this->service = $service;
     }
 
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
+    }
+
     protected function getModels(): Selection
     {
         $query = $this->service->getTable();
-        $tokens = preg_split('/\s+/', $this->searchTerm['term']);
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
         foreach ($tokens as $token) {
             $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
         }
@@ -43,11 +47,11 @@ class SchoolsGrid extends FilterBaseGrid
      */
     protected function configure(): void
     {
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
             'name'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $school): string => $school->address->city,
@@ -55,7 +59,7 @@ class SchoolsGrid extends FilterBaseGrid
             ),
             'city'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $row): Html => Html::el('span')

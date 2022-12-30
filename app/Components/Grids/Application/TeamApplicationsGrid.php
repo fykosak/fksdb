@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -14,7 +12,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
 
 class TeamApplicationsGrid extends FilterBaseGrid
 {
@@ -29,14 +26,14 @@ class TeamApplicationsGrid extends FilterBaseGrid
     protected function getModels(): Selection
     {
         $query = $this->event->getTeams();
-        $states = [];
-        foreach ($this->searchTerm['state'] as $state => $value) {
-            if ($value) {
-                $states[] = str_replace('__', '.', $state);
-            }
+        if (!isset($this->filterParams)) {
+            return $query;
         }
-        if (count($states)) {
-            $query->where('state IN ?', $states);
+        foreach ($this->filterParams as $key => $filterParam) {
+            switch ($key) {
+                case 'status':
+                    $query->where('state', $filterParam[$key]);
+            }
         }
         return $query;
     }
@@ -62,26 +59,14 @@ class TeamApplicationsGrid extends FilterBaseGrid
     }
 
     /**
-     * @throws BadTypeException
      * @throws NotImplementedException
      */
-    protected function createComponentSearchForm(): FormControl
+    protected function configureForm(Form $form): void
     {
-        $control = new FormControl($this->container);
-        $form = $control->getForm();
-        $stateContainer = new ContainerWithOptions($this->container);
-        $stateContainer->setOption('label', _('States'));
+        $items = [];
         foreach (TeamState::cases() as $state) {
-            $label = Html::el('span')
-                ->addHtml(Html::el('b')->addText($state->label()))
-                ->addText(': ');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state->value), $label);
+            $items[$state->value] = $state->label();
         }
-        $form->addComponent($stateContainer, 'state');
-        $form->addSubmit('submit', _('Apply filter'));
-        $form->onSuccess[] = function (Form $form): void {
-            $this->searchTerm = $form->getValues('array');
-        };
-        return $control;
+        $form->addSelect('status', _('State'), $items)->setPrompt(_('Select state'));
     }
 }

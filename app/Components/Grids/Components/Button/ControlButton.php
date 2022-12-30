@@ -33,6 +33,6 @@ class ControlButton extends DefaultButton
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'control.latte';
     }
 }

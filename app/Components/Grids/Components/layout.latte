@@ -30,7 +30,7 @@
 </div>
 {if $control instanceof FKSDB\Components\Grids\Components\FilterBaseGrid}
     <div class="mb-3">
-        {control searchForm}
+        {include filter from './filter.latte'}
     </div>
 {/if}
 {foreach $flashes as $flash}

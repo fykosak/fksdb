@@ -10,6 +10,6 @@ class RowContainer extends ItemComponent
 {
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'row.latte';
     }
 }

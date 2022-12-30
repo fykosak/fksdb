@@ -1,7 +1,6 @@
 {layout '../../Controls/@layout.latte'}
 {varType array $filterParams}
-{block content}
-    <hr/>
+{block filter}
     <div class="mb-3">
         {control filterForm}
         {foreach $filterParams as $key =>$value}
@@ -15,5 +14,9 @@
         {/foreach}
     </div>
     <hr/>
+{/block}
+{block content}
+    <hr/>
+    {include filter}
     {include content from './list.latte'}
 {/block}

@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class TaskGrid extends FilterBaseGrid
 {
@@ -23,7 +24,10 @@ class TaskGrid extends FilterBaseGrid
     protected function getModels(): Selection
     {
         $query = $this->event->getTasks();
-        $tokens = preg_split('/\s+/', $this->searchTerm['term']);
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
         foreach ($tokens as $token) {
             $query->where(
                 'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
@@ -32,6 +36,11 @@ class TaskGrid extends FilterBaseGrid
             );
         }
         return $query;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
     /**

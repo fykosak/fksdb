@@ -13,7 +13,7 @@ use Nette\DI\Container;
 abstract class ListComponent extends BaseListComponent
 {
     protected ORMFactory $reflectionFactory;
-    protected \Nette\ComponentModel\Container $buttons;
+    protected ButtonGroup $buttons;
     /** @var callable */
     protected $classNameCallback = null;
 

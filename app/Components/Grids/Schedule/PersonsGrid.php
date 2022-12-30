@@ -35,7 +35,7 @@ class PersonsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,

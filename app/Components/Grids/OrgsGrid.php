@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class OrgsGrid extends FilterBaseGrid
 {
@@ -23,7 +24,10 @@ class OrgsGrid extends FilterBaseGrid
     protected function getModels(): Selection
     {
         $query = $this->contest->getOrganisers()->order('since DESC');
-        $tokens = preg_split('/\s+/', $this->searchTerm['term']);
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
         foreach ($tokens as $token) {
             $query->where(
                 'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
@@ -32,6 +36,11 @@ class OrgsGrid extends FilterBaseGrid
             );
         }
         return $query;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
     /**

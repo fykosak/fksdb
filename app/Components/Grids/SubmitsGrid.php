@@ -44,7 +44,7 @@ class SubmitsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFQName(),
@@ -52,7 +52,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'task'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format('c'),
@@ -60,7 +60,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'submitted_on'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->source->value,
@@ -69,7 +69,7 @@ class SubmitsGrid extends BaseGrid
             'source'
         );
 
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,
@@ -81,7 +81,7 @@ class SubmitsGrid extends BaseGrid
             'revoke'
         );
 
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,
@@ -93,7 +93,7 @@ class SubmitsGrid extends BaseGrid
             'download_uploaded'
         );
 
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new ControlButton(
                 $this->container,
                 $this,

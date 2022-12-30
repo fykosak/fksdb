@@ -8,6 +8,6 @@ class PresenterButton extends DefaultButton
 {
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'presenter.latte';
     }
 }

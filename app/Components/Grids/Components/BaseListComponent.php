@@ -16,6 +16,7 @@ abstract class BaseListComponent extends BaseComponent
     public function __construct(Container $container, int $userPermission)
     {
         parent::__construct($container);
+        $this->userPermission = $userPermission;
         $this->monitor(Presenter::class, fn() => $this->configure());
     }
 

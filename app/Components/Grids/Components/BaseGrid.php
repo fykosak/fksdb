@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\TableRow;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
@@ -30,10 +31,13 @@ abstract class BaseGrid extends BaseListComponent
 
     protected ORMFactory $tableReflectionFactory;
 
-    public function __construct(DIContainer $container)
+    protected TableRow $tableRow;
+
+    public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
     {
-        parent::__construct($container, 1024);
-        $this->addComponent(new TableRow($this->container, new Title(null, '')), 'columns');
+        parent::__construct($container, $userPermission);
+        $this->tableRow = new TableRow($this->container, new Title(null, ''));
+        $this->addComponent($this->tableRow, 'columns');
         $this->addComponent(new Container(), 'globalButtons');
     }
 
@@ -84,7 +88,7 @@ abstract class BaseGrid extends BaseListComponent
 
     public function getColumnsContainer(): TableRow
     {
-        return $this->getComponent('columns');
+        return $this->tableRow;
     }
 
     public function getGlobalButtonsContainer(): Container
@@ -110,7 +114,7 @@ abstract class BaseGrid extends BaseListComponent
     protected function addColumns(array $fields): void
     {
         foreach ($fields as $name) {
-            $this->getColumnsContainer()->addComponent(
+            $this->tableRow->addComponent(
                 new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
                 str_replace('.', '__', $name)
             );
@@ -142,7 +146,7 @@ abstract class BaseGrid extends BaseListComponent
                 $paramMapCallback($model)
             ) : true
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent($button, $name);
+        $this->tableRow->getButtonContainer()->addComponent($button, $name);
         return $button;
     }
 
@@ -162,7 +166,7 @@ abstract class BaseGrid extends BaseListComponent
                 ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
                 : true
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent($button, str_replace('.', '_', $linkId));
+        $this->tableRow->getButtonContainer()->addComponent($button, str_replace('.', '_', $linkId));
         return $button;
     }
 
@@ -176,7 +180,7 @@ abstract class BaseGrid extends BaseListComponent
 
     public function handleCsv(): void
     {
-        $columns = $this->getColumnsContainer()->components;
+        $columns = $this->tableRow->components;
         $rows = $this->getModels();
         $data = [];
         foreach ($rows as $row) {

@@ -34,7 +34,7 @@ class PersonsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
@@ -42,7 +42,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_a'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
@@ -52,7 +52,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_b'
         );
-        $this->getColumnsContainer()->addComponent(
+        $this->tableRow->addComponent(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
@@ -63,7 +63,7 @@ class PersonsGrid extends BaseGrid
             ),
             'score'
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge A<-B')),
@@ -78,7 +78,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeAB'
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge B<-A')),
@@ -92,7 +92,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeBA'
         );
-        $this->getColumnsContainer()->getButtonContainer()->addComponent(
+        $this->tableRow->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('It\'s not a duplicity')),
