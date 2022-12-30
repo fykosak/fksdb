@@ -38,18 +38,13 @@ class AllSubmitsGrid extends FilterBaseGrid
         $this->submitService = $submitService;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->submitService->findAll($this->event);
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->submitService->findAll($this->event);
         $this->addColumns(
             $this->event->event_type_id === 1
                 ? [

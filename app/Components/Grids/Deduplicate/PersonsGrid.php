@@ -25,14 +25,8 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
-    protected function setData(): void
-    {
-    }
-
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
-
         $this->addColumn(
             'display_name_a',
             new Title(null, _('Person A')),

@@ -114,12 +114,7 @@ abstract class BaseGrid extends BaseComponent
     }
 
 
-    protected function configure(Presenter $presenter): void
-    {
-        $this->setData();
-    }
-
-    abstract protected function setData(): void;
+    abstract protected function configure(Presenter $presenter): void;
 
     public function render(): void
     {

@@ -23,18 +23,13 @@ class PersonsGrid extends BaseGrid
         $this->item = $item;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->item->getInterested();
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->item->getInterested();
         $this->paginate = false;
         $this->addColumn(
             'person_schedule_id',

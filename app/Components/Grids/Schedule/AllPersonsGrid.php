@@ -27,20 +27,15 @@ class AllPersonsGrid extends BaseGrid
         $this->personScheduleService = $personScheduleService;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
-            ->order('person_schedule_id');
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->personScheduleService->getTable()
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
+            ->order('person_schedule_id');
         $this->paginate = false;
         $this->addColumns(
             [

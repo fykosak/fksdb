@@ -20,11 +20,6 @@ class OrgsGrid extends FilterBaseGrid
         $this->contest = $contest;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->contest->getOrganisers();
-    }
-
     protected function getFilterCallback(): void
     {
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
@@ -43,8 +38,7 @@ class OrgsGrid extends FilterBaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
-
+        $this->data = $this->contest->getOrganisers();
         $this->data->order('since DESC');
 
         $this->addColumns([

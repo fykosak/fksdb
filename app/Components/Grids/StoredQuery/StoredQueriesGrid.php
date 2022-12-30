@@ -30,18 +30,12 @@ class StoredQueriesGrid extends BaseGrid
         $this->storedQueryService = $storedQueryService;
     }
 
-    public function setData(): void
-    {
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
-
         if (count($this->activeTagIds)) {
             $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
         } else {

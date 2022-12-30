@@ -27,18 +27,13 @@ class TeamSubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->team->getSubmits()->order('fyziklani_submit.created');
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->team->getSubmits()->order('fyziklani_submit.created');
         $this->paginate = false;
 
         $this->addColumns([

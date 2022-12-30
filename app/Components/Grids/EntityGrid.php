@@ -27,11 +27,6 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->service->getTable()->where($this->queryParams);
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
@@ -39,6 +34,7 @@ abstract class EntityGrid extends BaseGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
+        $this->data = $this->service->getTable()->where($this->queryParams);
         $this->addColumns($this->columns);
     }
 }

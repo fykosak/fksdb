@@ -14,10 +14,6 @@ use Nette\Application\UI\Presenter;
 
 class PersonGrid extends BaseGrid
 {
-    protected function setData(): void
-    {
-    }
-
     /**
      * @throws \InvalidArgumentException
      */
@@ -36,7 +32,6 @@ class PersonGrid extends BaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
         $this->paginate = false;
 
         $this->addColumn(

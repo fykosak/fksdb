@@ -23,11 +23,6 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->contestYear->getContestants()->order('person.other_name ASC');
-    }
-
     /**
      * @throws InvalidLinkException
      * @throws BadTypeException
@@ -35,7 +30,7 @@ class ContestantsGrid extends BaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->contestYear->getContestants()->order('person.other_name ASC');
         $this->addColumns([
             'person.full_name',
             'person_history.study_year',

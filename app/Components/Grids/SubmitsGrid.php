@@ -35,14 +35,9 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
-    }
-
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
         $this->addColumn(
             'task',
             new Title(null, _('Task')),

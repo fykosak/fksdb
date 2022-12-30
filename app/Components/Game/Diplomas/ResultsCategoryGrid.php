@@ -24,20 +24,15 @@ class ResultsCategoryGrid extends BaseGrid
         $this->category = $category;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->event->getParticipatingTeams()
-            ->where('category', $this->category->value)
-            ->order('name');
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->event->getParticipatingTeams()
+            ->where('category', $this->category->value)
+            ->order('name');
 
         $this->paginate = false;
 

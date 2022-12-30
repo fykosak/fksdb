@@ -21,18 +21,13 @@ class ResultsTotalGrid extends BaseGrid
         $this->event = $event;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->event->getParticipatingTeams()->order('name');
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->event->getParticipatingTeams()->order('name');
         $this->paginate = false;
 
         $this->addColumns([

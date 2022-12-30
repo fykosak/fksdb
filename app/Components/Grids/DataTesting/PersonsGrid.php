@@ -29,19 +29,13 @@ class PersonsGrid extends BaseGrid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->personService->getTable();
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
-
+        $this->data = $this->personService->getTable();
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {

@@ -27,20 +27,15 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->eventService->getTable()
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
-    }
-
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->eventService->getTable()
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
         $this->paginate = false;
         $this->addColumns([
             'event.name',

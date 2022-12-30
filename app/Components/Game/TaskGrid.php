@@ -20,11 +20,6 @@ class TaskGrid extends FilterBaseGrid
         $this->event = $event;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->event->getTasks();
-    }
-
     protected function getFilterCallback(): void
     {
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
@@ -43,7 +38,7 @@ class TaskGrid extends FilterBaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->event->getTasks();
         $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);
     }
 }

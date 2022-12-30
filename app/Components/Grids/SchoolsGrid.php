@@ -26,11 +26,6 @@ class SchoolsGrid extends FilterBaseGrid
         $this->service = $service;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->service->getTable();
-    }
-
     protected function getFilterCallback(): void
     {
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
@@ -44,7 +39,7 @@ class SchoolsGrid extends FilterBaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-        parent::configure($presenter);
+        $this->data = $this->service->getTable();
         $this->addColumn('name', new Title(null, _('Name')), fn(SchoolModel $model) => $model->name);
         $this->addColumn('city', new Title(null, _('City')), fn(SchoolModel $school): string => $school->address->city);
         $this->addColumn(

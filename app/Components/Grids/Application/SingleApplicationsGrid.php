@@ -28,11 +28,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->holder = $holder;
     }
 
-    protected function setData(): void
-    {
-        $this->data = $this->event->getParticipants()->order('person.family_name');
-    }
-
     protected function getFilterCallBack(): void
     {
         $states = [];
@@ -91,7 +86,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
     protected function configure(Presenter $presenter): void
     {
         $this->paginate = false;
-
+        $this->data = $this->event->getParticipants()->order('person.family_name');
         $this->addColumns([
             'person.full_name',
             'event_participant.status',
@@ -99,7 +94,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         // $this->addCSVDownloadButton();
         $this->addHolderColumns();
-        parent::configure($presenter);
     }
 
     protected function getStateCases(): array

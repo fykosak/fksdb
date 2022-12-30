@@ -32,7 +32,7 @@ class TeamApplicationsGrid extends FilterBaseGrid
      */
     protected function configure(Presenter $presenter): void
     {
-
+        $this->data = $this->event->getTeams();
         $this->paginate = false;
 
         $this->addColumns([
@@ -46,12 +46,6 @@ class TeamApplicationsGrid extends FilterBaseGrid
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
         //$this->addCSVDownloadButton();
-        parent::configure($presenter);
-    }
-
-    protected function setData(): void
-    {
-        $this->data = $this->event->getTeams();
     }
 
     protected function getFilterCallBack(): void
