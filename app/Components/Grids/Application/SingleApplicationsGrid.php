@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -15,7 +15,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class SingleApplicationsGrid extends FilterBaseGrid
+class SingleApplicationsGrid extends FilterGrid
 {
     protected EventModel $event;
     private BaseHolder $holder;

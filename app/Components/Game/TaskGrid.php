@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\Components\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class TaskGrid extends FilterBaseGrid
+class TaskGrid extends FilterGrid
 {
     private EventModel $event;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\DataTesting;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
@@ -17,7 +17,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 
-class PersonsGrid extends BaseGrid
+class PersonsGrid extends Grid
 {
     private PersonService $personService;
 

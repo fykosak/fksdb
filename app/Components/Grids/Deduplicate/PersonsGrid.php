@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -14,7 +14,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class PersonsGrid extends BaseGrid
+class PersonsGrid extends Grid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;

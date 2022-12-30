@@ -25,6 +25,11 @@ class TableRow extends ItemComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'tableRow.latte';
     }
 
+    public function renderHead(): void
+    {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'tableRow.head.latte');
+    }
+
     public function getButtonContainer(): ButtonGroup
     {
         return $this->buttons;

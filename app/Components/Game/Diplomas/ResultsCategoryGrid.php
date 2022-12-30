@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class ResultsCategoryGrid extends BaseGrid
+class ResultsCategoryGrid extends Grid
 {
     private EventModel $event;
     private TeamCategory $category;

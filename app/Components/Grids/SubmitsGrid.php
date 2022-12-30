@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -21,7 +21,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-class SubmitsGrid extends BaseGrid
+class SubmitsGrid extends Grid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\StoredQuery;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class StoredQueriesGrid extends BaseGrid
+class StoredQueriesGrid extends Grid
 {
     /** @const No. of characters that are showed from query description. */
     public const DESCRIPTION_TRUNC = 80;

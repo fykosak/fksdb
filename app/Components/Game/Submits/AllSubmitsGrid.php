@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
-use FKSDB\Components\Grids\Components\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -21,7 +21,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class AllSubmitsGrid extends FilterBaseGrid
+class AllSubmitsGrid extends FilterGrid
 {
     protected SubmitService $submitService;
     protected EventModel $event;

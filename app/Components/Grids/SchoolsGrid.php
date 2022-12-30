@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -14,7 +14,7 @@ use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class SchoolsGrid extends FilterBaseGrid
+class SchoolsGrid extends FilterGrid
 {
     private SchoolService $service;
 

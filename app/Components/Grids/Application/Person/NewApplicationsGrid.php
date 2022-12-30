@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application\Person;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -15,7 +15,7 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 
-class NewApplicationsGrid extends BaseGrid
+class NewApplicationsGrid extends Grid
 {
     protected EventService $eventService;
 

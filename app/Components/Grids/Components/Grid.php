@@ -13,8 +13,7 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container as DIContainer;
-use Nette\Utils\Paginator;
-use PePa\CSVResponse;
+use Nette\Utils\Paginator as NettePaginator;
 
 /**
  * Combination od old NiftyGrid - Base grid from Michal Koutny
@@ -23,12 +22,10 @@ use PePa\CSVResponse;
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
  */
-abstract class BaseGrid extends BaseListComponent
+abstract class Grid extends BaseListComponent
 {
     public bool $paginate = true;
-
     protected ORMFactory $tableReflectionFactory;
-
     protected TableRow $tableRow;
 
     public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
@@ -53,12 +50,12 @@ abstract class BaseGrid extends BaseListComponent
         return $count;
     }
 
-    protected function createComponentPaginator(): GridPaginator
+    protected function createComponentPaginator(): Paginator
     {
-        return new GridPaginator($this->container);
+        return new Paginator($this->container);
     }
 
-    public function getPaginator(): Paginator
+    public function getPaginator(): NettePaginator
     {
         return $this->getComponent('paginator')->paginator;
     }
@@ -77,12 +74,13 @@ abstract class BaseGrid extends BaseListComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'grid.latte';
     }
 
     public function render(): void
     {
         $this->getPaginator()->itemCount = $this->getCount();
+        $this->template->paginate = $this->paginate;
         $this->template->resultsCount = $this->getCount();
         parent::render();
     }

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Components;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\Utils\Paginator;
+use Nette\Utils\Paginator as NettePaginator;
 
 /**
  * NiftyGrid - DataGrid for Nette
@@ -18,16 +18,16 @@ use Nette\Utils\Paginator;
  * @license    New BSD Licence
  * @link    http://addons.nette.org/cs/niftygrid
  */
-class GridPaginator extends BaseComponent
+class Paginator extends BaseComponent
 {
     /** @persistent */
     public int $page = 1;
-    public Paginator $paginator;
+    public NettePaginator $paginator;
 
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->paginator = new Paginator();
+        $this->paginator = new NettePaginator();
         $this->paginator->setItemsPerPage(20);
     }
 
