@@ -6,11 +6,12 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -25,19 +26,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
         parent::__construct($container);
         $this->event = $event;
         $this->holder = $holder;
-    }
-
-    protected function getFilterCallBack(): void
-    {
-        $states = [];
-        foreach ($this->searchTerm['status'] as $state => $value) {
-            if ($value) {
-                $states[] = str_replace('__', '.', $state);
-            }
-        }
-        if (count($states)) {
-            $this->data->where('status IN ?', $states);
-        }
     }
 
     protected function getHoldersColumns(): array
@@ -78,6 +66,21 @@ class SingleApplicationsGrid extends FilterBaseGrid
         $this->addColumns($fields);
     }
 
+    protected function getModels(): Selection
+    {
+        $query = $this->event->getParticipants();
+        $states = [];
+        foreach ($this->searchTerm['status'] as $state => $value) {
+            if ($value) {
+                $states[] = str_replace('__', '.', $state);
+            }
+        }
+        if (count($states)) {
+            $query->where('status IN ?', $states);
+        }
+        return $query;
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
@@ -85,7 +88,6 @@ class SingleApplicationsGrid extends FilterBaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->data = $this->event->getParticipants();
         $this->addColumns([
             'person.full_name',
             'event_participant.status',
@@ -97,7 +99,7 @@ class SingleApplicationsGrid extends FilterBaseGrid
 
     protected function getStateCases(): array
     {
-        $query = $this->data->select('count(*) AS count,status.*')->group('status');
+        $query = $this->getModels()->select('count(*) AS count,status.*')->group('status');
 
         $states = [];
         foreach ($query as $row) {

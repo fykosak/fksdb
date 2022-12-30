@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application\Person;
 
-use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 
 class NewApplicationsGrid extends BaseGrid
 {
@@ -26,15 +27,19 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->eventService->getTable()
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->eventService->getTable()
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
         $this->paginate = false;
         $this->addColumns([
             'event.name',

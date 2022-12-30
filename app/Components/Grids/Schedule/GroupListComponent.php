@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
-use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
-use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
-use FKSDB\Components\Grids\ListComponent\ListComponent;
-use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
-use FKSDB\Components\Grids\ListComponent\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Button\ButtonGroup;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\RowContainer;
+use FKSDB\Components\Grids\Components\Container\ListGroupContainer;
+use FKSDB\Components\Grids\Components\ListComponent;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class GroupListComponent extends ListComponent
@@ -29,7 +30,7 @@ class GroupListComponent extends ListComponent
         $this->event = $event;
     }
 
-    protected function getModels(): iterable
+    protected function getModels(): Selection
     {
         return $this->event->getScheduleGroups();
     }

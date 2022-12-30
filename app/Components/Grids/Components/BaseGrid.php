@@ -2,27 +2,22 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
-use FKSDB\Components\Grids\ListComponent\Container\TableRow;
-use FKSDB\Components\Grids\ListComponent\ItemComponent;
-use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
-use FKSDB\Components\Grids\ListComponent\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\TableRow;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container as DIContainer;
 use Nette\Utils\Paginator;
-use FKSDB\Components\Grids\Components\GlobalButton;
 use PePa\CSVResponse;
 
 /**
@@ -32,33 +27,22 @@ use PePa\CSVResponse;
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
  */
-abstract class BaseGrid extends BaseComponent
+abstract class BaseGrid extends BaseListComponent
 {
     public bool $paginate = true;
 
     protected ORMFactory $tableReflectionFactory;
-    /** @var TypedSelection|TypedGroupedSelection */
-    protected Selection $data;
 
     public function __construct(DIContainer $container)
     {
-        parent::__construct($container);
+        parent::__construct($container, 1024);
         $this->addComponent(new TableRow($this->container, new Title(null, '')), 'columns');
         $this->addComponent(new Container(), 'globalButtons');
-
-        $this->monitor(Presenter::class, fn() => $this->configure());
     }
 
     final public function injectBase(ORMFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    protected function addColumn(string $name, Title $title, callable $renderer): RendererItem
-    {
-        $column = new RendererItem($this->container, $renderer, $title);
-        $this->getColumnsContainer()->addComponent($column, $name);
-        return $column;
     }
 
     public function addGlobalButton(string $name, string $label, string $link): GlobalButton
@@ -76,10 +60,10 @@ abstract class BaseGrid extends BaseComponent
 
     protected function getCount(): int
     {
-        $count = $this->data->count('*');
+        $count = $this->getModels()->count('*');
         $this->getPaginator()->setItemCount($count);
         if ($this->paginate) {
-            $this->data->limit($this->getPaginator()->getItemsPerPage(), $this->getPaginator()->getOffset());
+            $this->getModels()->limit($this->getPaginator()->getItemsPerPage(), $this->getPaginator()->getOffset());
         }
         return $count;
     }
@@ -111,27 +95,16 @@ abstract class BaseGrid extends BaseComponent
         return $this->getComponent('globalButtons');
     }
 
-
-    abstract protected function configure(): void;
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
+    }
 
     public function render(): void
     {
         $this->getPaginator()->itemCount = $this->getCount();
         $this->template->resultsCount = $this->getCount();
-        $this->template->rows = $this->data;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
-    private function addReflectionColumn(string $field): void
-    {
-        $this->getColumnsContainer()->addComponent(
-            new TemplateItem($this->container, '@' . $field . ':value', '@' . $field . ':title'),
-            str_replace('.', '__', $field)
-        );
+        parent::render();
     }
 
     /**
@@ -140,7 +113,10 @@ abstract class BaseGrid extends BaseComponent
     protected function addColumns(array $fields): void
     {
         foreach ($fields as $name) {
-            $this->addReflectionColumn($name);
+            $this->getColumnsContainer()->addComponent(
+                new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
+                str_replace('.', '__', $name)
+            );
         }
     }
 
@@ -204,7 +180,7 @@ abstract class BaseGrid extends BaseComponent
     public function handleCsv(): void
     {
         $columns = $this->getColumnsContainer()->components;
-        $rows = $this->data;
+        $rows = $this->getModels();
         $data = [];
         foreach ($rows as $row) {
             $datum = [];

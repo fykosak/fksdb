@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PersonRelatedGrid extends BaseGrid
@@ -23,17 +25,23 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
+    protected function getModels(): Selection
+    {
+        $query = $this->person->related($this->definition['table']);
+        if ($this->definition['minimalPermission'] > $this->userPermissions) {
+            $query->where('1=0');
+            $this->flashMessage('Access denied', Message::LVL_ERROR);
+        }
+        return $query;
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->person->related($this->definition['table']);
-        if ($this->definition['minimalPermission'] > $this->userPermissions) {
-            $this->data->where('1=0');
-            $this->flashMessage('Access denied', Message::LVL_ERROR);
-        }
+
         $this->paginate = false;
         $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {

@@ -2,34 +2,26 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent;
+namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
+use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use FKSDB\Models\ORM\ORMFactory;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
-use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 
-abstract class ListComponent extends BaseComponent implements IContainer
+abstract class ListComponent extends BaseListComponent
 {
     protected ORMFactory $reflectionFactory;
     protected \Nette\ComponentModel\Container $buttons;
     /** @var callable */
     protected $classNameCallback = null;
-    protected int $userPermission;
 
     public function __construct(Container $container, int $userPermission)
     {
-        parent::__construct($container);
-        $this->userPermission = $userPermission;
+        parent::__construct($container, $userPermission);
         $this->buttons = new ButtonGroup($this->container, new Title(null, ''));
         $this->addComponent($this->buttons, 'buttons');
-        $this->monitor(Presenter::class, function (): void {
-            $this->configure();
-        });
     }
 
     protected function getTemplatePath(): string
@@ -39,14 +31,10 @@ abstract class ListComponent extends BaseComponent implements IContainer
 
     public function render(): void
     {
-        $this->template->models = $this->getModels();
-        $this->template->userPermission = $this->userPermission;
         $this->template->classNameCallback = $this->classNameCallback;
         $this->template->title = $this->getComponent('title', false);
-        $this->template->render($this->getTemplatePath());
+        parent::render();
     }
-
-    abstract protected function getModels(): iterable;
 
     abstract protected function configure(): void;
 

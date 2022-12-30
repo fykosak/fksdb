@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class ProducersGrid extends EntityGrid
@@ -19,13 +19,10 @@ class ProducersGrid extends EntityGrid
         ]);
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
-    protected function configure(): void
+    protected function getModels(): Selection
     {
-        parent::configure();
-        $this->data->order('name');
+        $query = parent::getModels();
+        $query->order('name');
+        return $query;
     }
 }

@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Container;
+namespace FKSDB\Components\Grids\Components\Container;
 
-use FKSDB\Components\Grids\ListComponent\Button\ButtonGroup;
-use FKSDB\Components\Grids\ListComponent\ItemComponent;
+use FKSDB\Components\Grids\Components\Button\ButtonGroup;
+use FKSDB\Components\Grids\Components\ItemComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
@@ -19,7 +19,7 @@ class TableRow extends ItemComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'tableRow.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 
     public function getButtonContainer(): ButtonGroup

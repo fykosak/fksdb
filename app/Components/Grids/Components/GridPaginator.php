@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Components;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\BadRequestException;

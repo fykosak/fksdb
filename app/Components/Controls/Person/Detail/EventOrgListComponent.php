@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
-use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
-use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\RowContainer;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Closing;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class TeamSubmitsGrid extends BaseGrid
@@ -26,13 +27,17 @@ class TeamSubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->team->getSubmits()->order('fyziklani_submit.created');
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->team->getSubmits()->order('fyziklani_submit.created');
         $this->paginate = false;
 
         $this->addColumns([

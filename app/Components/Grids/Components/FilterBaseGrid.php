@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -12,15 +12,6 @@ abstract class FilterBaseGrid extends BaseGrid
 {
     /** @persistent */
     public ?array $searchTerm = null;
-
-    public function render(): void
-    {
-        // this has to be done already here (and in the parent call again :-( )
-        if (isset($this->searchTerm)) {
-            $this->getFilterCallback();
-        }
-        parent::render();
-    }
 
     /**
      * @throws BadTypeException
@@ -39,6 +30,4 @@ abstract class FilterBaseGrid extends BaseGrid
         };
         return $control;
     }
-
-    abstract protected function getFilterCallback(): void;
 }

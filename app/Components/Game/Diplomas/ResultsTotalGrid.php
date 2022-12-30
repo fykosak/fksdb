@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class ResultsTotalGrid extends BaseGrid
@@ -19,13 +20,17 @@ class ResultsTotalGrid extends BaseGrid
         $this->event = $event;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->event->getParticipatingTeams()->order('name');
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->event->getParticipatingTeams()->order('name');
         $this->paginate = false;
 
         $this->addColumns([

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\StoredQuery;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class StoredQueriesGrid extends BaseGrid
@@ -29,18 +30,21 @@ class StoredQueriesGrid extends BaseGrid
         $this->storedQueryService = $storedQueryService;
     }
 
+    protected function getModels(): Selection
+    {
+        if (count($this->activeTagIds)) {
+            return $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
+        } else {
+            return $this->storedQueryService->getTable()->order('name');
+        }
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        if (count($this->activeTagIds)) {
-            $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
-        } else {
-            $queries = $this->storedQueryService->getTable()->order('name');
-        }
-        $this->data = $queries;
         $this->addColumns([
             'stored_query.query_id',
             'stored_query.name',

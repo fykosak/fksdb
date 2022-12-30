@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Container;
+namespace FKSDB\Components\Grids\Components\Container;
 
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
@@ -27,6 +27,6 @@ class ListGroupContainer extends RowContainer
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'listGroup.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 }

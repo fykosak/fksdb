@@ -1,10 +1,10 @@
-{varType FKSDB\Components\Grids\BaseGrid $control}
-
+{varType FKSDB\Components\Grids\Components\BaseGrid $control}
 {varType int $resultsCount}
 {varType bool $paginate}
 {varType array $flashes}
-{varType iterable $rows}
-{var FKSDB\Components\Grids\ListComponent\ItemComponent[] $columns = $control->getColumnsContainer()->getComponents()}
+{varType Fykosak\NetteORM\Model[] $models}
+{varType int $userPermission}
+{var FKSDB\Components\Grids\Components\ItemComponent[] $columns = $control->getColumnsContainer()->getComponents()}
 {var FKSDB\Components\Grids\Components\GlobalButton[] $globalButtons = $control->getGlobalButtonsContainer()->getComponents()}
 <div class="row mb-3">
     <div class="col-8">
@@ -28,7 +28,7 @@
         {/if}
     </div>
 </div>
-{if $control instanceof FKSDB\Components\Grids\FilterBaseGrid}
+{if $control instanceof FKSDB\Components\Grids\Components\FilterBaseGrid}
     <div class="mb-3">
         {control searchForm}
     </div>
@@ -39,7 +39,7 @@
     </div>
 {/foreach}
 
-{if !is_countable($rows) || count($rows)}
+{if count($models)}
     <table class="table table-sm table-hover table-striped">
         <thead>
         <tr>
@@ -55,9 +55,9 @@
         </tr>
         </thead>
         <tbody>
-        {foreach $rows as $row}
+        {foreach $models as $model}
             <tr>
-                {control $control['columns'] $row,1024}
+                {control $control['columns'] $model,$userPermission}
             </tr>
         {/foreach}
         </tbody>

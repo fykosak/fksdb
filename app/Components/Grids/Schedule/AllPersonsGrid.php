@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class AllPersonsGrid extends BaseGrid
@@ -26,15 +27,19 @@ class AllPersonsGrid extends BaseGrid
         $this->personScheduleService = $personScheduleService;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->personScheduleService->getTable()
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
+            ->order('person_schedule_id');
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
-            ->order('person_schedule_id');
         $this->paginate = false;
         $this->addColumns(
             [

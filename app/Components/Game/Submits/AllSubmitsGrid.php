@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Grids\FilterBaseGrid;
-use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
+use FKSDB\Components\Grids\Components\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -18,6 +18,7 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -43,7 +44,6 @@ class AllSubmitsGrid extends FilterBaseGrid
      */
     protected function configure(): void
     {
-        $this->data = $this->submitService->findAll($this->event);
         $this->addColumns(
             $this->event->event_type_id === 1
                 ? [
@@ -82,22 +82,23 @@ class AllSubmitsGrid extends FilterBaseGrid
         );
     }
 
-    protected function getFilterCallBack(): void
+    protected function getModels(): Selection
     {
+        $query = $this->submitService->findAll($this->event);
         foreach ($this->searchTerm as $key => $condition) {
             if (!$condition) {
                 continue;
             }
             switch ($key) {
                 case 'team':
-                    $this->data->where('fyziklani_submit.fyziklani_team_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_team_id', $condition);
                     break;
                 case 'code':
                     $fullCode = TaskCodePreprocessor::createFullCode($condition);
                     if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
                         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
                         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
-                        $this->data->where(
+                        $query->where(
                             'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.label =? ',
                             $teamId,
                             $taskLabel
@@ -107,13 +108,14 @@ class AllSubmitsGrid extends FilterBaseGrid
                     }
                     break;
                 case 'not_null':
-                    $this->data->where('fyziklani_submit.points IS NOT NULL');
+                    $query->where('fyziklani_submit.points IS NOT NULL');
                     break;
                 case 'task':
-                    $this->data->where('fyziklani_submit.fyziklani_task_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_task_id', $condition);
                     break;
             }
         }
+        return $query;
     }
 
     public function handleRevoke(int $id): void

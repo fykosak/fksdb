@@ -10,7 +10,6 @@ use Nette\DI\Container;
 
 class ContestantsFromSchoolGrid extends EntityGrid
 {
-
     public function __construct(SchoolModel $school, Container $container)
     {
         parent::__construct($container, ContestantService::class, [

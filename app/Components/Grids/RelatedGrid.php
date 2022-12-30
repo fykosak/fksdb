@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use Fykosak\NetteORM\Model;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 abstract class RelatedGrid extends BaseGrid
@@ -19,8 +21,12 @@ abstract class RelatedGrid extends BaseGrid
         $this->model = $model;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->model->related($this->tableName);
+    }
+
     protected function configure(): void
     {
-        $this->data = $this->model->related($this->tableName);
     }
 }

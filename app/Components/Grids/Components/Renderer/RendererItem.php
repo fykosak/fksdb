@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Renderer;
+namespace FKSDB\Components\Grids\Components\Renderer;
 
-use FKSDB\Components\Grids\ListComponent\ItemComponent;
+use FKSDB\Components\Grids\Components\ItemComponent;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -28,6 +28,6 @@ class RendererItem extends ItemComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 }

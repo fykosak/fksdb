@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class TaskGrid extends FilterBaseGrid
@@ -19,16 +20,18 @@ class TaskGrid extends FilterBaseGrid
         $this->event = $event;
     }
 
-    protected function getFilterCallback(): void
+    protected function getModels(): Selection
     {
+        $query = $this->event->getTasks();
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
         foreach ($tokens as $token) {
-            $this->data->where(
+            $query->where(
                 'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
                 $token,
                 $token
             );
         }
+        return $query;
     }
 
     /**
@@ -37,7 +40,6 @@ class TaskGrid extends FilterBaseGrid
      */
     protected function configure(): void
     {
-        $this->data = $this->event->getTasks();
         $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);
     }
 }

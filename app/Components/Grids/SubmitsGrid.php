@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\ListComponent\Button\ControlButton;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Button\ControlButton;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -15,6 +17,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
@@ -34,23 +37,36 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
+    }
+
     protected function configure(): void
     {
-        $this->data = $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
-        $this->addColumn(
-            'task',
-            new Title(null, _('Task')),
-            fn(SubmitModel $submit): string => $submit->task->getFQName()
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(SubmitModel $submit): string => $submit->task->getFQName(),
+                new Title(null, _('Task'))
+            ),
+            'task'
         );
-        $this->addColumn(
-            'submitted_on',
-            new Title(null, _('Timestamp')),
-            fn(SubmitModel $model): string => $model->submitted_on->format('c')
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(SubmitModel $model): string => $model->submitted_on->format('c'),
+                new Title(null, _('Timestamp'))
+            ),
+            'submitted_on'
         );
-        $this->addColumn(
-            'source',
-            new Title(null, _('Method of handing')),
-            fn(SubmitModel $model): string => $model->source->value
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(SubmitModel $model): string => $model->source->value,
+                new Title(null, _('Method of handing'))
+            ),
+            'source'
         );
 
         $this->getColumnsContainer()->getButtonContainer()->addComponent(

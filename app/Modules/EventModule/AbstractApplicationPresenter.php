@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;

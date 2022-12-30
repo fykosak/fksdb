@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class OrgsGrid extends FilterBaseGrid
 {
-
     private ContestModel $contest;
 
     public function __construct(Container $container, ContestModel $contest)
@@ -19,16 +20,18 @@ class OrgsGrid extends FilterBaseGrid
         $this->contest = $contest;
     }
 
-    protected function getFilterCallback(): void
+    protected function getModels(): Selection
     {
+        $query = $this->contest->getOrganisers()->order('since DESC');
         $tokens = preg_split('/\s+/', $this->searchTerm['term']);
         foreach ($tokens as $token) {
-            $this->data->where(
+            $query->where(
                 'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
                             LIKE CONCAT(\'%\', ? , \'%\')',
                 $token
             );
         }
+        return $query;
     }
 
     /**
@@ -37,8 +40,6 @@ class OrgsGrid extends FilterBaseGrid
      */
     protected function configure(): void
     {
-        $this->data = $this->contest->getOrganisers();
-        $this->data->order('since DESC');
 
         $this->addColumns([
             'person.full_name',

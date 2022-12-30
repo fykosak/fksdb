@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\ListComponent\ListComponent;
+use FKSDB\Components\Grids\Components\ListComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;

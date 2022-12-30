@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\EventService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class EventsGrid extends EntityGrid
@@ -27,6 +28,13 @@ class EventsGrid extends EntityGrid
         ]);
     }
 
+    protected function getModels(): Selection
+    {
+        $value = parent::getModels();
+        $value->order('event.begin ASC');
+        return $value;
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
@@ -34,7 +42,6 @@ class EventsGrid extends EntityGrid
     protected function configure(): void
     {
         parent::configure();
-        $this->data->order('event.begin ASC');
 
         $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);

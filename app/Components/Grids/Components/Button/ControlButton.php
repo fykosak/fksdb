@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Button;
+namespace FKSDB\Components\Grids\Components\Button;
 
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
@@ -33,6 +33,6 @@ class ControlButton extends DefaultButton
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'control.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 }

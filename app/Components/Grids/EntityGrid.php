@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 abstract class EntityGrid extends BaseGrid
@@ -26,13 +28,17 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->service->getTable()->where($this->queryParams);
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->service->getTable()->where($this->queryParams);
         $this->addColumns($this->columns);
     }
 }

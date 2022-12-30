@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\ListComponent\Referenced;
+namespace FKSDB\Components\Grids\Components\Referenced;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Grids\ListComponent\ItemComponent;
+use FKSDB\Components\Grids\Components\ItemComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
@@ -47,6 +47,6 @@ class TemplateItem extends ItemComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'template.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 }

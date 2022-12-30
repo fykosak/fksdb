@@ -6,11 +6,12 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\FilterBaseGrid;
+use FKSDB\Components\Grids\Components\FilterBaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -25,15 +26,28 @@ class TeamApplicationsGrid extends FilterBaseGrid
         $this->event = $event;
     }
 
+    protected function getModels(): Selection
+    {
+        $query = $this->event->getTeams();
+        $states = [];
+        foreach ($this->searchTerm['state'] as $state => $value) {
+            if ($value) {
+                $states[] = str_replace('__', '.', $state);
+            }
+        }
+        if (count($states)) {
+            $query->where('state IN ?', $states);
+        }
+        return $query;
+    }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->data = $this->event->getTeams();
         $this->paginate = false;
-
         $this->addColumns([
             'fyziklani_team.fyziklani_team_id',
             'fyziklani_team.name',
@@ -45,19 +59,6 @@ class TeamApplicationsGrid extends FilterBaseGrid
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
         //$this->addCSVDownloadButton();
-    }
-
-    protected function getFilterCallBack(): void
-    {
-        $states = [];
-        foreach ($this->searchTerm['state'] as $state => $value) {
-            if ($value) {
-                $states[] = str_replace('__', '.', $state);
-            }
-        }
-        if (count($states)) {
-            $this->data->where('state IN ?', $states);
-        }
     }
 
     /**

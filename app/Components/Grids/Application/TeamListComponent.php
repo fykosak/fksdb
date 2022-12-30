@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
-use FKSDB\Components\Grids\ListComponent\Container\RowContainer;
-use FKSDB\Components\Grids\ListComponent\Container\ListGroupContainer;
-use FKSDB\Components\Grids\ListComponent\FilterListComponent;
-use FKSDB\Components\Grids\ListComponent\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\RowContainer;
+use FKSDB\Components\Grids\Components\Container\ListGroupContainer;
+use FKSDB\Components\Grids\Components\FilterListComponent;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -20,6 +20,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -96,7 +97,7 @@ class TeamListComponent extends FilterListComponent
         );
     }
 
-    protected function getModels(): iterable
+    protected function getModels(): Selection
     {
         $query = $this->event->getTeams();
         foreach ($this->filterParams as $key => $value) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;

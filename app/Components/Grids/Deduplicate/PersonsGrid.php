@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\ListComponent\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PersonsGrid extends BaseGrid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
+    private TypedSelection $data;
 
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
@@ -24,24 +27,42 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->data;
+    }
+
     protected function configure(): void
     {
-        $this->addColumn(
-            'display_name_a',
-            new Title(null, _('Person A')),
-            fn(PersonModel $row): string => $this->renderPerson($row)
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(PersonModel $row): string => $this->renderPerson($row),
+                new Title(null, _('Person A')),
+            ),
+            'display_name_a'
         );
-        $this->addColumn(
-            'display_name_b',
-            new Title(null, _('Person B')),
-            fn(PersonModel $row): string => $this->renderPerson(
-                $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
-            )
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(PersonModel $row): string => $this->renderPerson(
+                    $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
+                ),
+                new Title(null, _('Person B')),
+            ),
+            'display_name_b'
         );
-        $this->addColumn('score', new Title(null, _('Similarity')), fn(PersonModel $row): string => sprintf(
-            '%0.2f',
-            $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]
-        ));
+        $this->getColumnsContainer()->addComponent(
+            new RendererItem(
+                $this->container,
+                fn(PersonModel $row): string => sprintf(
+                    '%0.2f',
+                    $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]
+                ),
+                new Title(null, _('Similarity'))
+            ),
+            'score'
+        );
         $this->getColumnsContainer()->getButtonContainer()->addComponent(
             new PresenterButton(
                 $this->container,
