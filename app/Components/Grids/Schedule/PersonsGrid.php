@@ -35,7 +35,7 @@ class PersonsGrid extends Grid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,

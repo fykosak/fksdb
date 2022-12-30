@@ -1,9 +1,7 @@
 {varType Fykosak\NetteORM\Model $model}
 {varType int $userPermission}
-{varType Fykosak\NetteORM\Model $model}
 {foreach $control->getComponents() as $component}
-    <div class="col">
+    <div class="row mb-3">
         {control $component $model, $userPermission}
     </div>
 {/foreach}
-

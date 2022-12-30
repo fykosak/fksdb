@@ -41,7 +41,7 @@ class PersonGrid extends Grid
     {
         $this->paginate = false;
 
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,

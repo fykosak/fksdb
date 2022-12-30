@@ -1,0 +1,28 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType ?Fykosak\Utils\UI\Title $title}
+{varType FKSDB\Components\Grids\Components\Container\RelatedTable $control}
+{varType bool $head}
+{varType int $userPermission}
+<div class="col-12 mb-3">
+    <strong class="mb-3">{$title->toHtml()}</strong>
+    {if count($models)}
+        <table class="table table-sm">
+            {if $head}
+                <thead>
+                <tr>
+                    {$control->tableRow->renderHead()}
+                </tr>
+                </thead>
+            {/if}
+            <tbody>
+            {foreach $models as $model}
+                <tr>
+                    {control $control->tableRow $model,$userPermission}
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {else}
+        {\FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+</div>

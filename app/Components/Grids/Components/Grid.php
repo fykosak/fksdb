@@ -26,13 +26,13 @@ abstract class Grid extends BaseListComponent
 {
     public bool $paginate = true;
     protected ORMFactory $tableReflectionFactory;
-    protected TableRow $tableRow;
+    public TableRow $tableRow;
 
     public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
     {
         parent::__construct($container, $userPermission);
         $this->tableRow = new TableRow($this->container, new Title(null, ''));
-        $this->addComponent($this->tableRow, 'columns');
+        $this->addComponent($this->tableRow, 'row');
     }
 
     final public function injectBase(ORMFactory $tableReflectionFactory): void
@@ -52,11 +52,6 @@ abstract class Grid extends BaseListComponent
         return $control->paginator;
     }
 
-    public function getColumnsContainer(): TableRow
-    {
-        return $this->tableRow;
-    }
-
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'grid.latte';
@@ -74,11 +69,20 @@ abstract class Grid extends BaseListComponent
     protected function addColumns(array $fields): void
     {
         foreach ($fields as $name) {
-            $this->tableRow->addComponent(
+            $this->addColumn(
                 new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
                 str_replace('.', '__', $name)
             );
         }
+    }
+
+    protected function addColumn(ItemComponent $component, string $name): void
+    {
+        $this->tableRow->addComponent($component, $name);
+    }
+    protected function addButton(ItemComponent $component, string $name): void
+    {
+        $this->tableRow->buttons->addComponent($component, $name);
     }
 
     protected function addPresenterButton(
@@ -106,7 +110,7 @@ abstract class Grid extends BaseListComponent
                 $paramMapCallback($model)
             ) : true
         );
-        $this->tableRow->getButtonContainer()->addComponent($button, $name);
+        $this->addButton($button, $name);
         return $button;
     }
 
@@ -126,7 +130,7 @@ abstract class Grid extends BaseListComponent
                 ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
                 : true
         );
-        $this->tableRow->getButtonContainer()->addComponent($button, str_replace('.', '_', $linkId));
+        $this->addButton($button, str_replace('.', '_', $linkId));
         return $button;
     }
 

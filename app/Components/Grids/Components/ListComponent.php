@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Button\ButtonGroup;
+use FKSDB\Components\Grids\Components\Container\ListRows;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
@@ -13,7 +14,8 @@ use Nette\DI\Container;
 abstract class ListComponent extends BaseListComponent
 {
     protected ORMFactory $reflectionFactory;
-    protected ButtonGroup $buttons;
+    public ButtonGroup $buttons;
+    public ListRows $rows;
     /** @var callable */
     protected $classNameCallback = null;
 
@@ -21,7 +23,9 @@ abstract class ListComponent extends BaseListComponent
     {
         parent::__construct($container, $userPermission);
         $this->buttons = new ButtonGroup($this->container, new Title(null, ''));
+        $this->rows = new ListRows($this->container, new Title(null, ''));
         $this->addComponent($this->buttons, 'buttons');
+        $this->addComponent($this->rows, 'rows');
     }
 
     protected function getTemplatePath(): string
@@ -41,6 +45,11 @@ abstract class ListComponent extends BaseListComponent
     protected function setTitle(Control $title): void
     {
         $this->addComponent($title, 'title');
+    }
+
+    protected function addRow(ItemComponent $component, string $name): void
+    {
+        $this->rows->addComponent($component, $name);
     }
 
     protected function addButton(ItemComponent $button, string $name): void

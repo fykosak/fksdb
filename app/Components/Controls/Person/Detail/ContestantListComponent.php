@@ -11,6 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 
 class ContestantListComponent extends BaseListComponent
 {
@@ -19,7 +20,7 @@ class ContestantListComponent extends BaseListComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
-    protected function getModels(): iterable
+    protected function getModels(): Selection
     {
         return $this->person->getContestants();
     }
@@ -34,7 +35,7 @@ class ContestantListComponent extends BaseListComponent
             $contestant->contest->getContestSymbol();
         $this->setTitle(new TemplateItem($this->container, '@contest.name'));
         $row1 = new RowContainer($this->container, new Title(null, ''));
-        $this->addComponent($row1, 'row1');
+        $this->addRow($row1, 'row1');
         $row1->addComponent(new TemplateItem($this->container, _('Contest year @contestant.year')), 'contestant__year');
         if ($this->isOrg) {
             $this->addButton(

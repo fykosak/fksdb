@@ -1,6 +1,7 @@
 {varType Fykosak\NetteORM\Model[] $models}
 {varType callable $classNameCallback}
 {varType Nette\Application\UI\Control $title}
+{varType FKSDB\Components\Grids\Components\ListComponent $control}
 {varType int $userPermission}
 {block content}
     {if count($models)}
@@ -11,15 +12,8 @@
                 {if $title}
                     <h4>{control $title $model,$userPermission}</h4>
                 {/if}
-                {foreach $control->getComponents() as $name=> $component}
-                    {continueIf $name == 'buttons'}
-                    {continueIf $name == 'filterForm'}
-                    {continueIf $name == 'title'}
-                    <div class="row">
-                        {control $component $model, $userPermission}
-                    </div>
-                {/foreach}
-                {control $control->getComponent('buttons') $model,$userPermission}
+                {control $control->rows $model,$userPermission}
+                {control $control->buttons $model,$userPermission}
             </div>
         {/foreach}
     {else}

@@ -46,11 +46,11 @@ class SchoolsGrid extends FilterGrid
      */
     protected function configure(): void
     {
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
             'name'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $school): string => $school->address->city,
@@ -58,7 +58,7 @@ class SchoolsGrid extends FilterGrid
             ),
             'city'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $row): Html => Html::el('span')

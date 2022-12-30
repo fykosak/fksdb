@@ -34,7 +34,7 @@ class PersonsGrid extends Grid
 
     protected function configure(): void
     {
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
@@ -42,7 +42,7 @@ class PersonsGrid extends Grid
             ),
             'display_name_a'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
@@ -52,7 +52,7 @@ class PersonsGrid extends Grid
             ),
             'display_name_b'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
@@ -63,7 +63,7 @@ class PersonsGrid extends Grid
             ),
             'score'
         );
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge A<-B')),
@@ -78,7 +78,7 @@ class PersonsGrid extends Grid
             ),
             'mergeAB'
         );
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Merge B<-A')),
@@ -92,7 +92,7 @@ class PersonsGrid extends Grid
             ),
             'mergeBA'
         );
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('It\'s not a duplicity')),

@@ -38,7 +38,7 @@ class ContestantsGrid extends Grid
             'person.full_name',
             'person_history.study_year',
         ]);
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(

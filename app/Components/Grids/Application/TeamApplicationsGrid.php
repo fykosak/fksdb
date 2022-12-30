@@ -32,7 +32,7 @@ class TeamApplicationsGrid extends FilterGrid
         foreach ($this->filterParams as $key => $filterParam) {
             switch ($key) {
                 case 'status':
-                    $query->where('state', $filterParam[$key]);
+                    $query->where('state', $filterParam);
             }
         }
         return $query;

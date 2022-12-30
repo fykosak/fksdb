@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Container\ListGroupContainer;
 use FKSDB\Components\Grids\Components\ListComponent;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
@@ -49,7 +48,7 @@ class GroupListComponent extends ListComponent
             )
         );
         $row0 = new RowContainer($this->container, new Title(null, ''));
-        $this->addComponent($row0, 'row0');
+        $this->addRow($row0, 'row0');
         $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
         $row0->addComponent(
             new RendererItem(
@@ -61,27 +60,27 @@ class GroupListComponent extends ListComponent
             ),
             'duration'
         );
-        $itemsRow = new ListGroupContainer(
+        $itemsRow = new RelatedTable(
             $this->container,
             fn(ScheduleGroupModel $model) => $model->getItems(),
             new Title(null, _('Items'))
         );
-        $this->addComponent($itemsRow, 'items');
-        $itemsRow->addComponent(
+        $this->addRow($itemsRow, 'items');
+        $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
                 '@schedule_item.name_cs:value / @schedule_item.name_en:value (@schedule_item.schedule_item_id:value)'
             ),
             'title'
         );
-        $itemsRow->addComponent(
+        $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
                 '@schedule_item.price_czk / @schedule_item.price_eur'
             ),
             'price'
         );
-        $itemsRow->addComponent(
+        $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
                 '<span title="' . _('Used / Free / Total') .
@@ -89,9 +88,7 @@ class GroupListComponent extends ListComponent
             ),
             'capacity'
         );
-        $itemButtonContainer = new ButtonGroup($this->container, new Title(null, ''));
-        $itemsRow->addComponent($itemButtonContainer, 'buttons');
-        $itemButtonContainer->addComponent(
+        $itemsRow->addButton(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Edit')),
@@ -99,7 +96,7 @@ class GroupListComponent extends ListComponent
             ),
             'edit'
         );
-        $itemButtonContainer->addComponent(
+        $itemsRow->addButton(
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Detail')),

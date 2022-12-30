@@ -44,7 +44,7 @@ class SubmitsGrid extends Grid
 
     protected function configure(): void
     {
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFQName(),
@@ -52,7 +52,7 @@ class SubmitsGrid extends Grid
             ),
             'task'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format('c'),
@@ -60,7 +60,7 @@ class SubmitsGrid extends Grid
             ),
             'submitted_on'
         );
-        $this->tableRow->addComponent(
+        $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->source->value,
@@ -69,7 +69,7 @@ class SubmitsGrid extends Grid
             'source'
         );
 
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new ControlButton(
                 $this->container,
                 $this,
@@ -81,7 +81,7 @@ class SubmitsGrid extends Grid
             'revoke'
         );
 
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new ControlButton(
                 $this->container,
                 $this,
@@ -93,7 +93,7 @@ class SubmitsGrid extends Grid
             'download_uploaded'
         );
 
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new ControlButton(
                 $this->container,
                 $this,

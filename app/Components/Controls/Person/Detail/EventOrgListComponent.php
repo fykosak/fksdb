@@ -11,6 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 
 class EventOrgListComponent extends BaseListComponent
 {
@@ -25,7 +26,7 @@ class EventOrgListComponent extends BaseListComponent
         return new Title(null, _('Event organisers'));
     }
 
-    protected function getModels(): iterable
+    protected function getModels(): Selection
     {
         return $this->person->getEventOrgs();
     }
@@ -41,11 +42,11 @@ class EventOrgListComponent extends BaseListComponent
                 : $eventOrg->event->event_type->contest->getContestSymbol());
 
         $row0 = new RowContainer($this->container, new Title(null, ''));
-        $this->addComponent($row0, 'row0');
+        $this->addRow($row0, 'row0');
         $row0->addComponent(new TemplateItem($this->container, '@event.name'), 'event__name');
         $row0->addComponent(new TemplateItem($this->container, '@event.event_type'), 'event__type');
         $row1 = new RowContainer($this->container, new Title(null, ''));
-        $this->addComponent($row1, 'row1');
+        $this->addRow($row1, 'row1');
         $row1->addComponent(new TemplateItem($this->container, '@event_org.note'), 'event_org_note');
         $this->addButton(
             new PresenterButton($this->container, new Title(null, _('Edit')), fn(EventOrgModel $eventOrg) => [

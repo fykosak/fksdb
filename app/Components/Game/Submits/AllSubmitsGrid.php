@@ -68,7 +68,7 @@ class AllSubmitsGrid extends FilterGrid
                 ['id' => 'fyziklani_submit_id']
             );
         }
-        $this->tableRow->getButtonContainer()->addComponent(
+        $this->addButton(
             new ControlButton(
                 $this->container,
                 $this,

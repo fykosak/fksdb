@@ -65,6 +65,6 @@ class NewApplicationsGrid extends Grid
                 }
             }
         );
-        $this->tableRow->getButtonContainer()->addComponent($button, 'create');
+        $this->addButton($button, 'create');
     }
 }

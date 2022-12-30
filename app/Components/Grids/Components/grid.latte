@@ -4,7 +4,9 @@
 {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
 {varType int $userPermission}
 {php $control->getPaginator()->setItemCount($models->count('*'))}
-{php $models->limit($control->getPaginator()->getItemsPerPage(),$control->getPaginator()->getOffset())}
+{if $paginate}
+    {php $models->limit($control->getPaginator()->getItemsPerPage(),$control->getPaginator()->getOffset())}
+{/if}
 {foreach $flashes as $flash}
     <div class="alert alert-{$flash->type}">
         {$flash->message}
@@ -16,17 +18,19 @@
         {include filter from './filter.latte'}
     </div>
 {/if}
-<div class="row mt-3">
+<div class="row my-3">
     <div class="offset-8 col-4">
+        <span class="badge bg-primary float-end">
         {_'Total'} {$control->getPaginator()->getItemCount()}
         {switch $control->getPaginator()->getItemCount()}
-            {case 1}{_'záznam'}
-            {case 2,3,4}{_'záznamy'}
-            {default}{_'záznamů'}
-        {/switch}
+                {case 1}{_'záznam'}
+                {case 2,3,4}{_'záznamy'}
+                {default}{_'záznamů'}
+            {/switch}
         {if $control->getPaginator()->getItemCount() && $paginate}
-            {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
-        {/if}
+                {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
+            {/if}
+            </span>
     </div>
 </div>
 
@@ -34,13 +38,13 @@
     <table class="table table-sm table-hover table-striped">
         <thead>
         <tr>
-            {$control['columns']->renderHead()}
+            {$control->tableRow->renderHead()}
         </tr>
         </thead>
         <tbody>
         {foreach $models as $model}
             <tr>
-                {control $control['columns'] $model,$userPermission}
+                {control $control->tableRow $model,$userPermission}
             </tr>
         {/foreach}
         </tbody>

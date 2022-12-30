@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Container\ListGroupContainer;
 use FKSDB\Components\Grids\Components\FilterListComponent;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -51,7 +51,7 @@ class TeamListComponent extends FilterListComponent
             new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
         );
         $row = new RowContainer($this->container, new Title(null, ''));
-        $this->addComponent($row, 'row0');
+        $this->addRow($row, 'row0');
         $row->addComponent(
             new TemplateItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),
             'state'
@@ -68,7 +68,7 @@ class TeamListComponent extends FilterListComponent
             new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
             'phone'
         );
-        $memberList = new ListGroupContainer($this->container, function (TeamModel2 $team): array {
+        $memberList = new RelatedTable($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
@@ -76,17 +76,17 @@ class TeamListComponent extends FilterListComponent
             }
             return $members;
         }, new Title(null, _('Members')));
-        $this->addComponent($memberList, 'members');
-        $memberList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
-        $memberList->addComponent(new TemplateItem($this->container, '@school.school'), 'school');
+        $this->addRow($memberList, 'members');
+        $memberList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $memberList->addColumn(new TemplateItem($this->container, '@school.school'), 'school');
 
-        $teacherList = new ListGroupContainer(
+        $teacherList = new RelatedTable(
             $this->container,
             fn(TeamModel2 $team): iterable => $team->getTeachers(),
             new Title(null, _('Teachers'))
         );
-        $this->addComponent($teacherList, 'teachers');
-        $teacherList->addComponent(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $this->addRow($teacherList, 'teachers');
+        $teacherList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
         $this->addButton(
             new PresenterButton(
                 $this->container,
