@@ -1,3 +1,4 @@
-{varType Fykosak\NetteORM\Model $model}
+{varType Fykosak\NetteORM\Model|null $model}
+{varType int|null $userPermission}
 {varType callable $renderer}
-{$renderer($model)}
+{$renderer($model,$userPermission)}

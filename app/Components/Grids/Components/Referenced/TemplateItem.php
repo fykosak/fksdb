@@ -33,7 +33,7 @@ class TemplateItem extends ItemComponent
         $this->titleString = $titleString;
     }
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->templateString = $this->templateString;
         $this->template->titleString = $this->titleString;

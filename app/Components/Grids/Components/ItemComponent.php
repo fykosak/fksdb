@@ -11,9 +11,9 @@ use Nette\DI\Container;
 
 abstract class ItemComponent extends BaseComponent
 {
-    public Title $title;
+    public ?Title $title;
 
-    public function __construct(Container $container, Title $title)
+    public function __construct(Container $container, ?Title $title = null)
     {
         parent::__construct($container);
         $this->title = $title;
@@ -21,7 +21,7 @@ abstract class ItemComponent extends BaseComponent
 
     abstract protected function getTemplatePath(): string;
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->model = $model;
         $this->template->title = $this->title;

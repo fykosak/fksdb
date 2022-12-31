@@ -25,7 +25,7 @@ class ControlButton extends DefaultButton
         $this->control = $control;
     }
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->linkControl = $this->control;
         parent::render($model, $userPermission);

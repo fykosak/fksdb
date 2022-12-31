@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use FKSDB\Components\Grids\Components\Container\ListRows;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 abstract class ListComponent extends BaseListComponent
@@ -42,17 +41,17 @@ abstract class ListComponent extends BaseListComponent
 
     abstract protected function configure(): void;
 
-    protected function setTitle(Control $title): void
+    protected function setTitle(ItemComponent $title): void
     {
         $this->addComponent($title, 'title');
     }
 
-    protected function addRow(ItemComponent $component, string $name): void
+    public function addRow(ItemComponent $component, string $name): void
     {
         $this->rows->addComponent($component, $name);
     }
 
-    protected function addButton(ItemComponent $button, string $name): void
+    public function addButton(ItemComponent $button, string $name): void
     {
         $this->buttons->addComponent($button, $name);
     }

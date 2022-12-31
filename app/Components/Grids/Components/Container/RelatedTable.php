@@ -25,7 +25,7 @@ class RelatedTable extends ItemComponent
         $this->addComponent($this->tableRow, 'row');
     }
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->models = ($this->modelToIterator)($model);
         $this->template->head = $this->head;
@@ -44,6 +44,6 @@ class RelatedTable extends ItemComponent
 
     public function addButton(ItemComponent $component, string $name): void
     {
-        $this->tableRow->buttons->addComponent($component, $name);
+        $this->tableRow->addButton($component, $name);
     }
 }

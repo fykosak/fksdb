@@ -82,7 +82,7 @@ abstract class Grid extends BaseListComponent
     }
     protected function addButton(ItemComponent $component, string $name): void
     {
-        $this->tableRow->buttons->addComponent($component, $name);
+        $this->tableRow->addButton($component, $name);
     }
 
     protected function addPresenterButton(

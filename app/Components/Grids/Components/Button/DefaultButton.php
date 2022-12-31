@@ -30,7 +30,7 @@ abstract class DefaultButton extends ItemComponent
         $this->showCallback = $showCallback;
     }
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->show = isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true;
         $this->template->params = ($this->linkCallback)($model);

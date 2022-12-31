@@ -20,7 +20,7 @@ class RendererItem extends ItemComponent
         $this->renderer = $renderer;
     }
 
-    public function render(Model $model, int $userPermission): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $this->template->renderer = $this->renderer;
         parent::render($model, $userPermission);
