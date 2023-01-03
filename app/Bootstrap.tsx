@@ -177,21 +177,21 @@ window.addEventListener('DOMContentLoaded', () => {
                             <div className="input-group-append">
                                 <button type="button"
                                         className="btn btn-outline-secondary"
-                                        title={translator.getText('Upravit')}
+                                        title={translator.getText('Edit')}
                                         onClick={() => {
                                             decompactifyContainer();
                                         }}>
                                     <span className="fa fa-pen me-3"/>
-                                    {translator.getText('Upravit')}
+                                    {translator.getText('Edit')}
                                 </button>
                                 <button type="button"
                                         className="btn btn-outline-warning"
-                                        title={translator.getText('Smazat')}
+                                        title={translator.getText('Delete')}
                                         onClick={() => {
                                             $clearButton.click();
                                         }}>
                                     <span className="fa fa-times me-3"/>
-                                    {translator.getText('Smazat')}
+                                    {translator.getText('Delete')}
                                 </button>
                             </div>
                         </div>
