@@ -7,10 +7,7 @@ namespace FKSDB\Components\Grids\Schedule;
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class ItemsGrid extends RelatedGrid
 {
@@ -22,12 +19,11 @@ class ItemsGrid extends RelatedGrid
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        parent::configure();
         $this->addColumns([
             'schedule_item.schedule_item_id',
             'schedule_item.name_cs',
@@ -39,7 +35,7 @@ class ItemsGrid extends RelatedGrid
             'schedule_item.require_id_number',
         ]);
         $this->paginate = false;
-        $this->addLinkButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
-        $this->addLinkButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
+        $this->addPresenterButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addPresenterButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
     }
 }

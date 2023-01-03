@@ -2,8 +2,8 @@
 {varType FKSDB\Modules\Core\BasePresenter $presenter}
 {block content}
     <hr/>
-    {control valuePrinter:row 'stored_query.description', $model,1024}
-    {control valuePrinter:row 'stored_query.tags', $model,1024}
+    {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name:'@stored_query.description',printer:$control['valuePrinter']}
+    {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name:'@stored_query.tags',printer:$control['valuePrinter']}
     <hr/>
     {if count($model->getQueryParameters())}
         <h3>{_'Parameters'}</h3>
@@ -26,7 +26,7 @@
     {/if}
 
     <h3>{_'SQL'}</h3>
-    {control valuePrinter:onlyValue 'stored_query.sql', $model,1024}
+    {control valuePrinter:templateString '@stored_query.sql', $model,1024}
     <hr/>
     <div class="btn-group">
         <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"

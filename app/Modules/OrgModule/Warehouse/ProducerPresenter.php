@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -70,7 +70,7 @@ class ProducerPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): BaseGrid
+    protected function createComponentGrid(): Grid
     {
         return new ProducersGrid($this->getContext());
     }

@@ -49,14 +49,20 @@
         ]}
     {/switch}
     {foreach $fiels as $field}
-        {control valuePrinter:row $field, $model}
+        <div class="row">
+            <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
+            <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+        </div>
     {/foreach}
     <hr/>
 
     {if $rankVisible}
         <h2>{_'Rank & points'}</h2>
         {foreach ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'] as $field}
-            {control valuePrinter:row $field, $model}
+            <div class="row">
+                <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
+                <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+            </div>
         {/foreach}
         <hr/>
     {/if}

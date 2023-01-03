@@ -7,10 +7,7 @@ namespace FKSDB\Components\Grids\Warehouse;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class ProductsGrid extends EntityGrid
 {
@@ -27,15 +24,12 @@ class ProductsGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
-     * @throws DuplicateButtonException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->addLinkButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
+        parent::configure();
+        $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }
 }

@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class ResultsTotalGrid extends BaseGrid
+class ResultsTotalGrid extends Grid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
@@ -24,20 +20,17 @@ class ResultsTotalGrid extends BaseGrid
         $this->event = $event;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $teams = $this->event->getParticipatingTeams()
-            ->order('name');
-        return new NDataSource($teams);
+        return $this->event->getParticipatingTeams()->order('name');
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
         $this->paginate = false;
 
         $this->addColumns([

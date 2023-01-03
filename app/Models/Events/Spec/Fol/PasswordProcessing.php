@@ -12,7 +12,6 @@ use Nette\Utils\ArrayHash;
 
 class PasswordProcessing extends AbstractProcessing
 {
-
     protected function innerProcess(
         ArrayHash $values,
         ModelHolder $holder,

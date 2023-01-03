@@ -6,9 +6,9 @@
         <ul>
             {foreach $row as $team}
                 {continueIf !$team instanceof FKSDB\Models\ORM\Models\Fyziklani\TeamModel2}
-                <li>{control valuePrinter:onlyValue 'fyziklani_team.name',$team}
-                        ({control valuePrinter:onlyValue 'fyziklani_team.fyziklani_team_id',$team})
-                    {control valuePrinter:onlyValue 'fyziklani_team.state',$team}</li>
+                <li>
+                    {control valuePrinter:templateString '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id) @fyziklani_team.state',$team, 1024}
+                </li>
             {/foreach}
         </ul>
     {/foreach}

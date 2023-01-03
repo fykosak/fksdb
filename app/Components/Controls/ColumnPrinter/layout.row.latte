@@ -1,13 +1,18 @@
-{layout './layout.latte'}
-{varType string $title}
-{varType Nette\Utils\Html $html}
-{define content}
-    <div class="row mt-1">
-        <b class="col-xl-4 col-lg-5 col-md-5 col-sm-6">{$title}
-            {include description}
+{varType Fykosak\NetteORM\Model $model}
+{varType int $userPermission}
+{varType string $name}
+{include row model:$model,userPermission:$userPermission,name:'@' . $name,printer:$control}
+{define row}
+    {varType Fykosak\NetteORM\Model $model}
+    {varType int $userPermission}
+    {varType string $name}
+    {varType FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent $printer}
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
+            {$printer->renderTemplateString($name . ':title',$model,$userPermission)}
         </b>
-        <span class="col-xl-8 col-lg-7 col-md-7 col-sm-6">
-        {$html}
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$printer->renderTemplateString($name . ':value',$model,$userPermission)}
     </span>
     </div>
 {/define}

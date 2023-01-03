@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class ResultsCategoryGrid extends BaseGrid
+class ResultsCategoryGrid extends Grid
 {
-
     private EventModel $event;
     private TeamCategory $category;
 
@@ -27,22 +23,12 @@ class ResultsCategoryGrid extends BaseGrid
         $this->category = $category;
     }
 
-    protected function getData(): IDataSource
-    {
-        $teams = $this->event->getParticipatingTeams()
-            ->where('category', $this->category->value)
-            ->order('name');
-        return new NDataSource($teams);
-    }
-
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
         $this->paginate = false;
 
         $this->addColumns([
@@ -50,5 +36,12 @@ class ResultsCategoryGrid extends BaseGrid
             'fyziklani_team.name',
             'fyziklani_team.rank_category',
         ]);
+    }
+
+    protected function getModels(): Selection
+    {
+        return $this->event->getParticipatingTeams()
+            ->where('category', $this->category->value)
+            ->order('name');
     }
 }

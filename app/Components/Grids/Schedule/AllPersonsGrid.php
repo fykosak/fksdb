@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class AllPersonsGrid extends BaseGrid
+class AllPersonsGrid extends Grid
 {
-
     private PersonScheduleService $personScheduleService;
     private EventModel $event;
 
@@ -31,23 +27,20 @@ class AllPersonsGrid extends BaseGrid
         $this->personScheduleService = $personScheduleService;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $query = $this->personScheduleService->getTable()
+        return $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
-            ->order('person_schedule_id');//->limit(10, 140);
-        return new NDataSource($query);
+            ->order('person_schedule_id');
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('person_schedule_id', _('#'));
         $this->addColumns(
             [
                 'person.full_name',

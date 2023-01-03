@@ -2,7 +2,7 @@
     {varType FKSDB\Models\ORM\Models\PaymentModel $model}
     {varType bool $isOrg}
     {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
-    <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
+    <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
     {var $progress = 0}
     {switch $model->state}
         {case FKSDB\Models\ORM\Models\PaymentState::New}
