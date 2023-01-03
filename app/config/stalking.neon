@@ -97,24 +97,6 @@ parameters:
                 - task.year
                 - task.series
 
-        org:
-            layout: multi
-            label: Org
-            minimalPermission: 128
-            table: org
-            links:
-                - org.detail
-                - org.edit
-            itemHeadline: contest.contest
-            rows:
-                - org.org_id
-                - org.since
-                - org.until
-                - org.role
-                - org.order
-                - org.contribution
-                - org.tex_signature
-                - org.domain_alias
         payment:
             layout: grid
             label: Payment

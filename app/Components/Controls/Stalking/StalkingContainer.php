@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
 use FKSDB\Components\Controls\Stalking\Components;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
@@ -47,14 +49,19 @@ class StalkingContainer extends BaseComponent
         return new PersonRelatedGrid('payment', $this->person, $this->userPermission, $this->getContext());
     }
 
-    protected function createComponentContestantBasesGrid(): PersonRelatedGrid
+    protected function createComponentContestantBasesGrid(): ContestantListComponent
     {
-        return new PersonRelatedGrid('contestant', $this->person, $this->userPermission, $this->getContext());
+        return new ContestantListComponent($this->container, $this->person, $this->userPermission, true);
     }
 
     protected function createComponentTaskContributionsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('task_contribution', $this->person, $this->userPermission, $this->getContext());
+    }
+
+    protected function createComponentOrgList(): OrgListComponent
+    {
+        return new OrgListComponent($this->container, $this->person, $this->userPermission, true);
     }
 
     protected function createComponentEventTeachersGrid(): PersonRelatedGrid
