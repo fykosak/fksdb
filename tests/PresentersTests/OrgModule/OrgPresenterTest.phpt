@@ -47,7 +47,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $html = $this->assertPageDisplay($response);
         Assert::contains('Tester_L', $html);
         Assert::contains('Testrovič_L', $html);
-        Assert::contains('Still organises', $html);
+        Assert::contains('Still organizes', $html);
     }
 
     public function testCreate(): void
