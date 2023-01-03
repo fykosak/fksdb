@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
@@ -24,8 +25,11 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
-    {
+    final public function renderTemplateString(
+        string $templateString,
+        ?Model $model,
+        ?FieldLevelPermissionValue $userPermission
+    ): void {
         $this->template->html = $this->renderToString($templateString, $model, $userPermission);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
     }
@@ -34,8 +38,11 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderToString(string $templateString, ?Model $model, ?int $userPermission): string
-    {
+    final public function renderToString(
+        string $templateString,
+        ?Model $model,
+        ?FieldLevelPermissionValue $userPermission
+    ): string {
         return preg_replace_callback(
             '/@([a-z_]+)\.([a-z_]+)(:([a-zA-Z]+))?/',
             function (array $match) use ($model, $userPermission) {
@@ -62,7 +69,7 @@ class ColumnRendererComponent extends BaseComponent
     final public function renderRow(
         string $field,
         Model $model,
-        int $userPermission = FieldLevelPermission::ALLOW_FULL
+        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
     ): void {
         $this->template->model = $model;
         $this->template->userPermission = $userPermission;
@@ -77,7 +84,7 @@ class ColumnRendererComponent extends BaseComponent
     final public function renderListItem(
         string $field,
         Model $model,
-        int $userPermission = FieldLevelPermission::ALLOW_FULL
+        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
     ): void {
         $this->template->model = $model;
         $this->template->userPermission = $userPermission;

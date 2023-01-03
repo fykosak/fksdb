@@ -7,11 +7,12 @@ namespace FKSDB\Components\Grids\Components\Referenced;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Grids\Components\BaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class TemplateBaseItem extends BaseItem
+class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
@@ -33,7 +34,7 @@ class TemplateBaseItem extends BaseItem
         $this->titleString = $titleString;
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
         $this->template->templateString = $this->templateString;
         $this->template->titleString = $this->titleString;

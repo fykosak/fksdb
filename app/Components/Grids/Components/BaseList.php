@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -11,9 +12,9 @@ use Nette\DI\Container;
 
 abstract class BaseList extends BaseComponent
 {
-    protected int $userPermission;
+    protected FieldLevelPermissionValue $userPermission;
 
-    public function __construct(Container $container, int $userPermission)
+    public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
     {
         parent::__construct($container);
         $this->userPermission = $userPermission;

@@ -1,6 +1,6 @@
 {varType Fykosak\NetteORM\Model|null $model}
 {varType string $templateString}
-{varType int|null $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
 {varType Fykosak\Utils\UI\Title|null $title}
 <span title="{$title->title}">
         {control printer:templateString $templateString, $model, $userPermission}

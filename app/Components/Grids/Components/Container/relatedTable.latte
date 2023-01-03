@@ -2,7 +2,7 @@
 {varType ?Fykosak\Utils\UI\Title|null $title}
 {varType FKSDB\Components\Grids\Components\Container\RelatedTable $control}
 {varType bool $head}
-{varType int|null $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
 <div class="col-12 mb-3">
     <strong class="mb-3">{$title->toHtml()}</strong>
     {include table from './table.latte' models=>$models,head:$head,userPermission:$userPermission,tableRow:$control->tableRow}

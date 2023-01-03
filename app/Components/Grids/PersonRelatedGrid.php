@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Database\Table\Selection;
@@ -26,7 +25,7 @@ class PersonRelatedGrid extends Grid
         Container $container
     ) {
         $this->definition = $container->getParameters()['components'][$section];
-        parent::__construct($container, 1024);
+        parent::__construct($container);
         $this->person = $person;
         $this->userPermissions = $userPermissions;
     }

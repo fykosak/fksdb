@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\FieldLevelPermissionValue;
 
 final class Component extends BaseComponent
 {
-    private FieldLevelPermissionValue $minimalPermissions = FieldLevelPermissionValue::Full;
+    private FieldLevelPermissionValue $minimalPermission = FieldLevelPermissionValue::Full;
 
     /**
      * @throws NotImplementedException
@@ -17,10 +17,10 @@ final class Component extends BaseComponent
     final public function render(string $section): void
     {
         $definition = $this->getContext()->getParameters()['components'][$section];
-        $this->minimalPermissions = FieldLevelPermissionValue::from($definition['minimalPermission']);
+        $this->minimalPermission = FieldLevelPermissionValue::from($definition['minimalPermission']);
         if ($this->beforeRender()) {
             $this->template->headline = $definition['label'];
-            $this->template->userPermission = $this->userPermissions;
+            $this->template->userPermission = $this->userPermission;
             $this->renderSingle($definition);
         }
     }
@@ -40,8 +40,8 @@ final class Component extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
-    protected function getMinimalPermissions(): FieldLevelPermissionValue
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
-        return $this->minimalPermissions;
+        return $this->minimalPermission;
     }
 }

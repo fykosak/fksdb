@@ -7,13 +7,13 @@
             {var FKSDB\Models\ORM\Models\EventModel $event = $datum['event']}
             {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams = $datum['teams']}
             <div class="alert alert-secondary">
-                <strong class="mb-3">{control valuePrinter:onlyValue 'event.name', $event}</strong>
+                <strong class="mb-3">{control valuePrinter:templateString '@event.name', $event,$userPermission}</strong>
                 <ul class="list-group list-group-flush">
                     {foreach $teams as $team}
                         <div class="list-group-item bg-transparent">
                             <div class="row">
-                                <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.name', $team}</span>
-                                <span class="col">{control valuePrinter:onlyValue 'fyziklani_team.state', $team}</span>
+                                <span class="col">{control valuePrinter:templateString '@fyziklani_team.name', $team,$userPermission}</span>
+                                <span class="col">{control valuePrinter:templateString '@fyziklani_team.state', $team,$userPermission}</span>
                                 <span class="col">
                                     {control linkPrinter 'fyziklani_team.detail',$team,'btn btn-sm btn-outline-secondary'}
                                 </span>

@@ -1,5 +1,5 @@
 {varType Fykosak\NetteORM\Model|null $model}
-{varType int|null $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
 {foreach $control->getComponents() as $component}
     <div class="col">
         {control $component $model, $userPermission}

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Renderer;
 
 use FKSDB\Components\Grids\Components\BaseItem;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class RendererBaseItem extends BaseItem
+class RendererItem extends BaseItem
 {
     /** @var callable */
     protected $renderer;
@@ -20,7 +21,7 @@ class RendererBaseItem extends BaseItem
         $this->renderer = $renderer;
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
         $this->template->renderer = $this->renderer;
         parent::render($model, $userPermission);

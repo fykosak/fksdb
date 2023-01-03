@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Container;
 
 use FKSDB\Components\Grids\Components\BaseItem;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -25,7 +26,7 @@ class RelatedTable extends BaseItem
         $this->addComponent($this->tableRow, 'row');
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
         $this->template->models = ($this->modelToIterator)($model);
         $this->template->head = $this->head;

@@ -6,9 +6,10 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\TableRow;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
@@ -28,8 +29,10 @@ abstract class Grid extends BaseList
     protected ORMFactory $tableReflectionFactory;
     public TableRow $tableRow;
 
-    public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
-    {
+    public function __construct(
+        DIContainer $container,
+        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
+    ) {
         parent::__construct($container, $userPermission);
         $this->tableRow = new TableRow($this->container, new Title(null, ''));
         $this->addComponent($this->tableRow, 'row');
@@ -70,7 +73,7 @@ abstract class Grid extends BaseList
     {
         foreach ($fields as $name) {
             $this->addColumn(
-                new TemplateBaseItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
+                new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
                 str_replace('.', '__', $name)
             );
         }

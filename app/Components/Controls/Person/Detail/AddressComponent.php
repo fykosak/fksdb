@@ -16,7 +16,7 @@ class AddressComponent extends BaseComponent
         }
     }
 
-    protected function getMinimalPermissions(): FieldLevelPermissionValue
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
         return FieldLevelPermissionValue::Restrict;
     }

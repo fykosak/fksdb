@@ -11,17 +11,17 @@
                     <div class="col">
                         <div>
                             <strong>
-                                {control valuePrinter:onlyValue 'task.fq_name', $task}
+                                {control valuePrinter:templateString '@task.fq_name', $task,$userPermission}
                             </strong>
                         </div>
                         <div>
-                            {control valuePrinter:onlyValue 'contest.name', $task} {$task->year}-{$task->series}-{$task->label}
+                            {control valuePrinter:templateString '@contest.name', $task,$userPermission} {$task->year}-{$task->series}-{$task->label}
                         </div>
                     </div>
                     <div class="col">
                         <div>
                             {foreach $contributions as $contribution}
-                                {control valuePrinter:onlyValue 'task_contribution.type', $contribution}
+                                {control valuePrinter:templateString '@task_contribution.type', $contribution,$userPermission}
                                 {*$contribution->type->label()}{if !$iterator->isLast()},{/if*}
                             {/foreach}
                         </div>

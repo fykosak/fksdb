@@ -15,7 +15,7 @@ class EmailMessageListComponent extends BaseComponent
         }
     }
 
-    protected function getMinimalPermissions(): FieldLevelPermissionValue
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
         return FieldLevelPermissionValue::Full;
     }

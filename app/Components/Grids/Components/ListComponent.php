@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use FKSDB\Components\Grids\Components\Container\ListRows;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -18,7 +19,7 @@ abstract class ListComponent extends BaseList
     /** @var callable */
     protected $classNameCallback = null;
 
-    public function __construct(Container $container, int $userPermission)
+    public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
     {
         parent::__construct($container, $userPermission);
         $this->buttons = new ButtonGroup($this->container, new Title(null, ''));

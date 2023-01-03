@@ -9,14 +9,14 @@
             <div n:class="'alert alert-' . $organiser->contest->getContestSymbol()">
                 <div class="row">
                     <div class="col">
-                        <div>{control valuePrinter:onlyValue 'contest.name', $organiser}</div>
+                        <div>{control valuePrinter:templateString '@contest.name', $organiser,$userPermission}</div>
                         <div class="text text-muted">
                             {sprintf(_('Since %d'),$organiser->since)}
                             {$organiser->until?sprintf(_('until %d'),$organiser->since):''}
                         </div>
                     </div>
                     <div class="col">
-                        <div>{control valuePrinter:onlyValue 'org.domain_alias', $organiser}</div>
+                        <div>{control valuePrinter:templateString '@org.domain_alias', $organiser,$userPermission}</div>
                         <div class="text text-muted">
                             \siganture{l}{$organiser->tex_signature}{r}
                         </div>

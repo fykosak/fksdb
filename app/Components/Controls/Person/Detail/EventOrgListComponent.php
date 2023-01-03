@@ -7,9 +7,8 @@ namespace FKSDB\Components\Controls\Person\Detail;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
@@ -17,7 +16,7 @@ use Nette\Database\Table\Selection;
 class EventOrgListComponent extends DetailComponent
 {
 
-    protected function getMinimalPermissions(): FieldLevelPermissionValue
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
         return FieldLevelPermissionValue::Restrict;
     }
@@ -44,11 +43,11 @@ class EventOrgListComponent extends DetailComponent
 
         $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateBaseItem($this->container, '@event.name'), 'event__name');
-        $row0->addComponent(new TemplateBaseItem($this->container, '@event.event_type'), 'event__type');
+        $row0->addComponent(new TemplateItem($this->container, '@event.name'), 'event__name');
+        $row0->addComponent(new TemplateItem($this->container, '@event.event_type'), 'event__type');
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
-        $row1->addComponent(new TemplateBaseItem($this->container, '@event_org.note'), 'event_org_note');
+        $row1->addComponent(new TemplateItem($this->container, '@event_org.note'), 'event_org_note');
         $this->addButton(
             new PresenterButton($this->container, new Title(null, _('Edit')), fn(EventOrgModel $eventOrg) => [
                 ':Event:EventOrg:edit',

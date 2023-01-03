@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\Utils\UI\Title;
@@ -39,14 +40,14 @@ class ContestantsGrid extends Grid
             'person_history.study_year',
         ]);
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
                     'school',
                     'school'
                 )->render(
                     $row->getPersonHistory(),
-                    1024
+                    FieldLevelPermissionValue::Full
                 ),
                 new Title(null, _('School'))
             ),

@@ -1,5 +1,5 @@
 {varType Fykosak\NetteORM\Model|null $model}
-{varType int|null $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
 {varType FKSDB\Components\Grids\Components\Container\TableRow $control}
 {foreach $control->getComponents() as $name=> $component}
     {continueIf $name === 'buttons'}
@@ -9,6 +9,6 @@
 {/foreach}
 {if count($control->buttons->getComponents())}
     <td>
-        {control $control->buttons $model,1024}
+        {control $control->buttons $model,FKSDB\Models\ORM\FieldLevelPermissionValue::Full}
     </td>
 {/if}

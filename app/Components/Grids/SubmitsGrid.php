@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -45,7 +45,7 @@ class SubmitsGrid extends Grid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFQName(),
                 new Title(null, _('Task'))
@@ -53,7 +53,7 @@ class SubmitsGrid extends Grid
             'task'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format('c'),
                 new Title(null, _('Timestamp'))
@@ -61,7 +61,7 @@ class SubmitsGrid extends Grid
             'submitted_on'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->source->value,
                 new Title(null, _('Method of handing'))

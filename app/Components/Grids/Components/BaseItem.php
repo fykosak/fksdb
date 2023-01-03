@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
@@ -21,7 +22,7 @@ abstract class BaseItem extends BaseComponent
 
     abstract protected function getTemplatePath(): string;
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
         $this->template->model = $model;
         $this->template->title = $this->title;

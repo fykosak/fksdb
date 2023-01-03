@@ -19,7 +19,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     public function __construct(
         Container $container,
         protected readonly PersonModel $person,
-        protected readonly FieldLevelPermissionValue $userPermissions,
+        protected readonly FieldLevelPermissionValue $userPermission,
         protected readonly bool $isOrg,
     ) {
         parent::__construct($container);
@@ -34,14 +34,15 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     {
         $this->template->person = $this->person;
         $this->template->isOrg = $this->isOrg;
-        if ($this->userPermissions < $this->getMinimalPermissions()) {
+        $this->template->userPermission = $this->userPermission;
+        if ($this->userPermission < $this->getMinimalPermission()) {
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
             return false;
         }
         return true;
     }
 
-    abstract protected function getMinimalPermissions(): FieldLevelPermissionValue;
+    abstract protected function getMinimalPermission(): FieldLevelPermissionValue;
 
     protected function createComponentContestBadge(): ContestBadge
     {

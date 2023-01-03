@@ -2,7 +2,7 @@
 {varType bool $paginate}
 {varType array $flashes}
 {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
-{varType int $userPermission}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
 {php $control->getPaginator()->setItemCount($models->count('*'))}
 {if $paginate}
     {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Button;
 
 use FKSDB\Components\Grids\Components\BaseItem;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
@@ -36,7 +37,7 @@ abstract class Button extends BaseItem
         return __DIR__ . DIRECTORY_SEPARATOR . 'button.latte';
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
         $this->template->linkControl = $this->getLinkControl();
         $this->template->show = isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true;

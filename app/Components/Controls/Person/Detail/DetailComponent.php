@@ -18,10 +18,10 @@ abstract class DetailComponent extends ListComponent
     public function __construct(
         Container $container,
         PersonModel $person,
-        FieldLevelPermissionValue $userPermissions,
+        FieldLevelPermissionValue $userPermission,
         bool $isOrg
     ) {
-        parent::__construct($container, $userPermissions->value);
+        parent::__construct($container, $userPermission);
         $this->isOrg = $isOrg;
         $this->person = $person;
     }
@@ -34,7 +34,7 @@ abstract class DetailComponent extends ListComponent
 
     protected function getTemplatePath(): string
     {
-        if ($this->userPermission < $this->getMinimalPermissions()) {
+        if ($this->userPermission < $this->getMinimalPermission()) {
             return __DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte';
         }
         return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
