@@ -10,7 +10,7 @@ use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-trait FilterComponentTrait
+trait FilterTrait
 {
     /** @persistent */
     public array $filterParams = [];

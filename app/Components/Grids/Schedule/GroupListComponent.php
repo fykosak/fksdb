@@ -8,8 +8,8 @@ use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\ListComponent;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -42,16 +42,16 @@ class GroupListComponent extends ListComponent
     {
         $this->classNameCallback = fn(ScheduleGroupModel $model) => 'alert alert-secondary';
         $this->setTitle(
-            new TemplateItem(
+            new TemplateBaseItem(
                 $this->container,
                 '@schedule_group.name_cs / @schedule_group.name_en (@schedule_group.schedule_group_id)'
             )
         );
         $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
+        $row0->addComponent(new TemplateBaseItem($this->container, '@schedule_group.schedule_group_type'), 'type');
         $row0->addComponent(
-            new RendererItem(
+            new RendererBaseItem(
                 $this->container,
                 fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
                     ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
@@ -67,21 +67,21 @@ class GroupListComponent extends ListComponent
         );
         $this->addRow($itemsRow, 'items');
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateBaseItem(
                 $this->container,
                 '@schedule_item.name_cs:value / @schedule_item.name_en:value (@schedule_item.schedule_item_id:value)'
             ),
             'title'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateBaseItem(
                 $this->container,
                 '@schedule_item.price_czk / @schedule_item.price_eur'
             ),
             'price'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateBaseItem(
                 $this->container,
                 '<span title="' . _('Used / Free / Total') .
                 '">@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity</span>'

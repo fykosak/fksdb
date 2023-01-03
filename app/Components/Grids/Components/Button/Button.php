@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Button;
 
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
+use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
-abstract class DefaultButton extends ItemComponent
+abstract class Button extends BaseItem
 {
     /** @var callable */
     private $linkCallback;
@@ -30,11 +31,19 @@ abstract class DefaultButton extends ItemComponent
         $this->showCallback = $showCallback;
     }
 
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'button.latte';
+    }
+
     public function render(?Model $model, ?int $userPermission): void
     {
+        $this->template->linkControl = $this->getLinkControl();
         $this->template->show = isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true;
-        $this->template->params = ($this->linkCallback)($model);
+        [$this->template->destination, $this->template->params] = ($this->linkCallback)($model);
         $this->template->buttonClassName = $this->buttonClassName ?? 'btn btn-outline-secondary btn-sm';
         parent::render($model, $userPermission);
     }
+
+    abstract protected function getLinkControl(): Control;
 }

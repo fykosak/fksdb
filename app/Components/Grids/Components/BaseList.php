@@ -9,7 +9,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-abstract class BaseListComponent extends BaseComponent
+abstract class BaseList extends BaseComponent
 {
     protected int $userPermission;
 

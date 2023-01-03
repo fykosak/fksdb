@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Renderer;
 
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class RendererItem extends ItemComponent
+class RendererBaseItem extends BaseItem
 {
     /** @var callable */
     protected $renderer;

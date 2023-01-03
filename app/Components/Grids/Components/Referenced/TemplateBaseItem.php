@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Referenced;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class TemplateItem extends ItemComponent
+class TemplateBaseItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Container;
 
 use FKSDB\Components\Grids\Components\Button\ButtonGroup;
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class TableRow extends ItemComponent
+class TableRow extends BaseItem
 {
     public ButtonGroup $buttons;
 
@@ -25,7 +25,7 @@ class TableRow extends ItemComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'tableRow.latte';
     }
 
-    public function addButton(ItemComponent $itemComponent, string $name): void
+    public function addButton(BaseItem $itemComponent, string $name): void
     {
         $this->buttons->addComponent($itemComponent, $name);
     }

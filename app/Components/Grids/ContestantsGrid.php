@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -39,7 +39,7 @@ class ContestantsGrid extends Grid
             'person_history.study_year',
         ]);
         $this->addColumn(
-            new RendererItem(
+            new RendererBaseItem(
                 $this->container,
                 fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
                     'school',

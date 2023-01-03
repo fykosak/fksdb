@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -36,7 +36,7 @@ class PersonsGrid extends Grid
     {
         $this->paginate = false;
         $this->addColumn(
-            new RendererItem(
+            new RendererBaseItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,
                 new Title(null, _('#'))

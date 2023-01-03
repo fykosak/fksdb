@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -33,10 +33,10 @@ class ContestantListComponent extends BaseListComponent
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
             $contestant->contest->getContestSymbol();
-        $this->setTitle(new TemplateItem($this->container, '@contest.name'));
+        $this->setTitle(new TemplateBaseItem($this->container, '@contest.name'));
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
-        $row1->addComponent(new TemplateItem($this->container, _('Contest year @contestant.year')), 'contestant__year');
+        $row1->addComponent(new TemplateBaseItem($this->container, _('Contest year @contestant.year')), 'contestant__year');
         if ($this->isOrg) {
             $this->addButton(
                 new PresenterButton(

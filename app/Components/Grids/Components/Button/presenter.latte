@@ -1,8 +1,0 @@
-{varType Fykosak\Utils\UI\Title|null $title}
-{varType string $buttonClassName}
-{varType array $params}
-{varType bool $show}
-{if $show}
-    <a href="{plink $params[0], (expand)$params[1]}"
-       class="{$buttonClassName}">{$title?$title->toHtml():$control->getPresenter()->link($params[0], (expand)$params[1])}</a>
-{/if}

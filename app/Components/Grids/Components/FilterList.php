@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-abstract class FilterListComponent extends ListComponent
+abstract class FilterList extends ListComponent
 {
-    use FilterComponentTrait;
+    use FilterTrait;
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'filter.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'list.filter.latte';
     }
 
     public function render(): void

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Button;
 
-use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
-class ControlButton extends DefaultButton
+class ControlButton extends Button
 {
     private Control $control;
 
@@ -25,14 +24,8 @@ class ControlButton extends DefaultButton
         $this->control = $control;
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    protected function getLinkControl(): Control
     {
-        $this->template->linkControl = $this->control;
-        parent::render($model, $userPermission);
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'control.latte';
+        return $this->control;
     }
 }

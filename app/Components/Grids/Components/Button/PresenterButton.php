@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Button;
 
-class PresenterButton extends DefaultButton
+use Nette\Application\UI\Control;
+
+class PresenterButton extends Button
 {
-    protected function getTemplatePath(): string
+    protected function getLinkControl(): Control
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'presenter.latte';
+        return $this->getPresenter();
     }
 }

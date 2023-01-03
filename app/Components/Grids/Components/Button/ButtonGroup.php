@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Button;
 
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 
-class ButtonGroup extends ItemComponent
+class ButtonGroup extends BaseItem
 {
     protected function getTemplatePath(): string
     {

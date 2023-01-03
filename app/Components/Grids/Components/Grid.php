@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\TableRow;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
@@ -22,7 +22,7 @@ use Nette\Utils\Paginator as NettePaginator;
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
  */
-abstract class Grid extends BaseListComponent
+abstract class Grid extends BaseList
 {
     public bool $paginate = true;
     protected ORMFactory $tableReflectionFactory;
@@ -70,17 +70,18 @@ abstract class Grid extends BaseListComponent
     {
         foreach ($fields as $name) {
             $this->addColumn(
-                new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
+                new TemplateBaseItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
                 str_replace('.', '__', $name)
             );
         }
     }
 
-    protected function addColumn(ItemComponent $component, string $name): void
+    protected function addColumn(BaseItem $component, string $name): void
     {
         $this->tableRow->addComponent($component, $name);
     }
-    protected function addButton(ItemComponent $component, string $name): void
+
+    protected function addButton(BaseItem $component, string $name): void
     {
         $this->tableRow->addButton($component, $name);
     }
@@ -116,6 +117,7 @@ abstract class Grid extends BaseListComponent
 
     /**
      * @throws BadTypeException
+     * @deprecated
      */
     protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
     {

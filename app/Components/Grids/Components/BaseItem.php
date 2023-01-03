@@ -9,7 +9,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-abstract class ItemComponent extends BaseComponent
+abstract class BaseItem extends BaseComponent
 {
     public ?Title $title;
 

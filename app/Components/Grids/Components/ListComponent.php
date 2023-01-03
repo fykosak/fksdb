@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-abstract class ListComponent extends BaseListComponent
+abstract class ListComponent extends BaseList
 {
     protected ORMFactory $reflectionFactory;
     public ButtonGroup $buttons;
@@ -41,17 +41,17 @@ abstract class ListComponent extends BaseListComponent
 
     abstract protected function configure(): void;
 
-    protected function setTitle(ItemComponent $title): void
+    protected function setTitle(BaseItem $title): void
     {
         $this->addComponent($title, 'title');
     }
 
-    public function addRow(ItemComponent $component, string $name): void
+    public function addRow(BaseItem $component, string $name): void
     {
         $this->rows->addComponent($component, $name);
     }
 
-    public function addButton(ItemComponent $button, string $name): void
+    public function addButton(BaseItem $button, string $name): void
     {
         $this->buttons->addComponent($button, $name);
     }

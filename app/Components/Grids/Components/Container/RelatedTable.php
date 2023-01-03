@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Container;
 
-use FKSDB\Components\Grids\Components\ItemComponent;
+use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class RelatedTable extends ItemComponent
+class RelatedTable extends BaseItem
 {
     /** @var callable */
     private $modelToIterator;
@@ -37,12 +37,12 @@ class RelatedTable extends ItemComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'relatedTable.latte';
     }
 
-    public function addColumn(ItemComponent $component, string $name): void
+    public function addColumn(BaseItem $component, string $name): void
     {
         $this->tableRow->addComponent($component, $name);
     }
 
-    public function addButton(ItemComponent $component, string $name): void
+    public function addButton(BaseItem $component, string $name): void
     {
         $this->tableRow->addButton($component, $name);
     }
