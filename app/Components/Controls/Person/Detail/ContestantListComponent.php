@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 
-class ContestantListComponent extends BaseListComponent
+class ContestantListComponent extends DetailComponent
 {
     protected function getMinimalPermissions(): int
     {
@@ -36,7 +36,10 @@ class ContestantListComponent extends BaseListComponent
         $this->setTitle(new TemplateBaseItem($this->container, '@contest.name'));
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
-        $row1->addComponent(new TemplateBaseItem($this->container, _('Contest year @contestant.year')), 'contestant__year');
+        $row1->addComponent(
+            new TemplateBaseItem($this->container, _('Contest year @contestant.year')),
+            'contestant__year'
+        );
         if ($this->isOrg) {
             $this->addButton(
                 new PresenterButton(
@@ -83,7 +86,7 @@ class ContestantListComponent extends BaseListComponent
         }
     }
 
-    protected function getTitle(): Title
+    protected function getHeadline(): Title
     {
         return new Title(null, _('Contestants'));
     }

@@ -6,13 +6,11 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\ListComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-abstract class BaseListComponent extends ListComponent
+abstract class DetailComponent extends ListComponent
 {
-    protected ORMFactory $tableReflectionFactory;
     protected PersonModel $person;
     protected bool $isOrg;
 
@@ -27,14 +25,9 @@ abstract class BaseListComponent extends ListComponent
         $this->person = $person;
     }
 
-    final public function injectPrimary(ORMFactory $tableReflectionFactory): void
-    {
-        $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
     final public function render(): void
     {
-        $this->template->title = $this->getTitle();
+        $this->template->headline = $this->getHeadline();
         parent::render();
     }
 
@@ -46,5 +39,5 @@ abstract class BaseListComponent extends ListComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
     }
 
-    abstract protected function getTitle(): Title;
+    abstract protected function getHeadline(): Title;
 }

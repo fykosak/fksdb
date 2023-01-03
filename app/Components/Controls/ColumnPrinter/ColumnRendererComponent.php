@@ -37,7 +37,7 @@ class ColumnRendererComponent extends BaseComponent
     final public function renderToString(string $templateString, ?Model $model, ?int $userPermission): string
     {
         return preg_replace_callback(
-            '/@([a-z_]+).([a-z_]+)(:([a-zA-Z]+))?/',
+            '/@([a-z_]+)\.([a-z_]+)(:([a-zA-Z]+))?/',
             function (array $match) use ($model, $userPermission) {
                 [, $table, $field, , $render] = $match;
                 $factory = $this->tableReflectionFactory->loadColumnFactory($table, $field);
@@ -57,6 +57,7 @@ class ColumnRendererComponent extends BaseComponent
 
     /**
      * @throws CannotAccessModelException
+     * @deprecated
      */
     final public function renderRow(
         string $field,
@@ -71,6 +72,7 @@ class ColumnRendererComponent extends BaseComponent
 
     /**
      * @throws CannotAccessModelException
+     * @deprecated
      */
     final public function renderListItem(
         string $field,

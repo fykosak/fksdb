@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
 
-class EventOrgListComponent extends BaseListComponent
+class EventOrgListComponent extends DetailComponent
 {
 
     protected function getMinimalPermissions(): int
@@ -21,7 +21,7 @@ class EventOrgListComponent extends BaseListComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
-    protected function getTitle(): Title
+    protected function getHeadline(): Title
     {
         return new Title(null, _('Event organisers'));
     }
