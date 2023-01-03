@@ -57,8 +57,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
                 'person_id_container' => self::personToValues($this->person),
-                'since' => (string)1,
-                'order' => (string)0,
+                'since' => "1",
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -74,8 +74,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'since' => (string)2, // out of range
-                'order' => (string)0,
+                'since' => "2", // out of range
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -91,8 +91,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => null, // empty personId
-                'since' => (string)1,
-                'order' => (string)0,
+                'since' => "1",
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -108,8 +108,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->orgPerson->person_id,
                 'person_id_container' => self::personToValues($this->person),
-                'since' => (string)1,
-                'order' => (string)2,
+                'since' => "1",
+                'order' => "2",
                 'domain_alias' => 'b',
             ],
         ], [
@@ -133,7 +133,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $html = $this->assertPageDisplay($response);
         Assert::contains('Tester_L', $html);
         Assert::contains('Testrovič_L', $html);
-        Assert::contains('Still organises', $html);
+        Assert::contains('Still organizes', $html);
     }
 
     protected function getPresenterName(): string
