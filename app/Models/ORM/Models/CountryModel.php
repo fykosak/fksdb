@@ -32,7 +32,7 @@ class CountryModel extends Model
     public function getHtmlFlag(?string $className): Html
     {
         $className = $className . ' flag-icon flag-icon-' . \strtolower($this->alpha_2);
-        return Html::el('i')->addAttributes(['class' => $className]);
+        return Html::el('i')->addAttributes(['class' => $className, 'title' => $this->name]);
     }
 
     /**

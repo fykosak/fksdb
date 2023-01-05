@@ -40,20 +40,16 @@ class EventParticipantMachine extends Machine
     /**
      * @return Transition[]
      */
-    public function getAvailableTransitions(
-        ModelHolder $holder,
-        ?EnumColumn $sourceState = null
-    ): array {
+    public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
+    {
         return array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => $transition->canExecute($holder)
         );
     }
 
-    public function getTransitionByTarget(
-        EnumColumn $sourceState,
-        EnumColumn $target
-    ): ?Transition {
+    public function getTransitionByTarget(EnumColumn $sourceState, EnumColumn $target): ?Transition
+    {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => $transition->target->value ==

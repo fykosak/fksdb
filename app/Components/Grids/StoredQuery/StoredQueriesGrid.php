@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\StoredQuery;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\NDataSource;
 
-class StoredQueriesGrid extends BaseGrid
+class StoredQueriesGrid extends Grid
 {
-
     /** @const No. of characters that are showed from query description. */
-
     public const DESCRIPTION_TRUNC = 80;
 
     private QueryService $storedQueryService;
@@ -33,32 +30,52 @@ class StoredQueriesGrid extends BaseGrid
         $this->storedQueryService = $storedQueryService;
     }
 
+    protected function getModels(): Selection
+    {
+        if (count($this->activeTagIds)) {
+            return $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
+        } else {
+            return $this->storedQueryService->getTable()->order('name');
+        }
+    }
+
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
-        if (count($this->activeTagIds)) {
-            $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
-        } else {
-            $queries = $this->storedQueryService->getTable()->order('name');
-        }
-        $this->setDataSource(new NDataSource($queries));
         $this->addColumns([
             'stored_query.query_id',
             'stored_query.name',
+            'stored_query.description',
             'stored_query.qid',
             'stored_query.tags',
         ]);
-        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
 
-        $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-primary');
-        $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-info');
-        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-outline-success');
+        $this->addPresenterButton(
+            'StoredQuery:edit',
+            'edit',
+            _('Edit'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-primary'
+        );
+        $this->addPresenterButton(
+            'StoredQuery:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-info'
+        );
+        $this->addPresenterButton(
+            'Export:execute',
+            'execute',
+            _('Execute export'),
+            false,
+            ['id' => 'query_id'],
+            'btn btn-sm btn-outline-success'
+        );
     }
 }

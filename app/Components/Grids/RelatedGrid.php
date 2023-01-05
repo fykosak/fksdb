@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Grid;
 use Fykosak\NetteORM\Model;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
-abstract class RelatedGrid extends BaseGrid
+abstract class RelatedGrid extends Grid
 {
-
     protected Model $model;
     protected string $tableName;
 
@@ -22,9 +21,12 @@ abstract class RelatedGrid extends BaseGrid
         $this->model = $model;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $query = $this->model->related($this->tableName);
-        return new NDataSource($query);
+        return $this->model->related($this->tableName);
+    }
+
+    protected function configure(): void
+    {
     }
 }
