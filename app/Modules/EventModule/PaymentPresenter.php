@@ -96,7 +96,7 @@ class PaymentPresenter extends BasePresenter
     {
         if (!$this->isAllowed($this->getEntity(), 'edit')) {
             $this->flashMessage(
-                \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
+                \sprintf(_('Payment #%s cannot be edited'), $this->getEntity()->getPaymentId()),
                 Message::LVL_ERROR
             );
             $this->redirect(':Core:MyPayments:');
@@ -107,12 +107,13 @@ class PaymentPresenter extends BasePresenter
 
     public function actionCreate(): void
     {
-       /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
+       if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Public:Dashboard:default');
             }
-        }*/ //TODO
+       } //TODO
+
     }
 
     /* ********* actions *****************/
@@ -263,6 +264,7 @@ class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
+            $this->getEvent(),
             $this->getEntity()
         );
     }
