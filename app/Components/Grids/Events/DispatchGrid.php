@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Events;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class DispatchGrid extends EntityGrid
@@ -28,13 +28,21 @@ class DispatchGrid extends EntityGrid
         );
     }
 
+    protected function getModels(): Selection
+    {
+        $value = parent::getModels();
+        $value->order('begin DESC');
+        return $value;
+    }
+
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('begin DESC');
-        $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+        parent::configure();
+        $this->paginate = true;
+        $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 }

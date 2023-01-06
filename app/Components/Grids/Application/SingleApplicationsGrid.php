@@ -4,26 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\SQL\SearchableDataSource;
-use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
 
-class SingleApplicationsGrid extends BaseGrid
+class SingleApplicationsGrid extends FilterGrid
 {
-
     protected EventModel $event;
     private BaseHolder $holder;
 
@@ -32,34 +25,6 @@ class SingleApplicationsGrid extends BaseGrid
         parent::__construct($container);
         $this->event = $event;
         $this->holder = $holder;
-    }
-
-    protected function getData(): IDataSource
-    {
-        $participants = $this->getSource();
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        return $source;
-    }
-
-    protected function getSource(): TypedGroupedSelection
-    {
-        return $this->event->getParticipants();
-    }
-
-    public function getFilterCallBack(): callable
-    {
-        return function (Selection $table, array $value): void {
-            $states = [];
-            foreach ($value['status'] as $state => $value) {
-                if ($value) {
-                    $states[] = str_replace('__', '.', $state);
-                }
-            }
-            if (count($states)) {
-                $table->where('status IN ?', $states);
-            }
-        };
     }
 
     protected function getHoldersColumns(): array
@@ -86,6 +51,7 @@ class SingleApplicationsGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function addHolderColumns(): void
     {
@@ -93,77 +59,52 @@ class SingleApplicationsGrid extends BaseGrid
         $fields = [];
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = $this->getTableName() . '.' . $name;
+                $fields[] = DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
             }
         }
         $this->addColumns($fields);
     }
 
-    protected function getTableName(): string
+    protected function getModels(): Selection
     {
-        return DbNames::TAB_EVENT_PARTICIPANT;
+        $query = $this->event->getParticipants();
+        if (!isset($this->filterParams)) {
+            return $query;
+        }
+        foreach ($this->filterParams as $key => $filterParam) {
+            switch ($key) {
+                case 'status':
+                    $query->where('event_participant.status', $filterParam);
+            }
+        }
+        return $query;
     }
 
     /**
      * @throws BadTypeException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        $this->setDefaultOrder('person.family_name');
         $this->paginate = false;
-
         $this->addColumns([
             'person.full_name',
             'event_participant.status',
         ]);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
-        $this->addCSVDownloadButton();
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        // $this->addCSVDownloadButton();
         $this->addHolderColumns();
-        parent::configure($presenter);
-    }
-
-    protected function getStateCases(): array
-    {
-        $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
-
-        $states = [];
-        foreach ($query as $row) {
-            $states[] = [
-                'state' => $row->status,
-                'count' => $row->count,
-                'description' => $row->description,
-            ];
-        }
-        return $states;
     }
 
     /**
-     * @throws BadTypeException
+     * @throws NotImplementedException
      */
-    protected function createComponentSearchForm(): FormControl
+    protected function configureForm(Form $form): void
     {
-        $control = new FormControl($this->getContext());
-        $form = $control->getForm();
-        $stateContainer = new ContainerWithOptions($this->getContext());
-        $stateContainer->setOption('label', _('States'));
-        foreach ($this->getStateCases() as $state) {
-            $label = Html::el('span')
-                ->addHtml(Html::el('b')->addText($state['state']))
-                ->addText(': ')
-                ->addHtml(Html::el('i')->addText(_((string)$state['description'])))
-                ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']->value), $label);
+        $items = [];
+        foreach (EventParticipantStatus::cases() as $state) {
+            $items[$state->value] = $state->label();
         }
-        $form->addComponent($stateContainer, 'status');
-        $form->addSubmit('submit', _('Apply filter'));
-        $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues('array');
-            $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
-            $count = $this->dataSource->getCount();
-            $this->getPaginator()->itemCount = $count;
-        };
-        return $control;
+        $form->addSelect('status', _('Status'), $items)->setPrompt(_('Select state'));
     }
 }

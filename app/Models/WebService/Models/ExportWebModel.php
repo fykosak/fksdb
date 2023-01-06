@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Nette\Application\BadRequestException;
 
 class ExportWebModel extends WebModel
 {
@@ -28,7 +27,6 @@ class ExportWebModel extends WebModel
     }
 
     /**
-     * @throws BadRequestException
      * @throws \SoapFault
      * @throws \DOMException
      */
@@ -87,15 +85,14 @@ class ExportWebModel extends WebModel
 
     private function isAuthorizedExport(StoredQuery $query): bool
     {
-        $implicitParameters = $query->getImplicitParameters();
-        if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
+        if (!isset($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
         return $this->contestAuthorizator->isAllowedForLogin(
             $this->authenticatedLogin,
             $query,
             'execute',
-            $this->contestService->findByPrimary($implicitParameters[StoredQueryFactory::PARAM_CONTEST])
+            $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }
 }

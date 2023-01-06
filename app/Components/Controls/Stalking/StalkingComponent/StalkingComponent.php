@@ -28,9 +28,6 @@ class StalkingComponent extends BaseStalkingComponent
                 case 'single':
                     $this->renderSingle($definition);
                     return;
-                case 'multi':
-                    $this->renderMulti($definition);
-                    return;
                 default:
                     throw new InvalidStateException();
             }
@@ -59,18 +56,6 @@ class StalkingComponent extends BaseStalkingComponent
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
-    }
-
-    /**
-     * @param array|Model[] $definition
-     */
-    private function renderMulti(array $definition): void
-    {
-        $this->template->links = $definition['links'];
-        $this->template->rows = $definition['rows'];
-        $this->template->models = $this->person->related($definition['table']);
-        $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }
 
     protected function getMinimalPermissions(): int

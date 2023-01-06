@@ -1,9 +1,0 @@
-{varType Fykosak\NetteORM\Model $model}
-{varType int $userPermission}
-{if count($control->getComponents())}
-    <div class="btn-group">
-        {foreach $control->getComponents() as $button}
-            {control $button $model,$userPermission}
-        {/foreach}
-    </div>
-{/if}

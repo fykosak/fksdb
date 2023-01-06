@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
+use Nette\Forms\Form;
 
-class TaskGrid extends BaseGrid
+class TaskGrid extends FilterGrid
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
@@ -23,28 +21,34 @@ class TaskGrid extends BaseGrid
         $this->event = $event;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $submits = $this->event->getTasks();
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where(
-                    'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
-                    $token,
-                    $token
-                );
-            }
-        });
-        return $dataSource;
+        $query = $this->event->getTasks();
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
+        foreach ($tokens as $token) {
+            $query->where(
+                'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
+                $token,
+                $token
+            );
+        }
+        return $query;
     }
 
-    protected function configure(Presenter $presenter): void
+    protected function configureForm(Form $form): void
     {
-        parent::configure($presenter);
-        $this->addColumn('fyziklani_task_id', _('Task Id'));
-        $this->addColumn('label', _('#'));
-        $this->addColumn('name', _('Task name'));
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
+    protected function configure(): void
+    {
+        $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);
     }
 }
