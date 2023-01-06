@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class LogicOr extends VariadicExpression
 {
-
-    protected function evaluate(ModelHolder $holder): bool
+    /**
+     * @param mixed $holder
+     */
+    protected function evaluate($holder, ...$args): bool
     {
         foreach ($this->arguments as $argument) {
-            if ($this->evaluateArgument($argument, $holder)) {
+            if ($this->evaluateArgument($argument, $holder, ...$args)) {
                 return true;
             }
         }

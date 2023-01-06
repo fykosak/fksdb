@@ -9,7 +9,10 @@ use FKSDB\Models\Transitions\Statement;
 
 class Falsable implements Statement
 {
-    public function __invoke(ModelHolder $holder): bool
+    /**
+     * @param mixed $holder
+     */
+    public function __invoke($holder, ...$args): bool
     {
         return false;
     }

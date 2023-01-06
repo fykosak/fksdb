@@ -29,11 +29,12 @@ abstract class AbstractSymbolGenerator implements Statement
     abstract protected function create(PaymentModel $modelPayment): array;
 
     /**
+     * @param ...$args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws BadTypeException
      */
-    final public function __invoke(ModelHolder $holder): void
+    final public function __invoke($holder, ...$args): void
     {
         if (!$holder instanceof PaymentHolder) {
             throw new BadTypeException(PaymentHolder::class, $holder);

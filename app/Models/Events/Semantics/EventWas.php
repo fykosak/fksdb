@@ -11,9 +11,10 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 class EventWas extends EvaluatedExpression
 {
     /**
-     * @param BaseHolder $holder
+     * @param $holder
+     * @param ...$args
      */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke($holder, ...$args): bool
     {
         return $holder->event->begin->getTimestamp() <= time();
     }

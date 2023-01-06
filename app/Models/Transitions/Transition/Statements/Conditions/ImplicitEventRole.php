@@ -12,10 +12,11 @@ class ImplicitEventRole extends EventRole
 {
 
     /**
+     * @param mixed $holder
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke($holder, ...$args): bool
     {
         /** @var EventModel $event */
         $event = $holder->getModel()->getReferencedModel(EventModel::class);

@@ -1,19 +1,21 @@
 parameters:
     fyziklani17payment:
-            symbolGenerator:
-                variableSymbolStart: 7292000
-                variableSymbolEnd: 7292999
-                info:
-                    CZK:
-                        bank_account: 38330021/0100
-                        bank_name: "Komerční banka, a.s."
-                        recipient: "Univerzita Karlova"
-                        iban: CZ91 0100 0000 0000 3833 0021
-                    EUR:
-                        bank_name: "Komerční banka, a.s."
-                        recipient: "Univerzita Karlova"
-                        iban: CZ93 0100 0000 4373 0978 0297
-                        swift: KOMBCZPPXXX
+        begin: 2023-01-05
+        end: 2023-02-08
+        symbolGenerator:
+            variableSymbolStart: 7292000
+            variableSymbolEnd: 7292999
+            info:
+                CZK:
+                    bank_account: 38330021/0100
+                    bank_name: "Komerční banka, a.s."
+                    recipient: "Univerzita Karlova"
+                    iban: CZ91 0100 0000 0000 3833 0021
+                EUR:
+                    bank_name: "Komerční banka, a.s."
+                    recipient: "Univerzita Karlova"
+                    iban: CZ93 0100 0000 4373 0978 0297
+                    swift: KOMBCZPPXXX
 services:
     fyziklani17payment.symbolGenerator:
             factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
@@ -30,21 +32,19 @@ transitions:
     fyziklani17payment:
         machine: fyziklani17payment.machine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani17Payment()
+        decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
         transitions:
-            init->new:
+            init->in_progress:
                 label: _('Create')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-05', '2022-02-10')
-            new->waiting:
+            in_progress->waiting:
                 label: _('Generate payment')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-05', '2022-02-10')
                 behaviorType: success
                 beforeExecute:
                     - @fyziklani17payment.symbolGenerator
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Payment\NewPaymentCallback()
-            new|waiting->canceled:
+            in_progress|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
             waiting->received:

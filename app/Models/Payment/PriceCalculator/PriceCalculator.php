@@ -39,10 +39,11 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @param PaymentHolder $holder
+     * @param $holder
+     * @param ...$args
      * @throws \Exception
      */
-    final public function __invoke(ModelHolder $holder): void
+    final public function __invoke($holder, ...$args): void
     {
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 

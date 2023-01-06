@@ -21,7 +21,10 @@ class DateBetween implements Statement
         $this->to = new \DateTime($to);
     }
 
-    public function __invoke(ModelHolder $holder): bool
+    /**
+     * @param mixed $holder
+     */
+    public function __invoke($holder, ...$args): bool
     {
         return (\time() <= $this->to->getTimestamp()) && (\time() >= $this->from->getTimestamp());
     }

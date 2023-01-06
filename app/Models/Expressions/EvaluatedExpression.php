@@ -16,10 +16,10 @@ abstract class EvaluatedExpression implements Statement
      * @param mixed $evaluated
      * @return mixed
      */
-    final protected function evaluateArgument($evaluated, ModelHolder $holder)
+    final protected function evaluateArgument($evaluated, $holder, ...$args)
     {
         if (is_callable($evaluated)) {
-            return $evaluated($holder);
+            return $evaluated($holder, ...$args);
         } else {
             return $evaluated;
         }

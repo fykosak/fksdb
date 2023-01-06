@@ -39,10 +39,11 @@ abstract class MailCallback implements Statement
 
 
     /**
+     * @param ...$args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function __invoke(ModelHolder $holder): void
+    public function __invoke($holder, ...$args): void
     {
         foreach ($this->getPersonsFromHolder($holder) as $person) {
             $data = $this->getData($holder);

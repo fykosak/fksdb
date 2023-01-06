@@ -11,9 +11,10 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 class RegOpen extends EvaluatedExpression
 {
     /**
-     * @param BaseHolder $holder
+     * @param $holder
+     * @param ...$args
      */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke($holder, ...$args): bool
     {
         return (!$holder->event->registration_begin || $holder->event->registration_begin->getTimestamp() <= time())
             && (!$holder->event->registration_end || $holder->event->registration_end->getTimestamp() >= time());

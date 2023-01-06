@@ -27,6 +27,8 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Security\User;
+use Tracy\Debugger;
 
 /**
  * @property PaymentModel|null $model
@@ -41,6 +43,7 @@ class PaymentFormComponent extends EntityFormComponent
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
     private EventModel $event;
+    private User $user;
 
     public function __construct(
         Container $container,
@@ -56,12 +59,14 @@ class PaymentFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
+        User $user,
         PaymentService $paymentService,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         SchedulePaymentService $schedulePaymentService,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
+        $this->user = $user;
         $this->paymentService = $paymentService;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
@@ -99,14 +104,15 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->getContext(),
                 $this->machine,
                 $this->event,
+                $this->user,
+                $this->isOrg,
                 !$this->isCreating()
             ),
-            'payment_accommodation'
+            'items'
         );
     }
 
     /**
-     * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      * @throws ModelException
      * @throws StorageException
@@ -114,7 +120,7 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        $values = $form->getValues('array');
         $data = [
             'currency' => $values['currency'],
             'person_id' => $values['person_id'],
@@ -122,35 +128,27 @@ class PaymentFormComponent extends EntityFormComponent
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
-            if (isset($this->model)) {
-                $this->paymentService->storeModel($data, $this->model);
-                $model = $this->model;
-            } else {
-                $model = $this->paymentService->storeModel(
-                    array_merge($data, [
-                        'event_id' => $this->event->event_id,
-                    ])
-                );
+            $model = $this->paymentService->storeModel(
+                array_merge($data, [
+                    'event_id' => $this->event->event_id,
+                ]),
+                $this->model
+            );
+            $this->schedulePaymentService->storeItems((array)$values['items'], $model);
+            if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $this->machine->executeImplicitTransition($holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {
             $connection->rollBack();
-            return;
-        }
-        try {
-            $this->schedulePaymentService->storeItems((array)$values['payment_accommodation'], $model); // TODO
-            //$this->schedulePaymentService->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException | EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
-            return;
+            throw $exception;
         }
         $connection->commit();
-
         $this->getPresenter()->flashMessage(
-            !isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.')
+            !isset($this->model)
+                ? _('Payment has been created.')
+                : _('Payment has been updated.')
         );
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
@@ -169,7 +167,7 @@ class PaymentFormComponent extends EntityFormComponent
                 $items[$key] = $items[$key] ?? [];
                 $items[$key][$row->person_schedule_id] = true;
             }
-            $values['payment_accommodation'] = $items;
+            $values['items'] = $items;
             $this->getForm()->setDefaults($values);
         } else {
             /** @var LoginModel $login */

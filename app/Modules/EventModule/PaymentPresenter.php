@@ -15,13 +15,13 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
+use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -39,10 +39,9 @@ class PaymentPresenter extends BasePresenter
         $this->priceCalculator = $priceCalculator;
     }
 
-    /* ********* titles *****************/
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('New payment'), 'fa fa-credit-card');
+        return new PageTitle(null, _('Create payment'), 'fa fa-credit-card');
     }
 
     /**
@@ -74,7 +73,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()),
+            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->getPaymentId()),
             'fa fa-credit-card',
         );
     }
@@ -87,45 +86,46 @@ class PaymentPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    public function actionEdit(): void
+    public function authorizedEdit(): void
     {
-        if (!$this->isAllowed($this->getEntity(), 'edit')) {
-            $this->flashMessage(
-                \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
-                Message::LVL_ERROR
-            );
-            $this->redirect(':Core:MyPayments:');
-        }
+        $event = $this->getEvent();
+        $this->setAuthorized(
+            $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)
+            || ($this->isPaymentAllowed()
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
+            )
+        );
     }
-    /* ********* Authorization *****************/
 
-
-    public function actionCreate(): void
+    public function authorizedCreate(): void
     {
-       /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
-            $this->flashMessage(_('Payment is not allowed in this time!'));
-            if (!$this->isOrg()) {
-                $this->redirect(':Public:Dashboard:default');
-            }
-        }*/ //TODO
+        $event = $this->getEvent();
+        $this->setAuthorized(
+            $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'org-create', $event)
+            || ($this->isPaymentAllowed()
+                && $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $event)
+            )
+        );
+    }
+
+    /* ********* Authorization *****************/
+    /**
+     * @throws EventNotFoundException
+     */
+    private function isPaymentAllowed(): bool
+    {
+        $params = $this->getContext()->parameters[sprintf('fyziklani%dpayment', $this->getEvent()->event_year)];
+        if (!isset($params['begin']) || !isset($params['end'])) {
+            return false;
+        }
+        return (time() > $params['begin']->getTimestamp()) && (time() < $params['end']->getTimestamp());
     }
 
     /* ********* actions *****************/
-
-    /**
-     * TODO!!!!
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    private function isOrg(): bool
-    {
-        return $this->isAllowed($this->getModelResource(), 'org');
-    }
 
     /**
      * @throws EventNotFoundException
@@ -155,7 +155,6 @@ class PaymentPresenter extends BasePresenter
         $payment = $this->getEntity();
         $this->template->items = $this->priceCalculator->getGridItems($payment);
         $this->template->model = $payment;
-        $this->template->isOrg = $this->isOrg();
     }
 
     protected function isEnabled(): bool
@@ -168,6 +167,7 @@ class PaymentPresenter extends BasePresenter
         try {
             $this->getMachine();
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             return false;
         }
         return true;
@@ -205,7 +205,7 @@ class PaymentPresenter extends BasePresenter
     {
         return $this->paymentService;
     }
-    /* ********* Components *****************/
+
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
@@ -235,13 +235,12 @@ class PaymentPresenter extends BasePresenter
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
     {
         return new PaymentFormComponent(
             $this->getContext(),
-            $this->isOrg(),
+            $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
             $this->getMachine(),
             $this->getEvent(),
             null
@@ -261,8 +260,9 @@ class PaymentPresenter extends BasePresenter
     {
         return new PaymentFormComponent(
             $this->getContext(),
-            $this->isOrg(),
+            $this->isAllowed($this->getEntity(), 'org-edit'),
             $this->getMachine(),
+            $this->getEvent(),
             $this->getEntity()
         );
     }

@@ -15,7 +15,7 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Tracy\Debugger;
 
-abstract class PaymentTransitions implements TransitionsDecorator
+class PaymentTransitions implements TransitionsDecorator
 {
 
     protected EventAuthorizator $eventAuthorizator;
@@ -43,14 +43,17 @@ abstract class PaymentTransitions implements TransitionsDecorator
         $this->decorateTransitionWaitingToReceived($machine);
     }
 
-    abstract protected function getDatesCondition(): callable;
-
     /**
      * @throws UnavailableTransitionsException
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void
     {
-        foreach ([PaymentState::tryFrom(PaymentState::NEW), PaymentState::tryFrom(PaymentState::WAITING)] as $state) {
+        foreach (
+            [
+                PaymentState::tryFrom(PaymentState::IN_PROGRESS),
+                PaymentState::tryFrom(PaymentState::WAITING),
+            ] as $state
+        ) {
             $transition = $machine->getTransitionByStates($state, PaymentState::tryFrom(PaymentState::CANCELED));
             $transition->setCondition(fn() => true);
             $transition->beforeExecute[] = $this->getClosureDeleteRows();
