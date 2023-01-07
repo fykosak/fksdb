@@ -7,7 +7,6 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 abstract class AbstractDateInput extends TextInput
 {

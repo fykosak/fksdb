@@ -1,11 +1,18 @@
 {varType Fykosak\NetteORM\Model $model}
 {varType int $userPermission}
 {varType string $name}
-<div class="row">
-    <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
-        {control $control:templateString '@' . $name . ':title',$model,$userPermission}
-    </b>
-    <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-        {control $control:templateString '@' . $name,$model,$userPermission}
+{include row model:$model,userPermission:$userPermission,name:'@' . $name,printer:$control}
+{define row}
+    {varType Fykosak\NetteORM\Model $model}
+    {varType int $userPermission}
+    {varType string $name}
+    {varType FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent $printer}
+    <div class="row">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
+            {$printer->renderTemplateString($name . ':title',$model,$userPermission)}
+        </b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$printer->renderTemplateString($name . ':value',$model,$userPermission)}
     </span>
-</div>
+    </div>
+{/define}

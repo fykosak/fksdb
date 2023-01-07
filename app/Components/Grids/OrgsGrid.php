@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
+use Nette\Forms\Form;
 
-class OrgsGrid extends BaseGrid
+class OrgsGrid extends FilterGrid
 {
-
     private ContestModel $contest;
 
     public function __construct(Container $container, ContestModel $contest)
@@ -23,32 +21,34 @@ class OrgsGrid extends BaseGrid
         $this->contest = $contest;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $orgs = $this->contest->getOrganisers();
-
-        $dataSource = new SearchableDataSource($orgs);
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where(
-                    'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
+        $query = $this->contest->getOrganisers()->order('since DESC');
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
+        foreach ($tokens as $token) {
+            $query->where(
+                'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
                             LIKE CONCAT(\'%\', ? , \'%\')',
-                    $token
-                );
-            }
-        });
-        return $dataSource;
+                $token
+            );
+        }
+        return $query;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
-        $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
             'person.full_name',

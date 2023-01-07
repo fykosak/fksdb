@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -156,7 +156,7 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws GoneException
      */
-    protected function createComponentGrid(): BaseGrid
+    protected function createComponentGrid(): Grid
     {
         throw new GoneException();
     }
