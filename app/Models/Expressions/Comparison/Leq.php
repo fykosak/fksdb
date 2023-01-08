@@ -25,12 +25,9 @@ class Leq extends EvaluatedExpression
         $this->bValue = $bValue;
     }
 
-    /**
-     * @param mixed $holder
-     * @param ...$args
-     */
-    public function __invoke($holder, ...$args): bool
+    public function __invoke(...$args): bool
     {
+        [$holder] = $args;
         return $this->evaluateArgument($this->aValue, $holder) <=
             $this->evaluateArgument($this->bValue, $holder);
     }

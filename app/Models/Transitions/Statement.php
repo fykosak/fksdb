@@ -6,5 +6,5 @@ namespace FKSDB\Models\Transitions;
 
 interface Statement
 {
-    public function __invoke($holder, ...$args);
+    public function __invoke(...$args);
 }

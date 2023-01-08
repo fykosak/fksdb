@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class RegOpen extends EvaluatedExpression
 {
-    /**
-     * @param $holder
-     * @param ...$args
-     */
-    public function __invoke($holder, ...$args): bool
+    public function __invoke(...$args): bool
     {
+        [$holder] = $args;
         return (!$holder->event->registration_begin || $holder->event->registration_begin->getTimestamp() <= time())
             && (!$holder->event->registration_end || $holder->event->registration_end->getTimestamp() >= time());
     }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Transitions\Holder\PaymentHolder;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
@@ -39,12 +37,12 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @param $holder
      * @param ...$args
      * @throws \Exception
      */
-    final public function __invoke($holder, ...$args): void
+    final public function __invoke(...$args): void
     {
+        [$holder] = $args;
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 
         foreach ($this->preProcess as $preProcess) {

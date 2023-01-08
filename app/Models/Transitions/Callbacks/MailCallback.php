@@ -43,8 +43,9 @@ abstract class MailCallback implements Statement
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function __invoke($holder, ...$args): void
+    public function __invoke(...$args): void
     {
+        [$holder] = $args;
         foreach ($this->getPersonsFromHolder($holder) as $person) {
             $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;

@@ -56,7 +56,7 @@ class AddressHandler extends ReferencedHandler
             throw new InvalidAddressException(_('PSC is required for Czech and Slovak'));
         }
         // $this->findModelConflicts($model, $data, null);
-        return $this->addressService->storeModel($data, $model, false);
+        return $this->addressService->storeModel($data, $model);
     }
 
     public function inferCountry(?string $postalCode): ?array

@@ -16,19 +16,15 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
-use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Security\User;
-use Tracy\Debugger;
 
 /**
  * @property PaymentModel|null $model

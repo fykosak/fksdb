@@ -21,13 +21,9 @@ class Not extends EvaluatedExpression
         $this->expression = $expression;
     }
 
-    /**
-     * @param mixed $holder
-     * @param ...$args
-     */
-    final public function __invoke($holder, ...$args): bool
+    final public function __invoke(...$args): bool
     {
-        return !$this->evaluateArgument($this->expression, $holder);
+        return !$this->evaluateArgument($this->expression, ...$args);
     }
 
     public function __toString(): string

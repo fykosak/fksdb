@@ -22,13 +22,9 @@ class After extends EvaluatedExpression
         $this->datetime = $datetime;
     }
 
-    /**
-     * @param mixed $holder
-     * @param ...$args
-     */
-    public function __invoke($holder, ...$args): bool
+    public function __invoke(...$args): bool
     {
-        $datetime = $this->evaluateArgument($this->datetime, $holder);
+        $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {
             throw new InvalidStateException();
         }

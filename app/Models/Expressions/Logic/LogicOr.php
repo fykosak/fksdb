@@ -8,13 +8,10 @@ use FKSDB\Models\Expressions\VariadicExpression;
 
 class LogicOr extends VariadicExpression
 {
-    /**
-     * @param mixed $holder
-     */
-    protected function evaluate($holder, ...$args): bool
+    public function __invoke(...$args): bool
     {
         foreach ($this->arguments as $argument) {
-            if ($this->evaluateArgument($argument, $holder, ...$args)) {
+            if ($this->evaluateArgument($argument, ...$args)) {
                 return true;
             }
         }
