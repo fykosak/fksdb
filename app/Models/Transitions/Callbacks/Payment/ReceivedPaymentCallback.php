@@ -6,9 +6,13 @@ namespace FKSDB\Models\Transitions\Callbacks\Payment;
 
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class ReceivedPaymentCallback extends MailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getData(ModelHolder $holder): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
