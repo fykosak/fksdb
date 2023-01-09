@@ -21,9 +21,6 @@ class EventRolePrinter
 {
     use SmartObject;
 
-    /**
-     * @throws NotImplementedException
-     */
     public function __invoke(PersonModel $person, EventModel $event): Html
     {
         $container = Html::el('span');
@@ -41,7 +38,6 @@ class EventRolePrinter
 
     /**
      * @param EventRole[] $roles
-     * @throws NotImplementedException
      */
     private function getHtml(array $roles): Html
     {
@@ -67,7 +63,7 @@ class EventRolePrinter
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-9'])
                         ->addText(
-                            _('Team member') . ' - ' . _($role->member->fyziklani_team->state->label())
+                            _('Team member') . ' - ' . _($role->member->fyziklani_team->name)
                         )
                 );
             } elseif ($role instanceof ParticipantRole) {

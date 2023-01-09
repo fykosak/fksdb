@@ -7,6 +7,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
+use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -84,6 +85,20 @@ class PaymentPresenter extends BasePresenter
         return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
     }
 
+    public function titleDetailedList(): PageTitle
+    {
+        return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedDetailedList(): void
+    {
+        $this->authorizedList();
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -102,17 +117,18 @@ class PaymentPresenter extends BasePresenter
             $this->redirect(':Core:MyPayments:');
         }
     }
+
     /* ********* Authorization *****************/
 
 
     public function actionCreate(): void
     {
-       /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
-            $this->flashMessage(_('Payment is not allowed in this time!'));
-            if (!$this->isOrg()) {
-                $this->redirect(':Public:Dashboard:default');
-            }
-        }*/ //TODO
+        /* if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
+             $this->flashMessage(_('Payment is not allowed in this time!'));
+             if (!$this->isOrg()) {
+                 $this->redirect(':Public:Dashboard:default');
+             }
+         }*/ //TODO
     }
 
     /* ********* actions *****************/
@@ -230,6 +246,14 @@ class PaymentPresenter extends BasePresenter
     protected function createComponentGrid(): EventPaymentGrid
     {
         return new EventPaymentGrid($this->getEvent(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentList(): PaymentList
+    {
+        return new PaymentList($this->getContext(), $this->getEvent());
     }
 
     /**
