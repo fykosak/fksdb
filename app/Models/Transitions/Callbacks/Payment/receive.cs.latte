@@ -1,5 +1,6 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
+{var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
 {block body}
 <div>
     <p>
