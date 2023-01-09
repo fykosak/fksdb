@@ -1,21 +1,23 @@
 parameters:
     fyziklani17payment:
-        begin: 2023-01-05
+        begin: 2023-01-12
         end: 2023-02-08
         symbolGenerator:
-            variableSymbolStart: 7292000
-            variableSymbolEnd: 7292999
+            variableSymbolStart: 173230000
+            variableSymbolEnd: 173239999
             info:
                 CZK:
-                    bank_account: 38330021/0100
-                    bank_name: "Komerční banka, a.s."
-                    recipient: "Univerzita Karlova"
-                    iban: CZ91 0100 0000 0000 3833 0021
+                    bank_account: 2402414686/2010
+                    bank_name: "Fio banka, a.s."
+                    recipient: "Fykos, z.s."
+                    iban: CZ55 2010 0000 0024 0241 4686
+                    constant_symbol: 0308
                 EUR:
-                    bank_name: "Komerční banka, a.s."
-                    recipient: "Univerzita Karlova"
-                    iban: CZ93 0100 0000 4373 0978 0297
-                    swift: KOMBCZPPXXX
+                    bank_name: "Fio banka, a.s."
+                    recipient: "Fykos, z.s."
+                    iban: CZ05 2010 0000 0022 0241 4681
+                    swift: FIOBCZPPXXX
+                    constant_symbol: 0308
 services:
     fyziklani17payment.symbolGenerator:
             factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
@@ -26,7 +28,7 @@ services:
         factory: FKSDB\Models\Transitions\Machine\PaymentMachine
         setup:
             - setEventId(173)
-            - setScheduleGroupTypes([accommodation])
+            - setScheduleGroupTypes([accommodation,weekend])
 
 transitions:
     fyziklani17payment:
