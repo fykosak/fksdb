@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Payment;
 
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 
 class NewPaymentCallback extends MailCallback
 {
     /**
-     * @param TeamHolder $holder
+     * @param PaymentHolder $holder
      */
     protected function getData(ModelHolder $holder): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
+        if (PersonModel::createFromActiveRow($holder->getModel()->person)->getPreferredLang() === 'cs'){
             $subject = 'Platba na Fyziklání';
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {

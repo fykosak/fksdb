@@ -1,4 +1,4 @@
-{layout '../layout.latte'}
+{layout './layout.latte'}
 {varType FKSDB\Models\ORM\Models\PaymentModel $model}
 {block body}
     <div>
@@ -11,7 +11,7 @@
         </p>
         {include './items.latte'}
         <p>
-            Please transfer the money to the bank account below. As soon as we receive the payment we will send you a confirmation e-mail.
+            Please transfer the money to the bank account below no later than by the end of registration. As soon as we receive the payment we will send you a confirmation e-mail.
         </p>
         <p>
             Please use the special variable symbol which has been assigned to your payment.

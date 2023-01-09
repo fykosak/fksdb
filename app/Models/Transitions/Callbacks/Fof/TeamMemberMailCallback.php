@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Fof;
 
-use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
+use Fykosak\NetteORM\Model;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
