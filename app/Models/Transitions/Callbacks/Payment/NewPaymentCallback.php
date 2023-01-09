@@ -16,7 +16,7 @@ class NewPaymentCallback extends MailCallback
      */
     protected function getData(ModelHolder $holder): array
     {
-        if (PersonModel::createFromActiveRow($holder->getModel()->person)->getPreferredLang() === 'cs'){
+        if ($holder->getModel()->person->getPreferredLang() === 'cs') {
             $subject = 'Platba na Fyziklání';
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {

@@ -16,7 +16,7 @@ class ReceivedPaymentCallback extends MailCallback
      */
     protected function getData(ModelHolder $holder): array
     {
-        if (PersonModel::createFromActiveRow($holder->getModel()->person)->getPreferredLang() === 'cs'){
+        if ($holder->getModel()->person->getPreferredLang() === 'cs') {
             $subject = 'Potvrzení přijetí platby';
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {
