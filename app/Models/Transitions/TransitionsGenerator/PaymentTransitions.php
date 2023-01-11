@@ -14,7 +14,6 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
-use Nette\Security\Authorizator;
 use Tracy\Debugger;
 
 class PaymentTransitions implements TransitionsDecorator
