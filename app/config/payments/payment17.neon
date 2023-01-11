@@ -50,7 +50,7 @@ transitions:
                 label: _('Cancel payment')
                 behaviorType: danger
             waiting->received:
-                behaviorType: success
                 label: _('Paid')
+                behaviorType: success
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Payment\ReceivedPaymentCallback()

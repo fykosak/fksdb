@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
@@ -13,6 +14,7 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
+use Nette\Security\Authorizator;
 use Tracy\Debugger;
 
 class PaymentTransitions implements TransitionsDecorator
@@ -76,7 +78,9 @@ class PaymentTransitions implements TransitionsDecorator
                 $this->personScheduleService->storeModel([$personSchedule->state => 'received'], $personSchedule);
             }
         };
-        $transition->setCondition(fn() => false);
+
+        $transition->setCondition(function (PaymentHolder $holder){return $this->eventAuthorizator->isAllowed($holder->getModel(), 'execute', $holder->getModel()->getReferencedModel(EventModel::class));});
+
     }
 
     private function getClosureDeleteRows(): callable
