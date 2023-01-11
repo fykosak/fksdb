@@ -6,12 +6,10 @@ $input-border-radius-lg: 0;
 @import 'node_modules/flag-icon-css/sass/flag-icon';
 @import 'node_modules/codemirror/lib/codemirror.css';
 
-@import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
 @import "../Components/Charts/style";
 @import "../Components/Charts/legend";
 @import "colors";
-@import "points";
 @import "contests";
 @import "callout";
 @import "payment";
@@ -30,9 +28,6 @@ $input-border-radius-lg: 0;
 @include color-variant(#17becf, color-10);
 @include color-variant(#000000, color-11);
 :root {
-  --color-fof-main: #{$fofMainColor};
-  --color-fol-main: #{$folMainColor};
-  --color-fykos-main: #{$fykosMainColor};
   --color-vyfuk-main: #{$vyfukMainColor};
 
   --color-fof-points-5: #{$fyziklaniPoints5};
@@ -53,15 +48,22 @@ $input-border-radius-lg: 0;
   --color-variant-color-11: #000000;
 }
 
-@include color-variant($fykosMainColor, "fykos");
+@each $name, $color in $colorMap {
+  :root {
+    --color-#{$name}-main: #{$color};
+    --color-#{$name}: #{$color};
+  }
+  @include color-variant($color, $name);
+
+  [data-style-id~="#{$name}"] {
+    @include page-theme($color);
+  }
+}
+
 @include color-variant($vyfukMainColor, "vyfuk");
-@include color-variant($ctyrbojColor, "ctyrboj");
 
 @include color-variant(deeppink, 'pink');
 @include color-variant(#dc3545, 'error');
-
-@include color-variant($folMainColor, "fol");
-@include color-variant($fofMainColor, "fof");
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -168,4 +170,23 @@ main {
 footer {
   min-height: $footerHeight;
   background-color: rgba(255, 255, 255, .7);
+}
+
+.points-field {
+  text-align: center;
+  display: block;
+  width: 100px;
+  float: left;
+  margin: 2px;
+}
+
+.inbox-field {
+  display: block;
+  width: 100px;
+  float: left;
+  margin: 2px;
+
+  input {
+    width: 90px;
+  }
 }

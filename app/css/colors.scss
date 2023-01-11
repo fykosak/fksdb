@@ -1,10 +1,10 @@
 /* general setting */
 @import "/node_modules/bootstrap/scss/bootstrap";
 @import "./mixins/navigation-item";
+@import "mixins/_bg";
+@import "mixins/_border";
+@import "mixins/_vars";
 
-$fofMainColor: #e6060d;
-$folMainColor: rgb(0, 174, 107);
-$fykosMainColor: #1175da;
 $vyfukMainColor: #ff4800;
 $ctyrbojColor: #00a6cc;
 
@@ -25,9 +25,19 @@ $fyziklaniPoints1: #f45d01;
   .btn-#{$index} {
     @include button-outline-variant($color);
   }
-  .bg-#{$index} {
-    color: color-contrast($color);
-    background-color: $color;
+  $steps: -30, -20, -10, 0, 10, 20, 30;
+  @each $amount in $steps {
+    $suffix: '';
+    $newColor: $color;
+    @if $amount < 0 {
+      $suffix: '-d'+#{-$amount};
+      $newColor: darken($color, -$amount);
+    } @else if $amount > 0 {
+      $suffix: '-l'+#{$amount};
+      $newColor: lighten($color, $amount);
+    }
+    @include bg($index, $newColor, $suffix);
+    @include border($index, $newColor, $suffix);
   }
   .text-#{$index} {
     color: $color;

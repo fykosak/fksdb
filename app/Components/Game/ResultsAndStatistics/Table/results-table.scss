@@ -34,33 +34,33 @@
 
   thead tr th {
     &[data-task-label^="A"] {
-      background-color: lighten($fofMainColor, 30%);
+      background-color: lighten($fofColor, 30%);
     }
 
     &[data-task-label^="B"] {
-      background-color: lighten($fofMainColor, 20%);
+      background-color: lighten($fofColor, 20%);
     }
 
     &[data-task-label^="C"] {
-      background-color: lighten($fofMainColor, 10%);
+      background-color: lighten($fofColor, 10%);
     }
 
     &[data-task-label^="D"] {
-      background-color: $fofMainColor;
+      background-color: $fofColor;
     }
 
     &[data-task-label^="E"] {
-      background-color: darken($fofMainColor, 10%);
+      background-color: darken($fofColor, 10%);
       color: white;
     }
 
     &[data-task-label^="F"] {
-      background-color: darken($fofMainColor, 20%);
+      background-color: darken($fofColor, 20%);
       color: white;
     }
 
     &[data-task-label^="G"] {
-      background-color: darken($fofMainColor, 30%);
+      background-color: darken($fofColor, 30%);
       color: white;
     }
   }

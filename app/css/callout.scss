@@ -1,4 +1,9 @@
-@import "mixins/callout";
+@mixin bd-callout($color) {
+  border-left-color: $color;
+  h4 {
+    color: $color;
+  }
+}
 
 .bs-callout {
   margin: 20px 0;
