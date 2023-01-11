@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
 use Nette\Security\User;
@@ -26,6 +27,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     private EventModel $event;
     private User $user;
     private bool $isOrg;
+    private ScheduleItemService $scheduleItemService;
 
     /**
      * @throws NotImplementedException
@@ -50,6 +52,11 @@ class PersonPaymentContainer extends ContainerWithOptions
     final public function injectServicePersonSchedule(PersonScheduleService $personScheduleService): void
     {
         $this->personScheduleService = $personScheduleService;
+    }
+
+    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
+    {
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -82,7 +89,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         }
 
         if (count($this->machine->scheduleGroupTypes)) {
-            $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->machine->scheduleGroupTypes);
+            $query->where(['schedule_item.schedule_group.schedule_group_type IN' => $this->machine->scheduleGroupTypes, 'schedule_item.price_czk > 0 OR schedule_item.price_eur > 0']);
         }
         $query->order('person.family_name ,person_id');
         $lastPersonId = null;

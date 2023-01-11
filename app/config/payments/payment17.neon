@@ -1,6 +1,6 @@
 parameters:
     fyziklani17payment:
-        begin: 2023-01-12
+        begin: 2023-01-09
         end: 2023-02-08
         symbolGenerator:
             variableSymbolStart: 173230000
@@ -11,13 +11,13 @@ parameters:
                     bank_name: "Fio banka, a.s."
                     recipient: "Fykos, z.s."
                     iban: CZ55 2010 0000 0024 0241 4686
-                    constant_symbol: 0308
+                    constant_symbol: "0308"
                 EUR:
                     bank_name: "Fio banka, a.s."
                     recipient: "Fykos, z.s."
                     iban: CZ05 2010 0000 0022 0241 4681
                     swift: FIOBCZPPXXX
-                    constant_symbol: 0308
+                    constant_symbol: "0308"
 services:
     fyziklani17payment.symbolGenerator:
             factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
