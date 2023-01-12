@@ -9,7 +9,6 @@ use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
@@ -21,7 +20,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -118,7 +116,7 @@ class PaymentPresenter extends BasePresenter
      */
     private function isPaymentAllowed(): bool
     {
-        $params = $this->getContext()->parameters[sprintf('fyziklani%dpayment', $this->getEvent()->event_year)];
+        $params = $this->getContext()->parameters[$this->getEvent()->getPaymentFactoryName()];
         if (!isset($params['begin']) || !isset($params['end'])) {
             return false;
         }
@@ -159,22 +157,15 @@ class PaymentPresenter extends BasePresenter
 
     protected function isEnabled(): bool
     {
-        return $this->hasApi();
-    }
-
-    private function hasApi(): bool
-    {
         try {
             $this->getMachine();
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
             return false;
         }
         return true;
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws MissingServiceException
      */
@@ -182,12 +173,7 @@ class PaymentPresenter extends BasePresenter
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->getContext()->getService(
-                sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year)
-            );
-            if (!$machine instanceof PaymentMachine) {
-                throw new BadTypeException(PaymentMachine::class, $machine);
-            }
+            $machine = $this->getContext()->getService($this->getEvent()->getPaymentFactoryName());
         }
         return $machine;
     }
@@ -207,7 +193,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -233,7 +218,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
@@ -242,13 +226,11 @@ class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
             $this->getMachine(),
-            $this->getEvent(),
             null
         );
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -262,7 +244,6 @@ class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->isAllowed($this->getEntity(), 'org-edit'),
             $this->getMachine(),
-            $this->getEvent(),
             $this->getEntity()
         );
     }

@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -38,19 +37,12 @@ class PaymentFormComponent extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
-    private EventModel $event;
     private User $user;
 
-    public function __construct(
-        Container $container,
-        bool $isOrg,
-        PaymentMachine $machine,
-        EventModel $event,
-        ?PaymentModel $model
-    ) {
+    public function __construct(Container $container, bool $isOrg, PaymentMachine $machine, ?PaymentModel $model)
+    {
         parent::__construct($container, $model);
         $this->machine = $machine;
-        $this->event = $event;
         $this->isOrg = $isOrg;
     }
 
@@ -99,7 +91,6 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->machine,
-                $this->event,
                 $this->user,
                 $this->isOrg,
                 !$this->isCreating()
@@ -126,7 +117,7 @@ class PaymentFormComponent extends EntityFormComponent
         try {
             $model = $this->paymentService->storeModel(
                 array_merge($data, [
-                    'event_id' => $this->event->event_id,
+                    'event_id' => $this->machine->event->event_id,
                 ]),
                 $this->model
             );

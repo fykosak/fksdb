@@ -8,13 +8,11 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
 use Nette\Security\User;
@@ -24,10 +22,8 @@ class PersonPaymentContainer extends ContainerWithOptions
     private PersonScheduleService $personScheduleService;
     private PaymentMachine $machine;
     private bool $showAll;
-    private EventModel $event;
     private User $user;
     private bool $isOrg;
-    private ScheduleItemService $scheduleItemService;
 
     /**
      * @throws NotImplementedException
@@ -35,7 +31,6 @@ class PersonPaymentContainer extends ContainerWithOptions
     public function __construct(
         Container $container,
         PaymentMachine $machine,
-        EventModel $event,
         User $user,
         bool $isOrg,
         bool $showAll = true
@@ -44,7 +39,6 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->user = $user;
         $this->machine = $machine;
         $this->showAll = $showAll;
-        $this->event = $event;
         $this->isOrg = $isOrg;
         $this->configure();
     }
@@ -54,11 +48,6 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->personScheduleService = $personScheduleService;
     }
 
-    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
-    {
-        $this->scheduleItemService = $scheduleItemService;
-    }
-
     /**
      * @throws NotImplementedException
      * @throws \Exception
@@ -66,11 +55,11 @@ class PersonPaymentContainer extends ContainerWithOptions
     protected function configure(): void
     {
         $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
+            ->where('schedule_item.schedule_group.event_id', $this->machine->event->event_id);
         if (!$this->isOrg) {
             /** @var LoginModel $login */
             $login = $this->user->getIdentity();
-            $roles = $login->person->getEventRoles($this->event);
+            $roles = $login->person->getEventRoles($this->machine->event);
             $teams = [];
             foreach ($roles as $role) {
                 if ($role instanceof FyziklaniTeamTeacherRole) {
@@ -85,17 +74,19 @@ class PersonPaymentContainer extends ContainerWithOptions
             foreach ($teams as $team) {
                 $persons += $team->getPersons();
             }
-            $query->where('person.person_id', array_map(fn(PersonModel $person) => $person->person_id, $persons));
-        }
-
-        if (count($this->machine->scheduleGroupTypes)) {
-            $query->where(['schedule_item.schedule_group.schedule_group_type IN' => $this->machine->scheduleGroupTypes, 'schedule_item.price_czk > 0 OR schedule_item.price_eur > 0']);
+            $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }
         $query->order('person.family_name ,person_id');
         $lastPersonId = null;
         $container = null;
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
+            if (
+                !$model->schedule_item->isPayable() ||
+                in_array($model->schedule_item->schedule_group->schedule_group_type, $this->machine->scheduleGroupTypes)
+            ) {
+                continue;
+            }
             if ($this->showAll || !$model->hasActivePayment()) {
                 if ($model->person_id !== $lastPersonId) {
                     $container = new ModelContainer();
