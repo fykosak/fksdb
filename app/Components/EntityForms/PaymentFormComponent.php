@@ -79,8 +79,6 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
                 'person_id'
             );
-        } else {
-            $form->addHidden('person_id');
         }
         /** @var SelectBox $currencyField */
         $currencyField = $this->reflectionFormFactory->createField('payment', 'currency');
@@ -91,9 +89,7 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->machine,
-                $this->user,
-                $this->isOrg,
-                !$this->isCreating()
+                $this->isOrg
             ),
             'items'
         );
@@ -108,17 +104,17 @@ class PaymentFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        $data = [
-            'currency' => $values['currency'],
-            'person_id' => $values['person_id'],
-        ];
+        /** @var LoginModel $login */
+        $login = $this->user->getIdentity();
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
             $model = $this->paymentService->storeModel(
-                array_merge($data, [
+                [
                     'event_id' => $this->machine->event->event_id,
-                ]),
+                    'currency' => $values['currency'],
+                    'person_id' => $this->isOrg ? $values['person_id'] : $login->person->person_id,
+                ],
                 $this->model
             );
             $this->schedulePaymentService->storeItems((array)$values['items'], $model);
@@ -146,22 +142,10 @@ class PaymentFormComponent extends EntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $values = $this->model->toArray();
-            $query = $this->model->getRelatedPersonSchedule();
-            $items = [];
-            foreach ($query as $row) {
-                $key = 'person' . $row->person_id;
-                $items[$key] = $items[$key] ?? [];
-                $items[$key][$row->person_schedule_id] = true;
-            }
-            $values['items'] = $items;
-            $this->getForm()->setDefaults($values);
-        } else {
-            /** @var LoginModel $login */
-            $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
-                'person_id' => $login->person->person_id,
-            ]);
+            $this->getForm()->setDefaults($this->model->toArray());
+            /** @var PersonPaymentContainer $itemContainer */
+            $itemContainer = $this->getForm()->getComponent('items');
+            $itemContainer->setPayment($this->model);
         }
     }
 }

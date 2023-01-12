@@ -20,6 +20,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
+use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -160,6 +161,7 @@ class PaymentPresenter extends BasePresenter
         try {
             $this->getMachine();
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             return false;
         }
         return true;
@@ -173,7 +175,7 @@ class PaymentPresenter extends BasePresenter
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->getContext()->getService($this->getEvent()->getPaymentFactoryName());
+            $machine = $this->getContext()->getService($this->getEvent()->getPaymentFactoryName() . '.machine');
         }
         return $machine;
     }
