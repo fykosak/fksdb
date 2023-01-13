@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-11 17:12+0100\n"
+"POT-Creation-Date: 2023-01-13 22:06+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -96,7 +96,7 @@ msgstr ""
 #: ../app/Modules/OrgModule/PersonPresenter.php:155
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
-#: ../app/Components/EntityForms/PaymentFormComponent.php:87
+#: ../app/Components/EntityForms/PaymentFormComponent.php:79
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:32
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:33
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:90
@@ -705,22 +705,22 @@ msgstr ""
 msgid "Error during deleting"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:44
+#: ../app/Modules/EventModule/PaymentPresenter.php:43
 #, fuzzy
 msgid "Create payment"
 msgstr "Nová platba"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:59
+#: ../app/Modules/EventModule/PaymentPresenter.php:58
 #, php-format
 msgid "Edit payment #%s"
 msgstr "Uprava platby #%s"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:76
+#: ../app/Modules/EventModule/PaymentPresenter.php:75
 #, fuzzy, php-format
 msgid "Detail of the payment #%s"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:83
+#: ../app/Modules/EventModule/PaymentPresenter.php:82
 msgid "List of payments"
 msgstr "Zoznam platieb"
 
@@ -1370,8 +1370,8 @@ msgid "__time"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Types/DateTime/DateColumnFactory.php:20
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:55
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:56
+#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:46
+#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:47
 msgid "__date"
 msgstr ""
 
@@ -1447,7 +1447,7 @@ msgstr ""
 msgid "Unlimited capacity"
 msgstr "Kapacita"
 
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:53
+#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:44
 #, fuzzy, php-format
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytnovanie neexistuje"
@@ -1530,7 +1530,7 @@ msgid "Out of DB"
 msgstr ""
 
 #: ../app/Models/ORM/Models/EventParticipantStatus.php:161
-#: ../app/config/payments/payment17.neon.neon2php:54
+#: ../app/config/payments/payment17.neon.neon2php:55
 #: ../app/config/payments/payment16.neon.neon2php:50
 #: ../app/config/payments/payment14.neon.neon2php:50
 #: ../app/config/payments/payment13.neon.neon2php:47
@@ -2181,6 +2181,10 @@ msgstr ""
 msgid "There has been a change in the data of this form since it was shown."
 msgstr ""
 
+#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:114
+msgid "This item has already assigned another payment"
+msgstr ""
+
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:86
 msgid "Deliver address"
 msgstr ""
@@ -2493,23 +2497,23 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:75
+#: ../app/Components/EntityForms/PaymentFormComponent.php:67
 msgid "Proceed to summary"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:75
+#: ../app/Components/EntityForms/PaymentFormComponent.php:67
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:96
+#: ../app/Components/EntityForms/PaymentFormComponent.php:86
 msgid "Please select currency"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:146
+#: ../app/Components/EntityForms/PaymentFormComponent.php:133
 msgid "Payment has been created."
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:147
+#: ../app/Components/EntityForms/PaymentFormComponent.php:134
 msgid "Payment has been updated."
 msgstr ""
 
