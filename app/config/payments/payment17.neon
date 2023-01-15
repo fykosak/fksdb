@@ -13,7 +13,6 @@ parameters:
                     iban: CZ55 2010 0000 0024 0241 4686
                     constant_symbol: "0308"
                 EUR:
-                    bank_account: 2202414681/2010
                     bank_name: "Fio banka, a.s."
                     recipient: "Fykos, z.s."
                     iban: CZ05 2010 0000 0022 0241 4681
