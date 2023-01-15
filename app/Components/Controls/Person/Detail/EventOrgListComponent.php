@@ -42,12 +42,15 @@ class EventOrgListComponent extends DetailComponent
                 : $eventOrg->event->event_type->contest->getContestSymbol());
 
         $row0 = new RowContainer($this->container, new Title(null, ''));
+        $this->setTitle(new TemplateItem($this->container, '@event.name'));
         $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateItem($this->container, '@event.name'), 'event__name');
         $row0->addComponent(new TemplateItem($this->container, '@event.event_type'), 'event__type');
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
-        $row1->addComponent(new TemplateItem($this->container, '@event_org.note'), 'event_org_note');
+        $row1->addComponent(
+            new TemplateItem($this->container, _('@event_org.note:title: @event_org.note')),
+            'event_org_note'
+        );
         $this->addButton(
             new PresenterButton($this->container, new Title(null, _('Edit')), fn(EventOrgModel $eventOrg) => [
                 ':Event:EventOrg:edit',

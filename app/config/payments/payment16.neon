@@ -32,9 +32,9 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
         decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
         transitions:
-            init->new:
+            init->in_progress:
                 label: _('Create')
-            new->waiting:
+            in_progress->waiting:
                 label: _('Generate payment')
                 behaviorType: success
                 beforeExecute:
@@ -42,7 +42,7 @@ transitions:
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Payment\NewPaymentCallback()
-            new|waiting->canceled:
+            in_progress|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
             waiting->received:
