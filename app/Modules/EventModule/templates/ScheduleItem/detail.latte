@@ -9,19 +9,21 @@
             <b class="col-2">{_'Id'}</b>
             <span class="col-10">#{$model->schedule_item_id}</span>
         </div>
-        {control valuePrinter:row 'schedule_item.price_eur', $model}
-        {control valuePrinter:row 'schedule_item.price_czk',$model}
+        {foreach [
+        '@schedule_item.price_eur',
+        '@schedule_item.price_czk',
+        '@schedule_item.name_cs',
+        '@schedule_item.name_en',
+        '@schedule_item.description_cs',
+        '@schedule_item.description_en',
+        '@schedule_item.capacity',
+        '@schedule_item.used_capacity',
+        '@schedule_item.free_capacity',
+        '@schedule_item.require_id_number'
+        ] as $fieldName}
+            {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name: $fieldName,printer:$control['valuePrinter']}
+        {/foreach}
 
-        {control valuePrinter:row 'schedule_item.name_cs', $model}
-        {control valuePrinter:row 'schedule_item.name_en',$model}
-
-        {control valuePrinter:row 'schedule_item.description_cs', $model}
-        {control valuePrinter:row 'schedule_item.description_en', $model}
-
-        {control valuePrinter:row 'schedule_item.capacity', $model}
-        {control valuePrinter:row 'schedule_item.used_capacity', $model}
-        {control valuePrinter:row 'schedule_item.free_capacity', $model}
-        {control valuePrinter:row 'schedule_item.require_id_number', $model}
     </div>
     <a class="btn btn-outline-primary btn-sm" href="{plink ScheduleItem:edit}">{_'Edit item'}</a>
     <hr/>

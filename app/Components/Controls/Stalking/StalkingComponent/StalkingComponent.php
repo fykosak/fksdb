@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 class StalkingComponent extends BaseStalkingComponent
@@ -27,9 +26,6 @@ class StalkingComponent extends BaseStalkingComponent
             switch ($definition['layout']) {
                 case 'single':
                     $this->renderSingle($definition);
-                    return;
-                case 'multi':
-                    $this->renderMulti($definition);
                     return;
                 default:
                     throw new InvalidStateException();
@@ -59,18 +55,6 @@ class StalkingComponent extends BaseStalkingComponent
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
-    }
-
-    /**
-     * @param array|Model[] $definition
-     */
-    private function renderMulti(array $definition): void
-    {
-        $this->template->links = $definition['links'];
-        $this->template->rows = $definition['rows'];
-        $this->template->models = $this->person->related($definition['table']);
-        $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }
 
     protected function getMinimalPermissions(): int

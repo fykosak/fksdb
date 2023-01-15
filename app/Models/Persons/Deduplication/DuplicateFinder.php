@@ -29,14 +29,11 @@ class DuplicateFinder
 
     public function getPairs(): array
     {
+        /** @var PersonModel[][] $buckets */
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var PersonModel $person */
-        foreach (
-            $this->personService->getTable()->select(
-                "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
-            ) as $person
-        ) {
+        foreach ($this->personService->getTable() as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -49,9 +46,6 @@ class DuplicateFinder
         foreach ($buckets as $bucket) {
             foreach ($bucket as $personA) {
                 foreach ($bucket as $personB) {
-                    /** @var PersonModel $personA
-                     * @var PersonModel $personB
-                     */
                     if ($personA->person_id >= $personB->person_id) {
                         continue;
                     }
@@ -69,16 +63,13 @@ class DuplicateFinder
         return $pairs;
     }
 
-    private function getBucketKey(PersonModel $row): string
+    private function getBucketKey(PersonModel $person): string
     {
-        $fam = Strings::webalize($row->family_name);
+        $fam = Strings::webalize($person->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
-        //return $row->gender . mb_substr($row->family_name, 0, 2);
     }
 
     /**
-     * @param PersonModel|PersonInfoModel $a
-     * @param PersonModel|PersonInfoModel $b
      * @todo Implement more than binary score.
      */
     private function getSimilarityScore(PersonModel $a, PersonModel $b): float
@@ -92,16 +83,12 @@ class DuplicateFinder
         if (in_array($b->getPrimary(), $this->getDifferentPersons($a))) {
             return 0;
         }
-
-        /*
-         * Email check
-         */
-        if (!$a->PI || !$b->PI) { // if person_info records don't exist
-            $emailScore = 0.5; // cannot say anything
-        } elseif (!$a->email || !$b->email) {
+        if (!$a->getInfo() || !$b->getInfo()) {
+            $emailScore = 0.5;
+        } elseif (!$a->getInfo()->email || !$b->getInfo()->email) {
             $emailScore = 0.8; // a little bit more
         } else {
-            $emailScore = 1 - $this->relativeDistance($a->email, $b->email);
+            $emailScore = 1 - $this->relativeDistance($a->getInfo()->email, $b->getInfo()->email);
         }
 
         $familyScore = $this->stringScore($a->family_name, $b->family_name);

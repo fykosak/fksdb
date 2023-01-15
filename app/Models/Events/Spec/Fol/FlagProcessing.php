@@ -6,6 +6,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
 use FKSDB\Models\ORM\Services\SchoolService;
@@ -38,7 +39,7 @@ class FlagProcessing extends WithSchoolProcessing
         ];
 
         if (!$formValues['school_id']) {
-            if ($this->isBaseReallyEmpty($holder->name)) {
+            if ($this->holder->getModelState() === Machine::STATE_INIT) {
                 return;
             }
 

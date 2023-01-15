@@ -21,11 +21,6 @@ abstract class Machine
     /** @var Transition[] */
     protected array $transitions = [];
     protected Explorer $explorer;
-    /**
-     * @var callable|null
-     * if callback return true, transition is allowed explicit, independently of transition's condition
-     */
-    private $implicitCondition = null;
 
     public function __construct(Explorer $explorer)
     {
@@ -130,9 +125,6 @@ abstract class Machine
     {
         if ($transition->source->value !== $holder->getState()->value) {
             return false;
-        }
-        if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
-            return true;
         }
         return $transition->canExecute($holder);
     }

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class State extends EvaluatedExpression
 {
@@ -17,11 +15,9 @@ class State extends EvaluatedExpression
         $this->state = $state;
     }
 
-    /**
-     * @param BaseHolder $holder
-     */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
+        [$holder] = $args;
         return $holder->getModelState()->value === $this->state;
     }
 

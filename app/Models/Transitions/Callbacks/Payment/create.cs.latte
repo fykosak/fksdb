@@ -1,10 +1,12 @@
-{layout '../layout.latte'}
-{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
+{var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
+
 {block body}
     <div>
         <p>
             Dobrý den,<br/>
-            byla Vám vytvořena platba #{$model->getPaymentId()} za Fyziklání 2022 s částkou
+            byla Vám vytvořena platba #{$model->getPaymentId()} za Fyziklání 2023 na částku
             <b>{$model->getPrice()->__toString()}</b>.
         </p>
         <p>
@@ -12,15 +14,15 @@
         </p>
         {include './items.latte'}
         <p>
-                Prosíme o její uhrazení převodem na účet. Jakmile platbu zaregistrujeme, bude Vám zasláno potvrzení.
+            Prosíme o její uhrazení převodem na účet nejpozději do konce registrace. Jakmile platbu zaregistrujeme, bude Vám na tento e-mail zasláno potvrzení.
         </p>
         <p>
-                Pro snadné zpracování prosím uveďte v platbě Váš variabilní symbol, který charakterizuje Vaši platbu.
+            Pro snadné zpracování prosím uveďte v platbě Váš variabilní a konstantní symbol, který charakterizuje Vaši platbu. V případě že symbol neuvedete, nebudeme vědět, že je platba od Vás.
         </p>
         {include './parameters.latte'}
         <p>
-                Doba vyřízení transakce je přibližně týden. V případě potíží nás neváhejte kontaktovat na
-                <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+            Doba vyřízení transakce je přibližně týden. V případě potíží nás neváhejte kontaktovat na
+            <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
         </p>
         {include './signature.cs.latte'}
     </div>

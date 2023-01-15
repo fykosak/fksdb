@@ -10,23 +10,20 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
-use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Security\User;
 
 /**
  * @property PaymentModel|null $model
@@ -40,28 +37,24 @@ class PaymentFormComponent extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
-    private EventModel $event;
+    private User $user;
 
-    public function __construct(
-        Container $container,
-        bool $isOrg,
-        PaymentMachine $machine,
-        EventModel $event,
-        ?PaymentModel $model
-    ) {
+    public function __construct(Container $container, bool $isOrg, PaymentMachine $machine, ?PaymentModel $model)
+    {
         parent::__construct($container, $model);
         $this->machine = $machine;
-        $this->event = $event;
         $this->isOrg = $isOrg;
     }
 
     final public function injectPrimary(
+        User $user,
         PaymentService $paymentService,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         SchedulePaymentService $schedulePaymentService,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
+        $this->user = $user;
         $this->paymentService = $paymentService;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
@@ -86,8 +79,6 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
                 'person_id'
             );
-        } else {
-            $form->addHidden('person_id');
         }
         /** @var SelectBox $currencyField */
         $currencyField = $this->reflectionFormFactory->createField('payment', 'currency');
@@ -98,14 +89,13 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->machine,
-                !$this->isCreating()
+                $this->isOrg
             ),
-            'payment_accommodation'
+            'items'
         );
     }
 
     /**
-     * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      * @throws ModelException
      * @throws StorageException
@@ -113,43 +103,35 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
-        $data = [
-            'currency' => $values['currency'],
-            'person_id' => $values['person_id'],
-        ];
+        $values = $form->getValues('array');
+        /** @var LoginModel $login */
+        $login = $this->user->getIdentity();
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
-            if (isset($this->model)) {
-                $this->paymentService->storeModel($data, $this->model);
-                $model = $this->model;
-            } else {
-                $model = $this->paymentService->storeModel(
-                    array_merge($data, [
-                        'event_id' => $this->event->event_id,
-                    ])
-                );
+            $model = $this->paymentService->storeModel(
+                [
+                    'event_id' => $this->machine->event->event_id,
+                    'currency' => $values['currency'],
+                    'person_id' => $this->isOrg ? $values['person_id'] : $login->person->person_id,
+                ],
+                $this->model
+            );
+            $this->schedulePaymentService->storeItems((array)$values['items'], $model);
+            if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $this->machine->executeImplicitTransition($holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {
             $connection->rollBack();
-            return;
-        }
-        try {
-            $this->schedulePaymentService->storeItems((array)$values['payment_accommodation'], $model); // TODO
-            //$this->schedulePaymentService->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException | EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
-            return;
+            throw $exception;
         }
         $connection->commit();
-
         $this->getPresenter()->flashMessage(
-            !isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.')
+            !isset($this->model)
+                ? _('Payment has been created.')
+                : _('Payment has been updated.')
         );
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
@@ -160,22 +142,10 @@ class PaymentFormComponent extends EntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $values = $this->model->toArray();
-            $query = $this->model->getRelatedPersonSchedule();
-            $items = [];
-            foreach ($query as $row) {
-                $key = 'person' . $row->person_id;
-                $items[$key] = $items[$key] ?? [];
-                $items[$key][$row->person_schedule_id] = true;
-            }
-            $values['payment_accommodation'] = $items;
-            $this->getForm()->setDefaults($values);
-        } else {
-            /** @var LoginModel $login */
-            $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
-                'person_id' => $login->person->person_id,
-            ]);
+            $this->getForm()->setDefaults($this->model->toArray());
+            /** @var PersonPaymentContainer $itemContainer */
+            $itemContainer = $this->getForm()->getComponent('items');
+            $itemContainer->setPayment($this->model);
         }
     }
 }

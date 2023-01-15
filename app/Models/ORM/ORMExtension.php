@@ -109,8 +109,8 @@ class ORMExtension extends Extension
                 case 'float':
                     $this->registerFloatRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
-                case 'logic':
-                    $this->registerLogicRow($factory, $tableName, $modelClassName, $fieldName, $field);
+                case 'bool':
+                    $this->registerBoolRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
                 case 'class':
                     $this->registerClassColumnFactory($factory, $tableName, $modelClassName, $fieldName, $field);
@@ -229,7 +229,7 @@ class ORMExtension extends Extension
         );
     }
 
-    private function registerLogicRow(
+    private function registerBoolRow(
         ServiceDefinition $factory,
         string $tableName,
         string $modelClassName,

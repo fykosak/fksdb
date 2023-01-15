@@ -50,7 +50,7 @@ class ResultsComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $parameters = $this->createParametersValues($this->storedQuery->getQueryPattern()->getParameters());
+        $parameters = $this->createParametersValues($this->storedQuery->queryPattern->getParameters());
         $form->addComponent($parameters, self::CONT_PARAMS);
 
         $form->addSubmit('execute', _('Execute'));

@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -89,6 +90,9 @@ class AddressFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @throws BadTypeException
+     */
     protected function setDefaults(): void
     {
         /** @var AddressDataContainer $container */
