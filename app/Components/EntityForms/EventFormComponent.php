@@ -125,23 +125,6 @@ class EventFormComponent extends EntityFormComponent
         ], null, $this->contestYear->contest);
     }
 
-    private function createParamDescription(BaseHolder $holder): Html
-    {
-        $scheme = $holder->paramScheme;
-        $result = Html::el('ul');
-        foreach ($scheme as $key => $meta) {
-            $item = Html::el('li');
-            $result->addText($item);
-
-            $item->addHtml(Html::el()->setText($key));
-            if (isset($meta['default'])) {
-                $item->addText(': ');
-                $item->addHtml(Html::el()->setText(Utils::getRepresentation($meta['default'])));
-            }
-        }
-        return $result;
-    }
-
     private function updateTokens(EventModel $event): void
     {
         $connection = $this->authTokenService->explorer->getConnection();

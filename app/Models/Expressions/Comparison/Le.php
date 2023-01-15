@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Comparison;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class Le extends EvaluatedExpression
 {
@@ -26,8 +25,9 @@ class Le extends EvaluatedExpression
         $this->bValue = $bValue;
     }
 
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
+        [$holder] = $args;
         return $this->evaluateArgument($this->aValue, $holder) <
             $this->evaluateArgument($this->bValue, $holder);
     }

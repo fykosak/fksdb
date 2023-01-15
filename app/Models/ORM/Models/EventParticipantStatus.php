@@ -122,9 +122,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function label(): string
     {
         switch ($this->value) {
@@ -179,6 +176,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             case self::SPARE3:
                 return _('Spare 3');
         }
-        throw new NotImplementedException();
+        return $this->value;
     }
 }

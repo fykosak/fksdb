@@ -13,7 +13,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
     public const WAITING = 'waiting'; // waiting for confirm payment
     public const RECEIVED = 'received'; // payment received
     public const CANCELED = 'canceled'; // payment canceled
-    public const NEW = 'new'; // new payment
+    public const IN_PROGRESS = 'in_progress';
     public const INIT = 'init'; // virtual state for correct ORM
 
     public function badge(): Html
@@ -26,7 +26,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
-            case self::NEW:
+            case self::IN_PROGRESS:
                 return _('New payment');
             case self::WAITING:
                 return _('Waiting for paying');
@@ -41,7 +41,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
     public function getBehaviorType(): string
     {
         switch ($this->value) {
-            case self::NEW:
+            case self::IN_PROGRESS:
                 return 'primary';
             case self::WAITING:
                 return 'warning';

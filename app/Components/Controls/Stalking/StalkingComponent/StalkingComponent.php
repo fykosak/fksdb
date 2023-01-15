@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 class StalkingComponent extends BaseStalkingComponent

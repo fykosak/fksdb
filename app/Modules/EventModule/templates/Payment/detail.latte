@@ -1,11 +1,10 @@
 {block content}
     {varType FKSDB\Models\ORM\Models\PaymentModel $model}
-    {varType bool $isOrg}
     {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
     <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
     {var $progress = 0}
     {switch $model->state->value}
-        {case FKSDB\Models\ORM\Models\PaymentState::NEW}
+        {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
         {php $progress = 1}
         {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
         {php $progress = 2}
@@ -38,11 +37,7 @@
 
     <h2>{_'Person information'}</h2>
     <div>
-        {if $isOrg}
-            {control valuePrinter:row 'person.person_link', $model}
-        {else}
-            {control valuePrinter:row 'person.full_name', $model}
-        {/if}
+        {control valuePrinter:row 'person.full_name', $model}
         {control valuePrinter:row 'person_info.email', $model->person->getInfo()}
     </div>
     <hr/>

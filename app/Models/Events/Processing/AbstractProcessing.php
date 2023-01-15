@@ -25,7 +25,7 @@ abstract class AbstractProcessing implements Processing
     private array $valuesPathCache;
     private array $formPathCache;
     private ?EventParticipantStatus $state;
-    private ModelHolder $holder;
+    protected ModelHolder $holder;
 
     final public function process(
         ?EventParticipantStatus $state,
@@ -79,20 +79,6 @@ abstract class AbstractProcessing implements Processing
             }
         }
         return $result;
-    }
-
-    /**
-     * Checks whether base is really empty after a value
-     * from it wasn't loaded.
-     * When it returns false, correct value can be loaded from the model
-     * (which is not updated yet).
-     */
-    protected function isBaseReallyEmpty(string $name): bool
-    {
-        if ($this->holder->getModelState() == Machine::STATE_INIT) {
-            return true; // it was empty since beginning
-        }
-        return false;
     }
 
     private function setValues(ArrayHash $values, string $prefix = ''): void

@@ -12,5 +12,4 @@ use Fykosak\NetteORM\Service;
  */
 class AddressService extends Service
 {
-    private const PATTERN = '/[0-9]{5}/';
 }

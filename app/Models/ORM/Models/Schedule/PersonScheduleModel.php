@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
  * @property-read ScheduleItemModel schedule_item
  * @property-read int person_id
  * @property-read int schedule_item_id
- * @property-read string state
  * @property-read int person_schedule_id
  */
 class PersonScheduleModel extends Model
@@ -31,13 +30,7 @@ class PersonScheduleModel extends Model
     public function hasActivePayment(): bool
     {
         $payment = $this->getPayment();
-        if (!$payment) {
-            return false;
-        }
-        if ($payment->state->value == PaymentState::CANCELED) {
-            return false;
-        }
-        return true;
+        return $payment && $payment->state->value !== PaymentState::CANCELED;
     }
 
     /**
@@ -45,19 +38,17 @@ class PersonScheduleModel extends Model
      */
     public function getLabel(): string
     {
-        $item = $this->schedule_item;
-        $group = $item->schedule_group;
-        switch ($group->schedule_group_type->value) {
+        switch ($this->schedule_item->schedule_group->schedule_group_type->value) {
             case ScheduleGroupType::ACCOMMODATION:
                 return sprintf(
                     _('Accommodation for %s from %s to %s in %s'),
                     $this->person->getFullName(),
-                    $group->start->format(_('__date')),
-                    $group->end->format(_('__date')),
-                    $item->name_cs
+                    $this->schedule_item->schedule_group->start->format(_('__date')),
+                    $this->schedule_item->schedule_group->end->format(_('__date')),
+                    $this->schedule_item->name_cs
                 );
             case ScheduleGroupType::WEEKEND:
-                return $item->getLabel();
+                return $this->schedule_item->getLabel();
             default:
                 throw new NotImplementedException();
         }
