@@ -27,7 +27,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::IN_PROGRESS:
-                return _('New payment');
+                return _('In progress');
             case self::WAITING:
                 return _('Waiting for paying');
             case self::RECEIVED:
