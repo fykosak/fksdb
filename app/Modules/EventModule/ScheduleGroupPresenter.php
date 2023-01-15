@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupListComponent;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
+use FKSDB\Components\Grids\Schedule\PerPersonScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
+use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -40,7 +42,7 @@ class ScheduleGroupPresenter extends BasePresenter
 
     public function titlePersons(): PageTitle
     {
-        return new PageTitle(null, _('Whole program'), 'fas fa-list');
+        return new PageTitle(null, _('Schedule per person'), 'fas fa-list');
     }
 
     public function titleDetail(): PageTitle
@@ -59,6 +61,14 @@ class ScheduleGroupPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $this->template->model = $this->getEntity();
+    }
+
+    public function renderList(): void
+    {
+        $this->template->items = [
+            new NavItem(new Title(null, _('Create group'), 'fa fa-plus'), 'create'),
+            new NavItem(new Title(null, _('All persons'), 'fa fa-users'), 'persons'),
+        ];
     }
 
     /**
@@ -93,9 +103,9 @@ class ScheduleGroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentAllPersonsGrid(): AllPersonsGrid
+    protected function createComponentPerPersonScheduleList(): PerPersonScheduleList
     {
-        return new AllPersonsGrid($this->getContext(), $this->getEvent());
+        return new PerPersonScheduleList($this->getContext(), $this->getEvent());
     }
 
     /**

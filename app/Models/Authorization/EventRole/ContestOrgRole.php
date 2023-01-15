@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authorization\EventRole;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\OrgModel;
+use Nette\Utils\Html;
 
 class ContestOrgRole extends EventRole
 {
@@ -15,5 +16,12 @@ class ContestOrgRole extends EventRole
     {
         parent::__construct('event.contestOrg', $event);
         $this->org = $org;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-color-6'])
+            ->addText(_('Contest org'));
     }
 }

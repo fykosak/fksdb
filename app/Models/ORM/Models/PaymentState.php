@@ -18,22 +18,9 @@ class PaymentState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = '';
-        switch ($this->value) {
-            case self::IN_PROGRESS:
-                $badge = 'badge bg-primary';
-                break;
-            case self::WAITING:
-                $badge = 'badge bg-warning';
-                break;
-            case self::RECEIVED:
-                $badge = 'badge bg-success';
-                break;
-            case self::CANCELED:
-                $badge = 'badge bg-secondary';
-                break;
-        }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])->addText(
+            $this->label()
+        );
     }
 
     public function label(): string
@@ -51,8 +38,29 @@ class PaymentState extends FakeStringEnum implements EnumColumn
         }
     }
 
+    public function getBehaviorType(): string
+    {
+        switch ($this->value) {
+            case self::IN_PROGRESS:
+                return 'primary';
+            case self::WAITING:
+                return 'warning';
+            case self::RECEIVED:
+                return 'success';
+            default:
+            case self::CANCELED:
+                return 'secondary';
+        }
+    }
+
     public static function cases(): array
     {
-        return [];
+        return [
+            new self(self::WAITING),
+            new self(self::RECEIVED),
+            new self(self::CANCELED),
+            new self(self::IN_PROGRESS),
+            new self(self::INIT),
+        ];
     }
 }
