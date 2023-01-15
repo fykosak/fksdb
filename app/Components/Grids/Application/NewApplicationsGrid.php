@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Application\Person;
+namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;

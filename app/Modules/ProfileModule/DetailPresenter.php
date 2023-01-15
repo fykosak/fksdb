@@ -10,7 +10,7 @@ use FKSDB\Components\Controls\Person\Detail\HistoryListComponent;
 use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
 use FKSDB\Components\Controls\Person\Detail\PaymentListComponent;
 use FKSDB\Components\Controls\Person\Detail\RoleComponent;
-use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
+use FKSDB\Components\Grids\Application\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Modules\CoreModule\BasePresenter;

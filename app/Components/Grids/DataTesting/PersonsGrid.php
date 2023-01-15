@@ -10,6 +10,7 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Message;
@@ -46,7 +47,7 @@ class PersonsGrid extends Grid
             $this->addColumn(
                 new RendererItem(
                     $this->container,
-                    function ($person) use ($test): Html {
+                    function (PersonModel $person) use ($test): Html {
                         $logger = new MemoryLogger();
                         $test->run($logger, $person);
                         return self::createHtmlLog($logger->getMessages());

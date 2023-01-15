@@ -11,7 +11,6 @@ use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -127,9 +126,6 @@ class TeamListComponent extends FilterList
         return $query;
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function configureForm(Form $form): void
     {
         $form->addText('name', _('Team name'))->setOption(
