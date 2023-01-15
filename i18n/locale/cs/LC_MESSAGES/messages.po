@@ -3465,7 +3465,7 @@ msgstr "SWIFT"
 
 #: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:53
 msgid "Amount"
-msgstr "Množství"
+msgstr "Částka"
 
 #: ../app/Components/PDFGenerators/TeamSeating/SingleTeam/layout.single.latte.latte2php:8
 msgid "Sector"
