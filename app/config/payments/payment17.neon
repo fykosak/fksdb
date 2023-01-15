@@ -17,7 +17,6 @@ parameters:
                     recipient: "Fykos, z.s."
                     iban: CZ05 2010 0000 0022 0241 4681
                     swift: FIOBCZPPXXX
-                    constant_symbol: "0308"
 services:
     fyziklani17payment.symbolGenerator:
             factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
