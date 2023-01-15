@@ -67,7 +67,7 @@ class PaymentModel extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return $this->state === PaymentState::New;
+        return $this->state === PaymentState::InProgress;
     }
 
     /**

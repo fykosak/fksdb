@@ -80,9 +80,8 @@ class TransitionsExtension extends CompilerExtension
                 $factory->addSetup('addAfterExecute', [$callback]);
             }
         }
-
-        if (isset($transitionConfig['beforeExecute'])) {
-            foreach ($transitionConfig['beforeExecute'] as $callback) {
+        if (isset($baseConfig['beforeExecute'])) {
+            foreach ($baseConfig['beforeExecute'] as $callback) {
                 $factory->addSetup('addBeforeExecute', [$callback]);
             }
         }

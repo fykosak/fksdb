@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Authorization\Assertions\QIDAssertion;
 use FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
@@ -14,7 +13,6 @@ class ACLExtension extends CompilerExtension
 {
     /** @var string[] */
     public static array $semanticMap = [
-        'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
     ];
 

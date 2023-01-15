@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class Not extends EvaluatedExpression
 {
@@ -22,9 +21,9 @@ class Not extends EvaluatedExpression
         $this->expression = $expression;
     }
 
-    final public function __invoke(ModelHolder $holder): bool
+    final public function __invoke(...$args): bool
     {
-        return !$this->evaluateArgument($this->expression, $holder);
+        return !$this->evaluateArgument($this->expression, ...$args);
     }
 
     public function __toString(): string

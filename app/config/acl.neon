@@ -76,7 +76,7 @@ acl:
     - addResource(event.dashboard)   # default
     - addResource(event.schedule)    # default
     - addResource(event.model)       # default
-    - addResource(event.payment)     # create, edit, list, detail, delete
+    - addResource(event.payment)     # create, edit, list, detail, delete, org-create, org-edit
 
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart

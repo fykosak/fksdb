@@ -12,13 +12,13 @@ enum PaymentState: string implements EnumColumn
     case Waiting = 'waiting'; // waiting for confirm payment
     case Received = 'received'; // payment received
     case Canceled = 'canceled'; // payment canceled
-    case New = 'new'; // new payment
+    case InProgress = 'in_progress'; // new payment
     case Init = 'init'; // virtual state for correct ORM
 
     public function getBehaviorType(): string
     {
         return match ($this) {
-            self::New => 'primary',
+            self::InProgress => 'primary',
             self::Waiting => 'warning',
             self::Received => 'success',
             self::Canceled, self::Init => 'secondary',
@@ -35,7 +35,7 @@ enum PaymentState: string implements EnumColumn
     public function label(): string
     {
         return match ($this) {
-            self::New => _('New payment'),
+            self::InProgress => _('New payment'),
             self::Waiting => _('Waiting for paying'),
             self::Received => _('Payment received'),
             self::Canceled => _('Payment canceled'),

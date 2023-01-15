@@ -164,4 +164,12 @@ class EventModel extends Model implements Resource, NodeCreator
                 return new CtyrbojHandler($this, $container);
         }
     }
+
+    public function getPaymentFactoryName(): ?string
+    {
+        if ($this->event_type_id === 1) {
+            return sprintf('fyziklani%dpayment', $this->event_year);
+        }
+        return null;
+    }
 }
