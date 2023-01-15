@@ -85,7 +85,7 @@ class PaymentPresenter extends BasePresenter
 
     public function titleDetailedList(): PageTitle
     {
-        return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
+        return new PageTitle(null, _('Detailed list of payments'), 'fa fa-credit-card');
     }
 
     /**
