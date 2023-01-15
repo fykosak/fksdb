@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
@@ -29,12 +28,14 @@ abstract class AbstractSymbolGenerator implements Statement
     abstract protected function create(PaymentModel $modelPayment): array;
 
     /**
+     * @param ...$args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws BadTypeException
      */
-    final public function __invoke(ModelHolder $holder): void
+    final public function __invoke(...$args): void
     {
+        [$holder] = $args;
         if (!$holder instanceof PaymentHolder) {
             throw new BadTypeException(PaymentHolder::class, $holder);
         }

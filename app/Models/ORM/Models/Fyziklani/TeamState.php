@@ -79,9 +79,6 @@ class TeamState extends FakeStringEnum implements EnumColumn
         return '';
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function label(): string
     {
         switch ($this->value) {
@@ -102,7 +99,7 @@ class TeamState extends FakeStringEnum implements EnumColumn
             case self::CANCELLED:
                 return _('Canceled');
         }
-        throw new NotImplementedException();
+        return $this->value;
     }
 
     /**

@@ -6,72 +6,47 @@ namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 class GraphComponent extends FrontEndComponent implements Chart
 {
+    private Machine $machine;
 
-    private EventParticipantMachine $baseMachine;
-
-    public function __construct(Container $container, EventParticipantMachine $baseMachine)
+    public function __construct(Container $container, Machine $machine)
     {
         parent::__construct($container, 'event.model.graph');
-        $this->baseMachine = $baseMachine;
+        $this->machine = $machine;
     }
 
+    /**
+     * @return array[]
+     */
     final public function getData(): array
     {
-        return [
-            'nodes' => $this->prepareNodes(),
-            'links' => $this->prepareTransitions(),
-        ];
-    }
-
-    /**
-     * @return EventParticipantStatus[]
-     */
-    private function getAllStates(): array
-    {
-        return array_merge(
-            EventParticipantStatus::cases(),
-            [
-                EventParticipantStatus::tryFrom(Machine::STATE_INIT),
-            ]
-        );
-    }
-
-    /**
-     * @return array[]
-     */
-    private function prepareNodes(): array
-    {
-        $nodes = [];
-        foreach ($this->getAllStates() as $state) {
-            $nodes[$state->value] = [
-                'label' => $state->value,
-                'type' => $state->value === Machine::STATE_INIT ? 'init' : 'default',
-            ];
-        }
-        return $nodes;
-    }
-
-    /**
-     * @return array[]
-     */
-    private function prepareTransitions(): array
-    {
         $edges = [];
-        foreach ($this->baseMachine->getTransitions() as $transition) {
+        $nodes = [];
+        foreach ($this->machine->getTransitions() as $transition) {
+            if (!isset($nodes[$transition->source->value])) {
+                $nodes[$transition->source->value] = [
+                    'label' => $transition->source->label(),
+                    'type' => $transition->source->value === Machine::STATE_INIT ? 'init' : 'default',
+                ];
+            }
+            if (!isset($nodes[$transition->target->value])) {
+                $nodes[$transition->target->value] = [
+                    'label' => $transition->target->label(),
+                    'type' => $transition->target->value === Machine::STATE_INIT ? 'init' : 'default',
+                ];
+            }
             $edges[] = [
                 'from' => $transition->source->value,
                 'to' => $transition->target->value,
                 'label' => $transition->getLabel(),
             ];
         }
-        return $edges;
+        return ['nodes' => $nodes, 'links' => $edges];
     }
 
     public function getTitle(): string

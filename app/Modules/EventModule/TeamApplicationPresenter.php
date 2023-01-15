@@ -244,22 +244,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         static $machine;
         if (!isset($machine)) {
-            try {
-                switch ($this->getEvent()->event_type_id) {
-                    case 1:
-                        $machine = $this->getContext()->getService('fof.default.machine');
-                        break;
-                    case 9:
-                        $machine = $this->getContext()->getService('fol.default.machine');
-                        break;
-                    default:
-                        throw new InvalidStateException();
-                }
-            } catch (MissingServiceException $exception) {
-            }
-            if (!$machine instanceof TeamMachine) {
-                throw new BadTypeException(TeamMachine::class, $machine);
-            }
+            $machine = $this->eventDispatchFactory->getTeamMachine($this->getEvent());
         }
         return $machine;
     }
