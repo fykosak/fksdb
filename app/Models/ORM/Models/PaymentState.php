@@ -59,7 +59,7 @@ class PaymentState extends FakeStringEnum implements EnumColumn
             new self(self::WAITING),
             new self(self::RECEIVED),
             new self(self::CANCELED),
-            new self(self::NEW),
+            new self(self::IN_PROGRESS),
             new self(self::INIT),
         ];
     }

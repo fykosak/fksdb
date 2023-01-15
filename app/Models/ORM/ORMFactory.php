@@ -16,7 +16,6 @@ final class ORMFactory
     use SmartObject;
 
     private Container $container;
-    private array $cache = [];
 
     public function __construct(Container $container)
     {
