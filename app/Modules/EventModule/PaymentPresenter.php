@@ -7,6 +7,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
+use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -80,6 +81,20 @@ class PaymentPresenter extends BasePresenter
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
+    }
+
+    public function titleDetailedList(): PageTitle
+    {
+        return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedDetailedList(): void
+    {
+        $this->authorizedList();
     }
 
     /**
@@ -220,6 +235,15 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentList(): PaymentList
+    {
+        return new PaymentList($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent

@@ -82,11 +82,12 @@ navigation:
             Game.Statistics.table: []
 
         Event.Dashboard.default:
-            Event.TeamApplication.list: []
             Event.TeamApplication.detailedList: []
+            Event.TeamApplication.list: []
             Event.Application.list: []
             Event.EventOrg.list: []
             Event.Payment.create: []
+            Event.Payment.detailedList: []
             Event.Payment.list: []
             Game.Dashboard.default: []
             Event.ScheduleGroup.list: []

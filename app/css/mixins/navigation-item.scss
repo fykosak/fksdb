@@ -1,18 +1,19 @@
 @mixin navigation-item($color,$background,$apply-hover : true,$apply-border:true) {
   min-height: 12rem;
   width: 12rem;
-  text-align: center;
   color: $color;
   background-color: $background;
+  text-align: center;
+  text-decoration: none;
   @if $apply-border {
     border: $color solid 1px;
   } @else {
     border: none;
   }
-
   transition-duration: 200ms;
-  .icon {
+  i {
     font-size: 5rem;
+    display: block;
   }
   @if $apply-hover {
     &:hover, &:focus {
