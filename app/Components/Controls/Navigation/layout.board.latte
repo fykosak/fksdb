@@ -3,7 +3,6 @@
 {block content}
     <nav class="d-md-flex justify-content-md-around flex-wrap">
         {foreach $item->children as $subItem}
-            {dump $subItem}
             <a href="{$control->getPresenter()->link($subItem->destination,$subItem->linkParams)}"
                class="mb-3 d-block navigation-item p-2 d-flex align-items-center justify-content-center">
                 {$subItem->title->toHtml($subTitle)}

@@ -33,8 +33,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     final public function renderNav(string $root = ''): void
     {
-        $structure = $this->navigationFactory->getStructure($root);
-        parent::render($this->getItem($structure));
+        parent::render($this->getItem($root));
     }
 
     /**
@@ -44,8 +43,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
-        $structure = $this->navigationFactory->getStructure($root);
-        $this->template->item = $this->getItem($structure);
+        $this->template->item = $this->getItem($root);
         $this->template->subTitle = $subTitle;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
@@ -57,10 +55,14 @@ final class NavigationChooserComponent extends NavigationItemComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     */
     final public function renderAsideList(string $root, bool $subTitle = false): void
     {
-        $structure = $this->navigationFactory->getStructure($root);
-        $this->template->items = $structure['parents'];
+        $this->template->item = $this->getItem($root);
         $this->template->subTitle = $subTitle;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.asideList.latte');
     }
@@ -70,10 +72,11 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadTypeException
      * @throws InvalidLinkException
      */
-    private function getItem(array $structure): NavItem
+    private function getItem(string $root): NavItem
     {
+        $structure = $this->navigationFactory->getStructure($root);
         $items = [];
-        foreach ($structure['parents'] as $item) {
+        foreach ($structure as $item) {
             if ($this->isItemVisible($item)) {
                 $items[] = new NavItem(
                     $this->getItemTitle($item),

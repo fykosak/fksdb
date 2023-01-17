@@ -1,18 +1,15 @@
-{varType FKSDB\Components\Controls\Navigation\NavigationChooserComponent $control}
-{varType Fykosak\Utils\UI\Navigation\NavItem[] $items}
+{varType Fykosak\Utils\UI\Navigation\NavItem $item}
+{varType bool $subTitle}
 {block content}
-    {foreach $items as $item}
-        {var Fykosak\Utils\UI\PageTitle $title = $control->getItemTitle($item)}
-        {continueIf !$control->isItemVisible($item)}
-        {if $control->isItemActive($item)}
+    {foreach $item->children as $subItem}
+        {if $subItem->active}
             <span class="list-group-item-action list-group-item active">
-                <i class="{$title->icon . ' icon mx-2'}"></i>
-                <span class="text ">{$title->title}</span>
+                {$subItem->title->toHtml($subTitle)}
             </span>
         {else}
-            <a href="{$control->getItemLink($item)}" class="list-group-item-action list-group-item">
-                <i class="{$title->icon . ' icon mx-2'}"></i>
-                <span class="text ">{$title->title}</span>
+            <a href="{$control->getPresenter()->link($subItem->destination,$subItem->linkParams)}"
+               class="list-group-item-action list-group-item">
+                {$subItem->title->toHtml($subTitle)}
             </a>
         {/if}
     {/foreach}
