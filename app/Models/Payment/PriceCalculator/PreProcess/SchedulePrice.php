@@ -34,10 +34,9 @@ class SchedulePrice implements Preprocess
         $items = [];
 
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
-            $scheduleItem = $model->schedule_item;
             $items[] = [
                 'label' => $model->getLabel(),
-                'price' => $scheduleItem->getPrice(),
+                'price' => $model->schedule_item->getPrice(),
             ];
         }
         return $items;

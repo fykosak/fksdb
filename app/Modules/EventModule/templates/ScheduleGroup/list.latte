@@ -1,5 +1,6 @@
+{varType Fykosak\Utils\UI\Navigation\NavItem[] $items}
 {block content}
-    <a class="btn btn-outline-primary" href="{plink create}">{_'Create group'}</a>
-    <a class="btn btn-outline-primary" href="{plink persons}">{_'All persons'}</a>
+    {control navigationChooser:boardInline $items}
+    <hr/>
     {control grid}
 {/block}

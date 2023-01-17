@@ -47,13 +47,15 @@ abstract class ListComponent extends BaseList
         $this->addComponent($title, 'title');
     }
 
-    public function addRow(BaseItem $component, string $name): void
+    public function addRow(BaseItem $component, string $name): BaseItem
     {
         $this->rows->addComponent($component, $name);
+        return $component;
     }
 
-    public function addButton(BaseItem $button, string $name): void
+    public function addButton(BaseItem $button, string $name): BaseItem
     {
         $this->buttons->addComponent($button, $name);
+        return $button;
     }
 }

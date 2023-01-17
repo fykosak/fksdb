@@ -3,7 +3,7 @@
     {varType FKSDB\Components\Grids\Components\Container\TableRow $tableRow}
     {default bool $head = true}
     {varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
-    {default string $className= 'table table-sm'}
+    {default string $className = 'table table-sm table-striped'}
     {if count($models)}
         <table class="{$className}">
             {if $head}

@@ -16,13 +16,19 @@ class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
+    /** @var callable|null */
+    protected $modelAccessorHelper = null;
 
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function __construct(Container $container, string $templateString, ?string $titleString = null)
-    {
+    public function __construct(
+        Container $container,
+        string $templateString,
+        ?string $titleString = null,
+        ?callable $modelAccessorHelper = null
+    ) {
         $printer = new ColumnRendererComponent($container);
         parent::__construct(
             $container,
@@ -32,10 +38,12 @@ class TemplateItem extends BaseItem
         );
         $this->templateString = $templateString;
         $this->titleString = $titleString;
+        $this->modelAccessorHelper = $modelAccessorHelper;
     }
 
     public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
     {
+        $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
         $this->template->templateString = $this->templateString;
         $this->template->titleString = $this->titleString;
         parent::render($model, $userPermission);

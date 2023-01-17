@@ -7,7 +7,6 @@ namespace FKSDB\Modules\Core;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
@@ -31,9 +30,7 @@ use Nette\DI\Container;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements
-    AutocompleteJSONProvider,
-    NavigablePresenter
+abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
 {
     /**
      * BackLink for tree construction for breadcrumbs.
