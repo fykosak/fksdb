@@ -2,13 +2,14 @@ parameters:
     events:
         tabor12:
             appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            capacityCond: le(count('auto.invited','invited','interested','applied','paid','participated'),param('capacity')) # checks if the event is not full
             person:
                 person:
                     other_name:
                         required: true
                     family_name:
-                        required: true
+                        re Test Testovací 	Invited 	Nenastaveno 	Nenastaveno 	Nenastaveno 		Nenastaveno 	quired: true
                 person_info:
                     email:
                         required: true
@@ -57,7 +58,7 @@ events:
             notifyFrom:
                 default: Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>
             capacity:
-                default: 30
+                default: 29
 
             letterWhere:
                 default: nikde
@@ -70,21 +71,16 @@ events:
 
             transitions:
                 __init->invited:
-                    condition: role('admin')
+                    condition: and(role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
-                auto.invited->invited: # this must be duplicate of __init->invited
-                    condition: role('admin')
+                auto.invited->invited:
+                    condition: and(role('admin'))
                     label: _('Pozvat účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
-                __init->spare:
-                    condition: role('admin')
-                    label: _('Pozvat náhradníka')
-                    afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
-                auto.spare->spare: # this must be duplicate of __init->spare
+                __init|auto.spare->spare:
                     condition: role('admin')
                     label: _('Pozvat náhradníka')
                     afterExecute:
@@ -102,6 +98,8 @@ events:
                 applied->paid:
                     condition: role('admin')
                     label: _('Zaplatil')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
                 invited->rejected:
                     condition: or(regOpen(),role('admin'))
                     label: _('Odmítnout účast')
@@ -111,10 +109,18 @@ events:
                     label: _('Odmítnout účast')
                     behaviorType: warning
                 interested->applied:
-                    condition: role('admin')
+                    condition: and(role('admin'),%events.tabor12.capacityCond%)
                     label: _('Schválit jako účastníka')
-                spare->invited:
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
+                interested->rejected:
                     condition: role('admin')
+                    label: _('Odmítnout jako účastníka')
+                    behaviorType: warning
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\RejectedMailCallback()
+                spare->invited:
+                    condition: and(role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat jako účastníka')
 
                 paid->participated:

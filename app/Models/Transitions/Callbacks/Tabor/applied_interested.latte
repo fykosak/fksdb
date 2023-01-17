@@ -1,0 +1,14 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+<p>
+    Ahoj,<br/>
+    s radostí ti oznamujeme, že jsi {if $holder->getPerson()->gender->value == 'F'}byla vybrána{else}byl vybrán{/if}
+    jako {if $holder->getPerson()->gender->value == 'F'}účastnici{else}účastníka{/if} na Letním táboru
+    Výfuku a jsme rádi, že máš zájem se této akce účastnit.
+</p>
+<p>
+    Další informace budeme rozesílat v brzké době.
+</p>
+<p>
+    Za organizátory<br/>
+    {$holder->getParameter('letterSignature')}
+</p>
