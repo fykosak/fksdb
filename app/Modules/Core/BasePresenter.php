@@ -132,7 +132,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
                 $action = $destination;
                 $presenter = $this->getName();
             } else {
-                $action = (string)substr($destination, $a + 1);
+                $action = substr($destination, $a + 1);
                 if ($destination[0] === ':') { // absolute
                     if ($a < 2) {
                         throw new InvalidLinkException("Missing presenter name in '$destination'.");
