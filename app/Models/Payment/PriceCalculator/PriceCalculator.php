@@ -54,16 +54,4 @@ class PriceCalculator implements Statement
             $holder->getModel()
         );
     }
-
-    /**
-     * @return array[]
-     */
-    public function getGridItems(PaymentModel $modelPayment): array
-    {
-        $items = [];
-        foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
-        }
-        return $items;
-    }
 }

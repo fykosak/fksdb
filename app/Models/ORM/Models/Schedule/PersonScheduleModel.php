@@ -27,30 +27,11 @@ class PersonScheduleModel extends Model
         return $schedulePayment ? $schedulePayment->payment : null;
     }
 
-    public function hasActivePayment(): bool
+    public function getLabel(?string $lang = null): string
     {
-        $payment = $this->getPayment();
-        return $payment && $payment->state->value !== PaymentState::CANCELED;
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getLabel(): string
-    {
-        switch ($this->schedule_item->schedule_group->schedule_group_type->value) {
-            case ScheduleGroupType::ACCOMMODATION:
-                return sprintf(
-                    _('Accommodation for %s from %s to %s in %s'),
-                    $this->person->getFullName(),
-                    $this->schedule_item->schedule_group->start->format(_('__date')),
-                    $this->schedule_item->schedule_group->end->format(_('__date')),
-                    $this->schedule_item->name_cs
-                );
-            case ScheduleGroupType::WEEKEND:
-                return $this->schedule_item->getLabel();
-            default:
-                throw new NotImplementedException();
-        }
+        $lang = $lang ?? $this->person->getPreferredLang() ?? 'en';
+        return $this->person->getFullName() . ': '
+            . $this->schedule_item->schedule_group->getName()[$lang] . ' - '
+            . $this->schedule_item->getName()[$lang];
     }
 }
