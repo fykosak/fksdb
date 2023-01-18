@@ -9,7 +9,7 @@ parameters:
                     other_name:
                         required: true
                     family_name:
-                        re Test Testovací 	Invited 	Nenastaveno 	Nenastaveno 	Nenastaveno 		Nenastaveno 	quired: true
+                        required: true
                 person_info:
                     email:
                         required: true
