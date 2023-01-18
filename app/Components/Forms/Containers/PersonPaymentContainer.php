@@ -127,9 +127,8 @@ class PersonPaymentContainer extends ContainerWithOptions
     {
         /** @var SchedulePaymentModel $row */
         foreach ($payment->getSchedulePayment() as $row) {
-            $key = 'person' . $row->person_schedule->person_id;
             /** @var Checkbox $component */
-            $component = $this[$key][$row->person_schedule_id];
+            $component = $this['person' . $row->person_schedule->person_id][$row->person_schedule_id];
             $component->setDefaultValue(true);
         }
     }
