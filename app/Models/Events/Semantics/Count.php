@@ -12,11 +12,11 @@ class Count
 {
     use SmartObject;
 
-    private string $state;
+    private array $states;
 
-    public function __construct(string $state)
+    public function __construct(string ...$states)
     {
-        $this->state = $state;
+        $this->states = $states;
     }
 
     /**
@@ -26,12 +26,17 @@ class Count
     {
         $table = $holder->service->getTable();
         $table->where('event_participant.event_id', $holder->event->getPrimary());
-        $table->where('status', $this->state);
+        $table->where('status', $this->states);
         return $table->count('1');
     }
 
     public function __toString(): string
     {
-        return "count($this->state)";
+        $terms = [];
+        foreach ($this->states as $term) {
+            $terms[] = (string)$term;
+        }
+        $result = implode(', ', $terms);
+        return "count($result)";
     }
 }
