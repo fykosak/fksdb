@@ -2,7 +2,7 @@ parameters:
     events:
         tabor12:
             appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
             capacityCond: le(count('auto.invited','invited','interested','applied','paid','participated'),param('capacity')) # checks if the event is not full
             person:
                 person:
@@ -76,7 +76,7 @@ events:
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
                 auto.invited->invited:
-                    condition: and(role('admin'))
+                    condition: role('admin')
                     label: _('Pozvat účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
