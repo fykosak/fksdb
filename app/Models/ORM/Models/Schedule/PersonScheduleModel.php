@@ -41,11 +41,10 @@ class PersonScheduleModel extends Model
         switch ($this->schedule_item->schedule_group->schedule_group_type->value) {
             case ScheduleGroupType::ACCOMMODATION:
                 return sprintf(
-                    _('Accommodation for %s from %s to %s in %s'),
+                    _('Accommodation for %s from %s to %s'),
                     $this->person->getFullName(),
                     $this->schedule_item->schedule_group->start->format(_('__date')),
-                    $this->schedule_item->schedule_group->end->format(_('__date')),
-                    $this->schedule_item->name_cs
+                    $this->schedule_item->schedule_group->end->format(_('__date'))
                 );
             case ScheduleGroupType::WEEKEND:
                 return $this->schedule_item->getLabel();
