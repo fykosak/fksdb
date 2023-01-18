@@ -10,7 +10,7 @@ parameters:
     dataDir: %appDir%/../data
 
     # WDSL file defining provided services.
-    wsdlUrl: https://db.fykos.local/FKSDBWebServices.wsdl
+    wsdlUrl: https://db.fykos.cz/FKSDBWebServices.wsdl
 
     # Map: contest_id => contest indentifier
     contestMapping:
