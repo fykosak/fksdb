@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
 import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
-import InputConnector from 'vendor/fykosak/nette-frontend-component/src/InputConnector/InputConnector';
+import InputConnector2 from './InputConnector2';
 import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
@@ -11,7 +11,7 @@ import { mapRegisterCallback } from 'vendor/fykosak/nette-frontend-component/src
 
 interface OwnProps {
     scheduleDef: {
-        groups: ModelScheduleGroup[];
+        group: ModelScheduleGroup;
         options: Params;
     };
     input: HTMLInputElement;
@@ -33,17 +33,17 @@ class ScheduleField extends React.Component<OwnProps> {
     public render() {
         return <StoreCreator app={app}>
             <>
-                <InputConnector input={this.props.input}/>
+                <InputConnector2 input={this.props.input}/>
                 {this.getComponentByMode()}
             </>
         </StoreCreator>;
     }
 
     private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.groups.length === 0) {
+        if (!this.props.scheduleDef.group) {
             return <span className="text text-muted">{translator.getText('No items found.')}</span>;
         }
-        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
+        return <Container group={this.props.scheduleDef.group} params={this.props.scheduleDef.options}/>;
     }
 }
 

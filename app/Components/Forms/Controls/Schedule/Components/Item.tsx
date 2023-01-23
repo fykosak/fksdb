@@ -53,20 +53,15 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
-        onChange: (value: number) => dispatch(changeData(ownProps.item.scheduleGroupId.toString(), value)),
+        onChange: (value: number) => dispatch(changeData('data', value)),
     };
 };
 
-const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const {item} = ownProps;
-    let value = null;
-    if (state.inputConnector.data.hasOwnProperty(item.scheduleGroupId.toString())) {
-        value = state.inputConnector.data[item.scheduleGroupId.toString()];
-    }
+const mapStateToProps = (state: Store): StateProps => {
     return {
-        value,
+        value: state.inputConnector.data.data,
     };
 };
 

@@ -12,10 +12,6 @@ export default class CapacityLabel extends React.Component<OwnProps> {
         const {capacity, usedCapacity} = this.props;
         if (capacity === null) {
             return null;
-            /* <small
-                className={'capacity-label ms-3'}>
-                {lang.getText('Used capacity')}: {usedCapacity}
-            </small>;*/
         }
         return <small
             className={'capacity-label ms-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>

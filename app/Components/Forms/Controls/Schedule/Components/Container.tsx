@@ -4,18 +4,16 @@ import * as React from 'react';
 import Group from './Group';
 
 interface OwnProps {
-    groups: ModelScheduleGroup[];
+    group: ModelScheduleGroup;
     params: Params;
 }
 
 export default class Container extends React.Component<OwnProps> {
 
     public render() {
-        const {groups, params} = this.props;
+        const {group, params} = this.props;
         return <div className="schedule-container schedule-container-accommodation ms-3">
-            {groups.map((group, index) => {
-                return <Group key={index} group={group} params={params}/>;
-            })}
+            <Group group={group} params={params}/>
         </div>;
     }
 }

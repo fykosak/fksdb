@@ -1,40 +1,36 @@
 @import "../../../../css/colors";
 
-.schedule-field-container {
-  color: var(--color-fof-main);
+.schedule-field-container .schedule-row {
+  padding: .5rem;
+  border-bottom: var(--color-fof-main) 1px dashed;
 
-  .schedule-row {
-    padding: .5rem;
-    border-bottom: var(--color-fof-main) 1px dashed;
+  &:first-of-type {
+    border-top: var(--color-fof-main) 1px dashed;
+  }
 
-    &:first-of-type {
-      border-top: var(--color-fof-main) 1px dashed;
+  .schedule-container {
+    .chooser-container, .info-container {
+      width: 100%;
+      padding: 1rem 0;
     }
 
-    .schedule-container {
-      .chooser-container, .info-container {
-        width: 100%;
-        padding: 1rem 0;
+    .chooser-container {
+
+      border: solid 1px var(--color-fof-main);
+      border-radius: 1rem;
+
+      &.active {
+        color: white;
+        background-color: var(--color-fof-main);
       }
+    }
 
-      .chooser-container {
+    .info-container {
+      cursor: not-allowed;
+    }
 
-        border: solid 1px var(--color-fof-main);
-        border-radius: 1rem;
-
-        &.active {
-          color: white;
-          background-color: var(--color-fof-main);
-        }
-      }
-
-      .info-container {
-        cursor: not-allowed;
-      }
-
-      .chooser-container {
-        cursor: pointer;
-      }
+    .chooser-container {
+      cursor: pointer;
     }
   }
 }

@@ -144,7 +144,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
 
             if (isset($data['person_schedule'])) {
-                $this->eventScheduleHandler->prepareAndUpdate($data['person_schedule'], $person, $this->event);
+                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event, 'cs');//TODO
             }
             if (!$outerTransaction) {
                 $connection->commit();

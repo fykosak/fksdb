@@ -24,7 +24,7 @@ class Handler
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      */
-    public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event, string $lang): void
+    public function handle(array $data, PersonModel $person, EventModel $event, string $lang): void
     {
         foreach ($data as $type => $items) {
             foreach ($items as $groupId => $item) {
@@ -36,7 +36,7 @@ class Handler
                 if (!$group) {
                     throw new InvalidStateException(_('Schedule group does not exists'));
                 }
-                $this->saveGroup($person, $group, $item, $lang);
+                $this->saveGroup($person, $group, (int)$item, $lang);
             }
         }
     }
