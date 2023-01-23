@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -152,6 +153,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } else {
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
+                    }
+                    if ($component instanceof ScheduleContainer) {
+                        $component->setValues($value);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
@@ -205,12 +209,16 @@ class ReferencedPersonContainer extends ReferencedContainer
             default:
                 throw new InvalidArgumentException();
         }
-        $this->appendMetadata($control, $fieldName, $metadata);
-
+        if ($control instanceof BaseControl) {
+            $this->appendMetadataField($control, $fieldName, $metadata);
+        }
+        if ($control instanceof ContainerWithOptions) {
+            $this->appendMetadataContainer($control, $metadata);
+        }
         return $control;
     }
 
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void
+    protected function appendMetadataField(BaseControl $control, string $fieldName, array $metadata): void
     {
         foreach ($metadata as $key => $value) {
             switch ($key) {
@@ -229,6 +237,31 @@ class ReferencedPersonContainer extends ReferencedContainer
                 case 'caption':
                     if ($value) {
                         $control->caption = $value;
+                    }
+                    break;
+                case 'description':
+                    if ($value) {
+                        $control->setOption('description', $value);
+                    }
+            }
+        }
+    }
+
+    protected function appendMetadataContainer(ContainerWithOptions $control, array $metadata): void
+    {
+        foreach ($metadata as $key => $value) {
+            switch ($key) {
+                case 'required':
+                    if ($value) {
+                        foreach ($control->getComponents() as $baseComponent) {
+                            $conditioned = $baseComponent->addConditionOn($this->getReferencedId(), Form::FILLED);
+                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
+                        }
+                    }
+                    break;
+                case 'caption':
+                    if ($value) {
+                        $control->setOption('title', $value);
                     }
                     break;
                 case 'description':

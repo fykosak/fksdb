@@ -35,8 +35,12 @@ class Handler
      */
     public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event): void
     {
-        foreach ($this->prepareData($data) as $type => $newScheduleData) {
-            $this->updateDataType($newScheduleData, $type, $person, $event);
+        foreach ($data as $groupId => $items) {
+            $group = $event->getScheduleGroups()->where('schedule_group_id', $groupId)->fetch();
+            if (!$group) {
+                throw new InvalidStateException(_('Schedule group does not exists'));
+            }
+            $this->saveGroup($person,$group,$items);
         }
     }
 

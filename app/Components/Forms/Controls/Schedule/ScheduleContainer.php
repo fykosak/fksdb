@@ -46,7 +46,7 @@ class ScheduleContainer extends ContainerWithOptions
         foreach ($groups as $group) {
             $this->addComponent(
                 new ScheduleGroupField($group, $this->lang),
-                $group->schedule_group_id
+                (string)$group->schedule_group_id
             );
         }
     }
