@@ -4,111 +4,41 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\InvalidStateException;
 
 class Handler
 {
     private PersonScheduleService $personScheduleService;
-    private ScheduleItemService $scheduleItemService;
 
-    public function __construct(
-        PersonScheduleService $personScheduleService,
-        ScheduleItemService $scheduleItemService
-    ) {
+    public function __construct(PersonScheduleService $personScheduleService)
+    {
         $this->personScheduleService = $personScheduleService;
-        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws NotImplementedException
      */
-    public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event): void
+    public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event, string $lang): void
     {
-        foreach ($data as $groupId => $items) {
-            $group = $event->getScheduleGroups()->where('schedule_group_id', $groupId)->fetch();
-            if (!$group) {
-                throw new InvalidStateException(_('Schedule group does not exists'));
-            }
-            $this->saveGroup($person,$group,$items);
-        }
-    }
-
-    /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
-     * @throws NotImplementedException
-     * @throws \PDOException
-     * @throws ModelException
-     */
-    private function updateDataType(array $newScheduleData, string $type, PersonModel $person, EventModel $event): void
-    {
-        $oldRows = $person->getScheduleForEvent($event)->where(
-            'schedule_item.schedule_group.schedule_group_type',
-            $type
-        );
-
-        /** @var PersonScheduleModel $modelPersonSchedule */
-        foreach ($oldRows as $oldRow) {
-            $modelPersonSchedule = $oldRow;
-            if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
-                // do nothing
-                $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
-                unset($newScheduleData[$index]);
-            } else {
-                try {
-                    $this->personScheduleService->disposeModel($modelPersonSchedule);
-                } catch (\PDOException $exception) {
-                    if (preg_match('/payment/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(
-                            sprintf(
-                                _('The item "%s" has already a payment generated, so it cannot be deleted.'),
-                                $modelPersonSchedule->getLabel()
-                            )
-                        );
-                    } else {
-                        throw $exception;
-                    }
+        foreach ($data as $type => $items) {
+            foreach ($items as $groupId => $item) {
+                /** @var ScheduleGroupModel|null $group */
+                $group = $event->getScheduleGroups()
+                    ->where('schedule_group_type', $type)
+                    ->where('schedule_group_id', $groupId)
+                    ->fetch();
+                if (!$group) {
+                    throw new InvalidStateException(_('Schedule group does not exists'));
                 }
+                $this->saveGroup($person, $group, $item, $lang);
             }
         }
-
-        foreach ($newScheduleData as $id) {
-            /** @var ScheduleItemModel $modelScheduleItem */
-            $modelScheduleItem = $this->scheduleItemService->findByPrimary($id);
-            if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->personScheduleService->storeModel(
-                    ['person_id' => $person->person_id, 'schedule_item_id' => $id]
-                );
-            } else {
-                throw new FullCapacityException(
-                    sprintf(
-                        _('The person %s could not be registered for "%s" because of full capacity.'),
-                        $person->getFullName(),
-                        $modelScheduleItem->getLabel()
-                    )
-                );
-            }
-        }
-    }
-
-    private function prepareData(array $data): array
-    {
-        $newData = [];
-        foreach ($data as $type => $datum) {
-            $newData[$type] = $datum ? array_values((array)json_decode($datum)) : [];
-        }
-        return $newData;
     }
 
     public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value, string $lang): void
