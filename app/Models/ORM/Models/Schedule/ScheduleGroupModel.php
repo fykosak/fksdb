@@ -21,6 +21,9 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface end
  * @property-read string name_cs
  * @property-read string name_en
+ * @property-read \DateTimeInterface|null registration_begin
+ * @property-read \DateTimeInterface|null registration_end
+ * @property-read \DateTimeInterface|null modification_end
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
@@ -58,6 +61,20 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function canCreate(): bool
+    {
+        $end = $this->registration_end ?? $this->event->registration_end;
+        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+    }
+
+    public function canEdit(): bool
+    {
+        $end = $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
+        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
     }
 
     /**

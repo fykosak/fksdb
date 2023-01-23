@@ -8,10 +8,12 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Nette\InvalidStateException;
 
 class Handler
 {
@@ -103,5 +105,49 @@ class Handler
             $newData[$type] = $datum ? array_values((array)json_decode($datum)) : [];
         }
         return $newData;
+    }
+
+    public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value, string $lang): void
+    {
+        $personSchedule = $person->getScheduleByGroup($group);
+        if ($value) {
+            /** @var ScheduleItemModel|null $item */
+            $item = $group->getItems()->where('schedule_item_id', $value)->fetch();
+            if (!$item) {
+                throw new InvalidStateException(sprintf(_('Item with Id %s does not exists'), $value));
+            }
+            // create
+            if (!$personSchedule) {
+                if (!$group->canCreate()) {
+                    throw new InvalidStateException(_('Registration is not open at this time'));
+                }
+            } else {
+                // already booked
+                if ($personSchedule->schedule_item_id === $item->schedule_item_id) {
+                    return;
+                }
+                if (!$group->canEdit()) {
+                    throw new InvalidStateException(_('Registration is not open at this time'));
+                }
+            }
+            if (!$item->hasFreeCapacity()) {
+                throw new FullCapacityException(
+                    sprintf(
+                        _('The person %s could not be registered for "%s" because of full capacity.'),
+                        $person->getFullName(),
+                        $lang === 'cs' ? $item->name_cs : $item->name_en
+                    )
+                );
+            }
+            $this->personScheduleService->storeModel(
+                ['person_id' => $person->person_id, 'schedule_item_id' => $value],
+                $personSchedule
+            );
+        } elseif ($personSchedule) {
+            if (!$group->canEdit()) {
+                throw new InvalidStateException(_('Registration is not open at this time'));
+            }
+            $this->personScheduleService->disposeModel($personSchedule);
+        }
     }
 }
