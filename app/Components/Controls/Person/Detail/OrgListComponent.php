@@ -47,7 +47,7 @@ class OrgListComponent extends DetailComponent
 
         $row1 = new RowContainer($this->container);
         $row1->addComponent(new TemplateBaseItem($this->container, '@org.domain_alias'), 'domain_alias');
-        $row1->addComponent(new TemplateBaseItem($this->container, '\siganture{@org.tex_signature}'), 'tex_signature');
+        $row1->addComponent(new TemplateBaseItem($this->container, '\signature{@org.tex_signature}'), 'tex_signature');
         $this->addRow($row1, 'row1');
         $this->addButton(
             new PresenterButton(
