@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
-use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -17,6 +16,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
@@ -40,7 +40,6 @@ class ReferencedPersonContainer extends ReferencedContainer
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
-    private PersonScheduleFactory $personScheduleFactory;
     protected ?EventModel $event;
 
 
@@ -62,13 +61,11 @@ class ReferencedPersonContainer extends ReferencedContainer
     final public function injectPrimary(
         FlagFactory $flagFactory,
         PersonService $personService,
-        SingleReflectionFormFactory $singleReflectionFormFactory,
-        PersonScheduleFactory $personScheduleFactory
+        SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
         $this->personService = $personService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
-        $this->personScheduleFactory = $personScheduleFactory;
     }
 
     /**
@@ -174,7 +171,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     }
 
     /**
-     * @return IComponent|BaseControl
+     * @return ContainerWithOptions|BaseControl|AddressDataContainer
      * @throws BadTypeException
      * @throws NotImplementedException
      * @throws OmittedControlException
@@ -193,12 +190,13 @@ class ReferencedPersonContainer extends ReferencedContainer
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
-                $control = $this->personScheduleFactory->createField(
-                    $fieldName,
+                return new ScheduleContainer(
+                    $this->container,
                     $this->event,
-                    $metadata['label'] ?? null
+                    ScheduleGroupType::tryFrom($fieldName),
+                    'cs',
+                    (bool)$metadata['required'] ?? false
                 );
-                break;
             case 'person':
             case 'person_info':
                 $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
@@ -209,12 +207,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             default:
                 throw new InvalidArgumentException();
         }
-        if ($control instanceof BaseControl) {
-            $this->appendMetadataField($control, $fieldName, $metadata);
-        }
-        if ($control instanceof ContainerWithOptions) {
-            $this->appendMetadataContainer($control, $metadata);
-        }
+        $this->appendMetadataField($control, $fieldName, $metadata);
         return $control;
     }
 
@@ -237,31 +230,6 @@ class ReferencedPersonContainer extends ReferencedContainer
                 case 'caption':
                     if ($value) {
                         $control->caption = $value;
-                    }
-                    break;
-                case 'description':
-                    if ($value) {
-                        $control->setOption('description', $value);
-                    }
-            }
-        }
-    }
-
-    protected function appendMetadataContainer(ContainerWithOptions $control, array $metadata): void
-    {
-        foreach ($metadata as $key => $value) {
-            switch ($key) {
-                case 'required':
-                    if ($value) {
-                        foreach ($control->getComponents() as $baseComponent) {
-                            $conditioned = $baseComponent->addConditionOn($this->getReferencedId(), Form::FILLED);
-                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
-                        }
-                    }
-                    break;
-                case 'caption':
-                    if ($value) {
-                        $control->setOption('label', $value);
                     }
                     break;
                 case 'description':

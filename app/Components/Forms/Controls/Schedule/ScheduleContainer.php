@@ -17,22 +17,21 @@ class ScheduleContainer extends ContainerWithOptions
     private EventModel $event;
     private ScheduleGroupType $type;
     private string $lang;
+    private bool $required;
 
     public function __construct(
         Container $container,
         EventModel $event,
         ScheduleGroupType $type,
         string $lang,
-        ?string $label
+        bool $required = false
     ) {
         parent::__construct($container);
-        if ($label) {
-            $this->setOption('label', $label);
-        }
         $this->monitor(Presenter::class, fn() => $this->configure());
         $this->event = $event;
         $this->type = $type;
         $this->lang = $lang;
+        $this->required = $required;
     }
 
     /**
@@ -44,8 +43,10 @@ class ScheduleContainer extends ContainerWithOptions
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type->value);
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
+            $field = new ScheduleGroupField($group, $this->lang);
+            $field->setRequired($this->required);
             $this->addComponent(
-                new ScheduleGroupField($group, $this->lang),
+                $field,
                 (string)$group->schedule_group_id
             );
         }
