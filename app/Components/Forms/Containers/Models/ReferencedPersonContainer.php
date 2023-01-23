@@ -261,7 +261,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     break;
                 case 'caption':
                     if ($value) {
-                        $control->setOption('title', $value);
+                        $control->setOption('label', $value);
                     }
                     break;
                 case 'description':
