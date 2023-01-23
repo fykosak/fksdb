@@ -1432,7 +1432,7 @@ msgid "Unlimited capacity"
 msgstr "Neomezená kapacita"
 
 #: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:44
-#, fuzzy, php-format
+#, php-format
 msgid "Accommodation for %s from %s to %s"
 msgstr "Ubytování osoby %s od %s do %s"
 
@@ -1801,9 +1801,8 @@ msgid "Team member"
 msgstr "Člen týmu"
 
 #: ../app/Models/Authorization/EventRole/FyziklaniTeamTeacherRole.php:24
-#, fuzzy
 msgid "Teacher: "
-msgstr "Učitel"
+msgstr "Učitel: "
 
 #: ../app/Models/Authorization/EventRole/EventOrgRole.php:25
 msgid "Event org"
@@ -2097,9 +2096,8 @@ msgid "Execute export"
 msgstr "Spustit"
 
 #: ../app/Components/Grids/Payment/PaymentList.php:57
-#, fuzzy
 msgid "-- select state --"
-msgstr "-- vyber --"
+msgstr "-- vyber stav --"
 
 #: ../app/Components/Grids/Payment/PaymentList.php:58
 #: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:11
@@ -2117,9 +2115,8 @@ msgid "Item"
 msgstr "Položka"
 
 #: ../app/Components/Grids/Payment/PaymentList.php:94
-#, fuzzy
 msgid "For"
-msgstr "Chce kat. A"
+msgstr "Pro"
 
 #: ../app/Components/Grids/Payment/PaymentList.php:100
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:49
