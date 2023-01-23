@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Utils\Html;
 
-class UIdColumnFactory extends ColumnFactory
+class IdColumnFactory extends ColumnFactory
 {
 
     /**
@@ -17,6 +17,6 @@ class UIdColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText('#' . $model->getPaymentUId());
+        return Html::el('span')->addText('#' . $model->getPaymentId());
     }
 }
