@@ -167,7 +167,6 @@ class PaymentPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $payment = $this->getEntity();
-        $this->template->items = $this->priceCalculator->getGridItems($payment);
         $this->template->model = $payment;
     }
 

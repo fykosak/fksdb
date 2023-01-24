@@ -31,6 +31,22 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
 
+    public function getName(): array
+    {
+        return [
+            'cs' => $this->name_cs,
+            'en' => $this->name_en,
+        ];
+    }
+
+    public function getDescription(): array
+    {
+        return [
+            'cs' => $this->description_cs,
+            'en' => $this->description_en,
+        ];
+    }
+
     /**
      * @throws \Exception
      */
@@ -109,22 +125,14 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
-            'price' => [
-                'eur' => $this->price_eur,
-                'czk' => $this->price_czk,
-            ],
+            'price' => $this->getPrice()->__serialize(),
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => [
-                'cs' => $this->name_cs,
-                'en' => $this->name_en,
-            ],
+            'label' => $this->getName(),
+            'name' => $this->getName(),
             'requireIdNumber' => $this->require_id_number,
-            'description' => [
-                'cs' => $this->description_cs,
-                'en' => $this->description_en,
-            ],
+            'description' => $this->getDescription(),
         ];
     }
 
@@ -140,20 +148,11 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'requireIdNumber' => $this->require_id_number,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => [
-                'cs' => $this->description_cs,
-                'en' => $this->description_en,
-            ],
-            'name' => [
-                'cs' => $this->name_cs,
-                'en' => $this->name_en,
-            ],
+            'description' => $this->getDescription(),
+            'name' => $this->getName(),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
-            'price' => [
-                'eur' => $this->price_eur,
-                'czk' => $this->price_czk,
-            ],
+            'price' => $this->getPrice()->__serialize(),
         ], $document, $node);
         return $node;
     }

@@ -39,8 +39,12 @@ class PaymentFormComponent extends EntityFormComponent
     private SingleReflectionFormFactory $reflectionFormFactory;
     private User $user;
 
-    public function __construct(Container $container, bool $isOrg, PaymentMachine $machine, ?PaymentModel $model)
-    {
+    public function __construct(
+        Container $container,
+        bool $isOrg,
+        PaymentMachine $machine,
+        ?PaymentModel $model
+    ) {
         parent::__construct($container, $model);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
@@ -89,7 +93,8 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->machine,
-                $this->isOrg
+                $this->isOrg,
+                $this->model
             ),
             'items'
         );
@@ -117,7 +122,7 @@ class PaymentFormComponent extends EntityFormComponent
                 ],
                 $this->model
             );
-            $this->schedulePaymentService->storeItems((array)$values['items'], $model);
+            $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $this->machine->executeImplicitTransition($holder);
