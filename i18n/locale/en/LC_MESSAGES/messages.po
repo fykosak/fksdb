@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-13 22:06+0100\n"
+"POT-Creation-Date: 2023-01-24 22:51+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: ../app/Modules/OrgModule/PersonPresenter.php:155
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
-#: ../app/Components/EntityForms/PaymentFormComponent.php:79
+#: ../app/Components/EntityForms/PaymentFormComponent.php:83
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:32
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:33
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:90
@@ -106,7 +106,7 @@ msgstr ""
 #: ../data/events/council/councilDefault.neon.neon2php:58
 #: ../data/events/council/council1.neon.neon2php:8
 #: ../data/events/tsaf/tsaf8.neon.neon2php:116
-#: ../data/events/tabor/tabor12.neon.neon2php:133
+#: ../data/events/tabor/tabor12.neon.neon2php:139
 #: ../data/events/tabor/tabor10.neon.neon2php:99
 #: ../data/events/tabor/tabor7.neon.neon2php:98
 #: ../data/events/tabor/tabor9.neon.neon2php:99
@@ -304,7 +304,6 @@ msgid "Create new teacher"
 msgstr ""
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:51
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:56
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:78
 msgid "Teacher"
 msgstr ""
@@ -335,6 +334,7 @@ msgstr ""
 
 #: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:34
 #: ../app/Components/Grids/Schedule/GroupListComponent.php:66
+#: ../app/Components/Grids/Payment/PaymentList.php:82
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:44
 msgid "Items"
 msgstr ""
@@ -688,37 +688,49 @@ msgstr ""
 msgid "Error during deleting"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:43
+#: ../app/Modules/EventModule/PaymentPresenter.php:44
 msgid "Create payment"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:58
+#: ../app/Modules/EventModule/PaymentPresenter.php:59
 #, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:75
+#: ../app/Modules/EventModule/PaymentPresenter.php:76
 #, php-format
 msgid "Detail of the payment #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:82
+#: ../app/Modules/EventModule/PaymentPresenter.php:83
 msgid "List of payments"
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:38
+#: ../app/Modules/EventModule/PaymentPresenter.php:88
+msgid "Detailed list of payments"
+msgstr ""
+
+#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:40
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:12
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:22
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:74
 msgid "Schedule"
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:43
-msgid "Whole program"
+#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:45
+msgid "Schedule per person"
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:48
+#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:50
 msgid "Schedule items"
+msgstr ""
+
+#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:69
+msgid "Create group"
+msgstr ""
+
+#: ../app/Modules/EventModule/ScheduleGroupPresenter.php:70
+msgid "All persons"
 msgstr ""
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:51
@@ -1109,15 +1121,15 @@ msgstr ""
 msgid "Born number is not set"
 msgstr ""
 
-#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:30
+#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:28
 msgid "Not in transaction!"
 msgstr ""
 
-#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:35
+#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:33
 msgid "No item selected."
 msgstr ""
 
-#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:46
+#: ../app/Models/ORM/Services/Schedule/SchedulePaymentService.php:44
 #, php-format
 msgid "Item \"%s\" has already another payment."
 msgstr ""
@@ -1344,8 +1356,6 @@ msgid "__time"
 msgstr "H:i:s"
 
 #: ../app/Models/ORM/Columns/Types/DateTime/DateColumnFactory.php:20
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:46
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:47
 msgid "__date"
 msgstr "jS \\of M Y"
 
@@ -1414,13 +1424,8 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:93
+#: ../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:109
 msgid "Unlimited capacity"
-msgstr ""
-
-#: ../app/Models/ORM/Models/Schedule/PersonScheduleModel.php:44
-#, php-format
-msgid "Accommodation for %s from %s to %s in %s"
 msgstr ""
 
 #: ../app/Models/ORM/Models/EventParticipantStatus.php:129
@@ -1500,7 +1505,7 @@ msgid "Out of DB"
 msgstr ""
 
 #: ../app/Models/ORM/Models/EventParticipantStatus.php:161
-#: ../app/config/payments/payment17.neon.neon2php:55
+#: ../app/config/payments/payment17.neon.neon2php:54
 #: ../app/config/payments/payment16.neon.neon2php:50
 #: ../app/config/payments/payment14.neon.neon2php:50
 #: ../app/config/payments/payment13.neon.neon2php:47
@@ -1611,20 +1616,20 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
-#: ../app/Models/ORM/Models/PaymentState.php:43
+#: ../app/Models/ORM/Models/PaymentState.php:30
 msgid "In progress"
 msgstr ""
 
-#: ../app/Models/ORM/Models/PaymentState.php:45
+#: ../app/Models/ORM/Models/PaymentState.php:32
 msgid "Waiting for paying"
 msgstr ""
 
-#: ../app/Models/ORM/Models/PaymentState.php:47
+#: ../app/Models/ORM/Models/PaymentState.php:34
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:24
 msgid "Payment received"
 msgstr ""
 
-#: ../app/Models/ORM/Models/PaymentState.php:50
+#: ../app/Models/ORM/Models/PaymentState.php:37
 msgid "Payment canceled"
 msgstr ""
 
@@ -1737,10 +1742,10 @@ msgid "This option is only available to secondary school students."
 msgstr ""
 
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:17
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:231
-#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:63
-#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:67
-#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:71
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:225
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:65
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:69
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:73
 msgid "Field %label is required."
 msgstr ""
 
@@ -1762,19 +1767,15 @@ msgstr ""
 msgid "Camp invitation"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:35
+#: ../app/Models/ValuePrinters/EventRolePrinter.php:32
 msgid "No role"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:63
-msgid "Event org"
+#: ../app/Models/ValuePrinters/HashPrinter.php:16
+msgid "Is set"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:70
-msgid "Team member"
-msgstr ""
-
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:78
+#: ../app/Models/Authorization/EventRole/ParticipantRole.php:26
 #: ../data/events/soustredeni/sous35j.neon.neon2php:208
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:239
 #: ../data/events/soustredeni/sous36p.neon.neon2php:206
@@ -1787,12 +1788,20 @@ msgstr ""
 msgid "Participant"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:85
-msgid "Contest org"
+#: ../app/Models/Authorization/EventRole/FyziklaniTeamMemberRole.php:26
+msgid "Team member"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/HashPrinter.php:16
-msgid "Is set"
+#: ../app/Models/Authorization/EventRole/FyziklaniTeamTeacherRole.php:24
+msgid "Teacher: "
+msgstr ""
+
+#: ../app/Models/Authorization/EventRole/EventOrgRole.php:25
+msgid "Event org"
+msgstr ""
+
+#: ../app/Models/Authorization/EventRole/ContestOrgRole.php:25
+msgid "Contest org"
 msgstr ""
 
 #: ../app/Models/Entity/ModelNotFoundException.php:13
@@ -1956,6 +1965,7 @@ msgstr ""
 #: ../app/Components/Grids/Application/SingleApplicationsGrid.php:94
 #: ../app/Components/Grids/Application/TeamApplicationsGrid.php:57
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:67
+#: ../app/Components/Grids/Payment/PaymentList.php:106
 #: ../app/Components/Grids/EmailsGrid.php:40
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:62
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:65
@@ -2077,6 +2087,39 @@ msgstr ""
 msgid "Execute export"
 msgstr ""
 
+#: ../app/Components/Grids/Payment/PaymentList.php:57
+msgid "-- select state --"
+msgstr ""
+
+#: ../app/Components/Grids/Payment/PaymentList.php:58
+#: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:11
+#: ../app/config/orm.neon.neon2php:343
+msgid "Variable symbol"
+msgstr ""
+
+#: ../app/Components/Grids/Payment/PaymentList.php:87
+msgid "@schedule_group.name_en: @schedule_item.name_en"
+msgstr ""
+
+#: ../app/Components/Grids/Payment/PaymentList.php:87
+#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:48
+#: ../app/Models/Transitions/Callbacks/Payment/items.latte.latte2php:26
+msgid "Item"
+msgstr ""
+
+#: ../app/Components/Grids/Payment/PaymentList.php:94
+msgid "For"
+msgstr ""
+
+#: ../app/Components/Grids/Payment/PaymentList.php:100
+#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:49
+#: ../app/Models/Transitions/Callbacks/Payment/items.latte.latte2php:27
+#: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:350
+#: ../app/config/orm.neon.neon2php:1045
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
+msgid "Price"
+msgstr ""
+
 #: ../app/Components/Grids/SchoolsGrid.php:50
 #: ../app/Components/Forms/Factories/SchoolFactory.php:39
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:12
@@ -2136,31 +2179,27 @@ msgstr ""
 msgid "There has been a change in the data of this form since it was shown."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:114
+#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:126
 msgid "This item has already assigned another payment"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:86
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:83
 msgid "Deliver address"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:89
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:86
 #: ../app/Modules/OrgModule/templates/Person/edit.latte.latte2php:4
 #: ../app/Modules/CoreModule/templates/MyProfile/edit.latte.latte2php:2
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:6
 msgid "Permanent address"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:91
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:88
 msgid "(when different from delivery address)"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:224
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:222
 msgid "Confirmation is necessary to proceed."
-msgstr ""
-
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:228
-msgid "All fields in section %label are required."
 msgstr ""
 
 #: ../app/Components/Forms/Containers/Models/ReferencedContainer.php:104
@@ -2278,13 +2317,22 @@ msgstr ""
 msgid "Hidden value"
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:69
-#, php-format
-msgid ""
-"The item \"%s\" has already a payment generated, so it cannot be deleted."
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:46
+msgid "Schedule group does not exists"
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:90
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:60
+#, php-format
+msgid "Item with Id %s does not exists"
+msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:65
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:73
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:91
+msgid "Registration is not open at this time"
+msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:79
 #, php-format
 msgid ""
 "The person %s could not be registered for \"%s\" because of full capacity."
@@ -2451,23 +2499,23 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:67
+#: ../app/Components/EntityForms/PaymentFormComponent.php:71
 msgid "Proceed to summary"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:67
+#: ../app/Components/EntityForms/PaymentFormComponent.php:71
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:86
+#: ../app/Components/EntityForms/PaymentFormComponent.php:90
 msgid "Please select currency"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:133
+#: ../app/Components/EntityForms/PaymentFormComponent.php:138
 msgid "Payment has been created."
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:134
+#: ../app/Components/EntityForms/PaymentFormComponent.php:139
 msgid "Payment has been updated."
 msgstr ""
 
@@ -2483,8 +2531,8 @@ msgstr ""
 msgid "Person is required."
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:135
-#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:136
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:138
+#: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:139
 #, php-format
 msgid "Teacher #%d"
 msgstr ""
@@ -2599,7 +2647,7 @@ msgstr ""
 
 #: ../app/Components/EntityForms/EntityFormComponent.php:63
 #: ../app/Modules/OrgModule/templates/Contestant/list.latte.latte2php:2
-#: ../app/config/payments/payment17.neon.neon2php:40
+#: ../app/config/payments/payment17.neon.neon2php:39
 #: ../app/config/payments/payment16.neon.neon2php:36
 #: ../app/config/payments/payment14.neon.neon2php:36
 #: ../app/config/payments/payment13.neon.neon2php:33
@@ -3263,7 +3311,7 @@ msgid "Select items"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:20
-#: ../app/config/payments/payment17.neon.neon2php:42
+#: ../app/config/payments/payment17.neon.neon2php:41
 #: ../app/config/payments/payment16.neon.neon2php:38
 msgid "Generate payment"
 msgstr ""
@@ -3276,31 +3324,12 @@ msgstr ""
 msgid "Person information"
 msgstr ""
 
-#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:48
-msgid "Item"
+#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:62
+msgid "Sum"
 msgstr ""
 
-#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:49
-#: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:350
-#: ../app/config/orm.neon.neon2php:1045
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
-msgid "Price"
-msgstr ""
-
-#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:61
-msgid "Sum in "
-msgstr ""
-
-#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:68
+#: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:69
 msgid "Edit items"
-msgstr ""
-
-#: ../app/Modules/EventModule/templates/ScheduleGroup/list.latte.latte2php:2
-msgid "Create group"
-msgstr ""
-
-#: ../app/Modules/EventModule/templates/ScheduleGroup/list.latte.latte2php:3
-msgid "All persons"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/ScheduleGroup/detail.latte.latte2php:6
@@ -3432,11 +3461,6 @@ msgstr ""
 msgid "Constant symbol"
 msgstr ""
 
-#: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:11
-#: ../app/config/orm.neon.neon2php:343
-msgid "Variable symbol"
-msgstr ""
-
 #: ../app/Models/Transitions/Callbacks/Payment/parameters.latte.latte2php:17
 #: ../app/config/orm.neon.neon2php:337
 msgid "Specific symbol"
@@ -3534,22 +3558,22 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:20
+#: ../app/Components/Grids/Components/grid.latte.latte2php:19
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:17
 msgid "Total"
 msgstr ""
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:22
+#: ../app/Components/Grids/Components/grid.latte.latte2php:21
 #, fuzzy
 msgid "záznam"
 msgstr "records"
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:23
+#: ../app/Components/Grids/Components/grid.latte.latte2php:22
 #, fuzzy
 msgid "záznamy"
 msgstr "records"
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:24
+#: ../app/Components/Grids/Components/grid.latte.latte2php:23
 msgid "záznamů"
 msgstr "records"
 
@@ -3704,7 +3728,7 @@ msgstr ""
 msgid "points"
 msgstr ""
 
-#: ../app/config/payments/payment17.neon.neon2php:50
+#: ../app/config/payments/payment17.neon.neon2php:49
 #: ../app/config/payments/payment16.neon.neon2php:46
 #: ../app/config/payments/payment14.neon.neon2php:46
 #: ../app/config/payments/payment13.neon.neon2php:43
@@ -3759,7 +3783,7 @@ msgstr "Present"
 #: ../app/config/fyziklani/default.neon.neon2php:59
 #: ../data/events/council/councilDefault.neon.neon2php:50
 #: ../data/events/tsaf/tsaf8.neon.neon2php:99
-#: ../data/events/tabor/tabor12.neon.neon2php:125
+#: ../data/events/tabor/tabor12.neon.neon2php:131
 #: ../data/events/tabor/tabor10.neon.neon2php:91
 #: ../data/events/tabor/tabor7.neon.neon2php:91
 #: ../data/events/tabor/tabor9.neon.neon2php:91
@@ -4312,7 +4336,7 @@ msgid "Total capacity"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:933
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:22
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:18
 msgid "Free capacity"
 msgstr ""
 
@@ -4383,7 +4407,7 @@ msgstr "Register contestant"
 #: ../data/events/council/councilDefault.neon.neon2php:54
 #: ../data/events/tsaf/tsaf8.neon.neon2php:108
 #: ../data/events/tsaf/tsaf8.neon.neon2php:112
-#: ../data/events/tabor/tabor12.neon.neon2php:129
+#: ../data/events/tabor/tabor12.neon.neon2php:135
 #: ../data/events/tabor/tabor10.neon.neon2php:95
 #: ../data/events/tabor/tabor7.neon.neon2php:95
 #: ../data/events/tabor/tabor9.neon.neon2php:95
@@ -4425,7 +4449,7 @@ msgid "Další poznámky"
 msgstr "Other notes"
 
 #: ../data/events/council/councilDefault.neon.neon2php:69
-#: ../data/events/tabor/tabor12.neon.neon2php:156
+#: ../data/events/tabor/tabor12.neon.neon2php:162
 #: ../data/events/tabor/tabor10.neon.neon2php:143
 #: ../data/events/tabor/tabor7.neon.neon2php:136
 #: ../data/events/tabor/tabor9.neon.neon2php:143
@@ -4456,8 +4480,8 @@ msgstr "Participant"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:63
 #: ../data/events/tsaf/tsaf8.neon.neon2php:68
-#: ../data/events/tabor/tabor12.neon.neon2php:74
-#: ../data/events/tabor/tabor12.neon.neon2php:79
+#: ../data/events/tabor/tabor12.neon.neon2php:75
+#: ../data/events/tabor/tabor12.neon.neon2php:80
 #: ../data/events/tabor/tabor10.neon.neon2php:40
 #: ../data/events/tabor/tabor10.neon.neon2php:45
 #: ../data/events/tabor/tabor7.neon.neon2php:40
@@ -4486,8 +4510,8 @@ msgid "Potvrdit účast"
 msgstr "Confirm participation"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:103
-#: ../data/events/tabor/tabor12.neon.neon2php:107
-#: ../data/events/tabor/tabor12.neon.neon2php:111
+#: ../data/events/tabor/tabor12.neon.neon2php:105
+#: ../data/events/tabor/tabor12.neon.neon2php:109
 #: ../data/events/tabor/tabor10.neon.neon2php:73
 #: ../data/events/tabor/tabor10.neon.neon2php:77
 #: ../data/events/tabor/tabor7.neon.neon2php:73
@@ -4520,7 +4544,7 @@ msgid "Jakou mikinu nosíš?"
 msgstr "Which sweatshirt?"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:134
-#: ../data/events/tabor/tabor12.neon.neon2php:142
+#: ../data/events/tabor/tabor12.neon.neon2php:148
 #: ../data/events/tabor/tabor10.neon.neon2php:108
 #: ../data/events/tabor/tabor7.neon.neon2php:107
 #: ../data/events/tabor/tabor9.neon.neon2php:108
@@ -4546,8 +4570,7 @@ msgstr ""
 msgid "TSAF"
 msgstr ""
 
-#: ../data/events/tabor/tabor12.neon.neon2php:84
-#: ../data/events/tabor/tabor12.neon.neon2php:89
+#: ../data/events/tabor/tabor12.neon.neon2php:85
 #: ../data/events/tabor/tabor10.neon.neon2php:50
 #: ../data/events/tabor/tabor10.neon.neon2php:55
 #: ../data/events/tabor/tabor7.neon.neon2php:50
@@ -4561,7 +4584,7 @@ msgstr ""
 msgid "Pozvat náhradníka"
 msgstr "Invite spare"
 
-#: ../data/events/tabor/tabor12.neon.neon2php:94
+#: ../data/events/tabor/tabor12.neon.neon2php:90
 #: ../data/events/tabor/tabor10.neon.neon2php:60
 #: ../data/events/tabor/tabor7.neon.neon2php:60
 #: ../data/events/tabor/tabor9.neon.neon2php:60
@@ -4570,7 +4593,7 @@ msgstr "Invite spare"
 msgid "Potrvrdit učast"
 msgstr ""
 
-#: ../data/events/tabor/tabor12.neon.neon2php:99
+#: ../data/events/tabor/tabor12.neon.neon2php:95
 #: ../data/events/tabor/tabor10.neon.neon2php:65
 #: ../data/events/tabor/tabor7.neon.neon2php:65
 #: ../data/events/tabor/tabor9.neon.neon2php:65
@@ -4579,7 +4602,7 @@ msgstr ""
 msgid "Chci jet"
 msgstr ""
 
-#: ../data/events/tabor/tabor12.neon.neon2php:104
+#: ../data/events/tabor/tabor12.neon.neon2php:100
 #: ../data/events/tabor/tabor10.neon.neon2php:70
 #: ../data/events/tabor/tabor7.neon.neon2php:70
 #: ../data/events/tabor/tabor9.neon.neon2php:70
@@ -4588,7 +4611,7 @@ msgstr ""
 msgid "Zaplatil"
 msgstr "Payed"
 
-#: ../data/events/tabor/tabor12.neon.neon2php:115
+#: ../data/events/tabor/tabor12.neon.neon2php:113
 #: ../data/events/tabor/tabor10.neon.neon2php:81
 #: ../data/events/tabor/tabor7.neon.neon2php:81
 #: ../data/events/tabor/tabor9.neon.neon2php:81
@@ -4598,6 +4621,11 @@ msgid "Schválit jako účastníka"
 msgstr "Approve participation"
 
 #: ../data/events/tabor/tabor12.neon.neon2php:118
+#, fuzzy
+msgid "Odmítnout jako účastníka"
+msgstr "Confirm as a participant"
+
+#: ../data/events/tabor/tabor12.neon.neon2php:124
 #: ../data/events/tabor/tabor10.neon.neon2php:84
 #: ../data/events/tabor/tabor7.neon.neon2php:84
 #: ../data/events/tabor/tabor9.neon.neon2php:84
@@ -4606,7 +4634,7 @@ msgstr "Approve participation"
 msgid "Pozvat jako účastníka"
 msgstr "Confirm as a participant"
 
-#: ../data/events/tabor/tabor12.neon.neon2php:122
+#: ../data/events/tabor/tabor12.neon.neon2php:128
 #: ../data/events/tabor/tabor10.neon.neon2php:88
 #: ../data/events/tabor/tabor7.neon.neon2php:88
 #: ../data/events/tabor/tabor9.neon.neon2php:88
@@ -4615,7 +4643,7 @@ msgstr "Confirm as a participant"
 msgid "Zúčastnil se"
 msgstr "Participated"
 
-#: ../data/events/tabor/tabor12.neon.neon2php:139
+#: ../data/events/tabor/tabor12.neon.neon2php:145
 #: ../data/events/tabor/tabor10.neon.neon2php:105
 #: ../data/events/tabor/tabor7.neon.neon2php:104
 #: ../data/events/tabor/tabor9.neon.neon2php:105
@@ -4633,7 +4661,7 @@ msgstr "Participated"
 msgid "Jídlo"
 msgstr "Food"
 
-#: ../data/events/tabor/tabor12.neon.neon2php:145
+#: ../data/events/tabor/tabor12.neon.neon2php:151
 #: ../data/events/tabor/tabor10.neon.neon2php:111
 #: ../data/events/tabor/tabor7.neon.neon2php:110
 #: ../data/events/tabor/tabor9.neon.neon2php:111
@@ -4645,7 +4673,7 @@ msgstr "Food"
 msgid "Užívané léky"
 msgstr ""
 
-#: ../data/events/tabor/tabor12.neon.neon2php:147
+#: ../data/events/tabor/tabor12.neon.neon2php:153
 #: ../data/events/tabor/tabor10.neon.neon2php:133
 #: ../data/events/tabor/tabor7.neon.neon2php:126
 #: ../data/events/tabor/tabor9.neon.neon2php:133
@@ -4654,7 +4682,7 @@ msgstr ""
 msgid "Umím plavat"
 msgstr ""
 
-#: ../data/events/tabor/tabor12.neon.neon2php:149
+#: ../data/events/tabor/tabor12.neon.neon2php:155
 #: ../data/events/tabor/tabor10.neon.neon2php:135
 #: ../data/events/tabor/tabor7.neon.neon2php:128
 #: ../data/events/tabor/tabor9.neon.neon2php:135
