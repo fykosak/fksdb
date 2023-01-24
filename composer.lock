@@ -785,22 +785,22 @@
         },
         {
             "name": "nette/bootstrap",
-            "version": "v3.2.0",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/bootstrap.git",
-                "reference": "7fde23cc8a8cf97d545baf0ad7f8cd47c73feb17"
+                "reference": "1a7965b4ee401ad0e3f673b9c016d2481afdc280"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/bootstrap/zipball/7fde23cc8a8cf97d545baf0ad7f8cd47c73feb17",
-                "reference": "7fde23cc8a8cf97d545baf0ad7f8cd47c73feb17",
+                "url": "https://api.github.com/repos/nette/bootstrap/zipball/1a7965b4ee401ad0e3f673b9c016d2481afdc280",
+                "reference": "1a7965b4ee401ad0e3f673b9c016d2481afdc280",
                 "shasum": ""
             },
             "require": {
-                "nette/di": "^3.1",
+                "nette/di": "^3.0.5",
                 "nette/utils": "^3.2.1 || ^4.0",
-                "php": ">=8.0 <8.3"
+                "php": ">=7.2 <8.3"
             },
             "conflict": {
                 "tracy/tracy": "<2.6"
@@ -816,9 +816,9 @@
                 "nette/robot-loader": "^3.0",
                 "nette/safe-stream": "^2.2",
                 "nette/security": "^3.0",
-                "nette/tester": "^2.4",
-                "phpstan/phpstan-nette": "^1.0",
-                "tracy/tracy": "^2.9"
+                "nette/tester": "^2.0",
+                "phpstan/phpstan-nette": "^0.12",
+                "tracy/tracy": "^2.6"
             },
             "suggest": {
                 "nette/robot-loader": "to use Configurator::createRobotLoader()",
@@ -827,7 +827,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -860,35 +860,35 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/bootstrap/issues",
-                "source": "https://github.com/nette/bootstrap/tree/v3.2.0"
+                "source": "https://github.com/nette/bootstrap/tree/v3.1.4"
             },
-            "time": "2023-01-13T04:09:35+00:00"
+            "time": "2022-12-14T15:23:02+00:00"
         },
         {
             "name": "nette/caching",
-            "version": "v3.2.2",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/caching.git",
-                "reference": "6d94aca2017e83e95cec7d57cc3211c82cee6987"
+                "reference": "e1e38105956bb631e2295ef7a2fdef83485238e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/caching/zipball/6d94aca2017e83e95cec7d57cc3211c82cee6987",
-                "reference": "6d94aca2017e83e95cec7d57cc3211c82cee6987",
+                "url": "https://api.github.com/repos/nette/caching/zipball/e1e38105956bb631e2295ef7a2fdef83485238e9",
+                "reference": "e1e38105956bb631e2295ef7a2fdef83485238e9",
                 "shasum": ""
             },
             "require": {
                 "nette/finder": "^2.4 || ^3.0",
-                "nette/utils": "^3.2 || ~4.0.0",
-                "php": ">=8.0 <8.3"
+                "nette/utils": "^2.4 || ^3.0",
+                "php": ">=7.2 <8.3"
             },
             "require-dev": {
                 "latte/latte": "^2.11 || ^3.0",
-                "nette/di": "^3.1 || ^4.0",
-                "nette/tester": "^2.4",
-                "phpstan/phpstan": "^1.0",
-                "tracy/tracy": "^2.9"
+                "nette/di": "^v3.0",
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.12",
+                "tracy/tracy": "^2.4"
             },
             "suggest": {
                 "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
@@ -896,7 +896,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -931,9 +931,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/caching/issues",
-                "source": "https://github.com/nette/caching/tree/v3.2.2"
+                "source": "https://github.com/nette/caching/tree/v3.1.4"
             },
-            "time": "2023-01-21T19:59:02+00:00"
+            "time": "2022-10-18T23:27:44+00:00"
         },
         {
             "name": "nette/component-model",
@@ -1441,25 +1441,25 @@
         },
         {
             "name": "nette/neon",
-            "version": "v3.4.0",
+            "version": "v3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/neon.git",
-                "reference": "372d945c156ee7f35c953339fb164538339e6283"
+                "reference": "22e384da162fab42961d48eb06c06d3ad0c11b95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/neon/zipball/372d945c156ee7f35c953339fb164538339e6283",
-                "reference": "372d945c156ee7f35c953339fb164538339e6283",
+                "url": "https://api.github.com/repos/nette/neon/zipball/22e384da162fab42961d48eb06c06d3ad0c11b95",
+                "reference": "22e384da162fab42961d48eb06c06d3ad0c11b95",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=8.0 <8.3"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "nette/tester": "^2.4",
-                "phpstan/phpstan": "^1.0",
+                "nette/tester": "^2.0",
+                "phpstan/phpstan": "^0.12",
                 "tracy/tracy": "^2.7"
             },
             "bin": [
@@ -1468,7 +1468,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.4-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -1503,9 +1503,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/neon/issues",
-                "source": "https://github.com/nette/neon/tree/v3.4.0"
+                "source": "https://github.com/nette/neon/tree/v3.3.3"
             },
-            "time": "2023-01-13T03:08:29+00:00"
+            "time": "2022-03-10T02:04:26+00:00"
         },
         {
             "name": "nette/nette",
@@ -2544,25 +2544,25 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.2.0",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3"
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/1ee04c65529dea5d8744774d474e7cbd2f1206d3",
-                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1"
+                "php": ">=7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.3-dev"
+                    "dev-main": "2.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2591,7 +2591,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.2"
             },
             "funding": [
                 {
@@ -2607,7 +2607,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-25T10:21:52+00:00"
+            "time": "2022-01-02T09:53:40+00:00"
         },
         {
             "name": "tracy/tracy",
