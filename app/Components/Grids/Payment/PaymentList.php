@@ -66,7 +66,7 @@ class PaymentList extends FilterList
     {
         $this->classNameCallback = fn(PaymentModel $payment): string => 'alert alert-' .
             $payment->state->getBehaviorType();
-        $this->setTitle(new TemplateBaseItem($this->container, '@payment.payment_uid'));
+        $this->setTitle(new TemplateBaseItem($this->container, '@payment.payment_id'));
         $row = new RowContainer($this->container);
         $this->addRow($row, 'row');
         $row->addComponent(new TemplateBaseItem($this->container, '@payment.price'), 'price');
