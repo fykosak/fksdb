@@ -150,8 +150,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } else {
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
-                    }
-                    if ($component instanceof ScheduleContainer) {
+                    } elseif ($component instanceof ScheduleContainer) {
                         $component->setValues($value);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
