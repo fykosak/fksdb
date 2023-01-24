@@ -193,7 +193,6 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->container,
                     $this->event,
                     ScheduleGroupType::tryFrom($fieldName),
-                    'cs',
                     (bool)$metadata['required'] ?? false
                 );
             case 'person':

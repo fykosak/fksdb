@@ -8,9 +8,9 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Controls\SelectBox;
 
-class ScheduleGroupField extends TextInput
+class ScheduleGroupField extends SelectBox
 {
     use FrontEndComponentTrait;
 
@@ -25,6 +25,14 @@ class ScheduleGroupField extends TextInput
         $this->group = $group;
         $this->registerFrontend('schedule.group-container');
         $this->appendProperty();
+        $items = [];
+        /** @var ScheduleItemModel $item */
+        foreach ($this->group->getItems() as $item) {
+            $items[$item->getPrimary()] = $lang === 'cs'
+                ? ($item->name_cs . ' - ' . $item->description_cs)
+                : ($item->name_en . ' - ' . $item->description_en);
+        }
+        $this->setItems($items)->setPrompt('--select--');
     }
 
     protected function getData(): array

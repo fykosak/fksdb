@@ -75,7 +75,6 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
-     * @throws NotImplementedException
      */
     public function store(array $values, ?Model $model = null): PersonModel
     {
@@ -101,7 +100,6 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws ExistingPaymentException
      * @throws StorageException
      * @throws FullCapacityException
-     * @throws NotImplementedException
      */
     private function innerStore(PersonModel $person, array $data): void
     {
@@ -144,7 +142,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
 
             if (isset($data['person_schedule'])) {
-                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event, 'cs');//TODO
+                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event);
             }
             if (!$outerTransaction) {
                 $connection->commit();

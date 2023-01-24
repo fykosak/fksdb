@@ -14,7 +14,7 @@ interface OwnProps {
         group: ModelScheduleGroup;
         options: Params;
     };
-    input: HTMLInputElement;
+    input: HTMLInputElement | HTMLSelectElement;
 }
 
 export interface Params {
@@ -50,11 +50,9 @@ class ScheduleField extends React.Component<OwnProps> {
 export const eventSchedule: mapRegisterCallback = (element, reactId, rawData) => {
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
-    if (!(element instanceof HTMLInputElement)) {
-        return false;
+    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+        ReactDOM.render(<ScheduleField scheduleDef={JSON.parse(rawData)} input={element}/>, container);
+        return true;
     }
-
-    ReactDOM.render(<ScheduleField scheduleDef={JSON.parse(rawData)} input={element}/>, container);
-
-    return true;
+    return false;
 };

@@ -9,22 +9,31 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 
 class Handler
 {
-    private PersonScheduleService $personScheduleService;
+    private PersonScheduleService $service;
+    private GettextTranslator $translator;
 
-    public function __construct(PersonScheduleService $personScheduleService)
+    public function __construct(Container $container)
     {
-        $this->personScheduleService = $personScheduleService;
+        $container->callInjects($this);
+    }
+
+    public function inject(PersonScheduleService $service, GettextTranslator $translator): void
+    {
+        $this->service = $service;
+        $this->translator = $translator;
     }
 
     /**
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      */
-    public function handle(array $data, PersonModel $person, EventModel $event, string $lang): void
+    public function handle(array $data, PersonModel $person, EventModel $event): void
     {
         foreach ($data as $type => $items) {
             foreach ($items as $groupId => $item) {
@@ -36,12 +45,12 @@ class Handler
                 if (!$group) {
                     throw new InvalidStateException(_('Schedule group does not exists'));
                 }
-                $this->saveGroup($person, $group, (int)$item, $lang);
+                $this->saveGroup($person, $group, (int)$item);
             }
         }
     }
 
-    public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value, string $lang): void
+    public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value): void
     {
         $personSchedule = $person->getScheduleByGroup($group);
         if ($value) {
@@ -69,11 +78,11 @@ class Handler
                     sprintf(
                         _('The person %s could not be registered for "%s" because of full capacity.'),
                         $person->getFullName(),
-                        $lang === 'cs' ? $item->name_cs : $item->name_en
+                        $this->translator->lang === 'cs' ? $item->name_cs : $item->name_en
                     )
                 );
             }
-            $this->personScheduleService->storeModel(
+            $this->service->storeModel(
                 ['person_id' => $person->person_id, 'schedule_item_id' => $value],
                 $personSchedule
             );
@@ -81,7 +90,7 @@ class Handler
             if (!$group->canEdit()) {
                 throw new InvalidStateException(_('Registration is not open at this time'));
             }
-            $this->personScheduleService->disposeModel($personSchedule);
+            $this->service->disposeModel($personSchedule);
         }
     }
 }

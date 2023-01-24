@@ -8,7 +8,7 @@ import {
 import { InputConnectorStateMap } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';
 
 export interface OwnProps {
-    input: HTMLInputElement;
+    input: HTMLInputElement | HTMLSelectElement;
 }
 
 export interface StateProps {
