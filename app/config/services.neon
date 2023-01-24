@@ -17,12 +17,12 @@ services:
 
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
     #auth
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
-    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
+    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
     - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     #auth
     - FKSDB\Models\Authorization\ContestAuthorizator
@@ -45,7 +45,7 @@ services:
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
-    - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
+    - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
@@ -57,9 +57,9 @@ services:
     - FKSDB\Models\Results\SQLResultsCache
     - FKSDB\Models\Results\ResultsModelFactory
     #strored query
-    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection,...)
+    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection)
     #tasks
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
