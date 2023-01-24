@@ -105,7 +105,7 @@ parameters:
             links:
                 - payment.detail
             rows:
-                - payment.payment_uid
+                - payment.payment_id
                 - event.name
                 - payment.price
                 - payment.state

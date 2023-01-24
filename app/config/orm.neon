@@ -316,6 +316,10 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Payment\PaymentColumnFactory
                     title: _('Payment')
+                 payment_id:
+                     type: class
+                     class: FKSDB\Models\ORM\Columns\Tables\Payment\IdColumnFactory
+                     title: _('Payment ID')
                  payment_uid:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Payment\UIdColumnFactory
