@@ -46,7 +46,7 @@ class ScheduleContainer extends ContainerWithOptions
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type->value);
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
-            $field = new ScheduleGroupField($group, $this->translator->lang);
+            $field = new ScheduleGroupField($group, (string)$this->translator->lang);
             $field->setRequired($this->required);
             $this->addComponent(
                 $field,
