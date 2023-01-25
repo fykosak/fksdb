@@ -30,6 +30,7 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {
@@ -151,6 +152,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
+                        Debugger::barDump($value);
                         $component->setValues($value);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()

@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 
 class ScheduleContainer extends ContainerWithOptions
@@ -27,10 +26,10 @@ class ScheduleContainer extends ContainerWithOptions
         bool $required = false
     ) {
         parent::__construct($container);
-        $this->monitor(Presenter::class, fn() => $this->configure());
         $this->event = $event;
         $this->type = $type;
         $this->required = $required;
+        $this->configure();
     }
 
     public function inject(GettextTranslator $translator): void

@@ -5,7 +5,7 @@ export interface ModelScheduleGroup {
     items: ModelScheduleItem[];
     scheduleGroupId: number;
     scheduleGroupType: ScheduleGroupType;
-    label: LocalizedString;
+    name: LocalizedString;
     eventId: number;
     start: string;
     end: string;

@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Store } from '../reducer';
 import CapacityLabel from './Parts/CapacityLabel';
-import DescriptionLabel from './Parts/DescriptionLabel';
 import PriceLabel from './Parts/PriceLabel';
 
 interface OwnProps {
@@ -32,23 +31,24 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
         const isChecked = (value === scheduleItemId);
 
-        return <div className="mb-3">
-                <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
-                <span
-                    className={isChecked ? 'fas fa-check-circle' : 'far fa-circle'}
-                    onClick={() => {
-                        isChecked ? onChange(null) : onChange(scheduleItemId);
-                    }}
-                />
-                    <span className="ms-3">
-                        {label[translator.getCurrentLocale()]} {
-                        params.description && <DescriptionLabel description={description}/>
-                    }</span>
-            </span>
-            <span className="text-muted">
-                {params.price && <PriceLabel price={price}/>}
-                {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
-            </span>
+        return <div
+            className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : '')}
+            onClick={() => {
+                isChecked ? onChange(null) : onChange(scheduleItemId);
+            }}>
+            <div className="card-body">
+                <h5 className="card-title">
+                    <i className={isChecked ? 'me-3 fas fa-check-circle' : 'me-3 far fa-circle'}/>
+                    {label[translator.getCurrentLocale()]}
+                </h5>
+                {params.description && <h6 className="card-subtitle">
+                    {description[translator.getCurrentLocale()]}
+                </h6>}
+                <p className="card-text">
+                    {params.price && <PriceLabel price={price}/>}
+                    {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                </p>
+            </div>
         </div>;
     }
 }
