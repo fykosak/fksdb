@@ -7,8 +7,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Store } from '../reducer';
-import CapacityLabel from './Parts/CapacityLabel';
-import PriceLabel from './Parts/PriceLabel';
+import CapacityLabel from './CapacityLabel';
+import PriceLabel from './PriceLabel';
 
 interface OwnProps {
     item: ModelScheduleItem;

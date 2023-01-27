@@ -19,6 +19,9 @@ class ScheduleContainer extends ContainerWithOptions
     private bool $required;
     private GettextTranslator $translator;
 
+    /**
+     * @throws BadRequestException
+     */
     public function __construct(
         Container $container,
         EventModel $event,

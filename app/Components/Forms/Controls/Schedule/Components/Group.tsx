@@ -14,7 +14,7 @@ export default class Group extends React.Component<OwnProps> {
 
     public render() {
         const {group, params} = this.props;
-        return <div className="schedule-container ms-3">
+        return <div className="ms-3">
             <h4 className="mb-3">
                 {group.name[translator.getCurrentLocale()]}
                 {params.groupTime && (

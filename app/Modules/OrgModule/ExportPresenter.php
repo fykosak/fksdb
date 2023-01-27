@@ -89,8 +89,7 @@ class ExportPresenter extends BasePresenter
      */
     public function actionExecute(): void
     {
-        $storedQuery = $this->getStoredQuery();
-        if ($storedQuery && $this->getParameter('qid')) {
+        if ($this->getParameter('qid')) {
             $parameters = [];
             foreach ($this->getParameters() as $key => $value) {
                 if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {

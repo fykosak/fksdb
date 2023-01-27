@@ -14,7 +14,7 @@ export default class CapacityLabel extends React.Component<OwnProps> {
             return null;
         }
         return <small
-            className={'capacity-label ms-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
+            className={'ms-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
             {translator.getText('Free capacity')}:&nbsp;{(capacity - usedCapacity)}
         </small>;
     }
