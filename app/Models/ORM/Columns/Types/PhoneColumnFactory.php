@@ -53,7 +53,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
     final public function runTest(Logger $logger, Model $model): void
     {
 
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return;
         }
@@ -74,7 +74,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         } else {

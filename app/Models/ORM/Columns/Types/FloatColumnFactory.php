@@ -26,7 +26,7 @@ class FloatColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         return (new NumberPrinter($this->prefix, $this->suffix, $this->decimalDigitsCount, $this->nullValue))(
-            $model->{$this->getModelAccessKey()}
+            $model->{$this->modelAccessKey}
         );
     }
 

@@ -32,7 +32,7 @@ abstract class ColumnFactory
     protected bool $required = false;
     protected bool $omitInputField = false;
     protected bool $isWriteOnly = true;
-    protected FieldLevelPermission $permission;
+    public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
     protected string $modelClassName;
 
@@ -96,11 +96,6 @@ abstract class ColumnFactory
         $this->omitInputField = $omit;
     }
 
-    final public function getPermission(): FieldLevelPermission
-    {
-        return $this->permission;
-    }
-
     final public function getTitle(): string
     {
         return _($this->title);
@@ -109,16 +104,6 @@ abstract class ColumnFactory
     final public function getDescription(): ?string
     {
         return $this->description ? _($this->description) : null;
-    }
-
-    final protected function getModelAccessKey(): string
-    {
-        return $this->modelAccessKey;
-    }
-
-    final protected function getTableName(): string
-    {
-        return $this->tableName;
     }
 
     final protected function getMetaData(): array
@@ -139,7 +124,7 @@ abstract class ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 
     /**
@@ -178,12 +163,12 @@ abstract class ColumnFactory
 
     final public function hasReadPermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->read;
+        return $userValue >= $this->permission->read;
     }
 
     final public function hasWritePermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->write;
+        return $userValue >= $this->permission->write;
     }
 
     protected function renderNullModel(): Html

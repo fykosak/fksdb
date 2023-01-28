@@ -15,7 +15,7 @@ class LogicColumnFactory extends ColumnFactory
 {
     protected function createHtmlValue(Model $model): Html
     {
-        return (new BinaryPrinter())($model->{$this->getModelAccessKey()});
+        return (new BinaryPrinter())($model->{$this->modelAccessKey});
     }
 
     protected function createFormControl(...$args): BaseControl

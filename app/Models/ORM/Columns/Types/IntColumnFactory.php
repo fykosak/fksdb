@@ -19,7 +19,7 @@ class IntColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))(
-            $model->{$this->getModelAccessKey()}
+            $model->{$this->modelAccessKey}
         );
     }
 
