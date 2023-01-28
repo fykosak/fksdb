@@ -175,7 +175,6 @@ class PaymentPresenter extends BasePresenter
         try {
             $this->getMachine();
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
             return false;
         }
         return true;
