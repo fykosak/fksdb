@@ -38,10 +38,10 @@ class ORMExtension extends Extension
     {
         parent::loadConfiguration();
         foreach ($this->config as $tableName => $fieldDefinitions) {
-            foreach ($fieldDefinitions['columnFactories'] as $fieldName => $field) {
+            foreach ($fieldDefinitions['columns'] as $fieldName => $field) {
                 $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
-            foreach ($fieldDefinitions['linkFactories'] as $fieldName => $field) {
+            foreach ($fieldDefinitions['links'] as $fieldName => $field) {
                 $this->createLinkFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
         }
@@ -114,7 +114,7 @@ class ORMExtension extends Extension
                             'destination' => Expect::string()->required(),
                             'params' => Expect::arrayOf(Expect::string(), Expect::string()),
                             'title' => Expect::type(Statement::class),
-                        ]),
+                        ])->castTo('array'),
                         Expect::string()
                     )
                 ),
@@ -136,7 +136,10 @@ class ORMExtension extends Extension
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition($this->prefix($tableName . '.link.' . $linkId));
         if (is_array($def)) {
-            $factory->setFactory(Link::class, [$def['destination'], $def['params'], $def['title'], $modelClassName]);
+            $factory->setFactory(
+                Link::class,
+                [$def['destination'], $def['params'], $this->translate($def['title']), $modelClassName]
+            );
         } elseif (is_string($def)) {
             $factory->setFactory($def);
         }
