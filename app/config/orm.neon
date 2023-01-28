@@ -324,13 +324,8 @@ orm:
                 class: FKSDB\Models\ORM\Columns\Tables\Payment\PaymentColumnFactory
                 title: _('Payment')
             payment_id:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Payment\IdColumnFactory
+                type: primaryKey
                 title: _('Payment ID')
-            payment_uid:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Payment\UIdColumnFactory
-                title: _('Payment UId')
             bank_account:
                 type: string
                 title: _('Bank account')

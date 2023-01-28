@@ -59,7 +59,7 @@ class DefaultGenerator extends AbstractSymbolGenerator
     {
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(
-                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId())
+                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->payment_id)
             );
         }
         $maxVariableSymbol = $modelPayment->event->getPayments()
