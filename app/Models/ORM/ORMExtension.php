@@ -282,7 +282,7 @@ class ORMExtension extends Extension
         array $field
     ): void {
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, EnumColumnFactory::class, $field);
-        $factory->addSetup('setEnumClassName', [$field['enumClassName']]);
+        $factory->addSetup('setEnumClassName', [$field['class']]);
     }
 
     private function registerClassColumnFactory(
