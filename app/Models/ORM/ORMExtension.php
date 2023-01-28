@@ -55,18 +55,10 @@ class ORMExtension extends Extension
                 'title' => Expect::type(Statement::class)->required(),
                 'accessKey' => Expect::string(),
                 'description' => Expect::type(Statement::class),
-                'required' => Expect::bool(),
-                'omitInputField' => Expect::bool(),
-                'writeOnly' => Expect::bool(),
-                'permission' => Expect::anyOf(
-                    Expect::structure([
-                        'read' => Expect::anyOf('FULL', 'RESTRICT', 'BASIC'),
-                        'write' => Expect::anyOf('FULL', 'RESTRICT', 'BASIC'),
-                    ])->castTo('array'),
-                    'FULL',
-                    'RESTRICT',
-                    'BASIC'
-                ),
+                'required' => Expect::bool(false),
+                'omitInputField' => Expect::bool(false),
+                'writeOnly' => Expect::bool(false),
+                'permission' => Expect::anyOf('ANYBODY', 'BASIC', 'RESTRICT', 'FULL')->firstIsDefault(),
             ], $items)
         )->castTo('array');
     }
@@ -376,7 +368,8 @@ class ORMExtension extends Extension
         string $fieldName,
         string $factoryClassName,
         array $field
-    ): void {
+    ): void
+    {
         $factory->setFactory($factoryClassName);
         $factory->addSetup('setUp', [
             $tableName,
@@ -385,22 +378,9 @@ class ORMExtension extends Extension
             $this->translate($field['title']),
             isset($field['description']) ? $this->translate($field['description']) : null,
         ]);
-        if (isset($field['permission'])) {
-            if (is_array($field['permission'])) {
-                $permission = $field['permission'];
-            } else {
-                $permission = ['read' => $field['permission'], 'write' => $field['permission']];
-            }
-            $factory->addSetup('setPermissionValue', [$permission]);
-        }
-        if (isset($field['omitInputField'])) {
-            $factory->addSetup('setOmitInputField', [$field['omitInputField']]);
-        }
-        if (isset($field['required'])) {
-            $factory->addSetup('setRequired', [$field['required']]);
-        }
-        if (isset($field['writeOnly'])) {
-            $factory->addSetup('setWriteOnly', [$field['writeOnly']]);
-        }
+        $factory->addSetup('setPermissionValue', [$field['permission']]);
+        $factory->addSetup('setOmitInputField', [$field['omitInputField']]);
+        $factory->addSetup('setRequired', [$field['required']]);
+        $factory->addSetup('setWriteOnly', [$field['writeOnly']]);
     }
 }

@@ -456,9 +456,7 @@ orm:
             account:
                 type: string
                 title: _('Bank account')
-                permission:
-                    read: FULL
-                    write: FULL
+                permission: FULL
             homepage:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HomepageColumnFactory
@@ -469,15 +467,11 @@ orm:
             phone_parent_m:
                 type: phone
                 title: _('Phone number (mother)')
-                permission:
-                   read: RESTRICT
-                   write: RESTRICT
+                permission: RESTRICT
             phone_parent_d:
                 type: phone
                 title: _('Phone number (father)')
-                permission:
-                    read: RESTRICT
-                    write: RESTRICT
+                permission: RESTRICT
             email_parent_m:
                 type: email
                 title: _('E-mail (mother)')
@@ -507,9 +501,7 @@ orm:
                 type: string
                 title: _('Place of birth')
                 description: _('City and region (for diplomas).')
-                permission:
-                    read: FULL
-                    write: FULL
+                permission: FULL
             career:
                 title: _('Current role')
                 type: text

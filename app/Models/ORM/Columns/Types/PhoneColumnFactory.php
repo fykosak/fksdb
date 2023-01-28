@@ -22,20 +22,12 @@ use Nette\Utils\Html;
 
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 {
-
     protected PhoneNumberFactory $phoneNumberFactory;
-
-    private bool $isWriteOnly = true;
 
     public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory)
     {
         $this->phoneNumberFactory = $phoneNumberFactory;
         parent::__construct($metaDataFactory);
-    }
-
-    public function setWriteOnly(bool $isWriteOnly): void
-    {
-        $this->isWriteOnly = $isWriteOnly;
     }
 
     protected function createFormControl(...$args): BaseControl
