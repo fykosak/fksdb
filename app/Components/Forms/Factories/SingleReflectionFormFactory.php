@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
-class SingleReflectionFormFactory
+final class SingleReflectionFormFactory
 {
+    private ORMFactory $tableReflectionFactory;
+    private Container $container;
 
-    protected ORMFactory $tableReflectionFactory;
-
-    public function __construct(ORMFactory $tableReflectionFactory)
+    public function __construct(ORMFactory $tableReflectionFactory, Container $container)
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->container = $container;
     }
 
     /**
@@ -50,7 +52,7 @@ class SingleReflectionFormFactory
         ?FieldLevelPermission $userPermissions = null,
         ...$args
     ): ModelContainer {
-        $container = new ModelContainer();
+        $container = new ModelContainer($this->container);
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);
             $control = $factory->createField(...$args);

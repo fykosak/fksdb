@@ -99,7 +99,7 @@ class PersonPaymentContainer extends ContainerWithOptions
                 continue;
             }
             if ($model->person_id !== $lastPersonId) {
-                $container = new ModelContainer();
+                $container = new ContainerWithOptions($this->container);
                 $this->addComponent($container, 'person' . $model->person_id);
                 $container->setOption('label', $model->person->getFullName());
                 $lastPersonId = $model->person_id;

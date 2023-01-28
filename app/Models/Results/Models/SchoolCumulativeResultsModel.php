@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Row;
-use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 
 /**

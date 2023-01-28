@@ -75,6 +75,7 @@ class PaymentFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      * @throws NotImplementedException
+     * @throws \Exception
      */
     protected function configureForm(Form $form): void
     {

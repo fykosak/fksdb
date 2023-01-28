@@ -54,6 +54,9 @@ class EvaluationNullObject extends EvaluationStrategy
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function getCategoryMap(): array
     {
         throw new NotImplementedException();

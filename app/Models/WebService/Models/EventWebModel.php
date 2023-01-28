@@ -55,6 +55,9 @@ class EventWebModel extends WebModel
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createPersonScheduleNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('personSchedule');
@@ -104,6 +107,9 @@ class EventWebModel extends WebModel
         return $data;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createScheduleListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('schedule');
@@ -135,6 +141,9 @@ class EventWebModel extends WebModel
         return $data;
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createEventDetailNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('eventDetail');
@@ -142,6 +151,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createTeamListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('teams');
@@ -206,6 +218,9 @@ class EventWebModel extends WebModel
         return $teamsData;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createParticipantListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('participants');

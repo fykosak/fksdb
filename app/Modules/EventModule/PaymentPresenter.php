@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -241,7 +240,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent

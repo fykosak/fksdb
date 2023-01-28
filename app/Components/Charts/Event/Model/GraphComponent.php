@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;

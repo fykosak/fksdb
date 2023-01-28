@@ -99,6 +99,9 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $value;
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('scheduleGroup');

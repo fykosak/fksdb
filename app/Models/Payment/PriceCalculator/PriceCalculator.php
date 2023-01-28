@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 use FKSDB\Models\Transitions\Statement;

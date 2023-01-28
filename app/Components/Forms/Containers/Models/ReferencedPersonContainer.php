@@ -77,7 +77,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     protected function configure(): void
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
-            $subContainer = new ContainerWithOptions();
+            $subContainer = new ContainerWithOptions($this->container);
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('showGroup', true);
                 $subContainer->setOption('label', _('Deliver address'));

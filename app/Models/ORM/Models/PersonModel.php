@@ -21,7 +21,6 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
  * @property-read int person_id
