@@ -10,18 +10,10 @@ trait NumberFactoryTrait
     private ?string $prefix;
     private ?string $suffix;
 
-    public function setNullValueFormat(string $nullValue): void
+    public function setNumberFactory(string $nullValue, ?string $prefix, ?string $suffix): void
     {
         $this->nullValue = $nullValue;
-    }
-
-    public function setPrefix(string $prefix): void
-    {
         $this->prefix = $prefix;
-    }
-
-    public function setSuffix(string $suffix): void
-    {
         $this->suffix = $suffix;
     }
 }

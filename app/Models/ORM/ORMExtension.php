@@ -62,7 +62,7 @@ class ORMExtension extends Extension
                     Expect::structure([
                         'read' => Expect::anyOf('FULL', 'RESTRICT', 'BASIC'),
                         'write' => Expect::anyOf('FULL', 'RESTRICT', 'BASIC'),
-                    ]),
+                    ])->castTo('array'),
                     'FULL',
                     'RESTRICT',
                     'BASIC'
@@ -87,7 +87,8 @@ class ORMExtension extends Extension
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('state'), [
                             'states' => Expect::arrayOf(
-                                Expect::structure(['badge' => Expect::string(), 'label' => Expect::string()]),
+                                Expect::structure(['badge' => Expect::string(), 'label' => Expect::string()])
+                                    ->castTo('array'),
                                 Expect::string()
                             )->required(),
                         ]),
@@ -340,15 +341,7 @@ class ORMExtension extends Extension
             $factoryClassName,
             $field
         );
-        if (isset($field['nullValueFormat'])) {
-            $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
-        }
-        if (isset($field['prefix'])) {
-            $factory->addSetup('setPrefix', [$field['prefix']]);
-        }
-        if (isset($field['suffix'])) {
-            $factory->addSetup('setSuffix', [$field['suffix']]);
-        }
+        $factory->addSetup('setNumberFactory', [$field['nullValueFormat'], $field['prefix'], $field['suffix']]);
     }
 
     private function registerAbstractDateTimeRow(
