@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -75,6 +74,11 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
+     * @throws ModelException
+     * @throws ModelDataConflictException
+     * @throws ScheduleException
+     * @throws StorageException
+     * @throws FullCapacityException
      */
     public function store(array $values, ?Model $model = null): PersonModel
     {
@@ -97,7 +101,7 @@ class ReferencedPersonHandler extends ReferencedHandler
     /**
      * @throws ModelException
      * @throws ModelDataConflictException
-     * @throws ExistingPaymentException
+     * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
      */

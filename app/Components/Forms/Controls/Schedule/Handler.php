@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 class Handler
 {
@@ -30,8 +29,7 @@ class Handler
     }
 
     /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
+     * @throws ScheduleException
      */
     public function handle(array $data, PersonModel $person, EventModel $event): void
     {
@@ -43,44 +41,38 @@ class Handler
                     ->where('schedule_group_id', $groupId)
                     ->fetch();
                 if (!$group) {
-                    throw new InvalidStateException(_('Schedule group does not exists'));
+                    throw new ScheduleException(null, _('Schedule group does not exists'));
                 }
                 $this->saveGroup($person, $group, (int)$item);
             }
         }
     }
-
     public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value): void
     {
         $personSchedule = $person->getScheduleByGroup($group);
+        // already booked
+        if ($personSchedule && $personSchedule->schedule_item_id === $value) {
+            return;
+        }
         if ($value) {
             /** @var ScheduleItemModel|null $item */
             $item = $group->getItems()->where('schedule_item_id', $value)->fetch();
             if (!$item) {
-                throw new InvalidStateException(sprintf(_('Item with Id %s does not exists'), $value));
+                throw new ScheduleException($group, sprintf(_('Item with Id %s does not exists'), $value));
             }
             // create
-            if (!$personSchedule) {
-                if (!$group->canCreate()) {
-                    throw new InvalidStateException(_('Registration is not open at this time'));
-                }
-            } else {
-                // already booked
-                if ($personSchedule->schedule_item_id === $item->schedule_item_id) {
-                    return;
-                }
+            if ($personSchedule) {
                 if (!$group->canEdit()) {
-                    throw new InvalidStateException(_('Registration is not open at this time'));
+                    throw new ScheduleException($group, _('Registration is not open at this time'));
                 }
+                if ($personSchedule->getPayment()) {
+                    throw new ExistingPaymentException($personSchedule);
+                }
+            } elseif (!$group->canCreate()) {
+                throw new ScheduleException($group, _('Registration is not open at this time'));
             }
             if (!$item->hasFreeCapacity()) {
-                throw new FullCapacityException(
-                    sprintf(
-                        _('The person %s could not be registered for "%s" because of full capacity.'),
-                        $person->getFullName(),
-                        $this->translator->lang === 'cs' ? $item->name_cs : $item->name_en
-                    )
-                );
+                throw new FullCapacityException($item, $person, $this->translator->lang);
             }
             $this->service->storeModel(
                 ['person_id' => $person->person_id, 'schedule_item_id' => $value],
@@ -88,7 +80,10 @@ class Handler
             );
         } elseif ($personSchedule) {
             if (!$group->canEdit()) {
-                throw new InvalidStateException(_('Registration is not open at this time'));
+                throw new ScheduleException($group, _('Registration is not open at this time'));
+            }
+            if ($personSchedule->getPayment()) {
+                throw new ExistingPaymentException($personSchedule);
             }
             $this->service->disposeModel($personSchedule);
         }
