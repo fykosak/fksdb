@@ -63,13 +63,13 @@ class Handler
             // create
             if ($personSchedule) {
                 if (!$group->canEdit()) {
-                    throw new ScheduleException($group, _('Registration is not open at this time'));
+                    throw new ScheduleException($group, _('Modification of this item is not allowed at this time'));
                 }
                 if ($personSchedule->getPayment()) {
                     throw new ExistingPaymentException($personSchedule);
                 }
             } elseif (!$group->canCreate()) {
-                throw new ScheduleException($group, _('Registration is not open at this time'));
+                throw new ScheduleException($group, _('Given item is not available at this time'));
             }
             if (!$item->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, $this->translator->lang);
@@ -80,7 +80,7 @@ class Handler
             );
         } elseif ($personSchedule) {
             if (!$group->canEdit()) {
-                throw new ScheduleException($group, _('Registration is not open at this time'));
+                throw new ScheduleException($group, _('Modification of this item is not allowed at this time'));
             }
             if ($personSchedule->getPayment()) {
                 throw new ExistingPaymentException($personSchedule);

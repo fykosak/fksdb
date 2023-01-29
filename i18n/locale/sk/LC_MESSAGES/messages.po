@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 22:51+0100\n"
+"POT-Creation-Date: 2023-01-29 01:21+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -96,7 +96,7 @@ msgstr ""
 #: ../app/Modules/OrgModule/PersonPresenter.php:155
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:62
-#: ../app/Components/EntityForms/PaymentFormComponent.php:83
+#: ../app/Components/EntityForms/PaymentFormComponent.php:84
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:32
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:33
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:90
@@ -615,27 +615,27 @@ msgid "Find"
 msgstr ""
 
 #: ../app/Modules/EventModule/ModelPresenter.php:25
-#: ../app/Components/Charts/Event/Model/GraphComponent.php:54
+#: ../app/Components/Charts/Event/Model/GraphComponent.php:53
 #, fuzzy
 msgid "Model of event"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/EventModule/TeamApplicationPresenter.php:48
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:47
 #, fuzzy
 msgid "Create team"
 msgstr "Zoznam platieb"
 
-#: ../app/Modules/EventModule/TeamApplicationPresenter.php:53
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:52
 #, fuzzy
 msgid "Detailed list of teams"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/EventModule/TeamApplicationPresenter.php:65
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:64
 #, fuzzy, php-format
 msgid "Edit team \"%s\""
 msgstr "Uprava platby #%s"
 
-#: ../app/Modules/EventModule/TeamApplicationPresenter.php:209
+#: ../app/Modules/EventModule/TeamApplicationPresenter.php:211
 #, fuzzy
 msgid "Event type is not supported"
 msgstr "Zvoliť typ"
@@ -705,26 +705,26 @@ msgstr ""
 msgid "Error during deleting"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:44
+#: ../app/Modules/EventModule/PaymentPresenter.php:43
 #, fuzzy
 msgid "Create payment"
 msgstr "Nová platba"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:59
+#: ../app/Modules/EventModule/PaymentPresenter.php:58
 #, php-format
 msgid "Edit payment #%s"
 msgstr "Uprava platby #%s"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:76
+#: ../app/Modules/EventModule/PaymentPresenter.php:75
 #, fuzzy, php-format
 msgid "Detail of the payment #%s"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:83
+#: ../app/Modules/EventModule/PaymentPresenter.php:82
 msgid "List of payments"
 msgstr "Zoznam platieb"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:88
+#: ../app/Modules/EventModule/PaymentPresenter.php:87
 #, fuzzy
 msgid "Detailed list of payments"
 msgstr "Zoznam akcií"
@@ -966,7 +966,6 @@ msgstr ""
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:164
 #: ../app/Modules/CoreModule/ErrorPresenter.php:18
-#: ../app/Components/EntityForms/EntityFormComponent.php:57
 #: ../app/Components/Controls/PreferredLangFormComponent.php:53
 msgid "Error"
 msgstr ""
@@ -1030,13 +1029,13 @@ msgstr ""
 msgid "Update my profile"
 msgstr ""
 
-#: ../app/Modules/Core/Language.php:25
+#: ../app/Modules/Core/Language.php:31
 #: ../app/Models/ORM/Models/Fyziklani/GameLang.php:25
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:23
 msgid "Czech"
 msgstr ""
 
-#: ../app/Modules/Core/Language.php:27
+#: ../app/Modules/Core/Language.php:33
 #: ../app/Models/ORM/Models/Fyziklani/GameLang.php:27
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:27
 msgid "English"
@@ -1076,12 +1075,8 @@ msgstr ""
 msgid "Delete an entity"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/ChartPresenterTrait.php:25
+#: ../app/Modules/Core/PresenterTraits/ChartPresenterTrait.php:26
 msgid "Charts"
-msgstr ""
-
-#: ../app/Modules/Core/PresenterTraits/YearPresenterTrait.php:89
-msgid "No year available"
 msgstr ""
 
 #: ../app/Models/Authentication/GoogleAuthenticator.php:68
@@ -1458,68 +1453,68 @@ msgstr ""
 msgid "Unlimited capacity"
 msgstr "Kapacita"
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:129
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:86
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:128
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:82
 msgid "Applied"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:131
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:130
 msgid "Applied no DSEF"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:133
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:132
 msgid "Applied no TSAF"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:135
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:134
 msgid "Applied TSAF"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:137
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:90
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:136
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:86
 msgid "Approved"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:139
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:138
 msgid "Auto invited"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:141
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:140
 msgid "Auto spare"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:143
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:142
 #, fuzzy
 msgid "Cancelled"
 msgstr "Nová platba"
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:145
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:98
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:144
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:94
 msgid "Disqualified"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:147
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:146
 msgid "Interested"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:149
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:148
 msgid "Invited"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:151
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:150
 msgid "Invited 1"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:153
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:152
 msgid "Invited 2"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:155
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:154
 msgid "Invited 3"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:157
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:96
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:156
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:92
 #: ../data/events/soustredeni/sous35j.neon.neon2php:123
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:154
 #: ../data/events/soustredeni/sous36p.neon.neon2php:121
@@ -1531,11 +1526,11 @@ msgstr ""
 msgid "Missed"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:159
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:158
 msgid "Out of DB"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:161
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:160
 #: ../app/config/payments/payment17.neon.neon2php:54
 #: ../app/config/payments/payment16.neon.neon2php:50
 #: ../app/config/payments/payment14.neon.neon2php:50
@@ -1543,8 +1538,8 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:163
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:94
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:162
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:90
 #: ../data/events/soustredeni/sous35j.neon.neon2php:120
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:151
 #: ../data/events/soustredeni/sous36p.neon.neon2php:118
@@ -1556,34 +1551,34 @@ msgstr ""
 msgid "Participated"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:165
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:88
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:164
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:84
 msgid "Pending"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:167
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:166
 #: ../app/Models/ORM/Models/EmailMessageState.php:55
 msgid "Rejected"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:169
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:92
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:168
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:88
 msgid "Spare"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:171
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:170
 msgid "Spare TSAF"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:173
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:172
 msgid "Spare 1"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:175
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:174
 msgid "Spare 2"
 msgstr ""
 
-#: ../app/Models/ORM/Models/EventParticipantStatus.php:177
+#: ../app/Models/ORM/Models/EventParticipantStatus.php:176
 msgid "Spare 3"
 msgstr ""
 
@@ -1592,7 +1587,7 @@ msgstr ""
 msgid "%s. question"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:100
+#: ../app/Models/ORM/Models/Fyziklani/TeamState.php:96
 #: ../app/Models/ORM/Models/EmailMessageState.php:51
 #, fuzzy
 msgid "Canceled"
@@ -1728,29 +1723,29 @@ msgstr ""
 msgid "Save CSV with quotes"
 msgstr ""
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:149
+#: ../app/Models/Events/Model/ApplicationHandler.php:155
 #, fuzzy, php-format
 msgid "Application \"%s\" saved."
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:185
+#: ../app/Models/Events/Model/ApplicationHandler.php:191
 #, fuzzy, php-format
 msgid "Application \"%s\" created."
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:193
+#: ../app/Models/Events/Model/ApplicationHandler.php:199
 #, fuzzy, php-format
 msgid "State of application \"%s\" changed."
 msgstr "Zoznam platieb"
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:239
+#: ../app/Models/Events/Model/ApplicationHandler.php:245
 #, php-format
 msgid ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
 msgstr ""
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:294
+#: ../app/Models/Events/Model/ApplicationHandler.php:300
 msgid "Error while saving the application."
 msgstr ""
 
@@ -1779,7 +1774,7 @@ msgid "This option is only available to secondary school students."
 msgstr ""
 
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:17
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:225
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:228
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:65
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:69
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:73
@@ -1804,7 +1799,7 @@ msgstr ""
 msgid "Camp invitation"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/EventRolePrinter.php:32
+#: ../app/Models/ValuePrinters/EventRolePrinter.php:26
 msgid "No role"
 msgstr ""
 
@@ -1912,12 +1907,12 @@ msgstr ""
 msgid "Submit cannot be revoked."
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/Models/Submits/SubmitHandlerFactory.php:136
+#: ../app/Models/Submits/SubmitHandlerFactory.php:135
 #, fuzzy
 msgid "Submit does not exist."
 msgstr "Ubytnovanie neexistuje"
 
-#: ../app/Models/Submits/SubmitHandlerFactory.php:147
+#: ../app/Models/Submits/SubmitHandlerFactory.php:146
 msgid "Access denied"
 msgstr ""
 
@@ -2002,9 +1997,9 @@ msgstr ""
 #: ../app/Components/Grids/ContestantsFromSchoolGrid.php:28
 #: ../app/Components/Grids/Events/DispatchGrid.php:46
 #: ../app/Components/Grids/Events/EventsGrid.php:46
-#: ../app/Components/Grids/Application/TeamListComponent.php:93
-#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:94
-#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:57
+#: ../app/Components/Grids/Application/TeamListComponent.php:92
+#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:93
+#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:56
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:67
 #: ../app/Components/Grids/Payment/PaymentList.php:106
 #: ../app/Components/Grids/EmailsGrid.php:40
@@ -2056,31 +2051,31 @@ msgstr ""
 msgid "There was an error during the deletion of task %s."
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:78
+#: ../app/Components/Grids/Application/TeamListComponent.php:77
 msgid "Members"
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:86
+#: ../app/Components/Grids/Application/TeamListComponent.php:85
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:75
 #, fuzzy
 msgid "Teachers"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:135
+#: ../app/Components/Grids/Application/TeamListComponent.php:131
 #: ../app/config/orm.neon.neon2php:832
 msgid "Team name"
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:137
+#: ../app/Components/Grids/Application/TeamListComponent.php:133
 msgid "Works as %name%, characters \"%\" will be added automatically."
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:139
+#: ../app/Components/Grids/Application/TeamListComponent.php:135
 #: ../app/config/orm.neon.neon2php:784
 msgid "Team Id"
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:144
+#: ../app/Components/Grids/Application/TeamListComponent.php:140
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:10
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:14
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:18
@@ -2091,37 +2086,37 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:144
+#: ../app/Components/Grids/Application/TeamListComponent.php:140
 #, fuzzy
 msgid "Select category"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:150
+#: ../app/Components/Grids/Application/TeamListComponent.php:146
 #, fuzzy
 msgid "Game lang"
 msgstr "Meno"
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:150
+#: ../app/Components/Grids/Application/TeamListComponent.php:146
 #, fuzzy
 msgid "Select language"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:156
-#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:70
+#: ../app/Components/Grids/Application/TeamListComponent.php:152
+#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:66
 #: ../app/config/orm.neon.neon2php:70 ../app/config/orm.neon.neon2php:171
 #: ../app/config/orm.neon.neon2php:357 ../app/config/orm.neon.neon2php:721
 #: ../app/config/orm.neon.neon2php:787 ../app/config/orm.neon.neon2php:1031
 msgid "State"
 msgstr ""
 
-#: ../app/Components/Grids/Application/TeamListComponent.php:156
-#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:108
-#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:70
+#: ../app/Components/Grids/Application/TeamListComponent.php:152
+#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:104
+#: ../app/Components/Grids/Application/TeamApplicationsGrid.php:66
 #, fuzzy
 msgid "Select state"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:108
+#: ../app/Components/Grids/Application/SingleApplicationsGrid.php:104
 msgid "Status"
 msgstr ""
 
@@ -2164,7 +2159,7 @@ msgstr ""
 #: ../app/Models/Transitions/Callbacks/Payment/items.latte.latte2php:27
 #: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:350
 #: ../app/config/orm.neon.neon2php:1045
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
+#: ../app/Components/Forms/Controls/Schedule/Components/PriceLabel.tsx.tsx2php:15
 msgid "Price"
 msgstr ""
 
@@ -2246,7 +2241,7 @@ msgstr ""
 msgid "(when different from delivery address)"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:222
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:225
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
@@ -2365,28 +2360,36 @@ msgstr ""
 msgid "Hidden value"
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:46
-#, fuzzy
-msgid "Schedule group does not exists"
-msgstr "Ubytnovanie neexistuje"
-
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:60
-#, fuzzy, php-format
-msgid "Item with Id %s does not exists"
-msgstr "Ubytnovanie neexistuje"
-
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:65
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:73
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:91
-#, fuzzy
-msgid "Registration is not open at this time"
-msgstr "Registrácia"
-
-#: ../app/Components/Forms/Controls/Schedule/Handler.php:79
+#: ../app/Components/Forms/Controls/Schedule/FullCapacityException.php:17
 #, php-format
 msgid ""
 "The person %s could not be registered for \"%s\" because of full capacity."
 msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/ExistingPaymentException.php:13
+msgid "Item has a assigned a payment"
+msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:44
+#, fuzzy
+msgid "Schedule group does not exists"
+msgstr "Ubytnovanie neexistuje"
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:61
+#, fuzzy, php-format
+msgid "Item with Id %s does not exists"
+msgstr "Ubytnovanie neexistuje"
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:66
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:83
+#, fuzzy
+msgid "Modification of this item is not allowed at this time"
+msgstr "Registrácia"
+
+#: ../app/Components/Forms/Controls/Schedule/Handler.php:72
+#, fuzzy
+msgid "Given item is not available at this time"
+msgstr "Registrácia"
 
 #: ../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:143
 #, php-format
@@ -2558,15 +2561,15 @@ msgstr ""
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:90
+#: ../app/Components/EntityForms/PaymentFormComponent.php:91
 msgid "Please select currency"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:138
+#: ../app/Components/EntityForms/PaymentFormComponent.php:139
 msgid "Payment has been created."
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:139
+#: ../app/Components/EntityForms/PaymentFormComponent.php:140
 msgid "Payment has been updated."
 msgstr ""
 
@@ -2696,6 +2699,10 @@ msgstr ""
 msgid "Person has been created"
 msgstr ""
 
+#: ../app/Components/EntityForms/EntityFormComponent.php:57
+msgid "Error in the form"
+msgstr ""
+
 #: ../app/Components/EntityForms/EntityFormComponent.php:63
 #: ../app/Modules/OrgModule/templates/Contestant/list.latte.latte2php:2
 #: ../app/config/payments/payment17.neon.neon2php:39
@@ -2710,76 +2717,76 @@ msgstr ""
 msgid "Group \"%s\" has been saved."
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:81
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:82
 msgid "Query has been edited"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:81
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:82
 msgid "Query has been created"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:93
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:94
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:28
 #: ../app/config/orm.neon.neon2php:957
 msgid "SQL"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:96
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:97
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:9
 #: ../app/config/orm.neon.neon2php:92
 msgid "Parameters"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:99
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:100
 msgid "Metadata"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:104
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:56
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:105
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:55
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:34
 msgid "Execute"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:161
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:162
 #: ../app/Components/Grids/Components/filter.latte.latte2php:10
 #, fuzzy
 msgid "Remove parameter"
 msgstr "Nová platba"
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:167
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:168
 msgid "Add parameter"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:180
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:181
 msgid "Parameter name"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:181
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:182
 msgid "Parameter name is required."
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:182
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:183
 msgid "Parameter name is too long."
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:186
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:187
 msgid ""
 "The name of the parameter can only contain lowercase \n"
 "                letters of the english alphabet, numbers, and an underscore."
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:192
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:193
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:13
 #: ../app/config/orm.neon.neon2php:967
 msgid "Description"
 msgstr ""
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:194
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:195
 #, fuzzy
 msgid "Data type"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/EntityForms/StoredQueryFormComponent.php:201
+#: ../app/Components/EntityForms/StoredQueryFormComponent.php:202
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:14
 msgid "Default value"
 msgstr ""
@@ -2833,12 +2840,12 @@ msgstr ""
 msgid "Schedule group Id"
 msgstr ""
 
-#: ../app/Components/EntityForms/EventFormComponent.php:77
+#: ../app/Components/EntityForms/EventFormComponent.php:74
 #, php-format
 msgid "Event \"%s\" has been saved."
 msgstr ""
 
-#: ../app/Components/EntityForms/EventFormComponent.php:105
+#: ../app/Components/EntityForms/EventFormComponent.php:102
 msgid "Parameters do not fulfill the Neon scheme"
 msgstr ""
 
@@ -2995,7 +3002,7 @@ msgstr ""
 msgid "There was an error during the task deletion."
 msgstr ""
 
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:144
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:142
 msgid "Parameter %label is numeric."
 msgstr ""
 
@@ -4443,7 +4450,7 @@ msgid "Total capacity"
 msgstr "Kapacita"
 
 #: ../app/config/orm.neon.neon2php:933
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:18
+#: ../app/Components/Forms/Controls/Schedule/Components/CapacityLabel.tsx.tsx2php:18
 #, fuzzy
 msgid "Free capacity"
 msgstr "Kapacita"
@@ -5497,7 +5504,7 @@ msgstr ""
 msgid "for free"
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Schedule/ScheduleField.tsx.tsx2php:44
+#: ../app/Components/Forms/Controls/Schedule/ScheduleField.tsx.tsx2php:43
 #, fuzzy
 msgid "No items found."
 msgstr "Časový vývoj prihlášiek"
@@ -5713,6 +5720,10 @@ msgstr ""
 #: ../app/Components/Controls/AjaxSubmit/middleware.ts.ts2php:23
 msgid "Unsupported format"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Registration is not open at this time"
+#~ msgstr "Registrácia"
 
 #, fuzzy
 #~ msgid "Accommodation for %s from %s to %s in %s"

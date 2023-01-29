@@ -32,7 +32,7 @@ class ScheduleGroupField extends SelectBox
                 ? ($item->name_cs . ' - ' . $item->description_cs)
                 : ($item->name_en . ' - ' . $item->description_en);
         }
-        $this->setItems($items)->setPrompt('--select--');
+        $this->setItems($items)->setPrompt($lang === 'cs' ? '-- nevybráno --' : '-- not selected --');
     }
 
     protected function getData(): array
