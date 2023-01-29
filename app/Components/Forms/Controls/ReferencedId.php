@@ -169,7 +169,7 @@ class ReferencedId extends HiddenField
                     /** @var ScheduleGroupField $component */
                     $component = $this->referencedContainer->getComponent('person_schedule')
                         ->getComponent($group->schedule_group_type->value)
-                        ->getComponent($group->schedule_group_id);
+                        ->getComponent((string)$group->schedule_group_id);
                     $component->addError($exception->getMessage());
                 }
                 $this->addError($exception->getMessage());
