@@ -127,9 +127,6 @@ class TeamListComponent extends FilterList
         return $query;
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function configureForm(Form $form): void
     {
         $form->addText('name', _('Team name'))->setOption(

@@ -22,9 +22,6 @@ class TeamState extends FakeStringEnum implements EnumColumn
     public const CANCELLED = 'cancelled';
     public const INIT = 'init'; // virtual state for correct ORM
 
-    /**
-     * @throws NotImplementedException
-     */
     public function badge(): Html
     {
         $badge = '';
