@@ -9,6 +9,9 @@ export interface ModelScheduleGroup {
     eventId: number;
     start: string;
     end: string;
+    registrationBegin: string | null;
+    registrationEnd: string | null;
+    modificationEnd: string | null;
 }
 
 export type ScheduleGroupType = 'accommodation' | 'dsef-group';

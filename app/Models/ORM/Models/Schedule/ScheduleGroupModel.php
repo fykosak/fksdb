@@ -56,6 +56,9 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
+            'registrationBegin' => $this->getRegistrationBegin(),
+            'registrationEnd' => $this->getRegistrationEnd(),
+            'modificationEnd' => $this->getModificationEnd(),
             'label' => $this->getName(),
             'name' => $this->getName(),
             'eventId' => $this->event_id,
@@ -71,16 +74,31 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
 
     public function canCreate(): bool
     {
-        $end = $this->registration_end ?? $this->event->registration_end;
-        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        $begin = $this->getRegistrationBegin();
+        $end = $this->getRegistrationEnd();
         return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
     }
 
     public function canEdit(): bool
     {
-        $end = $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
-        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        $begin = $this->getRegistrationBegin();
+        $end = $this->getModificationEnd();
         return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+    }
+
+    public function getRegistrationBegin(): ?\DateTimeInterface
+    {
+        return $this->registration_begin ?? $this->event->registration_begin;
+    }
+
+    public function getRegistrationEnd(): ?\DateTimeInterface
+    {
+        return $this->registration_end ?? $this->event->registration_end;
+    }
+
+    public function getModificationEnd(): ?\DateTimeInterface
+    {
+        return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
     }
 
     /**

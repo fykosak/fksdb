@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Utils\DateTime;
 
 class ScheduleGroupField extends SelectBox
 {
@@ -22,8 +21,12 @@ class ScheduleGroupField extends SelectBox
      */
     public function __construct(ScheduleGroupModel $group, string $lang)
     {
-        $regend = $group->registration_end ?: $group->event->registration_end; //TODO: change to better format
-        parent::__construct($lang === 'cs' ? $group->name_cs . ' - konec registrace: ' . $regend : $group->name_en . ' - end of registration: ' . $regend);
+        $regEnd = $group->getRegistrationEnd();
+        parent::__construct(
+            $lang === 'cs'
+                ? $group->name_cs . ' - konec registrace: ' . $regEnd
+                : $group->name_en . ' - end of registration: ' . $regEnd
+        );
         $this->group = $group;
         $this->registerFrontend('schedule.group-container');
         $this->appendProperty();
