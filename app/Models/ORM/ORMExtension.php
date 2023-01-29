@@ -368,8 +368,7 @@ class ORMExtension extends Extension
         string $fieldName,
         string $factoryClassName,
         array $field
-    ): void
-    {
+    ): void {
         $factory->setFactory($factoryClassName);
         $factory->addSetup('setUp', [
             $tableName,
