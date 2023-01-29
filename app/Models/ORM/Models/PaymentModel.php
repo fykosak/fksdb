@@ -61,16 +61,6 @@ class PaymentModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getPaymentUId(): string
-    {
-        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
-    }
-
-    public function getPaymentId(): string
-    {
-        return \sprintf('%d', $this->payment_id);
-    }
-
     public function canEdit(): bool
     {
         return $this->state->value == PaymentState::IN_PROGRESS;
@@ -113,7 +103,6 @@ class PaymentModel extends Model implements Resource
         return [
             'personId' => $this->person_id,
             'paymentId' => $this->payment_id,
-            'paymentUId' => $this->getPaymentUId(),
             'state' => $this->state->value,
             'price' => $this->price,
             'currency' => $this->currency,
