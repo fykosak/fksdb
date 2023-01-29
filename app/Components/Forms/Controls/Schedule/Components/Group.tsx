@@ -16,13 +16,13 @@ export default class Group extends React.Component<OwnProps> {
     public render() {
         const {group, params} = this.props;
         return <div className="ms-3">
-            <h4 className="mb-3">
+            <h5 className="mb-3">
                 {group.name[translator.getCurrentLocale()]}
                 {params.groupTime && (
                     <small className="ms-3 text-muted">
                         <TimeDisplay date={group.start}/> - <TimeDisplay date={group.end}/>
                     </small>)}
-            </h4>
+            </h5>
             {(group.registrationEnd || group.modificationEnd) &&
                 <div className="alert alert-info">
                     {group.registrationEnd && <p>

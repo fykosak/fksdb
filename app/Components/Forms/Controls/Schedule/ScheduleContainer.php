@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 class ScheduleContainer extends ContainerWithOptions
 {
@@ -33,21 +32,13 @@ class ScheduleContainer extends ContainerWithOptions
         $this->event = $event;
         $this->type = $type;
         $this->required = $required;
-        $this->configure();
-    }
 
-    public function inject(GettextTranslator $translator): void
-    {
-        $this->translator = $translator;
-    }
-
-    /**
-     * @throws BadRequestException
-     */
-    private function configure(): void
-    {
         // TODO order here!!!
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type->value);
+
+        if ($groups->count('*') > 1) {
+            $this->setOption('label', $type->label());
+        }
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
             $field = new ScheduleGroupField($group, (string)$this->translator->lang);
@@ -57,5 +48,10 @@ class ScheduleContainer extends ContainerWithOptions
                 (string)$group->schedule_group_id
             );
         }
+    }
+
+    public function inject(GettextTranslator $translator): void
+    {
+        $this->translator = $translator;
     }
 }
