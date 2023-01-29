@@ -13,8 +13,8 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -80,7 +80,7 @@ class ExportPresenter extends BasePresenter
      */
     public function titleExecute(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle');
+        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fa fa-play-circle');
     }
 
     /**
