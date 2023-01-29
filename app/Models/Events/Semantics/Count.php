@@ -34,7 +34,7 @@ class Count
     {
         $terms = [];
         foreach ($this->states as $term) {
-            $terms[] = (string)$term;
+            $terms[] = $term;
         }
         $result = implode(', ', $terms);
         return "count($result)";

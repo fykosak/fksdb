@@ -92,6 +92,9 @@ class ApplicationHandler
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function onlyExecute(BaseHolder $holder, string $explicitTransitionName): void
     {
         try {
@@ -115,6 +118,9 @@ class ApplicationHandler
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     private function innerStoreAndExecute(
         BaseHolder $holder,
         ?ArrayHash $data,

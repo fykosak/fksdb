@@ -30,7 +30,7 @@ import { translator } from '@translator/translator';
 
 const renderer = new Renderer();
 
-renderer.hashMapLoader.register('event.schedule', eventSchedule);
+renderer.hashMapLoader.register('schedule.group-container', eventSchedule);
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
 renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable);

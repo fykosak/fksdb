@@ -6,7 +6,7 @@
         {if $container->getOption('visible', true)}
             {snippet 'group-' . $container->getOption('id')}
                 <div n:attr="(expand) $attrs">
-                    {var $className = (count($container->getComponents()) > 1 || $container->getOption('label'))?'col-12 bd-callout bd-callout-priamry':''}
+                    {var $className = $container->getOption('label')?'col-12 bd-callout bd-callout-priamry':''}
                     <fieldset class="{$className}" data-level={$level}>
                         {if $container->getOption('label')}
                             <h4 class="mb-3">{$container->getOption('label')}</h4>

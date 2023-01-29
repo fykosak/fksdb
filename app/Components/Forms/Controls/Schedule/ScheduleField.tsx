@@ -1,20 +1,19 @@
 import { translator } from '@translator/translator';
-import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
 import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
-import InputConnector from 'vendor/fykosak/nette-frontend-component/src/InputConnector/InputConnector';
+import InputConnector2 from './InputConnector2';
 import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './style.scss';
 import { mapRegisterCallback } from 'vendor/fykosak/nette-frontend-component/src/Loader/HashMapLoader';
+import Group from 'FKSDB/Components/Forms/Controls/Schedule/Components/Group';
 
 interface OwnProps {
     scheduleDef: {
-        groups: ModelScheduleGroup[];
+        group: ModelScheduleGroup;
         options: Params;
     };
-    input: HTMLInputElement;
+    input: HTMLInputElement | HTMLSelectElement;
 }
 
 export interface Params {
@@ -28,33 +27,32 @@ export interface Params {
 class ScheduleField extends React.Component<OwnProps> {
     public componentDidMount() {
         this.props.input.style.display = 'none';
+        const label = this.props.input.parentElement.getElementsByTagName('label')[0];
+        if (label && label instanceof HTMLLabelElement) {
+            label.style.display = 'none';
+        }
     }
 
     public render() {
+        const {group, options} = this.props.scheduleDef;
         return <StoreCreator app={app}>
             <>
-                <InputConnector input={this.props.input}/>
-                {this.getComponentByMode()}
+                <InputConnector2 input={this.props.input}/>
+                {group
+                    ? <Group group={group} params={options}/>
+                    : <span className="text-muted">{translator.getText('No items found.')}</span>
+                }
             </>
         </StoreCreator>;
-    }
-
-    private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.groups.length === 0) {
-            return <span className="text text-muted">{translator.getText('No items found.')}</span>;
-        }
-        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
     }
 }
 
 export const eventSchedule: mapRegisterCallback = (element, reactId, rawData) => {
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
-    if (!(element instanceof HTMLInputElement)) {
-        return false;
+    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+        ReactDOM.render(<ScheduleField scheduleDef={JSON.parse(rawData)} input={element}/>, container);
+        return true;
     }
-
-    ReactDOM.render(<ScheduleField scheduleDef={JSON.parse(rawData)} input={element}/>, container);
-
-    return true;
+    return false;
 };

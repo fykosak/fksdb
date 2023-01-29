@@ -31,7 +31,7 @@ class SchoolFactory
 
     public function createContainer(): ModelContainer
     {
-        $container = new ModelContainer();
+        $container = new ModelContainer($this->container);
         $container->addText('name_full', _('Full name'))
             ->addRule(Form::MAX_LENGTH, _('Max length reached'), 255)
             ->setOption('description', _('Full name of the school.'));

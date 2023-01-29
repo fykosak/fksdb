@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -92,9 +92,9 @@ class OrgFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createOrgContainer(): ModelContainer
+    private function createOrgContainer(): ContainerWithOptions
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
 
         foreach (['since', 'until'] as $field) {
             $control = $this->singleReflectionFormFactory->createField(

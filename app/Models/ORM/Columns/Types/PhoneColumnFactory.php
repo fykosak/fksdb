@@ -22,20 +22,12 @@ use Nette\Utils\Html;
 
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 {
-
     protected PhoneNumberFactory $phoneNumberFactory;
-
-    private bool $isWriteOnly = true;
 
     public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory)
     {
         $this->phoneNumberFactory = $phoneNumberFactory;
         parent::__construct($metaDataFactory);
-    }
-
-    public function setWriteOnly(bool $isWriteOnly): void
-    {
-        $this->isWriteOnly = $isWriteOnly;
     }
 
     protected function createFormControl(...$args): BaseControl
@@ -61,7 +53,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
     final public function runTest(Logger $logger, Model $model): void
     {
 
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return;
         }
@@ -82,7 +74,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         } else {

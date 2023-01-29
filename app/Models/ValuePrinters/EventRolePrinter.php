@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
-    EventOrgRole,
-    EventRole,
-    FyziklaniTeamTeacherRole,
-    FyziklaniTeamMemberRole,
-    ParticipantRole
+use FKSDB\Models\Authorization\EventRole\{EventRole
 };
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;

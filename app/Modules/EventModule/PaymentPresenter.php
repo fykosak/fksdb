@@ -55,7 +55,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()),
+            \sprintf(_('Edit payment #%s'), $this->getEntity()->payment_id),
             'fa fa-credit-card'
         );
     }
@@ -72,7 +72,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->getPaymentId()),
+            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id),
             'fa fa-credit-card',
         );
     }
@@ -166,7 +166,6 @@ class PaymentPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $payment = $this->getEntity();
-        $this->template->items = $this->priceCalculator->getGridItems($payment);
         $this->template->model = $payment;
     }
 
@@ -241,7 +240,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent

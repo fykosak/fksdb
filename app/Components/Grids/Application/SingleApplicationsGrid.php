@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
@@ -96,9 +95,6 @@ class SingleApplicationsGrid extends FilterGrid
         $this->addHolderColumns();
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function configureForm(Form $form): void
     {
         $items = [];

@@ -13,11 +13,17 @@ class Language extends FakeStringEnum
     public const CS = 'cs';
     public const EN = 'en';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         switch ($this->value) {
@@ -29,6 +35,9 @@ class Language extends FakeStringEnum
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function locales(): string
     {
         switch ($this->value) {

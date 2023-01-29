@@ -59,7 +59,7 @@ class PaymentColumnFactory extends ColumnFactory
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
         $text = $html->getText();
-        $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
+        $html->setText('#' . $model->payment_id . ' - ' . $text);
         return $html;
     }
 

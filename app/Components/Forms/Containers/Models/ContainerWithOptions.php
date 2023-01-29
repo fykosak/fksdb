@@ -14,14 +14,12 @@ use Nette\Forms\Controls\BaseControl;
 class ContainerWithOptions extends Container
 {
     private array $options = [];
-    protected ?DIContainer $container;
+    protected DIContainer $container;
 
-    public function __construct(?DIContainer $container = null)
+    public function __construct(DIContainer $container = null)
     {
         $this->container = $container;
-        if ($container) {
-            $container->callInjects($this);
-        }
+        $container->callInjects($this);
     }
 
     /**

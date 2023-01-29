@@ -17,7 +17,7 @@ class StringColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 
     protected function createFormControl(...$args): BaseControl

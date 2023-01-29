@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Payment;
 
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;

@@ -21,7 +21,7 @@ abstract class AbstractDateTimeColumnFactory extends ColumnFactory
 
     final protected function createHtmlValue(Model $model): Html
     {
-        return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->getModelAccessKey()});
+        return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->modelAccessKey});
     }
 
     abstract protected function getDefaultFormat(): string;

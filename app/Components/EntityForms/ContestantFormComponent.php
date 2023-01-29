@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -44,7 +44,7 @@ class ContestantFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer($this->container);
+        $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->contestYear,
             $this->isCreating(),

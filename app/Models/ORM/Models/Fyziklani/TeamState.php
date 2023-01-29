@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -22,9 +21,6 @@ class TeamState extends FakeStringEnum implements EnumColumn
     public const CANCELLED = 'cancelled';
     public const INIT = 'init'; // virtual state for correct ORM
 
-    /**
-     * @throws NotImplementedException
-     */
     public function badge(): Html
     {
         $badge = '';
