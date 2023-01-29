@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\PaymentState;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read PersonModel person

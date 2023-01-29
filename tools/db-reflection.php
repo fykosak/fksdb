@@ -17,6 +17,6 @@ foreach ($factories as $key => $factoryName) {
     /** @var ColumnFactory $factory */
     $factory = $container->getService($factoryName);
     [, $table, $field] = explode('.', $factoryName);
-    echo '| ' . $table . ' | ' . $field . ' | ' . $factory->getPermission()->read . ' | ' . $factory->getPermission()->write . ' |' . "\n";
+    echo '| ' . $table . ' | ' . $field . ' | ' . $factory->permission->read . ' | ' . $factory->permission->write . ' |' . "\n";
 }
 

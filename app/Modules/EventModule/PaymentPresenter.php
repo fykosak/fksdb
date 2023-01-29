@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -56,7 +55,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()),
+            \sprintf(_('Edit payment #%s'), $this->getEntity()->payment_id),
             'fa fa-credit-card'
         );
     }
@@ -73,7 +72,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->getPaymentId()),
+            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id),
             'fa fa-credit-card',
         );
     }
@@ -175,7 +174,6 @@ class PaymentPresenter extends BasePresenter
         try {
             $this->getMachine();
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
             return false;
         }
         return true;
