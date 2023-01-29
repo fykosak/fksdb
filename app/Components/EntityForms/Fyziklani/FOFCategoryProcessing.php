@@ -40,7 +40,7 @@ class FOFCategoryProcessing extends FormProcessing
         foreach ($members as $member) {
             $history = $member->getHistory($event->getContestYear()->ac_year);
             if ($history->study_year >= 1 && $history->study_year <= 4) {
-                $year[(int)$history->study_year] += 1;
+                $year[$history->study_year] += 1;
             } else {
                 $year[0] += 1; // ZŠ
             }

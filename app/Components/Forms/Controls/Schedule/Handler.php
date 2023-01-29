@@ -30,6 +30,9 @@ class Handler
 
     /**
      * @throws ScheduleException
+     * @throws ExistingPaymentException
+     * @throws FullCapacityException
+     * @throws \PDOException
      */
     public function handle(array $data, PersonModel $person, EventModel $event): void
     {

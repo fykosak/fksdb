@@ -14,12 +14,7 @@ use Nette\Utils\Html;
 
 class FloatColumnFactory extends ColumnFactory
 {
-
-    private string $nullValue = 'notSet';
-
-    private ?string $prefix = null;
-
-    private ?string $suffix = null;
+    use NumberFactoryTrait;
 
     private int $decimalDigitsCount;
 
@@ -31,23 +26,8 @@ class FloatColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         return (new NumberPrinter($this->prefix, $this->suffix, $this->decimalDigitsCount, $this->nullValue))(
-            $model->{$this->getModelAccessKey()}
+            $model->{$this->modelAccessKey}
         );
-    }
-
-    public function setNullValueFormat(string $nullValue): void
-    {
-        $this->nullValue = $nullValue;
-    }
-
-    public function setPrefix(string $prefix): void
-    {
-        $this->prefix = $prefix;
-    }
-
-    public function setSuffix(string $suffix): void
-    {
-        $this->suffix = $suffix;
     }
 
     protected function createFormControl(...$args): BaseControl

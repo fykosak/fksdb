@@ -74,8 +74,6 @@ class StatsWebModel extends WebModel
                 $taskNode->appendChild($node);
             }
         }
-
-
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
