@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
@@ -20,7 +19,6 @@ class SchedulePaymentService extends Service
     /**
      * @throws DuplicatePaymentException
      * @throws EmptyDataException
-     * @throws NotImplementedException
      * @throws StorageException
      * @throws ModelException
      */

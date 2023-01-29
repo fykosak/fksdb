@@ -58,9 +58,6 @@ class TeamApplicationsGrid extends FilterGrid
         //$this->addCSVDownloadButton();
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function configureForm(Form $form): void
     {
         $items = [];

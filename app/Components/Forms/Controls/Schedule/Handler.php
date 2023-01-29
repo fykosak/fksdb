@@ -29,7 +29,6 @@ class Handler
     /**
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws NotImplementedException
      */
     public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event): void
     {
@@ -41,7 +40,6 @@ class Handler
     /**
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws NotImplementedException
      * @throws \PDOException
      * @throws ModelException
      */

@@ -7,7 +7,6 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
@@ -27,18 +26,21 @@ class PersonPaymentContainer extends ContainerWithOptions
     private PaymentMachine $machine;
     private User $user;
     private bool $isOrg;
+    private ?PaymentModel $model;
 
     /**
-     * @throws NotImplementedException
+     * @throws \Exception
      */
     public function __construct(
         Container $container,
         PaymentMachine $machine,
-        bool $isOrg
+        bool $isOrg,
+        ?PaymentModel $model
     ) {
         parent::__construct($container);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
+        $this->model = $model;
         $this->configure();
     }
 
@@ -49,7 +51,6 @@ class PersonPaymentContainer extends ContainerWithOptions
     }
 
     /**
-     * @throws NotImplementedException
      * @throws \Exception
      */
     protected function configure(): void
@@ -104,7 +105,11 @@ class PersonPaymentContainer extends ContainerWithOptions
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'
             );
-            if ($model->hasActivePayment()) {
+            if (
+                $model->getPayment()
+                && isset($this->model)
+                && $model->getPayment()->payment_id !== $this->model->payment_id
+            ) {
                 $checkBox->setDisabled();
                 $checkBox->setOption(
                     'description',
@@ -122,11 +127,8 @@ class PersonPaymentContainer extends ContainerWithOptions
     {
         /** @var SchedulePaymentModel $row */
         foreach ($payment->getSchedulePayment() as $row) {
-            $key = 'person' . $row->person_schedule->person_id;
             /** @var Checkbox $component */
-            $component = $this[$key][$row->person_schedule_id];
-            $component->setDisabled(false);
-            $component->setOption('description', null);
+            $component = $this['person' . $row->person_schedule->person_id][$row->person_schedule_id];
             $component->setDefaultValue(true);
         }
     }
