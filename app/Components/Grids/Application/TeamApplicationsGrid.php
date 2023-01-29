@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use Nette\Database\Table\Selection;

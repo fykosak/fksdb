@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\DI\Container;
 
@@ -17,6 +19,7 @@ foreach ($factories as $key => $factoryName) {
     /** @var ColumnFactory $factory */
     $factory = $container->getService($factoryName);
     [, $table, $field] = explode('.', $factoryName);
-    echo '| ' . $table . ' | ' . $field . ' | ' . $factory->permission->read . ' | ' . $factory->permission->write . ' |' . "\n";
+    echo '| ' . $table . ' | ' . $field . ' | ' . $factory->permission->read . ' | ' . $factory->permission->write .
+        ' |' . "\n";
 }
 

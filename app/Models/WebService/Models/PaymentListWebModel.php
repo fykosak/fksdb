@@ -19,6 +19,9 @@ class PaymentListWebModel extends WebModel
         $this->paymentService = $paymentService;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getJsonResponse(array $params): array
     {
         $data = [];

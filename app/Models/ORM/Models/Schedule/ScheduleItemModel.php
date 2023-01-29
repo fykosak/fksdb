@@ -121,6 +121,9 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         return $this->getLabel();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function __toArray(): array
     {
         return [
@@ -136,6 +139,9 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         ];
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('scheduleItem');

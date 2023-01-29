@@ -21,6 +21,7 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\Logger;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
@@ -35,6 +36,7 @@ class BaseHolder implements ModelHolder
     private $modifiable;
 
     private ExpressionEvaluator $evaluator;
+    private Container $container;
     public EventModel $event;
     public EventParticipantService $service;
     private ?EventParticipantModel $model;
@@ -49,6 +51,11 @@ class BaseHolder implements ModelHolder
     private array $formAdjustments = [];
     /** @var Processing[] */
     private array $processings = [];
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
@@ -184,7 +191,7 @@ class BaseHolder implements ModelHolder
 
     public function createFormContainer(): ContainerWithOptions
     {
-        $container = new ContainerWithOptions();
+        $container = new ContainerWithOptions($this->container);
         $container->setOption('label', $this->label);
 
         foreach ($this->fields as $name => $field) {

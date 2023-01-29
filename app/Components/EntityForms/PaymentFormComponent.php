@@ -75,6 +75,7 @@ class PaymentFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      * @throws NotImplementedException
+     * @throws \Exception
      */
     protected function configureForm(Form $form): void
     {
@@ -122,7 +123,7 @@ class PaymentFormComponent extends EntityFormComponent
                 ],
                 $this->model
             );
-            $this->schedulePaymentService->storeItems((array)$values['items'], $model);
+            $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $this->machine->executeImplicitTransition($holder);

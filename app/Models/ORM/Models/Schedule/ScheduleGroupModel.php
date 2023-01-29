@@ -21,6 +21,9 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface end
  * @property-read string name_cs
  * @property-read string name_en
+ * @property-read \DateTimeInterface|null registration_begin
+ * @property-read \DateTimeInterface|null registration_end
+ * @property-read \DateTimeInterface|null modification_end
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
@@ -53,6 +56,9 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
+            'registrationBegin' => $this->getRegistrationBegin(),
+            'registrationEnd' => $this->getRegistrationEnd(),
+            'modificationEnd' => $this->getModificationEnd(),
             'label' => $this->getName(),
             'name' => $this->getName(),
             'eventId' => $this->event_id,
@@ -64,6 +70,35 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function canCreate(): bool
+    {
+        $begin = $this->getRegistrationBegin();
+        $end = $this->getRegistrationEnd();
+        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+    }
+
+    public function canEdit(): bool
+    {
+        $begin = $this->getRegistrationBegin();
+        $end = $this->getModificationEnd();
+        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+    }
+
+    public function getRegistrationBegin(): ?\DateTimeInterface
+    {
+        return $this->registration_begin ?? $this->event->registration_begin;
+    }
+
+    public function getRegistrationEnd(): ?\DateTimeInterface
+    {
+        return $this->registration_end ?? $this->event->registration_end;
+    }
+
+    public function getModificationEnd(): ?\DateTimeInterface
+    {
+        return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
     }
 
     /**
@@ -82,6 +117,9 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $value;
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('scheduleGroup');

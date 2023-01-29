@@ -27,10 +27,6 @@ class CumulativeResultsModel extends AbstractResultsModel
      */
     public function getDataColumns(ModelCategory $category): array
     {
-        if ($this->series === null) {
-            throw new InvalidStateException('Series not specified.');
-        }
-
         if (!isset($this->dataColumns[$category->value])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);

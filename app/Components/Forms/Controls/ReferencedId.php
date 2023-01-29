@@ -6,7 +6,8 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleGroupField;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;
@@ -162,7 +163,14 @@ class ReferencedId extends HiddenField
                 $this->addError($exception->getMessage());
                 $this->rollback();
                 throw $exception;
-            } catch (ExistingPaymentException $exception) {
+            } catch (ScheduleException $exception) {
+                if ($exception->group) {
+                    /** @var ScheduleGroupField $component */
+                    $component = $this->referencedContainer->getComponent('person_schedule')
+                        ->getComponent($exception->group->schedule_group_type->value)
+                        ->getComponent((string)$exception->group->schedule_group_id);
+                    $component->addError($exception->getMessage());
+                }
                 $this->addError($exception->getMessage());
                 $this->rollback();
                 throw $exception;

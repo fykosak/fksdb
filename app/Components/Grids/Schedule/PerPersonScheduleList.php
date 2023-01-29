@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\ListComponent;
 use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -42,6 +43,10 @@ class PerPersonScheduleList extends ListComponent
         );
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
     protected function configure(): void
     {
         $this->setTitle(new TemplateBaseItem($this->getContext(), '@person.full_name'));

@@ -49,6 +49,10 @@ class TeamTeacherMailCallback extends MailCallback
         return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';
     }
 
+    /**
+     * @param TeamHolder $holder
+     * @return string[]
+     */
     protected function getData(ModelHolder $holder): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {

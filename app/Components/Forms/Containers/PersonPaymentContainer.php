@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Security\User;
@@ -27,6 +28,8 @@ class PersonPaymentContainer extends ContainerWithOptions
     private User $user;
     private bool $isOrg;
     private ?PaymentModel $model;
+
+    private GettextTranslator $translator;
 
     /**
      * @throws \Exception
@@ -44,10 +47,14 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->configure();
     }
 
-    final public function injectServicePersonSchedule(User $user, PersonScheduleService $personScheduleService): void
-    {
+    final public function injectServicePersonSchedule(
+        User $user,
+        PersonScheduleService $personScheduleService,
+        GettextTranslator $translator
+    ): void {
         $this->user = $user;
         $this->personScheduleService = $personScheduleService;
+        $this->translator = $translator;
     }
 
     /**
@@ -92,7 +99,7 @@ class PersonPaymentContainer extends ContainerWithOptions
                 continue;
             }
             if ($model->person_id !== $lastPersonId) {
-                $container = new ModelContainer();
+                $container = new ContainerWithOptions($this->container);
                 $this->addComponent($container, 'person' . $model->person_id);
                 $container->setOption('label', $model->person->getFullName());
                 $lastPersonId = $model->person_id;
@@ -100,7 +107,7 @@ class PersonPaymentContainer extends ContainerWithOptions
 
             $checkBox = $container->addCheckbox(
                 (string)$model->person_schedule_id,
-                $model->getLabel()
+                $model->getLabel($this->translator->lang)
                 . ' ('
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'
