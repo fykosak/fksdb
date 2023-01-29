@@ -165,11 +165,10 @@ class ReferencedId extends HiddenField
                 throw $exception;
             } catch (ScheduleException $exception) {
                 if ($exception->group) {
-                    $group = $exception->group;
                     /** @var ScheduleGroupField $component */
                     $component = $this->referencedContainer->getComponent('person_schedule')
-                        ->getComponent($group->schedule_group_type->value)
-                        ->getComponent((string)$group->schedule_group_id);
+                        ->getComponent($exception->group->schedule_group_type->value)
+                        ->getComponent((string)$exception->group->schedule_group_id);
                     $component->addError($exception->getMessage());
                 }
                 $this->addError($exception->getMessage());
