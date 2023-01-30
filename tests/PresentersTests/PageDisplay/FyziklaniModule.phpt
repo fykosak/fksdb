@@ -29,7 +29,7 @@ class FyziklaniModule extends EventModuleTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(GameSetupService::class)->storeModel([
+        $this->container->getByType(GameSetupService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'game_start' => new \DateTime(),
             'result_display' => new \DateTime(),
@@ -63,6 +63,7 @@ class FyziklaniModule extends EventModuleTestCase
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new FyziklaniModule($container);
 $testCase->run();

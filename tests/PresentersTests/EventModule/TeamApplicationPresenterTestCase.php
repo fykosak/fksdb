@@ -30,7 +30,7 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $school = $this->getContainer()->getByType(SchoolService::class)->getTable()->fetch();
+        $school = $this->container->getByType(SchoolService::class)->getTable()->fetch();
         $this->mockApplication();
 
         $this->personA = $this->createPerson('A', 'A', ['email' => 'a@a.a'], ['login' => 'AAAAAA', 'hash' => 'AAAAAA']);
@@ -55,7 +55,7 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
 
     public function outDateEvent(): void
     {
-        $this->getContainer()->getByType(EventService::class)->storeModel([
+        $this->container->getByType(EventService::class)->storeModel([
             'registration_begin' => (new \DateTime())->sub(new \DateInterval('P2D')),
             'registration_end' => (new \DateTime())->sub(new \DateInterval('P1D')),
         ], $this->event);

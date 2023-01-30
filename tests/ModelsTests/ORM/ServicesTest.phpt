@@ -21,7 +21,7 @@ class ServicesTest extends DatabaseTestCase
     public function testServices(string $service): void
     {
         Assert::noError(function () use ($service) {
-            $this->getContainer()->getService($service);
+            $this->container->getService($service);
         });
     }
 
@@ -29,7 +29,7 @@ class ServicesTest extends DatabaseTestCase
     {
         return array_map(function (string $service): array {
             return [$service];
-        }, $this->getContainer()->findByType(Service::class));
+        }, $this->container->findByType(Service::class));
     }
 }
 

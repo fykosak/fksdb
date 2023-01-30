@@ -22,14 +22,14 @@ abstract class StalkingTestCase extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->person = $this->getContainer()->getByType(PersonService::class)->storeModel([
+        $this->person = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'born_family_name' => 'Travisový',
             'display_name' => 'Tester Githubový',
             'gender' => 'M',
         ]);
-        $this->getContainer()->getByType(PersonInfoService::class)->storeModel([
+        $this->container->getByType(PersonInfoService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'preferred_lang' => 'cs',
             'born' => '1989-11-17',
@@ -53,19 +53,19 @@ abstract class StalkingTestCase extends DatabaseTestCase
             'email_parent_d' => 'tester_d@example.com',
             'email_parent_m' => 'tester_m@example.com',
         ]);
-        $userPerson = $this->getContainer()->getByType(PersonService::class)->storeModel([
+        $userPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $login = $this->getContainer()->getByType(LoginService::class)->storeModel(
+        $login = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $userPerson->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->getContainer()->getByType(GrantService::class)->storeModel(
+        $this->container->getByType(GrantService::class)->storeModel(
             ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
         );
         $this->fixture = $this->createPresenter('Org:Person');
