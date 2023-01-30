@@ -77,6 +77,9 @@ class Handler
             if (!$item->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, $this->translator->lang);
             }
+            if (!$group->hasFreeCapacity()) {
+                throw new FullCapacityException($item, $person, $this->translator->lang);
+            }
             $this->service->storeModel(
                 ['person_id' => $person->person_id, 'schedule_item_id' => $value],
                 $personSchedule

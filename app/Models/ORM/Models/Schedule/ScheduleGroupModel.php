@@ -24,6 +24,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null registration_begin
  * @property-read \DateTimeInterface|null registration_end
  * @property-read \DateTimeInterface|null modification_end
+ * @property-read int|null capacity
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
@@ -41,14 +42,6 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'cs' => $this->name_cs,
             'en' => $this->name_en,
         ];
-    }
-
-    /**
-     * Label include datetime from schedule group
-     */
-    public function getLabel(): string
-    {
-        return $this->name_cs . '/' . $this->name_en;
     }
 
     public function __toArray(): array
@@ -86,6 +79,19 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
     }
 
+    public function hasFreeCapacity(): bool
+    {
+        if (is_null($this->capacity)) {
+            return true;
+        }
+        $sum = 0;
+        /** @var ScheduleItemModel $item */
+        foreach ($this->getItems() as $item) {
+            $sum = $item->getUsedCapacity();
+        }
+        return $this->capacity > $sum;
+    }
+
     public function getRegistrationBegin(): ?\DateTimeInterface
     {
         return $this->registration_begin ?? $this->event->registration_begin;
@@ -102,7 +108,6 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @param string $key
      * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */

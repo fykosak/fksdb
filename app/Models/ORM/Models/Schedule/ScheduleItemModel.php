@@ -76,17 +76,6 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /* ****** CAPACITY CALCULATION *******/
-
-    public function getCapacity(): ?int
-    {
-        return $this->capacity;
-    }
-
-    public function isUnlimitedCapacity(): bool
-    {
-        return is_null($this->getCapacity());
-    }
-
     public function getUsedCapacity(): int
     {
         return $this->getInterested()->count();
@@ -94,10 +83,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     public function hasFreeCapacity(): bool
     {
-        if ($this->isUnlimitedCapacity()) {
+        if (is_null($this->capacity)) {
             return true;
         }
-        return ($this->getCapacity() - $this->getUsedCapacity()) > 0;
+        return ($this->capacity - $this->getUsedCapacity()) > 0;
     }
 
     /**
@@ -105,20 +94,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
      */
     public function getAvailableCapacity(): int
     {
-        if ($this->isUnlimitedCapacity()) {
+        if (is_null($this->capacity)) {
             throw new \LogicException(_('Unlimited capacity'));
         }
-        return ($this->getCapacity() - $this->getUsedCapacity());
-    }
-
-    public function getLabel(): string
-    {
-        return $this->name_cs . '/' . $this->name_en;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getLabel();
+        return ($this->capacity - $this->getUsedCapacity());
     }
 
     /**
@@ -141,6 +120,7 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     /**
      * @throws \DOMException
+     * @throws \Exception
      */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {

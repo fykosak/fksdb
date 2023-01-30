@@ -1211,6 +1211,7 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
     `registration_begin`  DATETIME     NULL DEFAULT NULL,
     `registration_end`    DATETIME     NULL DEFAULT NULL,
     `modification_end`    DATETIME     NULL DEFAULT NULL,
+    `capacity`            INT          NULL DEFAULT NULL,
     CONSTRAINT `fk_schedule_group__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)

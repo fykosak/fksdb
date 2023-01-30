@@ -14,9 +14,9 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -48,7 +48,10 @@ class ScheduleItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()),
+            \sprintf(
+                _('Schedule item "%s"'),
+                $this->getLang() === 'cs' ? $this->getEntity()->name_cs : $this->getEntity()->name_en
+            ),
             'fas fa-clipboard'
         );
     }
@@ -65,7 +68,10 @@ class ScheduleItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()),
+            \sprintf(
+                _('Edit schedule item "%s"'),
+                $this->getLang() === 'cs' ? $this->getEntity()->name_cs : $this->getEntity()->name_en
+            ),
             'fas fa-pen'
         );
     }
