@@ -19,6 +19,9 @@ class HandlerTest extends DatabaseTestCase
     {
         parent::setUp();
         $this->handler = new Handler($this->container);
+        $this->person = $this->createPerson('Tester', 'testorovič');
+        $randomPerson1 =  $this->createPerson('Random', 'Random');
+        $randomPerson2 =  $this->createPerson('Random', 'Random');
     }
 
     public function testSave(): void
