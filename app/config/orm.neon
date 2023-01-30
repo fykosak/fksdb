@@ -884,6 +884,15 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
                 title: _('Group name')
+            registration_begin:
+                type: dateTime
+                title: _('Registration begin')
+            registration_end:
+                type: dateTime
+                title: _('Registration end')
+            modification_end:
+                type: dateTime
+                title: _('Modification end')
     schedule_item:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleItemService
         model: FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel
