@@ -77,6 +77,9 @@ class ScheduleGroupFormComponent extends EntityFormComponent
                 'start' => ['required' => true],
                 'end' => ['required' => true],
                 'schedule_group_type' => ['required' => true],
+                'registration_begin' => [],
+                'registration_end' => [],
+                'modification_end' => [],
             ]
         );
         $form->addComponent($container, self::CONTAINER);

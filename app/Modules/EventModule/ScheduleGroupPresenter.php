@@ -13,10 +13,10 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
-use Fykosak\Utils\UI\Navigation\NavItem;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\UI\Navigation\NavItem;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
@@ -48,6 +48,22 @@ class ScheduleGroupPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(null, _('Schedule items'), 'fas fa-clipboard-list');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getLabel()),
+            'fas fa-pen'
+        );
     }
 
     /**
