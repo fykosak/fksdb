@@ -18,8 +18,8 @@ class SpareMailCallback extends EventParticipantCallback
     {
         return [
             'subject' => 'Pozvánka na Letní tábor Výfuku',
-            'blind_carbon_copy' => 'Letní tábor Výfuku <vyfuk@vyfuk.mff.cuni.cz>',
-            'sender' => 'Výfuk <vyfuk@vyfuk.mff.cuni.cz>',
+            'blind_carbon_copy' => 'Letní tábor Výfuku <vyfuk@vyfuk.org>',
+            'sender' => 'Výfuk <vyfuk@vyfuk.org>',
         ];
     }
 }
