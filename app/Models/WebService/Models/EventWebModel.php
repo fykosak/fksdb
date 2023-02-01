@@ -267,6 +267,7 @@ class EventWebModel extends WebModel
             'email' => $member->person->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->school->name_abbrev : null,
+            'studyYear' => $history ? $history->study_year : null,
             'countryIso' => $history ? (
             ($school = $history->school) ? $school->address->country->alpha_2 : null
             ) : null,
