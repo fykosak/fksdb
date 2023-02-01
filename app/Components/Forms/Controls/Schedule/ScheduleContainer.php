@@ -33,8 +33,9 @@ class ScheduleContainer extends ContainerWithOptions
         $this->type = $type;
         $this->required = $required;
 
-        // TODO order here!!!
-        $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type->value);
+        $groups = $this->event->getScheduleGroups()
+                              ->where('schedule_group_type', $this->type->value)
+                              ->order('start, schedule_group_id');
 
         if ($groups->count('*') > 1) {
             $this->setOption('label', $type->label());
