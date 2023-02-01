@@ -64,7 +64,12 @@ class ScheduleGroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getLabel()),
+            \sprintf(
+                _('Edit schedule group "%s"'),
+                $this->getLang() === 'en'
+                    ? $this->getEntity()->name_en
+                    : $this->getEntity()->name_cs
+            ),
             'fas fa-pen'
         );
     }
