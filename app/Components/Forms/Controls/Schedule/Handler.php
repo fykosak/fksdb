@@ -73,13 +73,13 @@ class Handler
                 }
             } elseif (!$group->canCreate()) {
                 throw new ScheduleException($group, _('Given item is not available at this time'));
+            } elseif (!$group->hasFreeCapacity()) {
+                throw new FullCapacityException($item, $person, $this->translator->lang);
             }
             if (!$item->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, $this->translator->lang);
             }
-            if (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, $this->translator->lang);
-            }
+
             $this->service->storeModel(
                 ['person_id' => $person->person_id, 'schedule_item_id' => $value],
                 $personSchedule

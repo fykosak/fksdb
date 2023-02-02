@@ -84,7 +84,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         try {
             /** @var ScheduleItemModel $item */
             foreach ($this->getItems() as $item) {
-                $available = $item->getAvailableCapacity();
+                $available += $item->getAvailableCapacity();
             }
         } catch (\LogicException $exception) {
             return true;
