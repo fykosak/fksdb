@@ -24,7 +24,6 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null registration_begin
  * @property-read \DateTimeInterface|null registration_end
  * @property-read \DateTimeInterface|null modification_end
- * @property-read int|null capacity
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
@@ -81,15 +80,17 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
 
     public function hasFreeCapacity(): bool
     {
-        if (is_null($this->capacity)) {
+        $available = 0;
+        try {
+            /** @var ScheduleItemModel $item */
+            foreach ($this->getItems() as $item) {
+                $available = $item->getAvailableCapacity();
+            }
+        } catch (\LogicException $exception) {
             return true;
         }
-        $sum = 0;
-        /** @var ScheduleItemModel $item */
-        foreach ($this->getItems() as $item) {
-            $sum = $item->getUsedCapacity();
-        }
-        return $this->capacity > $sum;
+
+        return $available > 0;
     }
 
     public function getRegistrationBegin(): ?\DateTimeInterface
