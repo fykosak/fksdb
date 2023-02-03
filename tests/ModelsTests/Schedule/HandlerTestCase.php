@@ -25,6 +25,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
 
     protected PersonScheduleService $personScheduleService;
     protected ScheduleItemService $itemService;
+    protected ScheduleGroupService $groupService;
 
     protected function setUp(): void
     {
@@ -32,6 +33,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
         $this->container->getByType(GettextTranslator::class)->setLang('cs');
         $this->personScheduleService = $this->container->getByType(PersonScheduleService::class);
         $this->itemService = $this->container->getByType(ScheduleItemService::class);
+        $this->groupService = $this->container->getByType(ScheduleGroupService::class);
         $this->handler = new Handler($this->container);
         $this->tester = $this->createPerson('Tester', 'testorovič');
         $event = $this->container->getByType(EventService::class)->storeModel([
@@ -44,7 +46,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
             'registration_end' => (new \DateTime())->add(new \DateInterval('P1D')),
             'name' => 'Test FOL opened',
         ]);
-        $this->group = $this->container->getByType(ScheduleGroupService::class)->storeModel([
+        $this->group = $this->groupService->storeModel([
             'schedule_group_type' => 'accommodation',
             'name_cs' => 'name CS',
             'name_en' => 'name EN',

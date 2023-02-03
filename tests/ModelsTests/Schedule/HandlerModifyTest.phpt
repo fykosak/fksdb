@@ -9,6 +9,8 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
+use http\Encoding\Stream\Debrotli;
 use Tester\Assert;
 
 class HandlerModifyTest extends HandlerTestCase
@@ -53,6 +55,55 @@ class HandlerModifyTest extends HandlerTestCase
         $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id);
 
         Assert::equal(10, $this->item1->getInterested()->count('*'));
+        Assert::equal(3, $this->item3->getInterested()->count('*'));
+    }
+
+    public function testRegistrationEnd(): void
+    {
+        $this->groupService->storeModel(
+            ['registration_end' => (new \DateTime())->sub(new \DateInterval('P1D'))],
+            $this->group
+        );
+        $this->personToItem($this->item1, 2);
+        $this->personToItem($this->item2, 2);
+        $this->personToItem($this->item3, 2);
+
+        Assert::exception(
+            fn() => $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id),
+            ScheduleException::class
+        );
+        Assert::equal(2, $this->item3->getInterested()->count('*'));
+    }
+
+    public function testModificationEnd(): void
+    {
+        $this->groupService->storeModel(
+            ['modification_end' => (new \DateTime())->sub(new \DateInterval('P1D'))],
+            $this->group
+        );
+        $this->personToItem($this->item1, 2);
+        $this->personToItem($this->item2, 2);
+        $this->personToItem($this->item3, 2);
+        Assert::exception(
+            fn() => $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id),
+            ScheduleException::class
+        );
+        Assert::equal(2, $this->item3->getInterested()->count('*'));
+    }
+
+    public function testBetweenDates(): void
+    {
+        $this->groupService->storeModel(
+            [
+                'modification_end' => (new \DateTime())->add(new \DateInterval('P1D')),
+                'registration_end' => (new \DateTime())->sub(new \DateInterval('P1D')),
+            ],
+            $this->group
+        );
+        $this->personToItem($this->item1, 2);
+        $this->personToItem($this->item2, 2);
+        $this->personToItem($this->item3, 2);
+        $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id);
         Assert::equal(3, $this->item3->getInterested()->count('*'));
     }
 }
