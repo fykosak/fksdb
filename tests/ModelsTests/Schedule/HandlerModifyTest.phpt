@@ -10,7 +10,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
-use http\Encoding\Stream\Debrotli;
 use Tester\Assert;
 
 class HandlerModifyTest extends HandlerTestCase
