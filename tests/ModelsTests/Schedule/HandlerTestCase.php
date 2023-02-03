@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ModelsTests\Schedule;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
