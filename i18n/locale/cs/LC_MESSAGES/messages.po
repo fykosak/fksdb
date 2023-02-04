@@ -63,7 +63,7 @@ msgstr "H:i"
 
 #: i18n/../app/Models/ORM/Columns/Types/DateTime/DateTimeColumnFactory.php:19
 msgid "__date_time"
-msgstr "d. m. Y, H:i:s"
+msgstr "d. m. Y, H:i"
 
 #: i18n/../app/Models/ORM/Columns/Types/DateTime/DateColumnFactory.php:20
 msgid "__date"
