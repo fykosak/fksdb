@@ -108,6 +108,16 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
     }
 
+    public function hasStarted(): bool
+    {
+        return $this->start->getTimestamp() < time();
+    }
+
+    public function hasEnded(): bool
+    {
+        return $this->end->getTimestamp() < time();
+    }
+
     /**
      * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException

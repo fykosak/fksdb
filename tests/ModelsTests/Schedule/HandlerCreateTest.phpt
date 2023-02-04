@@ -32,6 +32,22 @@ class HandlerCreateTest extends HandlerTestCase
         );
     }
 
+    public function testCapacityTransaction(): void
+    {
+        $this->personToItem($this->item1, 4);
+        $person2 = $this->createPerson('test', 'test2');
+        $this->groupService->explorer->getConnection()->beginTransaction();
+        Assert::equal(4, $this->item1->getUsedCapacity());
+        $this->handler->saveGroup($person2, $this->group, $this->item1->schedule_item_id);
+
+        Assert::exception(
+            fn() => $this->handler->saveGroup($this->tester, $this->group, $this->item1->schedule_item_id),
+            FullCapacityException::class
+        );
+        Assert::equal(5, $this->item1->getUsedCapacity());
+        $this->groupService->explorer->getConnection()->commit();
+    }
+
     public function testOverBook(): void
     {
         $this->personToItem($this->item1, 10);

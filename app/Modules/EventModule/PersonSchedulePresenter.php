@@ -18,6 +18,17 @@ class PersonSchedulePresenter extends BasePresenter
         return new PageTitle(null, _('Schedule per person'), 'fas fa-list');
     }
 
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('My schedule'), 'fas fa-list');
+    }
+
+    public function renderDefault(): void
+    {
+        $this->template->event = $this->getEvent();
+        $this->template->person = $this->getLoggedPerson();
+    }
+
     /**
      * @throws EventNotFoundException
      */

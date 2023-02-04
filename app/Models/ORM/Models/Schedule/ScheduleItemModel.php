@@ -78,7 +78,7 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     /* ****** CAPACITY CALCULATION *******/
     public function getUsedCapacity(): int
     {
-        return $this->getInterested()->count('*');
+        return $this->getInterested()->count();
     }
 
     public function hasFreeCapacity(): bool
