@@ -3,8 +3,8 @@
     <div class="mb-3">
         {include '../ScheduleItem/group.detail.latte' group=>$model}
     </div>
-    <a class="btn btn-outline-primary btn-sm" href="{plink ScheduleGroup:list}">{_'List of groups'}</a>
-    <a class="btn btn-outline-primary btn-sm" href="{plink ScheduleItem:create}">{_'Create item'}</a>
+    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Group:list}">{_'List of groups'}</a>
+    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
     <hr/>
     {control itemsGrid}
 {/block}

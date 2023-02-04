@@ -31,7 +31,7 @@ class HandlerCreateTest extends HandlerTestCase
             FullCapacityException::class
         );
     }
-
+    // test that count(*) is cached, but cont() isn't
     public function testCapacityTransaction(): void
     {
         $this->personToItem($this->item1, 4);
