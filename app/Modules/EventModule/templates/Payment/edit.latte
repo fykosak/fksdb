@@ -1,12 +1,12 @@
 {block content}
-    {*if !$model->canEdit()}
+    {if !$model->canEdit()}
         <div class="alert-danger alert">
             <h3>Platba má napočítanú cenu!</h3>
             Platba má napočítanú cenu, zmeny sa <b>nepremietnu</b> do výslednej ceny.
             Pred týmto zásahom kontaktujte aministrátovrov systému.
             Úpravy spôsobia nekonzistenciu dát.
-            #mišovászabije
+            <h3><strong>Mišo vás zabije, naozaj!!!</strong></h3>
         </div>
-    {/if*}
+    {/if}
     {control editForm}
 {/block}

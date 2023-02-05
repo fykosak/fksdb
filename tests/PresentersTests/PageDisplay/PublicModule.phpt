@@ -16,7 +16,7 @@ class PublicModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(ContestantService::class)->storeModel(
+        $this->container->getByType(ContestantService::class)->storeModel(
             ['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1]
         );
     }
@@ -38,6 +38,7 @@ class PublicModule extends AbstractPageDisplayTestCase
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new PublicModule($container);
 $testCase->run();

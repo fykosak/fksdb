@@ -25,7 +25,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     protected function createEvent(): EventModel
     {
-        return $this->getContainer()->getByType(EventService::class)->storeModel([
+        return $this->container->getByType(EventService::class)->storeModel([
             'event_type_id' => 9,
             'year' => 1,
             'event_year' => 1,
@@ -60,7 +60,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
         Assert::type(RedirectResponse::class, $response);
         /** @var TeamModel2 $team */
-        $team = $this->getContainer()->getByType(TeamService2::class)->getTable()
+        $team = $this->container->getByType(TeamService2::class)->getTable()
             ->where('event_id', $this->event->event_id)
             ->where('name', 'test team A')
             ->fetch();
@@ -113,7 +113,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $response = $this->createFormRequest('create', $data);
         Assert::type(RedirectResponse::class, $response);
         /** @var TeamModel2 $team */
-        $team = $this->getContainer()->getByType(TeamService2::class)->getTable()
+        $team = $this->container->getByType(TeamService2::class)->getTable()
             ->where('event_id', $this->event->event_id)
             ->where('name', 'test team A')
             ->fetch();
@@ -203,7 +203,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::contains('/auth/login', $response->getUrl());
         Assert::same(
             'Original',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -230,7 +230,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::contains('detail', $response->getUrl());
         Assert::same(
             'Edited',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -256,7 +256,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
         Assert::same(
             'Original',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -283,7 +283,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::contains('detail', $response->getUrl());
         Assert::same(
             'Edited',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -311,7 +311,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
         Assert::same(
             'Original',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -339,7 +339,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::contains('detail', $response->getUrl());
         Assert::same(
             'Edited',
-            $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
+            $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary())->name
         );
     }
 
@@ -362,14 +362,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
         Assert::type(RedirectResponse::class, $response);
-        $newTeam = $this->getContainer()->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
+        $newTeam = $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
         Assert::same(1, $newTeam->getMembers()->count('*'));
         Assert::same($this->personB->person_id, $newTeam->getMembers()->fetch()->person_id);
     }
 
     public function testCreateDuplicateMember(): void
     {
-        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $before = $this->container->getByType(TeamService2::class)->getTable()->count('*');
         $data = [
             'team' => [
                 'name' => 'Edited',
@@ -384,14 +384,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
-        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $after = $this->container->getByType(TeamService2::class)->getTable()->count('*');
         Assert::same($before, $after);
     }
 
     public function testCreateDuplicateMember2(): void
     {
         $this->createTeam('Unique', [$this->personA]);
-        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $before = $this->container->getByType(TeamService2::class)->getTable()->count('*');
 
         $data = [
             'team' => [
@@ -407,14 +407,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
-        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $after = $this->container->getByType(TeamService2::class)->getTable()->count('*');
         Assert::same($before, $after);
     }
 
     public function testEditDuplicateTeamName(): void
     {
         $this->createTeam('Unique', [$this->personB]);
-        $before = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $before = $this->container->getByType(TeamService2::class)->getTable()->count('*');
 
         $data = [
             'team' => [
@@ -430,20 +430,20 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('create', $data);
         Assert::type(TextResponse::class, $response);
-        $after = $this->getContainer()->getByType(TeamService2::class)->getTable()->count('*');
+        $after = $this->container->getByType(TeamService2::class)->getTable()->count('*');
         Assert::same($before, $after);
     }
 
     protected function createTeam(string $name, array $persons): TeamModel2
     {
-        $team = $this->getContainer()->getByType(TeamService2::class)->storeModel([
+        $team = $this->container->getByType(TeamService2::class)->storeModel([
             'name' => $name,
             'category' => 'B',
             'event_id' => $this->event->event_id,
         ]);
         /** @var PersonModel $person */
         foreach ($persons as $person) {
-            $this->getContainer()->getByType(TeamMemberService::class)->storeModel([
+            $this->container->getByType(TeamMemberService::class)->storeModel([
                 'person_id' => $person->person_id,
                 'fyziklani_team_id' => $team->fyziklani_team_id,
             ]);

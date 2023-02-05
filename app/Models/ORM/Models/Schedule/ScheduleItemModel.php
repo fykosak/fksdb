@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -15,36 +16,57 @@ use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
 
 /**
- * @property-read ScheduleGroupModel schedule_group
- * @property-read float price_eur
- * @property-read float price_czk
- * @property-read int|null capacity
  * @property-read int schedule_item_id
  * @property-read int schedule_group_id
- * @property-read string name_cs
- * @property-read string name_en
- * @property-read int require_id_number
- * @property-read string description_cs
- * @property-read string description_en
+ * @property-read ScheduleGroupModel schedule_group
+ * @property-read float|null price_czk
+ * @property-read float|null price_eur
+ * @property-read string|null name_cs
+ * @property-read string|null name_en
+ * @property-read int|null capacity
+ * @property-read string|null description_cs
+ * @property-read string|null description_en
+ * @property-read string|null long_description_cs
+ * @property-read string|null long_description_en
+ * @property-read \DateTimeInterface|null begin
+ * @property-read \DateTimeInterface|null end
  */
 class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
 
-    public function getName(): array
+    public function getName(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->name_cs,
             'en' => $this->name_en,
-        ];
+        ]);
     }
 
-    public function getDescription(): array
+    public function getDescription(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->description_cs,
             'en' => $this->description_en,
-        ];
+        ]);
+    }
+
+    public function getLongDescription(): LocalizedString
+    {
+        return new LocalizedString([
+            'cs' => $this->long_description_cs,
+            'en' => $this->long_description_en,
+        ]);
+    }
+
+    public function getBegin(): \DateTimeInterface
+    {
+        return $this->begin ?? $this->schedule_group->start;
+    }
+
+    public function getEnd(): \DateTimeInterface
+    {
+        return $this->end ?? $this->schedule_group->end;
     }
 
     /**
@@ -76,17 +98,6 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /* ****** CAPACITY CALCULATION *******/
-
-    public function getCapacity(): ?int
-    {
-        return $this->capacity;
-    }
-
-    public function isUnlimitedCapacity(): bool
-    {
-        return is_null($this->getCapacity());
-    }
-
     public function getUsedCapacity(): int
     {
         return $this->getInterested()->count();
@@ -94,10 +105,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     public function hasFreeCapacity(): bool
     {
-        if ($this->isUnlimitedCapacity()) {
+        if (is_null($this->capacity)) {
             return true;
         }
-        return ($this->getCapacity() - $this->getUsedCapacity()) > 0;
+        return ($this->capacity - $this->getUsedCapacity()) > 0;
     }
 
     /**
@@ -105,20 +116,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
      */
     public function getAvailableCapacity(): int
     {
-        if ($this->isUnlimitedCapacity()) {
+        if (is_null($this->capacity)) {
             throw new \LogicException(_('Unlimited capacity'));
         }
-        return ($this->getCapacity() - $this->getUsedCapacity());
-    }
-
-    public function getLabel(): string
-    {
-        return $this->name_cs . '/' . $this->name_en;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getLabel();
+        return ($this->capacity - $this->getUsedCapacity());
     }
 
     /**
@@ -132,15 +133,18 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getName(),
-            'name' => $this->getName(),
-            'requireIdNumber' => $this->require_id_number,
-            'description' => $this->getDescription(),
+            'label' => $this->getName()->__serialize(),
+            'name' => $this->getName()->__serialize(),
+            'begin' => $this->getBegin(),
+            'end' => $this->getEnd(),
+            'description' => $this->getDescription()->__serialize(),
+            'longDescription' => $this->getLongDescription()->__serialize(),
         ];
     }
 
     /**
      * @throws \DOMException
+     * @throws \Exception
      */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
@@ -151,11 +155,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'requireIdNumber' => $this->require_id_number,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => $this->getDescription(),
-            'name' => $this->getName(),
+            'description' => $this->getDescription()->__serialize(),
+            'name' => $this->getName()->__serialize(),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => $this->getPrice()->__serialize(),

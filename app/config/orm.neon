@@ -900,9 +900,6 @@ orm:
             schedule_item_id:
                 type: primaryKey
                 title: _('Schedule item Id')
-            require_id_number:
-                type: bool
-                title: _('Require Id number')
             price_czk:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceCZKColumnFactory
