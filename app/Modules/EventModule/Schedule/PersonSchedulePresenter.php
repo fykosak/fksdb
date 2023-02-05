@@ -26,8 +26,8 @@ class PersonSchedulePresenter extends BasePresenter
 
     public function authorizedDefault(): void
     {
-        $roles = $this->getLoggedPerson()->getEventRoles($this->getEvent());
-        $this->setAuthorized((bool)count($roles));
+        $person = $this->getLoggedPerson();
+        $this->setAuthorized($person && count($person->getEventRoles($this->getEvent())));
     }
 
     public function authorizedList(): void
