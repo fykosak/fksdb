@@ -24,6 +24,17 @@ class PersonSchedulePresenter extends BasePresenter
         return new PageTitle(null, _('My schedule'), 'fas fa-list');
     }
 
+    public function authorizedDefault(): void
+    {
+        $roles = $this->getLoggedPerson()->getEventRoles($this->getEvent());
+        $this->setAuthorized((bool)count($roles));
+    }
+
+    public function authorizedList(): void
+    {
+        $this->setAuthorized($this->isAllowed('event.scheduleGroup', 'create'));
+    }
+
     public function renderDefault(): void
     {
         $this->template->event = $this->getEvent();

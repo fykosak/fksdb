@@ -5,6 +5,9 @@ navigation:
             Event:Payment:create:
                 params:
                     eventId: 173
+            #Schedule:PersonSchedule:default:
+            #    params:
+            #        eventId: 173
         Org.Dashboard.default:
             Org.Dashboard.default: []
 

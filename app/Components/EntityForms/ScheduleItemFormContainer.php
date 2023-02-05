@@ -83,7 +83,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->event->getScheduleGroups() as $group) {
-            $items[$group->schedule_group_id] = ($this->translator->lang === 'cs' ? $group->name_cs : $group->name_en)
+            $items[$group->schedule_group_id] = $group->getName()[$this->translator->lang]
                 . '(' . $group->schedule_group_type->value . ')';
         }
         $container->addSelect('schedule_group_id', _('Schedule group Id'), $items);

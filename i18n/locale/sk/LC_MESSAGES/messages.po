@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-29 23:50+0100\n"
+"POT-Creation-Date: 2023-02-05 02:10+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -592,7 +592,7 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: i18n/../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:109
+#: i18n/../app/Models/ORM/Models/Schedule/ScheduleItemModel.php:120
 #, fuzzy
 msgid "Unlimited capacity"
 msgstr "Kapacita"
@@ -1261,7 +1261,7 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:14
 #: i18n/../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:18
 #: i18n/../app/config/orm.neon.neon2php:795
-#: i18n/../app/config/orm.neon.neon2php:998
+#: i18n/../app/config/orm.neon.neon2php:1007
 #: i18n/../app/Components/Game/ResultsAndStatistics/Presentation/Components/Headline.tsx.tsx2php:24
 #: i18n/../app/Components/Game/ResultsAndStatistics/Presentation/Components/Headline.tsx.tsx2php:32
 #: i18n/../app/Components/Game/ResultsAndStatistics/Table/filter.ts.ts2php:31
@@ -1290,7 +1290,7 @@ msgstr "Zvoliť typ"
 #: i18n/../app/config/orm.neon.neon2php:363
 #: i18n/../app/config/orm.neon.neon2php:717
 #: i18n/../app/config/orm.neon.neon2php:783
-#: i18n/../app/config/orm.neon.neon2php:1025
+#: i18n/../app/config/orm.neon.neon2php:1034
 msgid "State"
 msgstr ""
 
@@ -1310,11 +1310,19 @@ msgstr ""
 msgid "#"
 msgstr ""
 
+#: i18n/../app/Components/Grids/Schedule/GroupListComponent.php:47
+msgid "@schedule_group.name_en (@schedule_group.schedule_group_id)"
+msgstr ""
+
 #: i18n/../app/Components/Grids/Schedule/GroupListComponent.php:66
 #: i18n/../app/Components/Grids/Payment/PaymentList.php:82
 #: i18n/../app/Modules/OrgModule/Warehouse/ItemPresenter.php:34
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:44
 msgid "Items"
+msgstr ""
+
+#: i18n/../app/Components/Grids/Schedule/GroupListComponent.php:72
+msgid "@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Schedule/GroupListComponent.php:86
@@ -1388,7 +1396,7 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:49
 #: i18n/../app/config/orm.neon.neon2php:181
 #: i18n/../app/config/orm.neon.neon2php:356
-#: i18n/../app/config/orm.neon.neon2php:1039
+#: i18n/../app/config/orm.neon.neon2php:1048
 #: i18n/../app/Components/Forms/Controls/Schedule/Components/PriceLabel.tsx.tsx2php:15
 msgid "Price"
 msgstr ""
@@ -1410,11 +1418,11 @@ msgid "Active?"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/ScheduleItemFormContainer.php:51
-#, php-format
-msgid "Item \"%s\" has been saved."
-msgstr ""
+#, fuzzy, php-format
+msgid "Item \"#%d\" has been saved."
+msgstr "Registrácia"
 
-#: i18n/../app/Components/EntityForms/ScheduleItemFormContainer.php:88
+#: i18n/../app/Components/EntityForms/ScheduleItemFormContainer.php:89
 #: i18n/../app/config/orm.neon.neon2php:866
 msgid "Schedule group Id"
 msgstr ""
@@ -1510,10 +1518,10 @@ msgstr ""
 msgid "Person has been created"
 msgstr ""
 
-#: i18n/../app/Components/EntityForms/ScheduleGroupFormComponent.php:50
-#, php-format
-msgid "Group \"%s\" has been saved."
-msgstr ""
+#: i18n/../app/Components/EntityForms/ScheduleGroupFormComponent.php:49
+#, fuzzy, php-format
+msgid "Group \"#%d\" has been saved."
+msgstr "Registrácia"
 
 #: i18n/../app/Components/EntityForms/EntityFormComponent.php:57
 msgid "Error in the form"
@@ -1600,8 +1608,8 @@ msgstr ""
 #: i18n/../app/config/orm.neon.neon2php:604
 #: i18n/../app/config/orm.neon.neon2php:686
 #: i18n/../app/config/orm.neon.neon2php:791
-#: i18n/../app/config/orm.neon.neon2php:995
-#: i18n/../app/config/orm.neon.neon2php:1049
+#: i18n/../app/config/orm.neon.neon2php:1004
+#: i18n/../app/config/orm.neon.neon2php:1058
 msgid "Note"
 msgstr ""
 
@@ -1627,7 +1635,7 @@ msgstr ""
 
 #: i18n/../app/Components/EntityForms/StoredQueryFormComponent.php:94
 #: i18n/../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:28
-#: i18n/../app/config/orm.neon.neon2php:953
+#: i18n/../app/config/orm.neon.neon2php:962
 msgid "SQL"
 msgstr ""
 
@@ -1677,7 +1685,7 @@ msgstr ""
 
 #: i18n/../app/Components/EntityForms/StoredQueryFormComponent.php:193
 #: i18n/../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:13
-#: i18n/../app/config/orm.neon.neon2php:963
+#: i18n/../app/config/orm.neon.neon2php:972
 msgid "Description"
 msgstr ""
 
@@ -1723,7 +1731,7 @@ msgid "Product has been created."
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Warehouse/ProductFormComponent.php:81
-#: i18n/../app/config/orm.neon.neon2php:1009
+#: i18n/../app/config/orm.neon.neon2php:1018
 #, fuzzy
 msgid "Producer"
 msgstr "Uprava platby #%s"
@@ -2023,7 +2031,7 @@ msgid "Item with Id %s does not exists"
 msgstr "Ubytnovanie neexistuje"
 
 #: i18n/../app/Components/Forms/Controls/Schedule/Handler.php:69
-#: i18n/../app/Components/Forms/Controls/Schedule/Handler.php:86
+#: i18n/../app/Components/Forms/Controls/Schedule/Handler.php:89
 #, fuzzy
 msgid "Modification of this item is not allowed at this time"
 msgstr "Registrácia"
@@ -2089,7 +2097,7 @@ msgstr ""
 
 #: i18n/../app/Components/Controls/Person/PizzaComponent.php:38
 #: i18n/../app/Components/Controls/DataTesting/layout.latte.latte2php:2
-#: i18n/../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:30
+#: i18n/../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:30
 #: i18n/../app/Modules/OrgModule/templates/Dashboard/default.latte.latte2php:4
 msgid "Persons"
 msgstr ""
@@ -2466,20 +2474,6 @@ msgstr ""
 msgid "Fyziklani game setup"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ScheduleItemPresenter.php:51
-#, php-format
-msgid "Schedule item \"%s\""
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleItemPresenter.php:68
-#, php-format
-msgid "Edit schedule item \"%s\""
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleItemPresenter.php:75
-msgid "Create schedule item"
-msgstr ""
-
 #: i18n/../app/Modules/EventModule/EventOrgPresenter.php:38
 #, fuzzy
 msgid "Organisers of event"
@@ -2523,6 +2517,52 @@ msgstr "Uprava platby #%s"
 msgid "Event type is not supported"
 msgstr "Zvoliť typ"
 
+#: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:52
+#, php-format
+msgid "Schedule item \"%s\""
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:69
+#, php-format
+msgid "Edit schedule item \"%s\""
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:76
+msgid "Create schedule item"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/PersonSchedulePresenter.php:19
+msgid "Schedule per person"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/PersonSchedulePresenter.php:24
+msgid "My schedule"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:40
+#: i18n/../app/Components/Controls/Stalking/layout.container.latte.latte2php:74
+#: i18n/../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:12
+#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:22
+msgid "Schedule"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:45
+msgid "Schedule items"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:59
+#, fuzzy, php-format
+msgid "Edit schedule group \"%s\""
+msgstr "Uprava platby #%s"
+
+#: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:80
+msgid "Create group"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:81
+msgid "All persons"
+msgstr ""
+
 #: i18n/../app/Modules/EventModule/AbstractApplicationPresenter.php:57
 #: i18n/../app/Modules/EventModule/AbstractApplicationPresenter.php:63
 #, fuzzy, php-format
@@ -2531,29 +2571,6 @@ msgstr "Časový vývoj prihlášiek"
 
 #: i18n/../app/Modules/EventModule/AbstractApplicationPresenter.php:70
 msgid "Group transitions"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleGroupPresenter.php:40
-#: i18n/../app/Components/Controls/Stalking/layout.container.latte.latte2php:74
-#: i18n/../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:12
-#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:22
-msgid "Schedule"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleGroupPresenter.php:45
-msgid "Schedule per person"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleGroupPresenter.php:50
-msgid "Schedule items"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleGroupPresenter.php:69
-msgid "Create group"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/ScheduleGroupPresenter.php:70
-msgid "All persons"
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/DashboardPresenter.php:18
@@ -2974,12 +2991,12 @@ msgid "Create product"
 msgstr "Zoznam platieb"
 
 #: i18n/../app/Modules/OrgModule/Warehouse/ItemPresenter.php:39
-#: i18n/../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:28
+#: i18n/../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:28
 msgid "Edit item"
 msgstr ""
 
 #: i18n/../app/Modules/OrgModule/Warehouse/ItemPresenter.php:44
-#: i18n/../app/Modules/EventModule/templates/ScheduleGroup/detail.latte.latte2php:7
+#: i18n/../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:7
 msgid "Create item"
 msgstr ""
 
@@ -3553,18 +3570,6 @@ msgstr ""
 msgid "Seating"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:5
-msgid "Schedule item"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:9
-msgid "Id"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/templates/ScheduleItem/group.detail.latte.latte2php:2
-msgid "Schedule group"
-msgstr ""
-
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/list.latte.latte2php:6
 #: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:6
 #, fuzzy
@@ -3579,11 +3584,6 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:5
 msgid "Base info"
 msgstr ""
-
-#: i18n/../app/Modules/EventModule/templates/ScheduleGroup/detail.latte.latte2php:6
-#, fuzzy
-msgid "List of groups"
-msgstr "Zoznam platieb"
 
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:16
 msgid "Select items"
@@ -3615,6 +3615,47 @@ msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:13
 msgid "Event web-site"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:5
+msgid "Schedule item"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:9
+msgid "Id"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:2
+msgid "Schedule group"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:6
+#, fuzzy
+msgid "List of groups"
+msgstr "Zoznam platieb"
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:14
+msgid "Today"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:26
+msgid "Block eneded"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:28
+msgid "Block is ongoing"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:33
+msgid "Block start in"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:33
+msgid "minutes"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:35
+msgid "Block not started yet"
 msgstr ""
 
 #: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:6
@@ -3907,11 +3948,13 @@ msgid "For one-day events it is identical to the beginning."
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:109
+#: i18n/../app/config/orm.neon.neon2php:889
 #, fuzzy
 msgid "Registration begin"
 msgstr "Registrácia"
 
 #: i18n/../app/config/orm.neon.neon2php:112
+#: i18n/../app/config/orm.neon.neon2php:892
 #, fuzzy
 msgid "Registration end"
 msgstr "Registrácia"
@@ -4089,7 +4132,7 @@ msgid "Payment ID"
 msgstr "Nová platba"
 
 #: i18n/../app/config/orm.neon.neon2php:360
-#: i18n/../app/config/orm.neon.neon2php:1043
+#: i18n/../app/config/orm.neon.neon2php:1052
 msgid "Currency"
 msgstr ""
 
@@ -4263,8 +4306,8 @@ msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:641
 #: i18n/../app/config/orm.neon.neon2php:879
-#: i18n/../app/config/orm.neon.neon2php:910
-#: i18n/../app/config/orm.neon.neon2php:983
+#: i18n/../app/config/orm.neon.neon2php:919
+#: i18n/../app/config/orm.neon.neon2php:992
 #, fuzzy
 msgid "Name cs"
 msgstr "Meno"
@@ -4377,8 +4420,8 @@ msgid "Schedule end"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:882
-#: i18n/../app/config/orm.neon.neon2php:907
-#: i18n/../app/config/orm.neon.neon2php:986
+#: i18n/../app/config/orm.neon.neon2php:916
+#: i18n/../app/config/orm.neon.neon2php:995
 #, fuzzy
 msgid "Name en"
 msgstr "Meno"
@@ -4387,95 +4430,100 @@ msgstr "Meno"
 msgid "Group name"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:893
+#: i18n/../app/config/orm.neon.neon2php:895
+#, fuzzy
+msgid "Modification end"
+msgstr "Registrácia"
+
+#: i18n/../app/config/orm.neon.neon2php:902
 msgid "Schedule item Id"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:896
+#: i18n/../app/config/orm.neon.neon2php:905
 msgid "Require Id number"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:900
+#: i18n/../app/config/orm.neon.neon2php:909
 #, fuzzy
 msgid "Price CZK"
 msgstr "Cena v Kč"
 
-#: i18n/../app/config/orm.neon.neon2php:904
+#: i18n/../app/config/orm.neon.neon2php:913
 #, fuzzy
 msgid "Price EUR"
 msgstr "Cena v Kč"
 
-#: i18n/../app/config/orm.neon.neon2php:914
+#: i18n/../app/config/orm.neon.neon2php:923
 msgid "Item name"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:918
-#: i18n/../app/config/orm.neon.neon2php:992
-#: i18n/../app/config/orm.neon.neon2php:1032
+#: i18n/../app/config/orm.neon.neon2php:927
+#: i18n/../app/config/orm.neon.neon2php:1001
+#: i18n/../app/config/orm.neon.neon2php:1041
 #, fuzzy
 msgid "Description en"
 msgstr "Registrácia"
 
-#: i18n/../app/config/orm.neon.neon2php:921
-#: i18n/../app/config/orm.neon.neon2php:989
-#: i18n/../app/config/orm.neon.neon2php:1029
+#: i18n/../app/config/orm.neon.neon2php:930
+#: i18n/../app/config/orm.neon.neon2php:998
+#: i18n/../app/config/orm.neon.neon2php:1038
 #, fuzzy
 msgid "Description cs"
 msgstr "Registrácia"
 
-#: i18n/../app/config/orm.neon.neon2php:924
+#: i18n/../app/config/orm.neon.neon2php:933
 #, fuzzy
 msgid "Total capacity"
 msgstr "Kapacita"
 
-#: i18n/../app/config/orm.neon.neon2php:929
+#: i18n/../app/config/orm.neon.neon2php:938
 #: i18n/../app/Components/Forms/Controls/Schedule/Components/CapacityLabel.tsx.tsx2php:18
 #, fuzzy
 msgid "Free capacity"
 msgstr "Kapacita"
 
-#: i18n/../app/config/orm.neon.neon2php:933
+#: i18n/../app/config/orm.neon.neon2php:942
 #, fuzzy
 msgid "Used capacity"
 msgstr "Kapacita"
 
-#: i18n/../app/config/orm.neon.neon2php:945
+#: i18n/../app/config/orm.neon.neon2php:954
 msgid "QID"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:949
+#: i18n/../app/config/orm.neon.neon2php:958
 msgid "Tags"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:957
+#: i18n/../app/config/orm.neon.neon2php:966
 msgid "Query name"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:960
+#: i18n/../app/config/orm.neon.neon2php:969
 msgid "Query Id"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:980
-#: i18n/../app/config/orm.neon.neon2php:1006
-#: i18n/../app/config/orm.neon.neon2php:1019
+#: i18n/../app/config/orm.neon.neon2php:989
+#: i18n/../app/config/orm.neon.neon2php:1015
+#: i18n/../app/config/orm.neon.neon2php:1028
 #, fuzzy
 msgid "Product Id"
 msgstr "Uprava platby #%s"
 
-#: i18n/../app/config/orm.neon.neon2php:1016
+#: i18n/../app/config/orm.neon.neon2php:1025
 msgid "Item Id"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:1022
+#: i18n/../app/config/orm.neon.neon2php:1031
 msgid "Contest Id"
 msgstr ""
 
-#: i18n/../app/config/orm.neon.neon2php:1035
+#: i18n/../app/config/orm.neon.neon2php:1044
 #, fuzzy
 msgid "Data"
 msgstr "Zvoliť typ"
 
-#: i18n/../app/config/orm.neon.neon2php:1046
+#: i18n/../app/config/orm.neon.neon2php:1055
 #, fuzzy
 msgid "Placement"
 msgstr "Nová platba"

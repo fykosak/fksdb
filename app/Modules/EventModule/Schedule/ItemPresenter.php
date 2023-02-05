@@ -49,10 +49,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(
-                _('Schedule item "%s"'),
-                $this->getLang() === 'cs' ? $this->getEntity()->name_cs : $this->getEntity()->name_en
-            ),
+            \sprintf(_('Schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
             'fas fa-clipboard'
         );
     }
@@ -69,10 +66,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(
-                _('Edit schedule item "%s"'),
-                $this->getLang() === 'cs' ? $this->getEntity()->name_cs : $this->getEntity()->name_en
-            ),
+            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
             'fas fa-pen'
         );
     }

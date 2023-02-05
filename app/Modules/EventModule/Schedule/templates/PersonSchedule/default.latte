@@ -18,12 +18,9 @@
             </h2>
         {/if}
         {php $lastKey = $group->start->format('Y-d-m')}
-        <div class="d-flex align-items-center my-2">
+        <div class="{($personSchedule?'':'opacity-25 ') . 'd-flex align-items-center my-2'}">
             <h3 class="me-3">
-                {switch $lang}
-                    {case 'cs'}{$group->name_cs}
-                    {default}{$group->name_en}
-                {/switch}
+                {$group->getName()[$lang]}
             </h3>
             {if $group->hasEnded()}
                 <div class="badge bg-secondary">{_'Block eneded'}</div>
@@ -35,7 +32,7 @@
                     {if $toStart < 60 * 60}
                         {_'Block start in'} {floor($toStart / 60)} {_'minutes'}
                     {else}
-                        {_'Block not started'}
+                        {_'Block not started yet'}
                     {/if}
                 </div>
             {/if}
@@ -58,19 +55,13 @@
     <div class="{$selected?'card bg-success text-white':'card opacity-25'}">
         <div class="card-body">
             <h5 class="card-title">
-                {switch $lang}
-                    {case 'cs'}{$item->name_cs}
-                    {default}{$item->name_en}
-                {/switch}
+                {$item->getName()[$lang]}
             </h5>
             <small class="{$selected ?'card-subtitle':'text-fof card-subtitle'}">
                 {$item->getBegin()->format(_('__time'))} - {$item->getEnd()->format(_('__time'))}
             </small>
             <p class="card-text">
-                {switch $lang}
-                    {case 'cs'}{$item->description_cs}
-                    {default}{$item->description_en}
-                {/switch}
+                {$item->getDescription()[$lang]}
             </p>
         </div>
     </div>

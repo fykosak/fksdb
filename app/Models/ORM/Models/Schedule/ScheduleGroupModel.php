@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
@@ -35,12 +36,12 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }
 
-    public function getName(): array
+    public function getName(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->name_cs,
             'en' => $this->name_en,
-        ];
+        ]);
     }
 
     public function __toArray(): array
@@ -51,8 +52,8 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->getRegistrationBegin(),
             'registrationEnd' => $this->getRegistrationEnd(),
             'modificationEnd' => $this->getModificationEnd(),
-            'label' => $this->getName(),
-            'name' => $this->getName(),
+            'label' => $this->getName()->__serialize(),
+            'name' => $this->getName()->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
@@ -148,7 +149,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'end' => $this->end->format('c'),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => $this->getName(),
+            'name' => $this->getName()->__serialize(),
         ], $document, $node);
         return $node;
     }

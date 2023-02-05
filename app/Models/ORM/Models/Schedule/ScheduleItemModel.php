@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -34,20 +35,28 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
 
-    public function getName(): array
+    public function getName(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->name_cs,
             'en' => $this->name_en,
-        ];
+        ]);
     }
 
-    public function getDescription(): array
+    public function getDescription(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->description_cs,
             'en' => $this->description_en,
-        ];
+        ]);
+    }
+
+    public function getLongDescription(): LocalizedString
+    {
+        return new LocalizedString([
+            'cs' => $this->long_description_cs,
+            'en' => $this->long_description_en,
+        ]);
     }
 
     public function getBegin(): \DateTimeInterface
@@ -124,10 +133,12 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getName(),
-            'name' => $this->getName(),
-            'requireIdNumber' => $this->require_id_number,
-            'description' => $this->getDescription(),
+            'label' => $this->getName()->__serialize(),
+            'name' => $this->getName()->__serialize(),
+            'begin' => $this->getBegin(),
+            'end' => $this->getEnd(),
+            'description' => $this->getDescription()->__serialize(),
+            'longDescription' => $this->getLongDescription()->__serialize(),
         ];
     }
 
@@ -144,11 +155,10 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'requireIdNumber' => $this->require_id_number,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => $this->getDescription(),
-            'name' => $this->getName(),
+            'description' => $this->getDescription()->__serialize(),
+            'name' => $this->getName()->__serialize(),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => $this->getPrice()->__serialize(),
