@@ -9,12 +9,15 @@ $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 
 class Schedule extends EventModuleTestCase
 {
 
     private ScheduleGroupModel $scheduleGroup;
+    private ScheduleItemModel $scheduleItem;
 
     protected function setUp(): void
     {
@@ -27,6 +30,18 @@ class Schedule extends EventModuleTestCase
                 'name_en' => 'name EN',
                 'event_id' => $this->event->event_id,
                 'start' => new \DateTime(),
+                'end' => new \DateTime(),
+            ]);
+        $this->scheduleItem = $this->container
+            ->getByType(ScheduleItemService::class)
+            ->storeModel([
+                'schedule_group_id' => $this->scheduleGroup->schedule_group_id,
+                'price_czk' => 10.5,
+                'price_eur' => 2.55,
+                'name_cs' => 'test item',
+                'name_en' => 'test item',
+                'capacity' => 10,
+                'begin' => new \DateTime(),
                 'end' => new \DateTime(),
             ]);
     }
@@ -46,7 +61,12 @@ class Schedule extends EventModuleTestCase
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        $params['id'] = $this->scheduleGroup->schedule_group_id;
+        if ($presenterName === 'Schedule:Group') {
+            $params['id'] = $this->scheduleGroup->schedule_group_id;
+        } elseif ($presenterName === 'Schedule:Item') {
+            $params['id'] = $this->scheduleItem->schedule_item_id;
+        }
+
         return [$presenterName, $action, $params];
     }
 
@@ -55,6 +75,8 @@ class Schedule extends EventModuleTestCase
         return [
             ['Schedule:PersonSchedule', 'list'],
             //['Schedule:PersonSchedule', 'default'],
+            ['Schedule:Item', 'create'],
+            ['Schedule:Item', 'edit'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
             ['Schedule:Group', 'detail'],

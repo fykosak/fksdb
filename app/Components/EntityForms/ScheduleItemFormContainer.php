@@ -75,7 +75,6 @@ class ScheduleItemFormContainer extends EntityFormComponent
             'name_en' => ['required' => true],
             'description_cs' => ['required' => false],
             'description_en' => ['required' => false],
-            'require_id_number' => ['required' => true],
             'capacity' => ['required' => false],
             'price_czk' => ['required' => false],
             'price_eur' => ['required' => false],
