@@ -32,7 +32,6 @@ class ItemsGrid extends RelatedGrid
             'schedule_item.price_eur',
             'schedule_item.capacity',
             'schedule_item.used_capacity',
-            'schedule_item.require_id_number',
         ]);
         $this->paginate = false;
         $this->addPresenterButton(':Schedule:Item:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
