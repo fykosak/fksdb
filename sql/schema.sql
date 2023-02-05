@@ -1069,7 +1069,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_seat`
     `fyziklani_seat_id` INT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `fyziklani_room_id` INT        NOT NULL,
     `sector`            VARCHAR(2) NULL DEFAULT NULL,
-    `row`               SMALLINT   NULL DEFAULT NULL,
+    `row`               VARCHAR(2) NULL DEFAULT NULL,
     `col`               SMALLINT   NULL DEFAULT NULL,
     `layout_x`          DOUBLE     NOT NULL,
     `layout_y`          DOUBLE     NOT NULL,
