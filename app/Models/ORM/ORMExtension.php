@@ -58,7 +58,7 @@ class ORMExtension extends Extension
                 'required' => Expect::bool(false),
                 'omitInputField' => Expect::bool(false),
                 'writeOnly' => Expect::bool(false),
-                'permission' => Expect::anyOf('ANYBODY', 'BASIC', 'RESTRICT', 'FULL')->firstIsDefault(),
+                'permission' => Expect::anyOf('NoAccess', 'Basic', 'Restrict', 'Full')->firstIsDefault(),
             ], $items)
         )->castTo('array');
     }

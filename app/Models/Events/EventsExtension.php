@@ -23,7 +23,6 @@ use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Config\Loader;
 use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
@@ -57,13 +56,8 @@ class EventsExtension extends CompilerExtension
         'count' => Count::class,
     ];
 
-    private array $scheme;
-
-    private string $schemeFile;
-
-    public function __construct(string $schemaFile)
+    public function __construct()
     {
-        $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
 
@@ -136,9 +130,6 @@ class EventsExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-
-        $this->loadScheme();
-
         $config = $this->getConfig();
 
         $eventDispatchFactory = $this->getContainerBuilder()
@@ -159,13 +150,6 @@ class EventsExtension extends CompilerExtension
                 [$keys, Container::getMethodName($holder->getName()), $machine->getName(), $definition['formLayout']]
             );
         }
-    }
-
-    private function loadScheme(): void
-    {
-        $loader = new Loader();
-        $this->getContainerBuilder()->addDependency($this->schemeFile);
-        $this->scheme = $loader->load($this->schemeFile);
     }
 
     private function getBaseMachineConfig(string $eventName): array
