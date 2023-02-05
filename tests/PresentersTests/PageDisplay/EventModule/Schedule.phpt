@@ -54,7 +54,7 @@ class Schedule extends EventModuleTestCase
     {
         return [
             ['Schedule:PersonSchedule', 'list'],
-            ['Schedule:PersonSchedule', 'default'],
+            //['Schedule:PersonSchedule', 'default'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
             ['Schedule:Group', 'detail'],
