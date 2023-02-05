@@ -19,7 +19,7 @@
             </tspan>
         </text>
         <g class="stage" transform="translate(0,380)">
-            <text transform="translate(0,40)">
+            <text font-size="1.75rem" transform="translate(0,50)">
                 {switch $lang}
                     {case 'cs'}Podium
                     {case 'en'}Stage
@@ -46,7 +46,7 @@
                     {if is_null($sector) || $sector === 'D'}
                 <g class="sector" transform="translate(60,60) rotate(-45)">
                     <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,30)">
+                    <text transform="translate(0,50)">
                         <tspan>
                             {switch $lang}
                                 {case 'cs'}Opravovatelé D
@@ -60,7 +60,7 @@
                     {if is_null($sector) || $sector === 'C'}
                 <g class="sector" transform="translate(-60,60) rotate(45)">
                     <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,30)">
+                    <text transform="translate(0,50)">
                         <tspan>
                             {switch $lang}
                                 {case 'cs'}Opravovatelé C
