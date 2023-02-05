@@ -32,10 +32,10 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
+        $this->event = $this->container->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
@@ -44,7 +44,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->eventOrg = $this->getContainer()->getByType(EventOrgService::class)->storeModel([
+        $this->eventOrg = $this->container->getByType(EventOrgService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'person_id' => $this->eventOrgPerson->person_id,
             'note' => 'note-original',
@@ -104,7 +104,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'id' => (string)$this->eventOrg->e_org_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->getContainer()
+        $org = $this->container
             ->getByType(EventOrgService::class)->findByPrimary($this->eventOrg->e_org_id);
         Assert::equal('note-edited', $org->note);
     }
@@ -138,7 +138,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
 
     private function countEventOrgs(): int
     {
-        return $this->getContainer()
+        return $this->container
             ->getByType(EventOrgService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])

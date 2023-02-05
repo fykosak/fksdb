@@ -19,7 +19,7 @@ class Schedule extends EventModuleTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->scheduleGroup = $this->getContainer()
+        $this->scheduleGroup = $this->container
             ->getByType(ScheduleGroupService::class)
             ->storeModel([
                 'schedule_group_type' => 'accommodation',
@@ -53,14 +53,16 @@ class Schedule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Event:ScheduleGroup', 'list'],
-            ['Event:ScheduleGroup', 'persons'],
-            ['Event:ScheduleGroup', 'create'],
-            ['Event:ScheduleGroup', 'detail'],
-            ['Event:ScheduleGroup', 'edit'],
+            ['Schedule:PersonSchedule', 'list'],
+            //['Schedule:PersonSchedule', 'default'],
+            ['Schedule:Group', 'list'],
+            ['Schedule:Group', 'create'],
+            ['Schedule:Group', 'detail'],
+            ['Schedule:Group', 'edit'],
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new Schedule($container);
 $testCase->run();
