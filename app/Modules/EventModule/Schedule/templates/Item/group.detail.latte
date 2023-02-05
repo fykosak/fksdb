@@ -8,7 +8,10 @@
     '@schedule_group.schedule_group_type',
     '@event.name',
     '@schedule_group.start',
-    '@schedule_group.end'
+    '@schedule_group.end',
+    '@schedule_group.registration_begin',
+    '@schedule_group.registration_end',
+    '@schedule_group.modification_end'
     ] as $column}
         <div class="row">
             <b class="col-2">{control valuePrinter:templateString $column . ':title',$group,1024}</b>
@@ -16,7 +19,7 @@
         </div>
     {/foreach}
     <a class="btn btn-outline-primary btn-sm"
-       href="{plink ScheduleGroup:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
+       href="{plink :Schedule:Group:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
     <a class="btn btn-outline-primary btn-sm"
-       href="{plink ScheduleGroup:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
+       href="{plink :Schedule:Group:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
 </div>

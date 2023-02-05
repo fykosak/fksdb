@@ -166,6 +166,9 @@ class TeamModel2 extends Model implements Resource
         ];
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('team');

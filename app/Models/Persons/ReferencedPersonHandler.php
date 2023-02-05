@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -75,7 +74,11 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
-     * @throws NotImplementedException
+     * @throws ModelException
+     * @throws ModelDataConflictException
+     * @throws ScheduleException
+     * @throws StorageException
+     * @throws FullCapacityException
      */
     public function store(array $values, ?Model $model = null): PersonModel
     {
@@ -98,10 +101,9 @@ class ReferencedPersonHandler extends ReferencedHandler
     /**
      * @throws ModelException
      * @throws ModelDataConflictException
-     * @throws ExistingPaymentException
+     * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
-     * @throws NotImplementedException
      */
     private function innerStore(PersonModel $person, array $data): void
     {
@@ -144,7 +146,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
 
             if (isset($data['person_schedule'])) {
-                $this->eventScheduleHandler->prepareAndUpdate($data['person_schedule'], $person, $this->event);
+                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event);
             }
             if (!$outerTransaction) {
                 $connection->commit();

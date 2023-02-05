@@ -24,6 +24,6 @@ class IdNumberColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 }

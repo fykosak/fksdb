@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -106,8 +106,8 @@ class SettingsPresenter extends BasePresenter
         ControlGroup $group,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
-    ): ModelContainer {
-        $container = new ModelContainer();
+    ): ContainerWithOptions {
+        $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
 
         if ($verifyOldPassword) {

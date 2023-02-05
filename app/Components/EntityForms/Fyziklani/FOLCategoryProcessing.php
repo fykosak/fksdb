@@ -45,7 +45,7 @@ class FOLCategoryProcessing extends FormProcessing
             if (is_null($history->study_year)) {
                 $olds += 1;
             } elseif ($history->study_year >= 1 && $history->study_year <= 4) {
-                $year[(int)$history->study_year] += 1;
+                $year[$history->study_year] += 1;
             } else {
                 $year[0] += 1; // ZŠ
             }

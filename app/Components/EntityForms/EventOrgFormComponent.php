@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use Fykosak\Utils\Logging\Message;
@@ -44,7 +44,7 @@ class EventOrgFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
             $this->isCreating(),

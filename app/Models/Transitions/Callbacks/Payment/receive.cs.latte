@@ -5,14 +5,14 @@
 <div>
     <p>
         Dobrý den,<br/>
-        potvrzujeme, že jsme úspěšně přijali Vaši platbu #{$model->getPaymentId()} za Fyziklání 2023 v hodnotě <b>{$model->getPrice()->__toString()}</b>.
+        potvrzujeme, že jsme úspěšně přijali Vaši platbu #{$model->payment_id} za Fyziklání 2023 v hodnotě <b>{$model->getPrice()->__toString()}</b>.
     </p>
 
     <p>
         Pro rekapitulaci, platba zahrnovala následující:
     </p>
 
-    {include './items.latte'}
+    {include './items.latte', lang: 'cs'}
 
     {include './signature.cs.latte'}
 </div>

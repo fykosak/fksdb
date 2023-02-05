@@ -27,7 +27,6 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
 /**
@@ -83,6 +82,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         );
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedDetailedList(): void
     {
         $this->setAuthorized($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent()));

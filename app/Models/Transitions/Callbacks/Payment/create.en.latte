@@ -5,12 +5,12 @@
     <div>
         <p>
             Hello,<br/>
-            The payment number #{$model->getPaymentId()} in total sum <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2023.
+            The payment number #{$model->payment_id} in total sum <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2023.
         </p>
         <p>
             The payment includes:
         </p>
-        {include './items.latte'}
+        {include './items.latte', lang: 'en'}
         <p>
             Please transfer the money to the bank account below no later than by the end of registration. As soon as we receive the payment we will send you a confirmation e-mail.
         </p>

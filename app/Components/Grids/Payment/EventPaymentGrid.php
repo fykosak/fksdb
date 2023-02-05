@@ -25,7 +25,7 @@ class EventPaymentGrid extends RelatedGrid
     {
         parent::configure();
         $this->addColumns([
-            'payment.payment_uid',
+            'payment.payment_id',
             'person.full_name',
             'payment.price',
             'payment.state',

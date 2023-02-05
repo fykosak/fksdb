@@ -31,7 +31,7 @@ class GroupListComponent extends ListComponent
 
     protected function getModels(): Selection
     {
-        return $this->event->getScheduleGroups();
+        return $this->event->getScheduleGroups()->order('start');
     }
 
     /**
@@ -44,7 +44,7 @@ class GroupListComponent extends ListComponent
         $this->setTitle(
             new TemplateItem(
                 $this->container,
-                '@schedule_group.name_cs / @schedule_group.name_en (@schedule_group.schedule_group_id)'
+                _('@schedule_group.name_en (@schedule_group.schedule_group_id)')
             )
         );
         $row0 = new RowContainer($this->container, new Title(null, ''));
@@ -69,7 +69,7 @@ class GroupListComponent extends ListComponent
         $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
-                '@schedule_item.name_cs:value / @schedule_item.name_en:value (@schedule_item.schedule_item_id:value)'
+                _('@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)')
             ),
             'title'
         );
@@ -92,7 +92,7 @@ class GroupListComponent extends ListComponent
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Edit')),
-                fn(ScheduleItemModel $model) => [':Event:ScheduleItem:edit', ['id' => $model->getPrimary()]]
+                fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->getPrimary()]]
             ),
             'edit'
         );
@@ -100,7 +100,7 @@ class GroupListComponent extends ListComponent
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Detail')),
-                fn(ScheduleItemModel $model) => [':Event:ScheduleItem:detail', ['id' => $model->getPrimary()]]
+                fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->getPrimary()]]
             ),
             'detail'
         );
@@ -108,7 +108,7 @@ class GroupListComponent extends ListComponent
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Detail')),
-                fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:detail', ['id' => $model->getPrimary()]]
+                fn(ScheduleGroupModel $model) => [':Schedule:Group:detail', ['id' => $model->getPrimary()]]
             ),
             'detail'
         );
@@ -116,7 +116,7 @@ class GroupListComponent extends ListComponent
             new PresenterButton(
                 $this->container,
                 new Title(null, _('Edit')),
-                fn(ScheduleGroupModel $model) => [':Event:ScheduleGroup:edit', ['id' => $model->getPrimary()]]
+                fn(ScheduleGroupModel $model) => [':Schedule:Group:edit', ['id' => $model->getPrimary()]]
             ),
             'edit'
         );

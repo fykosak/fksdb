@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
@@ -20,11 +19,10 @@ class SchedulePaymentService extends Service
     /**
      * @throws DuplicatePaymentException
      * @throws EmptyDataException
-     * @throws NotImplementedException
      * @throws StorageException
      * @throws ModelException
      */
-    public function storeItems(array $data, PaymentModel $payment): void
+    public function storeItems(array $data, PaymentModel $payment, string $lang): void
     {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
@@ -44,7 +42,7 @@ class SchedulePaymentService extends Service
                 throw new DuplicatePaymentException(
                     sprintf(
                         _('Item "%s" has already another payment.'),
-                        $model->person_schedule->getLabel()
+                        $model->person_schedule->getLabel($lang)
                     )
                 );
             }

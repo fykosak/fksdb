@@ -1,6 +1,6 @@
 {block content}
     {varType FKSDB\Models\ORM\Models\PaymentModel $model}
-    {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
+    {varType string $lang}
     <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
     {var $progress = 0}
     {switch $model->state}
@@ -50,15 +50,16 @@
         </tr>
         </thead>
         <tbody>
-        {foreach $items as $item}
+        {foreach $model->getRelatedPersonSchedule() as $personSchedule}
+            {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
             <tr>
-                <td>{$item['label']}</td>
-                <td>{$item['price']->__toString()}</td>
+                <td>{$personSchedule->getLabel($lang)}</td>
+                <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
             </tr>
         {/foreach}
-        {if !is_null($model->price)}
+        {if isset($model->price)}
             <tr class="table-primary">
-                <td>{_'Sum in '}{$model->getPrice()->getCurrency()->getLabel()}</td>
+                <td>{_'Sum'}</td>
                 <td>{$model->getPrice()->__toString()}</td>
             </tr>
         {/if}

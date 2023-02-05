@@ -6,13 +6,13 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Badges\PermissionDeniedBadge;
-use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ValuePrinters\StringPrinter;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
@@ -21,17 +21,22 @@ abstract class ColumnFactory
 {
     use SmartObject;
 
-    private string $title;
-    private string $tableName;
-    private string $modelAccessKey;
-    private ?string $description;
-    private array $metaData;
-    private bool $required = false;
-    private bool $omitInputField = false;
-    private FieldLevelPermission $permission;
-    private string $modelClassName;
+    public const PERMISSION_ALLOW_ANYBODY = 1;
+    public const PERMISSION_ALLOW_BASIC = 16;
+    public const PERMISSION_ALLOW_RESTRICT = 128;
+    public const PERMISSION_ALLOW_FULL = 1024;
+    protected string $title;
+    protected string $tableName;
+    protected string $modelAccessKey;
+    protected ?string $description;
+    protected array $metaData;
+    protected bool $required = false;
+    protected bool $omitInputField = false;
+    protected bool $isWriteOnly = true;
+    public FieldLevelPermission $permission;
+    protected string $modelClassName;
 
-    public function __construct(private readonly MetaDataFactory $metaDataFactory)
+    public function __construct(protected readonly MetaDataFactory $metaDataFactory)
     {
         $this->permission = new FieldLevelPermission(
             FieldLevelPermissionValue::NoAccess,
@@ -71,12 +76,14 @@ abstract class ColumnFactory
         return $field;
     }
 
-    final public function setPermissionValue(array $values): void
+    final public function setPermissionValue(FieldLevelPermissionValue $value): void
     {
-        $this->permission = new FieldLevelPermission(
-            $values['read'],
-            $values['write'],
-        );
+        $this->permission = new FieldLevelPermission($value, $value);
+    }
+
+    public function setWriteOnly(bool $isWriteOnly): void
+    {
+        $this->isWriteOnly = $isWriteOnly;
     }
 
     final public function setRequired(bool $value): void
@@ -89,11 +96,6 @@ abstract class ColumnFactory
         $this->omitInputField = $omit;
     }
 
-    final public function getPermission(): FieldLevelPermission
-    {
-        return $this->permission;
-    }
-
     final public function getTitle(): string
     {
         return _($this->title);
@@ -102,16 +104,6 @@ abstract class ColumnFactory
     final public function getDescription(): ?string
     {
         return $this->description ? _($this->description) : null;
-    }
-
-    final protected function getModelAccessKey(): string
-    {
-        return $this->modelAccessKey;
-    }
-
-    final protected function getTableName(): string
-    {
-        return $this->tableName;
     }
 
     final protected function getMetaData(): array
@@ -132,7 +124,7 @@ abstract class ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 
     /**
@@ -171,12 +163,13 @@ abstract class ColumnFactory
 
     final public function hasReadPermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue->value >= $this->getPermission()->read->value;
+        return $userValue->value >= $this->permission->read->value;
     }
 
     final public function hasWritePermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue->value >= $this->getPermission()->write->value;
+
+        return $userValue->value >= $this->permission->write->value;
     }
 
     protected function renderNullModel(): Html

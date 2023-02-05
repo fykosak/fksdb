@@ -11,11 +11,17 @@ enum Language: string
     case Cs = 'cs';
     case En = 'en';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         return match ($this) {
@@ -24,6 +30,9 @@ enum Language: string
         };
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function locales(): string
     {
         return match ($this) {

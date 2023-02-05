@@ -39,7 +39,7 @@ class EnumColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $enum = $model->{$this->getModelAccessKey()};
+        $enum = $model->{$this->modelAccessKey};
         if (is_null($enum)) {
             return NotSetBadge::getHtml();
         }

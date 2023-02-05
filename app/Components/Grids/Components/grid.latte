@@ -7,8 +7,16 @@
 {if $paginate}
     {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}
 {/if}
-
 {block content}
+    {varType FKSDB\Components\Grids\Components\Grid $control}
+    {varType bool $paginate}
+    {varType array $flashes}
+    {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
+    {varType int $userPermission}
+    {php $control->getPaginator()->setItemCount($models->count('*'))}
+    {if $paginate}
+        {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}
+    {/if}
     {foreach $flashes as $flash}
         <div class="alert alert-{$flash->type}">
             {$flash->message}

@@ -54,7 +54,7 @@ class AccountManager
         $data = [];
         $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
             [
-                'token' => $token->token,
+                'token' => $token,
                 'person' => $person,
                 'email' => $email,
                 'until' => $until,

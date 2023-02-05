@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\PaymentState;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -27,27 +25,10 @@ class PersonScheduleModel extends Model
         return $schedulePayment ? $schedulePayment->payment : null;
     }
 
-    public function hasActivePayment(): bool
+    public function getLabel(string $lang): string
     {
-        $payment = $this->getPayment();
-        return $payment && $payment->state !== PaymentState::Canceled;
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getLabel(): string
-    {
-        return match ($this->schedule_item->schedule_group->schedule_group_type->value) {
-            ScheduleGroupType::ACCOMMODATION => sprintf(
-                _('Accommodation for %s from %s to %s in %s'),
-                $this->person->getFullName(),
-                $this->schedule_item->schedule_group->start->format(_('__date')),
-                $this->schedule_item->schedule_group->end->format(_('__date')),
-                $this->schedule_item->name_cs
-            ),
-            ScheduleGroupType::WEEKEND => $this->schedule_item->getLabel(),
-            default => throw new NotImplementedException(),
-        };
+        return $this->person->getFullName() . ': '
+            . $this->schedule_item->schedule_group->getName()[$lang] . ' - '
+            . $this->schedule_item->getName()[$lang];
     }
 }

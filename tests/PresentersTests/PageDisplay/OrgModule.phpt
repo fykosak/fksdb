@@ -17,13 +17,13 @@ class OrgModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(OrgService::class)->storeModel([
+        $this->container->getByType(OrgService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'contest_id' => 1,
             'since' => 1,
             'order' => 1,
         ]);
-        $this->getContainer()->getByType(PersonInfoService::class)->storeModel(
+        $this->container->getByType(PersonInfoService::class)->storeModel(
             ['person_id' => $this->person->person_id]
         );
     }
@@ -31,9 +31,9 @@ class OrgModule extends AbstractPageDisplayTestCase
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        $params['year'] = (string)1;
-        $params['contestId'] = (string)1;
-        $params['series'] = (string)1;
+        $params['year'] = "1";
+        $params['contestId'] = "1";
+        $params['series'] = "1";
         if ($presenterName === 'Org:Person') {
             $params['id'] = (string)$this->person->person_id;
         }
@@ -98,6 +98,7 @@ class OrgModule extends AbstractPageDisplayTestCase
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new OrgModule($container);
 $testCase->run();

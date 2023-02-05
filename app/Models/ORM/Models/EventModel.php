@@ -141,6 +141,9 @@ class EventModel extends Model implements Resource, NodeCreator
         ];
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('event');

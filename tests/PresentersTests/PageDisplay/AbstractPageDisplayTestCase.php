@@ -24,16 +24,16 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
     {
         parent::setUp();
 
-        $this->person = $this->getContainer()->getByType(PersonService::class)->storeModel([
+        $this->person = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $this->login = $this->getContainer()->getByType(LoginService::class)->storeModel(
+        $this->login = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->person->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(GrantService::class)->storeModel(
+        $this->container->getByType(GrantService::class)->storeModel(
             ['login_id' => $this->login->login_id, 'role_id' => 1000, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->login);

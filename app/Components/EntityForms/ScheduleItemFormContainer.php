@@ -48,8 +48,8 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleItemService->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);
+        $this->flashMessage(sprintf(_('Item "#%d" has been saved.'), $model->schedule_item_id), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('Schedule:Group:detail', ['id' => $model->schedule_group_id]);
     }
 
     protected function setDefaults(Form $form): void
@@ -72,7 +72,6 @@ class ScheduleItemFormContainer extends EntityFormComponent
             'name_en' => ['required' => true],
             'description_cs' => ['required' => false],
             'description_en' => ['required' => false],
-            'require_id_number' => ['required' => true],
             'capacity' => ['required' => false],
             'price_czk' => ['required' => false],
             'price_eur' => ['required' => false],
@@ -80,7 +79,8 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->event->getScheduleGroups() as $group) {
-            $items[$group->schedule_group_id] = $group->getLabel() . '(' . $group->schedule_group_type->value . ')';
+            $items[$group->schedule_group_id] = $group->getName()[$this->translator->lang]
+                . '(' . $group->schedule_group_type->value . ')';
         }
         $container->addSelect('schedule_group_id', _('Schedule group Id'), $items);
         $form->addComponent($container, self::CONTAINER);

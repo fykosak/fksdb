@@ -80,6 +80,10 @@ class ContestantPresenter extends BasePresenter
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): Control
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
