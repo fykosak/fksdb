@@ -105,8 +105,8 @@
     <h2>{_'Transitions'}</h2>
     {control applicationTransitions}
     <hr/>
-    {*    {if $event->event_type_id === 1 && $isOrg}*}
-    {*        <h2>{_'Seating'}</h2>*}
-    {*        {control seating:preview}*}
-    {*    {/if}*}
+        {if $event->event_type_id === 1 && $isOrg}
+            <h2>{_'Seating'}</h2>
+            {control seating:preview}
+        {/if}
 {/block}
