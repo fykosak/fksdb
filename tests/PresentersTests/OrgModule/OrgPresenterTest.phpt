@@ -25,12 +25,12 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
         $this->orgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->org = $this->getContainer()->getByType(OrgService::class)->storeModel([
+        $this->org = $this->container->getByType(OrgService::class)->storeModel([
             'person_id' => $this->orgPerson->person_id,
             'contest_id' => 1,
             'since' => 0,
@@ -117,7 +117,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         /** @var OrgModel $org */
-        $org = $this->getContainer()
+        $org = $this->container
             ->getByType(OrgService::class)
             ->getTable()
             ->where(['org_id' => $this->org->org_id])
@@ -143,13 +143,14 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
 
     private function countOrgs(): int
     {
-        return $this->getContainer()
+        return $this->container
             ->getByType(OrgService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');
     }
 }
+
 // phpcs:disable
 $testCase = new OrgPresenterTest($container);
 $testCase->run();

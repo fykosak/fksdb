@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -34,6 +34,7 @@ class EventWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -132,9 +133,11 @@ class EventWebModel extends WebModel
         foreach ($event->getScheduleGroups() as $group) {
             $datum = $group->__toArray();
             $datum['schedule_items'] = [];
+            $datum['scheduleItems'] = [];
             /** @var ScheduleItemModel $item */
             foreach ($group->getItems() as $item) {
                 $datum['schedule_items'][] = $item->__toArray();
+                $datum['scheduleItems'][] = $item->__toArray();
             }
             $data[] = $datum;
         }
@@ -292,6 +295,7 @@ class EventWebModel extends WebModel
         }
         $data['schedule'] = $this->createScheduleListArray($event);
         $data['person_schedule'] = $this->createPersonScheduleArray($event);
+        $data['personSchedule'] = $this->createPersonScheduleArray($event);
         return $data;
     }
 

@@ -20,7 +20,6 @@ use Nette\Forms\Form;
  */
 class ScheduleGroupFormComponent extends EntityFormComponent
 {
-
     public const CONTAINER = 'container';
 
     private ScheduleGroupService $scheduleGroupService;
@@ -47,7 +46,7 @@ class ScheduleGroupFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleGroupService->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
+        $this->flashMessage(sprintf(_('Group "#%d" has been saved.'), $model->schedule_group_id), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

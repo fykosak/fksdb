@@ -33,7 +33,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
     }
@@ -58,8 +58,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        $event = $this->getContainer()->getByType(EventService::class)->storeModel($data);
-        $this->getContainer()->getByType(GameSetupService::class)->storeModel([
+        $event = $this->container->getByType(EventService::class)->storeModel($data);
+        $this->container->getByType(GameSetupService::class)->storeModel([
             'event_id' => $event->event_id,
             'game_start' => new \DateTime('2016-01-01T10:00:00'),
             'game_end' => new \DateTime('2016-01-01T10:00:00'),
@@ -90,7 +90,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['room'])) {
             $data['room'] = '101';
         }
-        return $this->getContainer()->getByType(TeamService2::class)->storeModel($data);
+        return $this->container->getByType(TeamService2::class)->storeModel($data);
     }
 
     protected function createTask(array $data): TaskModel
@@ -101,11 +101,11 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy úloha';
         }
-        return $this->getContainer()->getByType(TaskService::class)->storeModel($data);
+        return $this->container->getByType(TaskService::class)->storeModel($data);
     }
 
     protected function createSubmit(array $data): SubmitModel
     {
-        return $this->getContainer()->getByType(SubmitService::class)->storeModel($data);
+        return $this->container->getByType(SubmitService::class)->storeModel($data);
     }
 }

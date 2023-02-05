@@ -1224,16 +1224,19 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_item`
 (
-    `schedule_item_id`  INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_id` INT(11)        NOT NULL,
-    `price_czk`         DECIMAL(11, 2) NULL     DEFAULT NULL,
-    `price_eur`         DECIMAL(11, 2) NULL     DEFAULT NULL,
-    `name_cs`           VARCHAR(256)   NULL     DEFAULT NULL,
-    `name_en`           VARCHAR(256)   NULL     DEFAULT NULL,
-    `capacity`          INT(11)        NOT NULL,
-    `require_id_number` INT(1)         NOT NULL DEFAULT 0,
-    `description_cs`    VARCHAR(256)   NULL     DEFAULT NULL,
-    `description_en`    VARCHAR(256)   NULL     DEFAULT NULL,
+    `schedule_item_id`    INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_id`   INT(11)        NOT NULL,
+    `price_czk`           DECIMAL(11, 2) NULL DEFAULT NULL,
+    `price_eur`           DECIMAL(11, 2) NULL DEFAULT NULL,
+    `name_cs`             VARCHAR(256)   NULL DEFAULT NULL,
+    `name_en`             VARCHAR(256)   NULL DEFAULT NULL,
+    `capacity`            INT(11)        NULL DEFAULT NULL,
+    `description_cs`      VARCHAR(256)   NULL DEFAULT NULL,
+    `description_en`      VARCHAR(256)   NULL DEFAULT NULL,
+    `long_description_cs` TEXT           NULl DEFAULT NULL COMMENT 'for web',
+    `long_description_en` TEXT           NULl DEFAULT NULL COMMENT 'for web',
+    `begin`               DATETIME       NULL DEFAULT NULL,
+    `end`                 DATETIME       NULL DEFAULT NULL,
     CONSTRAINT `fk_schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)
             REFERENCES `schedule_group` (`schedule_group_id`)
