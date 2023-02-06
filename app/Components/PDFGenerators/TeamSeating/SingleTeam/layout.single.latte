@@ -16,10 +16,10 @@
         {foreach $rests as $personRest}
             {foreach $personRest as $rest}
                 {if $team->game_lang === 'cs'}
-                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {substr($rest->schedule_item->name_cs, 0, 5)}
+                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {$rest->schedule_item->name_cs}
                     <br>
                 {else}
-                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {substr($rest->schedule_item->name_en, 0, 5)}
+                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {$rest->schedule_item->name_en}
                     <br>
                 {/if}
             {/foreach}
