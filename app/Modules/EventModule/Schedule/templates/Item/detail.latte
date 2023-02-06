@@ -19,13 +19,12 @@
         '@schedule_item.capacity',
         '@schedule_item.used_capacity',
         '@schedule_item.free_capacity',
-        '@schedule_item.require_id_number'
         ] as $fieldName}
-            {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name: $fieldName,printer:$control['valuePrinter']}
+            {include row from '../../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name: $fieldName,printer:$control['valuePrinter']}
         {/foreach}
 
     </div>
-    <a class="btn btn-outline-primary btn-sm" href="{plink ScheduleItem:edit}">{_'Edit item'}</a>
+    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:edit}">{_'Edit item'}</a>
     <hr/>
     <h2>{_'Persons'}</h2>
     {control personsGrid}

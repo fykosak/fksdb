@@ -35,12 +35,12 @@ class Extrapolate extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->person = $this->getContainer()->getByType(PersonService::class)->storeModel([
+        $this->person = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'gender' => 'M',
         ]);
-        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
+        $address = $this->container->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
@@ -48,7 +48,7 @@ class Extrapolate extends DatabaseTestCase
             'postal_code' => '02001',
             'country_id' => CountryService::SLOVAKIA,
         ]);
-        $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
+        $this->school = $this->container->getByType(SchoolService::class)->storeModel([
             'name_full' => 'GPU',
             'name' => 'GPU',
             'name_abbrev' => 'GPU',

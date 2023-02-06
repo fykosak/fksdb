@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule;
+namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
 use FKSDB\Components\Grids\Schedule\GroupListComponent;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
-use FKSDB\Components\Grids\Schedule\PerPersonScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
@@ -24,7 +24,7 @@ use Nette\Security\Resource;
 /**
  * @method ScheduleGroupModel getEntity()
  */
-class ScheduleGroupPresenter extends BasePresenter
+class GroupPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
@@ -38,11 +38,6 @@ class ScheduleGroupPresenter extends BasePresenter
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
-    public function titlePersons(): PageTitle
-    {
-        return new PageTitle(null, _('Schedule per person'), 'fas fa-list');
     }
 
     public function titleDetail(): PageTitle
@@ -61,7 +56,7 @@ class ScheduleGroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getLabel()),
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getName()[$this->getLang()]),
             'fas fa-pen'
         );
     }
@@ -83,7 +78,7 @@ class ScheduleGroupPresenter extends BasePresenter
     {
         $this->template->items = [
             new NavItem(new Title(null, _('Create group'), 'fa fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fa fa-users'), 'persons'),
+            new NavItem(new Title(null, _('All persons'), 'fa fa-users'), ':Schedule:PersonSchedule:list'),
         ];
     }
 
@@ -114,14 +109,6 @@ class ScheduleGroupPresenter extends BasePresenter
     protected function createComponentGrid(): GroupListComponent
     {
         return new GroupListComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentPerPersonScheduleList(): PerPersonScheduleList
-    {
-        return new PerPersonScheduleList($this->getContext(), $this->getEvent());
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
@@ -35,20 +36,12 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }
 
-    public function getName(): array
+    public function getName(): LocalizedString
     {
-        return [
+        return new LocalizedString([
             'cs' => $this->name_cs,
             'en' => $this->name_en,
-        ];
-    }
-
-    /**
-     * Label include datetime from schedule group
-     */
-    public function getLabel(): string
-    {
-        return $this->name_cs . '/' . $this->name_en;
+        ]);
     }
 
     public function __toArray(): array
@@ -59,8 +52,8 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->getRegistrationBegin(),
             'registrationEnd' => $this->getRegistrationEnd(),
             'modificationEnd' => $this->getModificationEnd(),
-            'label' => $this->getName(),
-            'name' => $this->getName(),
+            'label' => $this->getName()->__serialize(),
+            'name' => $this->getName()->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
@@ -86,6 +79,21 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
     }
 
+    public function hasFreeCapacity(): bool
+    {
+        $available = 0;
+        try {
+            /** @var ScheduleItemModel $item */
+            foreach ($this->getItems() as $item) {
+                $available += $item->getAvailableCapacity();
+            }
+        } catch (\LogicException $exception) {
+            return true;
+        }
+
+        return $available > 0;
+    }
+
     public function getRegistrationBegin(): ?\DateTimeInterface
     {
         return $this->registration_begin ?? $this->event->registration_begin;
@@ -101,8 +109,17 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
     }
 
+    public function hasStarted(): bool
+    {
+        return $this->start->getTimestamp() < time();
+    }
+
+    public function hasEnded(): bool
+    {
+        return $this->end->getTimestamp() < time();
+    }
+
     /**
-     * @param string $key
      * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */
@@ -132,7 +149,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'end' => $this->end->format('c'),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => $this->getName(),
+            'name' => $this->getName()->__serialize(),
         ], $document, $node);
         return $node;
     }
