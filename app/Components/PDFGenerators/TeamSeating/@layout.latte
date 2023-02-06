@@ -11,6 +11,9 @@
     {block headline}
         (0000) Team
     {/block}
+    {block logo}
+        <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo_black.png" alt="" style="float:right;max-width: 25%"/>
+    {/block}
 </h1>
 {embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
     {block seats}
@@ -61,7 +64,9 @@
     {/block}
 {/embed}
 <div style="clear: both"></div>
-{*{block logo}*}
-{*    <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo_black.png" alt="" style="float:right;max-width: 25%"/>*}
-{*{/block}*}
+<br>
+<br>
+<br>
+<br>
+
 {block upperContent}{/block}
