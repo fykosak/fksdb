@@ -15,7 +15,7 @@
         <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo.png" alt="" style="float:right;max-width: 25%"/>
     {/block}
 </h1>
-{embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
+{embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang->value:null}
     {block seats}
         {foreach $room->getSeats() as $seat}
             {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}

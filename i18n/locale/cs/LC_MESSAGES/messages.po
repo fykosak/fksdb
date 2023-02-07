@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 18:18+0100\n"
+"POT-Creation-Date: 2023-02-07 18:28+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3558,7 +3558,6 @@ msgid "WC"
 msgstr ""
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.pva.latte.latte2php:19
-#: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.pva2.latte.latte2php:17
 msgid "Entrance"
 msgstr "Vchod"
 

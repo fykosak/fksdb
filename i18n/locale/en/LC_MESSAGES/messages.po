@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 18:18+0100\n"
+"POT-Creation-Date: 2023-02-07 18:28+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -3562,7 +3562,6 @@ msgid "WC"
 msgstr ""
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.pva.latte.latte2php:19
-#: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.pva2.latte.latte2php:17
 msgid "Entrance"
 msgstr ""
 
