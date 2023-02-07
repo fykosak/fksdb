@@ -12,7 +12,7 @@
         (0000) Team
     {/block}
     {block logo}
-        <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo_black.png" alt="" style="float:right;max-width: 25%"/>
+        <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo.png" alt="" style="float:right;max-width: 25%"/>
     {/block}
 </h1>
 {embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
@@ -53,7 +53,7 @@
                 {/if}
                 {if $showBigNav && $selectedTeam}
                     <circle
-                            style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
+                            style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15;"
                             r="80"
                             cx="0"
                             cy="0"
