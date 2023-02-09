@@ -41,8 +41,9 @@
   }
 
   &.timer-big {
-    margin-top: 10rem;
+    //margin-top: 10rem;
     align-items: center;
+    position: relative;
 
     .time-value {
       font-size: 8rem;
@@ -62,3 +63,6 @@
   background-color: var(--color-fof-main);
 }
 
+.logo-sponsors {
+  width: 60%;
+}

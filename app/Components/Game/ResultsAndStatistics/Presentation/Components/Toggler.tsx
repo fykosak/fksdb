@@ -26,17 +26,18 @@ class Toggler extends React.Component<StateProps & OwnProps> {
                 {this.props.children}
             </>;
         }
-        return <div className={this.props.className}>
-            <div className="logo row mt-3">
-                <img className="col-6 offset-3" alt="" src={
-                    this.props.event === 'fof'
-                        ? '/images/fyziklani/fyziklani_2023_logo.png'
-                        : '/images/logo/vedecky_ctyrboj.png'
-                }
-                />
-            </div>
+        return <div className="h-100 d-flex flex-column justify-content-around align-items-center">
+            <img className="w-50 logo" alt="" src={
+                this.props.event === 'fof'
+                    ? '/images/fyziklani/fyziklani_2023_logo.png'
+                    : '/images/logo/vedecky_ctyrboj.png'
+            }/>
             <Images/>
             <Timer mode="big"/>
+            <img className="logo-sponsors" alt="" src={
+                this.props.event === 'fof'
+                    ? '/images/fyziklani/fyziklani_2023_sponsors.svg' : ""
+            }/>
         </div>;
     }
 }
