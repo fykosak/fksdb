@@ -30,7 +30,7 @@ class Toggler extends React.Component<StateProps & OwnProps> {
             <div className="logo row mt-3">
                 <img className="col-6 offset-3" alt="" src={
                     this.props.event === 'fof'
-                        ? '/images/fyziklani/logo_2022_white.svg'
+                        ? '/images/fyziklani/fyziklani_2023_logo.png'
                         : '/images/logo/vedecky_ctyrboj.png'
                 }
                 />

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Filter } from '../filter';
 import { Action, Dispatch } from 'redux';
-import { setFilter } from '../../actions/table';
+import { ACTION_SET_FILTER } from '../../actions/table';
 import { connect } from 'react-redux';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
@@ -35,7 +35,10 @@ class FilterComponent extends React.Component<OwnProps & StateProps & DispatchPr
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetFilter: (filter: Filter) => dispatch(setFilter(filter)),
+        onSetFilter: (filter: Filter) => dispatch({
+            filter,
+            type: ACTION_SET_FILTER,
+        }),
     };
 };
 const mapStateToPros = (state: Store, ownProps: OwnProps): StateProps => {
