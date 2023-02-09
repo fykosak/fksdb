@@ -67,10 +67,10 @@ class DiplomasPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(?TeamCategory $category = null): void
+    public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy->close($category);
+        $log = $closeStrategy->close($category ? TeamCategory::tryFrom($category) : null);
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
