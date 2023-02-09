@@ -64,7 +64,7 @@ class OrganizersWebModel extends WebModel
 
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->contestService->findByPrimary($params['contestId']);
+        $contest = $this->contestService->findByPrimary($params['contest_id']);
         $organisers = $contest->getOrganisers();
         if (isset($params['year'])) {
             $organisers->where('since<=?', $params['year'])
