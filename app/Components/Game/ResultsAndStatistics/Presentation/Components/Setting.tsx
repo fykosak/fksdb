@@ -3,8 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import {
+    ACTION_SET_PARAMS,
     Params,
-    setParams,
 } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
@@ -137,7 +137,10 @@ const mapStateToPros = (state: Store): StateProps => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetParams: (data) => dispatch(setParams(data)),
+        onSetParams: (data) => dispatch({
+            data,
+            type: ACTION_SET_PARAMS,
+        }),
     };
 };
 

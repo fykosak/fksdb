@@ -28,6 +28,10 @@ class Images extends React.Component<StateProps> {
         if (toStart === 0 || toEnd === 0) {
             return null;
         }
+
+        const label = this.getLabel(toStart, toEnd);
+        if (label === null) return null;
+
         return (
             <div className="presentation-images">
                 {this.getLabel(toStart, toEnd)}
@@ -37,10 +41,10 @@ class Images extends React.Component<StateProps> {
 
     private getLabel(toStart: number, toEnd: number): string {
         if (toStart > 300 * 1000) {
-            return 'Have not begun yet/Ješte nezačalo';
+            return 'Have not begun yet / Ješte nezačalo';
         }
         if (toStart > 0) {
-            return 'Will soon begin/Brzy začne';
+            return 'Will soon begin / Brzy začne';
         }
         if (toStart > -120 * 1000) {
             return 'Start!';
@@ -49,9 +53,9 @@ class Images extends React.Component<StateProps> {
             return null;
         }
         if (toEnd > -240 * 1000) {
-            return 'Ended/Skončilo';
+            return 'Ended / Skončilo';
         }
-        return 'Waiting for results/Čeká na výsledky';
+        return 'Waiting for results / Čeká na výsledky';
     }
 }
 

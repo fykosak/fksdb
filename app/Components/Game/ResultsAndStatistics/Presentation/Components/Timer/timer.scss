@@ -1,7 +1,7 @@
 @import "../../../../../../css/colors";
 
 .game-presentation .presentation-timer {
-  color: white;
+  color: var(--color-fof-main);
 
   justify-content: space-between;
   padding: .25em;
@@ -17,8 +17,8 @@
   & > span {
     display: flex;
     flex-wrap: wrap;
-    color: white;
-    //color: var(--color-fof-main);;
+    //color: white;
+    color: var(--color-fof-main);;
   }
 
   &.timer-small {
@@ -41,8 +41,9 @@
   }
 
   &.timer-big {
-    margin-top: 10rem;
+    //margin-top: 10rem;
     align-items: center;
+    position: relative;
 
     .time-value {
       font-size: 8rem;
@@ -62,3 +63,6 @@
   background-color: var(--color-fof-main);
 }
 
+.logo-sponsors {
+  width: 60%;
+}
