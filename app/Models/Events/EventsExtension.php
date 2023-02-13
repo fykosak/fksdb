@@ -95,6 +95,7 @@ class EventsExtension extends CompilerExtension
                             'label' => $translateExpressionType,
                             'afterExecute' => Expect::listOf($expressionType),
                             'beforeExecute' => Expect::listOf($expressionType),
+                            'validation' => $boolExpressionType(true)->default(true),
                             'behaviorType' => Expect::string('secondary'),
                         ])->castTo('array'),
                         Expect::string()
