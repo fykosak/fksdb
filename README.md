@@ -36,6 +36,8 @@ Initialization
 
 0.3) Run `composer install`
 
+0.4) Run `npm install && npm run build`
+
 Environment
 -----------
 
