@@ -69,6 +69,7 @@ class TransitionsExtension extends CompilerExtension
             ->addSetup('setSourceStateEnum', [$source])
             ->addSetup('setTargetStateEnum', [$target])
             ->addSetup('setLabel', [Helpers::translate($baseConfig['label'])])
+            ->addSetup('setValidation', [$baseConfig['validation']])
             ->addSetup(
                 'setBehaviorType',
                 [
