@@ -126,13 +126,17 @@ class ApplicationComponent extends BaseComponent
             if (!$transition->getValidation()) {
                 $submit->setValidationScope([]);
             }
-            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
+
+            $submit->onClick[] = fn(SubmitButton $button) =>
+                $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
             }
 
-            $submit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-' . $transition->behaviorType->value]);
+            $submit->getControlPrototype()->addAttributes(
+                ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
+            );
         }
 
         /*
