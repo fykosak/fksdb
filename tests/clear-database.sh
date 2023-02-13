@@ -1,11 +1,11 @@
 #!/bin/bash
 
 DB_NAME=fksdb_test
+COUNT=8
 
 SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
 
-
-COUNT=8
+source $SCRIPT_PATH/functions.sh
 
 if [ "x$1" != "x" ] ; then
 	COUNT=$1
@@ -13,7 +13,7 @@ fi
 
 for i in `seq 1 $COUNT` ; do
 
-mysql $DB_NAME$i <<EOD
+sql $DB_NAME$i <<EOD
 DELETE FROM email_message;
 DELETE FROM submit;
 DELETE FROM task;

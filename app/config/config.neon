@@ -122,7 +122,15 @@ php:
     # zlib.output_compression: yes
 
 database:
-    reflection: discovered
+    default:
+        dsn: 'mysql:host=%env.MYSQL_HOST%;dbname=%env.MYSQL_DATABASE%'
+        user: %env.MYSQL_USER%
+        password: %env.MYSQL_PASSWORD%
+    ro:
+        dsn: 'mysql:host=%env.MYSQL_HOST%;dbname=%env.MYSQL_DATABASE%'
+        user: %env.MYSQL_USER%-ro
+        password: %env.MYSQL_PASSWORD%
+
 application:
     errorPresenter: Core:Error
     mapping:
