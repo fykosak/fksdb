@@ -354,6 +354,7 @@ class ApplicationPresenter extends BasePresenter
                     'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
                 );
         }
+        $this->template->model = $this->getEventApplication();
     }
 
     protected function getRole(): PresenterRole

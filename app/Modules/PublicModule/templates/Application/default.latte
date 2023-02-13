@@ -1,3 +1,5 @@
 {block content}
+    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+    {control valuePrinter:row 'event_participant.status', $model}<br>
     {control application:form}
 {/block}
