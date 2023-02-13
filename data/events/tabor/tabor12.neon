@@ -3,7 +3,7 @@ parameters:
         tabor12:
             appCond: or(regOpen(), role('admin'))
             requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            capacityCond: le(count('auto.invited','invited','interested','applied','paid','participated'),param('capacity')) # checks if the event is not full
+            capacityCond: le(count('auto.invited','invited','applied','paid','participated'),param('capacity')) # checks if the event is not full
             person:
                 person:
                     other_name:
@@ -103,10 +103,12 @@ events:
                 invited->rejected:
                     condition: or(regOpen(),role('admin'))
                     label: _('Odmítnout účast')
+                    validation: false
                     behaviorType: danger
                 spare->rejected:
                     condition: or(regOpen(),role('admin'))
                     label: _('Odmítnout účast')
+                    validation: false
                     behaviorType: warning
                 interested->applied:
                     condition: and(role('admin'),%events.tabor12.capacityCond%)
@@ -150,7 +152,7 @@ events:
                 used_drugs:
                     label: _('Užívané léky')
                 swimmer:
-                     label: _('Umím plavat')
+                    label: _('Umím plavat')
                 note:
                     label: _('Ještě něco, co bychom o Tobě měli vědět?')
         #

@@ -25,6 +25,9 @@ class Transition
     /** @var Statement[] */
     public array $afterExecute = [];
 
+    /** @var bool */
+    protected $validation;
+
     public EnumColumn $source;
     public EnumColumn $target;
     protected ExpressionEvaluator $evaluator;
@@ -77,6 +80,16 @@ class Transition
     public function canExecute(ModelHolder $holder): bool
     {
         return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
+    }
+
+    public function getValidation(): bool
+    {
+        return $this->validation ?? true;
+    }
+
+    public function setValidation(?bool $validation): void
+    {
+        $this->validation = $validation ?? true;
     }
 
     public function addBeforeExecute(callable $callBack): void

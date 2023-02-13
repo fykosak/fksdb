@@ -43,7 +43,9 @@ class ScheduleContainer extends ContainerWithOptions
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
             $field = new ScheduleGroupField($group, (string)$this->translator->lang);
-            $field->setRequired($this->required);
+            if ($this->required) {
+                $field->setRequired(_('Field %label is required.'));
+            }
             $this->addComponent(
                 $field,
                 (string)$group->schedule_group_id
