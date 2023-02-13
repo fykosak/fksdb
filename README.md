@@ -101,3 +101,42 @@ Troubleshooting
 ---------------
 - make sure the `path` has the `+x` property, i.e. `sudo chmod +x /home`, `sudo chmod +x /home/user`, `sudo chmod +x /home/user/fksdb_path`
 
+Containerized
+=============
+
+```
+export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+export DOCKER_BUILDKIT=0
+
+# this will "install" the environment
+docker-compose build
+# this will start the server et al.
+docker-compose up
+```
+
+  * `docker-compose exec app $COMMAND` to run command inside environment
+
+```
+docker-compose exec app composer install
+docker-compose exec app composer run-script initTestDatabase
+docker-compose exec app composer run-script test
+```
+
+  * the app is exposed on port 8080
+```
+docker-compose exec app npm install
+docker-compose exec app npm run build
+```
+
+  * `fksdb` directory is bind mounted so changes propagate inside the container
+    * `fksdb/logs` are normals Nette logs
+    * `fksdb/containers/logs` contains (Apache) logs from inside the container
+  * MySQL data are persistent and changes in `fksdb` directory
+    * anything else won't survive container restart
+
+```
+docker-compose down
+```
+
+  * TODO optimize build process (composer install + npm build)
+  * TODO make the app image deployable (local development only so far)
