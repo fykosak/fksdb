@@ -19,20 +19,19 @@ parameters:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-            paramScheme:
-                 notifyBcc:
-                     default: dsef@fykos.cz
-                 notifyFrom:
-                     default: Den s experimentální fyzikou <dsef@fykos.cz>
+            #paramScheme:
+             #    notifyBcc:
+            #         default: dsef@fykos.cz
+             #    notifyFrom:
+             #        default: Den s experimentální fyzikou <dsef@fykos.cz>
 events:
     dsefDefault:
         eventTypeIds: [2]
         #eventYears: all
         formLayout: dsef.form
-        paramScheme: []
+        #paramScheme: []
 
         baseMachine:
-                service: @orm.event_participant.service
                 transitions: [] #not modifable
                 fields: [] #not modifable
         #

@@ -3,27 +3,7 @@ events:
         eventTypeIds: [4] # jarní je 4, podzimní je 5, ale nejsou různá
         eventYears: [35] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
-
-        paramScheme:
-            notifyBcc:
-                default: vercah@fykos.cz
-            notifyFrom:
-                default: FYKOSí Soustředění <soustredeni@fykos.cz>
-            letterWhere:
-                default: Hejnice
-            deadline:
-                default: 2022-04-04
-            letterSignature:
-                default: Veronika Hendrychová
-            letterDecisionDeadline:
-                default: 2022-04-04
-            letterResolutionTime:
-                default: 2022-04-06
-
-
         baseMachine:
-                service: @orm.event_participant.service
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

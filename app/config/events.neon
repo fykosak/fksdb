@@ -10,8 +10,6 @@ definition:
         default: true
     formLayout:
         default: application
-    paramScheme:
-        default: []
     baseMachine:
     machine:
 

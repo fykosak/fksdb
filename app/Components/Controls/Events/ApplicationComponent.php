@@ -81,10 +81,7 @@ class ApplicationComponent extends BaseComponent
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
-
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->event;
-        $this->template->primaryMachine = $this->handler->getMachine();
         $this->template->render($this->templateFile);
     }
 
@@ -109,11 +106,10 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine();
         $transitionSubmit = null;
 
         foreach (
-            $primaryMachine->getAvailableTransitions(
+            $this->handler->getMachine()->getAvailableTransitions(
                 $this->holder,
                 $this->holder->getModelState()
             ) as $transition

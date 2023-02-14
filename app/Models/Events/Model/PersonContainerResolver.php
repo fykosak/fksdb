@@ -21,7 +21,6 @@ class PersonContainerResolver implements Resolver
     /** @var callable */
     private $visibleCondition;
     private SelfResolver $selfResolver;
-    private ExpressionEvaluator $evaluator;
 
     /**
      * @param callable|bool $modifiableCondition
@@ -31,14 +30,12 @@ class PersonContainerResolver implements Resolver
         Field $field,
         $modifiableCondition,
         $visibleCondition,
-        SelfResolver $selfResolver,
-        ExpressionEvaluator $evaluator
+        SelfResolver $selfResolver
     ) {
         $this->field = $field;
         $this->modifiableCondition = $modifiableCondition;
         $this->visibleCondition = $visibleCondition;
         $this->selfResolver = $selfResolver;
-        $this->evaluator = $evaluator;
     }
 
     public function getResolutionMode(?PersonModel $person): ResolutionMode
@@ -53,12 +50,14 @@ class PersonContainerResolver implements Resolver
     public function isModifiable(?PersonModel $person): bool
     {
         return $this->selfResolver->isModifiable($person) ||
-            $this->evaluator->evaluate($this->modifiableCondition, $this->field->holder);
+        is_bool($this->modifiableCondition)
+            ? $this->modifiableCondition
+            : ($this->modifiableCondition)($this->field->holder);
     }
 
     public function isVisible(?PersonModel $person): bool
     {
         return $this->selfResolver->isVisible($person) ||
-            $this->evaluator->evaluate($this->visibleCondition, $this->field->holder);
+        is_bool($this->visibleCondition) ? $this->visibleCondition : ($this->visibleCondition)($this->field->holder);
     }
 }

@@ -24,13 +24,12 @@ events:
         eventTypeIds: [2]
         eventYears: [23]
         formLayout: dsef.form
-        paramScheme:
-            notifyBcc:
-                default: dsef@fykos.cz
-            notifyFrom:
-                default: Den s experimentální fyzikou <dsef@fykos.cz>
+       # paramScheme:
+       #     notifyBcc:
+        #        default: dsef@fykos.cz
+        #    notifyFrom:
+        #        default: Den s experimentální fyzikou <dsef@fykos.cz>
         baseMachine:
-                service: @orm.event_participant.service
                 transitions:
                     # to spare
                     __init->spare.tsaf:

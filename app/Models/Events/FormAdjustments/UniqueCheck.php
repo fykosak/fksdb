@@ -6,18 +6,18 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\Forms\Form;
 use Nette\Forms\Control;
+use Nette\Forms\Form;
 
 class UniqueCheck extends AbstractAdjustment
 {
-
     private string $field;
-
     private string $message;
+    private EventParticipantService $eventParticipantService;
 
-    public function __construct(string $field, string $message)
+    public function __construct(string $field, string $message, EventParticipantService $eventParticipantService)
     {
         $this->field = $field;
         $this->message = $message;
@@ -32,7 +32,7 @@ class UniqueCheck extends AbstractAdjustment
 
         foreach ($controls as $control) {
             $control->addRule(function (Control $control) use ($holder): bool {
-                $table = $holder->service->getTable();
+                $table = $this->eventParticipantService->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
                     /* We don't want to fulfill potential promise

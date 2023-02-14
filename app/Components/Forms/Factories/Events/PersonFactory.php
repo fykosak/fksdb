@@ -7,7 +7,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\EventsExtension;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
@@ -30,26 +29,23 @@ class PersonFactory extends AbstractFactory
     /** @var callable */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private ExpressionEvaluator $evaluator;
     private User $user;
     private DIContainer $container;
 
     /**
      * PersonFactory constructor.
      * @param callable|array $fieldsDefinition
-     * @param callable|string $searchType
      * @param callable|bool $allowClear
      * @param callable|bool $modifiable
      * @param callable|bool $visible
      */
     public function __construct(
         $fieldsDefinition,
-        $searchType,
+        string $searchType,
         $allowClear,
         $modifiable,
         $visible,
         ReferencedPersonFactory $referencedPersonFactory,
-        ExpressionEvaluator $evaluator,
         User $user,
         DIContainer $container
     ) {
@@ -59,7 +55,6 @@ class PersonFactory extends AbstractFactory
         $this->modifiable = $modifiable;
         $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
-        $this->evaluator = $evaluator;
         $this->user = $user;
         $this->container = $container;
     }
@@ -73,15 +68,14 @@ class PersonFactory extends AbstractFactory
             $field,
             $this->modifiable,
             $this->visible,
-            new SelfResolver($this->user),
-            $this->evaluator
+            new SelfResolver($this->user)
         );
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
             $field->holder->event->getContestYear(),
-            $this->evaluator->evaluate($this->searchType, $field->holder),
-            $this->evaluator->evaluate($this->allowClear, $field->holder),
+            $this->searchType,
+            is_bool($this->allowClear) ? $this->allowClear : ($this->allowClear)($field->holder),
             $resolver,
             $field->holder->event
         );
@@ -119,7 +113,7 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = $this->evaluator->evaluate($value, $field->holder);
+                    $value = is_scalar($value) ? $value : ($value)($field->holder);
                 }
             }
         }

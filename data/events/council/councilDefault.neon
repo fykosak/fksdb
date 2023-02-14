@@ -26,19 +26,18 @@ events:
     council:
         eventTypeIds: [15]
         formLayout: council.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Výfučí Kyber Koncil <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 0
+        #paramScheme:
+        #    notifyBcc:
+        #        default: vyfuk@vyfuk.mff.cuni.cz
+        #    notifyFrom:
+       #         default: Výfučí Kyber Koncil <vyfuk@vyfuk.mff.cuni.cz>
+       #     capacity:
+        #        default: 0
 
         baseMachine:
-                service: @orm.event_participant.service
                 transitions:
                     __init->applied:
-                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
                         label: _('Přihlásit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)

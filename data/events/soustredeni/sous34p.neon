@@ -3,30 +3,7 @@ events:
         eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
-        paramScheme:
-            notifyBcc:
-                default: soustredeni@fykos.cz
-            notifyFrom:
-                default: soustredeni@fykos.cz
-            deadline:
-                default: 1970-01-01 00:00:00
-            deadlineCall1:
-                default: 1970-01-01 00:00:00
-            deadlineCall2:
-                default: 1970-01-01 00:00:00
-            deadlineCallLast:
-                default: 1970-01-01 00:00:00
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
-
         baseMachine:
-                service: @orm.event_participant.service
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

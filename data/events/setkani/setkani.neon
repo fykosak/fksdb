@@ -63,20 +63,10 @@ events:
         eventTypeIds: [11,12]
         eventYears: [1,2,3,4,5,6,7] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Setkáni řešitelů Výfuku <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 0
-
         baseMachine:
-                service: @orm.event_participant.service
-
                 transitions:
                     __init->applied:
-                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
                         label: _('Přihlásit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)

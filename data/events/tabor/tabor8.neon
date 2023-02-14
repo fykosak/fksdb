@@ -15,24 +15,7 @@ events:
         eventTypeIds: [10]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor7.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            deadline:
-                default: 1970-01-01 00:00:00
-
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
-
         baseMachine:
-                service: @orm.event_participant.service
                 transitions:
                     __init->invited:
                         condition: role('admin')

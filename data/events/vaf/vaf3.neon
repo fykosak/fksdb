@@ -41,20 +41,18 @@ events:
         eventTypeIds: [3]
         eventYears: [3]
         formLayout: vikend.form
-        paramScheme:
-            notifyBcc:
-                default: vaf@fykos.cz
-            notifyFrom:
-                default: Víkend s aplikovanou fyzikou <vaf@fykos.cz>
-            capacity:
-                default: 0
+        #paramScheme:
+       #     notifyBcc:
+       #         default: vaf@fykos.cz
+      #      notifyFrom:
+      #          default: Víkend s aplikovanou fyzikou <vaf@fykos.cz>
+      #      capacity:
+     #           default: 0
 
         baseMachine:
-                service: @orm.event_participant.service
-
                 transitions:
                     __init->spare:
-                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
                         label: _('Přihlásit náhradníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)

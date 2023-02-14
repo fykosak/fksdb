@@ -78,10 +78,10 @@ class MailSender extends MailCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'blind_carbon_copy' => $holder->getParameter(self::BCC_PARAM) ?? null,
+            'blind_carbon_copy' => $holder->event->getParameter(self::BCC_PARAM) ?? null,
             'subject' => $this->getSubject($holder->event, $holder->getModel()),
-            'sender' => $holder->getParameter(self::FROM_PARAM),
-            'reply_to' => $holder->getParameter(self::FROM_PARAM),
+            'sender' => $holder->event->getParameter(self::FROM_PARAM),
+            'reply_to' => $holder->event->getParameter(self::FROM_PARAM),
         ];
     }
 

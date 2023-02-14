@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -27,7 +26,6 @@ class Transition
 
     public EnumColumn $source;
     public EnumColumn $target;
-    protected ExpressionEvaluator $evaluator;
 
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
@@ -54,11 +52,6 @@ class Transition
         $this->behaviorType = $behaviorType;
     }
 
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
-    }
-
     public function getLabel(): string
     {
         return _($this->label);
@@ -76,7 +69,10 @@ class Transition
 
     public function canExecute(ModelHolder $holder): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
+        if (!isset($this->condition)) {
+            return true;
+        }
+        return (bool)($this->condition)($holder);
     }
 
     public function addBeforeExecute(callable $callBack): void

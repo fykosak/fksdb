@@ -18,7 +18,6 @@ use FKSDB\Models\Events\Semantics\Role;
 use FKSDB\Models\Events\Semantics\State;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsExtension;
@@ -27,7 +26,6 @@ use Nette\DI\Config\Loader;
 use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
-use Nette\InvalidArgumentException;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
@@ -87,7 +85,6 @@ class EventsExtension extends CompilerExtension
                 'eventTypeIds' => Expect::listOf('int'),
                 'eventYears' => Expect::listOf('int')->default(null),
                 'formLayout' => Expect::string('application'),
-                'paramScheme' => Expect::array([]),
                 'baseMachine' => Expect::structure([
                     'transitions' => Expect::arrayOf(
                         Expect::structure([
@@ -111,7 +108,6 @@ class EventsExtension extends CompilerExtension
                         ])->castTo('array'),
                         Expect::string()
                     ),
-                    'service' => Expect::string(EventParticipantService::class),
                 ])->castTo('array'),
                 'machine' => Expect::structure([
                     'baseMachine' => Expect::structure([
@@ -126,7 +122,7 @@ class EventsExtension extends CompilerExtension
                     ),
                 ])->castTo('array'),
             ])->castTo('array'),
-            'string'
+            Expect::string()
         )->castTo('array');
     }
 
@@ -149,8 +145,6 @@ class EventsExtension extends CompilerExtension
             [$this->getContainerBuilder()->parameters['events']['templateDir']]
         );
         foreach ($config as $definitionName => $definition) {
-            $this->validateConfigName($definitionName);
-
             $keys = $this->createAccessKeys($definition);
             $machine = $this->createMachineFactory($definitionName);
             $holder = $this->createHolderFactory($definitionName, $definition);
@@ -171,13 +165,6 @@ class EventsExtension extends CompilerExtension
     private function getBaseMachineConfig(string $eventName): array
     {
         return $this->getConfig()[$eventName]['baseMachine'];
-    }
-
-    private function validateConfigName(string $name): void
-    {
-        if (!preg_match(self::NAME_PATTERN, $name)) {
-            throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
-        }
     }
 
     private function createTransitionService(string $baseName, string $mask, array $definition): array
@@ -218,8 +205,7 @@ class EventsExtension extends CompilerExtension
     {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->getFieldName())
-            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']])
-            ->addSetup('setEvaluator', ['@events.expressionEvaluator']);
+            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
         foreach ($fieldDefinition as $key => $parameter) {
             if (is_numeric($key)) {
                 continue;
@@ -307,17 +293,6 @@ class EventsExtension extends CompilerExtension
                     break;
             }
         }
-
-        $factory->addSetup('setService', [$definition['service']]);
-        $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-
-        $config = $this->getConfig();
-        $paramScheme = $definition['paramScheme'] ?? $config[$eventName]['paramScheme'];
-        foreach (array_keys($paramScheme) as $paramKey) {
-            $this->validateConfigName($paramKey);
-        }
-        $factory->addSetup('setParamScheme', [$paramScheme]);
-
         foreach ($definition['fields'] as $name => $fieldDef) {
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);

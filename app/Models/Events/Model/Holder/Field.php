@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
 
 class Field
 {
-
     public string $name;
     public ?string $label;
     public ?string $description;
     public BaseHolder $holder;
-    private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
     /** @var mixed */
     private $default;
@@ -51,11 +48,6 @@ class Field
         $this->default = $default;
     }
 
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
-    }
-
     public function setFactory(FieldFactory $factory): void
     {
         $this->factory = $factory;
@@ -78,7 +70,10 @@ class Field
 
     public function isRequired(): bool
     {
-        return $this->evaluator->evaluate($this->required, $this->holder);
+        if (is_bool($this->required)) {
+            return $this->required;
+        }
+        return ($this->required)($this->holder);
     }
 
     /** @param bool|callable $required */
@@ -91,7 +86,13 @@ class Field
 
     public function isModifiable(): bool
     {
-        return $this->holder->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this->holder);
+        if (!$this->holder->isModifiable()) {
+            return false;
+        }
+        if (is_bool($this->modifiable)) {
+            return $this->modifiable;
+        }
+        return ($this->modifiable)($this->holder);
     }
 
     /** @param bool|callable $modifiable */
@@ -104,7 +105,10 @@ class Field
 
     public function isVisible(): bool
     {
-        return (bool)$this->evaluator->evaluate($this->visible, $this->holder);
+        if (is_bool($this->visible)) {
+            return $this->visible;
+        }
+        return ($this->visible)($this->holder);
     }
 
     /**

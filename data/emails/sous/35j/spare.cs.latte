@@ -6,7 +6,7 @@
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} FYKOSu,<br/>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} dobrý výkon v uplynulých sériích, zveme Tě jako
     <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->event->event_type->name}, které se
-    bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od
+    bude konat v obci <strong>{$holder->event->getParameter('letterWhere')}</strong> od
     <strong>{$holder->event->begin|date:'j. n.'}</strong> do <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
 </p>
 
@@ -28,7 +28,7 @@
 <p>
     Své rozhodnutí, zda bys
     chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet, kdyby se nám uvolnilo místo, nám dej vědět co nejdříve, nejpozději však do
-    <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím <a
+    <strong>{$holder->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím <a
             href="https://db.fykos.cz/">FKSDB</a>, nebo pomocí odkazu <a
             href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if}
     , jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
@@ -39,7 +39,7 @@
 </p>
 <p>
     O Tvé účasti na soustředění rozhodneme do
-    <strong>{$holder->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
+    <strong>{$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
 </p>
 
 <p>
@@ -55,5 +55,5 @@
 <p>
     Těšíme se na Tebe!<br>
     Za organizátory<br>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>

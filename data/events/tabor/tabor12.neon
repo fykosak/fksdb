@@ -3,7 +3,7 @@ parameters:
         tabor12:
             appCond: or(regOpen(), role('admin'))
             requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            capacityCond: le(count('auto.invited','invited','interested','applied','paid','participated'),param('capacity')) # checks if the event is not full
+            capacityCond: le(count(['auto.invited','invited','interested','applied','paid','participated']),param('capacity')) # checks if the event is not full
             person:
                 person:
                     other_name:
@@ -52,23 +52,7 @@ events:
         eventTypeIds: [10]
         eventYears: [12] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 29
-
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-
-
         baseMachine:
-            service: @orm.event_participant.service
-
             transitions:
                 __init->invited:
                     condition: and(role('admin'),%events.tabor12.capacityCond%)

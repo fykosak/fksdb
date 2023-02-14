@@ -6,10 +6,7 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Processing\Processing;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -20,11 +17,8 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\Logging\Logger;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\InvalidArgumentException;
-use Nette\Neon\Neon;
 use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
@@ -34,16 +28,11 @@ class BaseHolder implements ModelHolder
 
     /** @var bool|callable */
     private $modifiable;
-
-    private ExpressionEvaluator $evaluator;
     private Container $container;
     public EventModel $event;
-    public EventParticipantService $service;
+    private EventParticipantService $service;
     private ?EventParticipantModel $model;
     public array $data = [];
-
-    public array $paramScheme;
-    private array $parameters;
 
     /** @var Field[] */
     private array $fields = [];
@@ -52,9 +41,10 @@ class BaseHolder implements ModelHolder
     /** @var Processing[] */
     private array $processings = [];
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, EventParticipantService $service)
     {
         $this->container = $container;
+        $this->service = $service;
     }
 
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
@@ -70,15 +60,11 @@ class BaseHolder implements ModelHolder
     /**
      * Apply processings to the values and sets them to the ORM model.
      */
-    public function processFormValues(
-        ArrayHash $values,
-        ?Transition $transition,
-        Logger $logger,
-        ?Form $form
-    ): ?EventParticipantStatus {
+    public function processFormValues(ArrayHash $values, ?Transition $transition): ?EventParticipantStatus
+    {
         $newState = $transition ? $transition->target : null;
         foreach ($this->processings as $processing) {
-            $processing->process($newState, $values, $this, $logger, $form);
+            $processing->process($values);
         }
         return $newState;
     }
@@ -112,29 +98,18 @@ class BaseHolder implements ModelHolder
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * @throws NeonSchemaException
-     */
     public function setEvent(EventModel $event): void
     {
         $this->event = $event;
         $this->data['event_id'] = $this->event->getPrimary();
-        $this->cacheParameters();
-    }
-
-    public function setParamScheme(array $paramScheme): void
-    {
-        $this->paramScheme = $paramScheme;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
     }
 
     public function isModifiable(): bool
     {
-        return $this->evaluator->evaluate($this->modifiable, $this);
+        if (is_bool($this->modifiable)) {
+            return $this->modifiable;
+        }
+        return ($this->modifiable)($this);
     }
 
     public function getModel(): ?EventParticipantModel
@@ -172,10 +147,6 @@ class BaseHolder implements ModelHolder
         $this->data['status'] = $state->value;
     }
 
-    public function setService(EventParticipantService $service): void
-    {
-        $this->service = $service;
-    }
 
     public function setLabel(string $label): void
     {
@@ -224,35 +195,6 @@ class BaseHolder implements ModelHolder
     public function __toString(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @throws NeonSchemaException
-     */
-    private function cacheParameters(): void
-    {
-        $parameters = $this->event->parameters ?? '';
-        $parameters = $parameters ? Neon::decode($parameters) : [];
-        if (is_string($parameters)) {
-            throw new NeonSchemaException('Parameters must be an array string given');
-        }
-        $this->parameters = NeonScheme::readSection($parameters, $this->paramScheme);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameter(string $name)
-    {
-        try {
-            return $this->parameters[$name] ?? null;
-        } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException(
-                "No parameter '$name' for event " . $this->event . '.',
-                0,
-                $exception
-            );
-        }
     }
 
     public function updateState(EnumColumn $newState): void

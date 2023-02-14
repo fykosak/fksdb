@@ -64,7 +64,6 @@ class TransitionsExtension extends CompilerExtension
         )
             ->addTag($machineName)
             ->setType($className)
-            ->addSetup('setEvaluator', ['@events.expressionEvaluator'])
             ->addSetup('setCondition', [$baseConfig['condition'] ?? null])
             ->addSetup('setSourceStateEnum', [$source])
             ->addSetup('setTargetStateEnum', [$target])

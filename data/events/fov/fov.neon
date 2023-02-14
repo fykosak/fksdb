@@ -19,23 +19,22 @@ events:
         eventTypeIds: [16]
         #eventYears: [] # specify for which years this machine is valid, by default all years
         formLayout: fov.form
-        paramScheme:
-            notifyBcc:
-                default: soustredeni@fykos.cz
-            notifyFrom:
-                default: soustredeni@fykos.cz
-            deadline:
-                default: 1970-01-01 00:00:00
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
+        #paramScheme:
+        #    notifyBcc:
+        #        default: soustredeni@fykos.cz
+        #    notifyFrom:
+        #        default: soustredeni@fykos.cz
+       #     deadline:
+       #         default: 1970-01-01 00:00:00
+        #    letterWhere:
+       #         default: nikde
+        #    letterSignature:
+       #         default: Student Pilný
+       #     letterResolutionTime:
+        #        default: až naprší a uschne
 
 
         baseMachine:
-                service: @orm.event_participant.service
                 transitions:
                     __init->invited:
                         condition: role('admin')

@@ -30,15 +30,14 @@ events:
         eventTypeIds: [14]
         eventYears: [1]
         formLayout: dsef.form
-        paramScheme:
-            notifyBcc:
-                default: dsef@fykos.cz
-            notifyFrom:
-                default: Den s experimentální fyzikou <dsef@fykos.cz>
-            accomodationCapacity:
-                default: 0
+       # paramScheme:
+        #    notifyBcc:
+        #        default: dsef@fykos.cz
+         #   notifyFrom:
+         #       default: Den s experimentální fyzikou <dsef@fykos.cz>
+         #   accomodationCapacity:
+        #        default: 0
         baseMachine:
-                service: @orm.event_participant.service
                 transitions: %events.defaultDsef.transitions%
 
                 fields:

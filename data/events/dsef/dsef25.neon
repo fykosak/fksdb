@@ -26,9 +26,8 @@ events:
         eventTypeIds: [2]
         eventYears: [25]
         formLayout: dsef.form
-        paramScheme: %events.defaultDsef.paramScheme%
+       # paramScheme: %events.defaultDsef.paramScheme%
         baseMachine:
-                service: @orm.event_participant.service
                 transitions: %events.defaultDsef.transitions%
 
                 fields:

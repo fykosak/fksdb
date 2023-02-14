@@ -43,21 +43,20 @@ parameters:
                 cancelled->__terminated:
                     condition: role('admin')
                     label: _('Smazat přihlášku')
-            paramScheme:
-                 notifyBcc:
-                     default: vercah@fykos.cz
-                 notifyFrom:
-                     default: Den s experimentální fyzikou <dsef@fykos.cz>
+           # paramScheme:
+           #      notifyBcc:
+           #          default: vercah@fykos.cz
+           #      notifyFrom:
+           #          default: Den s experimentální fyzikou <dsef@fykos.cz>
 
 events:
     dsef28:
         eventTypeIds: [2]
         eventYears: [28]
         formLayout: dsef.form
-        paramScheme: %events.defaultDsef.paramScheme%
+        #paramScheme: %events.defaultDsef.paramScheme%
 
         baseMachine:
-                service: @orm.event_participant.service
                 transitions: %events.dsef28.transitions%
                 fields:
                     person_id:

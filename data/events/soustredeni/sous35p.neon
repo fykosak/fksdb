@@ -3,30 +3,7 @@ events:
         eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [35] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
-#        notifyBcc: vercah@fykos.cz
-#        notifyFrom: soustredeni@fykos.cz
-#        letterDecisionDeadline: 2021-09-10T00:00:00+01:00
-#        letterWhere: Dolní Dvůr
-#        letterSignature: Veronika Hendrychová
-#        letterResolutionTime: 2021-09-13T00:00:00+01:00
-        paramScheme:
-            notifyBcc:
-                default: soustredeni@fykos.cz
-            notifyFrom:
-                default: soustredeni@fykos.cz
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterDecisionDeadline:
-                default: 1970-01-01 00:00:00
-            letterResolutionTime:
-                default: 1970-01-01 00:00:00
-
-
         baseMachine:
-                service: @orm.event_participant.service
-
                 transitions:
                     __init->invited:
                         condition: role('admin')

@@ -81,7 +81,6 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @orm.e_fyziklani_team.service
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
@@ -165,7 +164,6 @@ events:
             #   PARTICIPANT
             #
             PARTICIPANT:
-                service: @event.ServiceMFyziklaniParticipant
                 joinOn: e_fyziklani_team_id
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
