@@ -70,10 +70,10 @@ class Field
 
     public function isRequired(): bool
     {
-        if (is_bool($this->required)) {
-            return $this->required;
+        if (is_callable($this->required)) {
+            return ($this->required)($this->holder);
         }
-        return ($this->required)($this->holder);
+        return (bool)$this->required;
     }
 
     /** @param bool|callable $required */
@@ -89,10 +89,10 @@ class Field
         if (!$this->holder->isModifiable()) {
             return false;
         }
-        if (is_bool($this->modifiable)) {
-            return $this->modifiable;
+        if (is_callable($this->modifiable)) {
+            return ($this->modifiable)($this->holder);
         }
-        return ($this->modifiable)($this->holder);
+        return (bool)$this->modifiable;
     }
 
     /** @param bool|callable $modifiable */
@@ -105,10 +105,10 @@ class Field
 
     public function isVisible(): bool
     {
-        if (is_bool($this->visible)) {
-            return $this->visible;
+        if (is_callable($this->visible)) {
+            return ($this->visible)($this->holder);
         }
-        return ($this->visible)($this->holder);
+        return $this->visible;
     }
 
     /**

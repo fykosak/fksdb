@@ -4,23 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
 
 class ACLExtension extends CompilerExtension
 {
-    /** @var string[] */
-    public static array $semanticMap = [
-        'queryTag' => StoredQueryTagAssertion::class,
-    ];
-
-    public function __construct()
-    {
-        Helpers::registerSemantic(self::$semanticMap);
-    }
-
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();

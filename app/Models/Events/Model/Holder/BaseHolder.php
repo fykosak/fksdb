@@ -106,10 +106,10 @@ class BaseHolder implements ModelHolder
 
     public function isModifiable(): bool
     {
-        if (is_bool($this->modifiable)) {
-            return $this->modifiable;
+        if (is_callable($this->modifiable)) {
+            return ($this->modifiable)($this);
         }
-        return ($this->modifiable)($this);
+        return (bool)$this->modifiable;
     }
 
     public function getModel(): ?EventParticipantModel

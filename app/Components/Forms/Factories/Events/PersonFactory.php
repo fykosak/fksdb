@@ -33,7 +33,6 @@ class PersonFactory extends AbstractFactory
     private DIContainer $container;
 
     /**
-     * PersonFactory constructor.
      * @param callable|array $fieldsDefinition
      * @param callable|bool $allowClear
      * @param callable|bool $modifiable
@@ -75,7 +74,7 @@ class PersonFactory extends AbstractFactory
             $fieldsDefinition,
             $field->holder->event->getContestYear(),
             $this->searchType,
-            is_bool($this->allowClear) ? $this->allowClear : ($this->allowClear)($field->holder),
+            is_callable($this->allowClear) ? ($this->allowClear)($field->holder) : $this->allowClear,
             $resolver,
             $field->holder->event
         );
@@ -113,7 +112,7 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = is_scalar($value) ? $value : ($value)($field->holder);
+                    $value = is_callable($value) ? ($value)($field->holder) : $value;
                 }
             }
         }
