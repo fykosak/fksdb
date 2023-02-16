@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
@@ -20,14 +21,17 @@ class FOFHandler extends Handler
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    protected function savePoints(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void
+    protected function save(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void
     {
+        if (is_null($points) || $points === 0) {
+            throw new GameException(_('Points can not be a NULL or 0'));
+        }
         $submit = $this->submitService->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->create($logger, $task, $team, $points);
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($logger, $submit, $points);
-        } elseif (!$submit->isChecked()) { // check bodovania
+        } elseif ($submit->state->value !== SubmitState::CHECKED) { // check bodovania
             $this->check($logger, $submit, $points);
         } else {
             throw new TaskCodeException(_('Task given and validated.'));

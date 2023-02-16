@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -50,7 +51,7 @@ class AllSubmitsGrid extends FilterGrid
                 'fyziklani_task.label',
                 'fyziklani_submit.state',
                 'fyziklani_submit.points',
-                'fyziklani_submit.created',
+                'fyziklani_submit.modified',
             ]
                 : [
                 'fyziklani_team.name_n_id',
@@ -115,6 +116,9 @@ class AllSubmitsGrid extends FilterGrid
                 case 'task':
                     $query->where('fyziklani_submit.fyziklani_task_id', $condition);
                     break;
+                case 'state':
+                    $query->where('fyziklani_submit.state', $condition);
+                    break;
             }
         }
         return $query;
@@ -155,10 +159,15 @@ class AllSubmitsGrid extends FilterGrid
         foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }
+        $states = [];
+        foreach (SubmitState::cases() as $state) {
+            $states[$state->value] = $state->label();
+        }
 
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('-- select state --'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
     }
 }

@@ -10,6 +10,7 @@ use FKSDB\Components\Game\Closing\FOFPreviewComponent;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamListComponent;
+use FKSDB\Components\Game\Closing\TeamSelectForm;
 use FKSDB\Components\Game\Closing\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -186,6 +187,14 @@ class ClosePresenter extends BasePresenter
     protected function createComponentEditForm(): Control
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentTeamSelect(): TeamSelectForm
+    {
+        return new TeamSelectForm($this->getContext(), $this->getEvent());
     }
 
     protected function getModelResource(): string

@@ -62,8 +62,7 @@ navigation:
             Org.Validation.list: []
         Public.Dashboard.default:
             Core.Dispatch.default: []
-            Public.Submit.ajax:
-                visible: true
+            Public.Submit.ajax: []
             Core.MyApplications.default: []
         Game.Dashboard.default:
             Game.Submit.create: []

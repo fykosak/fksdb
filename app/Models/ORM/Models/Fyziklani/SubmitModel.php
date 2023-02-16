@@ -25,18 +25,13 @@ class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
 
-    public function isChecked(): bool
-    {
-        return $this->state->value === SubmitState::CHECKED;
-    }
-
     public function __toArray(): array
     {
         return [
             'points' => $this->points,
             'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
-            'created' => $this->modified->format('c'),
+            'modified' => $this->modified->format('c'),
         ];
     }
 

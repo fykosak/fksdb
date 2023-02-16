@@ -14,10 +14,12 @@ abstract class PreviewComponent extends BaseComponent
 {
     protected TeamModel2 $team;
     protected TeamService2 $teamService;
+    protected Handler $handler;
 
     public function __construct(Container $container, TeamModel2 $team)
     {
         parent::__construct($container);
+        $this->handler = new Handler($container);
         $this->team = $team;
     }
 
@@ -28,24 +30,12 @@ abstract class PreviewComponent extends BaseComponent
 
     final public function handleClose(): void
     {
-        $sum = $this->close();
+        $sum = $this->handler->close($this->team);
 
         $this->getPresenter()->flashMessage(
             \sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list', ['id' => null]);
-    }
-
-
-    protected function close(): int
-    {
-        $this->teamService->explorer->beginTransaction();
-        $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
-        $this->teamService->storeModel([
-            'points' => $sum,
-        ], $this->team);
-        $this->teamService->explorer->commit();
-        return $sum;
     }
 }

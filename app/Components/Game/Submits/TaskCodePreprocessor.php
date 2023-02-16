@@ -7,26 +7,9 @@ namespace FKSDB\Components\Game\Submits;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 
 final class TaskCodePreprocessor
 {
-
-    private TaskService $taskService;
-    private TeamService2 $teamService;
-    private EventModel $event;
-
-    public function __construct(
-        EventModel $event,
-        TeamService2 $teamService,
-        TaskService $taskService
-    ) {
-        $this->teamService = $teamService;
-        $this->taskService = $taskService;
-        $this->event = $event;
-    }
-
     public static function checkControlNumber(string $code): bool
     {
         if (strlen($code) != 9) {
@@ -71,13 +54,12 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public function getTeam(string $code): TeamModel2
+    public static function getTeam(string $code, EventModel $event): TeamModel2
     {
-        $fullCode = self::createFullCode($code);
-
-        $teamId = self::extractTeamId($fullCode);
-        $team = $this->teamService->findByPrimary($teamId);
-        if (!$team || ($team->event_id !== $this->event->event_id)) {
+        $teamId = self::extractTeamId(self::createFullCode($code));
+        /** @var TeamModel2 $team */
+        $team = $event->getTeams()->where('fyziklani_team_id', $teamId)->fetch();
+        if (!$team) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
         return $team;
@@ -86,12 +68,12 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public function getTask(string $code): TaskModel
+    public static function getTask(string $code, EventModel $event): TaskModel
     {
-        $fullCode = self::createFullCode($code);
         /* correct label */
-        $taskLabel = self::extractTaskLabel($fullCode);
-        $task = $this->taskService->findByLabel($taskLabel, $this->event);
+        $taskLabel = self::extractTaskLabel(self::createFullCode($code));
+        /** @var TaskModel $task */
+        $task = $event->getTasks()->where('label', $taskLabel)->fetch();
         if (!$task) {
             throw new TaskCodeException(\sprintf(_('Task %s does not exists.'), $taskLabel));
         }

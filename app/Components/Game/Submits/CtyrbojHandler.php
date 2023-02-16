@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
@@ -20,7 +21,7 @@ class CtyrbojHandler extends Handler
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    protected function savePoints(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void
+    protected function save(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void
     {
         $submit = $this->submitService->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
@@ -28,7 +29,7 @@ class CtyrbojHandler extends Handler
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($logger, $submit, null);
         } else {
-            throw new TaskCodeException(_('Task was given.'));
+            throw new GameException(\sprintf(_('Task was already submitted with % points.'), $submit->points));
         }
     }
 

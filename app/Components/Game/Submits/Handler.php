@@ -28,10 +28,8 @@ abstract class Handler
     protected TaskCodePreprocessor $taskCodePreprocessor;
     protected SubmitService $submitService;
 
-    public function __construct(
-        EventModel $event,
-        Container $container
-    ) {
+    public function __construct(EventModel $event, Container $container)
+    {
         $this->event = $event;
         $container->callInjects($this);
     }
@@ -44,11 +42,7 @@ abstract class Handler
     ): void {
         $this->user = $user;
         $this->submitService = $submitService;
-        $this->taskCodePreprocessor = new TaskCodePreprocessor(
-            $this->event,
-            $teamService,
-            $taskService
-        );
+        $this->taskCodePreprocessor = new TaskCodePreprocessor($this->event, $teamService, $taskService);
     }
 
     /**
@@ -59,13 +53,12 @@ abstract class Handler
     public function preProcess(Logger $logger, string $code, ?int $points): void
     {
         $this->checkTaskCode($code);
-        $task = $this->taskCodePreprocessor->getTask($code);
-        $team = $this->taskCodePreprocessor->getTeam($code);
-
-        $this->savePoints($logger, $team, $task, $points);
+        $task = TaskCodePreprocessor::getTask($code, $this->event);
+        $team = TaskCodePreprocessor::getTeam($code, $this->event);
+        $this->save($logger, $team, $task, $points);
     }
 
-    abstract protected function savePoints(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void;
+    abstract protected function save(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void;
 
     /**
      * @throws TaskCodeException
@@ -73,17 +66,17 @@ abstract class Handler
      */
     private function checkTaskCode(string $code): void
     {
-        $fullCode = $this->taskCodePreprocessor->createFullCode($code);
+        $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* skontroluje pratnosť kontrolu */
-        if (!$this->taskCodePreprocessor->checkControlNumber($fullCode)) {
+        if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
             throw new ControlMismatchException();
         }
-        $team = $this->taskCodePreprocessor->getTeam($code);
+        $team = TaskCodePreprocessor::getTeam($code, $this->event);
         /* otvorenie submitu */
         if (!$team->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($team);
         }
-        $this->taskCodePreprocessor->getTask($code);
+        TaskCodePreprocessor::getTask($code, $this->event);
     }
 
     abstract public function create(Logger $logger, TaskModel $task, TeamModel2 $team, ?int $points): void;
