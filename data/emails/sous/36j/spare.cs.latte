@@ -4,7 +4,7 @@
 
 <p>
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu (nebo Výfuku), zveme Tě jako
+    gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu, zveme Tě jako
     <b>{if $holder->getPerson()->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->event->event_type->name}, které se bude konat
     v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
     <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
@@ -14,7 +14,7 @@
     fyziky a matematiky, fyzikální experimenty), tak i na ten neodborný (hry, výlety), a samozřejmě na ostatní řešitele.
     Každé soustředění doprovází tematická legenda. Jaká je to letos, Ti zatím neprozradíme, ale slibujeme, že se máš na
     co těšit! Na <a href="https://fykos.cz/akce/soustredeni/start" target="_blank">našich stránkách</a> se můžeš podívat
-    na fotky z minulých let, kde jsme se například ocitli ve světě kouzelníků, Hunger Games nebo ve světě Pána prstenů.
+    na fotky z minulých let, kde jsme se například ocitli ve světě kouzelníků, Hunger Games nebo pod nadvládou diktátora.
 </p>
 {include ../inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
@@ -31,12 +31,6 @@ odkazu
 <p>
     O Tvé účasti na soustředění rozhodneme do
     <strong>{$holder->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
-</p>
-
-<p>
-    Zatím nevíme, jaká bude covidová situace na podzim. Je však možné, že pokud pandemie opět silněji udeří, budeme pro
-    účast vyžadovat nějaká opatření (pravděpodobně typu OTP). Konkrétněji Ti to dáme vědět v září, až budeme rozesílat
-    bližší informace přihlášeným účastníkům.
 </p>
 
 <p>
