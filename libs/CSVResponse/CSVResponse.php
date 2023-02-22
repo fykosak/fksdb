@@ -48,7 +48,7 @@ class CSVResponse implements IResponse
         $this->name = $name;
         $this->charset = $charset;
 //        $this->charset = $charset ? $charset : 'UTF-8';
-        $this->contentType = $contentType ? $contentType : 'text/csv';
+        $this->contentType = $contentType ?: 'text/csv';
     }
 
     /**
@@ -101,12 +101,6 @@ class CSVResponse implements IResponse
         $this->addHeading = $addHeading;
     }
 
-    /**
-     * Sends response to output.
-     * @param IRequest $httpRequest
-     * @param IHttpResponse $httpResponse
-     * @return void
-     */
     public function send(IRequest $httpRequest, IHttpResponse $httpResponse): void
     {
         // ----------------------------------------------------

@@ -23,13 +23,13 @@ class CtyrbojHandler extends Handler
      */
     protected function save(Logger $logger, TeamModel2 $team, TaskModel $task, ?int $points): void
     {
-        $submit = $this->submitService->findByTaskAndTeam($task, $team);
+        $submit = $this->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->create($logger, $task, $team, null);
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($logger, $submit, null);
         } else {
-            throw new GameException(\sprintf(_('Task was already submitted with % points.'), $submit->points));
+            throw new GameException(\sprintf(_('Task was already submitted'), $submit->points));
         }
     }
 
@@ -39,9 +39,6 @@ class CtyrbojHandler extends Handler
      */
     public function edit(Logger $logger, SubmitModel $submit, ?int $points): void
     {
-        if (!$submit->fyziklani_team->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($submit->fyziklani_team);
-        }
         $this->submitService->storeModel([
             'points' => $submit->fyziklani_task->points,
             'state' => SubmitState::CHECKED,
@@ -71,7 +68,7 @@ class CtyrbojHandler extends Handler
         throw new NotImplementedException();
     }
 
-    public function create(Logger $logger, TaskModel $task, TeamModel2 $team, ?int $points): void
+    protected function create(Logger $logger, TaskModel $task, TeamModel2 $team, ?int $points): void
     {
         $submit = $this->submitService->storeModel([
             'points' => $task->points,

@@ -45,13 +45,12 @@ class TeamListComponent extends FilterList
     protected function configure(): void
     {
         $this->classNameCallback = function (TeamModel2 $team) {
-            if (!$team->hasOpenSubmitting()) {
-                return 'alert alert-success';
-            }
             try {
                 $team->canClose();
                 return 'alert alert-warning';
-            } catch (GameException $exception) {
+            } catch (AlreadyClosedException $exception) {
+                return 'alert alert-success';
+            } catch (NotCheckedSubmitsException $exception) {
                 return 'alert alert-danger';
             }
         };

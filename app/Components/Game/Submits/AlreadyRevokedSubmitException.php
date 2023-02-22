@@ -11,6 +11,6 @@ class AlreadyRevokedSubmitException extends GameException
 {
     public function __construct(?\Throwable $previous = null)
     {
-        parent::__construct(_('Submit is already revoked'), IResponse::S400_BAD_REQUEST, $previous);
+        parent::__construct(_('Submit is already revoked'), IResponse::S400_BadRequest, $previous);
     }
 }

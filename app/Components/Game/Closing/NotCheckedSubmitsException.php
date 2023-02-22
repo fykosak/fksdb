@@ -14,7 +14,7 @@ class NotCheckedSubmitsException extends GameException
     {
         parent::__construct(
             sprintf(_('Team %s has non checked submits'), $team->name),
-            IResponse::S400_BAD_REQUEST,
+            IResponse::S400_BadRequest,
             $previous
         );
     }

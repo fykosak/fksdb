@@ -15,7 +15,7 @@ class NotClosedTeamException extends GameException
     {
         parent::__construct(
             sprintf(_('Team %s (%d) has not closed submitting'), $team->name, $team->fyziklani_team_id),
-            IResponse::S400_BAD_REQUEST,
+            IResponse::S400_BadRequest,
             $previous
         );
     }

@@ -14,7 +14,7 @@ class NotImplementedException extends BadRequestException
     {
         parent::__construct(
             $message ?? _('This functionality has not been implemented yet.'),
-            IResponse::S501_NOT_IMPLEMENTED,
+            IResponse::S501_NotImplemented,
             $previous
         );
     }

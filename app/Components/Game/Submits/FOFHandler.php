@@ -26,7 +26,7 @@ class FOFHandler extends Handler
         if (is_null($points) || $points === 0) {
             throw new GameException(_('Points can not be a NULL or 0'));
         }
-        $submit = $this->submitService->findByTaskAndTeam($task, $team);
+        $submit = $this->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->create($logger, $task, $team, $points);
         } elseif (is_null($submit->points)) { // ak bol zmazaný
@@ -34,7 +34,7 @@ class FOFHandler extends Handler
         } elseif ($submit->state->value !== SubmitState::CHECKED) { // check bodovania
             $this->check($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(_('Task given and validated.'));
+            throw new GameException(\sprintf(_('Task was already submitted'), $submit->points));
         }
     }
 
@@ -44,9 +44,6 @@ class FOFHandler extends Handler
      */
     public function edit(Logger $logger, SubmitModel $submit, ?int $points): void
     {
-        if (!$submit->fyziklani_team->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($submit->fyziklani_team);
-        }
         $this->submitService->storeModel([
             'points' => $points,
             'state' => SubmitState::CHECKED,
@@ -75,9 +72,6 @@ class FOFHandler extends Handler
      */
     public function check(Logger $logger, SubmitModel $submit, ?int $points): void
     {
-        if (!$submit->fyziklani_team->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($submit->fyziklani_team);
-        }
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }

@@ -8,23 +8,23 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
-    PaymentListWebModel,
-    SeriesResultsWebModel,
-    WebModel,
-    OrganizersWebModel,
-    EventListWebModel,
+use FKSDB\Models\WebService\Models\{EventListWebModel,
     EventWebModel,
     ExportWebModel,
-    SignaturesWebModel,
+    FyziklaniResultsWebModel,
+    OrganizersWebModel,
+    PaymentListWebModel,
     ResultsWebModel,
-    StatsWebModel
+    SeriesResultsWebModel,
+    SignaturesWebModel,
+    StatsWebModel,
+    WebModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Http\IResponse;
+use Nette\Schema\Processor;
 use Nette\Security\AuthenticationException;
 use Nette\SmartObject;
 use Tracy\Debugger;
@@ -143,7 +143,7 @@ class WebServiceModel
     {
         $webModel = $this->getWebModel($name);
         if (!$webModel) {
-            throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
+            throw new BadRequestException('Undefined method', IResponse::S404_NotFound);
         }
         $arguments = $this->processArguments($webModel, $arguments);
         return new JsonResponse($webModel->getJsonResponse($arguments));

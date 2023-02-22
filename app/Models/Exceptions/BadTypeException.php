@@ -13,7 +13,7 @@ class BadTypeException extends BadRequestException
     {
         parent::__construct(
             \sprintf(_('Expected type %s, got %s.'), $expected, \get_class($got)),
-            IResponse::S500_INTERNAL_SERVER_ERROR,
+            IResponse::S500_InternalServerError,
             $previous
         );
     }

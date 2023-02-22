@@ -47,7 +47,7 @@ class DefaultGenerator extends AbstractSymbolGenerator
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), IResponse::S501_NOT_IMPLEMENTED);
+        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), IResponse::S501_NotImplemented);
     }
 
     /**

@@ -90,7 +90,7 @@ class AjaxSubmitComponent extends AjaxComponent
 
             if (!$fileContainer->isOk()) {
                 $this->getLogger()->log(new Message(_('File is not Ok'), Message::LVL_ERROR));
-                $this->sendAjaxResponse(IResponse::S500_INTERNAL_SERVER_ERROR);
+                $this->sendAjaxResponse(IResponse::S500_InternalServerError);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);

@@ -6,7 +6,6 @@ namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Game\Submits\ControlMismatchException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -29,16 +28,11 @@ class CodeCloseForm extends FormComponent
     protected function handleSuccess(SubmitButton $button): void
     {
         $code = $button->getForm()->getForm()->getValues('array')['code'];
-        $fullCode = TaskCodePreprocessor::createFullCode($code);
-        if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
-            throw new ControlMismatchException();
-        }
-
         /** @var TeamModel2|null $team */
-        $team = TaskCodePreprocessor::getTeam($fullCode, $this->event);
+        $team = TaskCodePreprocessor::getTeam($code, $this->event);
         $team->canClose();
 
-        $finalTask = TaskCodePreprocessor::getTask($fullCode, $this->event);
+        $finalTask = TaskCodePreprocessor::getTask($code, $this->event);
         $task = $this->handler->getNextTask($team);
         if ($task) {
             if ($task->getPrimary() !== $finalTask->getPrimary()) {

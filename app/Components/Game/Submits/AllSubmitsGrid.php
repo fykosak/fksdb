@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -76,7 +77,14 @@ class AllSubmitsGrid extends FilterGrid
                 new Title(null, _('Revoke')),
                 fn(SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',
-                fn(SubmitModel $row): bool => $row->canRevoke(false)
+                function (SubmitModel $row): bool {
+                    try {
+                        $row->canRevoke();
+                        return true;
+                    } catch (GameException$exception) {
+                        return false;
+                    }
+                }
             ),
             'revoke'
         );
@@ -84,7 +92,7 @@ class AllSubmitsGrid extends FilterGrid
 
     protected function getModels(): Selection
     {
-        $query = $this->submitService->findAll($this->event);
+        $query = $this->event->getTeams();
         if (!isset($this->filterParams)) {
             return $query;
         }
@@ -97,16 +105,15 @@ class AllSubmitsGrid extends FilterGrid
                     $query->where('fyziklani_submit.fyziklani_team_id', $condition);
                     break;
                 case 'code':
-                    $fullCode = TaskCodePreprocessor::createFullCode($condition);
-                    if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
-                        $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
-                        $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
+                    try {
+                        $task = TaskCodePreprocessor::getTask($condition, $this->event);
+                        $team = TaskCodePreprocessor::getTeam($condition, $this->event);
                         $query->where(
-                            'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.label =? ',
-                            $teamId,
-                            $taskLabel
+                            'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.fyziklani_task_id =? ',
+                            $team->fyziklani_team_id,
+                            $task->fyziklani_task_id
                         );
-                    } else {
+                    } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
                     }
                     break;

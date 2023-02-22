@@ -287,7 +287,7 @@ class EventWebModel extends WebModel
     {
         $event = $this->eventService->findByPrimary($params['event_id']);
         if (is_null($event)) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
+            throw new BadRequestException('Unknown event.', IResponse::S404_NotFound);
         }
         $data = $event->__toArray();
         if ($event->isTeamEvent()) {

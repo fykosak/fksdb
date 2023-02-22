@@ -39,20 +39,13 @@ class SubmitModel extends Model implements Resource
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */
-    public function canRevoke(bool $throws = true): bool
+    public function canRevoke(): void
     {
         if (is_null($this->points)) {
-            if ($throws) {
-                throw new AlreadyRevokedSubmitException();
-            }
-            return false;
+            throw new AlreadyRevokedSubmitException();
         } elseif (!$this->fyziklani_team->hasOpenSubmitting()) {
-            if ($throws) {
-                throw new ClosedSubmittingException($this->fyziklani_team);
-            }
-            return false;
+            throw new ClosedSubmittingException($this->fyziklani_team);
         }
-        return true;
     }
 
     /**

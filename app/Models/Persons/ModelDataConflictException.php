@@ -12,7 +12,7 @@ class ModelDataConflictException extends \RuntimeException
 
     public function __construct(iterable $conflicts, ?\Throwable $previous = null)
     {
-        parent::__construct(_('Some fields don\'t match an existing record.'), IResponse::S409_CONFLICT, $previous);
+        parent::__construct(_('Some fields don\'t match an existing record.'), IResponse::S409_Conflict, $previous);
         $this->conflicts = $conflicts;
     }
 

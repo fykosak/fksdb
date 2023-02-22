@@ -30,11 +30,11 @@ class ErrorPresenter extends BasePresenter
                 in_array(
                     $code,
                     [
-                        IResponse::S400_BAD_REQUEST,
-                        IResponse::S403_FORBIDDEN,
-                        IResponse::S404_NOT_FOUND,
-                        IResponse::S405_METHOD_NOT_ALLOWED,
-                        IResponse::S410_GONE,
+                        IResponse::S400_BadRequest,
+                        IResponse::S403_Forbidden,
+                        IResponse::S404_NotFound,
+                        IResponse::S405_MethodNotAllowed,
+                        IResponse::S410_Gone,
                     ]
                 ) ? (string)$code : '500'
             );
