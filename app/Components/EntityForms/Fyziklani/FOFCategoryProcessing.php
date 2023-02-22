@@ -35,6 +35,18 @@ class FOFCategoryProcessing extends FormProcessing
         if ($values['team']['force_a']) {
             return TeamCategory::tryFrom(TeamCategory::A);
         }
+
+        $avg = this->getCoefficientAvg($members, $event);
+        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
+            return TeamCategory::tryFrom(TeamCategory::C);
+        } elseif ($avg <= 3 && $year[4] <= 2) {
+            return TeamCategory::tryFrom(TeamCategory::B);
+        } else {
+            return TeamCategory::tryFrom(TeamCategory::A);
+        }
+    }
+
+    public static function getCoefficientAvg(array $members, EventModel $event): float {
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
         foreach ($members as $member) {
@@ -51,13 +63,6 @@ class FOFCategoryProcessing extends FormProcessing
             $sum += $year[$y] * $y;
             $cnt += $year[$y];
         }
-        $avg = $sum / $cnt;
-        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
-            return TeamCategory::tryFrom(TeamCategory::C);
-        } elseif ($avg <= 3 && $year[4] <= 2) {
-            return TeamCategory::tryFrom(TeamCategory::B);
-        } else {
-            return TeamCategory::tryFrom(TeamCategory::A);
-        }
+        return $sum / $cnt;
     }
 }
