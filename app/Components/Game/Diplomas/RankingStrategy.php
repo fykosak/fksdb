@@ -185,7 +185,7 @@ class RankingStrategy
             'data' => $arraySubmits,
             'sum' => $sum,
             'count' => $count,
-            'average' => $sum/$count,
+            'average' => $sum / $count,
             'pointsCount' => $submitPointsCount
         ];
     }

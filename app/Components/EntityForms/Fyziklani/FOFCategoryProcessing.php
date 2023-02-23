@@ -36,7 +36,7 @@ class FOFCategoryProcessing extends FormProcessing
             return TeamCategory::tryFrom(TeamCategory::A);
         }
 
-        $avg = this->getCoefficientAvg($members, $event);
+        $avg = $this->getCoefficientAvg($members, $event);
         if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
             return TeamCategory::tryFrom(TeamCategory::C);
         } elseif ($avg <= 3 && $year[4] <= 2) {
@@ -46,7 +46,8 @@ class FOFCategoryProcessing extends FormProcessing
         }
     }
 
-    public static function getCoefficientAvg(array $members, EventModel $event): float {
+    public static function getCoefficientAvg(array $members, EventModel $event): float
+    {
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
         foreach ($members as $member) {
