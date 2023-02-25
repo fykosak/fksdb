@@ -66,6 +66,125 @@ class RankingStrategy
     }
 
     /**
+     * @throws NoMemberException
+     */
+    private static function getSortFunction(): callable
+    {
+        return function (array $b, array $a): int {
+
+            // sort by points
+            $d = $a['points'] - $b['points'];
+            if ($d !== 0) {
+                return $d;
+            }
+
+            // sort by average points
+            if ($a['submits']['count'] && $b['submits']['count']) {
+                // points must be equal in this step, so just compare the submit counts instead of averages
+                $d = $b['submits']['count'] - $a['submits']['count'];
+                if ($d !== 0) {
+                    return $d;
+                }
+            }
+
+            // sort by number of submits with given points
+            $d = $a['submits']['pointsCount'][5] - $b['submits']['pointsCount'][5];
+            if ($d !== 0) {
+                return $d;
+            }
+
+            $d = $a['submits']['pointsCount'][3] - $b['submits']['pointsCount'][3];
+            if ($d !== 0) {
+                return $d;
+            }
+
+            // coefficients
+            $ac = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bc = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+
+            if ($ac < $bc) {
+                return 1;
+            } elseif ($ac > $bc) {
+                return -1;
+            }
+
+            // team creation date
+            if ($a['team']->created < $b['team']->created) {
+                return 1;
+            } elseif ($a['team']->created > $b['team']->created) {
+                return -1;
+            }
+
+            // in case everything fails (at least team ids should be different)
+            return 0;
+        };
+    }
+
+    public function getInvalidTeamsPoints(?TeamCategory $category = null): array
+    {
+        $invalidTeams = [];
+        $teams = $this->getAllTeams($category);
+        foreach ($teams as $team) {
+            $sum = (int)$team->getNonRevokedSubmits()->sum('points');
+            if ($team->points !== $sum) {
+                $invalidTeams[] = $team;
+            }
+        }
+
+        return $invalidTeams;
+    }
+
+    /**
+     * Validate ranking of teams
+     * @param array $first expects teamData array from getTeamsStats
+     */
+    public function getInvalidTeamsRank(?TeamCategory $category = null): array
+    {
+        $compareFunction = self::getSortFunction();
+
+        $teams = $this->getAllTeams($category);
+        $teamsData = $this->getTeamsStats($teams);
+
+        $invalidTeams = [];
+
+        usort($teamsData, function ($a, $b) {
+            if (!is_null($category)) {
+                return $a['team']->rank_category - $b['team']->rank_category;
+            }
+            return $a['team']->rank_total - $b['team']->rank_total;
+        });
+
+        for ($i = 0; $i < count($teamsData) - 1; $i++) {
+            $a = $teamsData[$i];
+            $b = $teamsData[$i + 1];
+            $currentRank = is_null($category) ? $a['team']->rank_total : $a['team']->rank_category;
+            $nextRank = is_null($category) ? $b['team']->rank_total : $b['team']->rank_category;
+
+            // if the ranking is continuous
+            if ($currentRank + 1 !== $nextRank) {
+                $invalidTeams[] = $a['team'];
+                continue;
+            }
+
+            if ($compareFunction($b, $a) < 1) {
+                $invalidTeams[] = $a['team'];
+            }
+        }
+
+        return $invalidTeams;
+    }
+
+
+    private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
+    {
+        $query = $this->event->getParticipatingTeams();
+        if ($category) {
+            $query->where('category', $category->value);
+        }
+        return $query;
+    }
+
+    /**
      * @return array[]
      * @throws NotClosedTeamException
      */
@@ -88,71 +207,6 @@ class RankingStrategy
         return $teamsData;
     }
 
-    private static function getSortFunction(): callable
-    {
-        return function (array $b, array $a): int {
-            #sort by points
-            if ($a['points'] > $b['points']) {
-                return 1;
-            } elseif ($a['points'] < $b['points']) {
-                return -1;
-            }
-
-            # sort by average points
-            if ($a['submits']['count'] && $b['submits']['count']) {
-                $qa = $a['submits']['sum'] / $a['submits']['count'];
-                $qb = $b['submits']['sum'] / $b['submits']['count'];
-                if ($qa > $qb) {
-                    return 1;
-                } elseif ($qa < $qb) {
-                    return -1;
-                }
-            }
-
-            # sort by number of submits with given points
-            if ($a['submits']['pointsCount'][5] > $b['submits']['pointsCount'][5]) {
-                return 1;
-            } elseif ($a['submits']['pointsCount'][5] < $b['submits']['pointsCount'][5]) {
-                return -1;
-            }
-
-            if ($a['submits']['pointsCount'][3] > $b['submits']['pointsCount'][3]) {
-                return 1;
-            } elseif ($a['submits']['pointsCount'][3] < $b['submits']['pointsCount'][3]) {
-                return -1;
-            }
-
-            # coefficients
-            $ac = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
-            $bc = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
-
-            if ($ac < $bc) {
-                return 1;
-            } elseif ($ac > $bc) {
-                return -1;
-            }
-
-            # team ids
-            if ($a['team']->fyziklani_team_id < $b['team']->fyziklani_team_id) {
-                return 1;
-            } elseif ($a['team']->fyziklani_team_id > $b['team']->fyziklani_team_id) {
-                return -1;
-            }
-
-            # in case everything fails (at least team ids should be different)
-            return 0;
-        };
-    }
-
-    private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
-    {
-        $query = $this->event->getParticipatingTeams();
-        if ($category) {
-            $query->where('category', $category->value);
-        }
-        return $query;
-    }
-
     /**
      * @return array[]|int[]
      */
@@ -161,17 +215,18 @@ class RankingStrategy
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        $submitPointsCount = [];
+
+        $availablePoints = $this->event->getGameSetup()->available_points ?? '';
+        $maxPoints = max(array_map('intval', explode(',', $availablePoints)));
+        $submitPointsCount = array_fill(0, $maxPoints + 1, 0);
+
         /** @var SubmitModel $submit */
         foreach ($team->getSubmits() as $submit) {
             if ($submit->points === null) {
                 continue;
             }
-            if (isset($submitPointsCount[$submit->points])) {
-                $submitPointsCount[strval($submit->points)]++;
-            } else {
-                $submitPointsCount[strval($submit->points)] = 1;
-            }
+
+            $submitPointsCount[$submit->points]++;
             $sum += $submit->points;
             $count++;
             $arraySubmits[] = [
@@ -185,7 +240,6 @@ class RankingStrategy
             'data' => $arraySubmits,
             'sum' => $sum,
             'count' => $count,
-            'average' => $sum / $count,
             'pointsCount' => $submitPointsCount
         ];
     }

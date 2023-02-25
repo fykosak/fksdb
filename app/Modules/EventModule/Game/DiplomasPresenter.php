@@ -80,6 +80,50 @@ class DiplomasPresenter extends BasePresenter
         $this->redirect('this');
     }
 
+    public function handleValidate(?string $category = null): void
+    {
+        $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
+        $category = $category ? TeamCategory::tryFrom($category) : null;
+
+        // check saved points against submits
+        $invalidTeams = $rankingStrategy->getInvalidTeamsPoints($category);
+
+        if (!empty($invalidTeams)) {
+            $log = Html::el('ul');
+            foreach ($invalidTeams as $team) {
+                $log->addHtml(
+                    Html::el('li')
+                        ->addText($team->name)
+                );
+            }
+            $this->flashMessage(
+                Html::el()
+                    ->addHtml(Html::el('h3')->addText('Saved points and points from submits do not match.'))
+                    ->addHtml($log),
+                Message::LVL_ERROR
+            );
+            return;
+        }
+
+        // check ranking
+        $invalidTeams = $rankingStrategy->getInvalidTeamsRank($category);
+        if (!empty($invalidTeams)) {
+            $log = Html::el('ul');
+            foreach ($invalidTeams as $team) {
+                $log->addHtml(Html::el('li')->addText($team->name));
+            }
+            $this->flashMessage(
+                Html::el()
+                    ->addHtml(Html::el('h3')->addText('Ranking not valid'))
+                    ->addHtml($log),
+                Message::LVL_ERROR
+            );
+            return;
+        }
+
+        $this->flashMessage("Validated", Message::LVL_SUCCESS);
+    }
+
     /**
      * @throws EventNotFoundException
      */
