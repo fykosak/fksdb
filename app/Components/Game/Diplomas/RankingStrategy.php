@@ -73,50 +73,43 @@ class RankingStrategy
         return function (array $b, array $a): int {
 
             // sort by points
-            $d = $a['points'] - $b['points'];
-            if ($d !== 0) {
-                return $d;
+            $diffPoints = $a['points'] - $b['points'];
+            if ($diffPoints !== 0) {
+                return $diffPoints;
             }
 
             // sort by average points
             if ($a['submits']['count'] && $b['submits']['count']) {
                 // points must be equal in this step, so just compare the submit counts instead of averages
-                $d = $b['submits']['count'] - $a['submits']['count'];
-                if ($d !== 0) {
-                    return $d;
+                $diffCount = $b['submits']['count'] - $a['submits']['count'];
+                if ($diffCount !== 0) {
+                    return $diffCount;
                 }
             }
 
             // sort by number of submits with given points
-            $d = $a['submits']['pointsCount'][5] - $b['submits']['pointsCount'][5];
-            if ($d !== 0) {
-                return $d;
+            $diffCountFive = $a['submits']['pointsCount'][5] - $b['submits']['pointsCount'][5];
+            if ($diffCountFive !== 0) {
+                return $diffCountFive;
             }
 
-            $d = $a['submits']['pointsCount'][3] - $b['submits']['pointsCount'][3];
-            if ($d !== 0) {
-                return $d;
+            $diffCountThree = $a['submits']['pointsCount'][3] - $b['submits']['pointsCount'][3];
+            if ($diffCountThree !== 0) {
+                return $diffCountThree;
             }
 
             // coefficients
-            $ac = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
-            $bc = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+            $aCoef = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bCoef = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
 
-            if ($ac < $bc) {
+            if ($aCoef < $bCoef) {
                 return 1;
-            } elseif ($ac > $bc) {
+            } elseif ($aCoef > $bCoef) {
                 return -1;
             }
 
-            // team creation date
-            if ($a['team']->created < $b['team']->created) {
-                return 1;
-            } elseif ($a['team']->created > $b['team']->created) {
-                return -1;
-            }
-
-            // in case everything fails (at least team ids should be different)
-            return 0;
+            // team id
+            return $b['team']->fyziklani_team_id <=> $a['team']->fyziklani_team_id;
         };
     }
 
@@ -137,6 +130,7 @@ class RankingStrategy
     /**
      * Validate ranking of teams
      * @param array $first expects teamData array from getTeamsStats
+     * @throws NoMemberException
      */
     public function getInvalidTeamsRank(?TeamCategory $category = null): array
     {
@@ -147,11 +141,11 @@ class RankingStrategy
 
         $invalidTeams = [];
 
-        usort($teamsData, function ($a, $b) {
-            if (!is_null($category)) {
-                return $a['team']->rank_category - $b['team']->rank_category;
+        usort($teamsData, function ($a, $b) use ($category) {
+            if (is_null($category)) {
+                return $a['team']->rank_total - $b['team']->rank_total;
             }
-            return $a['team']->rank_total - $b['team']->rank_total;
+            return $a['team']->rank_category - $b['team']->rank_category;
         });
 
         for ($i = 0; $i < count($teamsData) - 1; $i++) {
@@ -216,9 +210,11 @@ class RankingStrategy
         $sum = 0;
         $count = 0;
 
-        $availablePoints = $this->event->getGameSetup()->available_points ?? '';
-        $maxPoints = max(array_map('intval', explode(',', $availablePoints)));
-        $submitPointsCount = array_fill(0, $maxPoints + 1, 0);
+        $availablePoints = $this->event->getGameSetup()->getAvailablePoints();
+        $submitPointsCount = [];
+        foreach ($availablePoints as $points) {
+            $submitPointsCount[$points] = 0;
+        }
 
         /** @var SubmitModel $submit */
         foreach ($team->getSubmits() as $submit) {
