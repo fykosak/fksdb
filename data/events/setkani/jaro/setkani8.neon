@@ -17,7 +17,7 @@ events:
         eventTypeIds: [11]
         eventYears: [8] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
-        baseMachine:
+        machine:
                 transitions:
                     __init->applied:
                         condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
@@ -35,7 +35,8 @@ events:
                         condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                fields:
+        holder:
+            fields:
                     person_id:
                         label: _('Person')
                         required: true
@@ -71,17 +72,8 @@ events:
                         label: _('Jakou barvu trička bys chtěl?')
                         required: false
                         factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
-
                     note:
                        label: _('Další poznámky')
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('Účastník')
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

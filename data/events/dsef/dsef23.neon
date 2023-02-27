@@ -18,18 +18,12 @@ parameters:
                 post_contact_p:
                     address:
                         required: true
-
 events:
     dsef23:
         eventTypeIds: [2]
         eventYears: [23]
         formLayout: dsef.form
-       # paramScheme:
-       #     notifyBcc:
-        #        default: dsef@fykos.cz
-        #    notifyFrom:
-        #        default: Den s experimentální fyzikou <dsef@fykos.cz>
-        baseMachine:
+        machine:
                 transitions:
                     # to spare
                     __init->spare.tsaf:
@@ -63,30 +57,20 @@ events:
                         behaviorType: danger
                     spare.tsaf->cancelled:
                         condition: role('admin')
-
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.dsef23.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.dsef23.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    lunch_count:
-                        modifiable: %events.dsef23.appCond%
-                        description:  à 30 Kč
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('Účastník')
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.dsef23.appCond%
+                    default: fromLogin
+                    factory: RefPerson(%events.dsef23.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                lunch_count:
+                    modifiable: %events.dsef23.appCond%
+                    description:  à 30 Kč
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-
             processings:
                 - @events.privacyPolicy

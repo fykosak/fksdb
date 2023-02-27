@@ -47,7 +47,7 @@ events:
         eventTypeIds: [12]
         eventYears: [12] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
-        baseMachine:
+        machine:
             transitions:
                 __init->applied:
                     condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
@@ -65,7 +65,7 @@ events:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-
+        holder:
             fields:
                 person_id:
                     label: _('Person')
@@ -74,19 +74,19 @@ events:
                     default: fromLogin
                     factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                 arrival_time:
-                   label: _('Předpokládaný příjezd')
-                   description: "Čas příjezdu"
+                               label: _('Předpokládaný příjezd')
+                               description: "Čas příjezdu"
                 arrival_destination:
-                   label: _('Na jaké místo přijedeš?')
-                   required: true
-                   factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
+                               label: _('Na jaké místo přijedeš?')
+                               required: true
+                               factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
                 departure_time:
-                   label: _('Předpokládaný odjezd')
-                   description: "Čas odjezdu"
+                               label: _('Předpokládaný odjezd')
+                               description: "Čas odjezdu"
                 departure_destination:
-                   label: _('Z jakého místa chceš odjíždět?')
-                   required: true
-                   factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
+                               label: _('Z jakého místa chceš odjíždět?')
+                               required: true
+                               factory: Chooser("Zvol místo", Options(%events.setkani12podzim.arrival.destination%))
                 tshirt_size:
                     label: 'Jakou velikost mikiny bys chtěl?'
                     required: true
@@ -102,15 +102,7 @@ events:
                     label: _('Health restrictions')
                     description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
                 note:
-                   label: _('Další poznámky')
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                label: _('Účastník')
+                    label: _('Další poznámky')
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

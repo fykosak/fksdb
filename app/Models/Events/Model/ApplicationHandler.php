@@ -149,8 +149,8 @@ class ApplicationHandler
             );
 
             if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data[$holder->name]['status'])) {
-                    $holder->setModelState(EventParticipantStatus::tryFrom($data[$holder->name]['status']));
+                if (isset($data['participant']['status'])) {
+                    $holder->setModelState(EventParticipantStatus::tryFrom($data['participant']['status']));
                 }
             }
 
@@ -220,8 +220,8 @@ class ApplicationHandler
     ): ?Transition {
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
-        if (isset($values[$holder->name]['status'])) {
-            $newState = EventParticipantStatus::tryFrom($values[$holder->name]['status']);
+        if (isset($values['participant']['status'])) {
+            $newState = EventParticipantStatus::tryFrom($values['participant']['status']);
         }
 
         $processState = $holder->processFormValues($values, $transition);
@@ -240,7 +240,7 @@ class ApplicationHandler
                         sprintf(
                             _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
                             $state->label(),
-                            $holder->label,
+                            'participant',
                             $newState->label()
                         )
                     );
@@ -248,8 +248,8 @@ class ApplicationHandler
             }
         }
 
-        if (isset($values[$holder->name])) {
-            $holder->data += (array)$values[$holder->name];
+        if (isset($values['participant'])) {
+            $holder->data += (array)$values['participant'];
         }
 
         return $transition;

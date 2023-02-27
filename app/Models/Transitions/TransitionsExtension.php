@@ -26,7 +26,6 @@ class TransitionsExtension extends CompilerExtension
                     self::createCommonTransition(
                         $this,
                         $this->getContainerBuilder(),
-                        Transition::class,
                         $machineName,
                         $source,
                         $target,
@@ -49,7 +48,6 @@ class TransitionsExtension extends CompilerExtension
     public static function createCommonTransition(
         CompilerExtension $extension,
         ContainerBuilder $builder,
-        string $className,
         string $machineName,
         EnumColumn $source,
         EnumColumn $target,
@@ -63,7 +61,7 @@ class TransitionsExtension extends CompilerExtension
             )
         )
             ->addTag($machineName)
-            ->setType($className)
+            ->setType(Transition::class)
             ->addSetup('setCondition', [$baseConfig['condition'] ?? null])
             ->addSetup('setSourceStateEnum', [$source])
             ->addSetup('setTargetStateEnum', [$target])

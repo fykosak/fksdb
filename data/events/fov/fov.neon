@@ -19,22 +19,7 @@ events:
         eventTypeIds: [16]
         #eventYears: [] # specify for which years this machine is valid, by default all years
         formLayout: fov.form
-        #paramScheme:
-        #    notifyBcc:
-        #        default: soustredeni@fykos.cz
-        #    notifyFrom:
-        #        default: soustredeni@fykos.cz
-       #     deadline:
-       #         default: 1970-01-01 00:00:00
-        #    letterWhere:
-       #         default: nikde
-        #    letterSignature:
-       #         default: Student Pilný
-       #     letterResolutionTime:
-        #        default: až naprší a uschne
-
-
-        baseMachine:
+        machine:
                 transitions:
                     __init->invited:
                         condition: role('admin')
@@ -62,23 +47,15 @@ events:
                     invited|auto.invited|applied->cancelled:
                         condition: role('admin')
                         label: _('Cancel application')
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.fov.appCond%
-                        default: null
-                        factory: RefPerson(%events.fov.person%, email, role('admin'), role('admin'), false)
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('Participant')
-                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.fov.appCond%
+                    default: null
+                    factory: RefPerson(%events.fov.person%, email, role('admin'), role('admin'), false)
+            modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy

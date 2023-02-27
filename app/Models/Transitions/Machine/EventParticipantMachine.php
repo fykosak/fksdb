@@ -20,7 +20,6 @@ use Nette\InvalidArgumentException;
  */
 class EventParticipantMachine extends Machine
 {
-
     public string $name = 'participant';
 
     private EventDispatchFactory $eventDispatchFactory;

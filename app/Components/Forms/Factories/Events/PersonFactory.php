@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
-use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
@@ -30,7 +29,6 @@ class PersonFactory extends AbstractFactory
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
     private User $user;
-    private DIContainer $container;
 
     /**
      * @param callable|array $fieldsDefinition
@@ -45,8 +43,7 @@ class PersonFactory extends AbstractFactory
         $modifiable,
         $visible,
         ReferencedPersonFactory $referencedPersonFactory,
-        User $user,
-        DIContainer $container
+        User $user
     ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
@@ -55,7 +52,6 @@ class PersonFactory extends AbstractFactory
         $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->user = $user;
-        $this->container = $container;
     }
 
     /**
@@ -103,8 +99,7 @@ class PersonFactory extends AbstractFactory
      */
     private function evaluateFieldsDefinition(Field $field): array
     {
-        Helpers::registerSemantic(EventsExtension::$semanticMap);
-        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
+        $fieldsDefinition = Helpers::resolveArrayExpression($this->fieldsDefinition, EventsExtension::$semanticMap);
 
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {

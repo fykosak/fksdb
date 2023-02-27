@@ -47,21 +47,20 @@ class ImportHandler
     {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
         $handler->setErrorMode($errorMode);
         $handler->beginTransaction();
         $hasError = false;
         foreach ($this->parser as $row) {
             $values = ArrayHash::from($this->rowToValues($row));
-            $keyValue = $values[$holder->name]['person_id'];
+            $keyValue = $values['participant']['person_id'];
             if (
-                !isset($values[$holder->name]['status'])
-                || !$values[$holder->name]['status']
+                !isset($values['participant']['status'])
+                || !$values['participant']['status']
             ) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } elseif ($stateless == self::STATELESS_KEEP) {
-                    unset($values[$holder->name]['status']);
+                    unset($values['participant']['status']);
                 }
             }
             $holder = $holdersMap[$keyValue] ?? $this->eventDispatchFactory->getDummyHolder($this->event);
@@ -78,11 +77,11 @@ class ImportHandler
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $holder): array
+    private function prepareColumnName(string $columnName): array
     {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
-            return [$holder->name, $parts[0]];
+            return ['participant', $parts[0]];
         } else {
             return $parts;
         }
@@ -101,7 +100,7 @@ class ImportHandler
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $holder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];

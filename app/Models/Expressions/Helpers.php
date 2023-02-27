@@ -7,20 +7,17 @@ namespace FKSDB\Models\Expressions;
 use FKSDB\Models\Expressions\Comparison\Le;
 use FKSDB\Models\Expressions\Comparison\Leq;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
-use FKSDB\Models\Expressions\Logic\Not;
 use FKSDB\Models\Expressions\Logic\LogicOr;
+use FKSDB\Models\Expressions\Logic\Not;
 use FKSDB\Models\Expressions\Predicates\After;
 use FKSDB\Models\Expressions\Predicates\Before;
-use Nette\DI\Container;
 use Nette\DI\Definitions\Statement;
-use Nette\DI\ServiceCreationException;
-use Nette\NotImplementedException;
 
 class Helpers
 {
 
     /** @var string[] */
-    private static array $semanticMap = [
+    private const SEMANTIC_MAP = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
         'neg' => Not::class,
@@ -30,91 +27,45 @@ class Helpers
         'leq' => Leq::class,
     ];
 
-    public static function registerSemantic(array $semanticMap): void
-    {
-        self::$semanticMap += $semanticMap;
-    }
-
     /**
-     * Transforms into dynamic expression tree built from FKSDB\Expressions\*.
-     *
-     * @param Statement|mixed $expression
-     * @return array|Statement|mixed
-     */
-    public static function statementFromExpression($expression)
-    {
-        if ($expression instanceof Statement) {
-            $arguments = [];
-            foreach ($expression->arguments as $attribute) {
-                $arguments[] = self::statementFromExpression($attribute);
-            }
-            $class = $expression->entity;
-            if (!is_array($expression->entity)) {
-                $class = self::$semanticMap[$expression->entity] ?? $class;
-                if (function_exists($class)) { // workaround for Nette interpretation of entities
-                    $class = ['', $class];
-                }
-            }
-
-            return new Statement($class, $arguments);
-        } elseif (is_array($expression)) {
-            return array_map(fn($subExpresion) => self::statementFromExpression($subExpresion), $expression);
-        } else {
-            return $expression;
-        }
-    }
-
-    /**
-     * Transforms and evalutes the expression during runtime.
-     *
      * @param mixed $expression
-     * @return mixed
-     * @throws ServiceCreationException
-     * @throws \ReflectionException
+     * @return array|mixed|void
      */
-    public static function evalExpression($expression, Container $container)
+    public static function resolveMixedExpression($expression, array $semantic)
     {
         if ($expression instanceof Statement) {
-            $arguments = [];
-            foreach ($expression->arguments as $attribute) {
-                if ($attribute === '...') {
-                    continue;
-                }
-                $arguments[] = self::evalExpression($attribute, $container);
-            }
-            $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
-            if (function_exists($entity)) {
-                return $entity(...$arguments);
-            } else {
-                throw new NotImplementedException();
-                /*  $rc = ClassType::from($entity);
-                  return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(),
-                 $arguments, function (string $type, bool $single) use ($container) {
-                      return $this->getByType($type);
-                  }));*/
-                // TODO!!!
-            }
+            self::resolveStatementExpression($expression, $semantic);
+        } elseif (is_iterable($expression)) {
+            return self::resolveArrayExpression($expression, $semantic);
         } else {
             return $expression;
         }
     }
 
-    /**
-     * @param mixed $expressionArray
-     * @return mixed
-     * @throws \ReflectionException
-     */
-    public static function evalExpressionArray($expressionArray, Container $container)
+    public static function resolveStatementExpression(Statement $statement, array $semantic): Statement
     {
-        if (is_iterable($expressionArray)) {
-            $result = [];
-            foreach ($expressionArray as $key => $expression) {
-                $result[$key] = self::evalExpressionArray($expression, $container);
-            }
-            return $result;
-        } else {
-            return self::evalExpression($expressionArray, $container);
+        $map = self::SEMANTIC_MAP + $semantic;
+        $arguments = [];
+        foreach ($statement->arguments as $attribute) {
+            $arguments[] = self::resolveMixedExpression($attribute, $semantic);
         }
+        $class = $statement->entity;
+        if (!is_array($statement->entity)) {
+            $class = $map[$statement->entity] ?? $class;
+            if (function_exists($class)) { // workaround for Nette interpretation of entities
+                $class = ['', $class];
+            }
+        }
+        return new Statement($class, $arguments);
+    }
+
+    public static function resolveArrayExpression(iterable $expressionArray, array $semantic): array
+    {
+        $result = [];
+        foreach ($expressionArray as $key => $expression) {
+            $result[$key] = self::resolveMixedExpression($expression, $semantic);
+        }
+        return $result;
     }
 
     /**

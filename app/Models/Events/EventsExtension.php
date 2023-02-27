@@ -19,29 +19,16 @@ use FKSDB\Models\Events\Semantics\State;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Config\Loader;
 use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
-/**
- * It's a f**** magic!
- */
 class EventsExtension extends CompilerExtension
 {
-    public const FIELD_FACTORY = 'Field_';
-    public const MACHINE_PREFIX = 'Machine_';
-    public const HOLDER_PREFIX = 'Holder_';
-
-
-    /** @const Regexp for configuration section names */
-    public const NAME_PATTERN = '/[a-z0-9_]/i';
-
     public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
@@ -55,26 +42,16 @@ class EventsExtension extends CompilerExtension
         'count' => Count::class,
     ];
 
-    private array $scheme;
-
-    private string $schemeFile;
-
-    public function __construct(string $schemaFile)
-    {
-        $this->schemeFile = $schemaFile;
-        Helpers::registerSemantic(self::$semanticMap);
-    }
-
     public function getConfigSchema(): Schema
     {
         $expressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
-            fn($value) => Helpers::statementFromExpression($value)
+            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
         );
         $boolExpressionType = fn(bool $default) => Expect::anyOf(
             Expect::bool($default),
             Expect::type(Statement::class)
         )->before(
-            fn($value) => Helpers::statementFromExpression($value)
+            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
         );
         $translateExpressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
             fn($value) => Helpers::translate($value)
@@ -85,7 +62,7 @@ class EventsExtension extends CompilerExtension
                 'eventTypeIds' => Expect::listOf('int'),
                 'eventYears' => Expect::listOf('int')->default(null),
                 'formLayout' => Expect::string('application'),
-                'baseMachine' => Expect::structure([
+                'machine' => Expect::structure([
                     'transitions' => Expect::arrayOf(
                         Expect::structure([
                             'condition' => $boolExpressionType(true)->default(true),
@@ -96,6 +73,10 @@ class EventsExtension extends CompilerExtension
                         ])->castTo('array'),
                         Expect::string()
                     ),
+
+                ])->castTo('array'),
+                'holder' => Expect::structure([
+                    'modifiable' => $boolExpressionType(true)->default(true),
                     'fields' => Expect::arrayOf(
                         Expect::structure([
                             'label' => $translateExpressionType,
@@ -108,17 +89,15 @@ class EventsExtension extends CompilerExtension
                         ])->castTo('array'),
                         Expect::string()
                     ),
-                ])->castTo('array'),
-                'machine' => Expect::structure([
-                    'baseMachine' => Expect::structure([
-                        'label' => $translateExpressionType,
-                        'modifiable' => $boolExpressionType(true)->default(true),
-                    ])->castTo('array'),
                     'formAdjustments' => Expect::listOf(
-                        Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
+                        Expect::mixed()->before(
+                            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
+                        )
                     ),
                     'processings' => Expect::listOf(
-                        Expect::mixed()->before(fn($value) => Helpers::statementFromExpression($value))
+                        Expect::mixed()->before(
+                            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
+                        )
                     ),
                 ])->castTo('array'),
             ])->castTo('array'),
@@ -132,11 +111,7 @@ class EventsExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-
-        $this->loadScheme();
-
         $config = $this->getConfig();
-
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
@@ -147,24 +122,12 @@ class EventsExtension extends CompilerExtension
         foreach ($config as $definitionName => $definition) {
             $keys = $this->createAccessKeys($definition);
             $machine = $this->createMachineFactory($definitionName);
-            $holder = $this->createHolderFactory($definitionName, $definition);
+            $holder = $this->createHolderFactory($definitionName);
             $eventDispatchFactory->addSetup(
                 'addEvent',
                 [$keys, Container::getMethodName($holder->getName()), $machine->getName(), $definition['formLayout']]
             );
         }
-    }
-
-    private function loadScheme(): void
-    {
-        $loader = new Loader();
-        $this->getContainerBuilder()->addDependency($this->schemeFile);
-        $this->scheme = $loader->load($this->schemeFile);
-    }
-
-    private function getBaseMachineConfig(string $eventName): array
-    {
-        return $this->getConfig()[$eventName]['baseMachine'];
     }
 
     private function createTransitionService(string $baseName, string $mask, array $definition): array
@@ -175,27 +138,11 @@ class EventsExtension extends CompilerExtension
             $factory = TransitionsExtension::createCommonTransition(
                 $this,
                 $this->getContainerBuilder(),
-                Transition::class,
                 $baseName,
                 $source,
                 $target,
                 $definition
             );
-            $parameters = array_keys($this->scheme['transition']);
-            foreach ($parameters as $parameter) {
-                switch ($parameter) {
-                    case 'label':
-                    case 'afterExecute':
-                    case 'beforeExecute':
-                    case 'behaviorType':
-                    case 'condition':
-                        break;
-                    default:
-                        if (isset($definition[$parameter])) {
-                            $factory->addSetup('set' . ucfirst($parameter), [$definition[$parameter]]);
-                        }
-                }
-            }
             $factories[] = $factory;
         }
         return $factories;
@@ -204,7 +151,7 @@ class EventsExtension extends CompilerExtension
     private function createFieldService(array $fieldDefinition): ServiceDefinition
     {
         $field = $this->getContainerBuilder()
-            ->addDefinition($this->getFieldName())
+            ->addDefinition($this->prefix(uniqid('Field_')))
             ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
         foreach ($fieldDefinition as $key => $parameter) {
             if (is_numeric($key)) {
@@ -246,11 +193,11 @@ class EventsExtension extends CompilerExtension
      */
     private function createMachineFactory(string $eventName): ServiceDefinition
     {
-        $factoryName = $this->getMachineName($eventName);
-        $definition = $this->getBaseMachineConfig($eventName);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-
-        $factory->setFactory(EventParticipantMachine::class);
+        $factoryName = $this->prefix('Machine_' . $eventName);
+        $definition = $this->getConfig()[$eventName]['machine'];
+        $factory = $this->getContainerBuilder()
+            ->addDefinition($factoryName)
+            ->setFactory(EventParticipantMachine::class);
 
         foreach ($definition['transitions'] as $mask => $transitionDef) {
             $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);
@@ -264,63 +211,26 @@ class EventsExtension extends CompilerExtension
         return $factory;
     }
 
-    /*
-     * Specialized data factories
-     */
-
     /**
      * @throws MachineDefinitionException
      */
-    private function createHolderFactory(string $eventName, array $definition): ServiceDefinition
+    private function createHolderFactory(string $eventName): ServiceDefinition
     {
-        $machineDef = $definition['machine'];
-
-        $instanceDef = $machineDef['baseMachine'];
-        $factoryName = $this->getHolderName($eventName);
-        $definition = $this->getBaseMachineConfig($eventName);
-        $factory = $this->getContainerBuilder()->addDefinition($factoryName);
-        $factory->setFactory(BaseHolder::class);
-
-        $parameters = array_keys($this->scheme['bmInstance']);
-
-        foreach ($parameters as $parameter) {
-            switch ($parameter) {
-                case 'modifiable':
-                case 'label':
-                    $factory->addSetup('set' . ucfirst($parameter), [$instanceDef[$parameter]]);
-                    break;
-                default:
-                    break;
-            }
-        }
-        foreach ($definition['fields'] as $name => $fieldDef) {
+        $factory = $this->getContainerBuilder()
+            ->addDefinition($this->prefix('Holder_' . $eventName))
+            ->setFactory(BaseHolder::class)
+            ->addSetup('setModifiable', [$this->getConfig()[$eventName]['holder']['modifiable']]);
+        foreach ($this->getConfig()[$eventName]['holder']['fields'] as $name => $fieldDef) {
             array_unshift($fieldDef, $name);
             $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
         }
-        foreach ($machineDef['processings'] as $processing) {
+        foreach ($this->getConfig()[$eventName]['holder']['processings'] as $processing) {
             $factory->addSetup('addProcessing', [$processing]);
         }
 
-        foreach ($machineDef['formAdjustments'] as $formAdjustment) {
+        foreach ($this->getConfig()[$eventName]['holder']['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', [$formAdjustment]);
         }
         return $factory;
-    }
-
-    /* **************** Naming **************** */
-
-    private function getMachineName(string $name): string
-    {
-        return $this->prefix(self::MACHINE_PREFIX . $name);
-    }
-
-    private function getHolderName(string $name): string
-    {
-        return $this->prefix(self::HOLDER_PREFIX . $name);
-    }
-
-    private function getFieldName(): string
-    {
-        return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
 }

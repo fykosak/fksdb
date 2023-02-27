@@ -19,28 +19,16 @@ parameters:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-            #paramScheme:
-             #    notifyBcc:
-            #         default: dsef@fykos.cz
-             #    notifyFrom:
-             #        default: Den s experimentální fyzikou <dsef@fykos.cz>
 events:
     dsefDefault:
         eventTypeIds: [2]
         #eventYears: all
         formLayout: dsef.form
-        #paramScheme: []
-
-        baseMachine:
-                transitions: [] #not modifable
-                fields: [] #not modifable
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
         machine:
-            baseMachine:
-                    label: _('Participant')
+                transitions: [] #not modifable
+
+        holder:
+            fields: [] #not modifable
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

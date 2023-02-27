@@ -3,7 +3,7 @@ events:
         eventTypeIds: [4] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
-        baseMachine:
+        machine:
                 transitions:
                     __init->invited:
                         condition: role('admin')
@@ -152,37 +152,29 @@ events:
                     out_of_db->cancelled:
                         condition: role('admin')
                         label: _('Return to DB as Cancelled')
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.soustredeni.appCond%
-                        default: null
-                        factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
-                    diet:
-                        label: _('Food')
-                        description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
-                    health_restrictions:
-                        label: _('Health restrictions')
-                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
-                    tshirt_size:
-                        label: _('What t-shirt size do you wear?')
-                        required: %events.soustredeni.requiredCond%
-                        factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
-                    price:
-                        label: _('Price of camp (CZK)')
-                        modifiable: false
-                        description: _("Price calculated according to the rules on our website.")
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('Participant')
-                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.soustredeni.appCond%
+                    default: null
+                    factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
+                diet:
+                    label: _('Food')
+                    description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
+                health_restrictions:
+                    label: _('Health restrictions')
+                    description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
+                tshirt_size:
+                    label: _('What t-shirt size do you wear?')
+                    required: %events.soustredeni.requiredCond%
+                    factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
+                price:
+                    label: _('Price of camp (CZK)')
+                    modifiable: false
+                    description: _("Price calculated according to the rules on our website.")
+            modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy

@@ -52,7 +52,7 @@ events:
         eventTypeIds: [10]
         eventYears: [12] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor.form
-        baseMachine:
+        machine:
             transitions:
                 __init->invited:
                     condition: and(role('admin'),%events.tabor12.capacityCond%)
@@ -118,33 +118,28 @@ events:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
+
+        holder:
             fields:
-                person_id:
-                    label: _('Person')
-                    required: true
-                    modifiable: %events.tabor12.appCond%
-                    default: null
-                    factory: RefPerson(%events.tabor12.person%, email, false, role('admin'), role('admin'))
-                diet:
-                    label: _('Jídlo')
-                    description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
-                health_restrictions:
-                    label: _('Zdravotní omezení')
-                    description: "Zdravotní stav nemá vliv na přijetí. Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na tábore nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
-                used_drugs:
-                    label: _('Užívané léky')
-                swimmer:
-                     label: _('Umím plavat')
-                note:
-                    label: _('Ještě něco, co bychom o Tobě měli vědět?')
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                label: _('Účastník')
-                modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+                            person_id:
+                                label: _('Person')
+                                required: true
+                                modifiable: %events.tabor12.appCond%
+                                default: null
+                                factory: RefPerson(%events.tabor12.person%, email, false, role('admin'), role('admin'))
+                            diet:
+                                label: _('Jídlo')
+                                description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
+                            health_restrictions:
+                                label: _('Zdravotní omezení')
+                                description: "Zdravotní stav nemá vliv na přijetí. Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na tábore nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+                            used_drugs:
+                                label: _('Užívané léky')
+                            swimmer:
+                                 label: _('Umím plavat')
+                            note:
+                                label: _('Ještě něco, co bychom o Tobě měli vědět?')
+            modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

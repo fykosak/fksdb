@@ -68,11 +68,11 @@ class ResourceAvailability extends AbstractAdjustment
             if (!$foundControls) {
                 continue;
             }
-            if (isset($foundControls[$holder->name])) {
+            if (isset($foundControls['participant'])) {
                 $holders[] = $holder;
-                $controls[] = $foundControls[$holder->name];
+                $controls[] = $foundControls['participant'];
                 $field = $fieldMask;
-            } elseif ($holder->name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+            } elseif ('participant' == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
                 $holders[] = $holder;
                 $controls[] = reset($foundControls); // assume single result;
                 $field = $fieldMask;

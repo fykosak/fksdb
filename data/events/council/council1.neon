@@ -2,7 +2,7 @@ events:
     council:
         eventTypeIds: [15]
         eventYears: [1,2]
-        baseMachine:
+        holder:
                 fields:
                     person_id:
                         label: _('Person')

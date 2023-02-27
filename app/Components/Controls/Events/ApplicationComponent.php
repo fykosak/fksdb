@@ -94,7 +94,7 @@ class ApplicationComponent extends BaseComponent
         $form = $result->getForm();
 
         $container = $this->holder->createFormContainer();
-        $form->addComponent($container, $this->holder->name);
+        $form->addComponent($container, 'participant');
         /*
          * Create save (no transition) button
          */

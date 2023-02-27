@@ -23,9 +23,6 @@ use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
 {
-    public string $name = 'participant';
-    public string $label;
-
     /** @var bool|callable */
     private $modifiable;
     private Container $container;
@@ -147,12 +144,6 @@ class BaseHolder implements ModelHolder
         $this->data['status'] = $state->value;
     }
 
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
-    }
-
     public static function getBareColumn(string $column): ?string
     {
         $column = str_replace(':', '.', $column);
@@ -163,7 +154,7 @@ class BaseHolder implements ModelHolder
     public function createFormContainer(): ContainerWithOptions
     {
         $container = new ContainerWithOptions($this->container);
-        $container->setOption('label', $this->label);
+        $container->setOption('label', _('Participant'));
 
         foreach ($this->fields as $name => $field) {
             if (!$field->isVisible()) {
@@ -190,11 +181,6 @@ class BaseHolder implements ModelHolder
         } catch (CannotAccessModelException $exception) {
             return null;
         }
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
     }
 
     public function updateState(EnumColumn $newState): void

@@ -36,34 +36,24 @@ parameters:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-          #  paramScheme:
-           #      notifyBcc:
-           #          default: dsef@fykos.cz
-           #      notifyFrom:
-           #          default: Den s experimentální fyzikou <dsef@fykos.cz>
-
 events:
     dsef27:
         eventTypeIds: [2]
         eventYears: [27]
         formLayout: dsef.form
-       #paramScheme: %events.defaultDsef.paramScheme%
-
-        baseMachine:
-                transitions: %events.dsef27.transitions%
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.dsef27.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    lunch_count:
-                        modifiable: %events.defaultDsef.appCond%
-                        description: _('Počet "obědů" (bageta za 30 Kč)')
         machine:
-            baseMachine:
-                    label: _('Účastník')
+                transitions: %events.dsef27.transitions%
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.defaultDsef.appCond%
+                    default: fromLogin
+                    factory: RefPerson(%events.dsef27.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                lunch_count:
+                    modifiable: %events.defaultDsef.appCond%
+                    description: _('Počet "obědů" (bageta za 30 Kč)')
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
