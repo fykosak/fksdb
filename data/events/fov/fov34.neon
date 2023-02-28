@@ -6,31 +6,31 @@ events:
         machine:
                 transitions:
                     __init->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(fov/invited.34)
                     auto.invited->invited: # this must be duplicate of __init->invited
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(fov/invited.34)
                     invited->applied:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Confirm participation')
                     invited->rejected:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Decline participation')
                         behaviorType: warning
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Participated')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Missed')
 
                     invited|auto.invited|applied->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Cancel application')
         holder:
             fields:
@@ -39,8 +39,8 @@ events:
                     required: true
                     modifiable: %events.fov.appCond%
                     default: null
-                    factory: RefPerson(%events.fov.person%, email, role('admin'), role('admin'), false)
-            modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fov.person%, email, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'), false)
+            modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy

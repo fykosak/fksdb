@@ -35,7 +35,7 @@ events:
                     required: true
                     modifiable: %events.defaultDsef.appCond%
                     default: fromLogin
-                    factory: RefPerson(%events.dsef24.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.dsef24.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                 lunch_count:
                     modifiable: %events.defaultDsef.appCond%
                     description:  _('à 30 Kč')

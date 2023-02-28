@@ -1,8 +1,8 @@
 parameters:
     events:
         vikend3:
-            appCond: or(regOpen(), role('admin'))
-            cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            cancelable: neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled')))
             person:
                 person:
                     other_name:
@@ -43,22 +43,22 @@ events:
         machine:
                 transitions:
                     __init->spare:
-                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
+                        condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit náhradníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     spare->applied:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Nasadit náhradníka')
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     spare|applied->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
         holder:
@@ -68,11 +68,11 @@ events:
                     required: true
                     modifiable: %events.vikend3.appCond%
                     default: fromLogin
-                    factory: RefPerson(%events.vikend3.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.vikend3.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                 tshirt_size:
                     label: _('Jaké triko nosíš?')
                     required: %events.soustredeni.requiredCond%
-                    factory: Chooser(_('Zvolit velikost'), Options(%events.vikend3.tshirt%))
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_('Zvolit velikost'), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.vikend3.tshirt%))
                 diet:
                     label: _('Jídlo')
                     description: _('Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?')

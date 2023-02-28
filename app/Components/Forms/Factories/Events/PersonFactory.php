@@ -6,7 +6,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Events\EventsExtension;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
@@ -99,7 +98,7 @@ class PersonFactory extends AbstractFactory
      */
     private function evaluateFieldsDefinition(Field $field): array
     {
-        $fieldsDefinition = Helpers::resolveArrayExpression($this->fieldsDefinition, EventsExtension::$semanticMap);
+        $fieldsDefinition = Helpers::resolveArrayExpression($this->fieldsDefinition);
 
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {

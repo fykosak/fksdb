@@ -12,6 +12,8 @@ use FKSDB\Models\Expressions\Logic\Not;
 use FKSDB\Models\Expressions\Predicates\After;
 use FKSDB\Models\Expressions\Predicates\Before;
 use Nette\DI\Definitions\Statement;
+use Nette\Schema\Elements\AnyOf;
+use Nette\Schema\Expect;
 
 class Helpers
 {
@@ -31,27 +33,26 @@ class Helpers
      * @param mixed $expression
      * @return array|mixed|void
      */
-    public static function resolveMixedExpression($expression, array $semantic)
+    public static function resolveMixedExpression($expression)
     {
         if ($expression instanceof Statement) {
-            self::resolveStatementExpression($expression, $semantic);
+            return self::resolveStatementExpression($expression);
         } elseif (is_iterable($expression)) {
-            return self::resolveArrayExpression($expression, $semantic);
+            return self::resolveArrayExpression($expression);
         } else {
             return $expression;
         }
     }
 
-    public static function resolveStatementExpression(Statement $statement, array $semantic): Statement
+    public static function resolveStatementExpression(Statement $statement): Statement
     {
-        $map = self::SEMANTIC_MAP + $semantic;
         $arguments = [];
         foreach ($statement->arguments as $attribute) {
-            $arguments[] = self::resolveMixedExpression($attribute, $semantic);
+            $arguments[] = self::resolveMixedExpression($attribute);
         }
         $class = $statement->entity;
         if (!is_array($statement->entity)) {
-            $class = $map[$statement->entity] ?? $class;
+            $class = self::SEMANTIC_MAP[$statement->entity] ?? $class;
             if (function_exists($class)) { // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
@@ -59,24 +60,29 @@ class Helpers
         return new Statement($class, $arguments);
     }
 
-    public static function resolveArrayExpression(iterable $expressionArray, array $semantic): array
+    public static function resolveArrayExpression(iterable $expressionArray): array
     {
         $result = [];
         foreach ($expressionArray as $key => $expression) {
-            $result[$key] = self::resolveMixedExpression($expression, $semantic);
+            $result[$key] = self::resolveMixedExpression($expression);
         }
         return $result;
     }
 
-    /**
-     * @param $statement
-     * @return Statement|string
-     */
-    public static function translate($statement)
+    public static function createExpressionSchemaType(): AnyOf
     {
-        if ($statement instanceof Statement && $statement->entity === '_') {
-            return _(...$statement->arguments);
-        }
-        return $statement;
+        return Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
+            fn($value) => self::resolveMixedExpression($value)
+        );
+    }
+
+    public static function createBoolExpressionSchemaType(bool $default): AnyOf
+    {
+        return Expect::anyOf(
+            Expect::bool($default),
+            Expect::type(Statement::class)
+        )->before(
+            fn($value) => self::resolveMixedExpression($value)
+        );
     }
 }

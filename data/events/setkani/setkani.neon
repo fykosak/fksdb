@@ -1,8 +1,8 @@
 parameters:
     events:
         setkani:
-            appCond: or(regOpen(), role('admin'))
-            cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            cancelable: neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled')))
             person:
 
                 person:
@@ -66,19 +66,19 @@ events:
         machine:
                 transitions:
                     __init->applied:
-                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
+                        condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     applied->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
         holder:
@@ -88,29 +88,29 @@ events:
                     required: true
                     modifiable: %events.setkani.appCond%
                     default: fromLogin
-                    factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.setkani.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                 arrival_time:
                    label: _('Předpokládaný příjezd')
                    description: "Čas příjezdu"
                 arrival_destination:
                    label: _('Na jaké místo přijedeš?')
                    required: true
-                   factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                   factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvol místo",FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.setkani.arrival.destination%))
                 departure_time:
                    label: _('Předpokládaný odjezd')
                    description: "Čas odjezdu"
                 departure_destination:
                    label: _('Z jakého místa chceš odjíždět?')
                    required: true
-                   factory: Chooser("Zvol místo",Options(%events.setkani.arrival.destination%))
+                   factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvol místo",FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.setkani.arrival.destination%))
                 tshirt_size:
                     label: _('Jaké tričko nosíš?')
                     required: true
-                    factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvol velikost", FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.setkani.tshirt.size%))
                 tshirt_color:
                     label: _('Jakou barvu trička bys chtěl?')
                     required: false
-                    factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvol barvu", FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.setkani.tshirt.color%))
                 diet:
                     label: _('Jídlo')
                     description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"

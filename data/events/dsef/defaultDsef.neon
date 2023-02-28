@@ -1,7 +1,7 @@
 parameters:
     events:
         defaultDsef:
-            appCond: or(regOpen(), role('admin'))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
             transitions:
                 __init->applied:
                     condition: %events.defaultDsef.appCond%
@@ -9,14 +9,14 @@ parameters:
                     afterExecute:
                         - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                 applied->participated:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Prezentovat')
                 applied->missed:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Nepřijel')
                     behaviorType: danger
                 applied->cancelled:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
 events:

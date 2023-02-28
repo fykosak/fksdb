@@ -7,7 +7,6 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
-use Tracy\Debugger;
 
 class ACLExtension extends CompilerExtension
 {
@@ -22,7 +21,7 @@ class ACLExtension extends CompilerExtension
         $config = $this->getConfig();
 
         foreach ($config as $setup) {
-            $stmt = Helpers::resolveMixedExpression($setup, []);
+            $stmt = Helpers::resolveMixedExpression($setup);
             $definition->addSetup($stmt->entity, $stmt->arguments);
         }
     }

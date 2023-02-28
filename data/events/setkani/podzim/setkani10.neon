@@ -36,19 +36,19 @@ events:
         machine:
                 transitions:
                     __init->applied:
-                        condition: or(and(regOpen(),le(count(['applied']),param('capacity'))), role('admin'))
+                        condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     applied->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
         holder:
@@ -58,7 +58,7 @@ events:
                     required: true
                     modifiable: %events.setkani.appCond%
                     default: fromLogin
-                    factory: RefPerson(%events.setkani_dist.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.setkani_dist.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                 note:
                    label: _('Další poznámky')
             formAdjustments:

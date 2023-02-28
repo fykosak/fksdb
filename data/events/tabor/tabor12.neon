@@ -1,9 +1,9 @@
 parameters:
     events:
         tabor12:
-            appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'),state('invited'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            capacityCond: le(count(['auto.invited','invited','interested','applied','paid','participated']),param('capacity')) # checks if the event is not full
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            requiredCond: or(and(neg(FKSDB\Models\Events\Semantics\Role('admin')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('interested'),FKSDB\Models\Events\Semantics\State('invited'),FKSDB\Models\Events\Semantics\State('spare'))), FKSDB\Models\Events\Semantics\State('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            capacityCond: le(FKSDB\Models\Events\Semantics\Count(['auto.invited','invited','interested','applied','paid','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')) # checks if the event is not full
             person:
                 person:
                     other_name:
@@ -55,67 +55,67 @@ events:
         machine:
             transitions:
                 __init->invited:
-                    condition: and(role('admin'),%events.tabor12.capacityCond%)
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
                 auto.invited->invited:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Pozvat účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
                 __init|auto.spare->spare:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Pozvat náhradníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
                 invited->applied:
-                    condition: or(regOpen(),role('admin'))
+                    condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Potrvrdit učast')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
                 spare->interested:
-                    condition: or(regOpen(),role('admin'))
+                    condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Chci jet')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
                 applied->paid:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zaplatil')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
                 invited->rejected:
-                    condition: or(regOpen(),role('admin'))
+                    condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Odmítnout účast')
                     behaviorType: danger
                 spare->rejected:
-                    condition: or(regOpen(),role('admin'))
+                    condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Odmítnout účast')
                     behaviorType: warning
                 interested->applied:
-                    condition: and(role('admin'),%events.tabor12.capacityCond%)
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
                     label: _('Schválit jako účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
                 interested->rejected:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Odmítnout jako účastníka')
                     behaviorType: warning
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\RejectedMailCallback()
                 spare->invited:
-                    condition: and(role('admin'),%events.tabor12.capacityCond%)
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat jako účastníka')
 
                 paid->participated:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Zúčastnil se')
                 applied->missed:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Nepřijel')
 
                 invited|auto.invited|spare|auto.spare|applied|interested|paid->cancelled:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
 
@@ -126,7 +126,7 @@ events:
                                 required: true
                                 modifiable: %events.tabor12.appCond%
                                 default: null
-                                factory: RefPerson(%events.tabor12.person%, email, false, role('admin'), role('admin'))
+                                factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.tabor12.person%, email, false, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'))
                             diet:
                                 label: _('Jídlo')
                                 description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
@@ -139,7 +139,7 @@ events:
                                  label: _('Umím plavat')
                             note:
                                 label: _('Ještě něco, co bychom o Tobě měli vědět?')
-            modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+            modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

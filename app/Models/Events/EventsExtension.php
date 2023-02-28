@@ -4,18 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
-use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
-use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\Events\Semantics\Count;
-use FKSDB\Models\Events\Semantics\EventWas;
-use FKSDB\Models\Events\Semantics\Parameter;
-use FKSDB\Models\Events\Semantics\RegOpen;
-use FKSDB\Models\Events\Semantics\Role;
-use FKSDB\Models\Events\Semantics\State;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -29,46 +20,21 @@ use Nette\Schema\Schema;
 
 class EventsExtension extends CompilerExtension
 {
-    public static array $semanticMap = [
-        'RefPerson' => PersonFactory::class,
-        'Chooser' => ChooserFactory::class,
-        'Options' => ArrayOptions::class,
-        'role' => Role::class,
-        'regOpen' => RegOpen::class,
-        'eventWas' => EventWas::class,
-        'state' => State::class,
-        'param' => Parameter::class,
-        'parameter' => Parameter::class,
-        'count' => Count::class,
-    ];
-
     public function getConfigSchema(): Schema
     {
-        $expressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
-            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
-        );
-        $boolExpressionType = fn(bool $default) => Expect::anyOf(
-            Expect::bool($default),
-            Expect::type(Statement::class)
-        )->before(
-            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
-        );
-        $translateExpressionType = Expect::anyOf(Expect::string(), Expect::type(Statement::class))->before(
-            fn($value) => Helpers::translate($value)
-        );
-
         return Expect::arrayOf(
             Expect::structure([
                 'eventTypeIds' => Expect::listOf('int'),
                 'eventYears' => Expect::listOf('int')->default(null),
                 'formLayout' => Expect::string('application'),
                 'machine' => Expect::structure([
+                    'stateEnum' => Expect::string()->default(EventParticipantStatus::class),
                     'transitions' => Expect::arrayOf(
                         Expect::structure([
-                            'condition' => $boolExpressionType(true)->default(true),
-                            'label' => $translateExpressionType,
-                            'afterExecute' => Expect::listOf($expressionType),
-                            'beforeExecute' => Expect::listOf($expressionType),
+                            'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
+                            'label' => Helpers::createExpressionSchemaType(),
+                            'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
+                            'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                             'behaviorType' => Expect::string('secondary'),
                         ])->castTo('array'),
                         Expect::string()
@@ -76,27 +42,27 @@ class EventsExtension extends CompilerExtension
 
                 ])->castTo('array'),
                 'holder' => Expect::structure([
-                    'modifiable' => $boolExpressionType(true)->default(true),
+                    'modifiable' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'fields' => Expect::arrayOf(
                         Expect::structure([
-                            'label' => $translateExpressionType,
-                            'description' => $translateExpressionType->default(null),
-                            'required' => $boolExpressionType(false)->default(false),
-                            'modifiable' => $boolExpressionType(true)->default(true),
-                            'visible' => $boolExpressionType(true)->default(true),
+                            'label' => Helpers::createExpressionSchemaType(),
+                            'description' => Helpers::createExpressionSchemaType()->default(null),
+                            'required' => Helpers::createBoolExpressionSchemaType(false)->default(false),
+                            'modifiable' => Helpers::createBoolExpressionSchemaType(true)->default(true),
+                            'visible' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                             'default' => Expect::mixed(),
-                            'factory' => $expressionType->default('@event.DBReflectionFactory'),
+                            'factory' => Helpers::createExpressionSchemaType()->default('@event.DBReflectionFactory'),
                         ])->castTo('array'),
                         Expect::string()
                     ),
                     'formAdjustments' => Expect::listOf(
                         Expect::mixed()->before(
-                            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
+                            fn($value) => Helpers::resolveMixedExpression($value)
                         )
                     ),
                     'processings' => Expect::listOf(
                         Expect::mixed()->before(
-                            fn($value) => Helpers::resolveMixedExpression($value, self::$semanticMap)
+                            fn($value) => Helpers::resolveMixedExpression($value)
                         )
                     ),
                 ])->castTo('array'),
@@ -202,10 +168,7 @@ class EventsExtension extends CompilerExtension
         foreach ($definition['transitions'] as $mask => $transitionDef) {
             $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);
             foreach ($transitions as $transition) {
-                $factory->addSetup(
-                    'addTransition',
-                    [$transition]
-                );
+                $factory->addSetup('addTransition', [$transition]);
             }
         }
         return $factory;

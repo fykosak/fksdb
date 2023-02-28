@@ -7,11 +7,13 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -28,6 +30,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     private User $user;
     private bool $isOrg;
     private ?PaymentModel $model;
+    private EventModel $event;
 
     private GettextTranslator $translator;
 
@@ -36,6 +39,7 @@ class PersonPaymentContainer extends ContainerWithOptions
      */
     public function __construct(
         Container $container,
+        EventModel $event,
         PaymentMachine $machine,
         bool $isOrg,
         ?PaymentModel $model
@@ -43,6 +47,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         parent::__construct($container);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
+        $this->event = $event;
         $this->model = $model;
         $this->configure();
     }
@@ -63,11 +68,11 @@ class PersonPaymentContainer extends ContainerWithOptions
     protected function configure(): void
     {
         $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $this->machine->event->event_id);
+            ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (!$this->isOrg) {
             /** @var LoginModel $login */
             $login = $this->user->getIdentity();
-            $roles = $login->person->getEventRoles($this->machine->event);
+            $roles = $login->person->getEventRoles($this->event);
             $teams = [];
             foreach ($roles as $role) {
                 if ($role instanceof FyziklaniTeamTeacherRole) {
@@ -93,7 +98,7 @@ class PersonPaymentContainer extends ContainerWithOptions
                 !$model->schedule_item->isPayable() ||
                 !in_array(
                     $model->schedule_item->schedule_group->schedule_group_type,
-                    $this->machine->scheduleGroupTypes
+                    [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND] // TODO to event params
                 )
             ) {
                 continue;
