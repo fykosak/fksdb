@@ -31,6 +31,8 @@ events:
         #eventYears: [1,2]
         formLayout: vikend.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->spare:
                         condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))

@@ -40,6 +40,8 @@ events:
         #eventYears: [5,6,8]
         formLayout: tsaf.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     # to invited
                     __init->invited:

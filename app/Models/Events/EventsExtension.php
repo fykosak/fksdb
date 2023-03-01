@@ -8,8 +8,6 @@ use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -24,23 +22,10 @@ class EventsExtension extends CompilerExtension
     {
         return Expect::arrayOf(
             Expect::structure([
-                'eventTypeIds' => Expect::listOf('int'),
-                'eventYears' => Expect::listOf('int')->default(null),
+                'eventTypeIds' => Expect::listOf(Expect::int()),
+                'eventYears' => Expect::listOf(Expect::int())->default(null),
                 'formLayout' => Expect::string('application'),
-                'machine' => Expect::structure([
-                    'stateEnum' => Expect::string()->default(EventParticipantStatus::class),
-                    'transitions' => Expect::arrayOf(
-                        Expect::structure([
-                            'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
-                            'label' => Helpers::createExpressionSchemaType(),
-                            'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
-                            'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
-                            'behaviorType' => Expect::string('secondary'),
-                        ])->castTo('array'),
-                        Expect::string()
-                    ),
-
-                ])->castTo('array'),
+                'machine' => TransitionsExtension::getMachineSchema(),
                 'holder' => Expect::structure([
                     'modifiable' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'fields' => Expect::arrayOf(
@@ -77,17 +62,21 @@ class EventsExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-        $config = $this->getConfig();
         $eventDispatchFactory = $this->getContainerBuilder()
-            ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
+            ->addDefinition('event.dispatch')
+            ->setFactory(EventDispatchFactory::class);
 
         $eventDispatchFactory->addSetup(
             'setTemplateDir',
             [$this->getContainerBuilder()->parameters['events']['templateDir']]
         );
-        foreach ($config as $definitionName => $definition) {
+        foreach ($this->getConfig() as $definitionName => $definition) {
             $keys = $this->createAccessKeys($definition);
-            $machine = $this->createMachineFactory($definitionName);
+            $machine = TransitionsExtension::createMachine(
+                $this,
+                $definitionName,
+                $this->getConfig()[$definitionName]['machine']
+            );
             $holder = $this->createHolderFactory($definitionName);
             $eventDispatchFactory->addSetup(
                 'addEvent',
@@ -96,33 +85,12 @@ class EventsExtension extends CompilerExtension
         }
     }
 
-    private function createTransitionService(string $baseName, string $mask, array $definition): array
-    {
-        [$sources, $target] = TransitionsExtension::parseMask($mask, EventParticipantStatus::class);
-        $factories = [];
-        foreach ($sources as $source) {
-            $factory = TransitionsExtension::createCommonTransition(
-                $this,
-                $this->getContainerBuilder(),
-                $baseName,
-                $source,
-                $target,
-                $definition
-            );
-            $factories[] = $factory;
-        }
-        return $factories;
-    }
-
-    private function createFieldService(array $fieldDefinition): ServiceDefinition
+    private function createFieldService(string $name, array $fieldDefinition): ServiceDefinition
     {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->prefix(uniqid('Field_')))
-            ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
+            ->setFactory(Field::class, [$name, $fieldDefinition['label']]);
         foreach ($fieldDefinition as $key => $parameter) {
-            if (is_numeric($key)) {
-                continue;
-            }
             switch ($key) {
                 case 'name':
                 case 'label':
@@ -157,35 +125,14 @@ class EventsExtension extends CompilerExtension
     /**
      * @throws MachineDefinitionException
      */
-    private function createMachineFactory(string $eventName): ServiceDefinition
-    {
-        $factoryName = $this->prefix('Machine_' . $eventName);
-        $definition = $this->getConfig()[$eventName]['machine'];
-        $factory = $this->getContainerBuilder()
-            ->addDefinition($factoryName)
-            ->setFactory(EventParticipantMachine::class);
-
-        foreach ($definition['transitions'] as $mask => $transitionDef) {
-            $transitions = $this->createTransitionService($factoryName, $mask, $transitionDef);
-            foreach ($transitions as $transition) {
-                $factory->addSetup('addTransition', [$transition]);
-            }
-        }
-        return $factory;
-    }
-
-    /**
-     * @throws MachineDefinitionException
-     */
     private function createHolderFactory(string $eventName): ServiceDefinition
     {
         $factory = $this->getContainerBuilder()
-            ->addDefinition($this->prefix('Holder_' . $eventName))
+            ->addDefinition($this->prefix($eventName . '.holder'))
             ->setFactory(BaseHolder::class)
             ->addSetup('setModifiable', [$this->getConfig()[$eventName]['holder']['modifiable']]);
         foreach ($this->getConfig()[$eventName]['holder']['fields'] as $name => $fieldDef) {
-            array_unshift($fieldDef, $name);
-            $factory->addSetup('addField', [new Statement($this->createFieldService($fieldDef))]);
+            $factory->addSetup('addField', [new Statement($this->createFieldService($name, $fieldDef))]);
         }
         foreach ($this->getConfig()[$eventName]['holder']['processings'] as $processing) {
             $factory->addSetup('addProcessing', [$processing]);

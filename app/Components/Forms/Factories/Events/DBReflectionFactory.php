@@ -82,7 +82,7 @@ class DBReflectionFactory extends AbstractFactory
 
     protected function setDefaultValue(BaseControl $control, Field $field): void
     {
-        if ($field->holder->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->holder->getModelState()->value === Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {

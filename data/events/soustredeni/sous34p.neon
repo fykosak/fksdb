@@ -4,6 +4,8 @@ events:
         eventYears: [34]
         formLayout: soustredeni.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->invited:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')

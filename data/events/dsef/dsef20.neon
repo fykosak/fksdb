@@ -26,6 +26,8 @@ events:
         eventYears: [20]
         formLayout: dsef.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     # to spare
                     __init->spare.tsaf:

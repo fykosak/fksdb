@@ -15,7 +15,7 @@ class Transition
 {
     use SmartObject;
 
-    /** @var callable|bool */
+    /** @var callable */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
@@ -62,9 +62,12 @@ class Transition
         $this->label = $label ?? '';
     }
 
-    public function setCondition(?callable $callback): void
+    /**
+     * @param callable|bool $condition
+     */
+    public function setCondition($condition): void
     {
-        $this->condition = $callback;
+        $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
     public function canExecute(ModelHolder $holder): bool

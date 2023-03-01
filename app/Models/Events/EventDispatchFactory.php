@@ -59,10 +59,10 @@ class EventDispatchFactory
     {
         switch ($event->event_type_id) {
             case 1:
-                $machine = $this->container->getService('fof.default.machine');
+                $machine = $this->container->getService('transitions.fof.machine');
                 break;
             case 9:
-                $machine = $this->container->getService('fol.default.machine');
+                $machine = $this->container->getService('transitions.fol.machine');
                 break;
             default:
                 throw new InvalidStateException();

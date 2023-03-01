@@ -40,6 +40,8 @@ events:
         eventYears: [11] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->applied:
                         condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))

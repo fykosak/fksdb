@@ -25,6 +25,8 @@ events:
         #eventYears: all
         formLayout: dsef.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions: [] #not modifable
 
         holder:

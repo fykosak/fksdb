@@ -30,6 +30,8 @@ events:
         eventYears: [1]
         formLayout: dsef.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions: %events.defaultDsef.transitions%
         holder:
             fields:

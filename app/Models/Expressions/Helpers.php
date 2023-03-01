@@ -17,8 +17,6 @@ use Nette\Schema\Expect;
 
 class Helpers
 {
-
-    /** @var string[] */
     private const SEMANTIC_MAP = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
@@ -78,10 +76,7 @@ class Helpers
 
     public static function createBoolExpressionSchemaType(bool $default): AnyOf
     {
-        return Expect::anyOf(
-            Expect::bool($default),
-            Expect::type(Statement::class)
-        )->before(
+        return Expect::anyOf(Expect::bool($default), Expect::type(Statement::class))->before(
             fn($value) => self::resolveMixedExpression($value)
         );
     }

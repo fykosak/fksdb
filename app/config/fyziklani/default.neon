@@ -1,5 +1,5 @@
 transitions:
-    fol.default:
+    fol:
         machine: FKSDB\Models\Transitions\Machine\TeamMachine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null
@@ -26,7 +26,7 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Zrušit tým')
                 behaviorType: danger
-    fof.default:
+    fof:
         machine: FKSDB\Models\Transitions\Machine\TeamMachine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null

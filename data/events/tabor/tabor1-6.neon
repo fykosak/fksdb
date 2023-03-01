@@ -59,6 +59,8 @@ events:
         eventYears: [1,2,3,4,5,6] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor.form
         machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->invited:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')

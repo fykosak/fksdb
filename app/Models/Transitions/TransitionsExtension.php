@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 use FKSDB\Models\Transitions\Transition\Transition;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ContainerBuilder;
 use Nette\DI\Definitions\ServiceDefinition;
+use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
@@ -18,24 +18,27 @@ class TransitionsExtension extends CompilerExtension
 {
     public function getConfigSchema(): Schema
     {
-        return Expect::arrayOf(
-            Expect::structure([
-                'machine' => Expect::string(),
-                'stateEnum' => Expect::string(),
-                'decorator' => Expect::type(\Nette\DI\Definitions\Statement::class)->nullable(),
-                'transitions' => Expect::arrayOf(
-                    Expect::structure([
-                        'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
-                        'label' => Helpers::createExpressionSchemaType(),
-                        'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
-                        'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
-                        'behaviorType' => Expect::string('secondary'),
-                    ])->castTo('array'),
-                    Expect::string()
-                ),
-            ])->castTo('array'),
-            Expect::string()
-        );
+        return Expect::arrayOf(self::getMachineSchema(), Expect::string());
+    }
+
+    public static function getMachineSchema(): Structure
+    {
+        return Expect::structure([
+            'machine' => Expect::string(),
+            'stateEnum' => Expect::string(),
+            'decorator' => Expect::type(\Nette\DI\Definitions\Statement::class)->nullable(),
+            'transitions' => Expect::arrayOf(
+                Expect::structure([
+                    'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
+                    'label' => Helpers::createExpressionSchemaType(),
+                    'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
+                    'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
+                    'behaviorType' => Expect::anyOf('success', 'warning', 'danger', 'primary', 'secondary')
+                        ->default('secondary'),
+                ])->castTo('array'),
+                Expect::string()
+            ),
+        ])->castTo('array');
     }
 
     public function loadConfiguration(): void
@@ -43,73 +46,50 @@ class TransitionsExtension extends CompilerExtension
         parent::loadConfiguration();
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
-            $machineDefinition = $this->setUpMachine($machineName, $machine);
-            $enumClassName = $machine['stateEnum'];
-            foreach ($machine['transitions'] as $mask => $transition) {
-                [$sources, $target] = self::parseMask($mask, $enumClassName);
-                foreach ($sources as $source) {
-                    $machineDefinition->addSetup('addTransition', [
-                        self::createCommonTransition(
-                            $this,
-                            $this->getContainerBuilder(),
-                            $machineName,
-                            $source,
-                            $target,
-                            $transition
-                        ),
-                    ]);
-                }
-            }
+            self::createMachine($this, $machineName, $machine);
         }
     }
-    public static function createCommonTransition(
-        CompilerExtension $extension,
-        ContainerBuilder $builder,
-        string $machineName,
-        EnumColumn $source,
-        EnumColumn $target,
-        array $baseConfig
-    ): ServiceDefinition {
-        $factory = $builder->addDefinition(
-            $extension->prefix(
-                $machineName . '.' .
-                ($source->value) . '.' .
-                ($target->value)
-            )
-        )
-            ->addTag($machineName)
-            ->setType(Transition::class)
-            ->addSetup('setCondition', [$baseConfig['condition'] ?? null])
-            ->addSetup('setSourceStateEnum', [$source])
-            ->addSetup('setTargetStateEnum', [$target])
-            ->addSetup('setLabel', [Helpers::resolveMixedExpression($baseConfig['label'])])
-            ->addSetup(
-                'setBehaviorType',
-                [
-                    BehaviorType::tryFrom($baseConfig['behaviorType'] ?? 'secondary'),
-                ]
-            );
-        if (isset($baseConfig['afterExecute'])) {
-            foreach ($baseConfig['afterExecute'] as $callback) {
-                $factory->addSetup('addAfterExecute', [$callback]);
-            }
+
+    public static function createMachine(CompilerExtension $extension, string $name, array $config): ServiceDefinition
+    {
+        $factory = $extension->getContainerBuilder()
+            ->addDefinition($extension->prefix($name . '.machine'))
+            ->setFactory($config['machine']);
+        if (isset($machineConfig['decorator'])) {
+            $factory->addSetup('decorateTransitions', [$machineConfig['decorator']]);
         }
-        if (isset($baseConfig['beforeExecute'])) {
-            foreach ($baseConfig['beforeExecute'] as $callback) {
-                $factory->addSetup('addBeforeExecute', [$callback]);
+        foreach ($config['transitions'] as $mask => $transitionConfig) {
+            [$sources, $target] = self::parseMask($mask, $config['stateEnum']);
+            foreach ($sources as $source) {
+                $transition = $extension->getContainerBuilder()->addDefinition(
+                    $extension->prefix(
+                        $name . '.' .
+                        ($source->value) . '.' .
+                        ($target->value)
+                    )
+                )
+                    ->addTag($name)
+                    ->setType(Transition::class)
+                    ->addSetup('setCondition', [$transitionConfig['condition']])
+                    ->addSetup('setSourceStateEnum', [$source])
+                    ->addSetup('setTargetStateEnum', [$target])
+                    ->addSetup('setLabel', [Helpers::resolveMixedExpression($transitionConfig['label'])])
+                    ->addSetup(
+                        'setBehaviorType',
+                        [
+                            BehaviorType::tryFrom($transitionConfig['behaviorType']),
+                        ]
+                    );
+                foreach ($transitionConfig['afterExecute'] as $callback) {
+                    $transition->addSetup('addAfterExecute', [$callback]);
+                }
+                foreach ($transitionConfig['beforeExecute'] as $callback) {
+                    $transition->addSetup('addBeforeExecute', [$callback]);
+                }
+                $factory->addSetup('addTransition', [$transition]);
             }
         }
         return $factory;
-    }
-
-    private function setUpMachine(string $machineName, array $machineConfig): ServiceDefinition
-    {
-        $builder = $this->getContainerBuilder();
-        $machineDefinition = $builder->addDefinition($machineName . '.machine')->setFactory($machineConfig['machine']);
-        if (isset($machineConfig['decorator'])) {
-            $machineDefinition->addSetup('decorateTransitions', [$machineConfig['decorator']]);
-        }
-        return $machineDefinition;
     }
 
     /**
