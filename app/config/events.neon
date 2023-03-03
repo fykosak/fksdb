@@ -44,6 +44,9 @@ transition:
     beforeExecute:
         default: []
         type: expression array
+    # If false, don't validate and save the data entered, just perform the transition
+    validation:
+        default: true
     # Requires confirmation in the GUI
     behaviorType:
         default: secondary

@@ -3,7 +3,7 @@ parameters:
         tabor12:
             appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
             requiredCond: or(and(neg(FKSDB\Models\Events\Semantics\Role('admin')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('interested'),FKSDB\Models\Events\Semantics\State('invited'),FKSDB\Models\Events\Semantics\State('spare'))), FKSDB\Models\Events\Semantics\State('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            capacityCond: le(FKSDB\Models\Events\Semantics\Count(['auto.invited','invited','interested','applied','paid','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')) # checks if the event is not full
+            capacityCond: le(FKSDB\Models\Events\Semantics\Count(['auto.invited','invited','applied','paid','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')) # checks if the event is not full
             person:
                 person:
                     other_name:
@@ -89,10 +89,12 @@ events:
                 invited->rejected:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Odmítnout účast')
+                    validation: false
                     behaviorType: danger
                 spare->rejected:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Odmítnout účast')
+                    validation: false
                     behaviorType: warning
                 interested->applied:
                     condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)

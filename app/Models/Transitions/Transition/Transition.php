@@ -24,6 +24,9 @@ class Transition
     /** @var Statement[] */
     public array $afterExecute = [];
 
+    /** @var bool */
+    protected $validation;
+
     public EnumColumn $source;
     public EnumColumn $target;
 
@@ -76,6 +79,16 @@ class Transition
             return true;
         }
         return (bool)($this->condition)($holder);
+    }
+
+    public function getValidation(): bool
+    {
+        return $this->validation ?? true;
+    }
+
+    public function setValidation(?bool $validation): void
+    {
+        $this->validation = $validation ?? true;
     }
 
     public function addBeforeExecute(callable $callBack): void

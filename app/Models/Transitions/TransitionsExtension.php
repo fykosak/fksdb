@@ -50,7 +50,6 @@ class TransitionsExtension extends CompilerExtension
             self::createMachine($this, $machineName, $machine);
         }
     }
-
     public static function createMachine(CompilerExtension $extension, string $name, array $config): ServiceDefinition
     {
         $factory = $extension->getContainerBuilder()
@@ -71,6 +70,7 @@ class TransitionsExtension extends CompilerExtension
                 )
                     ->addTag($name)
                     ->setType(Transition::class)
+                    ->addSetup('setValidation', [$transitionConfig['validation']])
                     ->addSetup('setCondition', [$transitionConfig['condition']])
                     ->addSetup('setSourceStateEnum', [$source])
                     ->addSetup('setTargetStateEnum', [$target])

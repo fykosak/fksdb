@@ -52,9 +52,9 @@ class ReferencedId extends HiddenField
 
         parent::__construct();
 
-        $this->monitor(Form::class, function (Form $form): void {
+        $this->monitor(IContainer::class, function (IContainer $container): void {
             if (!$this->attachedOnValidate) {
-                $form->onValidate[] = function () {
+                $container->onValidate[] = function () {
                     $this->createPromise();
                 };
                 $this->attachedOnValidate = true;

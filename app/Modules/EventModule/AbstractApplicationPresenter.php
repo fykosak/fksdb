@@ -76,6 +76,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+        $this->template->isOrg = $this->isAllowed('event.application', 'default');
     }
 
     /**
