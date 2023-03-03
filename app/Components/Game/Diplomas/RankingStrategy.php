@@ -32,13 +32,13 @@ class RankingStrategy
      */
     public function close(?TeamCategory $category = null): Html
     {
-        $connection = $this->teamService->explorer->getConnection();
-        $connection->beginTransaction();
+        //$connection = $this->teamService->explorer->getConnection();
+        //$connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
         usort($teamsData, self::getSortFunction());
         $log = $this->saveResults($teamsData, is_null($category));
-        $connection->commit();
+        //$connection->commit();
         return $log;
     }
 
