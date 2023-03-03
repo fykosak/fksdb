@@ -31,6 +31,7 @@ class TransitionsExtension extends CompilerExtension
                 Expect::structure([
                     'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'label' => Helpers::createExpressionSchemaType(),
+                    'validation' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'behaviorType' => Expect::anyOf('success', 'warning', 'danger', 'primary', 'secondary')
