@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
+use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
@@ -30,15 +31,21 @@ class RankingStrategy
     /**
      * @throws NotClosedTeamException
      */
-    public function close(?TeamCategory $category = null): Html
+    public function __invoke(?TeamCategory $category = null): Html
     {
-        //$connection = $this->teamService->explorer->getConnection();
-        //$connection->beginTransaction();
-        $teams = $this->getAllTeams($category);
-        $teamsData = $this->getTeamsStats($teams);
-        usort($teamsData, self::getSortFunction());
-        $log = $this->saveResults($teamsData, is_null($category));
-        //$connection->commit();
+        $connection = $this->teamService->explorer->getConnection();
+        try {
+            $connection->beginTransaction();
+            $teams = $this->getAllTeams($category);
+            $teamsData = $this->getTeamsStats($teams);
+            usort($teamsData, self::getSortFunction());
+            $log = $this->saveResults($teamsData, is_null($category));
+            $connection->commit();
+        } catch (NoMemberException $exception) {
+            $connection->rollBack();
+            throw $exception;
+        }
+
         return $log;
     }
 
@@ -117,6 +124,7 @@ class RankingStrategy
     {
         $invalidTeams = [];
         $teams = $this->getAllTeams($category);
+        /** @var TeamModel2 $team */
         foreach ($teams as $team) {
             $sum = (int)$team->getNonRevokedSubmits()->sum('points');
             if ($team->points !== $sum) {
@@ -129,7 +137,6 @@ class RankingStrategy
 
     /**
      * Validate ranking of teams
-     * @param array $first expects teamData array from getTeamsStats
      * @throws NoMemberException
      */
     public function getInvalidTeamsRank(?TeamCategory $category = null): array
@@ -236,7 +243,7 @@ class RankingStrategy
             'data' => $arraySubmits,
             'sum' => $sum,
             'count' => $count,
-            'pointsCount' => $submitPointsCount
+            'pointsCount' => $submitPointsCount,
         ];
     }
 }

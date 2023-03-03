@@ -70,7 +70,7 @@ class DiplomasPresenter extends BasePresenter
     public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy->close($category ? TeamCategory::tryFrom($category) : null);
+        $log = $closeStrategy($category ? TeamCategory::tryFrom($category) : null);
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
@@ -80,6 +80,9 @@ class DiplomasPresenter extends BasePresenter
         $this->redirect('this');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function handleValidate(?string $category = null): void
     {
         $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);

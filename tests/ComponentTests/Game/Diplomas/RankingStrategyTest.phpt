@@ -8,18 +8,20 @@ namespace FKSDB\Tests\ComponentTests\Game\Diplomas;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Components\Game\Diplomas\RankingStrategy;
 use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\Game\Diplomas\RankingStrategy;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Tests\PresentersTests\FyziklaniModule\FyziklaniTestCase;
-use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class RankingStrategyTest extends FyziklaniTestCase
 {
+    private RankingStrategy $rankingStrategy;
+    private array $teamsData;
+    private array $teams;
 
     protected function setUp(): void
     {
@@ -36,7 +38,7 @@ class RankingStrategyTest extends FyziklaniTestCase
         $tasks[] = $this->createTask(['fyziklani_task_id' => 4, 'label' => 'AD']);
 
         $this->teamsData = [
-            // (key) team_id, category, team member coefficient, expected total rank, expected category rank, points array
+            // team_id => category, team member coefficient, expected total rank, expected category rank, points array
             8 => ['A', 4, 1, 1, [5, 5, 5]], // higher sum
             2 => ['B', 4, 2, 1, [5, 3]],    // higher average
             1 => ['A', 4, 3, 2, [5, 2, 1]], // more 5 point submits
@@ -44,7 +46,7 @@ class RankingStrategyTest extends FyziklaniTestCase
             3 => ['A', 4, 5, 3, [3, 1]], // more 3 point submits
             7 => ['B', 1, 6, 3, [2, 2]], // lower team coefficient
             5 => ['A', 4, 7, 4, [2, 2]], // lower team id
-            6 => ['B', 4, 8, 4, [2, 2]]
+            6 => ['B', 4, 8, 4, [2, 2]],
         ];
 
         // create teams
@@ -55,18 +57,18 @@ class RankingStrategyTest extends FyziklaniTestCase
                 'fyziklani_team_id' => $index,
                 'state' => 'participated',
                 'points' => $sum,
-                'category' => $data[0]
+                'category' => $data[0],
             ]);
         }
 
         // create submits for teams
-        foreach ($this->teams as $teamIndex => $team) {
+        foreach ($this->teams as $team) {
             foreach ($this->teamsData[$team->fyziklani_team_id][4] as $pointIndex => $points) {
                 $this->createSubmit([
                     'fyziklani_task_id' => $tasks[$pointIndex]->fyziklani_task_id,
                     'fyziklani_team_id' => $team->fyziklani_team_id,
                     'points' => $points,
-                    'state' => 'checked'
+                    'state' => 'checked',
                 ]);
             }
         }
@@ -77,7 +79,7 @@ class RankingStrategyTest extends FyziklaniTestCase
         return [
             [null],
             [TeamCategory::tryFrom('A')],
-            [TeamCategory::tryFrom('B')]
+            [TeamCategory::tryFrom('B')],
         ];
     }
 
@@ -85,7 +87,7 @@ class RankingStrategyTest extends FyziklaniTestCase
     {
         // Create team members for teams so they can be compared by team coefficient.
         // Last two teams have higher coefficient and should be compared by creation date.
-        foreach ($this->teams as $index => $team) {
+        foreach ($this->teams as $team) {
             $teamMember = $this->createTeamMember(['fyziklani_team_id' => $team->fyziklani_team_id]);
             $this->createPersonHistory(
                 $teamMember->person,
@@ -94,7 +96,6 @@ class RankingStrategyTest extends FyziklaniTestCase
                 $this->teamsData[$team->fyziklani_team_id][1]
             );
         }
-
     }
 
     private function getExpectedRank(TeamModel2 $team, ?TeamCategory $category): int
@@ -110,14 +111,14 @@ class RankingStrategyTest extends FyziklaniTestCase
     public function testClosing(?TeamCategory $category): void
     {
         $this->addTeamMembers();
-        $this->rankingStrategy->close($category);
-
+        ($this->rankingStrategy)($category);
+        /** @var TeamModel2 $team */
         foreach ($this->event->getParticipatingTeams() as $team) {
             if (!is_null($category) && $team->category->value !== $category->value) {
                 continue;
             }
             $expectedRank = $this->getExpectedRank($team, $category);
-            $actualRank   = is_null($category) ? $team->rank_total : $team->rank_category;
+            $actualRank = is_null($category) ? $team->rank_total : $team->rank_category;
             Assert::same($expectedRank, $actualRank, "Failed for teamId " . $team->fyziklani_team_id);
         }
     }
@@ -143,7 +144,7 @@ class RankingStrategyTest extends FyziklaniTestCase
                     'fyziklani_task_id' => 4,
                     'fyziklani_team_id' => $team->fyziklani_team_id,
                     'points' => 5,
-                    'state' => 'checked'
+                    'state' => 'checked',
                 ]);
                 $changedTeamsCounter++;
             }
@@ -153,12 +154,9 @@ class RankingStrategyTest extends FyziklaniTestCase
         Assert::count($changedTeamsCounter, $invalidTeams);
     }
 
-    /**
-     * @throws FKSDB\Components\EntityForms\Fyziklani\NoMemberException
-     */
     public function testException(): void
     {
-        $this->rankingStrategy->close(null);
+        Assert::exception(fn() => ($this->rankingStrategy)(), NoMemberException::class);
     }
 
 
@@ -169,12 +167,12 @@ class RankingStrategyTest extends FyziklaniTestCase
     public function testRankValidation(?TeamCategory $category): void
     {
         $this->addTeamMembers();
-        $this->rankingStrategy->close($category);
+        ($this->rankingStrategy)($category);
 
         // separate teams in category
         $teamsInCategory = [];
         $teamCountInCategory = 0;
-
+        /** @var TeamModel2 $team */
         foreach ($this->event->getParticipatingTeams() as $team) {
             if (is_null($category) || $team->category->value === $category->value) {
                 $teamsInCategory[] = $team;
@@ -186,13 +184,14 @@ class RankingStrategyTest extends FyziklaniTestCase
         Assert::count(0, $invalidTeams, "Teams should be in a valid order");
 
         // reverse team order, so every two teams should be in a wrong order
-        foreach ($teamsInCategory as $index => $team) {
+        /** @var TeamModel2 $team */
+        foreach ($teamsInCategory as $team) {
             $currentRank = is_null($category) ? $team->rank_total : $team->rank_category;
-            $newrank = $teamCountInCategory - $currentRank;
+            $newRank = $teamCountInCategory - $currentRank;
             if (is_null($category)) {
-                $team->update(['rank_total' => $newrank]);
+                $team->update(['rank_total' => $newRank]);
             } else {
-                $team->update(['rank_category' => $newrank]);
+                $team->update(['rank_category' => $newRank]);
             }
         }
 
