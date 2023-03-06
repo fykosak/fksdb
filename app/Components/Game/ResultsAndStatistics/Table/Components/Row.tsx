@@ -23,7 +23,7 @@ export default class Row extends React.Component<OwnProps> {
             const submit = submits[taskId] || null;
             const points = submit ? submit.points : null;
 
-            if (points !== null || points !== 0) {
+            if (points !== null && points !== 0) {
                 count++;
                 sum += +points;
             }

@@ -1,0 +1,17 @@
+<p>
+    {if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    všimli jsme si, že jsme od tebe stále nedostali odpověď ohledně účasti na Letním táboře Výfuku,
+    a chtěli bychom tě požádat o tvé vyjádření.
+</p>
+
+{include 'decision.latte'}
+
+<p>
+    Pokud bys potřeboval{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet později či odjet dříve, se nám také ozvi a tento problém společně vyřešíme.
+</p>
+
+<p>
+    Za organizátory Výfuku<br/>
+    {$holder->getParameter('letterSignature')}
+</p>
+
