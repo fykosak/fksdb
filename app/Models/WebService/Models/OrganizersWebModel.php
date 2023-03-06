@@ -76,7 +76,6 @@ class OrganizersWebModel extends WebModel
             $items[] = [
                 'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
-                'email' => $org->person->getInfo()->email,
                 'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
                 'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
                 'career' => $org->person->getInfo()->career,
