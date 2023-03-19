@@ -194,7 +194,7 @@ class Merger
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
-    private function &getPairData(Model $trunkRow, Model $mergedRow): array
+    private function &getPairData(Model $trunkRow, Model $mergedRow): array // phpcs:ignore
     {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);
@@ -202,7 +202,7 @@ class Merger
         return $this->getPairDataById($table, $pairId);
     }
 
-    private function &getPairDataById(string $table, string $pairId): array
+    private function &getPairDataById(string $table, string $pairId): array // phpcs:ignore
     {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];
