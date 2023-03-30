@@ -70,6 +70,7 @@ events:
             service: @orm.event_participant.service
 
             transitions:
+                # init application
                 __init->invited:
                     condition: and(role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat účastníka')
@@ -85,54 +86,82 @@ events:
                     label: _('Pozvat náhradníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
-                invited->applied:
+                # reminders
+                # 1. reminder
+                spare->spare1:
+                    condition: role('admin')
+                    label: _('Send first call')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                invited->invited1:
+                    condition: role('admin')
+                    label: _('Send first call')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                # 2. reminder
+                spare1->spare2:
+                    condition: role('admin')
+                    label: _('Send second call')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                invited1->invited2:
+                    condition: role('admin')
+                    label: _('Send second call')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                # participant wants to go
+                invited|invited1|invited2->applied:
                     condition: or(regOpen(),role('admin'))
                     label: _('Potrvrdit učast')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
-                spare->interested:
+                spare|spare1|spare2->interested:
                     condition: or(regOpen(),role('admin'))
                     label: _('Chci jet')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
-                applied->paid:
-                    condition: role('admin')
-                    label: _('Zaplatil')
-                    afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
-                invited->rejected:
-                    condition: or(regOpen(),role('admin'))
-                    label: _('Odmítnout účast')
-                    validation: false
-                    behaviorType: danger
-                spare->rejected:
-                    condition: or(regOpen(),role('admin'))
-                    label: _('Odmítnout účast')
-                    validation: false
-                    behaviorType: warning
+                # invite spare as normal participant
+                spare|spare1|spare2->invited:
+                    condition: and(role('admin'),%events.tabor12.capacityCond%)
+                    label: _('Pozvat jako účastníka')
+                # approve interested spare as applied
                 interested->applied:
                     condition: and(role('admin'),%events.tabor12.capacityCond%)
                     label: _('Schválit jako účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
+                # participant paid
+                applied->paid:
+                    condition: role('admin')
+                    label: _('Zaplatil')
+                    afterExecute:
+                        - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
+                # participant rejected
+                invited|invited1|invited2->rejected:
+                    condition: or(regOpen(),role('admin'))
+                    label: _('Odmítnout účast')
+                    validation: false
+                    behaviorType: danger
+                spare|spare1|spare2->rejected:
+                    condition: or(regOpen(),role('admin'))
+                    label: _('Odmítnout účast')
+                    validation: false
+                    behaviorType: warning
                 interested->rejected:
                     condition: role('admin')
                     label: _('Odmítnout jako účastníka')
                     behaviorType: warning
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\RejectedMailCallback()
-                spare->invited:
-                    condition: and(role('admin'),%events.tabor12.capacityCond%)
-                    label: _('Pozvat jako účastníka')
-
+                # event was
                 paid->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Zúčastnil se')
                 applied->missed:
                     condition: and(role('admin'),eventWas())
                     label: _('Nepřijel')
-
-                invited|auto.invited|spare|auto.spare|applied|interested|paid->cancelled:
+                # cancel the application
+                invited|invited1|invited2|auto.invited|spare|spare1|spare2|auto.spare|applied|interested|paid->cancelled:
                     condition: role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
