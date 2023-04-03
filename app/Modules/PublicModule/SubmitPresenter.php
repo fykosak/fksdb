@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
+use FKSDB\Components\Controls\AjaxSubmit\QuizComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -30,6 +31,8 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter
 {
 
+    /** @persistent */
+    public ?int $id = null;
     private SubmitService $submitService;
     private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
@@ -79,11 +82,23 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
+    public function titleQuiz(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a quiz'), 'fas fa-cloud-upload-alt');
+    }
+
     final public function renderDefault(): void
     {
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = !$hasTasks;
         $this->template->hasForward = !$hasTasks;
+    }
+
+    protected function createComponentQuizComponent(): QuizComponent
+    {
+        /** @var TaskModel $task */
+        $task = $this->taskService->findByPrimary($this->id);
+        return new QuizComponent($this->getContext(), $task);
     }
 
     private function getAvailableTasks(): TypedGroupedSelection

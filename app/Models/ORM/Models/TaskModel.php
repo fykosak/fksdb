@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
@@ -55,6 +56,11 @@ class TaskModel extends Model
         }
         return $result;
     }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where('year', $this->year)->fetch();
+    } 
 
     public function webalizeLabel(): string
     {

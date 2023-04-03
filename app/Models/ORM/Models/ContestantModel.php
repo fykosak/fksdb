@@ -50,7 +50,7 @@ class ContestantModel extends Model implements Resource
     public function getAnswers(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
-            ->where('question_id', $question->submit_question_id)
+            ->where('submit_question_id', $question->submit_question_id)
             ->fetch();
     }
 }
