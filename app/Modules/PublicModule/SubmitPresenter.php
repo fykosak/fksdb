@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
-use FKSDB\Components\Controls\AjaxSubmit\QuizComponent;
+use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -98,7 +98,8 @@ class SubmitPresenter extends BasePresenter
     {
         /** @var TaskModel $task */
         $task = $this->taskService->findByPrimary($this->id);
-        return new QuizComponent($this->getContext(), $task);
+        return new QuizComponent($this->getContext(), $task, $this->getContestant());
+        //return new QuizComponent($this->getContext(), $task, null); // TODO only for testing
     }
 
     private function getAvailableTasks(): TypedGroupedSelection
@@ -174,7 +175,7 @@ class SubmitPresenter extends BasePresenter
                         $task->getFQName() . ' - ' . $question->getFQName(),
                         $options
                     );
-                    $existingEntry = $this->getContestant()->getAnswers($question);
+                    $existingEntry = $this->getContestant()->getAnswer($question);
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
