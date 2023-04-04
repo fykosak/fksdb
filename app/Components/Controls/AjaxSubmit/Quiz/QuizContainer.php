@@ -6,7 +6,9 @@ namespace FKSDB\Components\Controls\AjaxSubmit\Quiz;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\Submits\TaskNotQuizException;
 use Nette\DI\Container;
 
 class QuizContainer extends ContainerWithOptions
@@ -21,15 +23,22 @@ class QuizContainer extends ContainerWithOptions
         $this->contestant = $contestant;
         $this->configure();
     }
-
+    /**
+     * @throws TaskNotQuizException
+     */
     public function configure(): void
     {
         $questions = $this->task->getQuestions()->order('label');
+
+        if ($questions->count() == 0) {
+            throw new TaskNotQuizException($this->task);
+        }
+
         /** @var SubmitQuestionModel $question */
-        foreach($questions as $question) {
+        foreach ($questions as $question) {
             $answer = isset($this->contestant) ? $this->contestant->getAnswer($question) : null;
             $questionContainer = new QuizQuestionContainer($this->container, $question, $answer);
-            $this->addComponent($questionContainer, 'question'.$question->submit_question_id);
+            $this->addComponent($questionContainer, 'question' . $question->submit_question_id);
         }
     }
 }

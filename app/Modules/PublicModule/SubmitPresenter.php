@@ -19,11 +19,13 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -56,6 +58,11 @@ class SubmitPresenter extends BasePresenter
     /* ******************* AUTH ************************/
 
     public function authorizedAjax(): void
+    {
+        $this->authorizedDefault();
+    }
+
+    public function authorizedQuiz(): void
     {
         $this->authorizedDefault();
     }
@@ -94,12 +101,27 @@ class SubmitPresenter extends BasePresenter
         $this->template->hasForward = !$hasTasks;
     }
 
+    /**
+     * @throws TaskNotFoundException
+     * @throws ForbiddenRequestException
+     */
     protected function createComponentQuizComponent(): QuizComponent
     {
         /** @var TaskModel $task */
         $task = $this->taskService->findByPrimary($this->id);
+        if (!isset($task)) {
+            throw new TaskNotFoundException();
+        }
+
+        // check if task is opened for submitting
+        if (
+            ($task->submit_start && $task->submit_start->getTimestamp() > time()) ||
+            ($task->submit_deadline && $task->submit_deadline->getTimestamp() < time())
+        ) {
+            throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
+        }
+
         return new QuizComponent($this->getContext(), $task, $this->getContestant());
-        //return new QuizComponent($this->getContext(), $task, null); // TODO only for testing
     }
 
     private function getAvailableTasks(): TypedGroupedSelection

@@ -25,10 +25,10 @@ class QuizQuestionContainer extends ContainerWithOptions
     public function configure(): void
     {
         $items = [
-            'A'=>'A',
-            'B'=>'B',
-            'C'=>'C',
-            'D'=>'D',
+            'A' => 'A',
+            'B' => 'B',
+            'C' => 'C',
+            'D' => 'D',
         ];
 
         $this->setOption('label', $this->question->getFQName());

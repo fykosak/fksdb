@@ -22,11 +22,11 @@ use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\User;
 
-class QuizComponent extends FormComponent {
+class QuizComponent extends FormComponent
+{
+    use ReferencedPersonTrait;
 
     public const CONT_CONTESTANT = 'contestant';
-
-    use ReferencedPersonTrait;
 
     private TaskModel $task;
     private ?ContestantModel $contestant;
@@ -53,7 +53,7 @@ class QuizComponent extends FormComponent {
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('Submit'));
     }
 
     protected function configureForm(Form $form): void
@@ -85,37 +85,36 @@ class QuizComponent extends FormComponent {
         $form = $button->getForm();
         $values = $form->getValues();
         //try {
-            // create and save contestant 
-            if (!isset($this->contestant)) {
-                /** @var ReferencedId $referencedId */
-                $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
-                /** @var PersonModel $person */
-                $person = $referencedId->getModel();
+        // create and save contestant
+        if (!isset($this->contestant)) {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            /** @var ContestModel $contestYear */
+            $contestYear = $this->task->getContestYear();
 
-                /** @var ContestModel $contestYear */
-                $contestYear = $this->task->getContestYear();
+            $contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')
+                                 ->where('contest_id', $contestYear->contest_id)
+                                 ->where('year', $contestYear->year)
+                                 ->fetch();
+            $this->contestant = $this->contestantService->storeModel([
+                'contest_id' => $this->task->getContestYear()->contest_id,
+                'person_id' => $person->person_id,
+                'year' => $this->task->getContestYear()->year,
+            ], $contestant);
+        }
 
-                $contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')
-                                     ->where('contest_id', $contestYear->contest_id)
-                                     ->where('year', $contestYear->year)
-                                     ->fetch();
-                $this->contestant = $this->contestantService->storeModel([
-                    'contest_id' => $this->task->getContestYear()->contest_id,
-                    'person_id' => $person->person_id,
-                    'year' => $this->task->getContestYear()->year,
-                ], $contestant);
+        // TODO define and retrive name of question field in the same place
+        foreach ($this->task->getQuestions() as $question) {
+            $answer = $values['quiz_questions']['question' . $question->submit_question_id]['option'];
+            if (isset($answer)) {
+                $this->handler->saveQuestionAnswer($answer, $question, $this->contestant);
             }
+        }
 
-            // TODO define and retrive name of question field in the same place
-            foreach ($this->task->getQuestions() as $question) {
-                $answer = $values['quiz_questions']['question'.$question->submit_question_id]['option'];
-                if (isset($answer)) {
-                    $this->handler->saveQuestionAnswer($answer, $question, $this->contestant);
-                }
-            }
-
-            $this->flashMessage(_('Submitted'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('this');
+        $this->flashMessage(_('Submitted'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('this');
         //} catch (ModelException $exception) {
         //    $this->flashMessage(_('Error'), Message::LVL_ERROR);
         //}
