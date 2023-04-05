@@ -38,7 +38,12 @@ class UploadContainer extends React.Component<StateProps> {
             return (<LoadingState/>);
         }
         if (submit.isQuiz) {
-            return <p className="alert alert-info">{translator.getText('Pro vyplnění kvízu použijte starý systém nahrávání.')}</p>;
+            // create link to quiz relatively to "submit" presenter path
+            let pathname = window.location.pathname;
+            let substring = "submit"
+            let path = pathname.substring(0, pathname.indexOf(substring)+substring.length) + "/quiz/" + submit.taskId;
+            console.log(path);
+            return <a className="btn btn-primary" href={path}>{translator.getText('Submit using quiz form.')}</a>;
         }
         if (submit.submitId) {
             return (<File submit={submit}/>);

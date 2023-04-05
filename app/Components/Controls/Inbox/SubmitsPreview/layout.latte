@@ -6,7 +6,7 @@
             {if $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::POST}
                 <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
             {elseif $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::QUIZ}
-                <i class="text-warning fa fa-list-ul" title="#{$submit->submit_id}"></i>
+                <i class="text-primary fa fa-list-ul" title="#{$submit->submit_id}"></i>
             {else}
                 <a class="text-success"
                    title="{_'Download'}"

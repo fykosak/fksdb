@@ -32,7 +32,10 @@ class QuizQuestionContainer extends ContainerWithOptions
         ];
 
         $this->setOption('label', $this->question->getFQName());
-        $select = $this->addRadioList('option', '', $items);
+        $select = $this->addRadioList('option', null, $items);
+        $select->getContainerPrototype()->setAttribute('class', 'form-check-inline');
+        $select->getControlPrototype()->setAttribute('class', 'btn-check');
+        $select->getLabelPrototype()->setAttribute('class', 'btn btn-outline-secondary');
 
         if (isset($this->answer)) {
             $select->setDefaultValue($this->answer->answer);

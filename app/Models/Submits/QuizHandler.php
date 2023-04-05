@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
+use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
+use FKSDB\Models\ORM\Services\SubmitService;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Utils\DateTime;
 
@@ -15,10 +18,12 @@ class QuizHandler
 {
 
     private SubmitQuestionAnswerService $submitQuestionAnswerService;
+    private SubmitService $submitService;
 
-    public function __construct(SubmitQuestionAnswerService $service)
+    public function __construct(SubmitQuestionAnswerService $answerService, submitService $submitService)
     {
-        $this->submitQuestionAnswerService = $service;
+        $this->submitQuestionAnswerService = $answerService;
+        $this->submitService = $submitService;
     }
 
     public function saveQuestionAnswer(
@@ -37,12 +42,24 @@ class QuizHandler
             );
         }
 
+        // create task submit
         /** @var SubmitQuestionAnswerModel $answer */
-        $submit = $contestant->getAnswer($question);
+        $answerModel = $contestant->getAnswer($question);
 
-        // create new submit if none exists
-        if (!isset($submit)) {
-            return $this->submitQuestionAnswerService->storeModel([
+        // answer exists and the answer is the same -> everything is ok so dont update
+        if (isset($answerModel) && $answerModel->answer === $answer) {
+            return $answerModel;
+        }
+
+        if (isset($answerModel)) {
+            // save answer
+            $answerModel = $this->submitQuestionAnswerService->storeModel([
+                'submitted_on' => new DateTime(),
+                'answer' => $answer,
+            ], $answerModel);
+        } else {
+            // create new answer
+            $answerModel = $this->submitQuestionAnswerService->storeModel([
                 'submit_question_id' => $question->submit_question_id,
                 'contestant_id' => $contestant->contestant_id,
                 'submitted_on' => new DateTime(),
@@ -50,15 +67,19 @@ class QuizHandler
             ]);
         }
 
-        // if the answer is the same, ignore
-        if ($submit->answer == $answer) {
-            return $submit;
-        }
+        /** @var SubmitModel $submitModel */
+        $submitModel = $contestant->getSubmitForTask($question->task);
 
-        // save new answer
-        return $this->submitQuestionAnswerService->storeModel([
+        // save submit
+        // TODO dont save everything
+        // TODO dont update on every changed answer
+        $this->submitService->storeModel([
             'submitted_on' => new DateTime(),
-            'answer' => $answer,
-        ], $submit);
+            'source' => SubmitSource::QUIZ,
+            'task_id' => $question->task->task_id,
+            'contestant_id' => $contestant->contestant_id,
+        ], $submitModel);
+
+        return $answerModel;
     }
 }

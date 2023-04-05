@@ -47,6 +47,11 @@ class ContestantModel extends Model implements Resource
         return $this->getSubmits()->where('task.series', $series);
     }
 
+    public function getSubmitForTask(TaskModel $task): ?SubmitModel
+    {
+        return $this->getSubmits()->where('task_id', $task->task_id)->fetch();
+    }
+
     public function getAnswer(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
