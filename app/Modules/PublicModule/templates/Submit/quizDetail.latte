@@ -1,0 +1,48 @@
+{varType FKSDB\Models\ORM\Models\SubmitModel $submit}
+{varType FKSDB\Models\ORM\Models\SubmitQuestionModel $questions}
+{varType bool $showResults}
+
+{block content}
+    <div class="table-responsive">
+        <table class="table table-sm table-hover table-striped">
+            <thead>
+                <tr>
+                    <td>{_'Name'}</td>
+                    <td>{_'Answer'}</td>
+                    {if $showResults}
+                        <td>{_'Correct answer'}</td>
+                        <td>{_'Correctness'}</td>
+                    {/if}
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $questions as $question}
+                    {varType FKSDB\Models\ORM\Models\SubmitQuestionModel $question}
+                    <tr>
+                        <td>{$question->getFQName()}</td>
+                        {var $answer=$submit->contestant->getAnswer($question)->answer}
+                        <td>
+                            {ifset $answer}
+                                {$answer}
+                            {else}
+                                <i class="text-warning fas fa-slash fa-flip-horizontal"></i>
+                            {/ifset}
+                        </td>
+                        {if $showResults}
+                            <td>{$question->answer}</td>
+                            <td>
+                                {if $submit->contestant->getAnswer($question)->answer === $question->answer && isset($answer)}
+                                    <i class="text-success fa fa-check"></i>
+                                {elseif isset($answer)}
+                                    <i class="text-danger fas fa-times"></i>
+                                {else}
+                                    <i class="text-warning fas fa-slash fa-flip-horizontal"></i>
+                                {/if}
+                            </td>
+                        {/if}
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+{/block}

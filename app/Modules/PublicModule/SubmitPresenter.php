@@ -21,6 +21,7 @@ use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Models\Submits\TaskNotQuizException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
@@ -67,6 +68,11 @@ class SubmitPresenter extends BasePresenter
         $this->authorizedDefault();
     }
 
+    public function authorizedQuizDetail(): void
+    {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'download.corrected', $this->getSelectedContest()));
+    }
+
     public function authorizedDefault(): void
     {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
@@ -91,7 +97,12 @@ class SubmitPresenter extends BasePresenter
 
     public function titleQuiz(): PageTitle
     {
-        return new PageTitle(null, _('Submit a quiz'), 'fas fa-cloud-upload-alt');
+        return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
+    }
+
+    public function titleQuizDetail(): PageTitle
+    {
+        return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
     final public function renderDefault(): void
@@ -99,6 +110,26 @@ class SubmitPresenter extends BasePresenter
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = !$hasTasks;
         $this->template->hasForward = !$hasTasks;
+    }
+
+    /**
+     * @throws TaskNotFoundException
+     * @throws TaskNotQuizException
+     */
+    final public function renderQuizDetail(): void
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        if (!isset($submit)) {
+            throw new TaskNotFoundException(_('Submit not found.'));
+        }
+        if (!$submit->isQuiz()) {
+            throw new TaskNotQuizException($submit->task);
+        }
+
+        $this->template->submit = $submit;
+        $this->template->questions = $submit->task->getQuestions()->order('label');
+        //$this->template->showResults = $submit->task->submit_deadline->getTimestamp() < time();
+        $this->template->showResults = true;
     }
 
     /**

@@ -75,7 +75,7 @@ class SubmitsGrid extends Grid
                 $this,
                 new Title(null, _('Cancel')),
                 fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
-                'btn btn-sm btn-outline-warning',
+                'btn btn-sm me-1 btn-outline-warning',
                 fn(SubmitModel $submit): bool => $submit->canRevoke()
             ),
             'revoke'
@@ -104,6 +104,16 @@ class SubmitsGrid extends Grid
             ),
             'download_corrected'
         );
+
+        // TODO hide for non-quizes
+        $this->addPresenterButton(
+            ':Public:Submit:quizDetail',
+            'show',
+            _('Show'),
+            true,
+            ['id' => 'submit_id']
+        );
+
         $this->paginate = false;
     }
 
