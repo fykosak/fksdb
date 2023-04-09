@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\SubmitService;
 use Nette\Application\ForbiddenRequestException;
@@ -26,17 +27,41 @@ class QuizHandler
         $this->submitService = $submitService;
     }
 
-    public function saveQuestionAnswer(
+    public function storeSubmit(
+        TaskModel $task,
+        ContestantModel $contestant
+    ): SubmitModel {
+
+        /** @var SubmitModel $submitModel */
+        $submitModel = $contestant->getSubmitForTask($task);
+
+        if (isset($submitModel)) {
+            // save updated submit submit
+            return $this->submitService->storeModel([
+                'submitted_on' => new DateTime(),
+                'source' => SubmitSource::QUIZ,
+                'corrected' => false,
+            ], $submitModel);
+        } else {
+            // create new submit
+            return $this->submitService->storeModel([
+                'submitted_on' => new DateTime(),
+                'source' => SubmitSource::QUIZ,
+                'task_id' => $task->task_id,
+                'contestant_id' => $contestant->contestant_id,
+                'corrected' => false,
+            ]);
+        }
+    }
+
+    public function storeQuestionAnswer(
         ?string $answer,
         SubmitQuestionModel $question,
         ContestantModel $contestant
     ): SubmitQuestionAnswerModel {
 
         // check if task is opened for submitting
-        if (
-            ($question->task->submit_start && $question->task->submit_start->getTimestamp() > time()) ||
-            ($question->task->submit_deadline && $question->task->submit_deadline->getTimestamp() < time())
-        ) {
+        if (!$question->task->isOpened()) {
             throw new ForbiddenRequestException(
                 sprintf(_('Task %s is not opened for submitting.'), $question->task->task_id)
             );
@@ -66,19 +91,6 @@ class QuizHandler
                 'answer' => $answer,
             ]);
         }
-
-        /** @var SubmitModel $submitModel */
-        $submitModel = $contestant->getSubmitForTask($question->task);
-
-        // save submit
-        // TODO dont save everything
-        // TODO dont update on every changed answer
-        $this->submitService->storeModel([
-            'submitted_on' => new DateTime(),
-            'source' => SubmitSource::QUIZ,
-            'task_id' => $question->task->task_id,
-            'contestant_id' => $contestant->contestant_id,
-        ], $submitModel);
 
         return $answerModel;
     }

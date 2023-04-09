@@ -21,7 +21,7 @@ use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use FKSDB\Models\Submits\TaskNotQuizException;
+use FKSDB\Models\Submits\SubmitNotQuizException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
@@ -70,7 +70,9 @@ class SubmitPresenter extends BasePresenter
 
     public function authorizedQuizDetail(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'download.corrected', $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed('submit', 'download.corrected', $this->getSelectedContest())
+        );
     }
 
     public function authorizedDefault(): void
@@ -114,7 +116,7 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @throws TaskNotFoundException
-     * @throws TaskNotQuizException
+     * @throws SubmitNotQuizException
      */
     final public function renderQuizDetail(): void
     {
@@ -123,13 +125,12 @@ class SubmitPresenter extends BasePresenter
             throw new TaskNotFoundException(_('Submit not found.'));
         }
         if (!$submit->isQuiz()) {
-            throw new TaskNotQuizException($submit->task);
+            throw new SubmitNotQuizException($submit);
         }
 
         $this->template->submit = $submit;
         $this->template->questions = $submit->task->getQuestions()->order('label');
-        //$this->template->showResults = $submit->task->submit_deadline->getTimestamp() < time();
-        $this->template->showResults = true;
+        $this->template->showResults = $submit->task->submit_deadline->getTimestamp() < time();
     }
 
     /**
@@ -145,10 +146,7 @@ class SubmitPresenter extends BasePresenter
         }
 
         // check if task is opened for submitting
-        if (
-            ($task->submit_start && $task->submit_start->getTimestamp() > time()) ||
-            ($task->submit_deadline && $task->submit_deadline->getTimestamp() < time())
-        ) {
+        if (!$task->isOpened()) {
             throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
         }
 

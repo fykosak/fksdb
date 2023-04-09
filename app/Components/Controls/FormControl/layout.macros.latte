@@ -54,13 +54,13 @@
     {varType Nette\Forms\Controls\RadioList $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         {if !empty($field->getLabel()->getText())}
-            {label $field}
+            {label $field /}
         {/if}
         {foreach $field->getItems() as $key => $item}
             {var $divClassName = $field->getContainerPrototype()->class ? 'mb-3'}
             <div n:class="'form-check ' . $field->getContainerPrototype()->class">
                 {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
-                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class}
+                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class /}
             </div>
         {/foreach}
         {include metadata field => $field}

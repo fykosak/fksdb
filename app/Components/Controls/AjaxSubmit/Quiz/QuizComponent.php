@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
@@ -92,13 +91,9 @@ class QuizComponent extends FormComponent
                 /** @var PersonModel $person */
                 $person = $referencedId->getModel();
                 /** @var ContestModel $contestYear */
-                $contestYear = $this->task->getContestYear();
-
-                $contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')
-                                     ->where('contest_id', $contestYear->contest_id)
-                                     ->where('year', $contestYear->year)
-                                     ->fetch();
-                $this->contestant = $this->contestantService->storeModel([
+                $contestant = $person->getContestantByContestYear($this->task->getContestYear());
+                // if person is not a contestant in the contest year, create him
+                $this->contestant = $contestant ?? $this->contestantService->storeModel([
                     'contest_id' => $this->task->getContestYear()->contest_id,
                     'person_id' => $person->person_id,
                     'year' => $this->task->getContestYear()->year,
@@ -106,10 +101,14 @@ class QuizComponent extends FormComponent
             }
 
             // TODO define and retrive name of question field in the same place
+
+            // create quiz submit
+            $this->handler->storeSubmit($this->task, $this->contestant);
+            // create submit for each quiz question
             foreach ($this->task->getQuestions() as $question) {
                 $answer = $values['quiz_questions']['question' . $question->submit_question_id]['option'];
                 if (isset($answer)) {
-                    $this->handler->saveQuestionAnswer($answer, $question, $this->contestant);
+                    $this->handler->storeQuestionAnswer($answer, $question, $this->contestant);
                 }
             }
 

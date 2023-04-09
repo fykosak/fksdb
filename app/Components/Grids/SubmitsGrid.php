@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
@@ -105,13 +106,15 @@ class SubmitsGrid extends Grid
             'download_corrected'
         );
 
-        // TODO hide for non-quizes
-        $this->addPresenterButton(
-            ':Public:Submit:quizDetail',
-            'show',
-            _('Show'),
-            true,
-            ['id' => 'submit_id']
+        $this->addButton(
+            new PresenterButton(
+                $this->container,
+                new Title(null, _('Show')),
+                fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => $submit->isQuiz()
+            ),
+            'show_quiz_detail'
         );
 
         $this->paginate = false;
