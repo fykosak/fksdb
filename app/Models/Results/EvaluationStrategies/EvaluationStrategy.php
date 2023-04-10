@@ -73,7 +73,7 @@ abstract class EvaluationStrategy
         );
     }
 
-    abstract public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float;
+    abstract public function getSubmitPoints(SubmitModel $submit): ?float;
 
     abstract protected function getCategoryMap(): array;
 

@@ -50,10 +50,7 @@ class SQLResultsCache
             foreach ($task->getSubmits() as $submit) {
                 $this->submitService->storeModel(
                     [
-                        'calc_points' => $evaluationStrategy->getSubmitPoints(
-                            $submit,
-                            $submit->contestant->contest_category
-                        ),
+                        'calc_points' => $evaluationStrategy->getSubmitPoints($submit),
                     ],
                     $submit
                 );

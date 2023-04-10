@@ -28,7 +28,7 @@ class EvaluationVyfuk2012 extends EvaluationStrategy
         return $task->points;
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         return $submit->raw_points;
     }

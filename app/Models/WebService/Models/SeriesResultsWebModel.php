@@ -60,7 +60,7 @@ class SeriesResultsWebModel extends WebModel
             $sum = 0;
             /** @var SubmitModel $submit */
             foreach ($contestant->getSubmitsForSeries($params['series']) as $submit) {
-                $points = $evaluationStrategy->getSubmitPoints($submit, $contestant->contest_category);
+                $points = $evaluationStrategy->getSubmitPoints($submit);
                 $sum += $points;
                 $submitsData[$submit->task_id] = $points;
             }
