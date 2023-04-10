@@ -1,0 +1,18 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+<p>
+    {if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    jelikož jsi byl{if $holder->getPerson()->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
+    je nám ctí tě pozvat jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b>
+    na Letní tábor Výfuku, který se tentokrát koná
+    {$holder->event->begin|date:'j.n. Y'} – {$holder->event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
+    Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
+    her v přírodě.
+</p>
+
+{include 'decision.latte'}
+
+<p>
+    Za organizátory Výfuku se na Tebe těší <br/>
+    {$holder->getParameter('letterSignature')}
+</p>
+

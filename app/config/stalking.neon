@@ -97,24 +97,6 @@ parameters:
                 - task.year
                 - task.series
 
-        org:
-            layout: multi
-            label: Org
-            minimalPermission: 128
-            table: org
-            links:
-                - org.detail
-                - org.edit
-            itemHeadline: contest.contest
-            rows:
-                - org.org_id
-                - org.since
-                - org.until
-                - org.role
-                - org.order
-                - org.contribution
-                - org.tex_signature
-                - org.domain_alias
         payment:
             layout: grid
             label: Payment
@@ -123,7 +105,7 @@ parameters:
             links:
                 - payment.detail
             rows:
-                - payment.payment_uid
+                - payment.payment_id
                 - event.name
                 - payment.price
                 - payment.state
@@ -172,7 +154,7 @@ parameters:
                 - event_org.note
         fyziklani_team_teacher:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: fyziklani_team_teacher
             links:
                 - fyziklani_team.detail
@@ -182,7 +164,7 @@ parameters:
                 - event.name
         schedule_item:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: person_schedule
             links: []
             rows:
@@ -195,7 +177,7 @@ parameters:
                 - schedule_item.price_eur
         email_message:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: email_message
             rows:
                 - email_message.email_message_id

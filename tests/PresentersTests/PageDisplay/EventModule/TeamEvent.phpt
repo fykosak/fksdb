@@ -29,8 +29,6 @@ class TeamEvent extends EventModuleTestCase
     {
         return [
             ['Event:Chart', 'list'],
-            ['Event:Chart', 'participantAcquaintance'],
-            ['Event:Chart', 'singleApplicationProgress'],
             ['Event:Chart', 'teamApplicationProgress'],
             ['Event:Chart', 'model'],
             ['Event:Dashboard', 'default'],
@@ -38,10 +36,12 @@ class TeamEvent extends EventModuleTestCase
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
             ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'transitions'],
+            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'detailedList'],
         ];
     }
 }
+
 // phpcs:disable
 $testCase = new TeamEvent($container);
 $testCase->run();

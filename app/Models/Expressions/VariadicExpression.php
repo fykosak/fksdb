@@ -6,26 +6,12 @@ namespace FKSDB\Models\Expressions;
 
 abstract class VariadicExpression extends EvaluatedExpression
 {
-
     protected array $arguments;
 
     public function __construct(...$args)
     {
         $this->arguments = $args;
     }
-
-    /**
-     * @return mixed
-     */
-    final public function __invoke(...$args)
-    {
-        return $this->evaluate(...$args);
-    }
-
-    /**
-     * @return mixed
-     */
-    abstract protected function evaluate(...$args);
 
     abstract protected function getInfix(): string;
 

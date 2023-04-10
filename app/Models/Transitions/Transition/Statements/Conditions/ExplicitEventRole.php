@@ -25,7 +25,7 @@ class ExplicitEventRole extends EventRole
         $this->resource = $resource;
     }
 
-    protected function evaluate(...$args): bool
+    public function __invoke(...$args): bool
     {
         return $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event);
     }

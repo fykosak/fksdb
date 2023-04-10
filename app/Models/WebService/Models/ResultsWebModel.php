@@ -33,6 +33,7 @@ class ResultsWebModel extends WebModel
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -127,6 +128,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -140,6 +142,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -153,6 +156,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -167,6 +171,7 @@ class ResultsWebModel extends WebModel
      * @param BrojureResultsModel $resultsModel
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {

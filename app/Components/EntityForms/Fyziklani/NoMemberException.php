@@ -11,6 +11,6 @@ class NoMemberException extends InvalidStateException
 {
     public function __construct(int $code = 0, Throwable $previous = null)
     {
-        parent::__construct(_('Application must have atleast one member'), $code, $previous);
+        parent::__construct(_('Application must have at least one member'), $code, $previous);
     }
 }

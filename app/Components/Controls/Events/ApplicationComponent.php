@@ -7,10 +7,10 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -27,13 +27,13 @@ class ApplicationComponent extends BaseComponent
 {
 
     private ApplicationHandler $handler;
-    private Holder $holder;
+    private BaseHolder $holder;
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
     private string $templateFile;
     private EventAuthorizator $eventAuthorizator;
 
-    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
+    public function __construct(Container $container, ApplicationHandler $handler, BaseHolder $holder)
     {
         parent::__construct($container);
         $this->handler = $handler;
@@ -67,7 +67,7 @@ class ApplicationComponent extends BaseComponent
      */
     public function isEventAdmin(): bool
     {
-        $event = $this->holder->primaryHolder->event;
+        $event = $this->holder->event;
         return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
@@ -83,8 +83,8 @@ class ApplicationComponent extends BaseComponent
         }
 
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->primaryHolder->event;
-        $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
+        $this->template->event = $this->holder->event;
+        $this->template->primaryMachine = $this->handler->getMachine();
         $this->template->render($this->templateFile);
     }
 
@@ -96,16 +96,8 @@ class ApplicationComponent extends BaseComponent
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        /*
-         * Create containers
-         */
-        foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            if (!$baseHolder->isVisible()) {
-                continue;
-            }
-            $container = $baseHolder->createFormContainer();
-            $form->addComponent($container, $name);
-        }
+        $container = $this->holder->createFormContainer();
+        $form->addComponent($container, $this->holder->name);
 
         /*
          * Create save (no transition) button
@@ -113,46 +105,47 @@ class ApplicationComponent extends BaseComponent
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->onClick[] = function (SubmitButton $button): void {
-                $buttonForm = $button->getForm();
-                $this->handleSubmit($buttonForm);
-            };
+            $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
+
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
+        $primaryMachine = $this->handler->getMachine();
         $transitionSubmit = null;
 
         foreach (
             $primaryMachine->getAvailableTransitions(
                 $this->holder,
-                $this->holder->primaryHolder->getModelState(),
-                true,
-                true
+                $this->holder->getModelState()
             ) as $transition
         ) {
-            $transitionName = $transition->getName();
+            $transitionName = $transition->getId();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function (SubmitButton $button) use ($transitionName): void {
-                $form = $button->getForm();
-                $this->handleSubmit($form, $transitionName);
-            };
+            if (!$transition->getValidation()) {
+                $submit->setValidationScope([]);
+            }
+
+            $submit->onClick[] = fn(SubmitButton $button) =>
+                $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->behaviorType->value]);
+
+            $submit->getControlPrototype()->addAttributes(
+                ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
+            );
         }
 
         /*
          * Create cancel button
          */
-        $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-warning']);
-        $submit->onClick[] = fn() => $this->finalRedirect();
+        $cancelSubmit = $form->addSubmit('cancel', _('Cancel'));
+        $cancelSubmit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-warning']);
+        $cancelSubmit->setValidationScope([]);
+        $cancelSubmit->onClick[] = fn() => $this->finalRedirect();
 
         /*
          * Custom adjustments
@@ -168,10 +161,17 @@ class ApplicationComponent extends BaseComponent
         return $result;
     }
 
-    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void
+    /*
+     * Store data and transition
+     */
+    public function handleSubmit(Form $form, ?string $explicitTransitionName = null, bool $storeData = true): void
     {
         try {
-            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
+            if ($storeData) {
+                $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
+            } else {
+                $this->handler->onlyExecute($this->holder, $explicitTransitionName);
+            }
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
@@ -182,16 +182,16 @@ class ApplicationComponent extends BaseComponent
 
     private function canEdit(): bool
     {
-        return $this->holder->primaryHolder->getModelState()
-            != AbstractMachine::STATE_INIT && $this->holder->primaryHolder->isModifiable();
+        return $this->holder->getModelState()
+            != Machine::STATE_INIT && $this->holder->isModifiable();
     }
 
     private function finalRedirect(): void
     {
         if ($this->redirectCallback) {
-            $model = $this->holder->primaryHolder->getModel2();
+            $model = $this->holder->getModel();
             $id = $model ? $model->getPrimary(false) : null;
-            ($this->redirectCallback)($id, $this->holder->primaryHolder->event->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->event->getPrimary());
         } else {
             $this->redirect('this');
         }

@@ -7,7 +7,6 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -80,16 +79,9 @@ trait YearPresenterTrait
         }
     }
 
-    /**
-     * @throws BadRequestException
-     */
     private function selectYear(): ContestYearModel
     {
-        $candidate = $this->getSelectedContest()->getCurrentContestYear();
-        if (!$candidate) {
-            throw new BadRequestException(_('No year available'));
-        }
-        return $candidate;
+        return $this->getSelectedContest()->getCurrentContestYear();
     }
 
     protected function createComponentYearChooser(): YearChooserComponent

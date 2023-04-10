@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use Nette\Forms\Container;
 use Nette\DI\Container as DIContainer;
+use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 
 /**
  * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
@@ -13,12 +14,12 @@ use Nette\DI\Container as DIContainer;
 class ContainerWithOptions extends Container
 {
     private array $options = [];
+    protected DIContainer $container;
 
-    public function __construct(?DIContainer $container = null)
+    public function __construct(DIContainer $container = null)
     {
-        if ($container) {
-            $container->callInjects($this);
-        }
+        $this->container = $container;
+        $container->callInjects($this);
     }
 
     /**
@@ -26,7 +27,7 @@ class ContainerWithOptions extends Container
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @param mixed value
+     * @param mixed $value
      * @return static
      */
     public function setOption(string $key, $value): self
@@ -41,7 +42,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific option.
-     * @param mixed  default value
+     * @param mixed $default value
      * @return mixed
      */
     final public function getOption(string $key, $default = null)
@@ -55,5 +56,24 @@ class ContainerWithOptions extends Container
     final public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function setDisabled(bool $value = true): void
+    {
+        /** @var BaseControl $component */
+        foreach ($this->getComponents() as $component) {
+            $component->setDisabled($value);
+        }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setHtmlAttribute(string $name, $value = true): self
+    {
+        foreach ($this->getComponents() as $component) {
+            $component->setHtmlAttribute($name, $value);
+        }
+        return $this;
     }
 }

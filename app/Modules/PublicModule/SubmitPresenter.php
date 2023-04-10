@@ -6,7 +6,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
@@ -121,7 +121,7 @@ class SubmitPresenter extends BasePresenter
             if ($submit && $submit->source->value == SubmitSource::POST) {
                 continue; // prevDeadline will work though
             }
-            $container = new ModelContainer();
+            $container = new ContainerWithOptions($this->getContext());
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
             $questions = $task->getQuestions();

@@ -37,10 +37,22 @@ final class NavigationChooserComponent extends NavigationItemComponent
         parent::render($this->getItem($structure));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     */
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
         $structure = $this->navigationFactory->getStructure($root);
-        $this->template->items = $structure['parents'];
+        $this->template->item = $this->getItem($structure);
+        $this->template->subTitle = $subTitle;
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
+    }
+
+    final public function renderBoardInline(array $items, bool $subTitle = false): void
+    {
+        $this->template->item = new NavItem(new Title(null, ''), '#', [], $items);
         $this->template->subTitle = $subTitle;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
@@ -57,8 +69,8 @@ final class NavigationChooserComponent extends NavigationItemComponent
             if ($this->isItemVisible($item)) {
                 $items[] = new NavItem(
                     $this->getItemTitle($item),
-                    ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                    $item['linkParams'],
+                    ':' . $item['presenter'] . ':' . $item['action'],
+                    $item['params'],
                     [],
                     $this->isItemActive($item)
                 );
@@ -69,14 +81,11 @@ final class NavigationChooserComponent extends NavigationItemComponent
 
     public function isItemActive(array $item): bool
     {
-        if ($item instanceof NavItem) {
-            return false;
-        }
-        if (isset($item['linkPresenter'])) {
+        if (isset($item['presenter'])) {
             try {
                 $this->getPresenter()->link(
-                    ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                    array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
+                    ':' . $item['presenter'] . ':' . $item['action'],
+                    array_merge($this->getPresenter()->getParameters(), $item['params'])
                 );
             } catch (\Throwable $exception) {
                 /* empty */
@@ -95,11 +104,11 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     public function getItemTitle(array $item): Title
     {
-        if (isset($item['linkPresenter'])) {
+        if (isset($item['presenter'])) {
             $presenter = $this->presenterBuilder->preparePresenter(
-                $item['linkPresenter'],
-                $item['linkAction'],
-                $item['linkParams'],
+                $item['presenter'],
+                $item['action'],
+                $item['params'],
                 $this->getPresenter()->getParameters()
             );
             $presenter->setView($presenter->getView()); // to force update the title
@@ -114,10 +123,10 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     public function getItemLink(array $item): string
     {
-        if (isset($item['linkPresenter'])) {
+        if (isset($item['presenter'])) {
             return $this->getPresenter()->link(
-                ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
+                ':' . $item['presenter'] . ':' . $item['action'],
+                array_merge($this->getPresenter()->getParameters(), $item['params'])
             );
         }
         return '';
@@ -129,16 +138,10 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     public function isItemVisible(array $item): bool
     {
-        if ($item instanceof NavItem) {
-            return true;
-        }
-        if (isset($item['visible'])) {
-            return $item['visible'];
-        }
-        if (isset($item['linkPresenter'])) {
+        if (isset($item['presenter'])) {
             return $this->getPresenter()->authorized(
-                ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
+                ':' . $item['presenter'] . ':' . $item['action'],
+                array_merge($this->getPresenter()->getParameters(), $item['params'])
             );
         }
         return true;

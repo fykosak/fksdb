@@ -25,7 +25,7 @@ class RegisterPresenterTest extends DatabaseTestCase
     {
         parent::setUp();
 
-        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
+        $presenterFactory = $this->container->getByType(IPresenterFactory::class);
         $this->fixture = $presenterFactory->createPresenter('Public:Register');
         $this->fixture->autoCanonicalize = false;
     }

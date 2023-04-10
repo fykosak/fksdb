@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Utils\Strings;
 
 /**
  * @property-read int contest_id
@@ -21,7 +20,14 @@ class ContestModel extends Model
 
     public function getContestSymbol(): string
     {
-        return strtolower(Strings::webalize($this->name));
+        switch ($this->contest_id) {
+            case 1:
+                return 'fykos';
+            case 2:
+                return 'vyfuk';
+            case 3:
+                return 'ctyrboj';
+        }
     }
 
     public function getContestYear(?int $year): ?ContestYearModel

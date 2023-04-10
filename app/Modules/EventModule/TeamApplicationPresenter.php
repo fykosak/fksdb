@@ -4,31 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
-use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
+use FKSDB\Components\Grids\Application\TeamListComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
 /**
@@ -47,6 +45,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create team'), 'fa fa-calendar-plus');
+    }
+
+    public function titleDetailedList(): PageTitle
+    {
+        return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
     }
 
     /**
@@ -79,6 +82,14 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         );
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetailedList(): void
+    {
+        $this->setAuthorized($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent()));
+    }
+
     public function authorizedCreate(): void
     {
         $event = $this->getEvent();
@@ -107,7 +118,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         parent::renderDetail();
         try {
-            $setup = $this->getEvent()->getFyziklaniGameSetup();
+            $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
@@ -202,11 +213,18 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NeonSchemaException
      */
-    protected function createComponentGrid(): AbstractApplicationsGrid
+    protected function createComponentGrid(): TeamApplicationsGrid
     {
-        return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+        return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentList(): TeamListComponent
+    {
+        return new TeamListComponent($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent
@@ -220,30 +238,15 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return FyziklaniTeamMachine
+     * @return TeamMachine
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function getMachine(): FyziklaniTeamMachine
+    private function getMachine(): TeamMachine
     {
         static $machine;
         if (!isset($machine)) {
-            try {
-                switch ($this->getEvent()->event_type_id) {
-                    case 1:
-                        $machine = $this->getContext()->getService('fof.default.machine');
-                        break;
-                    case 9:
-                        $machine = $this->getContext()->getService('fol.default.machine');
-                        break;
-                    default:
-                        throw new InvalidStateException();
-                }
-            } catch (MissingServiceException $exception) {
-            }
-            if (!$machine instanceof FyziklaniTeamMachine) {
-                throw new BadTypeException(FyziklaniTeamMachine::class, $machine);
-            }
+            $machine = $this->eventDispatchFactory->getTeamMachine($this->getEvent());
         }
         return $machine;
     }

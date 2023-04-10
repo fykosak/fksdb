@@ -1,11 +1,11 @@
-{* General template for any event. *}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 <p>
-    We confirm receiving {$person->getFullname()}'s application for event <em>{$event}</em>
-    that takes place on
-    {if $event->end && $event->end->getTimestamp() !== $event->begin->getTimestamp()}
-    {$event->begin|date:'Y-m-d'} to {$event->end|date:'Y-m-d'}.
+    We confirm receiving {$holder->getPerson()->getFullName()}'s application for event <em>{$holder->event}</em>
+    that takes place
+    {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
+        from {$holder->event->begin|date:'M d'} to {$holder->event->end|date:'M d, Y'}.
     {else}
-    {$event->begin|date:'Y-m-d'}.
+        on {$holder->event->begin|date:'M d, Y'}.
     {/if}
 </p>
 {include 'inc/eventEdit.en.latte' event => $event, token => $token}

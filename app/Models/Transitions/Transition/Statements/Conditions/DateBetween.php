@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Transitions\Statement;
 
-class DateBetween extends Statement
+class DateBetween implements Statement
 {
     private \DateTimeInterface $to;
     private \DateTimeInterface $from;
@@ -20,7 +20,7 @@ class DateBetween extends Statement
         $this->to = new \DateTime($to);
     }
 
-    protected function evaluate(...$args): bool
+    public function __invoke(...$args): bool
     {
         return (\time() <= $this->to->getTimestamp()) && (\time() >= $this->from->getTimestamp());
     }

@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Modules\OrgModule\BasePresenter;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
@@ -75,7 +74,7 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     /**
      * @param StoredQuery $dataSource
-     * @throws BadRequestException
+     * @throws \DOMException
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
     {
@@ -88,7 +87,7 @@ class StoredQueryFactory implements XMLNodeSerializer
         // parameters
         $parametersNode = $doc->createElement('parameters');
         $node->appendChild($parametersNode);
-        foreach ($dataSource->getImplicitParameters() as $name => $value) {
+        foreach ($dataSource->implicitParameterValues as $name => $value) {
             $parameterNode = $doc->createElement('parameter', (string)$value);
             $parameterNode->setAttribute('name', (string)$name);
             $parametersNode->appendChild($parameterNode);
@@ -115,10 +114,8 @@ class StoredQueryFactory implements XMLNodeSerializer
                 }
                 if ($formatVersion == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
-                } elseif ($formatVersion == self::EXPORT_FORMAT_2) {
-                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 } else {
-                    throw new BadRequestException(_('Unsupported format'));
+                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 }
                 $textNode = $doc->createTextNode((string)$value);
                 $colNode->appendChild($textNode);

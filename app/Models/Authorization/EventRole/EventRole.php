@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authorization\EventRole;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\Role;
+use Nette\Utils\Html;
 
 abstract class EventRole implements Role
 {
@@ -27,4 +28,6 @@ abstract class EventRole implements Role
     {
         return $this->roleId;
     }
+
+    abstract public function badge(): Html;
 }

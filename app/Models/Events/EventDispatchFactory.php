@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
 class EventDispatchFactory
 {
@@ -44,10 +47,31 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(EventModel $event): Machine
+    public function getEventMachine(EventModel $event): EventParticipantMachine
     {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function getTeamMachine(EventModel $event): TeamMachine
+    {
+        switch ($event->event_type_id) {
+            case 1:
+                $machine = $this->container->getService('fof.default.machine');
+                break;
+            case 9:
+                $machine = $this->container->getService('fol.default.machine');
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        if (!$machine instanceof TeamMachine) {
+            throw new BadTypeException(TeamMachine::class, $machine);
+        }
+        return $machine;
     }
 
     /**
@@ -82,12 +106,12 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */
-    public function getDummyHolder(EventModel $event): Holder
+    public function getDummyHolder(EventModel $event): BaseHolder
     {
         $definition = $this->findDefinition($event);
-        /** @var Holder $holder */
+        /** @var BaseHolder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
-        $holder->inferEvent($event);
+        $holder->setEvent($event);
         return $holder;
     }
 

@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateColumnException;
 
 class ProducersGrid extends EntityGrid
 {
@@ -21,13 +19,10 @@ class ProducersGrid extends EntityGrid
         ]);
     }
 
-    /**
-     * @throws DuplicateColumnException
-     * @throws BadTypeException
-     */
-    protected function configure(Presenter $presenter): void
+    protected function getModels(): Selection
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('name');
+        $query = parent::getModels();
+        $query->order('name');
+        return $query;
     }
 }

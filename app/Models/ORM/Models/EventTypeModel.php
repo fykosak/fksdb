@@ -16,10 +16,25 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 class EventTypeModel extends Model
 {
-    public const FYZIKLANI = 1;
-
     public function getEvents(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT, 'event_type_id');
+    }
+
+    public function getSymbol(): string
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return 'fof';
+            case 9:
+                return 'fol';
+            case 2:
+            case 14:
+                return 'dsef';
+            case 16:
+                return 'fov';
+            default:
+                return 'secondary';
+        }
     }
 }

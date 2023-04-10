@@ -4,93 +4,65 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class TeamApplicationsGrid extends AbstractApplicationsGrid
+class TeamApplicationsGrid extends FilterGrid
 {
+    protected EventModel $event;
+
+    public function __construct(EventModel $event, Container $container)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
+    protected function getModels(): Selection
+    {
+        $query = $this->event->getTeams();
+        if (!isset($this->filterParams)) {
+            return $query;
+        }
+        foreach ($this->filterParams as $key => $filterParam) {
+            switch ($key) {
+                case 'status':
+                    $query->where('state', $filterParam);
+            }
+        }
+        return $query;
+    }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-
         $this->paginate = false;
-
         $this->addColumns([
             'fyziklani_team.fyziklani_team_id',
             'fyziklani_team.name',
             'fyziklani_team.state',
+            'fyziklani_team.game_lang',
+            'fyziklani_team.category',
+            'fyziklani_team.force_a',
+            'fyziklani_team.phone',
         ]);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
-        $this->addCSVDownloadButton();
-        parent::configure($presenter);
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
+        //$this->addCSVDownloadButton();
     }
 
-    protected function getSource(): TypedGroupedSelection
+    protected function configureForm(Form $form): void
     {
-        return $this->event->getFyziklaniTeams();
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws NotImplementedException
-     */
-    protected function createComponentSearchForm(): FormControl
-    {
-        $control = new FormControl($this->getContext());
-        $form = $control->getForm();
-        $stateContainer = new ContainerWithOptions($this->getContext());
-        $stateContainer->setOption('label', _('States'));
+        $items = [];
         foreach (TeamState::cases() as $state) {
-            $label = Html::el('span')
-                ->addHtml(Html::el('b')->addText($state->label()))
-                ->addText(': ');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state->value), $label);
+            $items[$state->value] = $state->label();
         }
-        $form->addComponent($stateContainer, 'state');
-        $form->addSubmit('submit', _('Apply filter'));
-        $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues('array');
-            $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
-            $count = $this->dataSource->getCount();
-            $this->getPaginator()->itemCount = $count;
-        };
-        return $control;
-    }
-
-    protected function getHoldersColumns(): array
-    {
-        return [
-            'note',
-            'game_lang',
-            'category',
-            'force_a',
-            'phone',
-            'password',
-        ];
-    }
-
-    protected function getTableName(): string
-    {
-        return DbNames::TAB_FYZIKLANI_TEAM;
+        $form->addSelect('status', _('State'), $items)->setPrompt(_('Select state'));
     }
 }

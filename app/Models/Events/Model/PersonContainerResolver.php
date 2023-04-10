@@ -7,9 +7,9 @@ namespace FKSDB\Models\Events\Model;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
-use Nette\SmartObject;
 use FKSDB\Models\Persons\Resolvers\Resolver;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use Nette\SmartObject;
 
 class PersonContainerResolver implements Resolver
 {
@@ -24,7 +24,6 @@ class PersonContainerResolver implements Resolver
     private ExpressionEvaluator $evaluator;
 
     /**
-     * PersonContainerResolver constructor.
      * @param callable|bool $modifiableCondition
      * @param callable|bool $visibleCondition
      */
@@ -54,12 +53,12 @@ class PersonContainerResolver implements Resolver
     public function isModifiable(?PersonModel $person): bool
     {
         return $this->selfResolver->isModifiable($person) ||
-            $this->evaluator->evaluate($this->modifiableCondition, $this->field);
+            $this->evaluator->evaluate($this->modifiableCondition, $this->field->holder);
     }
 
     public function isVisible(?PersonModel $person): bool
     {
         return $this->selfResolver->isVisible($person) ||
-            $this->evaluator->evaluate($this->visibleCondition, $this->field);
+            $this->evaluator->evaluate($this->visibleCondition, $this->field->holder);
     }
 }

@@ -6,7 +6,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -133,8 +133,8 @@ class SettingsPresenter extends BasePresenter
         bool $showPassword = true,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
-    ): ModelContainer {
-        $container = new ModelContainer();
+    ): ContainerWithOptions {
+        $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
 
         $login = $container->addText('login', _('Username'));

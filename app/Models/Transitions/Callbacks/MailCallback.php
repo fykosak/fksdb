@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -14,9 +13,12 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Statement;
+use Nette\SmartObject;
 
-class MailCallback implements TransitionCallback
+abstract class MailCallback implements Statement
 {
+    use SmartObject;
 
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
@@ -35,54 +37,49 @@ class MailCallback implements TransitionCallback
         $this->authTokenService = $authTokenService;
     }
 
+
     /**
-     * @throws BadTypeException
+     * @param ...$args
      * @throws \ReflectionException
-     * @throws NotImplementedException
+     * @throws BadTypeException
      */
-    public function __invoke(ModelHolder $holder, ...$args): void
+    public function __invoke(...$args): void
     {
+        [$holder] = $args;
         foreach ($this->getPersonsFromHolder($holder) as $person) {
             $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;
-            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
-                $this->getTemplatePath($holder),
-                $person->getPreferredLang(),
-                [
-                    'holder' => $holder,
-                    'token' => $this->createToken($person, $holder),
-                ]
-            );
+            $data['text'] = $this->createMessageText($holder, $person);
             $this->emailMessageService->addMessageToSend($data);
         }
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws BadTypeException
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
-        throw new NotImplementedException();
+        return $this->mailTemplateFactory->renderWithParameters(
+            $this->getTemplatePath($holder),
+            $person->getPreferredLang(),
+            [
+                'person' => $person,
+                'holder' => $holder,
+                'token' => $this->createToken($person, $holder),
+            ]
+        );
     }
 
-    protected function getData(ModelHolder $holder): array
-    {
-        return [
-            'subject' => 'FYKOS',
-            'blind_carbon_copy' => 'FYKOS <fykos@fykos.cz>',
-            'sender' => 'fykos@fykos.cz',
-        ];
-    }
-
-    protected function resolveLogin(PersonModel $person): LoginModel
+    final protected function resolveLogin(PersonModel $person): LoginModel
     {
         return $person->getLogin() ?? $this->accountManager->createLogin($person);
     }
 
-    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
+    protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
     {
-        return $this->authTokenService->createToken($this->resolveLogin($person), 'default', null);
+        return null;
     }
+
 
     /**
      * @return PersonModel[]
@@ -97,4 +94,8 @@ class MailCallback implements TransitionCallback
         }
         return [$person];
     }
+
+    abstract protected function getTemplatePath(ModelHolder $holder): string;
+
+    abstract protected function getData(ModelHolder $holder): array;
 }

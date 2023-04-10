@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Processing;
 
-use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
@@ -24,37 +23,28 @@ abstract class AbstractProcessing implements Processing
     public const WILD_CART = '*';
     private array $valuesPathCache;
     private array $formPathCache;
-    private array $states;
-    private Holder $holder;
+    private ?EventParticipantStatus $state;
+    protected ModelHolder $holder;
 
     final public function process(
-        array $states,
+        ?EventParticipantStatus $state,
         ArrayHash $values,
-        Machine $machine,
-        Holder $holder,
+        ModelHolder $holder,
         Logger $logger,
-        ?Form $form = null
-    ): ?array {
-        $this->states = $states;
+        ?Form $form
+    ): void {
+        $this->state = $state;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->innerProcess($states, $values, $holder, $logger, $form);
-        return null;
+        $this->innerProcess($values, $holder, $logger);
     }
 
     abstract protected function innerProcess(
-        array $states,
         ArrayHash $values,
-        Holder $holder,
-        Logger $logger,
-        ?Form $form
+        ModelHolder $holder,
+        Logger $logger
     ): void;
-
-    final protected function hasWildCart(string $mask): bool
-    {
-        return strpos($mask, self::WILD_CART) !== false;
-    }
 
     /**
      * @return FormControl[]
@@ -80,39 +70,14 @@ abstract class AbstractProcessing implements Processing
      */
     final protected function getControl(string $mask): array
     {
-        $keys = array_keys($this->formPathCache);
-        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
-        $pMask = preg_quote($pMask);
-        $pMask = str_replace('__WC__', '(.+)', $pMask);
-        $pattern = "/^$pMask\$/";
+        $pMask = str_replace('__WC__', '(.+)', preg_quote(str_replace(self::WILD_CART, '__WC__', $mask)));
         $result = [];
-        foreach ($keys as $key) {
-            if (preg_match($pattern, $key)) {
+        foreach (array_keys($this->formPathCache) as $key) {
+            if (preg_match("/^$pMask\$/", $key)) {
                 $result[] = $this->formPathCache[$key];
             }
         }
         return $result;
-    }
-
-    /**
-     * Checks whether base is really empty after a value
-     * from it wasn't loaded.
-     * When it returns false, correct value can be loaded from the model
-     * (which is not updated yet).
-     */
-    protected function isBaseReallyEmpty(string $name): bool
-    {
-        $baseHolder = $this->holder->getBaseHolder($name);
-        if ($baseHolder->getModelState() == AbstractMachine::STATE_INIT) {
-            return true; // it was empty since beginning
-        }
-        if (
-            isset($this->states[$name])
-            && $this->states[$name] == AbstractMachine::STATE_TERMINATED
-        ) {
-            return true; // it has been deleted by user
-        }
-        return false;
     }
 
     private function setValues(ArrayHash $values, string $prefix = ''): void

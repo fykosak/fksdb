@@ -18,7 +18,7 @@ class BornColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $control = new WriteOnlyDatePicker($this->getTitle());
-        $control->setDefaultValue((new \DateTime())->modify('-16 years'));
+        $control->setDefaultValue((new \DateTime())->modify('-50 years'));
         return $control;
     }
 

@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Utils\FakeStringEnum;
@@ -133,16 +134,10 @@ class PersonModel extends Model implements Resource
         return $this->getPostContacts()->where(['type' => $type->value])->fetch();
     }
 
-    public function getPermanentPostContact(bool $fallback = true): ?PostContactModel
+    public function getActivePostContact(): ?PostContactModel
     {
-        $postContact = $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
-        if ($postContact) {
-            return $postContact;
-        } elseif ($fallback) {
-            return $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
-        } else {
-            return null;
-        }
+        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
+            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
     }
 
     public function getEventParticipants(): TypedGroupedSelection
@@ -248,7 +243,7 @@ class PersonModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getSerializedSchedule(EventModel $event, string $type): ?string
+    public function getSerializedSchedule(EventModel $event, string $type): array
     {
         $query = $this->getSchedule()
             ->where('schedule_item.schedule_group.event_id', $event->event_id)
@@ -256,14 +251,9 @@ class PersonModel extends Model implements Resource
         $items = [];
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
-            $scheduleItem = $model->schedule_item;
-            $items[$scheduleItem->schedule_group_id] = $scheduleItem->schedule_item_id;
+            $items[$model->schedule_item->schedule_group_id] = $model->schedule_item->schedule_item_id;
         }
-        if (!count($items)) {
-            return null;
-        }
-
-        return json_encode($items);
+        return $items;
     }
 
     /**
@@ -280,6 +270,11 @@ class PersonModel extends Model implements Resource
     public function getScheduleForEvent(EventModel $event): TypedGroupedSelection
     {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
+    }
+
+    public function getScheduleByGroup(ScheduleGroupModel $group): ?PersonScheduleModel
+    {
+        return $this->getSchedule()->where('schedule_item.schedule_group_id', $group->schedule_group_id)->fetch();
     }
 
     public function getSchedule(): TypedGroupedSelection
@@ -316,7 +311,7 @@ class PersonModel extends Model implements Resource
      * @return PersonGender|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

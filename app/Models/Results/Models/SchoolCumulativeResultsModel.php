@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use Nette\Database\Row;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 
 /**
@@ -44,9 +43,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
-        if ($this->series === null) {
-            throw new InvalidStateException('Series not specified.');
-        }
         if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             foreach ($this->getSeries() as $series) {

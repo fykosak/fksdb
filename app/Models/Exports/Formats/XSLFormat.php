@@ -40,6 +40,9 @@ class XSLFormat implements ExportFormat
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function getResponse(): PlainTextResponse
     {
         // Prepare XSLT processor

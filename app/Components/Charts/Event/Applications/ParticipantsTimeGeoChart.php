@@ -31,7 +31,7 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
         $rawData = [];
         /** @var EventParticipantModel $participant */
         foreach ($this->event->getParticipants() as $participant) {
-            $iso = $participant->getPersonHistory()->school->address->region->country_iso3;
+            $iso = $participant->getPersonHistory()->school->address->country->alpha_3;
             $rawData[] = [
                 'country' => $iso,
                 'created' => $participant->created->format('c'),

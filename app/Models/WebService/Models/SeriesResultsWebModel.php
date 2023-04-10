@@ -83,7 +83,7 @@ class SeriesResultsWebModel extends WebModel
             $sameRank = [];
             foreach ($values as $index => &$value) {
                 $toRank = $index + 1;
-                $sameRank[] =& $value;
+                $sameRank[] = &$value;
                 if (!isset($values[$index + 1]) || $value['sum'] !== $values[$index + 1]['sum']) {
                     foreach ($sameRank as &$sameValue) {
                         $sameValue['rank'] = [$fromRank, $toRank];

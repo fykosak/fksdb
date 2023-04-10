@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Machine;
 
-use FKSDB\Models\Transitions\Holder\PaymentHolder;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\PaymentService;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
-class PaymentMachine extends Machine
+final class PaymentMachine extends Machine
 {
     public EventModel $event;
     private EventService $eventService;
@@ -26,15 +26,12 @@ class PaymentMachine extends Machine
         $this->paymentService = $paymentService;
     }
 
-    final public function setEventId(int $eventId): void
+    public function setEventId(int $eventId): void
     {
-        $event = $this->eventService->findByPrimary($eventId);
-        if (!is_null($event)) {
-            $this->event = $event;
-        }
+        $this->event = $this->eventService->findByPrimary($eventId);
     }
 
-    final public function setScheduleGroupTypes(array $types): void
+    public function setScheduleGroupTypes(array $types): void
     {
         $this->scheduleGroupTypes = $types;
     }

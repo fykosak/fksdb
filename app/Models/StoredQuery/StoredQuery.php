@@ -9,33 +9,22 @@ use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
-use NiftyGrid\DataSource\IDataSource;
 
 /**
  * Represents instantiotion (in term of parameters) of \FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
  */
-class StoredQuery implements IDataSource, Resource
+class StoredQuery implements Resource
 {
-
-    private const INNER_QUERY = 'sub';
-    private ?QueryModel $queryPattern = null;
-    private ?string $qid = null;
+    public ?QueryModel $queryPattern = null;
     private string $sql;
-    private ?string $name = null;
     private array $queryParameters = [];
     private Connection $connection;
     /** from Presenter     */
-    private array $implicitParameterValues = [];
+    public array $implicitParameterValues = [];
     /** User set parameters     */
     private array $parameterValues = [];
     /** default parameter of ModelStoredQueryParameter     */
     private array $parameterDefaultValues = [];
-    private ?int $count = null;
-    private ?\PDOStatement $data = null;
-    private ?int $limit = null;
-    private ?int $offset = null;
-    private array $orders = [];
-    private ?array $columnNames = null;
 
     private function __construct(Connection $connection)
     {
@@ -50,7 +39,6 @@ class StoredQuery implements IDataSource, Resource
             $queryPattern->getQueryParameters()
         );
         $storedQuery->queryPattern = $queryPattern;
-        $storedQuery->name = $queryPattern->name;
         return $storedQuery;
     }
 
@@ -63,16 +51,6 @@ class StoredQuery implements IDataSource, Resource
         $storedQuery->setSQL($sql);
         $storedQuery->setQueryParameters($parameters);
         return $storedQuery;
-    }
-
-    public function getQueryPattern(): ?QueryModel
-    {
-        return $this->queryPattern;
-    }
-
-    public function getSQL(): string
-    {
-        return $this->sql;
     }
 
     private function setSQL(string $sql): void
@@ -91,15 +69,8 @@ class StoredQuery implements IDataSource, Resource
             }
             if (isset($this->implicitParameterValues[$key]) || $this->implicitParameterValues[$key] != $value) {
                 $this->implicitParameterValues[$key] = $value;
-                $this->invalidateAll();
             }
         }
-    }
-
-    /** @return int[]|string[] */
-    public function getImplicitParameters(): array
-    {
-        return $this->implicitParameterValues;
     }
 
     public function setParameters(iterable $parameters): void
@@ -111,7 +82,6 @@ class StoredQuery implements IDataSource, Resource
             }
             if (!array_key_exists($key, $this->parameterValues) || $this->parameterValues[$key] != $value) {
                 $this->parameterValues[$key] = $value;
-                $this->invalidateAll();
             }
         }
     }
@@ -127,17 +97,10 @@ class StoredQuery implements IDataSource, Resource
 
     public function getName(): string
     {
-        return $this->name ?? 'adhoc';
-    }
-
-    public function getQId(): ?string
-    {
-        return $this->qid ?? ($this->hasQueryPattern() ? $this->queryPattern->qid : null);
-    }
-
-    public function setQId(string $qid): void
-    {
-        $this->qid = $qid;
+        if (isset($this->queryPattern)) {
+            return $this->queryPattern->name ?? 'adhoc';
+        }
+        return 'adhoc';
     }
 
     /**
@@ -163,30 +126,22 @@ class StoredQuery implements IDataSource, Resource
         }
     }
 
-    // return true if pattern query is real ORM model, it means is already stored in DB
-    public function hasQueryPattern(): bool
-    {
-        return (bool)$this->queryPattern ?? false;
-    }
-
     public function getColumnNames(): array
     {
-        if (!isset($this->columnNames)) {
-            $this->columnNames = [];
-            $innerSql = $this->getSQL();
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . '';
-
-            $statement = $this->bindParams($sql);
+        static $columnNames;
+        if (!isset($columnNames)) {
+            $columnNames = [];
+            $statement = $this->bindParams();
             $statement->execute();
 
             $count = $statement->columnCount();
 
             for ($col = 0; $col < $count; $col++) {
                 $meta = $statement->getColumnMeta($col);
-                $this->columnNames[] = $meta['name'];
+                $columnNames[] = $meta['name'];
             }
         }
-        return $this->columnNames;
+        return $columnNames;
     }
 
     public function getParameterNames(): array
@@ -194,13 +149,13 @@ class StoredQuery implements IDataSource, Resource
         return array_keys($this->parameterDefaultValues);
     }
 
-    private function bindParams(string $sql): \PDOStatement
+    private function bindParams(): \PDOStatement
     {
-        $statement = $this->connection->getPdo()->prepare($sql);
+        $statement = $this->connection->getPdo()->prepare($this->sql);
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
-            if (!preg_match("/:$key/", $sql)) { // this ain't foolproof
+            if (!preg_match("/:$key/", $this->sql)) { // this ain't foolproof
                 continue;
             }
             $statement->bindValue($key, $value);
@@ -209,43 +164,12 @@ class StoredQuery implements IDataSource, Resource
 
         // bind explicit parameters
         foreach ($this->getQueryParameters() as $parameter) {
-            $key = $parameter->name;
-            $value = $this->parameterValues[$key] ?? $parameter->defaultValue;
+            $value = $this->parameterValues[$parameter->name] ?? $parameter->defaultValue;
             $type = $parameter->getPDOType();
 
-            $statement->bindValue($key, $value, $type);
+            $statement->bindValue($parameter->name, $value, $type);
         }
         return $statement;
-    }
-
-    private function invalidateAll(): void
-    {
-        $this->count = null;
-        $this->data = null;
-    }
-
-    private function invalidateData(): void
-    {
-        $this->data = null;
-    }
-
-    /*     * ******************************
-     * Interface IDataSource
-     * ****************************** */
-
-    /**
-     * @throws \PDOException
-     */
-    public function getCount(string $column = '*'): int
-    {
-        if (!isset($this->count)) {
-            $innerSql = $this->getSQL();
-            $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
-            $statement = $this->bindParams($sql);
-            $statement->execute();
-            $this->count = (int)$statement->fetchColumn();
-        }
-        return $this->count;
     }
 
     /**
@@ -253,49 +177,9 @@ class StoredQuery implements IDataSource, Resource
      */
     public function getData(): \PDOStatement
     {
-        if (!isset($this->data)) {
-            $innerSql = $this->getSQL();
-            if ($this->orders || $this->limit !== null || $this->offset !== null) {
-                $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;
-            } else {
-                $sql = $innerSql;
-            }
-
-            if ($this->orders) {
-                $sql .= ' ORDER BY ' . implode(', ', $this->orders);
-            }
-
-            if ($this->limit !== null && $this->offset !== null) {
-                $sql .= " LIMIT $this->offset, $this->limit";
-            }
-
-            $statement = $this->bindParams($sql);
-            $statement->execute();
-            $this->data = $statement;
-        }
-        return $this->data; // lazy load during iteration?
-    }
-
-    public function limitData(int $limit, ?int $offset = null): void
-    {
-        $this->limit = $limit;
-        $this->offset = $offset;
-        $this->invalidateData();
-    }
-
-    /**
-     * Implements only single column sorting.
-     *
-     * @param string|null $by column name
-     * @param string|null $way DESC|ASC
-     */
-    public function orderData(?string $by, ?string $way): void
-    {
-        if (!is_numeric($by)) {
-            $by = "`$by`";
-        }
-        $this->orders[0] = "$by $way";
-        $this->invalidateData();
+        $statement = $this->bindParams();
+        $statement->execute();
+        return $statement;
     }
 
     public function getResourceId(): string

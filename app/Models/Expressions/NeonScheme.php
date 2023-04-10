@@ -23,16 +23,13 @@ class NeonScheme
      */
     public static function readSection(array $section, array $sectionScheme): array
     {
-        if (!is_array($section)) {
-            throw new NeonSchemaException('Expected array got \'' . $section . '\'.');
-        }
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {
                     $result[$key] = Arrays::get($section, $key);
                 } catch (InvalidArgumentException $exception) {
-                    throw new NeonSchemaException("Expected key '$key' not found.", null, $exception);
+                    throw new NeonSchemaException("Expected key '$key' not found.", 0, $exception);
                 }
                 if ($metadata === null) {
                     continue;

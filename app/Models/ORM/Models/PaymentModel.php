@@ -61,14 +61,9 @@ class PaymentModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getPaymentId(): string
-    {
-        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
-    }
-
     public function canEdit(): bool
     {
-        return $this->state->value == PaymentState::NEW;
+        return $this->state->value == PaymentState::IN_PROGRESS;
     }
 
     /**
@@ -92,7 +87,7 @@ class PaymentModel extends Model implements Resource
      * @return PaymentState|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
@@ -108,7 +103,6 @@ class PaymentModel extends Model implements Resource
         return [
             'personId' => $this->person_id,
             'paymentId' => $this->payment_id,
-            'paymentUId' => $this->getPaymentId(),
             'state' => $this->state->value,
             'price' => $this->price,
             'currency' => $this->currency,

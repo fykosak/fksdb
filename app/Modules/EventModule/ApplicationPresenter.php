@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -57,7 +57,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     final public function renderDetail(): void
     {
         parent::renderDetail();
-        $this->template->fields = $this->getHolder()->primaryHolder->getFields();
+        $this->template->fields = $this->getDummyHolder()->getFields();
         $this->template->model = $this->getEntity();
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
@@ -80,9 +80,17 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function createComponentGrid(): AbstractApplicationsGrid
+    protected function createComponentGrid(): SingleApplicationsGrid
     {
-        return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+        return new SingleApplicationsGrid($this->getEvent(), $this->getDummyHolder(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    final protected function createComponentMassTransitions(): MassTransitionsComponent
+    {
+        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -92,10 +100,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      */
     protected function createComponentImport(): ImportComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
-
-        return new ImportComponent($source, $handler, $this->getContext());
+        return new ImportComponent(
+            new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $this->getContext(),
+            $this->eventDispatchFactory
+        );
     }
 
     protected function getORMService(): EventParticipantService

@@ -6,12 +6,12 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Badges\PermissionDeniedBadge;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ValuePrinters\StringPrinter;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
@@ -24,21 +24,21 @@ abstract class ColumnFactory
     public const PERMISSION_ALLOW_BASIC = 16;
     public const PERMISSION_ALLOW_RESTRICT = 128;
     public const PERMISSION_ALLOW_FULL = 1024;
-    private string $title;
-    private string $tableName;
-    private string $modelAccessKey;
-    private ?string $description;
-    private array $metaData;
-    private bool $required = false;
-    private bool $omitInputField = false;
-    private FieldLevelPermission $permission;
-    private MetaDataFactory $metaDataFactory;
-    private string $modelClassName;
+    protected string $title;
+    protected string $tableName;
+    protected string $modelAccessKey;
+    protected ?string $description;
+    protected array $metaData;
+    protected bool $required = false;
+    protected bool $omitInputField = false;
+    protected bool $isWriteOnly = true;
+    public FieldLevelPermission $permission;
+    protected MetaDataFactory $metaDataFactory;
+    protected string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory)
     {
         $this->metaDataFactory = $metaDataFactory;
-        $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     final public function setUp(
@@ -73,12 +73,17 @@ abstract class ColumnFactory
         return $field;
     }
 
-    final public function setPermissionValue(array $values): void
+    final public function setPermissionValue(string $value): void
     {
         $this->permission = new FieldLevelPermission(
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
+            constant(self::class . '::PERMISSION_ALLOW_' . $value),
+            constant(self::class . '::PERMISSION_ALLOW_' . $value)
         );
+    }
+
+    public function setWriteOnly(bool $isWriteOnly): void
+    {
+        $this->isWriteOnly = $isWriteOnly;
     }
 
     final public function setRequired(bool $value): void
@@ -91,11 +96,6 @@ abstract class ColumnFactory
         $this->omitInputField = $omit;
     }
 
-    final public function getPermission(): FieldLevelPermission
-    {
-        return $this->permission;
-    }
-
     final public function getTitle(): string
     {
         return _($this->title);
@@ -104,16 +104,6 @@ abstract class ColumnFactory
     final public function getDescription(): ?string
     {
         return $this->description ? _($this->description) : null;
-    }
-
-    final protected function getModelAccessKey(): string
-    {
-        return $this->modelAccessKey;
-    }
-
-    final protected function getTableName(): string
-    {
-        return $this->tableName;
     }
 
     final protected function getMetaData(): array
@@ -134,7 +124,7 @@ abstract class ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 
     /**
@@ -173,12 +163,12 @@ abstract class ColumnFactory
 
     final public function hasReadPermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->read;
+        return $userValue >= $this->permission->read;
     }
 
     final public function hasWritePermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->write;
+        return $userValue >= $this->permission->write;
     }
 
     protected function renderNullModel(): Html

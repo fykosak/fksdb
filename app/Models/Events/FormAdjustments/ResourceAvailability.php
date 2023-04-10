@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Forms\Form;
@@ -40,7 +39,7 @@ class ResourceAvailability extends AbstractAdjustment
         array $fields,
         string $paramCapacity,
         string $message,
-        array $includeStates = [AbstractMachine::STATE_ANY],
+        array $includeStates = [Machine::STATE_ANY],
         array $excludeStates = ['cancelled']
     ) {
         $this->fields = $fields;
@@ -50,76 +49,61 @@ class ResourceAvailability extends AbstractAdjustment
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void
+    /**
+     * @param BaseHolder $holder
+     */
+    protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
-        $groups = $holder->getGroupedSecondaryHolders();
-        $groups[] = [
-            'service' => $holder->primaryHolder->getService(),
-            'holders' => [$holder->primaryHolder],
-        ];
-
         $sService = [];
         $controls = [];
 
-        foreach ($groups as $group) {
-            $holders = [];
-            $field = null;
-            /** @var BaseHolder $baseHolder */
-            foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->name;
-                foreach ($this->fields as $fieldMask) {
-                    $foundControls = $this->getControl($fieldMask);
-                    if (!$foundControls) {
-                        continue;
-                    }
-                    if (isset($foundControls[$name])) {
-                        $holders[] = $baseHolder;
-                        $controls[] = $foundControls[$name];
-                        $field = $fieldMask;
-                    } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
-                        $holders[] = $baseHolder;
-                        $controls[] = reset($foundControls); // assume single result;
-                        $field = $fieldMask;
-                    }
-                }
+        $holders = [];
+        $field = null;
+        $name = $holder->name;
+        foreach ($this->fields as $fieldMask) {
+            $foundControls = $this->getControl($fieldMask);
+            if (!$foundControls) {
+                continue;
             }
-            if ($holders) {
-                $sService[] = [
-                    'service' => $group['service'],
-                    'holders' => $holders,
-                    'field' => $field,
-                ];
+            if (isset($foundControls[$name])) {
+                $holders[] = $holder;
+                $controls[] = $foundControls[$name];
+                $field = $fieldMask;
+            } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+                $holders[] = $holder;
+                $controls[] = reset($foundControls); // assume single result;
+                $field = $fieldMask;
             }
         }
 
+        if ($holders) {
+            $sService[] = [
+                'service' => $holder->service,
+                'field' => $field,
+            ];
+        }
+
         $usage = 0;
-        /** @var Service|ServiceMulti[]|BaseHolder[][] $dataService */
+        /** @var Service|BaseHolder[][] $dataService */
         foreach ($sService as $dataService) {
-            /** @var BaseHolder $firstHolder */
-            $firstHolder = reset($dataService['holders']);
-            $event = $firstHolder->event;
+            $event = $holder->event;
             /** @var TypedGroupedSelection $table */
             $table = $dataService['service']->getTable();
-            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
-            if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
-                $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
+            $table->where('event_participant.event_id', $event->getPrimary());
+            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
+                $table->where('status', $this->includeStates);
             }
-            if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
-                $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
+            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
+                $table->where('NOT ' . 'status', $this->excludeStates);
             } else {
                 $table->where('1=0');
             }
-
-            $primaries = array_map(function (BaseHolder $baseHolder) {
-                $model = $baseHolder->getModel2();
-                return $model ? $model->getPrimary(false) : null;
-            }, $dataService['holders']);
-            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
+            $model = $holder->getModel();
 
             $column = BaseHolder::getBareColumn($dataService['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
-            if ($primaries) {
-                $table->where("NOT $pk IN", $primaries);
+            if ($model) {
+                $table->where("NOT $pk IN", [$model->getPrimary()]);
             }
             $usage += $table->sum($column);
         }

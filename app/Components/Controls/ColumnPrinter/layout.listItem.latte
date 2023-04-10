@@ -1,13 +1,13 @@
-{layout './layout.latte'}
-{define content}
-    <li class="list-group-item">
-        <div class="row">
-            <b class="col-6">{$title}
-                {include description}
-            </b>
-            <span class="col-6">
-                {$html}
+{varType Fykosak\NetteORM\Model $model}
+{varType int $userPermission}
+{varType string $name}
+<li class="list-group-item">
+    <div class="row">
+        <b class="col-6">
+            {control $control:templateString '@' . $name . ':title',$model,$userPermission}
+        </b>
+        <span class="col-6">
+                 {control $control:templateString '@' . $name,$model,$userPermission}
             </span>
-        </div>
-    </li>
-{/define}
+    </div>
+</li>

@@ -12,6 +12,6 @@ export default class DateDisplay extends React.Component<OwnProps> {
     public render() {
         const {date, options} = this.props;
         const dateObject = new Date(date);
-        return <span>{dateObject.toLocaleDateString(translator.getBCP47(), options)}</span>;
+        return <span>{dateObject.toLocaleDateString(translator.getBCP47(), options)} {dateObject.toLocaleTimeString(translator.getBCP47(), options)}</span>;
     }
 }

@@ -37,8 +37,8 @@ abstract class SubmitTestCase extends DatabaseTestCase
     {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
-        $serviceTask = $this->getContainer()->getByType(TaskService::class);
-        $taskCategoryService = $this->getContainer()->getByType(TaskCategoryService::class);
+        $serviceTask = $this->container->getByType(TaskService::class);
+        $taskCategoryService = $this->container->getByType(TaskCategoryService::class);
         $this->taskAll = $serviceTask->storeModel([
             'label' => '1',
             'series' => '1',
@@ -79,7 +79,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         ]);
 
         $this->person = $this->createPerson('Matyáš', 'Korvín', null, []);
-        $this->contestant = $this->getContainer()->getByType(ContestantService::class)->storeModel([
+        $this->contestant = $this->container->getByType(ContestantService::class)->storeModel([
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->person->person_id,
@@ -95,7 +95,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function tearDown(): void
     {
-        $params = $this->getContainer()->getParameters();
+        $params = $this->container->getParameters();
         $dir = $params['upload']['root'];
         /** @var SplFileInfo $f */
         foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
@@ -158,7 +158,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function assertSubmit(ContestantModel $contestant, TaskModel $task): SubmitModel
     {
-        $submit = $this->getContainer()
+        $submit = $this->container
             ->getByType(SubmitService::class)
             ->getTable()
             ->where(['contestant_id' => $contestant->contestant_id, 'task_id' => $task->task_id])
@@ -169,7 +169,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function assertNotSubmit(ContestantModel $contestant, TaskModel $task): void
     {
-        $submit = $this->getContainer()
+        $submit = $this->container
             ->getByType(SubmitService::class)
             ->getTable()
             ->where(['contestant_id' => $contestant->contestant_id, 'task_id' => $task->task_id])

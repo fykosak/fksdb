@@ -19,7 +19,8 @@ use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
     ExportWebModel,
     SignaturesWebModel,
     ResultsWebModel,
-    StatsWebModel
+    StatsWebModel,
+    ContestsModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -48,6 +49,7 @@ class WebServiceModel
         'GetStats' => StatsWebModel::class,
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
+        'GetContests' => ContestsModel::class,
     ];
 
     public function __construct(Container $container, PasswordAuthenticator $authenticator)

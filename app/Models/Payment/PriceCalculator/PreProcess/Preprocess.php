@@ -10,6 +10,4 @@ use Fykosak\Utils\Price\MultiCurrencyPrice;
 interface Preprocess
 {
     public static function calculate(PaymentModel $modelPayment): MultiCurrencyPrice;
-
-    public static function getGridItems(PaymentModel $modelPayment): array;
 }

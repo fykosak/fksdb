@@ -8,10 +8,8 @@ use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class EventsGrid extends EntityGrid
 {
@@ -30,21 +28,26 @@ class EventsGrid extends EntityGrid
         ]);
     }
 
+    protected function getModels(): Selection
+    {
+        $value = parent::getModels();
+        $value->order('event.begin ASC');
+        return $value;
+    }
+
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('event.begin ASC');
+        parent::configure();
 
-        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event.application.list');
+        $this->addORMLink('event.application.list');
 
-        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
     }
 }

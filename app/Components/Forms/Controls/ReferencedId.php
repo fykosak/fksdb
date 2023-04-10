@@ -6,7 +6,8 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
+use FKSDB\Components\Forms\Controls\Schedule\ScheduleGroupField;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;
@@ -51,9 +52,9 @@ class ReferencedId extends HiddenField
 
         parent::__construct();
 
-        $this->monitor(Form::class, function (Form $form): void {
+        $this->monitor(IContainer::class, function (IContainer $container): void {
             if (!$this->attachedOnValidate) {
-                $form->onValidate[] = function () {
+                $container->onValidate[] = function () {
                     $this->createPromise();
                 };
                 $this->attachedOnValidate = true;
@@ -144,13 +145,13 @@ class ReferencedId extends HiddenField
         $promise = new Promise(function () use ($values, $referencedId): ?int {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues($values);
+                    $model = $this->handler->store((array)$values);
                     $this->setValue($model, true);
                     $this->modelCreated = true;
                     return $model->getPrimary();
                 } elseif ($referencedId) {
                     $model = $this->service->findByPrimary($referencedId);
-                    $this->handler->update($model, (array)$values);
+                    $this->handler->store((array)$values, $model);
                     $this->setValue($model, true);
                     return $referencedId;
                 } else {
@@ -162,7 +163,14 @@ class ReferencedId extends HiddenField
                 $this->addError($exception->getMessage());
                 $this->rollback();
                 throw $exception;
-            } catch (ExistingPaymentException $exception) {
+            } catch (ScheduleException $exception) {
+                if ($exception->group) {
+                    /** @var ScheduleGroupField $component */
+                    $component = $this->referencedContainer->getComponent('person_schedule')
+                        ->getComponent($exception->group->schedule_group_type->value)
+                        ->getComponent((string)$exception->group->schedule_group_id);
+                    $component->addError($exception->getMessage());
+                }
                 $this->addError($exception->getMessage());
                 $this->rollback();
                 throw $exception;

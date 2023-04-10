@@ -25,12 +25,12 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
         $this->orgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->org = $this->getContainer()->getByType(OrgService::class)->storeModel([
+        $this->org = $this->container->getByType(OrgService::class)->storeModel([
             'person_id' => $this->orgPerson->person_id,
             'contest_id' => 1,
             'since' => 0,
@@ -47,7 +47,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $html = $this->assertPageDisplay($response);
         Assert::contains('Tester_L', $html);
         Assert::contains('Testrovič_L', $html);
-        Assert::contains('Still organises', $html);
+        Assert::contains('Still organizes', $html);
     }
 
     public function testCreate(): void
@@ -57,8 +57,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
                 'person_id_container' => self::personToValues($this->person),
-                'since' => (string)1,
-                'order' => (string)0,
+                'since' => "1",
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -74,8 +74,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'since' => (string)2, // out of range
-                'order' => (string)0,
+                'since' => "2", // out of range
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -91,8 +91,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id' => null, // empty personId
-                'since' => (string)1,
-                'order' => (string)0,
+                'since' => "1",
+                'order' => "0",
                 'domain_alias' => 't',
             ],
         ]);
@@ -108,8 +108,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             OrgFormComponent::CONTAINER => [
                 'person_id' => (string)$this->orgPerson->person_id,
                 'person_id_container' => self::personToValues($this->person),
-                'since' => (string)1,
-                'order' => (string)2,
+                'since' => "1",
+                'order' => "2",
                 'domain_alias' => 'b',
             ],
         ], [
@@ -117,7 +117,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         /** @var OrgModel $org */
-        $org = $this->getContainer()
+        $org = $this->container
             ->getByType(OrgService::class)
             ->getTable()
             ->where(['org_id' => $this->org->org_id])
@@ -133,7 +133,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         $html = $this->assertPageDisplay($response);
         Assert::contains('Tester_L', $html);
         Assert::contains('Testrovič_L', $html);
-        Assert::contains('Still organises', $html);
+        Assert::contains('Still organizes', $html);
     }
 
     protected function getPresenterName(): string
@@ -143,13 +143,14 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
 
     private function countOrgs(): int
     {
-        return $this->getContainer()
+        return $this->container
             ->getByType(OrgService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');
     }
 }
+
 // phpcs:disable
 $testCase = new OrgPresenterTest($container);
 $testCase->run();

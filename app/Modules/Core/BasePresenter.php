@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
@@ -31,9 +30,7 @@ use Nette\DI\Container;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements
-    AutocompleteJSONProvider,
-    NavigablePresenter
+abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
 {
     /**
      * BackLink for tree construction for breadcrumbs.
@@ -256,23 +253,16 @@ abstract class BasePresenter extends Presenter implements
     public function getTitle(): PageTitle
     {
         if (!isset($this->pageTitle)) {
-            $method = $this->formatTitleMethod($this->getView());
-            if (method_exists($this, $method)) {
-                $this->pageTitle = $this->{$method}();
+            try {
+                $reflection = new \ReflectionClass($this);
+                $method = $reflection->getMethod('title' . $this->getView());
+                $this->pageTitle = $method->invoke($this);
+            } catch (\ReflectionException$exception) {
             }
         }
         $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
-    }
-
-    /**
-     * Formats title method name.
-     * Method should set the title of the page using setTitle method.
-     */
-    protected static function formatTitleMethod(string $view): string
-    {
-        return 'title' . $view;
     }
 
     protected function getDefaultSubTitle(): ?string
@@ -313,9 +303,9 @@ abstract class BasePresenter extends Presenter implements
         return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    protected function createComponentValuePrinter(): ColumnRendererComponent
     {
-        return new ColumnPrinterComponent($this->getContext());
+        return new ColumnRendererComponent($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent

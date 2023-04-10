@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FKSDB\Tests\Events\FormAdjustments;
+
+// phpcs:disable
+$container = require '../../Bootstrap.php';
+
+// phpcs:enable
+
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use Nette\Application\Request;
+use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Template;
+use Nette\Utils\DateTime;
+use Tester\Assert;
+use Tester\DomQuery;
+
+class PrimaryLast extends ResourceAvailabilityTestCase
+{
+
+    private EventParticipantModel $app;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $person = $this->createPerson(
+            'Paní',
+            'Černá',
+            ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
+        $this->app = $this->getContainer()->getByType(EventParticipantService::class)->storeModel(
+            [
+                'person_id' => $person->person_id,
+                'event_id' => $this->event->event_id,
+                'status' => 'applied',
+                'accomodation' => 1,
+            ]
+        );
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel([
+            'event_participant_id' => $this->app->event_participant_id,
+            'e_dsef_group_id' => 1,
+        ]);
+        $this->authenticatePerson($person, $this->fixture);
+    }
+
+    public function testDisplay(): void
+    {
+        $request = new Request('Public:Application', 'GET', [
+            'action' => 'default',
+            'lang' => 'cs',
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->event->event_id,
+            'id' => (string)$this->app->event_participant_id,
+        ]);
+
+        $response = $this->fixture->run($request);
+        Assert::type(TextResponse::class, $response);
+        /** @var TextResponse $response */
+        $source = $response->getSource();
+        Assert::type(Template::class, $source);
+
+        $html = (string)$source;
+        $dom = DomQuery::fromHtml($html);
+        Assert::true((bool)$dom->xpath('//input[@name="participant[accomodation]"]'));
+        Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
+    }
+
+    protected function getCapacity(): int
+    {
+        return 3;
+    }
+}
+
+// phpcs:disable
+$testCase = new PrimaryLast($container);
+$testCase->run();
+// phpcs:enable

@@ -1,5 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Authorization\Grant[] $roles}
+{block headline}{_'Roles'}{/block}
 {block content}
     {if count($roles)}
         <ul class="list-group list-group-flush">

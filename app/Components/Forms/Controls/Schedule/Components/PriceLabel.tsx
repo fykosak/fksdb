@@ -1,0 +1,18 @@
+import { translator } from '@translator/translator';
+import { Price } from 'FKSDB/Models/Payment/price';
+import PricePrinter from 'FKSDB/Models/ValuePrinters/PricePrinter';
+import * as React from 'react';
+
+interface OwnProps {
+    price: Price;
+}
+
+export default class PriceLabel extends React.Component<OwnProps> {
+
+    public render() {
+        const {price} = this.props;
+        return <small className="ms-3">
+            {translator.getText('Price')}: <PricePrinter price={price}/>
+        </small>;
+    }
+}

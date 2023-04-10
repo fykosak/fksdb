@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
@@ -65,7 +64,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getContext()->getParameters()['forms']['registerContestant' .
