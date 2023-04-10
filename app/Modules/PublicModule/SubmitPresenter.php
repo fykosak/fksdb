@@ -161,7 +161,11 @@ class SubmitPresenter extends BasePresenter
     protected function createComponentQuizDetail(): QuizAnswersGrid
     {
         $submit = $this->submitService->findByPrimary($this->id);
-        return new QuizAnswersGrid($this->getContext(), $submit, $submit->task->submit_deadline->getTimestamp() < time());
+        return new QuizAnswersGrid(
+            $this->getContext(),
+            $submit,
+            $submit->task->submit_deadline->getTimestamp() < time()
+        );
     }
 
     /**
