@@ -1,0 +1,30 @@
+version: "3.0"
+
+services:
+  database:
+    build:
+      context: ..
+      dockerfile: containers/database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: foofoo
+      MYSQL_DATABASE: fksdb
+    volumes:
+      - db_data:/var/lib/mysql
+  app:
+    build:
+      context: ..
+      dockerfile: containers/app/Dockerfile
+    environment:
+      MYSQL_HOST: database
+      MYSQL_USER: root
+      MYSQL_PASSWORD: foofoo
+      MYSQL_DATABASE: fksdb
+    volumes:
+      - ..:/srv/fksdb
+      - ./logs/apache:/var/log/export
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_data:
+

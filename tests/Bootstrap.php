@@ -53,6 +53,9 @@ class Bootstrap
             ->addDirectory(LIBS_DIR)
             ->addDirectory(TESTS_DIR)
             ->register();
+        $configurator->addDynamicParameters([
+            'env' => getenv(),
+	]);
 
 // Create Dependency Injection container from config.neon file
         $configurator->addConfig(APP_DIR . '/config/config.neon');

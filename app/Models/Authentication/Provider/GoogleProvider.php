@@ -16,7 +16,7 @@ class GoogleProvider extends Google
     /**
      * @throws InvalidLinkException
      */
-    public function __construct(string $clientId, string $clientSecret, LinkGenerator $linkGenerator)
+    public function __construct(?string $clientId, ?string $clientSecret, LinkGenerator $linkGenerator)
     {
         parent::__construct([
             'clientId' => $clientId,
