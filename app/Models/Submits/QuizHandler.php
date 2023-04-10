@@ -49,6 +49,8 @@ class QuizHandler
                 'source' => SubmitSource::QUIZ,
                 'task_id' => $task->task_id,
                 'contestant_id' => $contestant->contestant_id,
+                'raw_points' => null,
+                'calc_points' => null,
                 'corrected' => false,
             ]);
         }
