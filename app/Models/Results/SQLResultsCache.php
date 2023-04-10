@@ -75,5 +75,6 @@ class SQLResultsCache
                 }
             }
         }
+        $this->recalculate($contestYear);
     }
 }

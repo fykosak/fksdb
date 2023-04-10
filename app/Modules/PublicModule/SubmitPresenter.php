@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
@@ -28,6 +29,7 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
@@ -70,8 +72,9 @@ class SubmitPresenter extends BasePresenter
 
     public function authorizedQuizDetail(): void
     {
+        $submit = $this->submitService->findByPrimary($this->id);
         $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed('submit', 'download.corrected', $this->getSelectedContest())
+            $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest())
         );
     }
 
@@ -107,6 +110,8 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
+    /* ********************** RENDER **********************/
+
     final public function renderDefault(): void
     {
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
@@ -114,24 +119,20 @@ class SubmitPresenter extends BasePresenter
         $this->template->hasForward = !$hasTasks;
     }
 
-    /**
-     * @throws TaskNotFoundException
-     * @throws SubmitNotQuizException
-     */
-    final public function renderQuizDetail(): void
+    private function getAvailableTasks(): TypedGroupedSelection
     {
-        $submit = $this->submitService->findByPrimary($this->id);
-        if (!isset($submit)) {
-            throw new TaskNotFoundException(_('Submit not found.'));
-        }
-        if (!$submit->isQuiz()) {
-            throw new SubmitNotQuizException($submit);
-        }
-
-        $this->template->submit = $submit;
-        $this->template->questions = $submit->task->getQuestions()->order('label');
-        $this->template->showResults = $submit->task->submit_deadline->getTimestamp() < time();
+        return $this->getSelectedContestYear()->getTasks()
+            ->where('submit_start IS NULL OR submit_start < NOW()')
+            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
+            ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
+
+    final public function renderAjax(): void
+    {
+        $this->template->availableTasks = $this->getAvailableTasks();
+    }
+
+    /* ********************** COMPONENTS **********************/
 
     /**
      * @throws TaskNotFoundException
@@ -153,17 +154,14 @@ class SubmitPresenter extends BasePresenter
         return new QuizComponent($this->getContext(), $task, $this->getContestant());
     }
 
-    private function getAvailableTasks(): TypedGroupedSelection
+    /**
+     * @throws TaskNotFoundException
+     * @throws SubmitNotQuizException
+     */
+    protected function createComponentQuizDetail(): QuizAnswersGrid
     {
-        return $this->getSelectedContestYear()->getTasks()
-            ->where('submit_start IS NULL OR submit_start < NOW()')
-            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
-            ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
-    }
-
-    final public function renderAjax(): void
-    {
-        $this->template->availableTasks = $this->getAvailableTasks();
+        $submit = $this->submitService->findByPrimary($this->id);
+        return new QuizAnswersGrid($this->getContext(), $submit, $submit->task->submit_deadline->getTimestamp() < time());
     }
 
     /**
