@@ -105,7 +105,7 @@ abstract class AESOPModel
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
             'end-year' => $history->study_year
-                ? (StudyYear::tryFromLegacy($history->study_year))->getGraduationYear($history->ac_year)
+                ? $this->contestYear->getGraduationYear(StudyYear::tryFromLegacy($history->study_year))
                 : null,
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),

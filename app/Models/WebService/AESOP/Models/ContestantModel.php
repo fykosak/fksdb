@@ -7,6 +7,7 @@ namespace FKSDB\Models\WebService\AESOP\Models;
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -159,6 +160,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear($studyYear);
+        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
     }
 }

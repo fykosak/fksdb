@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
@@ -38,7 +39,7 @@ class StudyYearColumnFactory extends ColumnFactory
             $hsYears[$studyYear] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                $contestYear->getGraduationYear($studyYear)
+                $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear))
             );
         }
 
@@ -47,7 +48,7 @@ class StudyYearColumnFactory extends ColumnFactory
             $primaryYears[$studyYear] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                $contestYear->getGraduationYear($studyYear)
+                $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear))
             );
         }
 

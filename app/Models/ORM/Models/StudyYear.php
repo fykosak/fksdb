@@ -96,16 +96,6 @@ class StudyYear extends FakeStringEnum implements EnumColumn
         return Strings::startsWith($this->value, 'H');
     }
 
-    public function getGraduationYear(int $acYear): ?int
-    {
-        if ($this->isHighSchool()) {
-            return $acYear + 5 - $this->numeric();
-        } elseif ($this->isPrimarySchool()) {
-            return $acYear + 14 - $this->numeric();
-        }
-        return null;
-    }
-
     public static function tryFromLegacy(?int $studyYear): ?self
     {
         if (is_null($studyYear)) {
