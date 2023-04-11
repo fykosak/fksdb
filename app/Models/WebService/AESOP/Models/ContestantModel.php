@@ -160,6 +160,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear($studyYear);
+        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
     }
 }
