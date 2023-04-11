@@ -32,6 +32,9 @@ class TeamMemberModel extends Model
         ];
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('participant');

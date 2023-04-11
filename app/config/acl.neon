@@ -50,7 +50,7 @@ acl:
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
-    - addResource(event)         # create, edit, list, application
+    - addResource(event)         # create, edit, list
     - addResource(teacher)       # create, edit, list, detail
     - addResource(emailMessage)  # list, detail
     - addResource(chart)         # list, chart
@@ -62,21 +62,21 @@ acl:
     - addResource(fyziklani.team)     # route, list, detail, org-edit, org-create, org-detail
 
     #fyziklani
-    - addResource(fyziklani.dashboard)  # default
-    - addResource(fyziklani.task)       # list
-    - addResource(fyziklani.close)      # default, hard
-    - addResource(fyziklani.presentation)# default
-    - addResource(fyziklani.submit)     # create, edit, list, detail, revoke,
-    - addResource(fyziklani.gameSetup)  # deafult
-    - addResource(fyziklani.diplomas)   # calculate, results
-    - addResource(fyziklani.seating)    # default
-    - addResource(fyziklani.statistics) # default
+    - addResource(game.dashboard)  # default
+    - addResource(game.task)       # list
+    - addResource(game.close)      # default, hard
+    - addResource(game.presentation)# default
+    - addResource(game.submit)     # create, edit, list, detail, revoke,
+    - addResource(game.gameSetup)  # deafult
+    - addResource(game.diplomas)   # calculate, results
+    - addResource(game.seating)    # default
+    - addResource(game.statistics) # default
     #event module
     - addResource(event.application) # import
     - addResource(event.dashboard)   # default
     - addResource(event.schedule)    # default
     - addResource(event.model)       # default
-    - addResource(event.payment)     # create, edit, list, detail, delete
+    - addResource(event.payment)     # create, edit, list, detail, delete, org-create, org-edit
 
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
@@ -161,17 +161,17 @@ acl:
 ## FYZIKLANI MODULE
     #base for org
 
-    - allow([org,event.org], fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
-    - allow([org,event.org], fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # može pozerať úlohy
-    - allow([org,event.org], fyziklani.close, default) # not hard!
-    - allow([org,event.org], fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
-    - allow([org,event.org], fyziklani.diplomas, results) # môže pozerať definitívne výsledky
+    - allow([org,event.org], game.dashboard, ::constant(Nette\Security\Permission::ALL))
+    - allow([org,event.org], game.task, ::constant(Nette\Security\Permission::ALL)) # može pozerať úlohy
+    - allow([org,event.org], game.close, default) # not hard!
+    - allow([org,event.org], game.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
+    - allow([org,event.org], game.diplomas, results) # môže pozerať definitívne výsledky
     # specific ACL
-    - allow(org, fyziklani.presentation, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
-    - allow(org, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
-    - allow(org, fyziklani.statistics, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, fyziklani.seating, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, fyziklani.diplomas, ::constant(Nette\Security\Permission::ALL)) # môže pozerať definitívne výsledky
+    - allow(org, game.presentation, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
+    - allow(org, game.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
+    - allow(org, game.statistics, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, game.seating, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, game.diplomas, ::constant(Nette\Security\Permission::ALL)) # môže pozerať definitívne výsledky
 
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))

@@ -30,12 +30,13 @@ class EvaluationFykos2011 extends EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         if (is_null($submit->raw_points)) {
             return null;
         }
-        return $this->getMultiplyCoefficient($submit->task, $category) * $submit->raw_points;
+        return $this->getMultiplyCoefficient($submit->task, $submit->contestant->contest_category) *
+            $submit->raw_points;
     }
 
     /**

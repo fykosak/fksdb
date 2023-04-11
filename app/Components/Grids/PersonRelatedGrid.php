@@ -4,22 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class PersonRelatedGrid extends BaseGrid
+class PersonRelatedGrid extends Grid
 {
-
     protected PersonModel $person;
     protected array $definition;
     protected int $userPermissions;
@@ -32,38 +25,28 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
-    /**
-     * @return IDataSource
-     * @throws BadTypeException
-     */
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
         $query = $this->person->related($this->definition['table']);
-        if (!$query instanceof TypedGroupedSelection) {
-            throw new BadTypeException(TypedGroupedSelection::class, $query);
-        }
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
-        return new NDataSource($query);
+        return $query;
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
+
         $this->paginate = false;
-        parent::configure($presenter);
-        $this->addColumns($this->definition['rows'], $this->userPermissions);
+        $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {
-            $this->addLink($link);
+            $this->addORMLink($link);
         }
-        $this->addCSVDownloadButton();
+        // $this->addCSVDownloadButton();
     }
 }

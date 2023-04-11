@@ -5,7 +5,7 @@
     <p>{$event->report}</p>
     <hr/>
     {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end','event.registration_begin','event.registration_end'] as $fieldName}
-        {control valuePrinter:row $fieldName, $event}
+        {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$event,userPermission:1024,name:'@' . $fieldName,printer:$control['valuePrinter']}
     {/foreach}
     <a class="btn btn-outline-secondary mt-3"
        href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>

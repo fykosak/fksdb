@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -122,9 +121,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function label(): string
     {
         switch ($this->value) {
@@ -179,6 +175,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             case self::SPARE3:
                 return _('Spare 3');
         }
-        throw new NotImplementedException();
+        return $this->value;
     }
 }

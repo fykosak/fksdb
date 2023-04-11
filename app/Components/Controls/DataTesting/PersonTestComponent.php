@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\DataTesting;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
+use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\DataTesting\TestLog;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent
@@ -59,7 +59,7 @@ class PersonTestComponent extends BaseComponent
         $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
             ->addRule(Form::INTEGER, _('Must be a int'))
             ->setDefaultValue($this->endId);
-        $levelsContainer = new ContainerWithOptions();
+        $levelsContainer = new ContainerWithOptions($this->container);
         $levelsContainer->setOption('label', _('Level'));
 
         foreach (TestLog::getAvailableLevels() as $level) {
@@ -70,7 +70,7 @@ class PersonTestComponent extends BaseComponent
         }
         $form->addComponent($levelsContainer, 'levels');
 
-        $testsContainer = new ContainerWithOptions();
+        $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
             $field = $testsContainer->addCheckbox((string)$key, $test->title);

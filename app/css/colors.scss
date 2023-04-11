@@ -1,12 +1,17 @@
 /* general setting */
-@import "/node_modules/bootstrap/scss/mixins/buttons";
-@import "/node_modules/bootstrap/scss/functions";
+@import "/node_modules/bootstrap/scss/bootstrap";
 @import "./mixins/navigation-item";
 
-$fOFMainColor: #e6060d;
-$fOLMainColor: rgb(0, 174, 107);
+$fofMainColor: #e6060d;
+$folMainColor: rgb(0, 174, 107);
 $fykosMainColor: #1175da;
 $vyfukMainColor: #ff4800;
+$ctyrbojColor: #00a6cc;
+
+$fofColor: #e6060d;
+$folColor: #00ae6b;
+$fykosColor: #1175da;
+$dsefColor: #f2b72b;
 
 $fyziklaniPoints5: #2d7dd2;
 $fyziklaniPoints3: #98cc04;
@@ -26,6 +31,15 @@ $fyziklaniPoints1: #f45d01;
   }
   .text-#{$index} {
     color: $color;
+  }
+  $alert-background: shift-color($color, $alert-bg-scale);
+  $alert-border: shift-color($color, $alert-border-scale);
+  $alert-color: shift-color($color, $alert-color-scale);
+  @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
+    $alert-color: mix($color, color-contrast($alert-background), abs($alert-color-scale));
+  }
+  .alert-#{$index} {
+    @include alert-variant($alert-background, $alert-border, $alert-color);
   }
 }
 

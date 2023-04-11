@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\DataTesting;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -12,15 +13,12 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\UI\Presenter;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class PersonsGrid extends BaseGrid
+class PersonsGrid extends Grid
 {
-
     private PersonService $personService;
 
     private DataTestingFactory $dataTestingFactory;
@@ -31,27 +29,32 @@ class PersonsGrid extends BaseGrid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        return new NDataSource($this->personService->getTable());
+        return $this->personService->getTable();
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->id, $test->title)->setRenderer(function ($person) use ($test): Html {
-                $logger = new MemoryLogger();
-                $test->run($logger, $person);
-                return self::createHtmlLog($logger->getMessages());
-            });
+            $this->addColumn(
+                new RendererBaseItem(
+                    $this->container,
+                    function ($person) use ($test): Html {
+                        $logger = new MemoryLogger();
+                        $test->run($logger, $person);
+                        return self::createHtmlLog($logger->getMessages());
+                    },
+                    new Title(null, $test->title)
+                ),
+                $test->id
+            );
         }
     }
 

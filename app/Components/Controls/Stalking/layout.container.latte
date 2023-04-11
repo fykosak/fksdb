@@ -45,14 +45,18 @@
 {/define}
 
 {define contests}
-    <h3>{_'Contestants'}</h3>
-    {control contestantBasesGrid}
     <h3>{_'Task contribution'}</h3>
     {control taskContributionsGrid}
-    <div class="card-columns mt-3">
-
-        {control stalkingComponent "org"}
-        {control role}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control orgList}
+        </div>
+        <div class="col">
+            {control role}
+        </div>
+        <div class="col">
+            {control contestantBasesGrid}
+        </div>
     </div>
 {/define}
 

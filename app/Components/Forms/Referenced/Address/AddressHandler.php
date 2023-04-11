@@ -34,10 +34,12 @@ class AddressHandler extends ReferencedHandler
         $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
-    public function store(array $values, ?Model $model = null): AddressModel
+    public function store(array $values, ?Model $model = null): ?AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
-
+        if (!isset($data['target']) || !isset($data['city'])) {
+            return null;
+        }
         if (!isset($data['country_id'])) {
             $countryData = $this->inferCountry($data['postal_code']);
             if ($countryData) {
@@ -51,10 +53,10 @@ class AddressHandler extends ReferencedHandler
             in_array($data['country_id'], [CountryService::SLOVAKIA, CountryService::CZECH_REPUBLIC]) &&
             !isset($data['postal_code'])
         ) {
-            throw new InvalidAddressException(_('PSC is required for Czech and Slovak'));
+            throw new InvalidAddressException(_('ZIP code is required for Czech and Slovak'));
         }
         // $this->findModelConflicts($model, $data, null);
-        return $this->addressService->storeModel($data, $model, false);
+        return $this->addressService->storeModel($data, $model);
     }
 
     public function inferCountry(?string $postalCode): ?array
@@ -76,7 +78,7 @@ class AddressHandler extends ReferencedHandler
             if (strlen($postalCode) != 5) {
                 return null;
             }
-            Debugger::log("Czechoslovak PSC not found '$postalCode'", Debugger::WARNING);
+            Debugger::log("Czechoslovak ZIP code not found '$postalCode'", Debugger::WARNING);
             $firstChar = substr($postalCode, 0, 1);
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {

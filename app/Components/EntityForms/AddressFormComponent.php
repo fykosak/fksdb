@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -18,6 +19,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * @property PostContactModel $model
@@ -61,6 +63,9 @@ class AddressFormComponent extends EntityFormComponent
                 $values[self::CONTAINER],
                 isset($this->model) ? $this->model->address : null
             );
+            if (!$address) {
+                throw new InvalidStateException(_('Address is required'));
+            }
             if (!isset($this->model)) {
                 $this->postContactService->storeModel(
                     [
@@ -85,6 +90,9 @@ class AddressFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @throws BadTypeException
+     */
     protected function setDefaults(): void
     {
         /** @var AddressDataContainer $container */

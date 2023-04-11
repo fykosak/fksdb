@@ -44,7 +44,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
@@ -52,7 +52,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
@@ -60,24 +60,24 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka4@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ContestantService::class)->storeModel(
+        $this->container->getByType(ContestantService::class)->storeModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
         );
 
         $this->event = $this->createEvent([]);
-        $task = $this->getContainer()->getByType(TaskService::class)->storeModel([
+        $task = $this->container->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
 
-        $team = $this->getContainer()->getByType(TeamService2::class)->storeModel([
+        $team = $this->container->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submit = $this->getContainer()->getByType(SubmitService::class)->storeModel([
+        $this->submit = $this->container->getByType(SubmitService::class)->storeModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
             'points' => 5,
@@ -89,11 +89,11 @@ class Authorization extends FyziklaniTestCase
     public function getTestData(): array
     {
         return [
-            [fn() => null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perPerson, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perOrg, 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
-            [fn() => $this->perOrgOther, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perContestant, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perPerson, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perOrg, 'Game:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrgOther, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perContestant, 'Game:Submit', ['create', 'edit', 'list'], false],
         ];
     }
 

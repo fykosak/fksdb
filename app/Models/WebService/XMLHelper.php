@@ -16,6 +16,9 @@ class XMLHelper
         throw new InvalidArgumentException();
     }
 
+    /**
+     * @throws \DOMException
+     */
     public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void
     {
         foreach ($data as $key => $datum) {
@@ -25,6 +28,9 @@ class XMLHelper
         }
     }
 
+    /**
+     * @throws \DOMException
+     */
     public static function fillArrayArgumentsToNode(
         string $attrName,
         array $data,

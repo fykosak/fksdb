@@ -102,6 +102,12 @@ class SubmitHandlerFactory
         return $submit;
     }
 
+    public function getUserStudyYear(ContestantModel $contestant): ?int
+    {
+        $personHistory = $contestant->getPersonHistory();
+        return (isset($personHistory->study_year)) ? $personHistory->study_year : null;
+    }
+
     public function handleQuizSubmit(TaskModel $task, ContestantModel $contestant): SubmitModel
     {
         return $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::QUIZ));

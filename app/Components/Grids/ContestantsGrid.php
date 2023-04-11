@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class ContestantsGrid extends BaseGrid
+class ContestantsGrid extends Grid
 {
-
     private ContestYearModel $contestYear;
 
     public function __construct(Container $container, ContestYearModel $contestYear)
@@ -27,37 +23,39 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        return new NDataSource($this->contestYear->getContestants());
+        return $this->contestYear->getContestants()->order('person.other_name ASC');
     }
 
     /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
-        $this->setDefaultOrder('person.other_name ASC');
         $this->addColumns([
             'person.full_name',
             'contestant.contest_category',
             'person_history.study_year',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(
-            fn(ContestantModel $row) => $row->getPersonHistory()->school->name_abbrev
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
+                    'school',
+                    'school'
+                )->render(
+                    $row->getPersonHistory(),
+                    1024
+                ),
+                new Title(null, _('School'))
+            ),
+            'school_name',
         );
 
-        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
-
-        $this->addGlobalButton('add', _('Create contestant'))
-            ->setLink($this->getPresenter()->link('create'));
 
         $this->paginate = false;
     }

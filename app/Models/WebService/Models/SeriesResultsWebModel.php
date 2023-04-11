@@ -60,7 +60,7 @@ class SeriesResultsWebModel extends WebModel
             $sum = 0;
             /** @var SubmitModel $submit */
             foreach ($contestant->getSubmitsForSeries($params['series']) as $submit) {
-                $points = $evaluationStrategy->getSubmitPoints($submit, $contestant->contest_category);
+                $points = $evaluationStrategy->getSubmitPoints($submit);
                 $sum += $points;
                 $submitsData[$submit->task_id] = $points;
             }
@@ -83,7 +83,7 @@ class SeriesResultsWebModel extends WebModel
             $sameRank = [];
             foreach ($values as $index => &$value) {
                 $toRank = $index + 1;
-                $sameRank[] =& $value;
+                $sameRank[] = &$value;
                 if (!isset($values[$index + 1]) || $value['sum'] !== $values[$index + 1]['sum']) {
                     foreach ($sameRank as &$sameValue) {
                         $sameValue['rank'] = [$fromRank, $toRank];

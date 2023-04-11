@@ -25,6 +25,6 @@ class EmailColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new EmailPrinter())($model->{$this->getModelAccessKey()});
+        return (new EmailPrinter())($model->{$this->modelAccessKey});
     }
 }

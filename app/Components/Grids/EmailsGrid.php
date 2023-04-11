@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class EmailsGrid extends EntityGrid
 {
@@ -26,16 +23,21 @@ class EmailsGrid extends EntityGrid
         ]);
     }
 
+    protected function getModels(): Selection
+    {
+        $value = parent::getModels();
+        $value->order('created DESC');
+        return $value;
+    }
+
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('created DESC');
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        parent::configure();
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }
 }

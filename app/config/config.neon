@@ -121,7 +121,8 @@ database:
 application:
     errorPresenter: Core:Error
     mapping:
-        Fyziklani: FKSDB\Modules\EventModule\Fyziklani\*Presenter
+        Game: FKSDB\Modules\EventModule\Game\*Presenter
+        Schedule: FKSDB\Modules\EventModule\Schedule\*Presenter
         Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:

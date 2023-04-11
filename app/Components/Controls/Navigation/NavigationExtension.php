@@ -20,11 +20,6 @@ class NavigationExtension extends CompilerExtension
         $navbar->addSetup('setStructure', [$this->createFromStructure($config['structure'])]);
     }
 
-    private function createNode(string $nodeId, array $arguments): array
-    {
-        return $this->parseIdAsLink($nodeId, $arguments);
-    }
-
     private function createFromStructure(array $structure): array
     {
         $structureData = [];
@@ -38,17 +33,14 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
-    private function parseIdAsLink(string $nodeId, array $arguments): array
+    private function createNode(string $nodeId, array $arguments): array
     {
-        $data = $arguments;
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');
-        $presenterName = substr($fullQualityAction, 0, $a);
-        $action = substr($fullQualityAction, $a + 1);
-        $data['linkPresenter'] = $presenterName;
-        $data['linkAction'] = $action;
-        $data['linkParams'] = $arguments['params'] ?? [];
-        unset($data['params']);
-        return $data;
+        return [
+            'presenter' => substr($fullQualityAction, 0, $a),
+            'action' => substr($fullQualityAction, $a + 1),
+            'params' => $arguments['params'] ?? [],
+        ];
     }
 }

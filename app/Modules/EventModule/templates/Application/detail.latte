@@ -2,6 +2,7 @@
     {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
     {varType array $groups}
     {varType bool $hasSchedule}
+    {varType bool $isOrg}
     <h2>{_'Base info'}</h2>
     {control valuePrinter:row 'person.person_link', $model}
     {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
@@ -23,6 +24,8 @@
         {control personScheduleGrid $model->person,$model->event}
     {/if}
     {include ../AbstractApplication/applicationControl.latte}
-    <h2>{_'Transitions'}</h2>
-    {control applicationTransitions}
+    {if $isOrg}
+        <h2>{_'Transitions'}</h2>
+        {control applicationTransitions}
+    {/if}
 {/block}

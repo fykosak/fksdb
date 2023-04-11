@@ -6,21 +6,22 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
-use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\ParameterService;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -113,9 +114,14 @@ class StoredQueryFormComponent extends EntityFormComponent
      */
     private function createMetadata(?ControlGroup $group = null): ModelContainer
     {
-        $container = $this->reflectionFormFactory->createContainer(
+        $container = $this->reflectionFormFactory->createContainerWithMetadata(
             'stored_query',
-            ['name', 'qid', 'tags', 'description']
+            [
+                'name' => ['required' => true],
+                'qid' => ['required' => false],
+                'tags' => ['required' => false],
+                'description' => ['required' => false],
+            ]
         );
         $container->setCurrentGroup($group);
         return $container;
@@ -125,9 +131,9 @@ class StoredQueryFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createConsole(?ControlGroup $group = null): ModelContainer
+    private function createConsole(?ControlGroup $group = null): ContainerWithOptions
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
         $container->setCurrentGroup($group);
         $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
         $container->addComponent($control, 'sql');

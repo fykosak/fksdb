@@ -92,6 +92,9 @@ class ApplicationHandler
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function onlyExecute(BaseHolder $holder, string $explicitTransitionName): void
     {
         try {
@@ -115,6 +118,9 @@ class ApplicationHandler
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     private function innerStoreAndExecute(
         BaseHolder $holder,
         ?ArrayHash $data,
@@ -137,9 +143,7 @@ class ApplicationHandler
 
             if ($execute === self::STATE_OVERWRITE) {
                 if (isset($data[$holder->name]['status'])) {
-                    $holder->setModelState(
-                        $data[$holder->name]['status']
-                    );
+                    $holder->setModelState(EventParticipantStatus::tryFrom($data[$holder->name]['status']));
                 }
             }
 

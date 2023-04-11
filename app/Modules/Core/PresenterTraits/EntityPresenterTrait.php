@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -177,5 +176,5 @@ trait EntityPresenterTrait
     /**
      * @throws NotImplementedException
      */
-    abstract protected function createComponentGrid(): BaseGrid;
+    abstract protected function createComponentGrid(): Control;
 }

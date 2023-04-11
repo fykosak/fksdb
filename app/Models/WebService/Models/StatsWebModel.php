@@ -48,35 +48,32 @@ class StatsWebModel extends WebModel
         $doc->appendChild($statsNode);
         $model = new TaskStatsModel($contestYear, $this->contestYearService->explorer);
 
-        if (isset($args->series)) {
-            if (!is_array($args->series)) {
-                $args->series = [$args->series];
-            }
-            foreach ($args->series as $series) {
-                $seriesNo = $series->series;
-                $model->series = $seriesNo;
-                $tasks = $series->{'_'};
-                /** @var TaskModel $task */
-                foreach ($model->getData(explode(' ', $tasks)) as $task) {
-                    $taskNode = $doc->createElement('task');
-                    $statsNode->appendChild($taskNode);
+        if (!is_array($args->series)) {
+            $args->series = [$args->series];
+        }
+        foreach ($args->series as $series) {
+            $seriesNo = $series->series;
+            $model->series = $seriesNo;
+            $tasks = $series->{'_'};
+            /** @var TaskModel $task */
+            foreach ($model->getData(explode(' ', $tasks)) as $task) {
+                $taskNode = $doc->createElement('task');
+                $statsNode->appendChild($taskNode);
 
-                    $taskNode->setAttribute('series', (string)$seriesNo);
-                    $taskNode->setAttribute('label', (string)$task->label);
-                    $taskNode->setAttribute('tasknr', (string)$task->tasknr);
+                $taskNode->setAttribute('series', (string)$seriesNo);
+                $taskNode->setAttribute('label', $task->label);
+                $taskNode->setAttribute('tasknr', (string)$task->tasknr);
 
-                    $node = $doc->createElement('points', (string)$task->points);
-                    $taskNode->appendChild($node);
+                $node = $doc->createElement('points', (string)$task->points);
+                $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('solvers', (string)$task->task_count);
-                    $taskNode->appendChild($node);
+                $node = $doc->createElement('solvers', (string)$task->task_count);
+                $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('average', (string)$task->task_avg);
-                    $taskNode->appendChild($node);
-                }
+                $node = $doc->createElement('average', (string)$task->task_avg);
+                $taskNode->appendChild($node);
             }
         }
-
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);

@@ -18,43 +18,70 @@
     {control teamRestsControl $model}
     <hr/>
     <h2>{_'Info'}</h2>
-    {foreach [
-    'fyziklani_team.fyziklani_team_id',
-    'fyziklani_team.name',
-    'fyziklani_team.state',
-    'fyziklani_team.phone',
-    'fyziklani_team.note',
-    'fyziklani_team.password',
-    'fyziklani_team.category',
-    'fyziklani_team.created',
-    'fyziklani_team.game_lang',
-    'fyziklani_team.force_a',
-    ] as $field}
-        {control valuePrinter:row $field, $model}
+    {var $fiels = []}
+    {switch $event->event_type_id}
+        {case 1}
+        {php $fiels = [
+        'fyziklani_team.fyziklani_team_id',
+        'fyziklani_team.name',
+        'fyziklani_team.state',
+        'fyziklani_team.phone',
+        'fyziklani_team.note',
+        'fyziklani_team.password',
+        'fyziklani_team.category',
+        'fyziklani_team.created',
+        'fyziklani_team.game_lang',
+        'fyziklani_team.force_a',
+        ]}
+        {case 9}
+        {php $fiels = [
+        'fyziklani_team.fyziklani_team_id',
+        'fyziklani_team.name',
+        'fyziklani_team.state',
+        'fyziklani_team.category',
+        'fyziklani_team.created',
+        ]}
+        {case 17}
+        {php $fiels = [
+        'fyziklani_team.fyziklani_team_id',
+        'fyziklani_team.name',
+        'fyziklani_team.state',
+        ]}
+    {/switch}
+    {foreach $fiels as $field}
+        <div class="row">
+            <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
+            <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+        </div>
     {/foreach}
     <hr/>
 
-    <h2>{_'Rank & points'}</h2>
     {if $rankVisible}
+        <h2>{_'Rank & points'}</h2>
         {foreach ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'] as $field}
-            {control valuePrinter:row $field, $model}
+            <div class="row">
+                <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
+                <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+            </div>
         {/foreach}
-    {else}
-        <span class="badge bg-info">{_'Results is not accessible.'}</span>
+        <hr/>
     {/if}
-    <hr/>
     {if $isOrg}
         {control schoolCheck $model}
         <hr/>
     {/if}
-
-    <h2>{_'Teachers'}</h2>
-    {foreach $model->getTeachers() as $teacher}
-        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
-        {control valuePrinter:row 'person.person_link', $teacher}
-        {include personSchedule, person => $teacher->person,event=> $model->event}
-    {/foreach}
-    <hr/>
+    {if $event->event_type_id === 1}
+        {var $teacherCounter = 0;}
+        <h2>{_'Teachers'}</h2>
+        {foreach $model->getTeachers() as $teacher}
+            {php $teacherCounter++}
+            <h3>{_'Teacher'} #{$teacherCounter}</h3>
+            {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+            {control valuePrinter:row 'person.person_link', $teacher}
+            {include personSchedule, person => $teacher->person,event=> $model->event}
+        {/foreach}
+        <hr/>
+    {/if}
 
     <h2>{_'Participants'}</h2>
 
@@ -63,15 +90,10 @@
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         {php $counter++}
         {var $history = $member->getPersonHistory()}
-
-        <h3>{_'Parcipant'} {$counter}</h3>
-
+        <h3>{_'Parcipant'} #{$counter}</h3>
         {control valuePrinter:row 'person.person_link', $member}
-
         {control valuePrinter:row 'person_history.study_year', $history}
-
         {control valuePrinter:row 'school.school', $history}
-
         {include personSchedule, person => $member->person,event=>$model->event}
         <hr/>
     {/foreach}
@@ -83,9 +105,8 @@
     <h2>{_'Transitions'}</h2>
     {control applicationTransitions}
     <hr/>
-    {if $event->event_type_id === 1}
-        <h2>{_'Seating'}</h2>
-        {control seating:preview}
-    {/if}
-
+        {if $event->event_type_id === 1 && $isOrg}
+            <h2>{_'Seating'}</h2>
+            {control seating:preview}
+        {/if}
 {/block}

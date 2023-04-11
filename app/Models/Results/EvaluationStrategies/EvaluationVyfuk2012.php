@@ -7,6 +7,7 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
+
 /**
  * Introduced in Výfuk 2011 (1st official year).
  */
@@ -27,7 +28,7 @@ class EvaluationVyfuk2012 extends EvaluationStrategy
         return $task->points;
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         return $submit->raw_points;
     }

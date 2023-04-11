@@ -3,9 +3,9 @@
     Potvrzujeme přijetí přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->event}</em>,
     která se koná
     {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
-        {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'}.
+        {$holder->event->begin|date:'j. n. Y'}–{$holder->event->end|date:'j. n. Y'}.
     {else}
-        {$holder->event->begin|date:'j.n. Y'}.
+        {$holder->event->begin|date:'j. n. Y'}.
     {/if}
 </p>
 {include 'inc/eventEdit.cs.latte'}

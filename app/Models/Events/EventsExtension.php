@@ -20,6 +20,7 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsExtension;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Config\Loader;
@@ -94,6 +95,7 @@ class EventsExtension extends CompilerExtension
                             'label' => $translateExpressionType,
                             'afterExecute' => Expect::listOf($expressionType),
                             'beforeExecute' => Expect::listOf($expressionType),
+                            'validation' => $boolExpressionType(true)->default(true),
                             'behaviorType' => Expect::string('secondary'),
                         ])->castTo('array'),
                         Expect::string()
@@ -187,7 +189,7 @@ class EventsExtension extends CompilerExtension
             $factory = TransitionsExtension::createCommonTransition(
                 $this,
                 $this->getContainerBuilder(),
-                \FKSDB\Models\Transitions\Transition\Transition::class,
+                Transition::class,
                 $baseName,
                 $source,
                 $target,

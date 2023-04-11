@@ -1,6 +1,7 @@
 INSERT INTO contest (contest_id, name)
 VALUES (1, 'FYKOS'),
-       (2, 'VÝFUK');
+       (2, 'VÝFUK'),
+       (3, 'Vědecký čtyřboj');
 
 INSERT INTO `contest_category` (`contest_category_id`, `label`, `name_cs`, `name_en`)
 VALUES (1, 'FYKOS_1', 'Kategorie 1. ročníků', 'Category 1st study year'),
@@ -66,7 +67,8 @@ VALUES (1, 1, 'FYKOSí Fyziklání'),
        (12, 2, 'Podzimní setkání řešitelů'),
        (14, 1, 'Den s experimentální fyzikou 2'),
        (15, 2, 'Výfučí Kyberkoncil'),
-       (16, 1, 'FYKOSí Online Víkend');
+       (16, 1, 'FYKOSí Online Víkend'),
+       (17, 3, 'Vědecký čtyřboj');
 
 INSERT INTO `event_status` (`status`, `description`)
 VALUES ('applied', 'obecně přihlášen'),

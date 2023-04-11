@@ -64,7 +64,7 @@ class OrganizersWebModel extends WebModel
 
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->contestService->findByPrimary($params['contestId']);
+        $contest = $this->contestService->findByPrimary($params['contest_id']);
         $organisers = $contest->getOrganisers();
         if (isset($params['year'])) {
             $organisers->where('since<=?', $params['year'])
@@ -76,6 +76,7 @@ class OrganizersWebModel extends WebModel
             $items[] = [
                 'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
+                'email' => $org->person->getInfo()->email,
                 'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
                 'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
                 'career' => $org->person->getInfo()->career,

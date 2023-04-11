@@ -65,13 +65,13 @@ class ProductFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('warehouse_product', [
-            'name_cs',
-            'name_en',
-            'description_cs',
-            'description_en',
-            'category',
-            'note',
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_product', [
+            'name_cs' => ['required' => true],
+            'name_en' => ['required' => true],
+            'description_cs' => ['required' => true],
+            'description_en' => ['required' => true],
+            'category' => ['required' => true],
+            'note' => ['required' => true],
         ]);
         $producers = [];
         /** @var ProducerModel $producer */

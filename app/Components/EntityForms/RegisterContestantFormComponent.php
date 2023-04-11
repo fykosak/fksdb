@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -64,7 +64,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getContext()->getParameters()['forms']['registerContestant' .
@@ -114,8 +114,12 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
-            $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
-            $this->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            try {
+                $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            } catch (SendFailedException $exception) {
+                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
+            }
         }
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }

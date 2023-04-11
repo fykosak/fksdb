@@ -49,7 +49,7 @@ class EvaluationNullObject extends EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getSubmitPoints(SubmitModel $submit, ContestCategoryModel $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         throw new NotImplementedException();
     }

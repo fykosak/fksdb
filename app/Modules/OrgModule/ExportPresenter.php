@@ -6,15 +6,15 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -80,7 +80,7 @@ class ExportPresenter extends BasePresenter
      */
     public function titleExecute(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle');
+        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fa fa-play-circle');
     }
 
     /**
@@ -89,8 +89,7 @@ class ExportPresenter extends BasePresenter
      */
     public function actionExecute(): void
     {
-        $storedQuery = $this->getStoredQuery();
-        if ($storedQuery && $this->getParameter('qid')) {
+        if ($this->getParameter('qid')) {
             $parameters = [];
             foreach ($this->getParameters() as $key => $value) {
                 if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {
@@ -112,7 +111,7 @@ class ExportPresenter extends BasePresenter
      */
     final public function renderExecute(): void
     {
-        $this->template->model = $this->getStoredQuery()->getQueryPattern();
+        $this->template->model = $this->getStoredQuery()->queryPattern;
     }
 
     protected function startup(): void
@@ -177,7 +176,7 @@ class ExportPresenter extends BasePresenter
         return false;
     }
 
-    protected function createComponentGrid(): BaseGrid
+    protected function createComponentGrid(): Grid
     {
         throw new NotImplementedException();
     }

@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class EventWas extends EvaluatedExpression
 {
-    /**
-     * @param BaseHolder $holder
-     */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
+        [$holder] = $args;
         return $holder->event->begin->getTimestamp() <= time();
     }
 

@@ -69,6 +69,7 @@ class TransitionsExtension extends CompilerExtension
             ->addSetup('setSourceStateEnum', [$source])
             ->addSetup('setTargetStateEnum', [$target])
             ->addSetup('setLabel', [Helpers::translate($baseConfig['label'])])
+            ->addSetup('setValidation', [$baseConfig['validation']])
             ->addSetup(
                 'setBehaviorType',
                 [
@@ -80,9 +81,8 @@ class TransitionsExtension extends CompilerExtension
                 $factory->addSetup('addAfterExecute', [$callback]);
             }
         }
-
-        if (isset($transitionConfig['beforeExecute'])) {
-            foreach ($transitionConfig['beforeExecute'] as $callback) {
+        if (isset($baseConfig['beforeExecute'])) {
+            foreach ($baseConfig['beforeExecute'] as $callback) {
                 $factory->addSetup('addBeforeExecute', [$callback]);
             }
         }

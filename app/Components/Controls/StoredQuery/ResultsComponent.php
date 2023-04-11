@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\StoredQuery;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
@@ -50,7 +49,7 @@ class ResultsComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $parameters = $this->createParametersValues($this->storedQuery->getQueryPattern()->getParameters());
+        $parameters = $this->createParametersValues($this->storedQuery->queryPattern->getParameters());
         $form->addComponent($parameters, self::CONT_PARAMS);
 
         $form->addSubmit('execute', _('Execute'));
@@ -124,14 +123,13 @@ class ResultsComponent extends BaseComponent
      * @param ParameterModel[] $queryParameters
      * TODO
      */
-    private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer
+    private function createParametersValues(array $queryParameters): ContainerWithOptions
     {
-        $container = new ModelContainer();
-        $container->setCurrentGroup($group);
+        $container = new ContainerWithOptions($this->container);
 
         foreach ($queryParameters as $parameter) {
             $name = $parameter->name;
-            $subContainer = new ModelContainer();
+            $subContainer = new ContainerWithOptions($this->container);
             $container->addComponent($subContainer, $name);
             // $subcontainer = $container->addContainer($name);
 
