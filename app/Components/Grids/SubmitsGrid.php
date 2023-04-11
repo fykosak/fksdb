@@ -109,7 +109,7 @@ class SubmitsGrid extends Grid
         $this->addButton(
             new PresenterButton(
                 $this->container,
-                new Title(null, _('Show')),
+                new Title(null, _('Detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
                 null,
                 fn(SubmitModel $submit): bool => $submit->isQuiz()

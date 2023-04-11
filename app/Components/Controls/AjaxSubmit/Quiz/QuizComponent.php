@@ -8,9 +8,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Submits\QuizHandler;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
@@ -32,10 +35,13 @@ class QuizComponent extends FormComponent
     private User $user;
     private ContestantService $contestantService;
     private QuizHandler $handler;
+    private AccountManager $accountManager;
+    private string $lang;
 
-    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant = null)
+    public function __construct(Container $container, string $lang, TaskModel $task, ContestantModel $contestant = null)
     {
         parent::__construct($container);
+        $this->lang = $lang;
         $this->task = $task;
         $this->contestant = $contestant;
     }
@@ -43,16 +49,18 @@ class QuizComponent extends FormComponent
     final public function inject(
         User $user,
         ContestantService $contestantService,
-        QuizHandler $handler
+        QuizHandler $handler,
+        AccountManager $accountManager,
     ) {
         $this->user = $user;
         $this->contestantService = $contestantService;
         $this->handler = $handler;
+        $this->accountManager = $accountManager;
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Submit a quiz'));
+        return $form->addSubmit('save', _('Save'));
     }
 
     protected function configureForm(Form $form): void
@@ -76,6 +84,8 @@ class QuizComponent extends FormComponent
             $referencedId->referencedContainer->setOption('label', _('Contestant'));
             $container->addComponent($referencedId, 'person_id');
             $form->addComponent($container, self::CONT_CONTESTANT);
+
+            $form->addComponent(new CaptchaBox(), 'captcha');
         }
     }
 
@@ -85,6 +95,7 @@ class QuizComponent extends FormComponent
         $values = $form->getValues();
         try {
             // create and save contestant
+            // TODO separate contestant creation into handler and reuse it in contestant register form
             if (!isset($this->contestant)) {
                 /** @var ReferencedId $referencedId */
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
@@ -98,7 +109,14 @@ class QuizComponent extends FormComponent
                     'person_id' => $person->person_id,
                     'year' => $this->task->getContestYear()->year,
                 ], $contestant);
+
+                // send invite mail if the person does not have a login
+                $email = $person->getInfo()->email;
+                if ($email && !$person->getLogin()) {
+                    $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                }
             }
+
 
             // TODO define and retrive name of question field in the same place
 

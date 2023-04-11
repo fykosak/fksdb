@@ -1,4 +1,5 @@
 import { translator } from '@translator/translator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
 import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import Card from 'FKSDB/Models/UI/Card';
@@ -12,6 +13,7 @@ import LoadingState from './States/LoadingState';
 interface StateProps {
     submitting: boolean;
     submit: ModelSubmit;
+    actions: NetteActions;
 }
 
 class UploadContainer extends React.Component<StateProps> {
@@ -38,7 +40,7 @@ class UploadContainer extends React.Component<StateProps> {
             return (<LoadingState/>);
         }
         if (submit.isQuiz) {
-            return <a className="btn btn-primary" href={this.props.actions.getAction('quiz')}>{translator.getText('Submit using quiz form.')}</a>;
+            return <a className="btn btn-primary" href={this.props.actions.getAction('quiz')}>{translator.getText('Submit using quiz form')}</a>;
         }
         if (submit.submitId) {
             return (<File submit={submit}/>);
@@ -54,6 +56,7 @@ const mapStateToProps = (state: Store): StateProps => {
             ...state.uploadData.submit,
         },
         submitting: state.fetch.submitting,
+        actions: state.fetch.actions,
     };
 };
 

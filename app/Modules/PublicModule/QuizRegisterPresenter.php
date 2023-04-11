@@ -62,6 +62,6 @@ class QuizRegisterPresenter extends BasePresenter
             throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
         }
 
-        return new QuizComponent($this->getContext(), $task, null);
+        return new QuizComponent($this->getContext(), $this->getLang(), $task, null);
     }
 }

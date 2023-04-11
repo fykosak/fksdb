@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType};
+use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -69,10 +69,13 @@ class PointsPresenter extends BasePresenter
     final public function renderEntry(): void
     {
         $this->template->showAll = (bool)$this->all;
-        if ($this->getSelectedContest()->contest_id === ContestModel::ID_VYFUK && $this->getSelectedSeries() > 6) {
-            $this->template->hasQuizTask = true;
-        } else {
-            $this->template->hasQuizTask = false;
+        $this->template->hasQuizTask = false;
+        /** @var TaskModel $task */
+        foreach ($this->seriesTable->getTasks() as $task) {
+            if ($task->getQuestions()->count('*') > 0) {
+                $this->template->hasQuizTask = true;
+                break;
+            }
         }
     }
 
@@ -113,7 +116,7 @@ class PointsPresenter extends BasePresenter
     {
         try {
             $this->resultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
-            $this->flashMessage(_('Calculate quiz points.'), Message::LVL_INFO);
+            $this->flashMessage(_('Quiz points calculated.'), Message::LVL_INFO);
         } catch (\Throwable $exception) {
             $this->flashMessage(_('Error during calculation.'), Message::LVL_ERROR);
             Debugger::log($exception);

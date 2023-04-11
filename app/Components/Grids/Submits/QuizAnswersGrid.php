@@ -46,6 +46,7 @@ class QuizAnswersGrid extends Grid
          */
 
         $submit = $this->submit;
+
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
@@ -53,6 +54,15 @@ class QuizAnswersGrid extends Grid
                 new Title(null, _('Name'))
             ),
             'name'
+        );
+
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(SubmitQuestionModel $question): int => $question->points,
+                new Title(null, _('Points'))
+            ),
+            'points'
         );
 
         $this->addColumn(

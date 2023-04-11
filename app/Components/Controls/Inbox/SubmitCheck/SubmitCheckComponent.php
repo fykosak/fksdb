@@ -49,7 +49,7 @@ class SubmitCheckComponent extends BaseComponent
                 );
             }
 
-            if ($submit->isQuiz() && $submit->corrected && !$this->correctedStorage->fileExists($submit)) {
+            if (!$submit->isQuiz() && $submit->corrected && !$this->correctedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(
                     sprintf(_('Corrected submit #%d is broken'), $submit->submit_id),

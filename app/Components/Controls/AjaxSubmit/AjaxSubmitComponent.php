@@ -63,9 +63,8 @@ class AjaxSubmitComponent extends AjaxComponent
         $this->addAction('revoke', 'revoke!');
         $this->addAction('download', 'download!');
         $this->addAction('upload', 'upload!');
-        $this->addAction('quiz', ':Quiz', ['id' => $this->task->task_id]);
+        $this->addAction('quiz', 'quiz!');
     }
-
     /**
      * @throws NotFoundException
      */
@@ -135,4 +134,10 @@ class AjaxSubmitComponent extends AjaxComponent
         }
         $this->sendAjaxResponse();
     }
+
+    public function handleQuiz(): void
+    {
+        $this->getPresenter()->redirect(':Quiz', ['id' => $this->task->task_id]);
+    }
+
 }

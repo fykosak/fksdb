@@ -3750,6 +3750,18 @@ msgstr ""
 msgid "was uploaded via a quiz form"
 msgstr ""
 
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:17
+msgid "řešitel"
+msgstr "contestant"
+
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:17
+msgid "řešitelé"
+msgstr "contestants"
+
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:17
+msgid "řešitelů"
+msgstr "contestants"
+
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
 msgid "Results for some teams are not closed yet"
 msgstr ""
