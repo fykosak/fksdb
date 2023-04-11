@@ -139,5 +139,4 @@ class AjaxSubmitComponent extends AjaxComponent
     {
         $this->getPresenter()->redirect(':Quiz', ['id' => $this->task->task_id]);
     }
-
 }

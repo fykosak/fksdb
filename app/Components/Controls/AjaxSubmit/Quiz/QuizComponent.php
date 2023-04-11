@@ -50,7 +50,7 @@ class QuizComponent extends FormComponent
         User $user,
         ContestantService $contestantService,
         QuizHandler $handler,
-        AccountManager $accountManager,
+        AccountManager $accountManager
     ) {
         $this->user = $user;
         $this->contestantService = $contestantService;
