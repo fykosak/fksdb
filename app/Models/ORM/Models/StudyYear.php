@@ -60,11 +60,6 @@ class StudyYear extends FakeStringEnum implements EnumColumn
         throw new \InvalidArgumentException();
     }
 
-    public function isPrimarySchool(): bool
-    {
-        return Strings::startsWith($this->value, 'P');
-    }
-
     public function numeric(): ?int
     {
         switch ($this->value) {
@@ -89,6 +84,34 @@ class StudyYear extends FakeStringEnum implements EnumColumn
             default:
                 return null;
         }
+    }
+
+    public static function getPrimarySchoolCases(): array
+    {
+        return [
+            new self(self::P_6),
+            new self(self::P_7),
+            new self(self::P_8),
+            new self(self::P_9),
+        ];
+    }
+
+    public function isPrimarySchool(): bool
+    {
+        return Strings::startsWith($this->value, 'P');
+    }
+
+    /**
+     * @return static[]
+     */
+    public static function getHighSchoolCases(): array
+    {
+        return [
+            new self(self::H_1),
+            new self(self::H_2),
+            new self(self::H_3),
+            new self(self::H_4),
+        ];
     }
 
     public function isHighSchool(): bool
