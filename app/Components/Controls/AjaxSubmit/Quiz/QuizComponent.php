@@ -11,6 +11,7 @@ use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -19,6 +20,7 @@ use FKSDB\Models\Submits\QuizHandler;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -89,6 +91,10 @@ class QuizComponent extends FormComponent
         }
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
     protected function handleSuccess(SubmitButton $button): void
     {
         $form = $button->getForm();
@@ -101,7 +107,6 @@ class QuizComponent extends FormComponent
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
                 /** @var PersonModel $person */
                 $person = $referencedId->getModel();
-                /** @var ContestModel $contestYear */
                 $contestant = $person->getContestantByContestYear($this->task->getContestYear());
                 // if person is not a contestant in the contest year, create him
                 $this->contestant = $contestant ?? $this->contestantService->storeModel([

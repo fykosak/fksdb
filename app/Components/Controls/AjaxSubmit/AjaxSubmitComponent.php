@@ -63,7 +63,7 @@ class AjaxSubmitComponent extends AjaxComponent
         $this->addAction('revoke', 'revoke!');
         $this->addAction('download', 'download!');
         $this->addAction('upload', 'upload!');
-        $this->addAction('quiz', 'quiz!');
+        $this->addPresenterLink('quiz', ':Quiz', ['id' => $this->task->task_id]);
     }
     /**
      * @throws NotFoundException
@@ -133,10 +133,5 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
-    }
-
-    public function handleQuiz(): void
-    {
-        $this->getPresenter()->redirect(':Quiz', ['id' => $this->task->task_id]);
     }
 }
