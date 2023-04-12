@@ -35,15 +35,17 @@ class PublicModule extends AbstractPageDisplayTestCase
         $this->task = $this->container->getByType(TaskService::class)->storeModel(
             ['label' => 1,'contest_id' => 1, 'year' => 1, 'series' => 1]
         );
-        $this->submit = $this->container->getByType(SubmitService::class)->storeModel(
-            ['contestant_id' => $this->contestant->contestant_id, 'task_id' => $this->task->task_id, 'source' => SubmitSource::QUIZ]
-        );
+        $this->submit = $this->container->getByType(SubmitService::class)->storeModel([
+            'contestant_id' => $this->contestant->contestant_id,
+            'task_id' => $this->task->task_id, 'source' => SubmitSource::QUIZ
+        ]);
         $this->question = $this->container->getByType(SubmitQuestionService::class)->storeModel(
             ['task_id' => $this->task->task_id]
         );
-        $this->container->getByType(SubmitQuestionAnswerService::class)->storeModel(
-            ['contestant_id' => $this->contestant->contestant_id, 'submit_question_id' => $this->question->submit_question_id]
-        );
+        $this->container->getByType(SubmitQuestionAnswerService::class)->storeModel([
+            'contestant_id' => $this->contestant->contestant_id,
+            'submit_question_id' => $this->question->submit_question_id
+        ]);
 
         // not quiz task
         $this->container->getByType(TaskService::class)->storeModel(
@@ -58,7 +60,7 @@ class PublicModule extends AbstractPageDisplayTestCase
         $params['contestId'] = '1';
         if ($action === 'quizDetail') {
             $params['id'] = $this->submit->submit_id;
-        } else if ($action === 'quiz' || $presenterName === 'Public:QuizRegister'){
+        } elseif ($action === 'quiz' || $presenterName === 'Public:QuizRegister') {
             $params['id'] = $this->task->task_id;
         }
         return [$presenterName, $action, $params];
