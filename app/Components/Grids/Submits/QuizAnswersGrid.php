@@ -59,7 +59,7 @@ class QuizAnswersGrid extends Grid
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): int => $question->points,
+                fn(SubmitQuestionModel $question): int => $question->points ?? 0,
                 new Title(null, _('Points'))
             ),
             'points'
