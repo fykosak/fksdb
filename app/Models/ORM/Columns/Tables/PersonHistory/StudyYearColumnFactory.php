@@ -35,20 +35,20 @@ class StudyYearColumnFactory extends ColumnFactory
     private function createOptions(ContestYearModel $contestYear): array
     {
         $hsYears = [];
-        foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(
+        foreach (StudyYear::getHighSchoolCases() as $studyYear) {
+            $hsYears[$studyYear->numeric()] = sprintf(
                 _('grade %d (expected graduation in %d)'),
-                $studyYear,
-                $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear))
+                $studyYear->numeric(),
+                $contestYear->getGraduationYear($studyYear)
             );
         }
 
         $primaryYears = [];
-        foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(
+        foreach (StudyYear::getPrimarySchoolCases() as $studyYear) {
+            $primaryYears[$studyYear->numeric()] = sprintf(
                 _('grade %d (expected graduation in %d)'),
-                $studyYear,
-                $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear))
+                $studyYear->numeric(),
+                $contestYear->getGraduationYear($studyYear)
             );
         }
 
