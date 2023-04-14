@@ -82,6 +82,9 @@ abstract class DatabaseTestCase extends TestCase
     {
         $tables = [
             DbNames::TAB_EMAIL_MESSAGE,
+
+            DbNames::TAB_SUBMIT_QUESTION_ANSWER,
+            DbNames::TAB_SUBMIT_QUESTION,
             DbNames::TAB_SUBMIT,
             DbNames::TAB_TASK,
 

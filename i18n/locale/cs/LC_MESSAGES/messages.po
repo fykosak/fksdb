@@ -497,6 +497,10 @@ msgstr "Registrace není otevřena"
 msgid "Application machine has no available transitions."
 msgstr "Žádné přechody nejsou dostupné"
 
+#: ../app/Modules/PublicModule/SubmitPresenter.php:268
+msgid "Submit a quiz"
+msgstr "Odevzdat kvíz"
+
 #: ../app/Modules/PublicModule/SubmitPresenter.php:69
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:7
 #: ../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:3
@@ -506,6 +510,10 @@ msgstr "Nahraná řešení"
 #: ../app/Modules/PublicModule/SubmitPresenter.php:79
 msgid "Submit a solution"
 msgstr "Nahrát řešení"
+
+#: ../app/Modules/PublicModule/SubmitPresenter.php:110
+msgid "Quiz detail"
+msgstr "Detail kvízu"
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:114
 msgid "Contestant is missing study year. Not all tasks are thus available."
@@ -2180,6 +2188,18 @@ msgstr "Sloučit B<-A"
 msgid "It's not a duplicity"
 msgstr "Není to duplicita"
 
+#: ../app/Components/Grids/Submits/QuizAnswersGrid:68
+msgid "Answer"
+msgstr "Odpověď"
+
+#: ../app/Components/Grids/Submits/QuizAnswersGrid:81
+msgid "Correct answer"
+msgstr "Správná odpověď"
+
+#: ../app/Components/Grids/Submits/QuizAnswersGrid:101
+msgid "Correctness"
+msgstr "Správnost"
+
 #: ../app/Components/Forms/OptimisticForm.php:69
 msgid "There has been a change in the data of this form since it was shown."
 msgstr "Od zobrazení formuláře byla změněna jeho data."
@@ -2942,6 +2962,10 @@ msgstr "Odevzdání úlohy %s zrušeno."
 msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
+#: ../app/Components/Controls/AjaxSubmit/Quiz/QuizComponent.php:133
+msgid "Submitted"
+msgstr "Odevzdáno"
+
 #: ../app/Components/Controls/StoredQuery/ResultsComponent.php:142
 msgid "Parameter %label is numeric."
 msgstr "Parametr %label je numerický"
@@ -3167,6 +3191,10 @@ msgstr "Přepočítat všechny body"
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:11
 msgid "Calculate quiz points"
 msgstr "Spočítat body kvízových úloh."
+
+#: ../app/Modules/OrgModule/PointsPresenter.php:119
+msgid "Quiz points calculated."
+msgstr "Body kvízových úloh spočítány."
 
 #: ../app/Modules/OrgModule/templates/Envelope/default.latte.latte2php:3
 msgid "Output"
@@ -3743,6 +3771,18 @@ msgstr "nahráno"
 #: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:8
 msgid "was uploaded via a quiz form"
 msgstr "nahráno přes kvízový dotazník"
+
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:17
+msgid "active"
+msgstr "aktivní"
+
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:18
+msgid "solution"
+msgstr "řešení"
+
+#: ../app/Components/Controls/Inbox/Inbox/layout.latte.latte2php:18
+msgid "solutions"
+msgstr "řešení"
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
 msgid "Results for some teams are not closed yet"
@@ -5491,6 +5531,10 @@ msgstr "Načítání"
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:41
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:43
+msgid "Submit using quiz form"
+msgstr "Odevzdat pomocí kvízového formuláře"
 
 #: ../app/Components/Game/ResultsAndStatistics/Table/Components/Index.tsx.tsx2php:32
 msgid "Results"

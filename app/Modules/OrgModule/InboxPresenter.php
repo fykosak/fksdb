@@ -8,6 +8,8 @@ use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Authorizator;
@@ -19,11 +21,16 @@ class InboxPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
 
-    private SeriesTable $seriesTable;
+    /** @persistent */
+    public ?int $id = null;
 
-    final public function injectSeriesTable(SeriesTable $seriesTable): void
+    private SeriesTable $seriesTable;
+    private SubmitService $submitService;
+
+    final public function injectSeriesTable(SeriesTable $seriesTable, SubmitService $submitService): void
     {
         $this->seriesTable = $seriesTable;
+        $this->submitService = $submitService;
     }
 
     /* ***************** AUTH ***********************/
@@ -45,6 +52,11 @@ class InboxPresenter extends BasePresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
+    public function authorizedQuizDetail(): void
+    {
+        $this->authorizedCorrected();
+    }
+
     /* ***************** TITLES ***********************/
 
     public function titleInbox(): PageTitle
@@ -60,6 +72,11 @@ class InboxPresenter extends BasePresenter
     public function titleCorrected(): PageTitle
     {
         return new PageTitle(null, _('Corrected'), 'fa fa-file-signature');
+    }
+
+    public function titleQuizDetail(): PageTitle
+    {
+        return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
     /* *********** LIVE CYCLE *************/
@@ -96,6 +113,16 @@ class InboxPresenter extends BasePresenter
     protected function createComponentSubmitsTableControl(): SubmitsPreviewComponent
     {
         return new SubmitsPreviewComponent($this->getContext(), $this->seriesTable);
+    }
+
+    /**
+     * @throws TaskNotFoundException
+     * @throws SubmitNotQuizException
+     */
+    protected function createComponentQuizDetail(): QuizAnswersGrid
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        return new QuizAnswersGrid($this->getContext(), $submit, true);
     }
 
     protected function beforeRender(): void
