@@ -63,8 +63,8 @@ class AjaxSubmitComponent extends AjaxComponent
         $this->addAction('revoke', 'revoke!');
         $this->addAction('download', 'download!');
         $this->addAction('upload', 'upload!');
+        $this->addPresenterLink('quiz', ':Quiz', ['id' => $this->task->task_id]);
     }
-
     /**
      * @throws NotFoundException
      */

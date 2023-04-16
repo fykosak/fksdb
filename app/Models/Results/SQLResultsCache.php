@@ -70,9 +70,13 @@ class SQLResultsCache
             foreach ($task->getSubmits() as $submit) {
                 $sum = $submit->calculateQuestionSum();
                 if (isset($sum)) {
-                    $this->submitService->storeModel(['raw_points' => $sum], $submit);
+                    $this->submitService->storeModel([
+                        'raw_points' => $sum,
+                        'corrected' => true,
+                    ], $submit);
                 }
             }
         }
+        $this->recalculate($contestYear);
     }
 }

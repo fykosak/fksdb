@@ -1352,7 +1352,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 )
     ENGINE = 'InnoDB';
 -- -----------------------------------------------------
--- Table `quiz`
+-- Table `submit_question`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question`
 (
@@ -1367,8 +1367,9 @@ CREATE TABLE IF NOT EXISTS `submit_question`
             REFERENCES `task` (`task_id`)
 )
     ENGINE = InnoDB;
+
 -- -----------------------------------------------------
--- Table `submit_quiz`
+-- Table `submit_question_answer`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question_answer`
 (

@@ -68,14 +68,14 @@ class DashboardPresenter extends BasePresenter
             // 1 Fyziklání online
             case 10:
                 // Tábor výfuku
-                return \sprintf('https://vyfuk.mff.cuni.cz/akce/tabor/tabor%d', $this->getEvent()->begin->format('Y'));
+                return \sprintf('https://vyfuk.org/akce/tabor/tabor%d', $this->getEvent()->begin->format('Y'));
             case 11:
                 // setkani jaro
-                return \sprintf('https://vyfuk.mff.cuni.cz/akce/setkani/jaro%d', $this->getEvent()->begin->format('Y'));
+                return \sprintf('https://vyfuk.org/akce/setkani/jaro%d', $this->getEvent()->begin->format('Y'));
             case 12:
                 // setkani podzim
                 return \sprintf(
-                    'https://vyfuk.mff.cuni.cz/akce/setkani/podzim%d',
+                    'https://vyfuk.org/akce/setkani/podzim%d',
                     $this->getEvent()->begin->format('Y')
                 );
             case 14:
