@@ -44,23 +44,19 @@ class FOLCategoryProcessing extends FormProcessing
         ]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
         foreach ($members as $member) {
-            $history = $member->getHistory($event->getContestYear()->ac_year);
+            $history = $member->getHistoryByContestYear($event->getContestYear());
             if (!$history->school) { // for future
                 $olds += 1;
             }
             $studyYear = StudyYear::tryFromLegacy($history->study_year);
-            if (is_null($studyYear)) {
+            if (
+                is_null($studyYear) || $studyYear->value === StudyYear::NONE || $studyYear->value === StudyYear::U_ALL
+            ) {
                 $olds += 1;
             } elseif ($studyYear->isHighSchool()) {
                 $year[$studyYear->value] += 1;
             } elseif ($studyYear->isPrimarySchool()) {
                 $year['P'] += 1;
-            } elseif ($studyYear->value === StudyYear::NONE || $studyYear->value === StudyYear::U_ALL) {
-                $olds += 1;
-            } elseif ($history->study_year >= 1 && $history->study_year <= 4) {
-                $year[$history->study_year] += 1;
-            } else {
-                $year[0] += 1; // ZŠ
             }
         }
         // evaluate stats

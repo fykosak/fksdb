@@ -38,7 +38,7 @@ class FOFCategoryProcessing extends FormProcessing
         }
 
         $avg = $this->getCoefficientAvg($members, $event);
-        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
+        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) { // TODO FIX!!!!
             return TeamCategory::tryFrom(TeamCategory::C);
         } elseif ($avg <= 3 && $year[4] <= 2) {
             return TeamCategory::tryFrom(TeamCategory::B);
