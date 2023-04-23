@@ -53,7 +53,7 @@ class SubmitModel extends Model implements Resource
      * @return SubmitState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

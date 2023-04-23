@@ -83,7 +83,7 @@ class EventParticipantModel extends Model implements Resource, NodeCreator
      * @return EventParticipantStatus|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

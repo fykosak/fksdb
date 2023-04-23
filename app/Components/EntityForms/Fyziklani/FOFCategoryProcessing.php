@@ -26,6 +26,7 @@ class FOFCategoryProcessing extends FormProcessing
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @param PersonModel[] $members
+     * @throws NoMemberException
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {
@@ -35,7 +36,28 @@ class FOFCategoryProcessing extends FormProcessing
         if ($values['team']['force_a']) {
             return TeamCategory::tryFrom(TeamCategory::A);
         }
+
+        $avg = $this->getCoefficientAvg($members, $event);
+        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
+            return TeamCategory::tryFrom(TeamCategory::C);
+        } elseif ($avg <= 3 && $year[4] <= 2) {
+            return TeamCategory::tryFrom(TeamCategory::B);
+        } else {
+            return TeamCategory::tryFrom(TeamCategory::A);
+        }
+    }
+
+    /**
+     * @throws NoMemberException
+     */
+    public static function getCoefficientAvg(array $members, EventModel $event): float
+    {
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
+
+        if (!count($members)) {
+            throw new NoMemberException();
+        }
+
         // calculate stats
         foreach ($members as $member) {
             $history = $member->getHistory($event->getContestYear()->ac_year);
@@ -51,13 +73,6 @@ class FOFCategoryProcessing extends FormProcessing
             $sum += $year[$y] * $y;
             $cnt += $year[$y];
         }
-        $avg = $sum / $cnt;
-        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
-            return TeamCategory::tryFrom(TeamCategory::C);
-        } elseif ($avg <= 3 && $year[4] <= 2) {
-            return TeamCategory::tryFrom(TeamCategory::B);
-        } else {
-            return TeamCategory::tryFrom(TeamCategory::A);
-        }
+        return $sum / $cnt;
     }
 }

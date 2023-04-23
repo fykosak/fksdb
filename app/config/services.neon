@@ -50,6 +50,7 @@ services:
     #submits
     - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
+    - FKSDB\Models\Submits\QuizHandler
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
     - FKSDB\Models\Submits\SeriesTable
     #results

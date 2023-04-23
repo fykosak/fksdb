@@ -49,10 +49,6 @@ parameters:
             person_info:
                 email:
                   required: true
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
                 origin:
                   required: false
                 agreed:
