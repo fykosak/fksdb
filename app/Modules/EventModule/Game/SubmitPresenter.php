@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
@@ -105,10 +104,9 @@ class SubmitPresenter extends BasePresenter
      */
     public function handleCheck(): void
     {
-        $logger = new MemoryLogger();
         $handler = $this->getEvent()->createGameHandler($this->getContext());
-        $handler->check($logger, $this->getEntity(), $this->getEntity()->points);
-        FlashMessageDump::dump($logger, $this);
+        $handler->check($this->getEntity(), $this->getEntity()->points);
+        FlashMessageDump::dump($handler->logger, $this);
         $this->redirect('this');
     }
 
@@ -158,6 +156,7 @@ class SubmitPresenter extends BasePresenter
     {
         return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
     }
+
 
     protected function getORMService(): SubmitService
     {

@@ -20,7 +20,7 @@
     {control valuePrinter:row 'fyziklani_submit.modified', $model}
 
     <div class="my-3">
-        {if !$model->isChecked() && $model->fyziklani_team->hasOpenSubmitting()}
+        {if $model->state->value !== SubmitState::CHECKED && $model->fyziklani_team->hasOpenSubmitting()}
             <a href="{link check!}" class="btn btn-outline-success">{_'Check submit'}</a>
         {/if}
     </div>

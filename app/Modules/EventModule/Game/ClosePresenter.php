@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
-use FKSDB\Components\Game\Closing\CtyrbojPreviewComponent;
-use FKSDB\Components\Game\Closing\FOFPreviewComponent;
+use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamListComponent;
@@ -38,19 +37,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @throws CannotAccessModelException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function titleHard(): PageTitle
-    {
-        return $this->titleTeam();
-    }
-
-    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -76,15 +62,6 @@ class ClosePresenter extends BasePresenter
     public function authorizedTeam(): void
     {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizeHard(): void
-    {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
     }
 
     /**
@@ -133,17 +110,10 @@ class ClosePresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
-     * @throws NotImplementedException
      */
     protected function createComponentCloseTeamControl(): PreviewComponent
     {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return new FOFPreviewComponent($this->getContext(), $this->getEntity());
-            case 17:
-                return new CtyrbojPreviewComponent($this->getContext(), $this->getEntity());
-        }
-        throw new NotImplementedException();
+        return new PreviewComponent($this->getContext(), $this->getEntity());
     }
 
     /**
@@ -186,6 +156,14 @@ class ClosePresenter extends BasePresenter
     protected function createComponentEditForm(): Control
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCodeCloseForm(): CodeCloseForm
+    {
+        return new CodeCloseForm($this->getContext(), $this->getEvent());
     }
 
     protected function getModelResource(): string

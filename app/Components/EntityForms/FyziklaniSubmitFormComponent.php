@@ -44,10 +44,9 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         $values = $form->getValues();
         try {
-            $logger = new MemoryLogger();
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
-            $handler->edit($logger, $this->model, $values['points']);
-            FlashMessageDump::dump($logger, $this->getPresenter());
+            $handler->edit($this->model, $values['points']);
+            FlashMessageDump::dump($handler->logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
