@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -16,7 +15,7 @@ class Transition
 {
     use SmartObject;
 
-    /** @var callable|bool */
+    /** @var callable */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
@@ -25,12 +24,10 @@ class Transition
     /** @var Statement[] */
     public array $afterExecute = [];
 
-    /** @var bool */
-    protected $validation;
+    protected bool $validation;
 
     public EnumColumn $source;
     public EnumColumn $target;
-    protected ExpressionEvaluator $evaluator;
 
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
@@ -57,11 +54,6 @@ class Transition
         $this->behaviorType = $behaviorType;
     }
 
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
-    }
-
     public function getLabel(): string
     {
         return _($this->label);
@@ -72,14 +64,20 @@ class Transition
         $this->label = $label ?? '';
     }
 
-    public function setCondition(?callable $callback): void
+    /**
+     * @param callable|bool $condition
+     */
+    public function setCondition($condition): void
     {
-        $this->condition = $callback;
+        $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
     public function canExecute(ModelHolder $holder): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
+        if (!isset($this->condition)) {
+            return true;
+        }
+        return (bool)($this->condition)($holder);
     }
 
     public function getValidation(): bool

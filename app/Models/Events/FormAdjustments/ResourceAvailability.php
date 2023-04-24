@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Forms\Form;
 use Nette\Forms\Control;
+use Nette\Forms\Form;
 
 /**
  * @deprecated use person_schedule UC
@@ -26,27 +26,30 @@ class ResourceAvailability extends AbstractAdjustment
     /** @var string[] */
     private array $excludeStates;
     private string $message;
+    private EventParticipantService $eventParticipantService;
 
     /**
      *
      * @param array $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param array $includeStates any state or array of state
-     * @param array $excludeStates any state or array of state
+     * @param string[] $includeStates any state or array of state
+     * @param string[] $excludeStates any state or array of state
      */
     public function __construct(
         array $fields,
         string $paramCapacity,
         string $message,
         array $includeStates = [Machine::STATE_ANY],
-        array $excludeStates = ['cancelled']
+        array $excludeStates = ['cancelled'],
+        EventParticipantService $eventParticipantService = null
     ) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
@@ -59,17 +62,16 @@ class ResourceAvailability extends AbstractAdjustment
 
         $holders = [];
         $field = null;
-        $name = $holder->name;
         foreach ($this->fields as $fieldMask) {
             $foundControls = $this->getControl($fieldMask);
             if (!$foundControls) {
                 continue;
             }
-            if (isset($foundControls[$name])) {
+            if (isset($foundControls['participant'])) {
                 $holders[] = $holder;
-                $controls[] = $foundControls[$name];
+                $controls[] = $foundControls['participant'];
                 $field = $fieldMask;
-            } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
+            } elseif ('participant' == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
                 $holders[] = $holder;
                 $controls[] = reset($foundControls); // assume single result;
                 $field = $fieldMask;
@@ -77,18 +79,15 @@ class ResourceAvailability extends AbstractAdjustment
         }
 
         if ($holders) {
-            $sService[] = [
-                'service' => $holder->service,
-                'field' => $field,
-            ];
+            $sService[] = $field;
         }
 
         $usage = 0;
-        /** @var Service|BaseHolder[][] $dataService */
+        /** @var string $dataService */
         foreach ($sService as $dataService) {
             $event = $holder->event;
             /** @var TypedGroupedSelection $table */
-            $table = $dataService['service']->getTable();
+            $table = $this->eventParticipantService->getTable();
             $table->where('event_participant.event_id', $event->getPrimary());
             if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
                 $table->where('status', $this->includeStates);
@@ -100,7 +99,7 @@ class ResourceAvailability extends AbstractAdjustment
             }
             $model = $holder->getModel();
 
-            $column = BaseHolder::getBareColumn($dataService['field']);
+            $column = BaseHolder::getBareColumn($dataService);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($model) {
                 $table->where("NOT $pk IN", [$model->getPrimary()]);
@@ -108,7 +107,7 @@ class ResourceAvailability extends AbstractAdjustment
             $usage += $table->sum($column);
         }
 
-        $capacity = $holder->getParameter($this->paramCapacity);
+        $capacity = $holder->event->getParameter($this->paramCapacity);
 
         if ($capacity <= $usage) {
             foreach ($controls as $control) {

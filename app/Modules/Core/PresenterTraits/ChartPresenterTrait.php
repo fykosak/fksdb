@@ -32,6 +32,7 @@ trait ChartPresenterTrait
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     final public function renderList(): void

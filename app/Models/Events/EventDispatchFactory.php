@@ -7,7 +7,6 @@ namespace FKSDB\Models\Events;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -60,10 +59,10 @@ class EventDispatchFactory
     {
         switch ($event->event_type_id) {
             case 1:
-                $machine = $this->container->getService('fof.default.machine');
+                $machine = $this->container->getService('transitions.fof.machine');
                 break;
             case 9:
-                $machine = $this->container->getService('fol.default.machine');
+                $machine = $this->container->getService('transitions.fol.machine');
                 break;
             default:
                 throw new InvalidStateException();
@@ -104,7 +103,6 @@ class EventDispatchFactory
 
     /**
      * @throws ConfigurationNotFoundException
-     * @throws NeonSchemaException
      */
     public function getDummyHolder(EventModel $event): BaseHolder
     {

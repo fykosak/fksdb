@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Utils\Utils;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
-use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int task_id
