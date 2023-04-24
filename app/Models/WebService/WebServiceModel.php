@@ -8,24 +8,23 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
-    PaymentListWebModel,
-    SeriesResultsWebModel,
-    WebModel,
-    OrganizersWebModel,
+use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
     EventWebModel,
     ExportWebModel,
-    SignaturesWebModel,
+    Fyziklani,
+    OrganizersWebModel,
+    PaymentListWebModel,
     ResultsWebModel,
+    SeriesResultsWebModel,
+    SignaturesWebModel,
     StatsWebModel,
-    ContestsModel
-};
+    WebModel};
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Http\IResponse;
+use Nette\Schema\Processor;
 use Nette\Security\AuthenticationException;
 use Nette\SmartObject;
 use Tracy\Debugger;
@@ -39,7 +38,7 @@ class WebServiceModel
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'GetFyziklaniResults' => Fyziklani\ResultsWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
