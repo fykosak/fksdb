@@ -94,7 +94,7 @@ class PersonFormComponent extends EntityFormComponent
                 Message::LVL_SUCCESS
             )
         );
-        FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
+        FlashMessageDump::dump($this->logger, $this->getPresenter());
         $this->getPresenter()->redirect('this');
     }
 

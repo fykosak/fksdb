@@ -53,7 +53,7 @@ class MassTransitionsComponent extends BaseComponent
                 $errored++;
             }
         }
-        FlashMessageDump::dump($logger, $this->getPresenter(), true);
+        FlashMessageDump::dump($logger, $this->getPresenter());
         $this->getPresenter()->flashMessage(
             sprintf(
                 _('Total %d applications, state changed %d, unavailable %d. '),

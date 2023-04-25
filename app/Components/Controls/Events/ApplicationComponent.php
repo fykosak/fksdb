@@ -156,8 +156,8 @@ class ApplicationComponent extends BaseComponent
         return $result;
     }
 
-    /*
-     * Store data and transition
+    /**
+     * @throws \Throwable
      */
     public function handleSubmit(Form $form, ?string $explicitTransitionName = null, bool $storeData = true): void
     {

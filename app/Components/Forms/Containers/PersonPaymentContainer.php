@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\Checkbox;
@@ -26,7 +25,6 @@ use Nette\Utils\Html;
 class PersonPaymentContainer extends ContainerWithOptions
 {
     private PersonScheduleService $personScheduleService;
-    private PaymentMachine $machine;
     private User $user;
     private bool $isOrg;
     private ?PaymentModel $model;
@@ -40,12 +38,10 @@ class PersonPaymentContainer extends ContainerWithOptions
     public function __construct(
         Container $container,
         EventModel $event,
-        PaymentMachine $machine,
         bool $isOrg,
         ?PaymentModel $model
     ) {
         parent::__construct($container);
-        $this->machine = $machine;
         $this->isOrg = $isOrg;
         $this->event = $event;
         $this->model = $model;

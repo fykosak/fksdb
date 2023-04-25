@@ -21,6 +21,7 @@ class UniqueCheck extends AbstractAdjustment
     {
         $this->field = $field;
         $this->message = $message;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     protected function innerAdjust(Form $form, ModelHolder $holder): void

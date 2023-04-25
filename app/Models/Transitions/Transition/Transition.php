@@ -24,8 +24,7 @@ class Transition
     /** @var Statement[] */
     public array $afterExecute = [];
 
-    /** @var bool */
-    protected $validation;
+    protected bool $validation;
 
     public EnumColumn $source;
     public EnumColumn $target;

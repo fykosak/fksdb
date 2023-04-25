@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\Models\{ContestModel, ContestYearModel, TaskContributionType, TaskModel};
+use FKSDB\Models\ORM\Models\{ContestYearModel, TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\TypedGroupedSelection;

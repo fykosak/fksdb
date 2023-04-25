@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Forms\Control;
 use Nette\Forms\Form;

@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
-use Nette\Forms\Form;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
