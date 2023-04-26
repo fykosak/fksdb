@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
@@ -56,6 +57,11 @@ class TaskModel extends Model
         return $result;
     }
 
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where('year', $this->year)->fetch();
+    }
+
     public function webalizeLabel(): string
     {
         return Strings::webalize($this->label, null, false);
@@ -98,5 +104,28 @@ class TaskModel extends Model
     public function getQuestions(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
+    }
+
+    public function isOpened(): bool
+    {
+        return $this->isAfterStart() && !$this->isAfterDeadline();
+    }
+
+    public function isAfterDeadline(): bool
+    {
+        if ($this->submit_deadline) {
+            return time() > $this->submit_deadline->getTimestamp();
+        }
+        // if the deadline is not specified, consider task as opened, so default to false
+        return false;
+    }
+
+    public function isAfterStart(): bool
+    {
+        if ($this->submit_start) {
+            return time() > $this->submit_start->getTimestamp();
+        }
+        // if the deadline is not specified, consider task as opened, so default to true
+        return true;
     }
 }
