@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\ContestService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -31,15 +30,13 @@ class ContestsModel extends WebModel
         ];
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function getJsonResponse(array $params): array
     {
         $data = [];
+        /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
             $data[] = $this->createContestArray($contest);
-        };
+        }
         return $data;
     }
 

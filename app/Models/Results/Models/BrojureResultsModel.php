@@ -109,7 +109,7 @@ class BrojureResultsModel extends AbstractResultsModel
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
-        if (array_search($this->listedSeries, $this->series) === false) {
+        if (!in_array($this->listedSeries, $this->series)) {
             throw new InvalidStateException('Listed series is not among series.');
         }
 

@@ -21,7 +21,7 @@ class QuizHandler
     private SubmitQuestionAnswerService $submitQuestionAnswerService;
     private SubmitService $submitService;
 
-    public function __construct(SubmitQuestionAnswerService $answerService, submitService $submitService)
+    public function __construct(SubmitQuestionAnswerService $answerService, SubmitService $submitService)
     {
         $this->submitQuestionAnswerService = $answerService;
         $this->submitService = $submitService;
@@ -56,6 +56,9 @@ class QuizHandler
         }
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     */
     public function storeQuestionAnswer(
         ?string $answer,
         SubmitQuestionModel $question,

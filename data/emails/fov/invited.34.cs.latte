@@ -17,7 +17,7 @@
     Účast na FYKOSím Online Víkendu je zcela <b>zdarma</b>. Své rozhodnutí, zda přijedeš, nám prosím
     co nejrychleji oznam prostřednictvím aplikace FKSDB po přihlášení nebo pomocí odkazu <br/>
     <a href="{$link}">{$link}</a><br/>
-    <b>do {$holder->getParameter('deadline')|date:'j.n. Y'}</b>. Detaily programu akce a odkazy na videohovory Ti zašleme později.
+    <b>do {$holder->event->getParameter('deadline')|date:'j.n. Y'}</b>. Detaily programu akce a odkazy na videohovory Ti zašleme později.
 </p>
 <p>
     Pokud bys {if $holder->getPerson()->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej
@@ -25,5 +25,5 @@
 </p>
 <p>
     Za organizátory se na Tebe moc těší <br/>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>

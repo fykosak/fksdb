@@ -29,7 +29,6 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
@@ -155,7 +154,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @throws TaskNotFoundException
      * @throws SubmitNotQuizException
      */
     protected function createComponentQuizDetail(): QuizAnswersGrid

@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -38,9 +39,11 @@ class PaymentFormComponent extends EntityFormComponent
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
     private User $user;
+    private EventModel $event;
 
     public function __construct(
         Container $container,
+        EventModel $event,
         bool $isOrg,
         PaymentMachine $machine,
         ?PaymentModel $model
@@ -48,6 +51,7 @@ class PaymentFormComponent extends EntityFormComponent
         parent::__construct($container, $model);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
+        $this->event = $event;
     }
 
     final public function injectPrimary(
@@ -93,7 +97,7 @@ class PaymentFormComponent extends EntityFormComponent
         $form->addComponent(
             new PersonPaymentContainer(
                 $this->getContext(),
-                $this->machine,
+                $this->event,
                 $this->isOrg,
                 $this->model
             ),
@@ -117,7 +121,7 @@ class PaymentFormComponent extends EntityFormComponent
         try {
             $model = $this->paymentService->storeModel(
                 [
-                    'event_id' => $this->machine->event->event_id,
+                    'event_id' => $this->event->event_id,
                     'currency' => $values['currency'],
                     'person_id' => $this->isOrg ? $values['person_id'] : $login->person->person_id,
                 ],
