@@ -44,9 +44,10 @@ class ChartPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      * @throws ForbiddenRequestException
+     * @throws NotImplementedException
      */
     protected function startup(): void
     {

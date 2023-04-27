@@ -4,7 +4,7 @@
     jelikož jsi byl{if $holder->getPerson()->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
     je nám ctí tě pozvat jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b>
     na Letní tábor Výfuku, který se tentokrát koná
-    {$holder->event->begin|date:'j.n. Y'} – {$holder->event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
+    {$holder->event->begin|date:'j.n. Y'} – {$holder->event->end|date:'j.n. Y'} {$holder->event->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
     her v přírodě.
 </p>
@@ -13,6 +13,6 @@
 
 <p>
     Za organizátory Výfuku se na Tebe těší <br/>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>
 

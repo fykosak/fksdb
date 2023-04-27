@@ -26,9 +26,6 @@ use Nette\Utils\Strings;
  */
 class MailSender extends MailCallback
 {
-    public const BCC_PARAM = 'notifyBcc';
-    public const FROM_PARAM = 'notifyFrom';
-
     private string $templateFile;
 
     public function __construct(
@@ -78,10 +75,10 @@ class MailSender extends MailCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'blind_carbon_copy' => $holder->getParameter(self::BCC_PARAM) ?? null,
+            'blind_carbon_copy' => $holder->event->getParameter('notifyBcc') ?? null,
             'subject' => $this->getSubject($holder->event, $holder->getModel()),
-            'sender' => $holder->getParameter(self::FROM_PARAM),
-            'reply_to' => $holder->getParameter(self::FROM_PARAM),
+            'sender' => $holder->event->getParameter('notifyFrom'),
+            'reply_to' => $holder->event->getParameter('notifyFrom'),
         ];
     }
 

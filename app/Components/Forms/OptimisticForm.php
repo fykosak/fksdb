@@ -65,7 +65,7 @@ class OptimisticForm extends Form
         $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 
-        if ($receivedFingerprint != $currentFingerprint) {
+        if ($receivedFingerprint !== $currentFingerprint) {
             $this->addError(_('There has been a change in the data of this form since it was shown.'));
             $this->setFingerprint($currentFingerprint);
             parent::setValues(($this->defaultsCallback)());
