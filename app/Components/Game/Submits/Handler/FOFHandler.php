@@ -23,7 +23,7 @@ class FOFHandler extends Handler
         if (is_null($points) || $points === 0) {
             throw new GameException(_('Points can not be a NULL or 0'));
         }
-        $submit = $team->findSubmit($task);
+        $submit = $team->getSubmit($task);
         if (is_null($submit)) { // novo zadaný
             $this->create($task, $team, $points);
         } elseif (is_null($submit->points)) { // ak bol zmazaný

@@ -12,14 +12,15 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
     EventWebModel,
     ExportWebModel,
-    Fyziklani,
+    Game,
     OrganizersWebModel,
     PaymentListWebModel,
     ResultsWebModel,
     SeriesResultsWebModel,
     SignaturesWebModel,
     StatsWebModel,
-    WebModel};
+    WebModel
+};
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
@@ -38,7 +39,9 @@ class WebServiceModel
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => Fyziklani\ResultsWebModel::class,
+        'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -123,8 +126,8 @@ class WebServiceModel
      */
     private function getWebModel(string $name): ?WebModel
     {
-        $name = ucfirst($name);
-        if (isset(self::WEB_MODELS[$name])) {
+        $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
+        if ($webModelClass) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;

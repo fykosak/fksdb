@@ -21,7 +21,7 @@ class CtyrbojHandler extends Handler
      */
     public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void
     {
-        $submit = $team->findSubmit($task);
+        $submit = $team->getSubmit($task);
         if (is_null($submit)) { // novo zadaný
             $this->create($task, $team, $task->points, SubmitState::CHECKED);
         } elseif (is_null($submit->points)) { // ak bol zmazaný

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models\Fyziklani;
+namespace FKSDB\Models\WebService\Models\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -16,14 +16,11 @@ use Nette\Schema\Expect;
 
 class ResultsWebModel extends WebModel
 {
-
     private EventService $eventService;
     private SubmitService $submitService;
 
-    public function injectServices(
-        EventService $eventService,
-        SubmitService $submitService
-    ): void {
+    public function injectServices(EventService $eventService, SubmitService $submitService): void
+    {
         $this->eventService = $eventService;
         $this->submitService = $submitService;
     }
@@ -66,6 +63,7 @@ class ResultsWebModel extends WebModel
     {
         return Expect::structure([
             'event_id' => Expect::scalar()->castTo('int')->required(),
+            'last_update' => Expect::string()->nullable(),
         ]);
     }
 }

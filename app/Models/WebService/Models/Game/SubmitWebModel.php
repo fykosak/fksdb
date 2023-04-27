@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models\Fyziklani;
+namespace FKSDB\Models\WebService\Models\Game;
 
-use FKSDB\Components\Game\Submits\TaskCodeException;
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
@@ -26,9 +26,9 @@ class SubmitWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'action' => Expect::anyOf('submit', 'edit', 'revoke')->required(),
+            'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
             'event_id' => Expect::scalar()->castTo('int')->required(),
-            'code' => Expect::string()->pattern('[0-9]{4}[A-H]{2}[0-9]{1}')->required(),
+            'code' => Expect::string()->pattern('^[0-9]{4,6}[a-hA-H]{2}[0-9]$')->required(),
             'points' => Expect::scalar()->castTo('int'),
         ]);
     }
@@ -44,16 +44,24 @@ class SubmitWebModel extends WebModel
             $handler = $event->createGameHandler($this->container);
             $team = TaskCodePreprocessor::getTeam($params['code'], $event);
             $task = TaskCodePreprocessor::getTask($params['code'], $event);
-            switch ($params['action']) {
-                case 'submit':
-                    $handler->handle($team, $task, $params['points']);
+            $points = $params['points'];
+            switch ($params['method']) {
+                case 'create':
+                    $handler->create($task, $team, $points);
+                    break;
+                case 'check':
+                    $submit = $team->getSubmit($task);
+                    if (!$submit) {
+                        throw new BadRequestException();
+                    }
+                    $handler->check($submit, $points);
                     break;
                 case 'edit':
                     $submit = $team->getSubmit($task);
                     if (!$submit) {
                         throw new BadRequestException();
                     }
-                    $handler->edit($submit, $params['points']);
+                    $handler->edit($submit, $points);
                     break;
                 case 'revoke':
                     $submit = $team->getSubmit($task);
@@ -61,11 +69,18 @@ class SubmitWebModel extends WebModel
                         throw new BadRequestException();
                     }
                     $handler->revoke($submit);
+                    break;
+                default:
+                    throw new BadRequestException();
             }
             return $handler->logger->getMessages();
-        } catch (TaskCodeException | BadRequestException$exception) {
+        } catch (GameException | BadRequestException $exception) {
             return [
                 new Message($exception->getMessage(), Message::LVL_ERROR),
+            ];
+        } catch (\Throwable $exception) {
+            return [
+                new Message(_('Undefined error'), Message::LVL_ERROR),
             ];
         }
     }
