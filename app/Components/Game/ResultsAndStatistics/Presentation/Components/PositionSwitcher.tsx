@@ -5,7 +5,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Params, setParams } from '../../actions/presentation';
+import { ACTION_SET_PARAMS, Params } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
@@ -82,7 +82,10 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetParams: (data) => dispatch(setParams(data)),
+        onSetParams: (data) => dispatch({
+            data,
+            type: ACTION_SET_PARAMS,
+        }),
     };
 };
 const mapStateToPros = (state: Store): StateProps => {

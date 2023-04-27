@@ -15,7 +15,6 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
-use Nette\Forms\Form;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -52,9 +51,9 @@ class ReferencedId extends HiddenField
 
         parent::__construct();
 
-        $this->monitor(Form::class, function (Form $form): void {
+        $this->monitor(IContainer::class, function (IContainer $container): void {
             if (!$this->attachedOnValidate) {
-                $form->onValidate[] = function () {
+                $container->onValidate[] = function () {
                     $this->createPromise();
                 };
                 $this->attachedOnValidate = true;

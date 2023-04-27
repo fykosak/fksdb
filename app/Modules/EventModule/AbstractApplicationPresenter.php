@@ -14,7 +14,6 @@ use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -77,6 +76,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+        $this->template->isOrg = $this->isAllowed('event.application', 'default');
     }
 
     /**
@@ -101,7 +101,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws NeonSchemaException
      * @throws \ReflectionException
      */
     public function getHolder(): BaseHolder
@@ -119,7 +118,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -137,7 +135,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException

@@ -42,7 +42,7 @@ abstract class Button extends BaseItem
         $this->template->linkControl = $this->getLinkControl();
         $this->template->show = isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true;
         [$this->template->destination, $this->template->params] = ($this->linkCallback)($model);
-        $this->template->buttonClassName = $this->buttonClassName ?? 'btn btn-outline-secondary btn-sm';
+        $this->template->buttonClassName = $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary';
         parent::render($model, $userPermission);
     }
 

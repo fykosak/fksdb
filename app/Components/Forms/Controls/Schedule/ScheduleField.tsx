@@ -27,6 +27,7 @@ export interface Params {
 class ScheduleField extends React.Component<OwnProps> {
     public componentDidMount() {
         this.props.input.style.display = 'none';
+        this.props.input.required = false;
         const label = this.props.input.parentElement.getElementsByTagName('label')[0];
         if (label && label instanceof HTMLLabelElement) {
             label.style.display = 'none';

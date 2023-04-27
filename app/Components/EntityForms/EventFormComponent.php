@@ -6,6 +6,7 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -70,6 +71,10 @@ class EventFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws ConfigurationNotFoundException
+     */
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {

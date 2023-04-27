@@ -81,10 +81,7 @@ class ApplicationComponent extends BaseComponent
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
-
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->event;
-        $this->template->primaryMachine = $this->handler->getMachine();
         $this->template->render($this->templateFile);
     }
 
@@ -97,7 +94,7 @@ class ApplicationComponent extends BaseComponent
         $form = $result->getForm();
 
         $container = $this->holder->createFormContainer();
-        $form->addComponent($container, $this->holder->name);
+        $form->addComponent($container, 'participant');
         /*
          * Create save (no transition) button
          */
@@ -106,14 +103,14 @@ class ApplicationComponent extends BaseComponent
             $saveSubmit = $form->addSubmit('save', _('Save'));
             $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
+
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine();
         $transitionSubmit = null;
 
         foreach (
-            $primaryMachine->getAvailableTransitions(
+            $this->handler->getMachine()->getAvailableTransitions(
                 $this->holder,
                 $this->holder->getModelState()
             ) as $transition
@@ -121,21 +118,29 @@ class ApplicationComponent extends BaseComponent
             $transitionName = $transition->getId();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transitionName);
+            if (!$transition->getValidation()) {
+                $submit->setValidationScope([]);
+            }
+
+            $submit->onClick[] = fn(SubmitButton $button) =>
+                $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->behaviorType->value]);
+
+            $submit->getControlPrototype()->addAttributes(
+                ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
+            );
         }
 
         /*
          * Create cancel button
          */
-        $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-warning']);
-        $submit->onClick[] = fn() => $this->finalRedirect();
+        $cancelSubmit = $form->addSubmit('cancel', _('Cancel'));
+        $cancelSubmit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-warning']);
+        $cancelSubmit->setValidationScope([]);
+        $cancelSubmit->onClick[] = fn() => $this->finalRedirect();
 
         /*
          * Custom adjustments
@@ -151,10 +156,17 @@ class ApplicationComponent extends BaseComponent
         return $result;
     }
 
-    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void
+    /**
+     * @throws \Throwable
+     */
+    public function handleSubmit(Form $form, ?string $explicitTransitionName = null, bool $storeData = true): void
     {
         try {
-            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
+            if ($storeData) {
+                $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
+            } else {
+                $this->handler->onlyExecute($this->holder, $explicitTransitionName);
+            }
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {

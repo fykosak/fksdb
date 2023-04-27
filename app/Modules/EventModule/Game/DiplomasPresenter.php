@@ -67,10 +67,10 @@ class DiplomasPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(?TeamCategory $category = null): void
+    public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy->close($category);
+        $log = $closeStrategy($category ? TeamCategory::tryFrom($category) : null);
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
@@ -78,6 +78,53 @@ class DiplomasPresenter extends BasePresenter
             Message::LVL_SUCCESS
         );
         $this->redirect('this');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function handleValidate(?string $category = null): void
+    {
+        $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
+        $category = $category ? TeamCategory::tryFrom($category) : null;
+
+        // check saved points against submits
+        $invalidTeams = $rankingStrategy->getInvalidTeamsPoints($category);
+
+        if (!empty($invalidTeams)) {
+            $log = Html::el('ul');
+            foreach ($invalidTeams as $team) {
+                $log->addHtml(
+                    Html::el('li')
+                        ->addText($team->name)
+                );
+            }
+            $this->flashMessage(
+                Html::el()
+                    ->addHtml(Html::el('h3')->addText('Saved points and points from submits do not match.'))
+                    ->addHtml($log),
+                Message::LVL_ERROR
+            );
+            return;
+        }
+
+        // check ranking
+        $invalidTeams = $rankingStrategy->getInvalidTeamsRank($category);
+        if (!empty($invalidTeams)) {
+            $log = Html::el('ul');
+            foreach ($invalidTeams as $team) {
+                $log->addHtml(Html::el('li')->addText($team->name));
+            }
+            $this->flashMessage(
+                Html::el()
+                    ->addHtml(Html::el('h3')->addText('Ranking not valid'))
+                    ->addHtml($log),
+                Message::LVL_ERROR
+            );
+            return;
+        }
+
+        $this->flashMessage("Validated", Message::LVL_SUCCESS);
     }
 
     /**

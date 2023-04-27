@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
+use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -29,15 +31,21 @@ class RankingStrategy
     /**
      * @throws NotClosedTeamException
      */
-    public function close(?TeamCategory $category = null): Html
+    public function __invoke(?TeamCategory $category = null): Html
     {
         $connection = $this->teamService->explorer->getConnection();
-        $connection->beginTransaction();
-        $teams = $this->getAllTeams($category);
-        $teamsData = $this->getTeamsStats($teams);
-        usort($teamsData, self::getSortFunction());
-        $log = $this->saveResults($teamsData, is_null($category));
-        $connection->commit();
+        try {
+            $connection->beginTransaction();
+            $teams = $this->getAllTeams($category);
+            $teamsData = $this->getTeamsStats($teams);
+            usort($teamsData, self::getSortFunction());
+            $log = $this->saveResults($teamsData, is_null($category));
+            $connection->commit();
+        } catch (NoMemberException $exception) {
+            $connection->rollBack();
+            throw $exception;
+        }
+
         return $log;
     }
 
@@ -56,13 +64,125 @@ class RankingStrategy
             $log->addHtml(
                 Html::el('li')
                     ->addText(
-                        _('Team') . $team->name . ':(' . $team->fyziklani_team_id . ')' . _(
-                            'Rank'
-                        ) . ': ' . ($rank)
+                        _('Team') . " " . $team->name . ' (' . $team->fyziklani_team_id . ')'
+                        . " - " . _('Rank') . ': ' . ($rank)
                     )
             );
         }
         return $log;
+    }
+
+    /**
+     * @throws NoMemberException
+     */
+    private static function getSortFunction(): callable
+    {
+        return function (array $b, array $a): int {
+
+            // sort by points
+            $diffPoints = $a['points'] - $b['points'];
+            if ($diffPoints !== 0) {
+                return $diffPoints;
+            }
+
+            // sort by average points
+            if ($a['submits']['count'] && $b['submits']['count']) {
+                // points must be equal in this step, so just compare the submit counts instead of averages
+                $diffCount = $b['submits']['count'] - $a['submits']['count'];
+                if ($diffCount !== 0) {
+                    return $diffCount;
+                }
+            }
+
+            // sort by number of submits with given points
+            $diffCountFive = $a['submits']['pointsCount'][5] - $b['submits']['pointsCount'][5];
+            if ($diffCountFive !== 0) {
+                return $diffCountFive;
+            }
+
+            $diffCountThree = $a['submits']['pointsCount'][3] - $b['submits']['pointsCount'][3];
+            if ($diffCountThree !== 0) {
+                return $diffCountThree;
+            }
+
+            // coefficients
+            $aCoef = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bCoef = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+
+            if ($aCoef < $bCoef) {
+                return 1;
+            } elseif ($aCoef > $bCoef) {
+                return -1;
+            }
+
+            // team id
+            return $b['team']->fyziklani_team_id <=> $a['team']->fyziklani_team_id;
+        };
+    }
+
+    public function getInvalidTeamsPoints(?TeamCategory $category = null): array
+    {
+        $invalidTeams = [];
+        $teams = $this->getAllTeams($category);
+        /** @var TeamModel2 $team */
+        foreach ($teams as $team) {
+            $sum = (int)$team->getNonRevokedSubmits()->sum('points');
+            if ($team->points !== $sum) {
+                $invalidTeams[] = $team;
+            }
+        }
+
+        return $invalidTeams;
+    }
+
+    /**
+     * Validate ranking of teams
+     * @throws NoMemberException
+     */
+    public function getInvalidTeamsRank(?TeamCategory $category = null): array
+    {
+        $compareFunction = self::getSortFunction();
+
+        $teams = $this->getAllTeams($category);
+        $teamsData = $this->getTeamsStats($teams);
+
+        $invalidTeams = [];
+
+        usort($teamsData, function ($a, $b) use ($category) {
+            if (is_null($category)) {
+                return $a['team']->rank_total - $b['team']->rank_total;
+            }
+            return $a['team']->rank_category - $b['team']->rank_category;
+        });
+
+        for ($i = 0; $i < count($teamsData) - 1; $i++) {
+            $a = $teamsData[$i];
+            $b = $teamsData[$i + 1];
+            $currentRank = is_null($category) ? $a['team']->rank_total : $a['team']->rank_category;
+            $nextRank = is_null($category) ? $b['team']->rank_total : $b['team']->rank_category;
+
+            // if the ranking is continuous
+            if ($currentRank + 1 !== $nextRank) {
+                $invalidTeams[] = $a['team'];
+                continue;
+            }
+
+            if ($compareFunction($b, $a) < 1) {
+                $invalidTeams[] = $a['team'];
+            }
+        }
+
+        return $invalidTeams;
+    }
+
+
+    private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
+    {
+        $query = $this->event->getParticipatingTeams();
+        if ($category) {
+            $query->where('category', $category->value);
+        }
+        return $query;
     }
 
     /**
@@ -88,33 +208,6 @@ class RankingStrategy
         return $teamsData;
     }
 
-    private static function getSortFunction(): callable
-    {
-        return function (array $b, array $a): int {
-            if ($a['points'] > $b['points']) {
-                return 1;
-            } elseif ($a['points'] < $b['points']) {
-                return -1;
-            } else {
-                if ($a['submits']['count'] && $b['submits']['count']) {
-                    $qa = $a['submits']['sum'] / $a['submits']['count'];
-                    $qb = $b['submits']['sum'] / $b['submits']['count'];
-                    return (int)($qa - $qb);
-                }
-                return 0;
-            }
-        };
-    }
-
-    private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
-    {
-        $query = $this->event->getParticipatingTeams();
-        if ($category) {
-            $query->where('category', $category->value);
-        }
-        return $query;
-    }
-
     /**
      * @return array[]|int[]
      */
@@ -123,18 +216,34 @@ class RankingStrategy
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
+
+        $availablePoints = $this->event->getGameSetup()->getAvailablePoints();
+        $submitPointsCount = [];
+        foreach ($availablePoints as $points) {
+            $submitPointsCount[$points] = 0;
+        }
+
         /** @var SubmitModel $submit */
         foreach ($team->getSubmits() as $submit) {
-            if ($submit->points !== null) {
-                $sum += $submit->points;
-                $count++;
-                $arraySubmits[] = [
-                    'task_id' => $submit->fyziklani_task_id,
-                    'points' => $submit->points,
-                    'time' => $submit->modified,
-                ];
+            if ($submit->points === null) {
+                continue;
             }
+
+            $submitPointsCount[$submit->points]++;
+            $sum += $submit->points;
+            $count++;
+            $arraySubmits[] = [
+                'task_id' => $submit->fyziklani_task_id,
+                'points' => $submit->points,
+                'time' => $submit->modified,
+            ];
         }
-        return ['data' => $arraySubmits, 'sum' => $sum, 'count' => $count];
+
+        return [
+            'data' => $arraySubmits,
+            'sum' => $sum,
+            'count' => $count,
+            'pointsCount' => $submitPointsCount,
+        ];
     }
 }

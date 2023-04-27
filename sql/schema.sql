@@ -1069,6 +1069,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_seat`
     `fyziklani_seat_id` INT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `fyziklani_room_id` INT        NOT NULL,
     `sector`            VARCHAR(2) NULL DEFAULT NULL,
+    `row`               VARCHAR(2) NULL DEFAULT NULL,
+    `col`               SMALLINT   NULL DEFAULT NULL,
     `layout_x`          DOUBLE     NOT NULL,
     `layout_y`          DOUBLE     NOT NULL,
     CONSTRAINT `fk_fyziklani_seat__fyziklani_seat_room`
@@ -1315,7 +1317,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
 )
     ENGINE = 'InnoDB';
 -- -----------------------------------------------------
--- Table `quiz`
+-- Table `submit_question`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question`
 (
@@ -1330,8 +1332,9 @@ CREATE TABLE IF NOT EXISTS `submit_question`
             REFERENCES `task` (`task_id`)
 )
     ENGINE = InnoDB;
+
 -- -----------------------------------------------------
--- Table `submit_quiz`
+-- Table `submit_question_answer`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question_answer`
 (

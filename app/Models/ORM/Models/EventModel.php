@@ -16,6 +16,9 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
+use Nette\InvalidArgumentException;
+use Nette\Neon\Neon;
+use Nette\Schema\Processor;
 use Nette\Security\Resource;
 
 /**
@@ -174,5 +177,24 @@ class EventModel extends Model implements Resource, NodeCreator
             return sprintf('fyziklani%dpayment', $this->event_year);
         }
         return null;
+    }
+
+    private function getParameters(): array
+    {
+        $parameters = $this->parameters ? Neon::decode($this->parameters) : [];
+        $processor = new Processor();
+        return $processor->process($this->event_type->getParamSchema(), $parameters);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameter(string $name)
+    {
+        try {
+            return $this->getParameters()[$name] ?? null;
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException("No parameter '$name' for event " . $this->name . '.', 0, $exception);
+        }
     }
 }

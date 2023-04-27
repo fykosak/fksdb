@@ -14,10 +14,10 @@ class NavigationExtension extends CompilerExtension
     {
         return Expect::arrayOf(
             Expect::arrayOf(
-                Expect::arrayOf(Expect::scalar()->nullable(), 'string'),
-                'string'
+                Expect::arrayOf(Expect::scalar()->nullable(), Expect::string()),
+                Expect::string()
             ),
-            'string'
+            Expect::string()
         );
     }
 

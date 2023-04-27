@@ -12,19 +12,4 @@ abstract class VariadicExpression extends EvaluatedExpression
     {
         $this->arguments = $args;
     }
-
-    abstract protected function getInfix(): string;
-
-    public function __toString(): string
-    {
-        $terms = [];
-        foreach ($this->arguments as $arg) {
-            $terms[] = (string)$arg;
-        }
-        $result = implode(' ' . $this->getInfix() . ' ', $terms);
-        if (count($terms) > 1) {
-            $result = "($result)";
-        }
-        return $result;
-    }
 }

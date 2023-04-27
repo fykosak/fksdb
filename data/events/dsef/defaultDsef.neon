@@ -1,7 +1,7 @@
 parameters:
     events:
         defaultDsef:
-            appCond: or(regOpen(), role('admin'))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
             transitions:
                 __init->applied:
                     condition: %events.defaultDsef.appCond%
@@ -9,39 +9,28 @@ parameters:
                     afterExecute:
                         - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                 applied->participated:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Prezentovat')
                 applied->missed:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Nepřijel')
                     behaviorType: danger
                 applied->cancelled:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-            paramScheme:
-                 notifyBcc:
-                     default: dsef@fykos.cz
-                 notifyFrom:
-                     default: Den s experimentální fyzikou <dsef@fykos.cz>
 events:
     dsefDefault:
         eventTypeIds: [2]
         #eventYears: all
         formLayout: dsef.form
-        paramScheme: []
-
-        baseMachine:
-                service: @orm.event_participant.service
-                transitions: [] #not modifable
-                fields: [] #not modifable
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
         machine:
-            baseMachine:
-                    label: _('Participant')
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+                transitions: [] #not modifable
+
+        holder:
+            fields: [] #not modifable
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

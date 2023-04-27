@@ -126,6 +126,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createScheduleListArray(EventModel $event): array
     {
         $data = [];
@@ -209,6 +212,7 @@ class EventWebModel extends WebModel
             foreach ($team->getTeachers() as $teacher) {
                 $teamData['teachers'][] = [
                     'name' => $teacher->person->getFullName(),
+                    'personId' => $teacher->person->person_id,
                     'email' => $teacher->person->getInfo()->email,
                 ];
             }
@@ -245,6 +249,9 @@ class EventWebModel extends WebModel
         return $participants;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createParticipantNode(EventParticipantModel $participant, \DOMDocument $doc): \DOMElement
     {
         $pNode = $participant->createXMLNode($doc);
@@ -252,6 +259,9 @@ class EventWebModel extends WebModel
         return $pNode;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
     {
         $pNode = $member->createXMLNode($doc);
@@ -267,6 +277,7 @@ class EventWebModel extends WebModel
         $history = $member->getPersonHistory();
         return [
             'name' => $member->person->getFullName(),
+            'personId' => $member->person->person_id,
             'email' => $member->person->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->school->name_abbrev : null,
@@ -279,7 +290,7 @@ class EventWebModel extends WebModel
 
     /**
      * @throws BadRequestException
-     * #Array
+     * @throws \Exception
      */
     public function getJsonResponse(array $params): array
     {
@@ -294,7 +305,6 @@ class EventWebModel extends WebModel
             $data['participants'] = $this->createParticipantListArray($event);
         }
         $data['schedule'] = $this->createScheduleListArray($event);
-        $data['person_schedule'] = $this->createPersonScheduleArray($event);
         $data['personSchedule'] = $this->createPersonScheduleArray($event);
         return $data;
     }

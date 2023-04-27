@@ -1,11 +1,8 @@
 parameters:
     events:
         tsaf8:
-            appCond: or(regOpen(), role('admin'))
-            # see soustredeni.neon
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('spare'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-
-            #accomodation: 'Noc po příjezdu (tj. ze 17.11. na 18.11.).'
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            requiredCond: or(and(neg(FKSDB\Models\Events\Semantics\Role('admin')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('spare'))), FKSDB\Models\Events\Semantics\State('participated'))
             person:
                 person:
                     other_name:
@@ -37,34 +34,23 @@ parameters:
                 F_M: M dámské
                 F_L: L dámské
                 F_XL: XL dámské
-
 events:
     tsaf8:
         eventTypeIds: [7]
         #eventYears: [5,6,8]
         formLayout: tsaf.form
-        paramScheme:
-            notifyBcc:
-                default: tsaf@fykos.cz
-            notifyFrom:
-                default: Týden s experimentální fyzikou <tsaf@fykos.cz>
-            capacity:
-                default: 0
-            accomodationCapacity:
-                default: 0
-
-        baseMachine:
-                service: @orm.event_participant.service
-
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     # to invited
                     __init->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
@@ -76,26 +62,26 @@ events:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     # to applied
                     __init->applied:
-                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Přihlásit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     spare->applied:
-                        condition: and(role('admin'),le(count('applied'),parameter('capacity')))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Potvrdit účastníka')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(transition)
                     invited->applied:
-                        condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
+                        condition: and(or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin')),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Potvrdit účast')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(transition)
                     # to end-states
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     invited->rejected:
@@ -104,56 +90,39 @@ events:
                         behaviorType: danger
                     # to cancelled/termination
                     auto.invited|invited|applied->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
                     spare->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.tsaf8.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.tsaf8.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-#                    accomodation:
-#                        label: _('Ubytování')
-#                        description: %events.tsaf8.accomodation%
-#                        modifiable: %events.tsaf8.appCond%
-                    tshirt_size:
-                        label: _('Jaké triko nosíš?')
-                        required: %events.tsaf8.requiredCond%
-                        factory: Chooser("Zvolit velikost", Options(%events.tsaf8.clothes%))
-                    jumper_size:
-                        label: _('Jakou mikinu nosíš?')
-                        required: %events.tsaf8.requiredCond%
-                        factory: Chooser("Zvolit velikost", Options(%events.tsaf8.clothes%))
-                    health_restrictions:
-                        label: _('Zdravotní omezení')
-                        description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v průběhu akce nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných aktivit? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
-                    price:
-                        label: _('Cena zájezdu (CZK)')
-                        modifiable: false
-                        description: "Cena v spočtená dle pravidel (http://fykos.cz/rocnik29/tsaf/pozvanka)."
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('TSAF')
-
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.tsaf8.appCond%
+                    default: fromLogin
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.tsaf8.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                tshirt_size:
+                    label: _('Jaké triko nosíš?')
+                    required: %events.tsaf8.requiredCond%
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvolit velikost", FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.tsaf8.clothes%))
+                jumper_size:
+                    label: _('Jakou mikinu nosíš?')
+                    required: %events.tsaf8.requiredCond%
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Zvolit velikost", FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.tsaf8.clothes%))
+                health_restrictions:
+                    label: _('Zdravotní omezení')
+                    description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v průběhu akce nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných aktivit? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+                price:
+                    label: _('Cena zájezdu (CZK)')
+                    modifiable: false
+                    description: "Cena v spočtená dle pravidel (http://fykos.cz/rocnik29/tsaf/pozvanka)."
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                #- FKSDB\Models\Events\FormAdjustments\ResourceAvailability('participantTsaf.accomodation', participantTsaf.accomodationCapacity, 'Kapacita ubytování po akci je již vyčerpána.')
-               # - FKSDB\Models\Events\FormAdjustments\ResourceAvailability('participantDsef.accomodation', participantDsef.accomodationCapacity, 'Kapacita ubytování před akcí je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
-
             processings:
                 - @events.privacyPolicy
-

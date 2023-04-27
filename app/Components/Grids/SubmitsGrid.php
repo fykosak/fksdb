@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -75,7 +76,7 @@ class SubmitsGrid extends Grid
                 $this,
                 new Title(null, _('Cancel')),
                 fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
-                'btn btn-sm btn-outline-warning',
+                'btn btn-sm me-1 btn-outline-warning',
                 fn(SubmitModel $submit): bool => $submit->canRevoke()
             ),
             'revoke'
@@ -104,6 +105,18 @@ class SubmitsGrid extends Grid
             ),
             'download_corrected'
         );
+
+        $this->addButton(
+            new PresenterButton(
+                $this->container,
+                new Title(null, _('Detail')),
+                fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => $submit->isQuiz()
+            ),
+            'show_quiz_detail'
+        );
+
         $this->paginate = false;
     }
 

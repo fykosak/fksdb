@@ -84,7 +84,7 @@ class PaymentModel extends Model implements Resource
     /**
      * @throws \ReflectionException
      */
-    public function &__get(string $key): mixed
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

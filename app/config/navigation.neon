@@ -1,12 +1,13 @@
 navigation:
-    #AK hotlinks
-    Core:Dispatch:default:
-        Event:Payment:create:
-            eventId: 173
-        #Schedule:PersonSchedule:default:
-        #   eventId: 173
-    Org.Dashboard.default:
-        Org.Dashboard.default: []
+        #AK hotlinks
+        Core:Dispatch:default:
+            Event:Payment:create:
+                eventId: 173
+            #Schedule:PersonSchedule:default:
+            #    params:
+            #        eventId: 173
+        Org.Dashboard.default:
+            Org.Dashboard.default: []
 
         Org.Inbox.list: []
         Org.Inbox.inbox: []

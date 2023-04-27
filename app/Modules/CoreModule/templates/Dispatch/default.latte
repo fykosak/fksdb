@@ -2,8 +2,8 @@
     {varType array $contestants}
     {varType array $contestsProperty}
     {varType array $orgs}
-    <h2>{_'Shortcuts'}</h2>
-    {control navigationChooser:board 'Core:Dispatch:default', true}
+	{*<h2>{_'Shortcuts'}</h2>
+	{control navigationChooser:board 'Core:Dispatch:default', true}*}
     <h2>{_'Contestant'}</h2>
     <p>
         <a href="{plink :Public:Register:contest}" class="btn btn-outline-primary">{_'Register'}</a>
@@ -11,14 +11,14 @@
     <nav class="d-md-flex justify-content-md-around flex-wrap">
         {foreach $contestants as $contestId => $contestantsForContest}
             <div class="navigation-item mb-3 d-block p-2">
-                <div class="icon d-sm-inline-block d-md-block mx-2">
+                <div class="icon d-md-inline-block d-md-block mx-1 pb-2">
                     <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
                             alt=""
                     />
                 </div>
                 <div class="list-group">
                     {foreach $contestantsForContest as $contestant}
-                        <a class="list-group-item-action list-group-item"
+                        <a class="list-group-item-action list-group-item p-2"
                            href="{$contestant['link']}">{$contestant['title']}</a>
                     {/foreach}
                 </div>
