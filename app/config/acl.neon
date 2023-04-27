@@ -139,9 +139,9 @@ acl:
     - allow(boss, emailMessage, list)
 
     # robot role
-    - allow(web, export, execute, queryTag(['web-safe']))
+    - allow(web, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['web-safe']))
     - allow(web, webService, ::constant(Nette\Security\Permission::ALL)) # new REST-API
-    - allow(wiki, export, execute, queryTag(['wiki-safe']))
+    - allow(wiki, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe']))
 
     - allow(org, webService, ::constant(Nette\Security\Permission::ALL))
 ## NEW APPLICATIONS

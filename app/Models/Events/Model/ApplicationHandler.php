@@ -29,7 +29,6 @@ use Tracy\Debugger;
 
 class ApplicationHandler
 {
-
     public const ERROR_ROLLBACK = 'rollback';
     public const ERROR_SKIP = 'skip';
     public const STATE_TRANSITION = 'transition';
@@ -74,16 +73,25 @@ class ApplicationHandler
         return $this->logger;
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function store(BaseHolder $holder, ArrayHash $data): void
     {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function storeAndExecuteValues(BaseHolder $holder, ArrayHash $data): void
     {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function storeAndExecuteForm(
         BaseHolder $holder,
         Form $form,
@@ -132,8 +140,7 @@ class ApplicationHandler
             $this->beginTransaction();
 
             $transition = $this->processData(
-                $data,
-                $form,
+                $form ? FormUtils::emptyStrToNull($form->getValues()) : $data,
                 $explicitTransitionName
                     ? $this->getMachine()->getTransitionById($explicitTransitionName)
                     : null,
@@ -142,8 +149,8 @@ class ApplicationHandler
             );
 
             if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data[$holder->name]['status'])) {
-                    $holder->setModelState(EventParticipantStatus::tryFrom($data[$holder->name]['status']));
+                if (isset($data['participant']['status'])) {
+                    $holder->setModelState(EventParticipantStatus::tryFrom($data['participant']['status']));
                 }
             }
 
@@ -206,29 +213,18 @@ class ApplicationHandler
     }
 
     private function processData(
-        ?ArrayHash $data,
-        ?Form $form,
+        ArrayHash $values,
         ?Transition $transition,
         BaseHolder $holder,
         ?string $execute
     ): ?Transition {
-        if ($form) {
-            $values = FormUtils::emptyStrToNull($form->getValues());
-        } else {
-            $values = $data;
-        }
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
-        if (isset($values[$holder->name]['status'])) {
-            $newState = EventParticipantStatus::tryFrom($values[$holder->name]['status']);
+        if (isset($values['participant']['status'])) {
+            $newState = EventParticipantStatus::tryFrom($values['participant']['status']);
         }
 
-        $processState = $holder->processFormValues(
-            $values,
-            $transition,
-            $this->logger,
-            $form
-        );
+        $processState = $holder->processFormValues($values, $transition);
 
         $newState = $newState ?: $processState;
 
@@ -244,7 +240,7 @@ class ApplicationHandler
                         sprintf(
                             _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
                             $state->label(),
-                            $holder->label,
+                            'participant',
                             $newState->label()
                         )
                     );
@@ -252,8 +248,8 @@ class ApplicationHandler
             }
         }
 
-        if (isset($values[$holder->name])) {
-            $holder->data += (array)$values[$holder->name];
+        if (isset($values['participant'])) {
+            $holder->data += (array)$values['participant'];
         }
 
         return $transition;

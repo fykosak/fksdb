@@ -115,10 +115,6 @@ class InboxPresenter extends BasePresenter
         return new SubmitsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @throws TaskNotFoundException
-     * @throws SubmitNotQuizException
-     */
     protected function createComponentQuizDetail(): QuizAnswersGrid
     {
         $submit = $this->submitService->findByPrimary($this->id);

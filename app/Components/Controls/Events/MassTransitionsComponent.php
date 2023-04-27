@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 
 class MassTransitionsComponent extends BaseComponent
@@ -37,16 +36,15 @@ class MassTransitionsComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
     }
 
-    /**
-     * @throws NeonSchemaException
-     */
     public function handleTransition(string $name): void
     {
-        $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;
-        foreach ($source->getHolders() as $holder) {
+        $machine = $this->eventDispatchFactory->getEventMachine($this->event);
+        /** @var EventParticipantModel $model */
+        foreach ($this->event->getParticipants() as $model) {
+            $holder = $machine->createHolder($model);
             $handler = new ApplicationHandler($this->event, $logger, $this->getContext());
             $total++;
             try {
@@ -55,7 +53,7 @@ class MassTransitionsComponent extends BaseComponent
                 $errored++;
             }
         }
-        FlashMessageDump::dump($logger, $this->getPresenter(), true);
+        FlashMessageDump::dump($logger, $this->getPresenter());
         $this->getPresenter()->flashMessage(
             sprintf(
                 _('Total %d applications, state changed %d, unavailable %d. '),

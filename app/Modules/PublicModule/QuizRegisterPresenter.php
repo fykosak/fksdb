@@ -35,12 +35,10 @@ class QuizRegisterPresenter extends BasePresenter
     {
         /** @var TaskModel $task */
         $task = $this->taskService->findByPrimary($this->id);
-        /** @var ContestModel $contest */
-        $contest = $task->contest;
-        if ($contest) {
+        if ($task) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
             $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->styleIds[] = $task->contest->getContestSymbol();
         }
         parent::beforeRender();
     }

@@ -141,7 +141,7 @@ class Utils
      */
     public static function cryptEmail(string $email): string
     {
-        [$user, $host] = preg_split('/@/', $email);
+        [$user, $host] = explode('@', $email);
         if (strlen($user) < 3) {
             return "@$host";
         } else {

@@ -6,7 +6,7 @@
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu, zveme Tě jako
     <b>{if $holder->getPerson()->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->event->event_type->name}, které se bude konat
-    v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
+    v obci <strong>{$holder->event->getParameter('letterWhere')}</strong> od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
     <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
 </p>
 <p>
@@ -21,7 +21,7 @@
 <p>
     Své rozhodnutí, zda bys
     chtěl{if $holder->getPerson()->gender == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0} kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+    <strong>{$holder->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
 odkazu
     <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své {if strpos($holder->getModelState(), 'spare') === 0}případné {/if}
     účasti nám pak můžeš dát vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s
@@ -30,7 +30,7 @@ odkazu
 </p>
 <p>
     O Tvé účasti na soustředění rozhodneme do
-    <strong>{$holder->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
+    <strong>{$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
 </p>
 
 {*<p>*}
@@ -47,5 +47,5 @@ odkazu
 
 <p>
     Za organizátory se na Tebe moc těší<br>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>

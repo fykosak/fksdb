@@ -15,9 +15,9 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
@@ -246,6 +246,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PaymentFormComponent(
             $this->getContext(),
+            $this->getEvent(),
             $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
             $this->getMachine(),
             null
@@ -264,6 +265,7 @@ class PaymentPresenter extends BasePresenter
     {
         return new PaymentFormComponent(
             $this->getContext(),
+            $this->getEvent(),
             $this->isAllowed($this->getEntity(), 'org-edit'),
             $this->getMachine(),
             $this->getEntity()

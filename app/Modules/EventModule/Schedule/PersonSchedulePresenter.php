@@ -24,17 +24,26 @@ class PersonSchedulePresenter extends BasePresenter
         return new PageTitle(null, _('My schedule'), 'fas fa-list');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedDefault(): void
     {
         $person = $this->getLoggedPerson();
         $this->setAuthorized($person && count($person->getEventRoles($this->getEvent())));
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedList(): void
     {
         $this->setAuthorized($this->isAllowed('event.scheduleGroup', 'create'));
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function renderDefault(): void
     {
         $this->template->event = $this->getEvent();
