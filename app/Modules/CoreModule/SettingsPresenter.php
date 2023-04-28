@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
-use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -24,7 +21,6 @@ use Nette\Forms\Form;
 
 class SettingsPresenter extends BasePresenter
 {
-
     public const CONT_LOGIN = 'login';
 
     private LoginService $loginService;
@@ -36,7 +32,7 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Settings'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change password'), 'fa fa-cogs');
     }
 
     /**
@@ -86,15 +82,8 @@ class SettingsPresenter extends BasePresenter
             $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
 
         $group = $form->addGroup(_('Authentication'));
-        $rule = function (BaseControl $baseControl) use ($login): bool {
-            $uniqueLogin = new UniqueLogin($this->getContext(), $login);
-            $uniqueEmail = new UniqueEmail($this->getContext(), $login->person);
-
-            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
-        };
         $loginContainer = $this->createLogin(
             $group,
-            $rule,
             true,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
@@ -122,18 +111,12 @@ class SettingsPresenter extends BasePresenter
 
     private function createLogin(
         ControlGroup $group,
-        callable $loginRule,
         bool $showPassword = true,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ContainerWithOptions {
         $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
-
-        $login = $container->addText('login', _('Username'));
-        $login->setHtmlAttribute('autocomplete', 'username');
-
-        $login->addRule($loginRule, _('This username is already taken.'));
 
         if ($showPassword) {
             if ($verifyOldPassword) {
