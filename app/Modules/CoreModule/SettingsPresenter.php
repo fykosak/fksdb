@@ -61,7 +61,6 @@ class SettingsPresenter extends BasePresenter
         }
     }
 
-
     /**
      * @throws BadTypeException
      */

@@ -9,17 +9,19 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
 class PreferredLangFormComponent extends FormComponent
 {
-
     protected PersonModel $person;
-
     protected PersonInfoService $personInfoService;
 
     public function __construct(Container $container, PersonModel $person)
@@ -53,6 +55,9 @@ class PreferredLangFormComponent extends FormComponent
         }
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $items = [];

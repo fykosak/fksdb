@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\FormUtils;
@@ -35,7 +37,7 @@ class LoginFomComponent extends EntityFormComponent
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
         $login = $container->addText('login', _('Username'));
         $login->setHtmlAttribute('autocomplete', 'username');
         $login->addRule(
