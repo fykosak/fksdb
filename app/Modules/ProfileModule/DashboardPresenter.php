@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
+use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 
 class DashboardPresenter extends BasePresenter

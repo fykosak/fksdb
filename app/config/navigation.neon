@@ -107,3 +107,11 @@ navigation:
         Profile.Edit.lang: []
         Profile.Edit.addressDelivery: []
         Profile.Edit.addressPermanent: []
+    Profile.Dashboard.default:
+        Core.MyApplications.default: []
+        Core.MyPayments.default: []
+        Profile.Email.default: []
+        Profile.PostContact.default: []
+        Profile.Lang.default: []
+        Profile.Login.default: []
+        Core.Settings.default: []

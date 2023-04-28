@@ -13,7 +13,7 @@ class PostContactPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change post contact'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change post contact'), 'fa fa-envelope');
     }
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent

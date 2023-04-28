@@ -1,6 +1,3 @@
 {block content}
-    <a href="{plink Email:default}" class="btn btn-primary">{_'Change email'}</a>
-    <a href="{plink PostContact:default}" class="btn btn-primary">{_'Edit post contact information'}</a>
-    <a href="{plink Lang:default}" class="btn btn-primary">{_'Change my lang settings'}</a>
-    <a href="{plink Login:default}" class="btn btn-primary">{_'Change login'}</a>
+    {control navigationChooser:board 'Profile.Dashboard.default'}
 {/block}
