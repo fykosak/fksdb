@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class TeamTeacherMailCallback extends MailCallback
 {

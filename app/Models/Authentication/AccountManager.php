@@ -119,7 +119,7 @@ class AccountManager
             $newEmail
         );
         $oldData = [
-            'text' => $this->mailTemplateFactory->renderChangePasswordOld(
+            'text' => $this->mailTemplateFactory->renderChangeEmailOld(
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,]
             ),
             'sender' => $this->emailFrom,
@@ -127,7 +127,7 @@ class AccountManager
             'recipient' => $person->getInfo()->email,
         ];
         $newData = [
-            'text' => $this->mailTemplateFactory->renderChangePasswordNew(
+            'text' => $this->mailTemplateFactory->renderChangeEmailNew(
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,]
             ),
             'sender' => $this->emailFrom,

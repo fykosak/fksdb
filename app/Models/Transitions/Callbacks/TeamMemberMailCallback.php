@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 abstract class TeamMemberMailCallback extends MailCallback
 {

@@ -65,17 +65,17 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
-    public function renderChangePasswordOld(array $data): string
+    public function renderChangeEmailOld(array $data): string
     {
-        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changePassword.old.latte', $data);
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.old.latte', $data);
     }
 
     /**
      * @throws BadTypeException
      */
-    public function renderChangePasswordNew(array $data): string
+    public function renderChangeEmailNew(array $data): string
     {
-        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changePassword.new.latte', $data);
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.new.latte', $data);
     }
 
     /**

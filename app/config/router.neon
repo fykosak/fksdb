@@ -75,7 +75,9 @@ fksrouter:
             mask: 'auth/<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
-
+        -
+            mask: 'profile/<presenter=Dashboard>/<action=default>'
+            module: Profile
         -
             mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
