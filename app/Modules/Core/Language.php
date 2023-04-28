@@ -49,6 +49,9 @@ class Language extends FakeStringEnum
         throw new NotImplementedException();
     }
 
+    /**
+     * @return self[]
+     */
     public static function cases(): array
     {
         return [

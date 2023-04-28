@@ -3,12 +3,14 @@
 {varType bool $hasAddress}
 {block content}
     {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY}
-        <p>{_'When different from delivery address. Mails will be send to permanent address.'}</p>
+        <p class="alert-info alert">
+            <i class="fas fa-info-circle me-1"></i>{_'Fill only if differnt from permant adress, otherwise mails will be send to permanent address.'}
+        </p>
     {/if}
     {include parent}
     {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY && $hasAddress}
         <div class="alert alert-warning">
-            <p>{_'When delivery adrress same as permenant can deleted. Mails will be send to permanent address.'}</p>
+            <p><i class="fas fa-info-circle me-1"></i>{_'Delivery address can be deleted if is same as permenant. Mails will be send to permanent address.'}</p>
             <a href="{link delete!}" class="btn btn-danger">{_'Remove delivery address'}</a>
         </div>
     {/if}
