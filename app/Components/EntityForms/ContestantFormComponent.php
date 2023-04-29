@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -16,7 +18,6 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\InvalidArgumentException;
 
 /**
  * @property ContestantModel $model
@@ -63,31 +64,20 @@ class ContestantFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
-        if ($this->isCreating()) {
-            $contestant = $this->service->storeModel([
-                'contest_id' => $this->contestYear->contest_id,
-                'year' => $this->contestYear->year,
-                'person_id' => $values[self::CONT_CONTESTANT]['person_id'],
-            ]);
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        if (isset($this->model)) {
+            $strategy->updateCategory($this->model);
+        } else {
+            /** @var ReferencedId $referencedId */
+            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+            /** @var PersonModel $person */
+            $person = $referencedId->getModel();
+            $strategy->createContestant($person);
         }
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Contestant has been updated') : _('Contestant has been created'),
             Message::LVL_SUCCESS
         );
-
-        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
-        $contestant = $contestant ?? $this->model;
-        try {
-            $category = $strategy->studyYearsToCategory($contestant);
-            $this->service->storeModel(
-                ['contest_category_id' => $category->contest_category_id],
-                $contestant
-            );
-            $this->getPresenter()->flashMessage(sprintf(_('Contestant enlisted to category %s.'), $category->label));
-        } catch (InvalidArgumentException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage());
-        }
         $this->getPresenter()->redirect('list');
     }
 

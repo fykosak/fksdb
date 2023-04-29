@@ -110,17 +110,17 @@ class ResultsModelFactory implements XMLNodeSerializer
         switch ($contestYear->contest_id) {
             case ContestModel::ID_FYKOS:
                 if ($contestYear->year >= 25) {
-                    return new EvaluationFykos2011($container);
+                    return new EvaluationFykos2011($container, $contestYear);
                 } else {
-                    return new EvaluationFykos2001($container);
+                    return new EvaluationFykos2001($container, $contestYear);
                 }
             case ContestModel::ID_VYFUK:
                 if ($contestYear->year >= 4) {
-                    return new EvaluationVyfuk2014($container);
+                    return new EvaluationVyfuk2014($container, $contestYear);
                 } elseif ($contestYear->year >= 2) {
-                    return new EvaluationVyfuk2012($container);
+                    return new EvaluationVyfuk2012($container, $contestYear);
                 } else {
-                    return new EvaluationVyfuk2011($container);
+                    return new EvaluationVyfuk2011($container, $contestYear);
                 }
         }
         throw new BadRequestException(
