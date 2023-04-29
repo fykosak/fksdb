@@ -17,9 +17,4 @@ class LogicOr extends VariadicExpression
         }
         return false;
     }
-
-    protected function getInfix(): string
-    {
-        return '||';
-    }
 }

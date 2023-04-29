@@ -51,10 +51,13 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
 
     public function getSubmitPoints(SubmitModel $submit): ?float
     {
+        if ($submit->task->series > 6) {
+            return $submit->raw_points;
+        }
         switch ($submit->contestant->contest_category->label) {
             case ContestCategoryModel::VYFUK_6:
             case ContestCategoryModel::VYFUK_7:
-                if ($submit->task->label == '1' && $submit->task->series < 7) {
+                if ($submit->task->label == '1') {
                     return $submit->raw_points;
                 } else {
                     return null;

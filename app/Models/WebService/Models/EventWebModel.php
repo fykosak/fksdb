@@ -126,6 +126,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createScheduleListArray(EventModel $event): array
     {
         $data = [];
@@ -246,6 +249,9 @@ class EventWebModel extends WebModel
         return $participants;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createParticipantNode(EventParticipantModel $participant, \DOMDocument $doc): \DOMElement
     {
         $pNode = $participant->createXMLNode($doc);
@@ -253,6 +259,9 @@ class EventWebModel extends WebModel
         return $pNode;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
     {
         $pNode = $member->createXMLNode($doc);
@@ -281,7 +290,7 @@ class EventWebModel extends WebModel
 
     /**
      * @throws BadRequestException
-     * #Array
+     * @throws \Exception
      */
     public function getJsonResponse(array $params): array
     {

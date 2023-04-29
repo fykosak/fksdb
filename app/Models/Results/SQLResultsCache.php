@@ -60,6 +60,7 @@ class SQLResultsCache
     }
 
     /**
+     * @throws BadRequestException
      * Calculate points from form-based tasks, such as quizzes.
      */
     public function calculateQuizPoints(ContestYearModel $contestYear, int $series): void
@@ -70,9 +71,13 @@ class SQLResultsCache
             foreach ($task->getSubmits() as $submit) {
                 $sum = $submit->calculateQuestionSum();
                 if (isset($sum)) {
-                    $this->submitService->storeModel(['raw_points' => $sum], $submit);
+                    $this->submitService->storeModel([
+                        'raw_points' => $sum,
+                        'corrected' => true,
+                    ], $submit);
                 }
             }
         }
+        $this->recalculate($contestYear);
     }
 }

@@ -1,7 +1,7 @@
 parameters:
     events:
         setkani12jaro:
-            appCond: or(regOpen(), role('admin'))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
             person:
                 person:
                     other_name:
@@ -39,42 +39,36 @@ events:
         eventTypeIds: [11]
         eventYears: [12] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Podzimní setkáni řešitelů Výfuku <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 30
 
-        baseMachine:
-            service: @orm.event_participant.service
-
+        machine:
+            machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+            stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
             transitions:
                 __init->applied:
-                    condition: or(and(regOpen(),le(count('applied','participated'),param('capacity'))), role('admin'))
+                    condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count('applied','participated'),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Přihlásit účastníka')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Setkani\ParticipantMailCallback()
                 applied->participated:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Prezentovat')
                 applied->missed:
-                    condition: and(role('admin'),eventWas())
+                    condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Nepřijel')
                     behaviorType: danger
                 applied->cancelled:
-                    condition: role('admin')
+                    condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
 
+        holder:
             fields:
                 person_id:
                     label: _('Person')
                     required: true
                     modifiable: %events.setkani12jaro.appCond%
                     default: fromLogin
-                    factory: RefPerson(%events.setkani12jaro.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.setkani12jaro.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                 diet:
                     label: _('Food')
                     description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
@@ -85,15 +79,6 @@ events:
                     label: _('Užívané léky')
                 note:
                    label: _('Další poznámky')
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                label: _('Účastník')
-                modifiable: or(neg(or(state('participated'),state('missed'),state('cancelled'))),role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy

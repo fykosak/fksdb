@@ -3,7 +3,7 @@
 <p>
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     protože se uvolnilo místo a Ty jsi projevil{if $holder->getPerson()->gender->value == 'F'}a{/if} zájem o {$holder->event->event_type->name} v obci
-    {$holder->getParameter('letterWhere')} od {$holder->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
+    {$holder->event->getParameter('letterWhere')} od {$holder->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
     , jsi nyní mezi pozvanými. Gratulujeme.
 </p>
 
@@ -14,5 +14,5 @@
 
 <p>
     Za organizátory<br>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>

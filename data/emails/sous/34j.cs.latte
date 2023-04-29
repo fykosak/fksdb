@@ -7,7 +7,7 @@
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích FYKOSu, je nám
     ctí Tě pozvat{if strpos($holder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na
     {$holder->event->event_type->name}, které se bude konat v
-    <strong>{$holder->getParameter('letterWhere')}</strong> v termínu
+    <strong>{$holder->event->getParameter('letterWhere')}</strong> v termínu
     od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
     <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
 </p>
@@ -31,7 +31,7 @@
     chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve,
     nejpozději však do
-    <strong>{$holder->getParameter('deadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+    <strong>{$holder->event->getParameter('deadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
 odkazu <a href="{$link}">{$link}</a>. I když si nyní nemůžeš být stoprocentně
     jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, zaškrni ano, pokud máš o
     soustředění zájem.
@@ -41,7 +41,7 @@ odkazu <a href="{$link}">{$link}</a>. I když si nyní nemůžeš být stoprocen
 </p>
 
 <p n:if="strpos($holder->getModelState(), 'spare') === 0">
-    O Tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->getParameter('deadline')|date:'j. n.'}
+    O Tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->event->getParameter('deadline')|date:'j. n.'}
 </p>
 
 <p>
@@ -55,5 +55,5 @@ odkazu <a href="{$link}">{$link}</a>. I když si nyní nemůžeš být stoprocen
 
 <p>
     Za organizátory se na Tebe moc těší<br>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>

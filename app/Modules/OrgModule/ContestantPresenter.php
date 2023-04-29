@@ -83,11 +83,7 @@ class ContestantPresenter extends BasePresenter
         /** @var ContestantModel $contestant */
         foreach ($contestants as $contestant) {
             try {
-                $category = $strategy->studyYearsToCategory($contestant);
-                $this->contestantService->storeModel(
-                    ['contest_category_id' => $category->contest_category_id],
-                    $contestant
-                );
+                $strategy->updateCategory($contestant);
             } catch (InvalidArgumentException $exception) {
                 $this->flashMessage($exception->getMessage());
             }

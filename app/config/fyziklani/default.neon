@@ -1,13 +1,6 @@
-
-services:
-    fol.default.machine:
-        factory: FKSDB\Models\Transitions\Machine\TeamMachine
-    fof.default.machine:
-        factory: FKSDB\Models\Transitions\Machine\TeamMachine
-
 transitions:
-    fol.default:
-        machine: fol.default.machine
+    fol:
+        machine: FKSDB\Models\Transitions\Machine\TeamMachine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null
         transitions:
@@ -33,8 +26,8 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
                 label: _('Zrušit tým')
                 behaviorType: danger
-    fof.default:
-        machine: fof.default.machine
+    fof:
+        machine: FKSDB\Models\Transitions\Machine\TeamMachine
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null
         transitions:

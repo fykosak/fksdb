@@ -8,6 +8,7 @@ use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
@@ -49,7 +50,7 @@ class BornCheck extends AbstractAdjustment
                     }
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if ($this->schoolService->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
+                    if ($this->schoolService->isCzSkSchool($schoolId) && isset($studyYear)) {
                         $form->addError($msg);
                         return false;
                     }
@@ -70,7 +71,7 @@ class BornCheck extends AbstractAdjustment
 //                };
     }
 
-    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int
+    private function getStudyYear(Control $studyYearControl, Control $personControl): ?StudyYear
     {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
@@ -82,7 +83,7 @@ class BornCheck extends AbstractAdjustment
             ->where('person_id', $personId)
             ->where('ac_year', $this->holder->event->getContestYear()->ac_year)
             ->fetch();
-        return $personHistory ? $personHistory->study_year : null;
+        return $personHistory ? StudyYear::tryFromLegacy($personHistory->study_year) : null;
     }
 
     private function getSchoolId(Control $schoolControl, Control $personControl): int
@@ -96,10 +97,5 @@ class BornCheck extends AbstractAdjustment
             ->where('person_id', $personId)
             ->where('ac_year', $this->holder->event->getContestYear()->ac_year)->fetch();
         return $school->school_id;
-    }
-
-    private function isStudent(?int $studyYear): bool
-    {
-        return isset($studyYear);
     }
 }

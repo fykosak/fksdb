@@ -6,8 +6,11 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\ContestCategoryService;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -16,16 +19,22 @@ abstract class EvaluationStrategy
 {
     private Container $container;
     protected ContestCategoryService $contestCategoryService;
+    private ContestantService $contestantService;
+    protected ContestYearModel $contestYear;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, ContestYearModel $contestYear)
     {
         $this->container = $container;
+        $this->contestYear = $contestYear;
         $this->container->callInjects($this);
     }
 
-    public function injectCategoryService(ContestCategoryService $contestCategoryService): void
-    {
+    public function injectService(
+        ContestCategoryService $contestCategoryService,
+        ContestantService $contestantService
+    ): void {
         $this->contestCategoryService = $contestCategoryService;
+        $this->contestantService = $contestantService;
     }
 
     /**
@@ -55,10 +64,10 @@ abstract class EvaluationStrategy
         throw new InvalidArgumentException('Invalid category ' . $category->label);
     }
 
-    final public function studyYearsToCategory(ContestantModel $contestant): ContestCategoryModel
+    private function studyYearsToCategory(PersonModel $person): ContestCategoryModel
     {
         $map = $this->getCategoryMap();
-        $personHistory = $contestant->getPersonHistory();
+        $personHistory = $person->getHistoryByContestYear($this->contestYear);
         foreach ($map as $key => $values) {
             if (in_array($personHistory->study_year, $values, true)) {
                 return $this->contestCategoryService->findByLabel((string)$key);
@@ -66,11 +75,37 @@ abstract class EvaluationStrategy
         }
         throw new InvalidArgumentException(
             sprintf(
-                _('Invalid studyYear %i for contestant %s.'),
+                _('Invalid studyYear %i for person %s.'),
                 $personHistory->study_year,
-                $contestant->person->getFullName()
+                $person->getFullName()
             )
         );
+    }
+
+    final public function createContestant(PersonModel $person): ?ContestantModel
+    {
+        $category = $this->studyYearsToCategory($person);
+        /** @var ContestantModel $contestant */
+        $contestant = $this->contestantService->storeModel([
+            'contest_id' => $this->contestYear->contest,
+            'person_id' => $person->person_id,
+            'year' => $this->contestYear->year,
+            'contest_category_id' => $category->contest_category_id,
+        ]);
+        return $contestant;
+    }
+
+    final public function updateCategory(ContestantModel $contestant): ?ContestantModel
+    {
+        $category = $this->studyYearsToCategory($contestant->person);
+        if ($category->contest_category_id === $contestant->contest_category_id) {
+            return $contestant;
+        }
+        /** @var ContestantModel $contestant */
+        $contestant = $this->contestantService->storeModel([
+            'contest_category_id' => $category->contest_category_id,
+        ], $contestant);
+        return $contestant;
     }
 
     abstract public function getSubmitPoints(SubmitModel $submit): ?float;

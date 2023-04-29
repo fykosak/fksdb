@@ -43,7 +43,7 @@ class FOLCategoryProcessing extends FormProcessing
         ]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
         foreach ($members as $member) {
-            $history = $member->getHistory($event->getContestYear()->ac_year);
+            $history = $member->getHistoryByContestYear($event->getContestYear());
             if (!$history->school) { // for future
                 $olds += 1;
             }
