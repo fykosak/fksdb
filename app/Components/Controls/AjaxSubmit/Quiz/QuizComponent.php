@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
@@ -38,7 +37,6 @@ class QuizComponent extends FormComponent
     private TaskModel $task;
     private ?ContestantModel $contestant;
     private User $user;
-    private ContestantService $contestantService;
     private QuizHandler $handler;
     private AccountManager $accountManager;
     private string $lang;
@@ -53,12 +51,10 @@ class QuizComponent extends FormComponent
 
     final public function inject(
         User $user,
-        ContestantService $contestantService,
         QuizHandler $handler,
         AccountManager $accountManager
     ) {
         $this->user = $user;
-        $this->contestantService = $contestantService;
         $this->handler = $handler;
         $this->accountManager = $accountManager;
     }

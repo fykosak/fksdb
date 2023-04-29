@@ -13,7 +13,6 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\Utils\Logging\Message;
@@ -33,7 +32,6 @@ class RegisterContestantFormComponent extends EntityFormComponent
     private string $lang;
 
     private ContestAuthorizator $contestAuthorizator;
-    private ContestantService $service;
     private AccountManager $accountManager;
     private User $user;
 
@@ -51,12 +49,10 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     final public function injectTernary(
         ContestAuthorizator $contestAuthorizator,
-        ContestantService $service,
         AccountManager $accountManager,
         User $user
     ): void {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->service = $service;
         $this->accountManager = $accountManager;
         $this->user = $user;
     }

@@ -11,7 +11,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\Utils\Logging\Message;
@@ -30,7 +29,6 @@ class ContestantFormComponent extends EntityFormComponent
 
     private ContestYearModel $contestYear;
     private ContestAuthorizator $contestAuthorizator;
-    private ContestantService $service;
 
     public function __construct(ContestYearModel $contestYear, Container $container, ?ContestantModel $model)
     {
@@ -38,12 +36,9 @@ class ContestantFormComponent extends EntityFormComponent
         $this->contestYear = $contestYear;
     }
 
-    public function inject(
-        ContestantService $service,
-        ContestAuthorizator $contestAuthorizator
-    ): void {
+    public function inject(ContestAuthorizator $contestAuthorizator): void
+    {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->service = $service;
     }
 
     protected function configureForm(Form $form): void
