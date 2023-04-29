@@ -36,6 +36,7 @@ class SubmitModel extends Model implements Resource
             'points' => $this->points,
             'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
+            'modified' => $this->modified->format('c'),
             'created' => $this->modified->format('c'),
         ];
     }

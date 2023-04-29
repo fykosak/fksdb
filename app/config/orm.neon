@@ -716,10 +716,6 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\Fyziklani\SubmitState
-            created:
-                type: dateTime
-                title: _('Created')
-                format: 'H:m:s d-M-Y'
             modified:
                 type: dateTime
                 title: _('Modified')

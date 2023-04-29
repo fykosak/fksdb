@@ -232,11 +232,7 @@ class RankingStrategy
             $submitPointsCount[$submit->points]++;
             $sum += $submit->points;
             $count++;
-            $arraySubmits[] = [
-                'task_id' => $submit->fyziklani_task_id,
-                'points' => $submit->points,
-                'time' => $submit->modified,
-            ];
+            $arraySubmits[] = $submit;
         }
 
         return [

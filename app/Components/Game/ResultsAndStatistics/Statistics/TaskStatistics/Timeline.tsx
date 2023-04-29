@@ -70,14 +70,14 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         }
 
         taskSubmits.sort((a, b) => {
-            return (new Date(a.created)).getTime() - (new Date(b.created)).getTime();
+            return (new Date(a.modified)).getTime() - (new Date(b.modified)).getTime();
         });
         const dots = taskSubmits.filter((submit) => {
-            const created = new Date(submit.created);
+            const created = new Date(submit.modified);
             return created.getTime() > fromDate.getTime() && created.getTime() < toDate.getTime();
         }).map((submit, index: number) => {
 
-            const submitted = new Date(submit.created);
+            const submitted = new Date(submit.modified);
 
             return (
                 <g style={{opacity: 1}} key={index}>
@@ -87,7 +87,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
                         r={5}
                         data-points={submit.points}
                     ><title>
-                        {submit.currentTeam.name + '-' + submit.created.toString()}
+                        {submit.currentTeam.name + '-' + submit.modified.toString()}
                     </title>
                     </circle>
                 </g>

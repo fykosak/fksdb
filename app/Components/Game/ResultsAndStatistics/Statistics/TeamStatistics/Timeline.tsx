@@ -58,7 +58,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
             const submit = teamSubmits.filter((fSubmit) => {
                 return fSubmit.taskId === taskId;
             })[0];
-            const to = submit ? new Date(submit.created) : gameEnd;
+            const to = submit ? new Date(submit.modified) : gameEnd;
 
             const fromCoordinates = this.xScale(from);
             const toCoordinates = this.xScale(to);
@@ -128,14 +128,14 @@ const reconstructTeamGame = (submits: Submits, tasks: TaskModel[], tasksOnBoard:
     for (const index in submits) {
         if (submits.hasOwnProperty(index)) {
             const submit: SubmitModel = submits[index];
-            const {teamId: submitTeamId, created} = submit;
+            const {teamId: submitTeamId, modified} = submit;
             if (teamId === submitTeamId) {
                 if (submit.points !== null && submit.points !== 0) {
                     teamSubmits.push(submit);
                     const task = taskBuffer.shift();
                     activeTasks.push({
                         ...task,
-                        from: new Date(created),
+                        from: new Date(modified),
                     });
                 }
             }

@@ -58,7 +58,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
                 const {teamId: submitTeamId, points} = submit;
                 meanPoints += (submit.points / numberOfTeams);
                 meanTeamData.push({
-                    xValue: new Date(submit.created),
+                    xValue: new Date(submit.modified),
                     yValue: meanPoints,
                 });
 
@@ -72,7 +72,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
                             active: (!(activePoints && (activePoints !== submit.points))),
                             color: 'var(--color-fof-points-' + submit.points + ')',
                             label: currentTask.label,
-                            xValue: new Date(submit.created),
+                            xValue: new Date(submit.modified),
                             yValue: maxPoints,
                         });
                     }

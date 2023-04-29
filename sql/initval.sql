@@ -36,9 +36,7 @@ VALUES (1, 'serial_author', 'serial_author', 'Je organizátornizátor autor seri
        (2, 'email_invalid', 'Neplatný e-mail',
         'E-maily zaslané na danou adresu se nám již nekdy vrátily. Zatím sem nepatri adresy, u nichž je hlášen \'mailbox full\'.',
         'global'),
-       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global'),
-       (4, 'send_forum', 'Notifikace ze fóra', 'Ze starého fóra na FYKOSím webu.', 'global'),
-       (5, 'send_forum_dgst', 'Digesty z fóra', 'Posílat digesty ze starého fóra na FYKOSím webu.', 'global');
+       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global');
 
 INSERT INTO `event_type` (`event_type_id`, `contest_id`, `name`)
 VALUES (1, 1, 'FYKOSí Fyziklání'),

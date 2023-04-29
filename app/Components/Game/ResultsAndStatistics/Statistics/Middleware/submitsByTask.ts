@@ -19,7 +19,7 @@ export const submitsByTask = (
             if (submit.taskId === activeTaskId) {
                 if (submit.points > 0) {
                     if (!activePoints || activePoints === submit.points) {
-                        const ms = (new Date(submit.created)).getTime();
+                        const ms = (new Date(submit.modified)).getTime();
                         const c = Math.floor(ms / aggregationTime);
                         taskTimeSubmits[c] = taskTimeSubmits[c] || {1: 0, 2: 0, 3: 0, 5: 0};
                         taskTimeSubmits[c][submit.points]++;

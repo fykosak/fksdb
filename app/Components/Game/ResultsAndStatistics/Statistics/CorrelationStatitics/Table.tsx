@@ -52,8 +52,8 @@ class Table extends React.Component<StateProps> {
             }
             rows.push(<tr key={id}>
                 <td>{task.label}</td>
-                <td>{firstSubmit ? firstSubmit.created : ''}</td>
-                <td>{secondSubmit ? secondSubmit.created : ''}</td>
+                <td>{firstSubmit ? firstSubmit.modified : ''}</td>
+                <td>{secondSubmit ? secondSubmit.modified : ''}</td>
                 <td>{delta ? (getTimeLabel(delta, 0)) : ''}</td>
             </tr>);
 
