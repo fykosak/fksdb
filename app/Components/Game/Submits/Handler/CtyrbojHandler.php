@@ -27,7 +27,7 @@ class CtyrbojHandler extends Handler
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($submit, $task->points);
         } else {
-            throw new GameException(\sprintf(_('Task was already submitted and checked'), $submit->points));
+            throw new GameException(\sprintf(_('Task was already submitted'), $submit->points));
         }
     }
 
@@ -37,5 +37,10 @@ class CtyrbojHandler extends Handler
     public function check(SubmitModel $submit, ?int $points): void
     {
         throw new NotImplementedException();
+    }
+
+    public function logPriority(): string
+    {
+        return 'ctyrboj-info';
     }
 }

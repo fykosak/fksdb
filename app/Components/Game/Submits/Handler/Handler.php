@@ -23,7 +23,6 @@ use Tracy\Debugger;
 abstract class Handler
 {
     protected const DEBUGGER_LOG_PRIORITY = 'ctyrboj-info';
-    protected const LOG_FORMAT = 'Submit %d was %s by %s';
 
     protected User $user;
     protected EventModel $event;
@@ -50,12 +49,10 @@ abstract class Handler
         }
     }
 
-    abstract public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void;
-
     public function create(
         TaskModel $task,
         TeamModel2 $team,
-        ?int $points,
+        int $points,
         string $newState = SubmitState::NOT_CHECKED
     ): void {
         $this->checkRequirements($team, $task);
@@ -108,7 +105,7 @@ abstract class Handler
      * @throws PointsMismatchException
      * @throws ModelException
      */
-    public function check(SubmitModel $submit, ?int $points): void
+    public function check(SubmitModel $submit, int $points): void
     {
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         if ($submit->points != $points) {
@@ -137,7 +134,7 @@ abstract class Handler
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function edit(SubmitModel $submit, ?int $points): void
+    public function edit(SubmitModel $submit, int $points): void
     {
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         $this->submitService->storeModel([
@@ -164,12 +161,16 @@ abstract class Handler
     {
         Debugger::log(
             \sprintf(
-                self::LOG_FORMAT . $appendLog,
+                'Submit %d was %s by %s' . $appendLog,
                 $submit->getPrimary(),
                 $action,
                 $this->user->getIdentity()->getId()
             ),
-            self::DEBUGGER_LOG_PRIORITY
+            $this->logPriority()
         );
     }
+
+    abstract public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void;
+
+    abstract public function logPriority(): string;
 }

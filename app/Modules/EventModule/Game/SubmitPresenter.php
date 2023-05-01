@@ -7,13 +7,10 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Components\Game\Submits\Form\CtyrbojPointsEntryComponent;
-use FKSDB\Components\Game\Submits\Form\FOFPointsEntryComponent;
-use FKSDB\Components\Game\Submits\Form\PointsEntryComponent;
+use FKSDB\Components\Game\Submits\Form\FormComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -131,17 +128,10 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      */
-    protected function createComponentCreateForm(): PointsEntryComponent
+    protected function createComponentCreateForm(): FormComponent
     {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return new FOFPointsEntryComponent($this->getContext(), $this->getEvent());
-            case 17:
-                return new CtyrbojPointsEntryComponent($this->getContext(), $this->getEvent());
-        }
-        throw new NotImplementedException();
+        return new FormComponent($this->getContext(), $this->getEvent());
     }
 
     /**

@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 
 class FOFHandler extends Handler
 {
-
     /**
      * @throws PointsMismatchException
      * @throws ClosedSubmittingException
@@ -33,5 +32,10 @@ class FOFHandler extends Handler
         } else {
             throw new GameException(\sprintf(_('Task was already submitted and checked'), $submit->points));
         }
+    }
+
+    public function logPriority(): string
+    {
+        return 'fof-info';
     }
 }
