@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\TaskNotFoundException;
@@ -20,9 +19,8 @@ class QuizRegisterPresenter extends BasePresenter
 
     private TaskService $taskService;
 
-    final public function injectTernary(
-        TaskService $taskService
-    ): void {
+    final public function injectTernary(TaskService $taskService): void
+    {
         $this->taskService = $taskService;
     }
 

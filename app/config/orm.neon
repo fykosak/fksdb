@@ -626,10 +626,6 @@ orm:
         service: FKSDB\Models\ORM\Services\TaskService
         model: FKSDB\Models\ORM\Models\TaskModel
         columns:
-            fq_name:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Task\FQNameColumnFactory
-                title: _('Task')
             series:
                 type: string
                 title: _('Series')

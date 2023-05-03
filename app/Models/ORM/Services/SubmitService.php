@@ -40,7 +40,10 @@ class SubmitService extends Service
     {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
-            'name' => $task->getFQName(),
+            'name' => [
+                'cs' => $task->name_cs,
+                'en' => $task->name_en,
+            ],
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,

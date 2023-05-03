@@ -4,26 +4,27 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\AjaxSubmit\Quiz;
 
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\Submits\QuizHandler;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use FKSDB\Models\Submits\QuizHandler;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Security\User;
 
 class QuizComponent extends FormComponent
@@ -68,7 +69,7 @@ class QuizComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $quizQuestions = new QuizContainer($this->container, $this->task, $this->contestant);
-        $quizQuestions->setOption('label', $this->task->getFQName());
+        $quizQuestions->setOption('label', $this->task->getFullLabel($this->lang));
         $form->addComponent($quizQuestions, 'quiz_questions');
 
         // show contestant registration form if contestant is null
@@ -128,6 +129,7 @@ class QuizComponent extends FormComponent
             // create quiz submit
             $this->handler->storeSubmit($this->task, $this->contestant);
             // create submit for each quiz question
+            /** @var SubmitQuestionModel $question */
             foreach ($this->task->getQuestions() as $question) {
                 $answer = $values['quiz_questions']['question' . $question->submit_question_id]['option'];
                 if (isset($answer)) {

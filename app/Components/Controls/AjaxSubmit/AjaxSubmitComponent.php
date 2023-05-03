@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -29,12 +29,14 @@ class AjaxSubmitComponent extends AjaxComponent
     private TaskModel $task;
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
+    private string $lang;
 
-    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant, string $lang)
     {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
+        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitService $submitService, SubmitHandlerFactory $submitHandlerFactory): void
@@ -108,7 +110,7 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(
                 new Message(
-                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFQName()),
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFullLabel($this->lang)),
                     Message::LVL_ERROR
                 )
             );
