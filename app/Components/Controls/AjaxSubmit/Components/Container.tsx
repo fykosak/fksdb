@@ -19,10 +19,10 @@ interface StateProps {
 class UploadContainer extends React.Component<StateProps> {
 
     public render() {
-
         const {submit} = this.props;
+        if (submit === undefined) return null ;
         const headline = (<>
-            <h4>{submit.name}</h4>
+            <h4>{submit.name[translator.getCurrentLocale()]}</h4>
             <small className="text-muted">{submit.deadline}</small>
         </>);
         return <Card headline={headline} level="info">
@@ -52,9 +52,7 @@ class UploadContainer extends React.Component<StateProps> {
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        submit: {
-            ...state.uploadData.submit,
-        },
+        submit: state.uploadData.submit,
         submitting: state.fetch.submitting,
         actions: state.fetch.actions,
     };

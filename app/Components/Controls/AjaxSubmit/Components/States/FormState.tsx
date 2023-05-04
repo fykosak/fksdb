@@ -1,3 +1,4 @@
+import { translator } from '@translator/translator';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
@@ -58,7 +59,7 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fa fa-download"/></span>
                     <span className="d-block p-1">
-                        <span>Drag file here.</span>
+                        <span>{translator.getText('Drag file here.')}</span>
                     </span>
                     <input
                         className="form-control"
