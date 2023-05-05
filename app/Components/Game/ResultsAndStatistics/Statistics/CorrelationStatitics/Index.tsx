@@ -1,14 +1,11 @@
-import { translator } from '@translator/translator';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
 import GlobalCorrelation from './GlobalCorrelation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     teams: TeamModel[];
@@ -24,8 +21,9 @@ interface DispatchProps {
 }
 
 class CorrelationStats extends React.Component<StateProps & DispatchProps> {
-
+    static contextType = TranslatorContext;
     public render() {
+        const translator = this.context;
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;
         const teamsOptions = teams.map((team) => {
             return (<option key={team.teamId} value={team.teamId}

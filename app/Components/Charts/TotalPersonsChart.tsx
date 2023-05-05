@@ -1,13 +1,10 @@
-import { translator } from '@translator/translator';
-import {
-    scaleLinear,
-    scaleTime,
-} from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface Data {
     created: string;
@@ -17,12 +14,13 @@ interface Data {
 
 interface OwnProps {
     data: Data[];
+    translator: Translator<availableLanguage>;
 }
 
 export default class TotalPersonsChart extends React.Component<OwnProps> {
 
     public render() {
-        const {data} = this.props;
+        const {data, translator} = this.props;
         const lineChartData: LineChartData<Date> = [];
         const pointsAll: PointData<Date>[] = [];
         const pointsMale: PointData<Date>[] = [];

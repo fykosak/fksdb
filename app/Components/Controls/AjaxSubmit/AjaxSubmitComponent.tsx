@@ -1,14 +1,17 @@
 import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
 import * as React from 'react';
 import UploadContainer from './Components/Container';
 import { app } from './Reducers';
 import './style.scss';
+import { TranslatorContext } from '@translator/LangContext';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface Props {
-    data: ModelSubmit;
+    data: SubmitModel;
     actions: NetteActions;
+    translator: Translator<availableLanguage>;
 }
 
 export default class AjaxSubmitComponent extends React.Component<Props> {
@@ -22,7 +25,9 @@ export default class AjaxSubmitComponent extends React.Component<Props> {
             }}
             app={app}
         >
-            <UploadContainer/>
+            <TranslatorContext.Provider value={this.props.translator}>
+                <UploadContainer/>
+            </TranslatorContext.Provider>
         </ActionsStoreCreator>;
     }
 }

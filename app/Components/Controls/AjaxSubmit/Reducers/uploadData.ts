@@ -3,13 +3,13 @@ import {
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
 
 export interface State {
-    submit?: ModelSubmit;
+    submit?: SubmitModel;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ModelSubmit>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<SubmitModel>>): State => {
     return {
         submit: {...action.data.data},
     };

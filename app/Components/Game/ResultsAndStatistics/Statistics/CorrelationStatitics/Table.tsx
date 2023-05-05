@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
@@ -8,6 +7,7 @@ import { getTimeLabel } from '../Middleware/correlation';
 import { getAverageNStandardDeviation } from '../Middleware/stdDev';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     submits: Submits;
@@ -18,9 +18,9 @@ interface StateProps {
 }
 
 class Table extends React.Component<StateProps> {
-
+    static contextType = TranslatorContext;
     public render() {
-
+        const translator = this.context;
         const {firstTeamId, secondTeamId, submits, tasks} = this.props;
         const firstTeamSubmits: SubmitModel[] = [];
         const secondTeamSubmits: SubmitModel[] = [];

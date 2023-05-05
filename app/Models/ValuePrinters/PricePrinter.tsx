@@ -1,15 +1,16 @@
-import { translator } from '@translator/translator';
 import { Price } from 'FKSDB/Models/Payment/price';
 import * as React from 'react';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     price: Price;
+    translator: Translator<availableLanguage>;
 }
 
 export default class PricePrinter extends React.Component<OwnProps> {
 
     public render() {
-        const {price: {EUR, CZK}} = this.props;
+        const {price: {EUR, CZK}, translator} = this.props;
         if ((!EUR || +EUR.amount === 0) && (!CZK || +CZK.amount === 0)) {
             return <span>{translator.getText('for free')}</span>;
         }

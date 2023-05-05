@@ -1,4 +1,4 @@
-import { LocalizedString } from '@translator/translator';
+import { availableLanguage, LangMap } from '@translator/translator';
 import { Price } from 'FKSDB/Models/Payment/price';
 
 export interface ModelScheduleItem {
@@ -7,7 +7,7 @@ export interface ModelScheduleItem {
     totalCapacity?: number;
     usedCapacity: number;
     scheduleItemId: number;
-    label: LocalizedString;
+    label: LangMap<availableLanguage, string>;
     requireIdNumber: boolean;
-    description: LocalizedString;
+    description: LangMap<availableLanguage, string>;
 }

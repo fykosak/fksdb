@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,6 +7,7 @@ import TimeHistogramLines from './TimeHistogramLinesChart';
 import Timeline from './Timeline';
 import Progress from './Progress';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     taskId: number;
@@ -15,8 +15,10 @@ interface StateProps {
 }
 
 class TaskStats extends React.Component<StateProps> {
+    static contextType = TranslatorContext;
     public render() {
         const {taskId, availablePoints} = this.props;
+        const translator = this.context;
         return (
             <>
                 <h2>{translator.getText('Global statistics')}</h2>

@@ -4,7 +4,7 @@ import TimeDisplay from 'FKSDB/Models/ValuePrinters/DatePrinter';
 import DateDisplay from 'FKSDB/Models/ValuePrinters/DatePrinter';
 import * as React from 'react';
 import ScheduleItem from './Item';
-import { translator } from '@translator/translator';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     group: ModelScheduleGroup;
@@ -12,15 +12,17 @@ interface OwnProps {
 }
 
 export default class Group extends React.Component<OwnProps> {
-
+    static contextType = TranslatorContext;
     public render() {
+        const translator = this.context;
         const {group, params} = this.props;
         return <div className="ms-3">
             <h5 className="mb-3">
-                {group.name[translator.getCurrentLocale()]}
+                {translator.get(group.name)}
                 {params.groupTime && (
                     <small className="ms-3 text-muted">
-                        <TimeDisplay date={group.start}/> - <TimeDisplay date={group.end}/>
+                        <TimeDisplay date={group.start} translator={translator}/> - <TimeDisplay date={group.end}
+                                                                                                 translator={translator}/>
                     </small>)}
             </h5>
             {(group.registrationEnd || group.modificationEnd) &&
@@ -28,13 +30,13 @@ export default class Group extends React.Component<OwnProps> {
                     {group.registrationEnd && <p>
                         <i className="fa fa-info me-2"/>
                         {translator.getText('Registration end: ')}
-                        <DateDisplay date={group.registrationEnd}/>
+                        <DateDisplay date={group.registrationEnd} translator={translator}/>
                     </p>
                     }
                     {group.modificationEnd && group.modificationEnd != group.registrationEnd && <p>
                         <i className="fa fa-info me-2"/>
                         {translator.getText('Modification end: ')}
-                        <DateDisplay date={group.modificationEnd}/>
+                        <DateDisplay date={group.modificationEnd} translator={translator}/>
                     </p>
                     }
                 </div>

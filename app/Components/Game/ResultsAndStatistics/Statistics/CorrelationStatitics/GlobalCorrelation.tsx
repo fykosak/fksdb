@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { scaleLinear } from 'd3-scale';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
@@ -10,6 +9,7 @@ import { setNewState } from '../../actions/stats';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     submits: Submits;
@@ -26,9 +26,9 @@ interface DispatchProps {
 }
 
 class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
-
+    static contextType = TranslatorContext;
     public render() {
-
+        const translator = this.context;
         const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
         const {submits, teams} = this.props;
         const submitsForTeams = calculateSubmitsForTeams(submits);

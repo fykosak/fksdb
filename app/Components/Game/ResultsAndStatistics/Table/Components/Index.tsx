@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
@@ -7,6 +6,7 @@ import { connect } from 'react-redux';
 import { Filter } from '../filter';
 import Row from './Row';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     filter: Filter | null;
@@ -16,8 +16,9 @@ interface StateProps {
 }
 
 class Index extends React.Component<StateProps> {
-
+    static contextType = TranslatorContext;
     public render() {
+        const translator = this.context;
         const {submits, teams, tasks, filter} = this.props;
         const submitsForTeams = {};
         for (const index in submits) {

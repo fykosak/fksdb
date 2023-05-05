@@ -1,21 +1,19 @@
-import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
 import { State } from '../../reducers/stats';
 import './legend.scss';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     onSetNewState(data: State): void;
 }
 
 class Legend extends React.Component<StateProps> {
-
+    static contextType = TranslatorContext;
     public render() {
+        const translator = this.context;
         const availablePoints = [1, 2, 3, 5];
         const {onSetNewState} = this.props;
         const legend = availablePoints.map((points: number) => {

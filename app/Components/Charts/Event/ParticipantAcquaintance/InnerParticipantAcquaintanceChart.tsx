@@ -10,6 +10,7 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { arc } from 'd3-shape';
 import * as React from 'react';
 import './style.scss';
+import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
     person: {
@@ -25,6 +26,7 @@ interface State {
 
 export interface OwnProps {
     data: Data[];
+    translator: Translator<availableLanguage>;
 }
 
 export default class InnerParticipantAcquaintanceChart extends React.Component<OwnProps, State> {

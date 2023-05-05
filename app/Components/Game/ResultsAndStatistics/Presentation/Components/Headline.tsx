@@ -1,6 +1,6 @@
 import Ordinal from '@translator/Ordinal';
-import { translator } from '@translator/translator';
 import * as React from 'react';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     startPosition: number;
@@ -10,9 +10,11 @@ interface OwnProps {
 
 export default class Headline extends React.Component<OwnProps> {
 
+    static contextType = TranslatorContext;
+
     public render() {
         const {category, startPosition, endPosition} = this.props;
-
+        const translator = this.context;
         return (
             <div className="row justify-content-md-center">
                 <div className="col-3">
