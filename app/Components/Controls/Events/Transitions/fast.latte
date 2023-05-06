@@ -1,0 +1,7 @@
+{layout ../../@layout.latte}
+{varType FKSDB\Models\Transitions\Transition\Transition $transition}
+{block content}
+    {dump $transition}
+    <p>{$transition->source->label()}->{$transition->target->label()}</p>
+    {control form}
+{/block}

@@ -88,7 +88,7 @@ abstract class Machine
         );
     }
 
-    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
+    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): Transition
     {
         $transitions = \array_filter(
             $this->transitions,

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Events\Transitions\FastTransitionComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -20,11 +20,11 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -252,20 +252,15 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return BaseComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
-    protected function createComponentApplicationTransitions(): BaseComponent
+    protected function createComponentFastTransition(): FastTransitionComponent
     {
-        return new TransitionButtonsComponent(
-            $this->getMachine(),
+        return new FastTransitionComponent(
             $this->getContext(),
-            $this->getMachine()->createHolder($this->getEntity())
+            $this->getEvent(),
+            TeamState::tryFrom(TeamState::APPLIED),
+            TeamState::tryFrom(TeamState::PARTICIPATED),
         );
     }
 }

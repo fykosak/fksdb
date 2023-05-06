@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Events\MassTransitionsComponent;
+use FKSDB\Components\Controls\Events\Transitions\FastTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -13,6 +13,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -81,13 +82,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
         return new SingleApplicationsGrid($this->getEvent(), $this->getDummyHolder(), $this->getContext());
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    final protected function createComponentMassTransitions(): MassTransitionsComponent
-    {
-        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
-    }
 
     /**
      * @throws EventNotFoundException
@@ -107,5 +101,18 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     protected function getORMService(): EventParticipantService
     {
         return $this->eventParticipantService;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentFastTransition(): FastTransitionComponent
+    {
+        return new FastTransitionComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
+            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+        );
     }
 }

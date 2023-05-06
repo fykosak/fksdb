@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
@@ -98,32 +97,6 @@ class ApplicationHandler
         ?string $explicitTransitionName = null
     ): void {
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    final public function onlyExecute(BaseHolder $holder, string $explicitTransitionName): void
-    {
-        try {
-            $this->beginTransaction();
-            $transition = $this->getMachine()->getTransitionById($explicitTransitionName);
-            if ($transition->source->value !== $holder->getModelState()->value) {
-                throw new UnavailableTransitionException($transition, $holder->getModel());
-            }
-            $this->saveAndExecute($transition, $holder);
-        } catch (
-            ModelDataConflictException
-            | DuplicateApplicationException
-            | MachineExecutionException
-            | SubmitProcessingException
-            | FullCapacityException
-            | ExistingPaymentException
-            | UnavailableTransitionException $exception
-        ) {
-            $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
-            $this->reRaise($exception);
-        }
     }
 
     /**

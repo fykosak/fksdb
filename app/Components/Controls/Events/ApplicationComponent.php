@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Fykosak\Utils\Logging\FlashMessageDump;
 
 /**
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
@@ -122,8 +122,11 @@ class ApplicationComponent extends BaseComponent
                 $submit->setValidationScope([]);
             }
 
-            $submit->onClick[] = fn(SubmitButton $button) =>
-                $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit(
+                $button->getForm(),
+                $transitionName,
+                $transition->getValidation()
+            );
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
@@ -165,7 +168,9 @@ class ApplicationComponent extends BaseComponent
             if ($storeData) {
                 $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             } else {
-                $this->handler->onlyExecute($this->holder, $explicitTransitionName);
+                $transition = $this->handler->getMachine()->getTransitionById($explicitTransitionName);
+                $this->handler->getMachine()->execute($transition, $this->holder);
+                // TODO flashmessage
             }
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
