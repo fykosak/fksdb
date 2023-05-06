@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -50,6 +51,28 @@ class EventDispatchFactory
     {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function getPaymentMachine(EventModel $event): PaymentMachine
+    {
+        $machine = $this->container->getService(
+            $this->getPaymentFactoryName($event) . '.machine'
+        );
+        if (!$machine instanceof PaymentMachine) {
+            throw new BadTypeException(PaymentMachine::class, $machine);
+        }
+        return $machine;
+    }
+
+    public function getPaymentFactoryName(EventModel $event): ?string
+    {
+        if ($event->event_type_id === 1) {
+            return sprintf('fyziklani%dpayment', $event->event_year);
+        }
+        return null;
     }
 
     /**

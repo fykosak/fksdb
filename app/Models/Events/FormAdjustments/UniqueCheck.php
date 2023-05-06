@@ -24,6 +24,9 @@ class UniqueCheck extends AbstractAdjustment
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
     protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
         $controls = $this->getControl($this->field);
