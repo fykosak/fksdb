@@ -22,8 +22,9 @@ interface DispatchProps {
     onSetNewState(data: State): void;
 }
 
-class Options extends React.Component<StateProps & DispatchProps> {
+class Options extends React.Component<StateProps & DispatchProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {

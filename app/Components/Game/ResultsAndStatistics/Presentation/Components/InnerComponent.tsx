@@ -19,7 +19,7 @@ interface StateProps {
     position: number;
 }
 
-class InnerComponent extends React.Component<StateProps> {
+class InnerComponent extends React.Component<StateProps, never> {
 
     public render() {
         const {submits, teams, rows, cols, category, position: statePosition, availablePoints} = this.props;

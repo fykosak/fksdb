@@ -7,7 +7,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class PricePrinter extends React.Component<OwnProps> {
+export default class PricePrinter extends React.Component<OwnProps, never> {
 
     public render() {
         const {price: {EUR, CZK}, translator} = this.props;

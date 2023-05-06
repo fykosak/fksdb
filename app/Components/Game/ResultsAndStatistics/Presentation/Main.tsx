@@ -18,7 +18,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class Main extends React.Component<OwnProps> {
+export default class Main extends React.Component<OwnProps, never> {
     public render() {
         return <MainComponent
             actions={this.props.actions}

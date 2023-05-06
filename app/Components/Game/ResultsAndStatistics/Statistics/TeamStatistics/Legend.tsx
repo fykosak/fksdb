@@ -10,8 +10,9 @@ interface StateProps {
     onSetNewState(data: State): void;
 }
 
-class Legend extends React.Component<StateProps> {
+class Legend extends React.Component<StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const availablePoints = [1, 2, 3, 5];

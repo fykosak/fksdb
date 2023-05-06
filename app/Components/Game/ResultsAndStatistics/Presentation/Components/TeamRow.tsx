@@ -7,7 +7,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-export default class TeamRow extends React.Component<OwnProps> {
+export default class TeamRow extends React.Component<OwnProps, never> {
     public render() {
         const {item, position, availablePoints} = this.props;
 

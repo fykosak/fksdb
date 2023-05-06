@@ -8,7 +8,7 @@ interface OwnProps {
     translator: Translator<string>;
 }
 
-export default class TimeDisplay extends React.Component<OwnProps> {
+export default class TimeDisplay extends React.Component<OwnProps, never> {
 
     public render() {
         const {options, translator} = this.props;

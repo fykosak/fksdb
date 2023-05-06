@@ -30,7 +30,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class CommonChart extends React.Component<OwnProps> {
+export default class CommonChart extends React.Component<OwnProps, never> {
 
     public render() {
         const {data, accessKey, translator} = this.props;

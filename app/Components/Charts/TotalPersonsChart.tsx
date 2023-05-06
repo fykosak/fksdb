@@ -17,7 +17,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class TotalPersonsChart extends React.Component<OwnProps> {
+export default class TotalPersonsChart extends React.Component<OwnProps, never> {
 
     public render() {
         const {data, translator} = this.props;

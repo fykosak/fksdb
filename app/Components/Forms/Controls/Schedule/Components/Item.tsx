@@ -24,8 +24,9 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {item, value, onChange, params} = this.props;

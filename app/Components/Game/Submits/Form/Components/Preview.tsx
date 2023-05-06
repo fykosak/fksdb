@@ -10,8 +10,9 @@ interface OwnProps {
     teams: TeamModel[];
 }
 
-export default class Preview extends React.Component<OwnProps> {
+export default class Preview extends React.Component<OwnProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const {code: value, tasks, teams} = this.props;
 

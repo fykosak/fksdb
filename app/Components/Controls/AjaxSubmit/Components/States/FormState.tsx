@@ -28,7 +28,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FormState extends React.Component<StateProps & DispatchProps> {
+class FormState extends React.Component<StateProps & DispatchProps, never> {
     static contextType = TranslatorContext;
 
     public render() {

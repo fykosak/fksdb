@@ -25,8 +25,9 @@ interface DispatchProps {
     onChangeSecondTeam(id: number): void;
 }
 
-class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
+class GlobalCorrelation extends React.Component<StateProps & DispatchProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);

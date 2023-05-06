@@ -24,7 +24,7 @@ export interface Params {
     price: boolean;
 }
 
-export default class ScheduleField extends React.Component<OwnProps> {
+export default class ScheduleField extends React.Component<OwnProps, never> {
     static contextType = TranslatorContext;
 
     public componentDidMount() {

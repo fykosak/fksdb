@@ -14,7 +14,7 @@ interface OwnProps<Store> {
     translator: Translator<availableLanguage>;
 }
 
-export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
+export default class MainComponent<Store> extends React.Component<OwnProps<Store>, never> {
     public render() {
         const initialData = {
             actions: this.props.actions,

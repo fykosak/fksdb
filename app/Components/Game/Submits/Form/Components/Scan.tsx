@@ -57,7 +57,7 @@ export default class Scan extends React.Component<WrappedFieldProps & Record<str
         html5QrCode.scanFile(imageFile, true)
             .then(decodedText => {
                 this.props.input.onChange(decodedText);
-                this.setState({processing: false});
+                this.setState({processing: false, error: null});
             })
             .catch((err: Html5QrcodeError) => {
                 this.setState({processing: false, error: err});

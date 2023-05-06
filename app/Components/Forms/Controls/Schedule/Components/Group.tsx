@@ -11,8 +11,9 @@ interface OwnProps {
     params: Params;
 }
 
-export default class Group extends React.Component<OwnProps> {
+export default class Group extends React.Component<OwnProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {group, params} = this.props;

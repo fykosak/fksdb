@@ -20,8 +20,9 @@ interface DispatchProps {
     onChangeFirstTeam(id: number): void;
 }
 
-class TeamStats extends React.Component<StateProps & DispatchProps> {
+class TeamStats extends React.Component<StateProps & DispatchProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {teams, onChangeFirstTeam, teamId} = this.props;

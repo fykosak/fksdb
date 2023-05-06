@@ -17,7 +17,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class UploadContainer extends React.Component<StateProps> {
+class UploadContainer extends React.Component<StateProps, never> {
 
     static contextType = TranslatorContext;
 

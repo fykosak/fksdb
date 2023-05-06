@@ -14,8 +14,9 @@ interface StateProps {
     availablePoints: number[];
 }
 
-class TaskStats extends React.Component<StateProps> {
+class TaskStats extends React.Component<StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const {taskId, availablePoints} = this.props;
         const translator = this.context;

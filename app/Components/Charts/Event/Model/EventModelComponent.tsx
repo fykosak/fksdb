@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import Chart from './Chart';
-import { Link as SimLink, Node as SimNode } from './Chart';
+import Chart, { Link as SimLink, Node as SimNode } from './Chart';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -27,7 +26,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class EventModelComponent extends React.Component<OwnProps> {
+export default class EventModelComponent extends React.Component<OwnProps, never> {
 
     public render() {
         const {data: {links, nodes}} = this.props;

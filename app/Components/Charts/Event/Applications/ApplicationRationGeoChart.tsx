@@ -9,7 +9,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class ApplicationRationGeoChart extends React.Component<OwnProps> {
+export default class ApplicationRationGeoChart extends React.Component<OwnProps, never> {
 
     public render() {
         return <ChartContainer

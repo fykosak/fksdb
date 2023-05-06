@@ -33,8 +33,9 @@ interface StateProps {
     messages: Message[];
 }
 
-class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
+class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;

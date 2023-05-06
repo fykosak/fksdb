@@ -13,7 +13,7 @@ interface StateProps {
     tasks: TaskModel[];
 }
 
-class Index extends React.Component<StateProps> {
+class Index extends React.Component<StateProps, never> {
 
     static contextType = TranslatorContext;
 

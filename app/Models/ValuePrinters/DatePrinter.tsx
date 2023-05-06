@@ -8,7 +8,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class DateDisplay extends React.Component<OwnProps> {
+export default class DateDisplay extends React.Component<OwnProps, never> {
 
     public render() {
         const {date, options, translator} = this.props;

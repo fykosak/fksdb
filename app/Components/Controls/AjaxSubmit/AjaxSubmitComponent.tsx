@@ -14,7 +14,7 @@ interface Props {
     translator: Translator<availableLanguage>;
 }
 
-export default class AjaxSubmitComponent extends React.Component<Props> {
+export default class AjaxSubmitComponent extends React.Component<Props, never> {
 
     public render() {
         return <ActionsStoreCreator

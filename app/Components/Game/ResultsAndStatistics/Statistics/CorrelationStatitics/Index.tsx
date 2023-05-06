@@ -20,8 +20,9 @@ interface DispatchProps {
     onChangeSecondTeam(id: number): void;
 }
 
-class CorrelationStats extends React.Component<StateProps & DispatchProps> {
+class CorrelationStats extends React.Component<StateProps & DispatchProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;

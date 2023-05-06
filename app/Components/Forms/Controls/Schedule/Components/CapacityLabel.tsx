@@ -6,7 +6,7 @@ interface OwnProps {
     usedCapacity: number;
 }
 
-export default class CapacityLabel extends React.Component<OwnProps> {
+export default class CapacityLabel extends React.Component<OwnProps, never> {
     static contextType = TranslatorContext;
     public render() {
         const {capacity, usedCapacity} = this.props;

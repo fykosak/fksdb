@@ -9,7 +9,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class PriceLabel extends React.Component<OwnProps> {
+export default class PriceLabel extends React.Component<OwnProps, never> {
     static contextType = TranslatorContext;
 
     public render() {

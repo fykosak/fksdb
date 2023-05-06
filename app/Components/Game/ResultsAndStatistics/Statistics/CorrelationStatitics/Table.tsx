@@ -17,8 +17,9 @@ interface StateProps {
     secondTeamId: number;
 }
 
-class Table extends React.Component<StateProps> {
+class Table extends React.Component<StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {firstTeamId, secondTeamId, submits, tasks} = this.props;

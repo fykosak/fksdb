@@ -15,7 +15,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class StatisticsComponent extends React.Component<OwnProps> {
+export default class StatisticsComponent extends React.Component<OwnProps, never> {
     public render() {
         const {mode} = this.props;
         let content = null;

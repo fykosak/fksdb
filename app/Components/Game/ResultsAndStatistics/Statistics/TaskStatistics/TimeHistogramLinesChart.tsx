@@ -1,7 +1,4 @@
-import {
-    scaleLinear,
-    scaleTime,
-} from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveMonotoneX } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
@@ -26,7 +23,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps> {
+class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, never> {
 
     public render() {
         const {

@@ -29,7 +29,7 @@ interface OwnProps {
     data: ResponseData;
 }
 
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, never> {
 
     static contextType = TranslatorContext;
 

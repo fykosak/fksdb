@@ -9,8 +9,9 @@ interface StateProps {
     categories: string[];
 }
 
-class FilterSelect extends React.Component<StateProps> {
+class FilterSelect extends React.Component<StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const {categories} = this.props;
         const translator = this.context;

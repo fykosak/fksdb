@@ -19,8 +19,9 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
+class FileState extends React.Component<OwnProps & DispatchProps & StateProps, never> {
     static contextType = TranslatorContext;
+
     public render() {
         const translator = this.context;
         const {submit} = this.props;
