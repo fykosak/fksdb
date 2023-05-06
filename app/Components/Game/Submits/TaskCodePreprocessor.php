@@ -30,6 +30,9 @@ final class TaskCodePreprocessor
     public static function getTask(string $code, EventModel $event): TaskModel
     {
         $taskLabel = self::extractTaskLabel($code);
+        if ($taskLabel === 'XX') {
+            throw new NoTaskLeftException();
+        }
         /** @var TaskModel $task */
         $task = $event->getTasks()->where('label', $taskLabel)->fetch();
         if (!$task) {
@@ -64,7 +67,9 @@ final class TaskCodePreprocessor
         if (strlen($fullCode) != 9) {
             throw new TaskCodeException(_('Code is too short'));
         }
-        $subCode = str_split(str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $code));
+        $subCode = str_split(
+            str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'X'], [1, 2, 3, 4, 5, 6, 7, 8, 0], $code)
+        );
 
         $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6])
             + 7 * ($subCode[1] + $subCode[4] + $subCode[7])

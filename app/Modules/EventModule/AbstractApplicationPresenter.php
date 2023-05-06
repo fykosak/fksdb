@@ -13,11 +13,13 @@ use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -110,11 +112,20 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
-    public function getHolder(): BaseHolder
+    public function getHolder(): ModelHolder
     {
-        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        return $machine->createHolder($this->getEntity());
+        return $this->getMachine()->createHolder($this->getEntity());
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    protected function getMachine(): Machine
+    {
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent());
     }
 
     protected function createComponentPersonScheduleGrid(): PersonGrid
@@ -129,6 +140,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {

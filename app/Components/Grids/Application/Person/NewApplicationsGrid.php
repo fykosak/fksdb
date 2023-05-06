@@ -55,7 +55,7 @@ class NewApplicationsGrid extends Grid
             function (EventModel $modelEvent): bool {
                 try {
                     return (bool)count(
-                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                        $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
                             $this->eventDispatchFactory->getDummyHolder($modelEvent),
                             EventParticipantStatus::tryFrom(Machine::STATE_INIT)
                         )

@@ -32,10 +32,6 @@ abstract class TransitionComponent extends BaseComponent
      */
     protected function getMachine(): Machine
     {
-        if ($this->event->isTeamEvent()) {
-            return $this->eventDispatchFactory->getTeamMachine($this->event);
-        } else {
-            return $this->eventDispatchFactory->getEventMachine($this->event);
-        }
+        return $this->eventDispatchFactory->getEventMachine($this->event);
     }
 }

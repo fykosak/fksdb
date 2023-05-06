@@ -28,15 +28,9 @@ use Tracy\Debugger;
 
 class ApplicationHandler
 {
-    public const ERROR_ROLLBACK = 'rollback';
-    public const ERROR_SKIP = 'skip';
-    public const STATE_TRANSITION = 'transition';
-    public const STATE_OVERWRITE = 'overwrite';
     private EventModel $event;
-
     private Logger $logger;
 
-    private string $errorMode = self::ERROR_ROLLBACK;
     private Connection $connection;
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -53,16 +47,11 @@ class ApplicationHandler
         $this->connection = $connection;
     }
 
-    public function setErrorMode(string $errorMode): void
-    {
-        $this->errorMode = $errorMode;
-    }
-
     public function getMachine(): EventParticipantMachine
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getEventMachine($this->event);
+            $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         }
         return $machine;
     }
@@ -75,67 +64,30 @@ class ApplicationHandler
     /**
      * @throws \Throwable
      */
-    final public function store(BaseHolder $holder, ArrayHash $data): void
+    final public function storeAndExecuteForm(BaseHolder $holder, Form $form, ?string $explicitTransitionName): void
     {
-        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    final public function storeAndExecuteValues(BaseHolder $holder, ArrayHash $data): void
-    {
-        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    final public function storeAndExecuteForm(
-        BaseHolder $holder,
-        Form $form,
-        ?string $explicitTransitionName = null
-    ): void {
-        $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    private function innerStoreAndExecute(
-        BaseHolder $holder,
-        ?ArrayHash $data,
-        ?Form $form,
-        ?string $explicitTransitionName,
-        ?string $execute
-    ): void {
         try {
-            $this->beginTransaction();
+            if (!$this->connection->getPdo()->inTransaction()) {
+                $this->connection->beginTransaction();
+            }
 
             $transition = $this->processData(
-                $form ? FormUtils::emptyStrToNull($form->getValues()) : $data,
+                FormUtils::emptyStrToNull($form->getValues()),
                 $explicitTransitionName
                     ? $this->getMachine()->getTransitionById($explicitTransitionName)
                     : null,
-                $holder,
-                $execute
+                $holder
             );
 
-            if ($execute === self::STATE_OVERWRITE) {
-                if (isset($data['participant']['status'])) {
-                    $holder->setModelState(EventParticipantStatus::tryFrom($data['participant']['status']));
-                }
-            }
-
             $this->saveAndExecute($transition, $holder);
-
-            if ($data || $form) {
-                $this->logger->log(
-                    new Message(
-                        sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
-                        Message::LVL_SUCCESS
-                    )
-                );
+            $this->logger->log(
+                new Message(
+                    sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
+                    Message::LVL_SUCCESS
+                )
+            );
+            if ($this->connection->getPdo()->inTransaction()) {
+                $this->connection->commit();
             }
         } catch (
             ModelDataConflictException |
@@ -146,8 +98,12 @@ class ApplicationHandler
             ExistingPaymentException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
-            $this->formRollback($form);
-            $this->reRaise($exception);
+            /** @var ReferencedId $referencedId */
+            foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
+                $referencedId->rollback();
+            }
+            $this->connection->rollBack();
+            throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $exception);
         }
     }
 
@@ -163,7 +119,6 @@ class ApplicationHandler
         if ($transition) {
             $transition->callAfterExecute($holder);
         }
-        $this->commit();
 
         if ($transition && $transition->isCreating()) {
             $this->logger->log(
@@ -185,12 +140,8 @@ class ApplicationHandler
         }
     }
 
-    private function processData(
-        ArrayHash $values,
-        ?Transition $transition,
-        BaseHolder $holder,
-        ?string $execute
-    ): ?Transition {
+    private function processData(ArrayHash $values, ?Transition $transition, BaseHolder $holder): ?Transition
+    {
         Debugger::log(json_encode((array)$values), 'app-form');
         $newState = null;
         if (isset($values['participant']['status'])) {
@@ -199,73 +150,27 @@ class ApplicationHandler
 
         $processState = $holder->processFormValues($values, $transition);
 
-        $newState = $newState ?: $processState;
-
-        if ($execute == self::STATE_TRANSITION) {
-            if ($newState) {
-                $state = $holder->getModelState();
-                $transition = $this->getMachine()->getTransitionByTarget(
-                    $state,
-                    $newState
+        $newState = $newState ?? $processState;
+        if ($newState) {
+            $state = $holder->getModelState();
+            $transition = $this->getMachine()->getTransitionByTarget(
+                $state,
+                $newState
+            );
+            if (!$transition) {
+                throw new MachineExecutionException(
+                    sprintf(
+                        _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
+                        $state->label(),
+                        'participant',
+                        $newState->label()
+                    )
                 );
-                if (!$transition) {
-                    throw new MachineExecutionException(
-                        sprintf(
-                            _('There is not a transition from state "%s" of machine "%s" to state "%s".'),
-                            $state->label(),
-                            'participant',
-                            $newState->label()
-                        )
-                    );
-                }
             }
         }
-
         if (isset($values['participant'])) {
             $holder->data += (array)$values['participant'];
         }
-
         return $transition;
-    }
-
-    private function formRollback(?Form $form): void
-    {
-        if ($form) {
-            /** @var ReferencedId $referencedId */
-            foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
-                $referencedId->rollback();
-            }
-        }
-        $this->rollback();
-    }
-
-    public function beginTransaction(): void
-    {
-        if (!$this->connection->getPdo()->inTransaction()) {
-            $this->connection->beginTransaction();
-        }
-    }
-
-    private function rollback(): void
-    {
-        if ($this->errorMode === self::ERROR_ROLLBACK) {
-            $this->connection->rollBack();
-        }
-    }
-
-    public function commit(bool $final = false): void
-    {
-        if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
-            $this->connection->commit();
-        }
-    }
-
-    /**
-     * @return never
-     * @throws ApplicationHandlerException
-     */
-    private function reRaise(\Throwable $e): void
-    {
-        throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $e);
     }
 }

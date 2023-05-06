@@ -6,6 +6,7 @@ namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Game\GameException;
+use FKSDB\Components\Game\Submits\NoTaskLeftException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
@@ -31,11 +32,27 @@ class CodeCloseForm extends FormComponent
         try {
             $code = $button->getForm()->getForm()->getValues('array')['code'];
             $team = TaskCodePreprocessor::getTeam($code, $this->event);
-            $givenTask = TaskCodePreprocessor::getTask($code, $this->event);
             $expectedTask = $this->handler->getNextTask($team);
-            if ($expectedTask) {
+            try {
+                $givenTask = TaskCodePreprocessor::getTask($code, $this->event, true);
+                if (!$expectedTask) {
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        _('system expect no task left')
+                    );
+                }
                 if ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
-                    throw new GameException(_('Final task mismatch'));
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
+                    );
+                }
+            } catch (NoTaskLeftException $exception) {
+                if ($expectedTask) {
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
+                    );
                 }
             }
             $this->handler->close($team);

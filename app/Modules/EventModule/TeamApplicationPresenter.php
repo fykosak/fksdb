@@ -238,20 +238,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return TeamMachine
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     */
-    private function getMachine(): TeamMachine
-    {
-        static $machine;
-        if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getTeamMachine($this->getEvent());
-        }
-        return $machine;
-    }
-
-    /**
      * @throws EventNotFoundException
      */
     protected function createComponentFastTransition(): FastTransitionComponent

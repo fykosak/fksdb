@@ -30,10 +30,9 @@ class ClosePresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    /* ******* TITLE ***********/
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Sealing of the scoring'), 'fas fa-stamp');
+        return new PageTitle(null, _('Close scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -68,11 +67,10 @@ class ClosePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizeList(): void
+    public function authorizedList(): void
     {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
-    /* *********** ACTIONS **************** */
 
     /**
      * @throws EventNotFoundException
@@ -91,8 +89,6 @@ class ClosePresenter extends BasePresenter
             $this->redirect('list');
         }
     }
-
-    /* ********* COMPONENTS ************* */
 
     /**
      * @param Resource|string|null $resource

@@ -15,6 +15,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -170,7 +171,7 @@ class ApplicationComponent extends BaseComponent
             } else {
                 $transition = $this->handler->getMachine()->getTransitionById($explicitTransitionName);
                 $this->handler->getMachine()->execute($transition, $this->holder);
-                // TODO flashmessage
+                $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
             }
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
