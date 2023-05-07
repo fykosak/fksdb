@@ -43,20 +43,20 @@ final class TaskCodePreprocessor
 
     private static function extractTeamId(string $code): int
     {
-        $fullCode = self::createFullNumCode($code);
+        $fullCode = self::createFullCode($code);
         return (int)substr($fullCode, 0, 6);
     }
 
     private static function extractTaskLabel(string $code): string
     {
-        $fullCode = self::createFullNumCode($code);
+        $fullCode = self::createFullCode($code);
         return (string)substr($fullCode, 6, 2);
     }
 
     /**
      * @throws TaskCodeException
      */
-    private static function createFullNumCode(string $code): string
+    private static function createFullCode(string $code): string
     {
         $length = strlen($code);
         if ($length > 9) {

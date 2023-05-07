@@ -12,7 +12,7 @@ interface OwnProps {
     onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
-export default class AutoButton extends React.Component<OwnProps> {
+export default class AutoButton extends React.Component<OwnProps, never> {
 
     public componentDidUpdate() {
         const {valid, submitting, handleSubmit, onSubmit} = this.props;

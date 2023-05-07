@@ -3,14 +3,63 @@ import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import { FormErrors } from 'redux-form';
 
-export const getFullCode = (code: string): string => {
-    const length = code.length;
-    return (('0').repeat(9 - length) + code).toLocaleUpperCase();
+export const validate = <FormData extends { code?: string }>(values: { code?: string }, props: OwnProps): FormErrors<FormData> => {
+    const errors: FormErrors<FormData> = {};
+
+    if (!values.code) {
+        errors.code = 'Code is empty.';
+        return errors;
+    }
+    try {
+        getTeam(values.code, props.teams);
+        getTask(values.code, props.tasks);
+    } catch (e) {
+        errors.code = e.message;
+    }
+    return errors;
 };
 
-const isValidFullCode = (code: string): boolean => {
+export const getTeam = (code: string, teams: TeamModel[]): TeamModel => {
+    const teamId = extractTeamId(code);
+    const filterTeams = teams.filter((currentTeam) => {
+        return currentTeam.teamId === +teamId;
+    });
+    if (!filterTeams.length) {
+        throw new Error('Team does not exists.');
+    }
+    return filterTeams[0];
+}
 
-    const subCode = code.split('').map((char): number => {
+export const getTask = (code: string, tasks: TaskModel[]): TaskModel => {
+    const taskLabel = extractTaskLabel(code);
+    console.log(taskLabel);
+    const filterTask = tasks.filter((currentTask) => {
+        return currentTask.label === taskLabel;
+    });
+    if (!filterTask.length) {
+        throw new Error('Task does not exists.');
+    }
+    return filterTask[0];
+}
+
+const extractTeamId = (code: string): number => {
+    const fullCode = createFullCode(code);
+    return +fullCode.substring(0, 6);
+}
+
+const extractTaskLabel = (code: string): string => {
+    const fullCode = createFullCode(code);
+    return fullCode.substring(6, 8).toString();
+}
+
+const createFullCode = (code: string): string => {
+    if (code.length > 9) {
+        throw new Error('Code is too long');
+    }
+
+    const fullCode = (('0').repeat(9 - code.length) + code).toLocaleUpperCase();
+
+    const subCode = fullCode.split('').map((char): number => {
         return +char.toLocaleUpperCase()
             .replace('A', '1')
             .replace('B', '2')
@@ -21,59 +70,12 @@ const isValidFullCode = (code: string): boolean => {
             .replace('G', '7')
             .replace('H', '8');
     });
-    return (getControl(subCode) % 10 === 0);
-};
 
-const getControl = (subCode: Array<string | number>): number => {
-    return (+subCode[0] + +subCode[3] + +subCode[6]) * 3 +
+    const sum = (+subCode[0] + +subCode[3] + +subCode[6]) * 3 +
         (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
         (+subCode[2] + +subCode[5] + +subCode[8]);
-};
-export const getTeam = (fullCode: string, teams: TeamModel[]): TeamModel => {
-    const matchedTeam = fullCode.match(/^([0-9]+)/);
-    if (!matchedTeam) {
-        return null;
+    if (sum % 10 !== 0) {
+        throw new Error('Invalid control');
     }
-    return teams.filter((currentTeam) => {
-        return currentTeam.teamId === +matchedTeam[1];
-    })[0];
-};
-
-export const getTask = (fullCode: string, tasks: TaskModel[]): TaskModel => {
-    const matchedLabel = fullCode.match(/^[0-9]+([a-zA-Z]{2})/);
-
-    if (!matchedLabel) {
-        return null;
-    }
-    return tasks.filter((currentTask) => {
-        return currentTask.label === matchedLabel[1].toUpperCase();
-    })[0];
-};
-
-export const validate = <FormData extends { code?: string }>(values: { code?: string }, props: OwnProps): FormErrors<FormData> => {
-    const errors: FormErrors<FormData> = {};
-
-    if (!values.code) {
-        errors.code = 'Code is empty.';
-        return errors;
-    }
-    const fullCode = getFullCode(values.code);
-
-    if (!getTeam(fullCode, props.teams)) {
-        errors.code = 'Team does not exists.';
-    }
-    if (!getTask(fullCode, props.tasks)) {
-        errors.code = 'Task does not exists.';
-    }
-
-    if (fullCode.match(/[a-zA-Z]{2}([0-9])$/)) {
-        if (!isValidFullCode(fullCode)) {
-            errors.code = 'Invalid control';
-        }
-    }
-    if (!fullCode.match(/^([0-9]{6}[a-zA-Z]{2}[0-9])$/)) {
-        errors.code = 'Invalid code format';
-    }
-
-    return errors;
-};
+    return fullCode;
+}

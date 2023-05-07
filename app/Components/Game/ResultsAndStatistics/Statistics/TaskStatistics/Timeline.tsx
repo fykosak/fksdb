@@ -53,7 +53,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         this.xScale = scaleTime().domain([fromDate, toDate]).range([30, 580]);
 
         for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
+            if (Object.hasOwn(submits,index)) {
                 const submit: SubmitModel = submits[index];
                 if (submit.taskId === taskId) {
                     const currentTeam = teams.filter((team) => {

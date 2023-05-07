@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 
-export default class Code extends React.Component<WrappedFieldProps> {
+export default class Code extends React.Component<WrappedFieldProps, never> {
 
     public render() {
         const {meta: {valid}, input} = this.props;
@@ -12,6 +12,7 @@ export default class Code extends React.Component<WrappedFieldProps> {
                     maxLength={9}
                     className={'form-control-lg form-control ' + (valid ? 'is-valid' : 'is-invalid')}
                     placeholder="XXXXXXYYX"
+                    autoFocus
                 />
             </span>
         );
