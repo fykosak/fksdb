@@ -47,7 +47,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     final public function titleTransition(): PageTitle
     {
-        return new PageTitle(null, _('Fast transition'), 'fas fa-address-book');
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-fast-forward');
     }
 
     final public function titleTransitions(): PageTitle

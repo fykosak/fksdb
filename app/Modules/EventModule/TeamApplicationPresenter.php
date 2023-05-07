@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Events\FastEditComponent;
 use FKSDB\Components\Controls\Events\Transitions\FastTransitionComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
@@ -22,7 +23,6 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\PageTitle;
@@ -50,6 +50,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     public function titleDetailedList(): PageTitle
     {
         return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
+    }
+
+    public function titleFastEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Fast edit'), 'fas fa-fast-forward');
     }
 
     /**
@@ -245,8 +250,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return new FastTransitionComponent(
             $this->getContext(),
             $this->getEvent(),
-            TeamState::tryFrom(TeamState::APPLIED),
+            TeamState::tryFrom(TeamState::APPROVED),
             TeamState::tryFrom(TeamState::PARTICIPATED),
         );
+    }
+
+    protected function createComponentFastEdit(): FastEditComponent
+    {
+        return new FastEditComponent($this->getContext());
     }
 }
