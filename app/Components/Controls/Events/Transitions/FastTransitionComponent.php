@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events\Transitions;
 
+use FKSDB\Components\Controls\Events\AttendanceCode;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -51,7 +55,7 @@ class FastTransitionComponent extends TransitionComponent
         $transition = $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
         $control = new FormControl($this->container);
         $form = $control->getForm();
-        $form->addText('id', _('Application Id'));
+        $form->addText('code', _('Application Id'));
         $form->addSubmit('submit', $transition->label());
         $form->onSuccess[] = fn(Form $form) => $this->handleSave($form);
         return $control;
@@ -61,22 +65,34 @@ class FastTransitionComponent extends TransitionComponent
     {
         try {
             $values = $form->getValues('array');
+            $id = AttendanceCode::checkCode($this->container, $values['code']);
             $machine = $this->getMachine();
             $transition = $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
             if ($this->event->isTeamEvent()) {
-                $model = $this->event->getTeams()->where('fyziklani_team_id', $values['id'])->fetch();
+                $model = $this->event->getTeams()->where('fyziklani_team_id', $id)->fetch();
             } else {
-                $model = $this->event->getParticipants()->where('event_participant_id', $values['id'])->fetch();
+                $model = $this->event->getParticipants()->where('event_participant_id', $id)->fetch();
             }
+            /** @var TeamModel2|EventParticipantModel|null $model */
             if (!$model) {
                 throw new NotFoundException();
             }
             $holder = $machine->createHolder($model);
             $machine->execute($transition, $holder);
-            $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+            if ($this->event->isTeamEvent()) {
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Transition successful team: (%d) %s'), $model->fyziklani_team_id, $model->name),
+                    Message::LVL_SUCCESS
+                );
+            } else {
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Transition successful application: %s'), $model->person->getFullName()),
+                    Message::LVL_SUCCESS
+                );
+            }
         } catch (NotFoundException $exception) {
             $this->getPresenter()->flashMessage(_('Application not found'), Message::LVL_ERROR);
-        } catch (UnavailableTransitionsException $exception) {
+        } catch (UnavailableTransitionsException | ForbiddenRequestException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
             $this->getPresenter()->flashMessage(_('Error'), Message::LVL_ERROR);

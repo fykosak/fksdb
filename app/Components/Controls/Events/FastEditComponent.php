@@ -7,6 +7,8 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
 class FastEditComponent extends BaseComponent
@@ -24,12 +26,18 @@ class FastEditComponent extends BaseComponent
         $control = new FormControl($this->container);
         $form = $control->getForm();
         $form->elementPrototype->target('_blank');
-        $form->addText('id', _('Team Id'))->setHtmlType('number');
+        $form->addText('code', _('Team Id'));
         $form->addSubmit('edit', _('Edit'));
 
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues('array');
-            $this->getPresenter()->redirect('edit', ['id' => +$values['id']]);
+            try {
+                $id = AttendanceCode::checkCode($this->container, $values['code']);
+            } catch (ForbiddenRequestException$exception) {
+                $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+                $this->getPresenter()->redirect('this');
+            }
+            $this->getPresenter()->redirect('edit', ['id' => $id]);
         };
         return $control;
     }
