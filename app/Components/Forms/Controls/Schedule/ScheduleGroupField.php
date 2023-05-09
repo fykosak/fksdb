@@ -40,6 +40,9 @@ class ScheduleGroupField extends SelectBox
         $this->setItems($items)->setPrompt($lang === 'cs' ? '-- nevybráno --' : '-- not selected --');
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function getData(): array
     {
         $group = $this->group->__toArray();

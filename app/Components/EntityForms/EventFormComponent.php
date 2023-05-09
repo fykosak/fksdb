@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -77,7 +76,6 @@ class EventFormComponent extends EntityFormComponent
 
     /**
      * @throws BadTypeException
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
     protected function setDefaults(): void

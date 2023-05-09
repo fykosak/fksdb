@@ -81,10 +81,7 @@ class ApplicationComponent extends BaseComponent
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
-
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->event;
-        $this->template->primaryMachine = $this->handler->getMachine();
         $this->template->render($this->templateFile);
     }
 
@@ -97,8 +94,7 @@ class ApplicationComponent extends BaseComponent
         $form = $result->getForm();
 
         $container = $this->holder->createFormContainer();
-        $form->addComponent($container, $this->holder->name);
-
+        $form->addComponent($container, 'participant');
         /*
          * Create save (no transition) button
          */
@@ -111,11 +107,10 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->handler->getMachine();
         $transitionSubmit = null;
 
         foreach (
-            $primaryMachine->getAvailableTransitions(
+            $this->handler->getMachine()->getAvailableTransitions(
                 $this->holder,
                 $this->holder->getModelState()
             ) as $transition
@@ -161,8 +156,8 @@ class ApplicationComponent extends BaseComponent
         return $result;
     }
 
-    /*
-     * Store data and transition
+    /**
+     * @throws \Throwable
      */
     public function handleSubmit(Form $form, ?string $explicitTransitionName = null, bool $storeData = true): void
     {

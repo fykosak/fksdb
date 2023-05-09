@@ -31,9 +31,4 @@ class Le extends EvaluatedExpression
         return $this->evaluateArgument($this->aValue, $holder) <
             $this->evaluateArgument($this->bValue, $holder);
     }
-
-    public function __toString(): string
-    {
-        return "$this->aValue < $this->bValue";
-    }
 }

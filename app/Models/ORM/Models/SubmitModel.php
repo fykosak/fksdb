@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
@@ -58,18 +56,26 @@ class SubmitModel extends Model implements Resource
 
     public function calculateQuestionSum(): ?int
     {
-        $query = $this->getQuestionAnswers();
-        if ($query->count('*')) {
-            $sum = 0;
-            /** @var SubmitQuestionAnswerModel $answer */
-            foreach ($query as $answer) {
-                if ($answer->answer === $answer->submit_question->answer) {
-                    $sum += $answer->submit_question->points;
-                }
-            }
-            return $sum;
+        // task does not have questions
+        if (!$this->isQuiz()) {
+            return null;
         }
-        return null;
+
+        $sum = 0;
+        // TODO rewrite to do sum directly in sql
+        /** @var SubmitQuestionModel $question */
+        foreach ($this->task->getQuestions() as $question) {
+            /** @var SubmitQuestionAnswerModel $answer */
+            $answer = $this->contestant->getAnswer($question);
+            if (!isset($answer)) {
+                continue;
+            }
+            if ($answer->answer === $question->answer) {
+                $sum += $question->points;
+            }
+        }
+
+        return $sum;
     }
 
     public function isQuiz(): bool
@@ -101,10 +107,5 @@ class SubmitModel extends Model implements Resource
             'rawPoints' => $this->raw_points,
             'calcPoints' => $this->calc_points,
         ];
-    }
-
-    public function getQuestionAnswers(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'submit_id');
     }
 }

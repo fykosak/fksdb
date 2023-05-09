@@ -4,41 +4,43 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\ImportHandler;
 use FKSDB\Models\Events\Model\ImportHandlerException;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use Fykosak\Utils\Logging\FlashMessageDump;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
-use Nette\Forms\Form;
 use Nette\DI\Container;
-use Nette\DI\MissingServiceException;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
 class ImportComponent extends BaseComponent
 {
-    private SingleEventSource $source;
     private ApplicationHandler $handler;
     private EventDispatchFactory $eventDispatchFactory;
+    private EventParticipantService $eventParticipantService;
+    private EventModel $event;
 
     public function __construct(
-        SingleEventSource $source,
         ApplicationHandler $handler,
         Container $container,
-        EventDispatchFactory $eventDispatchFactory
+        EventDispatchFactory $eventDispatchFactory,
+        EventParticipantService $eventParticipantService,
+        EventModel $event
     ) {
         parent::__construct($container);
-        $this->source = $source;
+        $this->event = $event;
         $this->handler = $handler;
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
@@ -83,9 +85,8 @@ class ImportComponent extends BaseComponent
     }
 
     /**
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
-     * @throws MissingServiceException
+     * @throws \Throwable
      */
     private function handleFormImport(Form $form): void
     {
@@ -100,7 +101,12 @@ class ImportComponent extends BaseComponent
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($parser, $this->source, $this->eventDispatchFactory);
+            $importHandler = new ImportHandler(
+                $parser,
+                $this->eventDispatchFactory,
+                $this->eventParticipantService,
+                $this->event
+            );
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);

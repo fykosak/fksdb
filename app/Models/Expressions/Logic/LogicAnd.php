@@ -17,9 +17,4 @@ class LogicAnd extends VariadicExpression
         }
         return true;
     }
-
-    protected function getInfix(): string
-    {
-        return '&&';
-    }
 }
