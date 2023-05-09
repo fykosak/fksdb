@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Components\Game\Submits\NoTaskLeftException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;

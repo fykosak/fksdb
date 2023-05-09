@@ -9,7 +9,6 @@ use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamListComponent;
-use FKSDB\Components\Game\Closing\TeamSelectForm;
 use FKSDB\Components\Game\Closing\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
