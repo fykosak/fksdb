@@ -15,7 +15,7 @@ export const submitStart = async (dispatch: Dispatch<Action<string>>, values: Su
         code: values.code,
     };
     const responseData = await dispatchNetteFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data));
-    dispatch(reset(FORM_NAME));
-    dispatch(focus(FORM_NAME, 'code'))
+    await dispatch(reset(FORM_NAME));
+    await dispatch(focus(FORM_NAME, 'code'))
     return responseData;
 }

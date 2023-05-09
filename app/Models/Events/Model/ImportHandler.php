@@ -16,18 +16,11 @@ class ImportHandler
 {
     use SmartObject;
 
-    private CSVParser $parser;
     private EventParticipantService $eventParticipantService;
-    private EventModel $event;
     private Connection $connection;
 
-    public function __construct(
-        Container $container,
-        CSVParser $parser,
-        EventModel $event
-    ) {
-        $this->parser = $parser;
-        $this->event = $event;
+    public function __construct(Container $container)
+    {
         $container->callInjects($this);
     }
 
@@ -42,16 +35,16 @@ class ImportHandler
      * @throws ConfigurationNotFoundException
      * @throws \Throwable
      */
-    public function import()
+    public function __invoke(CSVParser $parser, EventModel $event): void
     {
         $this->connection->beginTransaction();
         try {
-            foreach ($this->parser as $row) {
+            foreach ($parser as $row) {
                 $values = [];
                 foreach ($row as $columnName => $value) {
                     $value[$columnName] = $value;
                 }
-                $values['event_id'] = $this->event->event_id;
+                $values['event_id'] = $event->event_id;
                 $this->eventParticipantService->storeModel($values);
             }
         } catch (\Throwable $exception) {

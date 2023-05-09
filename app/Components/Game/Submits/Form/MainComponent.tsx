@@ -15,7 +15,7 @@ interface OwnProps {
     actions: NetteActions;
 }
 
-export default class FOFComponent extends React.Component<OwnProps> {
+export default class FOFComponent extends React.Component<OwnProps, never> {
     public render() {
         const {data, actions} = this.props;
         const {tasks, teams, availablePoints} = data;

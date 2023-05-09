@@ -27,12 +27,17 @@ class FastEditComponent extends BaseComponent
         $form = $control->getForm();
         $form->elementPrototype->target('_blank');
         $form->addText('code', _('Team Id'));
+        $form->addCheckbox('bypass', _('Bypass checksum'));
         $form->addSubmit('edit', _('Edit'));
 
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues('array');
             try {
-                $id = AttendanceCode::checkCode($this->container, $values['code']);
+                if ($values['bypass']) {
+                    $id = +$values['code'];
+                } else {
+                    $id = AttendanceCode::checkCode($this->container, $values['code']);
+                }
             } catch (ForbiddenRequestException$exception) {
                 $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
                 $this->getPresenter()->redirect('this');

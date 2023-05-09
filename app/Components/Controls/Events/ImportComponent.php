@@ -66,15 +66,12 @@ class ImportComponent extends BaseComponent
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-
-            try {
-                (new ImportHandler($this->container, $parser, $this->event))->import();
-                $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
-            } catch (\Throwable $exception) {
-                $this->getPresenter()->flashMessage(_('Import ran with errors.'), Message::LVL_WARNING);
-            }
+            (new ImportHandler($this->container))($parser, $this->event);
+            $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
         } catch (ImportHandlerException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (\Throwable $exception) {
+            $this->getPresenter()->flashMessage(_('Import ran with errors.'), Message::LVL_WARNING);
         }
         $this->getPresenter()->redirect('this');
     }

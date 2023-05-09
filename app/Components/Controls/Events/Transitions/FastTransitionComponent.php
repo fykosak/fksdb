@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Logging\Message;
@@ -43,7 +44,7 @@ class FastTransitionComponent extends TransitionComponent
      */
     final public function render(): void
     {
-        $this->template->transition = $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
+        $this->template->transition = $this->getTransition();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'fast.latte');
     }
 
@@ -52,11 +53,11 @@ class FastTransitionComponent extends TransitionComponent
      */
     public function createComponentForm(): FormControl
     {
-        $transition = $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
         $control = new FormControl($this->container);
         $form = $control->getForm();
         $form->addText('code', _('Application Id'));
-        $form->addSubmit('submit', $transition->label());
+        $form->addCheckbox('bypass', _('Bypass checksum'));
+        $form->addSubmit('submit', $this->getTransition()->label());
         $form->onSuccess[] = fn(Form $form) => $this->handleSave($form);
         return $control;
     }
@@ -65,9 +66,12 @@ class FastTransitionComponent extends TransitionComponent
     {
         try {
             $values = $form->getValues('array');
-            $id = AttendanceCode::checkCode($this->container, $values['code']);
+            if ($values['bypass']) {
+                $id = +$values['code'];
+            } else {
+                $id = AttendanceCode::checkCode($this->container, $values['code']);
+            }
             $machine = $this->getMachine();
-            $transition = $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
             if ($this->event->isTeamEvent()) {
                 $model = $this->event->getTeams()->where('fyziklani_team_id', $id)->fetch();
             } else {
@@ -78,7 +82,7 @@ class FastTransitionComponent extends TransitionComponent
                 throw new NotFoundException();
             }
             $holder = $machine->createHolder($model);
-            $machine->execute($transition, $holder);
+            $machine->execute($this->getTransition(), $holder);
             if ($this->event->isTeamEvent()) {
                 $this->getPresenter()->flashMessage(
                     sprintf(_('Transition successful team: (%d) %s'), $model->fyziklani_team_id, $model->name),
@@ -98,5 +102,13 @@ class FastTransitionComponent extends TransitionComponent
             $this->getPresenter()->flashMessage(_('Error'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    private function getTransition(): Transition
+    {
+        return $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
     }
 }

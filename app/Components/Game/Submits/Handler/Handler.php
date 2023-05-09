@@ -22,8 +22,6 @@ use Tracy\Debugger;
 
 abstract class Handler
 {
-    protected const DEBUGGER_LOG_PRIORITY = 'ctyrboj-info';
-
     protected User $user;
     protected EventModel $event;
     protected SubmitService $submitService;
@@ -73,7 +71,7 @@ abstract class Handler
                     $team->fyziklani_team_id,
                     $task->label
                 ),
-                Message::LVL_SUCCESS
+                $newState === SubmitState::NOT_CHECKED ? Message::LVL_INFO : Message::LVL_SUCCESS
             )
         );
     }

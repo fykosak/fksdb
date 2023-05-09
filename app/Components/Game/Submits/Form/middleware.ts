@@ -3,8 +3,8 @@ import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import { FormErrors } from 'redux-form';
 
-export const validate = <FormData extends { code?: string }>(values: { code?: string }, props: OwnProps): FormErrors<FormData> => {
-    const errors: FormErrors<FormData> = {};
+export const validate = (values: { code?: string }, props: OwnProps): FormErrors<{ code?: string }> => {
+    const errors: FormErrors<{ code?: string }> = {};
 
     if (!values.code) {
         errors.code = 'Code is empty.';
@@ -32,7 +32,6 @@ export const getTeam = (code: string, teams: TeamModel[]): TeamModel => {
 
 export const getTask = (code: string, tasks: TaskModel[]): TaskModel => {
     const taskLabel = extractTaskLabel(code);
-    console.log(taskLabel);
     const filterTask = tasks.filter((currentTask) => {
         return currentTask.label === taskLabel;
     });

@@ -64,7 +64,7 @@ class ApplicationHandler
     /**
      * @throws \Throwable
      */
-    final public function storeAndExecuteForm(BaseHolder $holder, Form $form, ?string $explicitTransitionName): void
+    final public function storeAndExecuteForm(BaseHolder $holder, Form $form, ?string $transitionName): void
     {
         try {
             if (!$this->connection->getPdo()->inTransaction()) {
@@ -73,13 +73,38 @@ class ApplicationHandler
 
             $transition = $this->processData(
                 FormUtils::emptyStrToNull($form->getValues()),
-                $explicitTransitionName
-                    ? $this->getMachine()->getTransitionById($explicitTransitionName)
+                $transitionName
+                    ? $this->getMachine()->getTransitionById($transitionName)
                     : null,
                 $holder
             );
 
-            $this->saveAndExecute($transition, $holder);
+            if ($transition) {
+                $this->getMachine()->execute2($transition, $holder);
+            }
+            $holder->saveModel();
+            if ($transition) {
+                $transition->callAfterExecute($holder);
+            }
+
+            if ($transition && $transition->isCreating()) {
+                $this->logger->log(
+                    new Message(
+                        sprintf(_('Application "%s" created.'), (string)$holder->getModel()),
+                        Message::LVL_SUCCESS
+                    )
+                );
+            } elseif ($transition) {
+                $this->logger->log(
+                    new Message(
+                        sprintf(
+                            _('State of application "%s" changed.'),
+                            (string)$holder->getModel()
+                        ),
+                        Message::LVL_INFO
+                    )
+                );
+            }
             $this->logger->log(
                 new Message(
                     sprintf(_('Application "%s" saved.'), (string)$holder->getModel()),
@@ -106,40 +131,6 @@ class ApplicationHandler
             throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $exception);
         }
     }
-
-    /**
-     * @throws \Throwable
-     */
-    private function saveAndExecute(?Transition $transition, BaseHolder $holder)
-    {
-        if ($transition) {
-            $this->getMachine()->execute2($transition, $holder);
-        }
-        $holder->saveModel();
-        if ($transition) {
-            $transition->callAfterExecute($holder);
-        }
-
-        if ($transition && $transition->isCreating()) {
-            $this->logger->log(
-                new Message(
-                    sprintf(_('Application "%s" created.'), (string)$holder->getModel()),
-                    Message::LVL_SUCCESS
-                )
-            );
-        } elseif ($transition) {
-            $this->logger->log(
-                new Message(
-                    sprintf(
-                        _('State of application "%s" changed.'),
-                        (string)$holder->getModel()
-                    ),
-                    Message::LVL_INFO
-                )
-            );
-        }
-    }
-
     private function processData(ArrayHash $values, ?Transition $transition, BaseHolder $holder): ?Transition
     {
         Debugger::log(json_encode((array)$values), 'app-form');

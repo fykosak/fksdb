@@ -17,18 +17,10 @@ export default class Preview extends React.Component<OwnProps, never> {
         if (!value) {
             return null;
         }
-        let error = null;
-        let task = null;
-        let team = null;
         try {
-            team = getTeam(value, teams);
-            task = getTask(value, tasks);
-        } catch (e) {
-            error = e.message;
-        }
-        return (
-            <>
-                {error && <span className="text-danger">{error}</span>}
+            const team = getTeam(value, teams);
+            const task = getTask(value, tasks);
+            return <>
                 {team && <>
                     <h3>{translator.getText('Team')}</h3>
                     <span className="text-success">{team.name}</span>
@@ -37,7 +29,10 @@ export default class Preview extends React.Component<OwnProps, never> {
                     <h3>{translator.getText('Task')}</h3>
                     <span className="text-success">{task.name}</span>
                 </>}
-            </>
-        );
+            </>;
+        } catch (e) {
+            return <span className="text-danger">{e.message}</span>
+        }
+
     }
 }
