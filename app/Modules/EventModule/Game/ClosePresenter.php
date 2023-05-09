@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
-use FKSDB\Components\Game\Closing\CtyrbojPreviewComponent;
-use FKSDB\Components\Game\Closing\FOFPreviewComponent;
+use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamListComponent;
@@ -32,23 +31,9 @@ class ClosePresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    /* ******* TITLE ***********/
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Sealing of the scoring'), 'fas fa-stamp');
-    }
-
-    /**
-     * @throws CannotAccessModelException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function titleHard(): PageTitle
-    {
-        return $this->titleTeam();
+        return new PageTitle(null, _('Close scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -83,20 +68,10 @@ class ClosePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizeHard(): void
-    {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizeList(): void
+    public function authorizedList(): void
     {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
-    /* *********** ACTIONS **************** */
 
     /**
      * @throws EventNotFoundException
@@ -116,8 +91,6 @@ class ClosePresenter extends BasePresenter
         }
     }
 
-    /* ********* COMPONENTS ************* */
-
     /**
      * @param Resource|string|null $resource
      * @throws EventNotFoundException
@@ -134,17 +107,10 @@ class ClosePresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
-     * @throws NotImplementedException
      */
     protected function createComponentCloseTeamControl(): PreviewComponent
     {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return new FOFPreviewComponent($this->getContext(), $this->getEntity());
-            case 17:
-                return new CtyrbojPreviewComponent($this->getContext(), $this->getEntity());
-        }
-        throw new NotImplementedException();
+        return new PreviewComponent($this->getContext(), $this->getEntity());
     }
 
     /**
@@ -192,9 +158,9 @@ class ClosePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentTeamSelect(): TeamSelectForm
+    protected function createComponentCodeCloseForm(): CodeCloseForm
     {
-        return new TeamSelectForm($this->getContext(), $this->getEvent());
+        return new CodeCloseForm($this->getContext(), $this->getEvent());
     }
 
     protected function getModelResource(): string

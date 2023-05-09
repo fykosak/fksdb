@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Events\FastEditComponent;
+use FKSDB\Components\Controls\Events\Transitions\FastTransitionComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -20,11 +21,10 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -50,6 +50,11 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     public function titleDetailedList(): PageTitle
     {
         return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
+    }
+
+    public function titleFastEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Fast edit'), 'fas fa-fast-forward');
     }
 
     /**
@@ -238,34 +243,20 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return TeamMachine
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function getMachine(): TeamMachine
+    protected function createComponentFastTransition(): FastTransitionComponent
     {
-        static $machine;
-        if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getTeamMachine($this->getEvent());
-        }
-        return $machine;
+        return new FastTransitionComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            TeamState::tryFrom(TeamState::APPROVED),
+            TeamState::tryFrom(TeamState::PARTICIPATED),
+        );
     }
 
-    /**
-     * @return BaseComponent
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    protected function createComponentApplicationTransitions(): BaseComponent
+    protected function createComponentFastEdit(): FastEditComponent
     {
-        return new TransitionButtonsComponent(
-            $this->getMachine(),
-            $this->getContext(),
-            $this->getMachine()->createHolder($this->getEntity())
-        );
+        return new FastEditComponent($this->getContext());
     }
 }

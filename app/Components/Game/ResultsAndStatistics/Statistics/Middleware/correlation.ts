@@ -17,7 +17,7 @@ export const calculateCorrelation = (
     let countTotal = 0;
     let countFiltered = 0;
     for (const taskId in firstTeamData) {
-        if (firstTeamData.hasOwnProperty(taskId) && secondTeamData.hasOwnProperty(taskId)) {
+        if (Object.hasOwn(firstTeamData,taskId) && Object.hasOwn(secondTeamData,taskId)) {
             const firstSubmit = firstTeamData[taskId];
             const secondSubmit = secondTeamData[taskId];
             const delta = Math.abs(firstSubmit.timestamp - secondSubmit.timestamp);

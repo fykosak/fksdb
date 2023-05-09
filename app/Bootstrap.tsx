@@ -9,10 +9,8 @@ import ParticipantAcquaintanceChart
     from './Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart';
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
-import ResultsPresentation
-    from './Components/Game/ResultsAndStatistics/Presentation/Main';
-import ResultsTable
-    from './Components/Game/ResultsAndStatistics/Table/Main';
+import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/Main';
+import ResultsTable from './Components/Game/ResultsAndStatistics/Table/Main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
 import MainComponent from './Components/Game/Submits/Form/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
@@ -148,14 +146,13 @@ window.addEventListener('DOMContentLoaded', () => {
             this.transformContainer(container, document.getElementById(container.attr('data-referenced-id')));
         },
         transformContainer: function (container: JQuery<HTMLElement>, refId: HTMLElement) {
-            const elRefId = $(refId);
             const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
             const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
             const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
             let compacted = null;
             //  const options = this.options;
-            if (elRefId) {
-                this.options.refId = elRefId;
+            if (refId) {
+                this.options.refId = $(refId);
             }
 
             function decompactifyContainer(): void {
@@ -325,7 +322,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 termFunction = extractLast;
             }
 
-            const options: Record<string, any> = {};
+            const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
                 options.source = (request, response) => {
@@ -345,11 +342,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         cache[term] = data;
                         response(data);
                     });
-                    /* $.getJSON(this.element.data('ac-ajax-url'), {acQ: term}, (data, status, xhr) => {
-                         data = conservationFunction(data);
-                         cache[term] = data;
-                         response(data);
-                     });*/
                 };
                 options.minLength = 3;
             } else {
@@ -357,8 +349,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 options.source = (request, response) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
-                    response($.ui.autocomplete.filter(
-                        items, s));
+                    response($.ui.autocomplete.filter(items, s));
                 };
                 options.minLength = 3;
             }

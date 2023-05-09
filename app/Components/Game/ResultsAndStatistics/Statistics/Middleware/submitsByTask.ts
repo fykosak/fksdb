@@ -14,7 +14,7 @@ export const submitsByTask = (
 ): SubmitsByTask => {
     const taskTimeSubmits: SubmitsByTask = {};
     for (const index in submits) {
-        if (submits.hasOwnProperty(index)) {
+        if (Object.hasOwn(submits,index)) {
             const submit: SubmitModel = submits[index];
             if (submit.taskId === activeTaskId) {
                 if (submit.points > 0) {

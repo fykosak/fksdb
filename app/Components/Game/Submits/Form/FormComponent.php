@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Submits\Form;
 
-use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Components\Game\Submits\TaskCodeException;
+use FKSDB\Components\Game\GameException;
+use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
@@ -14,13 +14,13 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-abstract class PointsEntryComponent extends AjaxComponent
+class FormComponent extends AjaxComponent
 {
     protected EventModel $event;
 
-    public function __construct(Container $container, EventModel $event, string $frontendId)
+    public function __construct(Container $container, EventModel $event)
     {
-        parent::__construct($container, $frontendId);
+        parent::__construct($container, $event->event_type_id === 1 ? 'fyziklani.submit-form' : 'ctyrboj.submit-form');
         $this->event = $event;
     }
 
@@ -29,6 +29,7 @@ abstract class PointsEntryComponent extends AjaxComponent
         return [
             'tasks' => TaskService::serialiseTasks($this->event),
             'teams' => TeamService2::serialiseTeams($this->event),
+            'availablePoints' => $this->event->getGameSetup()->getAvailablePoints(),
         ];
     }
 
@@ -44,15 +45,16 @@ abstract class PointsEntryComponent extends AjaxComponent
     {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
-            $this->innerHandleSave($data);
-        } catch (TaskCodeException | ClosedSubmittingException $exception) {
+            $task = TaskCodePreprocessor::getTask($data['code'], $this->event);
+            $team = TaskCodePreprocessor::getTeam($data['code'], $this->event);
+            $handler = $this->event->createGameHandler($this->getContext());
+            $handler->handle($team, $task, $data['points'] ? +$data['points'] : null);
+            foreach ($handler->logger->getMessages() as $message) {
+                $this->getLogger()->log($message);
+            }
+        } catch (GameException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
     }
-
-    /**
-     * @throws ClosedSubmittingException
-     */
-    abstract protected function innerHandleSave(array $data): void;
 }

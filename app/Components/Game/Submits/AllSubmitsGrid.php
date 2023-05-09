@@ -14,12 +14,11 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -62,13 +61,6 @@ class AllSubmitsGrid extends FilterGrid
         );
         if ($this->event->event_type_id === 1) {
             $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-            $this->addPresenterButton(
-                ':Game:Submit:detail',
-                'detail',
-                _('Detail'),
-                false,
-                ['id' => 'fyziklani_submit_id']
-            );
         }
         $this->addButton(
             new ControlButton(
@@ -90,9 +82,9 @@ class AllSubmitsGrid extends FilterGrid
         );
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
-        $query = $this->event->getTeams();
+        $query = $this->submitService->getTable()->where('fyziklani_team.event_id', $this->event->event_id);
         if (!isset($this->filterParams)) {
             return $query;
         }
@@ -140,10 +132,9 @@ class AllSubmitsGrid extends FilterGrid
             $this->redirect('this');
         }
         try {
-            $logger = new MemoryLogger();
             $handler = $this->event->createGameHandler($this->container);
-            $handler->revoke($logger, $submit);
-            FlashMessageDump::dump($logger, $this);
+            $handler->revoke($submit);
+            FlashMessageDump::dump($handler->logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
@@ -157,7 +148,7 @@ class AllSubmitsGrid extends FilterGrid
         $teams = [];
         /** @var TeamModel2 $team */
         foreach ($rows as $team) {
-            $teams[$team->fyziklani_team_id] = $team->name;
+            $teams[$team->fyziklani_team_id] = '(' . $team->fyziklani_team_id . ') ' . $team->name;
         }
 
         $rows = $this->event->getTasks();

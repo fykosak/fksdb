@@ -30,7 +30,7 @@ class TeamListComponent extends FilterList
 
     protected function getModels(): Selection
     {
-        return $this->event->getTeams()->order('points');
+        return $this->event->getPossiblyAttendingTeams()->order('fyziklani_team_id');
     }
 
     protected function configureForm(Form $form): void
@@ -47,7 +47,7 @@ class TeamListComponent extends FilterList
         $this->classNameCallback = function (TeamModel2 $team) {
             try {
                 $team->canClose();
-                return 'alert alert-warning';
+                return 'alert alert-info';
             } catch (AlreadyClosedException $exception) {
                 return 'alert alert-success';
             } catch (NotCheckedSubmitsException $exception) {
@@ -65,47 +65,5 @@ class TeamListComponent extends FilterList
         $row2 = new RowContainer($this->container);
         $row2->addComponent(new TemplateBaseItem($this->container, _('points: @fyziklani_team.points')), 'points');
         $this->addRow($row2, 'row2');
-
-        $closeButton = new PresenterButton(
-            $this->container,
-            new Title(null, _('Close!')),
-            fn(TeamModel2 $team) => [':Game:Close:team', ['id' => $team->fyziklani_team_id]],
-            null,
-            function (TeamModel2 $team) {
-                try {
-                    $team->canClose();
-                } catch (GameException $exception) {
-                    return false;
-                }
-                return true;
-            }
-        );
-        $this->addButton($closeButton, 'close');
-        /*<div class="row" >
-            <div class="col" >
-                {
-                    if $team->hasOpenSubmitting()}
-                    {
-                        try}
-                        {
-                            php $team->canClose()}
-                        <a href = "{plink team id=>$team->fyziklani_team_id}"
-                           class="btn btn-outline-success" >{
-        _'Close!'}</a >
-                    {
-                        /
-                        try}
-                {
-                else
-                }
-                    {
-                        $team->points} {
-        _'points'}
-                {
-                    /
-                    if}
-            </div >
-        </div >
-    </div >*/
     }
 }

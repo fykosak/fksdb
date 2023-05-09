@@ -1,0 +1,11 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TaskModel|null $task}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{block content}
+    {if $event->event_type_id === 1}
+        <div class="row mt-1">
+            <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_('Úloha u vydavačů')}:</b>
+            <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">{$task?$task->label:''}</span>
+        </div>
+    {/if}
+    <a class="btn btn-outline-success" href="{link close!}">{_('Confirm and close submitting.')}</a>
+{/block}

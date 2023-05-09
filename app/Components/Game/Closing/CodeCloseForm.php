@@ -9,6 +9,9 @@ use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Components\Game\Submits\NoTaskLeftException;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -27,28 +30,53 @@ class CodeCloseForm extends FormComponent
 
     protected function handleSuccess(SubmitButton $button): void
     {
-        $code = $button->getForm()->getForm()->getValues('array')['code'];
-        /** @var TeamModel2|null $team */
-        $team = TaskCodePreprocessor::getTeam($code, $this->event);
-        $team->canClose();
-
-        $finalTask = TaskCodePreprocessor::getTask($code, $this->event);
-        $task = $this->handler->getNextTask($team);
-        if ($task) {
-            if ($task->getPrimary() !== $finalTask->getPrimary()) {
-                throw new GameException(_('Final task miss match'));
+        try {
+            $code = $button->getForm()->getForm()->getValues('array')['code'];
+            $team = TaskCodePreprocessor::getTeam($code, $this->event);
+            $expectedTask = $this->handler->getNextTask($team);
+            try {
+                $givenTask = TaskCodePreprocessor::getTask($code, $this->event, true);
+                if (!$expectedTask) {
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        _('system expect no task left')
+                    );
+                }
+                if ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
+                    );
+                }
+            } catch (NoTaskLeftException $exception) {
+                if ($expectedTask) {
+                    throw new GameException(
+                        _('Final task mismatch') . ': ' .
+                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
+                    );
+                }
             }
+            $this->handler->close($team);
+            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
+            $this->getPresenter()->redirect('list', ['id' => null]);
+        } catch (GameException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (\Throwable$exception) {
+            $this->flashMessage('Undefined error', Message::LVL_ERROR);
         }
-        $this->handler->close($team);
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        // TODO: Implement appendSubmitButton() method.
+        return $form->addSubmit('submit', _('Close submitting!'));
     }
 
     protected function configureForm(Form $form): void
     {
-        // TODO: Implement configureForm() method.
+        $codeInput = $form->addText('code', _('Task code'));
+        $codeInput->setOption(
+            'description',
+            _('Kód z úlohy ktorá ostala ako daľšia na vydavanie, prip. posledný papierik')
+        );
     }
 }

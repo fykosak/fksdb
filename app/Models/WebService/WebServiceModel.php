@@ -8,10 +8,12 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\WebService\Models\{EventListWebModel,
+use FKSDB\Models\WebService\Models\{
+    ContestsModel,
     EventWebModel,
     ExportWebModel,
-    FyziklaniResultsWebModel,
+    EventListWebModel,
+    Game,
     OrganizersWebModel,
     PaymentListWebModel,
     ResultsWebModel,
@@ -19,7 +21,6 @@ use FKSDB\Models\WebService\Models\{EventListWebModel,
     SignaturesWebModel,
     StatsWebModel,
     WebModel,
-    ContestsModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -39,7 +40,9 @@ class WebServiceModel
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -124,8 +127,8 @@ class WebServiceModel
      */
     private function getWebModel(string $name): ?WebModel
     {
-        $name = ucfirst($name);
-        if (isset(self::WEB_MODELS[$name])) {
+        $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
+        if ($webModelClass) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;

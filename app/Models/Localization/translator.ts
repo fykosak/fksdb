@@ -34,19 +34,15 @@ class Lang {
         this.currentLocale = locale;
     }
 
-    public getAvailableLocales(): string[] {
-        return Object.keys(this.data);
-    }
-
     public getText(msgId: string): string {
-        if (this.data[this.currentLocale].hasOwnProperty(msgId) && this.data[this.currentLocale][msgId]) {
+        if (Object.hasOwn(this.data[this.currentLocale],msgId) && this.data[this.currentLocale][msgId]) {
             return this.data[this.currentLocale][msgId];
         }
         return msgId;
     }
 
     public getLocalizedText(msgId: string, locale: availableLanguage): string {
-        if (this.data[locale].hasOwnProperty(msgId) && this.data[locale][msgId]) {
+        if (Object.hasOwn(this.data[locale],msgId) && this.data[locale][msgId]) {
             return this.data[locale][msgId];
         }
         return msgId;

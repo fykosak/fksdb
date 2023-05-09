@@ -84,7 +84,10 @@ navigation:
         Event.Dashboard.default:
             Event.TeamApplication.detailedList: []
             Event.TeamApplication.list: []
+            Event.TeamApplication.transition: []
+            Event.TeamApplication.fastEdit: []
             Event.Application.list: []
+            Event.Application.transition: []
             Event.EventOrg.list: []
             Event.Payment.create: []
             Event.Payment.detailedList: []

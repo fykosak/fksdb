@@ -43,7 +43,7 @@ export default class CommonChart extends React.Component<OwnProps> {
 
         const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {
-            if (data[accessKey].hasOwnProperty(eventId) && data.events.hasOwnProperty(eventId)) {
+            if (Object.hasOwn(data[accessKey],eventId) && Object.hasOwn(data.events,eventId)) {
                 const event = data.events[eventId];
                 const apps = data[accessKey][eventId];
 

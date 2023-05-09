@@ -207,7 +207,7 @@ class ApplicationPresenter extends BasePresenter
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+            $machine = $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
         }
         return $machine;
     }

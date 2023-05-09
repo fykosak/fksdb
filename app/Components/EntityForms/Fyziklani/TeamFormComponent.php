@@ -117,7 +117,8 @@ abstract class TeamFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
-                $this->machine->executeImplicitTransition($holder);
+                $transition = $this->machine->getImplicitTransition($holder);
+                $this->machine->execute($transition, $holder);
             }
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(

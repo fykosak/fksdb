@@ -36,7 +36,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
     }
 
     public render() {
-        const {data, xScale, yScale, display} = this.props;
+        const {data, xScale, yScale} = this.props;
 
         yScale.range(this.getInnerYSize());
         xScale.range(this.getInnerXSize());

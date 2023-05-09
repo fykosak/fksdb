@@ -1,4 +1,12 @@
 {block content}
-    {control teamSelect}
+    <h2>{_'Direct closing'}</h2>
+    {control codeCloseForm}
+    <h2>{_'List of teams'}</h2>
+    <div class="small col-6">
+        <h3>{_'Legend'}</h3>
+        <p class="alert alert-info">{_'Team ready for closing'}</p>
+        <p class="alert alert alert-success">{_'Team closed'}</p>
+        <p class="alert alert-danger">{_'Team is not ready'}</p>
+    </div>
     {control grid}
 {/block}

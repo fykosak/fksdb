@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Game\Submits\CtyrbojHandler;
-use FKSDB\Components\Game\Submits\FOFHandler;
-use FKSDB\Components\Game\Submits\Handler;
+use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\Handler\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;

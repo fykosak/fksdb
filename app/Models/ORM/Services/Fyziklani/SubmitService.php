@@ -15,7 +15,7 @@ class SubmitService extends Service
 {
     public function serialiseSubmits(EventModel $event, ?string $lastUpdated): array
     {
-        $query = $event->getTeams();
+        $query = $this->getTable()->where('fyziklani_task.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {
             $query->where('modified >= ?', $lastUpdated);

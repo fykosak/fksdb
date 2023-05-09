@@ -94,6 +94,11 @@ class TeamModel2 extends Model implements Resource
         }
     }
 
+    public function getSubmit(TaskModel $task): ?SubmitModel
+    {
+        return $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+    }
+
     /**
      * @return PersonScheduleModel[]
      */

@@ -70,7 +70,7 @@ class ChartPresenter extends BasePresenter
                 'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
                 'model' => new GraphComponent(
                     $this->getContext(),
-                    $this->eventDispatchFactory->getTeamMachine($this->getEvent())
+                    $this->eventDispatchFactory->getEventMachine($this->getEvent())
                 ),
             ];
         } else {
