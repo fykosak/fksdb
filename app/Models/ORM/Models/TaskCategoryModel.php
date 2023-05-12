@@ -8,8 +8,9 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int task_id
- * @property-read int study_year
+ * @property-read int contest_category_id
  */
-class TaskStudyYearModel extends Model
+class TaskCategoryModel extends Model
 {
+
 }
