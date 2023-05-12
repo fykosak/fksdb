@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
-    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
+    FyziklaniTeamTeacherRole,
     ParticipantRole
 };
 use FKSDB\Models\ORM\DbNames;
@@ -15,8 +15,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -55,11 +55,13 @@ class PersonModel extends Model implements Resource
         return $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
     }
 
-    public function getHistoryByContestYear(
-        ContestYearModel $contestYear,
-        bool $extrapolated = false
-    ): ?PersonHistoryModel {
-        return $this->getHistory($contestYear->ac_year, $extrapolated);
+    public function getHistoryByContestYear(ContestYearModel $contestYear): ?PersonHistoryModel
+    {
+        /** @var PersonHistoryModel|null $history */
+        $history = $this->getHistories()
+            ->where('ac_year', $contestYear->ac_year)
+            ->fetch();
+        return $history;
     }
 
     public function getHistories(): TypedGroupedSelection
@@ -67,19 +69,13 @@ class PersonModel extends Model implements Resource
         return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
     }
 
-    public function getHistory(int $acYear, bool $extrapolated = false): ?PersonHistoryModel
+    public function getHistory(int $acYear): ?PersonHistoryModel
     {
+        /** @var PersonHistoryModel|null $history */
         $history = $this->getHistories()
             ->where('ac_year', $acYear)
             ->fetch();
-        if ($history) {
-            return $history;
-        }
-        if ($extrapolated) {
-            $lastHistory = $this->getLastHistory();
-            return $lastHistory ? $lastHistory->extrapolate($acYear) : null;
-        }
-        return null;
+        return $history;
     }
 
     public function getContestants(?ContestModel $contest = null): TypedGroupedSelection

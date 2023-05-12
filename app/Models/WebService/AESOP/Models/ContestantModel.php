@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
-use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
@@ -18,7 +19,7 @@ class ContestantModel extends AESOPModel
 {
 
     protected TaskService $taskService;
-    private ?ModelCategory $category;
+    private ?ContestCategoryModel $category;
 
     /**
      * ContestantModel constructor.
@@ -47,11 +48,9 @@ class ContestantModel extends AESOPModel
 WHERE
 	ac.`x-contest_id` = ?
         AND ac.`x-ac_year` = ?
-        AND (1=1 or ? = 0) -- hack for parameters
                                                order by surname, name",
             $this->contestYear->contest_id,
-            $this->contestYear->ac_year,
-            $this->category->value
+            $this->contestYear->ac_year
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
@@ -67,7 +66,7 @@ WHERE
 
     protected function getMask(): string
     {
-        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->value;
+        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->label;
     }
 
     /**
@@ -76,7 +75,7 @@ WHERE
      */
     public function getMaxPoints(): ?int
     {
-        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         if (!$this->category) {
             return null;
         }
@@ -92,11 +91,11 @@ WHERE
     /**
      * @throws BadRequestException
      */
-    private function getCategory(?string $stringCategory): ?ModelCategory
+    private function getCategory(?string $stringCategory): ?ContestCategoryModel
     {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->value == $stringCategory) {
+            if ($category->label == $stringCategory) {
                 return $category;
             }
         }
@@ -108,7 +107,7 @@ WHERE
      */
     private function filterCategory(ResultSet $data): array
     {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
 
         $studyYears = [];
         if ($this->category) {
@@ -161,6 +160,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear($studyYear);
+        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
     }
 }

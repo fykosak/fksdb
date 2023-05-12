@@ -21,30 +21,30 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 class PublicModule extends AbstractPageDisplayTestCase
 {
-    private ContestantModel $contestant;
     private TaskModel $task;
     private SubmitModel $submit;
-    private SubmitQuestionModel $question;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->contestant = $this->container->getByType(ContestantService::class)->storeModel(
-            ['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1]
+        /** @var ContestantModel $contestant */
+        $contestant = $this->container->getByType(ContestantService::class)->storeModel(
+            ['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1, 'contest_category_id' => 1]
         );
         $this->task = $this->container->getByType(TaskService::class)->storeModel(
             ['label' => 1,'contest_id' => 1, 'year' => 1, 'series' => 1]
         );
         $this->submit = $this->container->getByType(SubmitService::class)->storeModel([
-            'contestant_id' => $this->contestant->contestant_id,
+            'contestant_id' => $contestant->contestant_id,
             'task_id' => $this->task->task_id, 'source' => SubmitSource::QUIZ
         ]);
-        $this->question = $this->container->getByType(SubmitQuestionService::class)->storeModel(
+        /** @var SubmitQuestionModel $question */
+        $question = $this->container->getByType(SubmitQuestionService::class)->storeModel(
             ['task_id' => $this->task->task_id]
         );
         $this->container->getByType(SubmitQuestionAnswerService::class)->storeModel([
-            'contestant_id' => $this->contestant->contestant_id,
-            'submit_question_id' => $this->question->submit_question_id
+            'contestant_id' => $contestant->contestant_id,
+            'submit_question_id' => $question->submit_question_id
         ]);
 
         // not quiz task

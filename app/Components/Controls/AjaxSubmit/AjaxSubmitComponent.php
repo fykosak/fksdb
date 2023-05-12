@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -70,8 +70,7 @@ class AjaxSubmitComponent extends AjaxComponent
      */
     protected function getData(): array
     {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
-        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
+        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $this->contestant->contest_category);
     }
 
     /**

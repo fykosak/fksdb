@@ -10,10 +10,10 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\OrgService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -61,7 +61,7 @@ class Authorization extends FyziklaniTestCase
             'born' => DateTime::from('2000-01-01'),
         ], []);
         $this->container->getByType(ContestantService::class)->storeModel(
-            ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
+            ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1, 'contest_category_id' => 1]
         );
 
         $this->event = $this->createEvent([]);

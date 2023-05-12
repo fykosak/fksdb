@@ -5,6 +5,9 @@ orm:
     auth_token:
         service: FKSDB\Models\ORM\Services\AuthTokenService
         model: FKSDB\Models\ORM\Models\AuthTokenModel
+    contest_category:
+        model: FKSDB\Models\ORM\Models\ContestCategoryModel
+        service: FKSDB\Models\ORM\Services\ContestCategoryService
     contest:
         service: FKSDB\Models\ORM\Services\ContestService
         model: FKSDB\Models\ORM\Models\ContestModel
@@ -13,9 +16,9 @@ orm:
                 type: string
                 title: _('Contest name')
             contest:
-               type: class
-               class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
-               title: _('Contest')
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
+                title: _('Contest')
     contestant:
         service: FKSDB\Models\ORM\Services\ContestantService
         model: FKSDB\Models\ORM\Models\ContestantModel
@@ -26,6 +29,10 @@ orm:
             year:
                 type: string
                 title: _('Year')
+            contest_category:
+                type: class
+                title: _('Contest category')
+                class: FKSDB\Models\ORM\Columns\Tables\Contestant\ContestCategoryColumnFactory
         links:
             edit:
                 destination: :Org:Contestant:edit
@@ -135,8 +142,7 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
                 title: _('Event')
-        links:
-            application.list: FKSDB\Models\ORM\Links\ParticipantListLink
+        links: []
     event_org:
         service: FKSDB\Models\ORM\Services\EventOrgService
         model: FKSDB\Models\ORM\Models\EventOrgModel
@@ -656,9 +662,9 @@ orm:
                 type: enum
                 class: FKSDB\Models\ORM\Models\TaskContributionType
                 title: _('Type')
-    task_study_year:
-        service: FKSDB\Models\ORM\Services\TaskStudyYearService
-        model: FKSDB\Models\ORM\Models\TaskStudyYearModel
+    task_category:
+        model: FKSDB\Models\ORM\Models\TaskCategoryModel
+        service: FKSDB\Models\ORM\Services\TaskCategoryService
     teacher:
         service: FKSDB\Models\ORM\Services\TeacherService
         model: FKSDB\Models\ORM\Models\TeacherModel
