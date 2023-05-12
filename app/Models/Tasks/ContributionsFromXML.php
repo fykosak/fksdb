@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Pipeline\Stage;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -25,7 +25,7 @@ class ContributionsFromXML extends Stage
 
     private TaskContributionService $taskContributionService;
 
-    public function __construct(TaskContributionService $taskContributionService)
+    public function inject(TaskContributionService $taskContributionService): void
     {
         $this->taskContributionService = $taskContributionService;
     }

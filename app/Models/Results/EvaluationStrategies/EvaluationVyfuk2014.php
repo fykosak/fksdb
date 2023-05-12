@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 
 /**
  * Introduced in Výfuk 2014 (4th official year).
@@ -31,13 +31,13 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?float
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): ?float
     {
         if ($task->label == '1' && $task->series < 7) {
             if (
-                in_array($category->value, [
-                    ModelCategory::VYFUK_6,
-                    ModelCategory::VYFUK_7,
+                in_array($category->label, [
+                    ContestCategoryModel::VYFUK_6,
+                    ContestCategoryModel::VYFUK_7,
                 ])
             ) {
                 return $task->points;
@@ -49,14 +49,14 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         }
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         if ($submit->task->series > 6) {
             return $submit->raw_points;
         }
-        switch ($category->value) {
-            case ModelCategory::VYFUK_6:
-            case ModelCategory::VYFUK_7:
+        switch ($submit->contestant->contest_category->label) {
+            case ContestCategoryModel::VYFUK_6:
+            case ContestCategoryModel::VYFUK_7:
                 if ($submit->task->label == '1') {
                     return $submit->raw_points;
                 } else {
@@ -66,11 +66,11 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         return $submit->raw_points;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
     {
-        switch ($category->value) {
-            case ModelCategory::VYFUK_6:
-            case ModelCategory::VYFUK_7:
+        switch ($category->label) {
+            case ContestCategoryModel::VYFUK_6:
+            case ContestCategoryModel::VYFUK_7:
                 return 'IF (s.raw_points IS NOT NULL, t.points, NULL)';
             default:
                 return "IF (s.raw_points IS NOT NULL,
@@ -81,10 +81,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     protected function getCategoryMap(): array
     {
         return [
-            ModelCategory::VYFUK_6 => [6],
-            ModelCategory::VYFUK_7 => [7],
-            ModelCategory::VYFUK_8 => [8],
-            ModelCategory::VYFUK_9 => [null, 9],
+            ContestCategoryModel::VYFUK_6 => [6],
+            ContestCategoryModel::VYFUK_7 => [7],
+            ContestCategoryModel::VYFUK_8 => [8],
+            ContestCategoryModel::VYFUK_9 => [null, 9],
         ];
     }
 }

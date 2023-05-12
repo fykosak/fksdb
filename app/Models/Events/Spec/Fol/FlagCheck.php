@@ -8,12 +8,13 @@ use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control;
 
 class FlagCheck extends AbstractAdjustment
 {
@@ -60,7 +61,7 @@ class FlagCheck extends AbstractAdjustment
                 }, $msgForeign)
                 ->addRule(function () use ($studyYearControl, $personControl, $form, $msgOld): bool {
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if (!$this->isStudent($studyYear)) {
+                    if (is_null($studyYear)) {
                         $form->addError($msgOld);
                         return false;
                     }
@@ -81,7 +82,7 @@ class FlagCheck extends AbstractAdjustment
 //                };
     }
 
-    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int
+    private function getStudyYear(Control $studyYearControl, Control $personControl): ?StudyYear
     {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
@@ -93,7 +94,7 @@ class FlagCheck extends AbstractAdjustment
             ->where('person_id', $personId)
             ->where('ac_year', $this->holder->event->getContestYear()->ac_year)
             ->fetch();
-        return $personHistory->study_year;
+        return $personHistory ? StudyYear::tryFromLegacy($personHistory->study_year) : null;
     }
 
     private function getSchoolId(Control $schoolControl, Control $personControl): ?int
@@ -108,10 +109,5 @@ class FlagCheck extends AbstractAdjustment
             ->where('person_id', $personId)
             ->where('ac_year', $this->holder->event->getContestYear()->ac_year)->fetch();
         return $school->school_id;
-    }
-
-    private function isStudent(?int $studyYear): bool
-    {
-        return !is_null($studyYear);
     }
 }

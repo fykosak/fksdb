@@ -215,16 +215,25 @@ CREATE TABLE IF NOT EXISTS `auth_token`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8;
 
+CREATE TABLE IF NOT EXISTS `contest_category`
+(
+    `contest_category_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`               VARCHAR(16) NOT NULL,
+    `name_cs`             VARCHAR(64) NOT NULL,
+    `name_en`             VARCHAR(64) NOT NULL
+) ENGINE = InnoDB;
+
 -- -----------------------------------------------------
 -- Table `contestant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contestant`
 (
-    `contestant_id` INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contest_id`    INT(11)    NOT NULL COMMENT 'seminář',
-    `year`          TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
-    `person_id`     INT(11)    NOT NULL,
-    `created`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `contestant_id`       INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id`          INT(11)    NOT NULL COMMENT 'seminář',
+    `year`                TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
+    `person_id`           INT(11)    NOT NULL,
+    `contest_category_id` INT        NULL     DEFAULT NULL,
+    `created`             TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE INDEX `uq_contestant__contest_id` (`contest_id` ASC, `year` ASC, `person_id` ASC),
     INDEX `idx_contestant__person_id` (`person_id` ASC),
     CONSTRAINT `fk_contestant__person`
@@ -235,6 +244,11 @@ CREATE TABLE IF NOT EXISTS `contestant`
     CONSTRAINT `fk_contestant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT,
+    CONSTRAINT `fk_contestant__contest_category`
+        FOREIGN KEY (`contest_category_id`)
+            REFERENCES `contest_category` (`contest_category_id`)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT
 )
@@ -936,6 +950,27 @@ CREATE TABLE IF NOT EXISTS `task_study_year`
 )
     ENGINE = InnoDB
     COMMENT = 'specification of allowed study years for a task';
+
+CREATE TABLE IF NOT EXISTS `task_category`
+(
+    `task_id`             INT(11) NOT NULL,
+    `contest_category_id` INT     NOT NULL,
+    PRIMARY KEY (`contest_category_id`, `task_id`),
+    INDEX `idx_task_category__contest_category` (`contest_category_id` ASC),
+    INDEX `idx_task_category__task` (`task_id` ASC),
+    CONSTRAINT `fk_task_category__task`
+        FOREIGN KEY (`task_id`)
+            REFERENCES `task` (`task_id`)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT `fk_task_category__contest_category`
+        FOREIGN KEY (`contest_category_id`)
+            REFERENCES `contest_category` (`contest_category_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
+)
+    ENGINE = InnoDB
+    COMMENT = 'specification of allowed category for a task';
 
 -- -----------------------------------------------------
 -- Table `stored_query_tag_type`
