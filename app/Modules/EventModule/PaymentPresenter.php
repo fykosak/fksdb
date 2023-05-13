@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
@@ -217,8 +217,8 @@ class PaymentPresenter extends BasePresenter
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
-            $this->getMachine(),
             $this->getContext(),
+            $this->getEvent(),
             $this->getMachine()->createHolder($this->getEntity())
         );
     }

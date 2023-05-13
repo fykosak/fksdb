@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events\Transitions;
+namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Components\Controls\Events\AttendanceCode;
 use FKSDB\Components\Controls\FormControl\FormControl;

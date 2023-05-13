@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\Transitions\FastTransitionComponent;
-use FKSDB\Components\Controls\Events\Transitions\MassTransitionsComponent;
-use FKSDB\Components\Controls\Events\Transitions\TransitionButtonsComponent;
+use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -155,6 +155,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {

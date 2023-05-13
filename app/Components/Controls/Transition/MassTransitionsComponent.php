@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events\Transitions;
+namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;

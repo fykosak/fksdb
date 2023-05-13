@@ -1,3 +1,5 @@
+{layout ../@layout.latte}
+
 {varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
 {foreach $transitions as $transition}
     {continueIf $transition->isCreating()}

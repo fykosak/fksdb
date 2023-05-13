@@ -112,8 +112,10 @@ class ApplicationComponent extends BaseComponent
         $transitionSubmit = null;
 
         foreach (
-            $this->getMachine()->getAvailableTransitions($this->holder, $this->holder->getModelState()) as
-            $transition
+            $this->getMachine()->getAvailableTransitions(
+                $this->holder,
+                $this->holder->getModelState()
+            ) as $transition
         ) {
             $submit = $form->addSubmit($transition->getId(), $transition->getLabel());
 
