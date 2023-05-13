@@ -1,6 +1,6 @@
 {layout ../@layout.latte}
-
 {varType FKSDB\Models\Transitions\Transition\Transition $transition}
+
 {block content}
     {* TODO preklad *}
     <p class="alert-info alert">{_'Automaticky vykoná prechod: '}{$transition->source->label()}->{$transition->target->label()}</p>
