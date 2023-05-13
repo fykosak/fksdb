@@ -8,8 +8,9 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\WebService\Models\{ContestsModel,
+use FKSDB\Models\WebService\Models\{
     EventListWebModel,
+    ContestsModel,
     EventWebModel,
     ExportWebModel,
     Game,
@@ -42,6 +43,7 @@ class WebServiceModel
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
         'game/results' => Game\ResultsWebModel::class,
         'game/submit' => Game\SubmitWebModel::class,
+        'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,

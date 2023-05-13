@@ -135,8 +135,7 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
                 title: _('Event')
-        links:
-            application.list: FKSDB\Models\ORM\Links\ParticipantListLink
+        links: []
     event_org:
         service: FKSDB\Models\ORM\Services\EventOrgService
         model: FKSDB\Models\ORM\Models\EventOrgModel
