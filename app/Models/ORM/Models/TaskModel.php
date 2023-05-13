@@ -41,19 +41,17 @@ class TaskModel extends Model
         return $contributions;
     }
 
-    /**
-     * @return TaskStudyYearModel[] indexed by study_year
-     */
-    public function getStudyYears(): array
+    public function getCategories(): TypedGroupedSelection
     {
-        $studyYears = $this->related(DbNames::TAB_TASK_STUDY_YEAR, 'task_id');
+        return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
+    }
 
-        $result = [];
-        /** @var TaskStudyYearModel $studyYear */
-        foreach ($studyYears as $studyYear) {
-            $result[$studyYear->study_year] = $studyYear;
+    public function isForCategory(?ContestCategoryModel $category): bool
+    {
+        if (!$category) {
+            return false;
         }
-        return $result;
+        return (bool)$this->getCategories()->where('contest_category_id', $category->contest_category_id)->fetch();
     }
 
     public function getContestYear(): ContestYearModel

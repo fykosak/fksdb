@@ -42,7 +42,8 @@ class DbNames
     public const TAB_SUBMIT_QUESTION_ANSWER = 'submit_question_answer';
     public const TAB_TASK = 'task';
     public const TAB_TASK_CONTRIBUTION = 'task_contribution';
-    public const TAB_TASK_STUDY_YEAR = 'task_study_year';
+
+    public const TAB_TASK_CATEGORY = 'task_category';
     public const TAB_TEACHER = 'teacher';
     /* payment */
     public const TAB_PAYMENT = 'payment';

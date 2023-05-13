@@ -15,7 +15,7 @@ class SchoolsPerTeamProcessing extends FormProcessing
         $members = TeamFormComponent::getMembersFromForm($form);
         $schools = [];
         foreach ($members as $member) {
-            $school = $member->getHistory($event->getContestYear()->ac_year)->school;
+            $school = $member->getHistoryByContestYear($event->getContestYear())->school;
             if (!isset($schools[$school->school_id])) {
                 $schools[$school->school_id] = $school;
             }

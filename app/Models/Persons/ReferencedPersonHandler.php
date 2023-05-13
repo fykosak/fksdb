@@ -254,7 +254,6 @@ class ReferencedPersonHandler extends ReferencedHandler
         string $sub,
         string $field,
         ContestYearModel $contestYear,
-        bool $extrapolate = false,
         ?EventModel $event = null
     ) {
         if (!$person) {
@@ -273,7 +272,8 @@ class ReferencedPersonHandler extends ReferencedHandler
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
+                return ($history = $person->getHistoryByContestYear($contestYear))
+                    ? $history->{$field}
                     : null;
             case 'post_contact_d':
                 return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
