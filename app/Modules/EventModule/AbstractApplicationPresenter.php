@@ -12,7 +12,6 @@ use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -23,7 +22,6 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -146,7 +144,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     {
         return new ApplicationComponent(
             $this->getContext(),
-            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
             $this->getHolder()
         );
     }

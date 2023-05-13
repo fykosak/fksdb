@@ -57,13 +57,11 @@ class BaseHolder implements ModelHolder
     /**
      * Apply processings to the values and sets them to the ORM model.
      */
-    public function processFormValues(ArrayHash $values, ?Transition $transition): ?EventParticipantStatus
+    public function processFormValues(ArrayHash $values): void
     {
-        $newState = $transition ? $transition->target : null;
         foreach ($this->processings as $processing) {
             $processing->process($values);
         }
-        return $newState;
     }
 
     public function adjustForm(Form $form): void

@@ -6,13 +6,14 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\ImportHandler;
 use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
+use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
@@ -20,11 +21,19 @@ use Nette\Http\FileUpload;
 class ImportComponent extends BaseComponent
 {
     private EventModel $event;
+    private EventParticipantService $eventParticipantService;
+    private Connection $connection;
 
     public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container);
         $this->event = $event;
+    }
+
+    public function inject(EventParticipantService $eventParticipantService, Connection $connection): void
+    {
+        $this->eventParticipantService = $eventParticipantService;
+        $this->connection = $connection;
     }
 
     /**
@@ -66,11 +75,22 @@ class ImportComponent extends BaseComponent
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-            (new ImportHandler($this->container))($parser, $this->event);
+            $this->connection->beginTransaction();
+            foreach ($parser as $row) {
+                $values = [];
+                foreach ($row as $columnName => $value) {
+                    $value[$columnName] = $value;
+                }
+                $values['event_id'] = $this->event->event_id;
+                $this->eventParticipantService->storeModel($values);
+            }
+            $this->connection->commit();
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
         } catch (ImportHandlerException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->connection->rollBack();
+            $this->getPresenter()->flashMessage(_('Import failed.'), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
+            $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import ran with errors.'), Message::LVL_WARNING);
         }
         $this->getPresenter()->redirect('this');

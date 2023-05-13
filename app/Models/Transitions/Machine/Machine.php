@@ -10,7 +10,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
 abstract class Machine
