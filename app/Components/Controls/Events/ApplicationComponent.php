@@ -20,7 +20,6 @@ use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -29,16 +28,14 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 use Tracy\Debugger;
 
 /**
- * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
+ * @method BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent
 {
     private BaseHolder $holder;
-    private string $templateFile;
     private Connection $connection;
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -80,9 +77,6 @@ class ApplicationComponent extends BaseComponent
 
     final public function renderForm(): void
     {
-        if (!$this->templateFile) {
-            throw new InvalidStateException('Must set template for the application form.');
-        }
         $this->template->holder = $this->holder;
         $this->template->render($this->getTemplateFile());
     }
@@ -112,10 +106,7 @@ class ApplicationComponent extends BaseComponent
         $transitionSubmit = null;
 
         foreach (
-            $this->getMachine()->getAvailableTransitions(
-                $this->holder,
-                $this->holder->getModelState()
-            ) as $transition
+            $this->getMachine()->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition
         ) {
             $submit = $form->addSubmit($transition->getId(), $transition->getLabel());
 
@@ -123,10 +114,7 @@ class ApplicationComponent extends BaseComponent
                 $submit->setValidationScope([]);
             }
 
-            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit(
-                $button->getForm(),
-                $transition
-            );
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
@@ -148,7 +136,9 @@ class ApplicationComponent extends BaseComponent
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form);
+        foreach ($this->holder->formAdjustments as $adjustment) {
+            $adjustment->adjust($form, $this->holder);
+        }
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
@@ -172,7 +162,9 @@ class ApplicationComponent extends BaseComponent
                     }
                     $values = FormUtils::emptyStrToNull($form->getValues());
                     Debugger::log(json_encode((array)$values), 'app-form');
-                    $this->holder->processFormValues($values);
+                    foreach ($this->holder->processings as $processing) {
+                        $processing->process($values);
+                    }
 
                     if ($transition) {
                         $state = $this->holder->getModelState();
@@ -212,12 +204,12 @@ class ApplicationComponent extends BaseComponent
                         $this->connection->commit();
                     }
                 } catch (
-                ModelDataConflictException |
-                DuplicateApplicationException |
-                MachineExecutionException |
-                SubmitProcessingException |
-                FullCapacityException |
-                ExistingPaymentException $exception
+                    ModelDataConflictException |
+                    DuplicateApplicationException |
+                    MachineExecutionException |
+                    SubmitProcessingException |
+                    FullCapacityException |
+                    ExistingPaymentException $exception
                 ) {
                     $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
                     /** @var ReferencedId $referencedId */
