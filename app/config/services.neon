@@ -34,7 +34,6 @@ services:
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ORMFactory
     # Events
-    events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
@@ -68,7 +67,6 @@ services:
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
-    - FKSDB\Components\Controls\Events\ExpressionPrinter
 
     ## forms
     #provider

@@ -25,7 +25,7 @@ class Parameter
      */
     public function __invoke(ModelHolder $holder)
     {
-        return $holder->getParameter($this->parameter);
+        return $holder->event->getParameter($this->parameter);
     }
 
     public function __toString(): string

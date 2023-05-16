@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 

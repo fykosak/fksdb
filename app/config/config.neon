@@ -65,7 +65,9 @@ parameters:
             1: [8,9,1,2,3,4]
             # Výfuk
             2: [6,7,8,9]
-
+        defaultCategories:
+            1: [1,2,3,4]
+            2: [6,7,8,9]
         # Paths for search of new XML files, including trailing slash.
         # Arguments: contestName, year, series
         paths: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
@@ -137,7 +139,7 @@ extensions:
     fksrouter: FKSDB\Models\Router\RouterExtension
     acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
-    events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    events: FKSDB\Models\Events\EventsExtension()
     #payment: FKSDB\Models\Payment\PaymentExtension
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension

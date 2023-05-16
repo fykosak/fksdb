@@ -36,6 +36,7 @@ class ContestantsGrid extends Grid
     {
         $this->addColumns([
             'person.full_name',
+            'contestant.contest_category',
             'person_history.study_year',
         ]);
         $this->addColumn(

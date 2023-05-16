@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 
 /**
  * Fill calculated points into database.
@@ -16,10 +17,12 @@ use Nette\Application\BadRequestException;
 class SQLResultsCache
 {
     private SubmitService $submitService;
+    private Container $container;
 
-    public function __construct(SubmitService $submitService)
+    public function __construct(SubmitService $submitService, Container $container)
     {
         $this->submitService = $submitService;
+        $this->container = $container;
     }
 
     public function invalidate(ContestYearModel $contestYear): void
@@ -39,17 +42,16 @@ class SQLResultsCache
      */
     public function recalculate(ContestYearModel $contestYear): void
     {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $this->submitService->explorer->getConnection()->beginTransaction();
         /** @var TaskModel $task */
         foreach ($contestYear->getTasks() as $task) {
             /** @var SubmitModel $submit */
             foreach ($task->getSubmits() as $submit) {
-                $category = $evaluationStrategy->studyYearsToCategory(
-                    $submit->contestant->getPersonHistory()->study_year
-                );
                 $this->submitService->storeModel(
-                    ['calc_points' => $evaluationStrategy->getSubmitPoints($submit, $category)],
+                    [
+                        'calc_points' => $evaluationStrategy->getSubmitPoints($submit),
+                    ],
                     $submit
                 );
             }
@@ -58,6 +60,7 @@ class SQLResultsCache
     }
 
     /**
+     * @throws BadRequestException
      * Calculate points from form-based tasks, such as quizzes.
      */
     public function calculateQuizPoints(ContestYearModel $contestYear, int $series): void

@@ -22,16 +22,9 @@ services:
             factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
             setup:
                  - setUp(%fyziklani17payment.symbolGenerator.variableSymbolStart%, %fyziklani17payment.symbolGenerator.variableSymbolEnd%, %fyziklani17payment.symbolGenerator.info%)
-
-    fyziklani17payment.machine:
-        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
-        setup:
-            - setEventId(173)
-            - setScheduleGroupTypes([accommodation,weekend])
-
 transitions:
     fyziklani17payment:
-        machine: fyziklani17payment.machine
+        machine: FKSDB\Models\Transitions\Machine\PaymentMachine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
         decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
         transitions:

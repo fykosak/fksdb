@@ -5,8 +5,8 @@
     <li>
         Po potvrzení přihlášky budeme počítat s Tvou účastí na online akci.
     </li>
-    <li n:if="$holder->getParameter('deadline')">
-        Uzávěrka pro vyjádření <strong>{$holder->getParameter('deadline')|date:'j. n. Y H:i:s'}</strong>.
+    <li n:if="$holder->event->getParameter('deadline')">
+        Uzávěrka pro vyjádření <strong>{$holder->event->getParameter('deadline')|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
 

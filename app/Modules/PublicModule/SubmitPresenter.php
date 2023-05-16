@@ -29,7 +29,6 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
@@ -155,7 +154,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @throws TaskNotFoundException
      * @throws SubmitNotQuizException
      */
     protected function createComponentQuizDetail(): QuizAnswersGrid
@@ -178,9 +176,7 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        $personHistory = $this->getLoggedPerson()->getHistoryByContestYear($this->getSelectedContestYear());
-        $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
-        if ($studyYear === null) {
+        if (!$this->getContestant()->contest_category) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
         $prevDeadline = null;
@@ -206,8 +202,7 @@ class SubmitPresenter extends BasePresenter
                         _('Only PDF files are accepted.'),
                         'application/pdf'
                     );
-
-                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                if (!$task->isForCategory($this->getContestant()->contest_category)) {
                     $upload->setOption('description', _('Task is not for your category.'));
                     $upload->setDisabled();
                 }

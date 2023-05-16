@@ -34,6 +34,9 @@ class TransitionButtonsComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function handleTransition(string $transitionName): void
     {
         try {

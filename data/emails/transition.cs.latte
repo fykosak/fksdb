@@ -1,8 +1,7 @@
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{var $state = $holder->getModelState()}
 <p>
-    Změna stavu přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->name}</em>.
-    Nový stav <em>{$state->label()}</em>.
+    Změna stavu přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>participant</em>.
+    Nový stav <em>{$state = $holder->getModelState()->label()}</em>.
 </p>
 {include 'inc/eventEdit.cs.latte'}
 {include 'inc/closing.cs.latte'}

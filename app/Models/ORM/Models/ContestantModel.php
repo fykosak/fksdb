@@ -17,6 +17,8 @@ use Nette\Security\Resource;
  * @property-read int person_id
  * @property-read PersonModel person
  * @property-read \DateTimeInterface created
+ * @property-read int contest_category_id
+ * @property-read ContestCategoryModel contest_category
  */
 class ContestantModel extends Model implements Resource
 {

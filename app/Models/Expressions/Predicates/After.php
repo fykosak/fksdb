@@ -30,9 +30,4 @@ class After extends EvaluatedExpression
         }
         return $datetime->getTimestamp() <= time();
     }
-
-    public function __toString(): string
-    {
-        return "now >= $this->datetime";
-    }
 }
