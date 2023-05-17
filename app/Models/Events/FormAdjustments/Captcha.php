@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
@@ -28,6 +29,9 @@ class Captcha implements FormAdjustment
         $this->user = $user;
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
     public function adjust(Form $form, ModelHolder $holder): void
     {
         if ($holder->getModelState() != Machine::STATE_INIT || $this->user->isLoggedIn()) {

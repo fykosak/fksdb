@@ -156,14 +156,6 @@ class PersonModel extends Model implements Resource
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
-    /**
-     * @return null|PersonHistoryModel the most recent person's history record (if any)
-     */
-    private function getLastHistory(): ?PersonHistoryModel
-    {
-        return $this->getHistories()->order(('ac_year DESC'))->fetch();
-    }
-
     public function getFullName(): string
     {
         return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
@@ -213,15 +205,10 @@ class PersonModel extends Model implements Resource
         $names = explode(' ', $fullName);
         $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
         $familyName = $names[count($names) - 1];
-        if (mb_substr($familyName, -1) == 'á') {
-            $gender = 'F';
-        } else {
-            $gender = 'M';
-        }
         return [
             'other_name' => $otherName,
             'family_name' => $familyName,
-            'gender' => $gender,
+            'gender' => self::inferGender(['family_name' => $familyName]),
         ];
     }
 
@@ -338,18 +325,12 @@ class PersonModel extends Model implements Resource
         /** @var EventParticipantModel $eventParticipant */
         $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole(
-                $event,
-                $eventParticipant
-            );
+            $roles[] = new ParticipantRole($event, $eventParticipant);
         }
         /** @var TeamMemberModel $teamMember */
         $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
         if ($teamMember) {
-            $roles[] = new FyziklaniTeamMemberRole(
-                $event,
-                $teamMember
-            );
+            $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
         }
         /** @var OrgModel $org */
         $org = $this->getActiveOrgsAsQuery($event->event_type->contest)->fetch();
