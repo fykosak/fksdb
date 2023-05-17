@@ -77,20 +77,6 @@ class ResultsWebModel extends WebModel
             }
         }
 
-        if (isset($args->{'school-cumulatives'})) {
-            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
-
-            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'}
-                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
-            }
-
-            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
-                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
-                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
-            }
-        }
-
         // This type of call is deprecated (2015-10-02), when all possible callers
         // are notified about it, change it to \SoapFault exception.
         if (isset($args->brojure)) {

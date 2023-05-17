@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
+use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2023;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2012;
@@ -19,7 +20,6 @@ use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
-use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
@@ -51,12 +51,7 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createCumulativeResultsModel(ContestYearModel $contestYear): CumulativeResultsModel
     {
-        return new CumulativeResultsModel(
-            $contestYear,
-            $this->taskService,
-            self::findEvaluationStrategy($this->container, $contestYear),
-            $this->contestCategoryService
-        );
+        return new CumulativeResultsModel($this->container, $contestYear);
     }
 
     /**
@@ -64,12 +59,7 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createDetailResultsModel(ContestYearModel $contestYear): DetailResultsModel
     {
-        return new DetailResultsModel(
-            $contestYear,
-            $this->taskService,
-            self::findEvaluationStrategy($this->container, $contestYear),
-            $this->contestCategoryService
-        );
+        return new DetailResultsModel($this->container, $contestYear);
     }
 
     /**
@@ -77,27 +67,7 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createBrojureResultsModel(ContestYearModel $contestYear): BrojureResultsModel
     {
-        return new BrojureResultsModel(
-            $contestYear,
-            $this->taskService,
-            self::findEvaluationStrategy($this->container, $contestYear),
-            $this->contestCategoryService
-        );
-    }
-
-    /**
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
-    {
-        return new SchoolCumulativeResultsModel(
-            $this->container,
-            $this->createCumulativeResultsModel($contestYear),
-            $contestYear,
-            $this->taskService,
-            $this->contestCategoryService
-        );
+        return new BrojureResultsModel($this->container, $contestYear);
     }
 
     /**
@@ -109,7 +79,9 @@ class ResultsModelFactory implements XMLNodeSerializer
     ): EvaluationStrategy {
         switch ($contestYear->contest_id) {
             case ContestModel::ID_FYKOS:
-                if ($contestYear->year >= 25) {
+                if ($contestYear->year >= 36) {
+                    return new EvaluationFykos2023($container, $contestYear);
+                } elseif ($contestYear->year >= 25) {
                     return new EvaluationFykos2011($container, $contestYear);
                 } else {
                     return new EvaluationFykos2001($container, $contestYear);
