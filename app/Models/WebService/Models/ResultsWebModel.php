@@ -11,7 +11,6 @@ use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
 class ResultsWebModel extends WebModel
 {
@@ -19,14 +18,10 @@ class ResultsWebModel extends WebModel
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 
-    public function inject(
-        Container $container,
-        ContestYearService $contestYearService,
-        ResultsModelFactory $resultsModelFactory
-    ): void {
+    public function inject(ContestYearService $contestYearService, ResultsModelFactory $resultsModelFactory): void
+    {
         $this->contestYearService = $contestYearService;
         $this->resultsModelFactory = $resultsModelFactory;
-        $this->container = $container;
     }
 
     /**
@@ -103,6 +98,20 @@ class ResultsWebModel extends WebModel
                 $resultsModel->setListedSeries((int)$listedSeries);
                 $resultsModel->setSeries($series);
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
+            }
+        }
+
+        if (isset($args->{'school-cumulatives'})) {
+            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
+
+            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
+                $args->{'school-cumulatives'}->{'school-cumulative'}
+                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+            }
+
+            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
+                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
+                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
             }
         }
 

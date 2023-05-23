@@ -20,6 +20,7 @@ use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
+use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
@@ -72,6 +73,19 @@ class ResultsModelFactory implements XMLNodeSerializer
 
     /**
      * @throws BadRequestException
+     * @deprecated
+     */
+    public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
+    {
+        return new SchoolCumulativeResultsModel(
+            $this->container,
+            $this->createCumulativeResultsModel($contestYear),
+            $contestYear,
+        );
+    }
+
+    /**
+     * @throws BadRequestException
      */
     public static function findEvaluationStrategy(
         Container $container,
@@ -79,7 +93,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     ): EvaluationStrategy {
         switch ($contestYear->contest_id) {
             case ContestModel::ID_FYKOS:
-                if ($contestYear->year >= 36) {
+                if ($contestYear->year >= 37) {
                     return new EvaluationFykos2023($container, $contestYear);
                 } elseif ($contestYear->year >= 25) {
                     return new EvaluationFykos2011($container, $contestYear);
