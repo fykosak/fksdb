@@ -16,6 +16,7 @@ use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2012;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2014;
+use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2023;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\Models\CumulativeResultsModel;
@@ -101,7 +102,9 @@ class ResultsModelFactory implements XMLNodeSerializer
                     return new EvaluationFykos2001($container, $contestYear);
                 }
             case ContestModel::ID_VYFUK:
-                if ($contestYear->year >= 4) {
+                if ($contestYear->year >= 12) {
+                    return new EvaluationVyfuk2023($container, $contestYear);
+                } elseif ($contestYear->year >= 4) {
                     return new EvaluationVyfuk2014($container, $contestYear);
                 } elseif ($contestYear->year >= 2) {
                     return new EvaluationVyfuk2012($container, $contestYear);
