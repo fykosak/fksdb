@@ -1,4 +1,3 @@
-
 <?php
 
 declare(strict_types=1);
@@ -16,7 +15,6 @@ use Nette\Database\Table\Selection;
 
 class EventOrgListComponent extends DetailComponent
 {
-
     protected function getMinimalPermissions(): int
     {
         return FieldLevelPermission::ALLOW_RESTRICT;
