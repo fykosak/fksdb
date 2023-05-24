@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-24 12:58+0200\n"
+"POT-Creation-Date: 2023-05-24 16:51+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -69,7 +69,7 @@ msgid "Quiz detail"
 msgstr "Detail kvízu"
 
 #: ../app/Modules/OrgModule/DashboardPresenter.php:23
-msgid "Organiser's dashboard"
+msgid "Organizer's dashboard"
 msgstr "Organizátorská nástěnka"
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:55
@@ -164,7 +164,7 @@ msgstr "Stalkovat"
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:59
 #: ../app/Components/Grids/Warehouse/ProductsGrid.php:33
 #: ../app/Components/Grids/Warehouse/ItemsGrid.php:38
-#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:52
+#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:53
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:55
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:47
 #: ../app/Components/Game/Closing/TeamSubmitsGrid.php:51
@@ -384,11 +384,11 @@ msgstr "Vytvořit... výrobce :)"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:40
 #, php-format
-msgid "Edit of organiser %s"
+msgid "Edit organizer %s"
 msgstr "Upravit orga %s"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:55
-msgid "Editing of organiser outside chosen seminar."
+msgid "Editing organizer outside chosen seminar"
 msgstr "Úprava organizátora mimo vybraný seminář"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:67
@@ -397,13 +397,13 @@ msgid "Org %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:72
-msgid "Create an organiser"
+msgid "Create an organizer"
 msgstr "Založit organizátora"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:77
 #: ../app/Components/Grids/Events/EventsGrid.php:51
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:30
-msgid "Organisers"
+msgid "Organizers"
 msgstr "Organizátoři"
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:34
@@ -730,16 +730,16 @@ msgid "Departure"
 msgstr "Odjezd"
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:38
-msgid "Organisers of event"
+msgid "Organizers of event"
 msgstr "Organizátoři akce"
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:43
-msgid "Create organiser of event"
+msgid "Create organizer of event"
 msgstr "Přidat organizátora akce"
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:58
 #, php-format
-msgid "Edit Organiser of event \"%s\""
+msgid "Edit organizer of event \"%s\""
 msgstr "Upravit organizátora akce \"%s\""
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:70
@@ -1039,8 +1039,8 @@ msgstr "Soutěžící ročníku %d"
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:75
 #, php-format
-msgid "Organiser %s"
-msgstr "%s organizátor"
+msgid "Organizer %s"
+msgstr "Organizátor %s"
 
 #: ../app/Modules/Core/Language.php:31
 #: ../app/Models/ORM/Models/Fyziklani/GameLang.php:25
@@ -1210,16 +1210,16 @@ msgid "First year is not in interval [%d, %d]."
 msgstr "Počáteční rok není v intervalu [%d, %d]."
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:22
-msgid "Passive organiser"
+msgid "Passive organizer"
 msgstr "Pasivní org"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:23
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:38
-msgid "Organiser"
+msgid "Organizer"
 msgstr "Organizátor"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:24
-msgid "Active organiser"
+msgid "Active organizer"
 msgstr "Aktivní org"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:26
@@ -1227,11 +1227,11 @@ msgid "Leadership"
 msgstr "Vedení"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:28
-msgid "Deputy head organiser"
+msgid "Deputy head organizer"
 msgstr "Zástupce hlavního organizátora"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:29
-msgid "Head organiser"
+msgid "Head organizer"
 msgstr "Hlavní organizátor"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:31
@@ -2064,7 +2064,7 @@ msgstr "#"
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:67
 #: ../app/Components/Grids/Payment/PaymentList.php:106
 #: ../app/Components/Grids/EmailsGrid.php:40
-#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:62
+#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:63
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:65
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:62
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:78
@@ -3050,10 +3050,12 @@ msgstr "Tento e-mail se již používá."
 msgid ""
 "Email with a verification link has been sent to the new email address, the "
 "link is active for 20 minutes."
-msgstr "E-mail s potvrzovacím odkazem byl odeslán na novou adresu, odkaz platí 20 minut."
+msgstr ""
+"E-mail s potvrzovacím odkazem byl odeslán na novou adresu, odkaz platí 20 "
+"minut."
 
-#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:26
-msgid "Event organisers"
+#: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:27
+msgid "Event organizers"
 msgstr "Organizátoři akce"
 
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:44
@@ -3583,12 +3585,12 @@ msgstr "Registrovat se jako soutěžící"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:14
 msgid ""
-"It is necessary to fill in school and corespodence details and/or register "
+"It is necessary to fill in school and correspodence details and/or register "
 "for the new year"
 msgstr "Je potřeba vyplnit školní a korespondenční údaje pro nový ročník"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:16
-msgid "become an organiser"
+msgid "become an organizer"
 msgstr "Stát se organizátorem"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:17

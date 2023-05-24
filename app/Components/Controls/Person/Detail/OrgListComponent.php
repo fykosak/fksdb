@@ -27,7 +27,7 @@ class OrgListComponent extends DetailComponent
 
     protected function getHeadline(): Title
     {
-        return new Title(null, _('Organisers'));
+        return new Title(null, _('Organizers'));
     }
 
     /**

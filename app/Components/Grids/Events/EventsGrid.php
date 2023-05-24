@@ -47,6 +47,6 @@ class EventsGrid extends EntityGrid
 
        // $this->addORMLink('event.application.list');
 
-        $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organizers'), true, ['eventId' => 'event_id']);
     }
 }
