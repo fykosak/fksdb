@@ -91,7 +91,7 @@ class ChangeEmailComponent extends EntityFormComponent
         $values = $form->getValues('array');
         $this->accountManager->sendChangeEmail($this->model, $values['new_email'], Language::tryFrom($this->lang));
         $this->getPresenter()->flashMessage(
-            _('Email with verification link was send to new email address, link is active for 20 minutes.'),
+            _('Email with a verification link has been sent to the new email address, the link is active for 20 minutes.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

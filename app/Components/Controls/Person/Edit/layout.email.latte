@@ -3,11 +3,12 @@
 {block content}
     {if $changeActive}
         <p class="alert alert-info">{_'Please check your email and confirm your new address.'}</p>
+        <p><a href="{plink :Profile:Dashboard:default}" class="btn btn-primary">{_'Back to my profile'}</a></p>
     {else}
         <p class="alert alert-info">
             {switch $lang->value}
-                {cache 'cs'}{/cache}
-                {cache 'en'}{/cache}
+                {case 'cs'}Po zadání nové adresy na ni bude odeslán potvrzovací odkaz, kterým změnu dokončíte. Bez potvrzení k úpravě nedojde. Pokud se váš e-mail již používá a myslíte si, že jde o chybu, kontaktujte správce na <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.
+                {default}After entering your new address, a confirmation link will be sent to it to complete the process. Without the confirmation, your email will not change. In case your address is already in use and you believe it is a mistake, please contact the administrators at <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.
             {/switch}
         </p>
         {control formControl}

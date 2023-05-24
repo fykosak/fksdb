@@ -1,7 +1,7 @@
 {varType FKSDB\Modules\Core\Language $lang}
 {varType string $newEmail}
-{switch $lang}
-{case cs}
+{switch $lang->value}
+{case 'cs'}
     <h1>Dostali jsme požadavek na změnu e-mailové adresy ve FKSDB.</h1>
 
     <p>Někdo chce změnit adresu na {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>

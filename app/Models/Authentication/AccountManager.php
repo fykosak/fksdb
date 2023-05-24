@@ -146,7 +146,7 @@ class AccountManager
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,]
             ),
             'sender' => $this->emailFrom,
-            'subject' => _('Change email'),
+            'subject' => _('Change of email'),
             'recipient' => $person->getInfo()->email,
         ];
         $newData = [

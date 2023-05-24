@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-24 11:57+0200\n"
+"POT-Creation-Date: 2023-05-24 12:58+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -864,7 +864,6 @@ msgid "Change post contact"
 msgstr ""
 
 #: ../app/Modules/ProfileModule/EmailPresenter.php:24
-#: ../app/Models/Authentication/AccountManager.php:149
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:82
 msgid "Change email"
 msgstr ""
@@ -1126,6 +1125,10 @@ msgstr ""
 
 #: ../app/Models/Authentication/AccountManager.php:87
 msgid "Create an account"
+msgstr ""
+
+#: ../app/Models/Authentication/AccountManager.php:149
+msgid "Change of email"
 msgstr ""
 
 #: ../app/Models/Authentication/AccountManager.php:157
@@ -3052,8 +3055,8 @@ msgstr ""
 
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:94
 msgid ""
-"Email with verification link was send to new email address, link is active "
-"for 20 minutes."
+"Email with a verification link has been sent to the new email address, the "
+"link is active for 20 minutes."
 msgstr ""
 
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:26
@@ -3559,6 +3562,7 @@ msgid "Username for logging in to FKSDB and other systems"
 msgstr ""
 
 #: ../app/Modules/ProfileModule/templates/Email.confirm.latte.latte2php:2
+#: ../app/Components/Controls/Person/Edit/layout.email.latte.latte2php:6
 msgid "Back to my profile"
 msgstr ""
 

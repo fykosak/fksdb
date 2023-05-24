@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-24 11:39+0200\n"
+"POT-Creation-Date: 2023-05-24 12:58+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -863,7 +863,6 @@ msgid "Change post contact"
 msgstr "Změnit adresu"
 
 #: ../app/Modules/ProfileModule/EmailPresenter.php:24
-#: ../app/Models/Authentication/AccountManager.php:149
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:82
 msgid "Change email"
 msgstr "Změnit e-mail"
@@ -1126,6 +1125,10 @@ msgstr "Neplatný autentizační token"
 #: ../app/Models/Authentication/AccountManager.php:87
 msgid "Create an account"
 msgstr "Vytvořit účet"
+
+#: ../app/Models/Authentication/AccountManager.php:149
+msgid "Change of email"
+msgstr "Změna e-mailu"
 
 #: ../app/Models/Authentication/AccountManager.php:157
 msgid "Confirm your email"
@@ -3044,10 +3047,10 @@ msgid "This email is already in use."
 msgstr "Tento e-mail se již používá."
 
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:94
-msgid
-"Email with verification link was send to new email address, link is active "
-"for 20 minutes."
-msgstr "E-mail s potvrzovacím odkazem je odeslán, odkaz platí 20 minut."
+msgid ""
+"Email with a verification link has been sent to the new email address, the "
+"link is active for 20 minutes."
+msgstr "E-mail s potvrzovacím odkazem byl odeslán na novou adresu, odkaz platí 20 minut."
 
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:26
 msgid "Event organisers"
@@ -3554,6 +3557,7 @@ msgid "Username for logging in to FKSDB and other systems"
 msgstr "Uživatelské jméno pro přihlášení do FKSDB a ostatních systémů"
 
 #: ../app/Modules/ProfileModule/templates/Email.confirm.latte.latte2php:2
+#: ../app/Components/Controls/Person/Edit/layout.email.latte.latte2php:6
 msgid "Back to my profile"
 msgstr "Zpět na můj profil"
 
@@ -3760,9 +3764,10 @@ msgstr ""
 
 #: ../app/Components/EntityForms/layout.address.latte.latte2php:7
 msgid ""
-"Fill only if different from the permanent address, otherwise mail will be send "
-"there."
-msgstr "Vyplňte pouze pokud se liší od trvalé adresy, jinak budeme poštu posílat tam."
+"Fill only if different from the permanent address, otherwise mail will be "
+"send there."
+msgstr ""
+"Vyplňte pouze pokud se liší od trvalé adresy, jinak budeme poštu posílat tam."
 
 #: ../app/Components/EntityForms/layout.address.latte.latte2php:13
 msgid ""
@@ -3863,8 +3868,7 @@ msgid "Evalute"
 msgstr "Vyhodnotit"
 
 #: ../app/Components/Controls/Person/Edit/layout.email.latte.latte2php:5
-msgid ""
-"Please check your email and confirm your new address."
+msgid "Please check your email and confirm your new address."
 msgstr "Zkontrolujte si prosím e-mail a potvrďte novou adresu."
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:10

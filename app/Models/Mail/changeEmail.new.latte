@@ -2,9 +2,10 @@
 {varType string $newEmail}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var $link = $control->link('//:Profile:Email:confirm', ['at'=>$token->token])}
+{*TODO: otestovat a fixnout token, dělá nějaký bordel v nastavení preferred language*}
 
-{switch $lang}
-{case cs}
+{switch $lang->value}
+{case 'cs'}
     <h1>Potvrďte svou e-mailovou adresu.</h1>
 
     <p>K potvrzení nové e-mailové adresy {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)} slouží tento jednorázový odkaz:</p>
