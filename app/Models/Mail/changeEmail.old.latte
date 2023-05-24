@@ -1,14 +1,22 @@
 {varType FKSDB\Modules\Core\Language $lang}
-{varType FKSDB\Models\ORM\Models\PersonModel $peron}
 {varType string $newEmail}
-<h1>Bolo požiadané o zmenu emailovej adresy</h1>
+{switch $lang}
+{case cs}
+    <h1>Dostali jsme požadavek na změnu e-mailové adresy ve FKSDB.</h1>
 
-<p>Bolo požiadné o zmenu emailu na {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>
-<p>Pokial ste nežiadali o zmenu emailovej adresy konktaktuje urýchlene správcu FKSDB
-    <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>
-</p>
+    <p>Někdo chce změnit adresu na {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>
+    <p>Pokud jste to nebyli Vy, kontaktujte prosím správce FKSDB na <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.</p>
+    <p>
+        S pozdravem,<br/>
+        FKSDB
+    </p>
+{default}
+    <h1>We have received a request to change the email address in FKSDB.</h1>
 
-<p>
-    S pozdravem,<br/>
-    FKSDB
-</p>
+    <p>Someone wants to change the address to {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>
+    <p>If it was not you, please contact our FKSDB administrators at <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.</p>
+    <p>
+        Best regards,<br/>
+        FKSDB
+    </p>
+{/switch}

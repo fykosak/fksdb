@@ -1,17 +1,29 @@
 {varType FKSDB\Modules\Core\Language $lang}
-{varType FKSDB\Models\ORM\Models\PersonModel $peron}
 {varType string $newEmail}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var $link = $control->link('//:Profile:Email:confirm', ['at'=>$token->token])}
 
-<h1>Potvrďte svou e-mailovou adresu.</h1>
+{switch $lang}
+{case cs}
+    <h1>Potvrďte svou e-mailovou adresu.</h1>
 
-<p>Je potebné previesť potvrdenie vašej novej emailovej adresy, k tomu slúži jedorázový odkaz.</p>
+    <p>K potvrzení nové e-mailové adresy {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)} slouží tento jednorázový odkaz:</p>
 
-<a href="{$link}">{$link}</a>
+    <a href="{$link}">{$link}</a>
 
-<p>
-    S pozdravem,<br/>
-    FKSDB
-</p>
+    <p>
+        S pozdravem,<br/>
+        FKSDB
+    </p>
+{default}
+    <h1>Please confirm your email address.</h1>
 
+    <p>To confirm your new email address {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}, please click on this link:</p>
+
+    <a href="{$link}">{$link}</a>
+
+    <p>
+        Best regards,<br/>
+        FKSDB
+    </p>
+{/switch}
