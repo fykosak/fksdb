@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
@@ -95,12 +95,22 @@ class LoginModel extends Model implements IIdentity
         return $grants;
     }
 
-    public function getTokens(?string $type = null): TypedGroupedSelection
+    public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
         if (isset($type)) {
             $query->where('type', $type);
         }
+        return $query;
+    }
+
+    public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    {
+        $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
+        if (isset($type)) {
+            $query->where('type', $type->value);
+        }
+        $query->where('until > ?', new \DateTime());
         return $query;
     }
 }

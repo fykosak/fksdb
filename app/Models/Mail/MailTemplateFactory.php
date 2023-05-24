@@ -65,6 +65,22 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      */
+    public function renderChangeEmailOld(array $data): string
+    {
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.old.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function renderChangeEmailNew(array $data): string
+    {
+        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.new.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
+     */
     public function renderWithParameters(string $templateFile, ?string $lang, array $data = []): string
     {
         return $this->create()->renderToString($this->resolverFileName($templateFile, $lang), $data);
