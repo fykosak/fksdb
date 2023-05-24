@@ -45,7 +45,7 @@ class PreferredLangFormComponent extends FormComponent
                 ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
                 $this->person->getInfo()
             );
-            $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
+            $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);

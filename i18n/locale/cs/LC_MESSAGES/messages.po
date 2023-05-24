@@ -2981,8 +2981,8 @@ msgid "Tests"
 msgstr "Testy"
 
 #: ../app/Components/Controls/PreferredLangFormComponent.php:48
-msgid "Preferred language has been set"
-msgstr "Preferovaný jazyk byl nastaven"
+msgid "Preferred language has been set."
+msgstr "Preferovaný jazyk byl nastaven."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:54
 msgid "File with applications"
