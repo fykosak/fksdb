@@ -4398,7 +4398,7 @@ msgstr ""
 
 #: ../app/config/orm.neon.neon2php:543
 msgid "How did you come to know about us?"
-msgstr ""
+msgstr "Jak jste se o nás dozvěděli?"
 
 #: ../app/config/orm.neon.neon2php:547
 msgid "Poznámka"
