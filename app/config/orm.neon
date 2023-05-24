@@ -540,7 +540,7 @@ orm:
                 permission: Full
             origin:
                 type: string
-                title: _('How did you came to know about us?')
+                title: _('How did you come to know about us?')
                 permission: Basic
             note:
                 type: string
