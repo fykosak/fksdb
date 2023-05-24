@@ -1,8 +1,7 @@
 {varType FKSDB\Modules\Core\Language $lang}
 {varType string $newEmail}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var $link = $control->link('//:Profile:Email:confirm', ['at'=>$token->token])}
-{*TODO: otestovat a fixnout token, dělá nějaký bordel v nastavení preferred language*}
+{var $link = $control->link('//:Profile:Email:confirm', ['at'=>$token->token, 'lang'=>$lang->value])}
 
 {switch $lang->value}
 {case 'cs'}
