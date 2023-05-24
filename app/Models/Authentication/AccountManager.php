@@ -154,7 +154,7 @@ class AccountManager
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,]
             ),
             'sender' => $this->emailFrom,
-            'subject' => _('Confirm you email'),
+            'subject' => _('Confirm your email'),
             'recipient' => $newEmail,
         ];
         $this->emailMessageService->addMessageToSend($oldData);
@@ -167,7 +167,7 @@ class AccountManager
             !$person->getLogin()->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch()
             || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))
         ) {
-            $logger->log(new Message(_('Invalid token.'), Message::LVL_ERROR));
+            $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
             // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.
             //Možné príčiny: neskoro kliknutie na link; nebolo o zmenu vôbec požiuadané a nejak sa dostal sem.
             return;
@@ -178,7 +178,7 @@ class AccountManager
             $this->personInfoService->storeModel([
                 'email' => $this->tokenAuthenticator->getTokenData(),
             ], $person->getInfo());
-            $logger->log(new Message(_('Email has ben changed'), Message::LVL_SUCCESS));
+            $logger->log(new Message(_('Email has been changed.'), Message::LVL_SUCCESS));
             $this->tokenAuthenticator->disposeAuthToken();
         } catch (\Throwable $exception) {
             $logger->log(new Message(_('Some error occurred! Please contact system admins.'), Message::LVL_ERROR));

@@ -14,7 +14,7 @@ class TaskNotQuizException extends InvalidStateException
     {
         parent::__construct(
             sprintf(
-                _('Task %s is not a quiz'),
+                _('Task %s is not a quiz.'),
                 $task->task_id,
             ),
             IResponse::S404_NotFound,

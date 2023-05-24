@@ -72,7 +72,7 @@ class ChangeEmailComponent extends EntityFormComponent
         $uniqueEmail = new UniqueEmail($this->container);
         $newEmailControl->addRule(
             fn(BaseControl $baseControl) => ($uniqueEmail)($baseControl),
-            _('This email is already assigned to account')
+            _('This email is already in use.')
         );
         $form->addComponent($newEmailControl, 'new_email');
     }
