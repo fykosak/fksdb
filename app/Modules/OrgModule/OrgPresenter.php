@@ -37,7 +37,7 @@ class OrgPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit of organiser %s'), $this->getEntity()->person->getFullName()),
+            sprintf(_('Edit organizer %s'), $this->getEntity()->person->getFullName()),
             'fa fa-user-edit'
         );
     }
@@ -52,7 +52,7 @@ class OrgPresenter extends BasePresenter
         /** @var OrgModel $entity */
         $entity = $this->traitGetEntity();
         if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
+            throw new ForbiddenRequestException(_('Editing organizer outside chosen seminar'));
         }
         return $entity;
     }
@@ -69,12 +69,12 @@ class OrgPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create an organiser'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create an organizer'), 'fa fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Organisers'), 'fa fa-user-tie');
+        return new PageTitle(null, _('Organizers'), 'fa fa-user-tie');
     }
 
     /**

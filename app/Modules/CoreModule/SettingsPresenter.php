@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Rules\UniqueEmail;
-use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
@@ -25,23 +21,18 @@ use Nette\Forms\Form;
 
 class SettingsPresenter extends BasePresenter
 {
-
     public const CONT_LOGIN = 'login';
 
     private LoginService $loginService;
-    private PersonInfoService $personInfoService;
 
-    final public function injectQuarterly(
-        LoginService $loginService,
-        PersonInfoService $personInfoService
-    ): void {
+    final public function injectQuarterly(LoginService $loginService): void
+    {
         $this->loginService = $loginService;
-        $this->personInfoService = $personInfoService;
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Settings'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change password'), 'fa fa-cogs');
     }
 
     /**
@@ -62,18 +53,17 @@ class SettingsPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN)) {
+        if (
+            $this->tokenAuthenticator->isAuthenticatedByToken(
+                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
+            )
+        ) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY))) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
-    }
-
-    protected function createComponentPreferredLangForm(): PreferredLangFormComponent
-    {
-        return new PreferredLangFormComponent($this->getContext(), $this->getLoggedPerson());
     }
 
     /**
@@ -86,22 +76,14 @@ class SettingsPresenter extends BasePresenter
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(
+                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
+            ) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
 
         $group = $form->addGroup(_('Authentication'));
-        $rule = function (BaseControl $baseControl) use ($login): bool {
-            $uniqueLogin = new UniqueLogin($this->loginService);
-            $uniqueLogin->setIgnoredLogin($login);
-
-            $uniqueEmail = new UniqueEmail($this->personInfoService);
-            $uniqueEmail->setIgnoredPerson($login->person);
-
-            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
-        };
         $loginContainer = $this->createLogin(
             $group,
-            $rule,
             true,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
@@ -129,18 +111,12 @@ class SettingsPresenter extends BasePresenter
 
     private function createLogin(
         ControlGroup $group,
-        callable $loginRule,
         bool $showPassword = true,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ContainerWithOptions {
         $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
-
-        $login = $container->addText('login', _('Username'));
-        $login->setHtmlAttribute('autocomplete', 'username');
-
-        $login->addRule($loginRule, _('This username is already taken.'));
 
         if ($showPassword) {
             if ($verifyOldPassword) {
@@ -179,8 +155,10 @@ class SettingsPresenter extends BasePresenter
     {
         $values = $form->getValues();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(
+                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
+            ) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 

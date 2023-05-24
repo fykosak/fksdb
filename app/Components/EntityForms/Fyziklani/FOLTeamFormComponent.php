@@ -49,7 +49,7 @@ class FOLTeamFormComponent extends TeamFormComponent
                 ],
                 'born' => [
                     'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
+                    'description' => _('Only for Czech and Slovak students'),
                 ],
             ],
             'person_history' => [
