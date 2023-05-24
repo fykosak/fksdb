@@ -89,6 +89,7 @@ class StudyYear extends FakeStringEnum implements EnumColumn
     public static function getPrimarySchoolCases(): array
     {
         return [
+            new self(self::P_5),
             new self(self::P_6),
             new self(self::P_7),
             new self(self::P_8),

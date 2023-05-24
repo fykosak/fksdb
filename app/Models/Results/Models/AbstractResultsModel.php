@@ -9,8 +9,11 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
+use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Nette\Application\BadRequestException;
 use Nette\Database\Row;
+use Nette\DI\Container;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -37,20 +40,24 @@ abstract class AbstractResultsModel
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected ContestYearModel $contestYear;
     protected TaskService $taskService;
+    protected ContestYearModel $contestYear;
     protected EvaluationStrategy $evaluationStrategy;
     protected ContestCategoryService $contestCategoryService;
 
-    public function __construct(
-        ContestYearModel $contestYear,
-        TaskService $taskService,
-        EvaluationStrategy $evaluationStrategy,
-        ContestCategoryService $contestCategoryService
-    ) {
+    /**
+     * @throws BadRequestException
+     */
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        $container->callInjects($this);
         $this->contestYear = $contestYear;
+        $this->evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($container, $contestYear);
+    }
+
+    public function inject(TaskService $taskService, ContestCategoryService $contestCategoryService): void
+    {
         $this->taskService = $taskService;
-        $this->evaluationStrategy = $evaluationStrategy;
         $this->contestCategoryService = $contestCategoryService;
     }
 
