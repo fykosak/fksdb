@@ -32,6 +32,7 @@ enum StudyYear: string implements EnumColumn
     public function label(): string
     {
         return match ($this) {
+            self::Primary5 => _('Primary school 5th grade or lower.');
             self::Primary6 => _('Primary school 6th or lower.'),
             self::Primary7 => _('Primary school 7th'),
             self::Primary8 => _('Primary school 8th'),
@@ -48,6 +49,7 @@ enum StudyYear: string implements EnumColumn
     public function numeric(): ?int
     {
         return match ($this) {
+            self::Primary5 => 5,
             self::Primary6 => 6,
             self::Primary7 => 7,
             self::Primary8 => 8,
@@ -63,10 +65,11 @@ enum StudyYear: string implements EnumColumn
     public static function getPrimarySchoolCases(): array
     {
         return [
-            new self(self::P_6),
-            new self(self::P_7),
-            new self(self::P_8),
-            new self(self::P_9),
+            self::Primary5,
+            self::Primary6,
+            self::Primary7,
+            self::Primary8,
+            self::Primary9,
         ];
     }
 
@@ -81,10 +84,10 @@ enum StudyYear: string implements EnumColumn
     public static function getHighSchoolCases(): array
     {
         return [
-            new self(self::H_1),
-            new self(self::H_2),
-            new self(self::H_3),
-            new self(self::H_4),
+            self::High1,
+            self::High2,
+            self::High3,
+            self::High4,
         ];
     }
 

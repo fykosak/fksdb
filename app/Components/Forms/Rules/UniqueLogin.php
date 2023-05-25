@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueLogin
@@ -13,14 +14,15 @@ class UniqueLogin
     private LoginService $loginService;
     private ?LoginModel $ignoredLogin;
 
-    public function __construct(LoginService $loginService)
-    {
-        $this->loginService = $loginService;
-    }
-
-    public function setIgnoredLogin(?LoginModel $ignoredLogin): void
+    public function __construct(Container $container, ?LoginModel $ignoredLogin = null)
     {
         $this->ignoredLogin = $ignoredLogin;
+        $container->callInjects($this);
+    }
+
+    public function inject(LoginService $loginService): void
+    {
+        $this->loginService = $loginService;
     }
 
     public function __invoke(BaseControl $control): bool
@@ -30,7 +32,7 @@ class UniqueLogin
             return true;
         }
         $conflicts = $this->loginService->getTable()->where(['login' => $login]);
-        if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
+        if (isset($this->ignoredLogin)) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }
         if (count($conflicts) > 0) {
