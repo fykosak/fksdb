@@ -37,7 +37,7 @@ class StudyYear extends FakeStringEnum implements EnumColumn
             case self::P_5:
                 return _('Primary school 5th grade or lower.');
             case self::P_6:
-                return _('Primary school 6th.');
+                return _('Primary school 6th');
             case self::P_7:
                 return _('Primary school 7th');
             case self::P_8:
@@ -89,6 +89,7 @@ class StudyYear extends FakeStringEnum implements EnumColumn
     public static function getPrimarySchoolCases(): array
     {
         return [
+            new self(self::P_5),
             new self(self::P_6),
             new self(self::P_7),
             new self(self::P_8),

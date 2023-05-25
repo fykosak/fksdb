@@ -6,9 +6,6 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ContestCategoryService;
-use FKSDB\Models\ORM\Services\TaskService;
-use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\NotSupportedException;
@@ -30,11 +27,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function __construct(
         Container $container,
         CumulativeResultsModel $cumulativeResultsModel,
-        ContestYearModel $contestYear,
-        TaskService $taskService,
-        ContestCategoryService $contestCategoryService
+        ContestYearModel $contestYear
     ) {
-        parent::__construct($contestYear, $taskService, new EvaluationNullObject($container), $contestCategoryService);
+        parent::__construct($container, $contestYear);
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
@@ -114,7 +109,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function getData(ContestCategoryModel $category): array
     {
         $categories = [];
-        if ($category->value == ContestCategoryModel::ALL) {
+        if ($category->label === ContestCategoryModel::ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
         } else {
             $categories[] = $category;

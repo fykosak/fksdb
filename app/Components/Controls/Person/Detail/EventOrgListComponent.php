@@ -15,7 +15,6 @@ use Nette\Database\Table\Selection;
 
 class EventOrgListComponent extends DetailComponent
 {
-
     protected function getMinimalPermissions(): int
     {
         return FieldLevelPermission::ALLOW_RESTRICT;
@@ -23,7 +22,7 @@ class EventOrgListComponent extends DetailComponent
 
     protected function getHeadline(): Title
     {
-        return new Title(null, _('Event organisers'));
+        return new Title(null, _('Event organizers'));
     }
 
     protected function getModels(): Selection

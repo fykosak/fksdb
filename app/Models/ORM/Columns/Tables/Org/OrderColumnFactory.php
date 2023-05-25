@@ -19,14 +19,14 @@ class OrderColumnFactory extends ColumnFactory
     public function getOrderMapping(): array
     {
         return [
-            0 => '0 - ' . _('Passive organiser'),
-            1 => '1 - ' . _('Organiser'),
-            2 => '2 - ' . _('Active organiser'),
+            0 => '0 - ' . _('Passive organizer'),
+            1 => '1 - ' . _('Organizer'),
+            2 => '2 - ' . _('Active organizer'),
             3 => '3 - ',
             4 => '4 - ' . _('Leadership'),
             5 => '5 - ',
-            6 => '6 - ' . _('Deputy head organiser'),
-            7 => '7 - ' . _('Head organiser'),
+            6 => '6 - ' . _('Deputy head organizer'),
+            7 => '7 - ' . _('Head organizer'),
             8 => '8 - ',
             9 => '9 - ' . _('Head of the seminar'),
         ];

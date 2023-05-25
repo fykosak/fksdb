@@ -2,33 +2,18 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\CoreModule;
+namespace FKSDB\Modules\ProfileModule;
 
 use FKSDB\Components\EntityForms\AddressFormComponent;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Modules\CoreModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class MyProfilePresenter extends BasePresenter
+class PostContactPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('My profile'), 'fa fa-cogs');
-    }
-
-    public function titleEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Update my profile'), 'fa fa-cogs');
-    }
-
-    public function renderDefault(): void
-    {
-        $this->template->person = $this->getPerson();
-    }
-
-    private function getPerson(): PersonModel
-    {
-        return $this->getUser()->getIdentity()->person;
+        return new PageTitle(null, _('Change post contact'), 'fa fa-envelope');
     }
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
@@ -46,7 +31,7 @@ class MyProfilePresenter extends BasePresenter
         return new AddressFormComponent(
             $this->getContext(),
             $type,
-            $this->getPerson()
+            $this->getLoggedPerson()
         );
     }
 }
