@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\TaskNotFoundException;
