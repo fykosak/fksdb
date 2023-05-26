@@ -59,6 +59,7 @@ class ContestantFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        $form->getValues(); // trigger RPC
         $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
         if (isset($this->model)) {
             $strategy->updateCategory($this->model);
