@@ -27,7 +27,7 @@ class ChangeEmailComponent extends EntityFormComponent
 {
     private SingleReflectionFormFactory $reflectionFormFactory;
     private AccountManager $accountManager;
-    private string $lang;
+    private Language $lang;
 
     public function __construct(
         Container $container,
@@ -35,7 +35,7 @@ class ChangeEmailComponent extends EntityFormComponent
         string $lang
     ) {
         parent::__construct($container, $person);
-        $this->lang = $lang;
+        $this->lang = Language::from($lang);
     }
 
     public function inject(
@@ -49,9 +49,8 @@ class ChangeEmailComponent extends EntityFormComponent
     public function render(): void
     {
         $login = $this->model->getLogin();
-        $this->template->lang = Language::tryFrom($this->lang);
-        $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch();
+        $this->template->lang = $this->lang;
+        $this->template->changeActive = $login && $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         parent::render();
     }
 
@@ -89,7 +88,7 @@ class ChangeEmailComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        $this->accountManager->sendChangeEmail($this->model, $values['new_email'], Language::tryFrom($this->lang));
+        $this->accountManager->sendChangeEmail($this->model, $values['new_email'], $this->lang);
         $this->getPresenter()->flashMessage(
             _('Email with a verification link has been sent to the new email address,' .
                 ' the link is active for 20 minutes.'),
@@ -98,11 +97,8 @@ class ChangeEmailComponent extends EntityFormComponent
         $this->getPresenter()->redirect('this');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
+        $form->setDefaults(['new_email' => $this->model->getInfo()?->email]);
     }
 }
