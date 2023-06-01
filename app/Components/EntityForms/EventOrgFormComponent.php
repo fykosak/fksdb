@@ -6,7 +6,6 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Services\EventOrgService;
@@ -48,7 +47,7 @@ class EventOrgFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
-            $this->isCreating(),
+            !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
             $this->getContext()->getParameters()['forms']['adminEventOrg']
         );
@@ -71,13 +70,10 @@ class EventOrgFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 }

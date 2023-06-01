@@ -174,15 +174,15 @@ class FOFTeamFormComponent extends TeamFormComponent
         return $persons;
     }
 
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        parent::setDefaults();
+        parent::setDefaults($form);
         if (isset($this->model)) {
             $index = 0;
             /** @var TeamTeacherModel $teacher */
             foreach ($this->model->getTeachers() as $teacher) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $this->getForm()->getComponent('teacher_' . $index);
+                $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
                 $index++;
             }

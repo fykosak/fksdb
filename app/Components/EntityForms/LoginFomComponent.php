@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\FormUtils;
@@ -56,11 +55,8 @@ class LoginFomComponent extends EntityFormComponent
         $this->getPresenter()->redirect('this');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+        $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
     }
 }
