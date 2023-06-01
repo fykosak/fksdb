@@ -182,7 +182,7 @@ class FOFTeamFormComponent extends TeamFormComponent
             /** @var TeamTeacherModel $teacher */
             foreach ($this->model->getTeachers() as $teacher) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $this->getForm()->getComponent('teacher_' . $index);
+                $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
                 $index++;
             }

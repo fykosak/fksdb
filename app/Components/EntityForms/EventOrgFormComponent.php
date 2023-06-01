@@ -47,7 +47,7 @@ class EventOrgFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
-            $this->isCreating(),
+            !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
             $this->getContext()->getParameters()['forms']['adminEventOrg']
         );

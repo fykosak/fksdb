@@ -32,11 +32,6 @@ abstract class EntityFormComponent extends FormComponent
         parent::render();
     }
 
-    final protected function isCreating(): bool
-    {
-        return !isset($this->model);
-    }
-
     final protected function handleSuccess(Form $form): void
     {
         try {
@@ -60,7 +55,7 @@ abstract class EntityFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('send', $this->isCreating() ? _('Create') : _('Save'));
+        return $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void

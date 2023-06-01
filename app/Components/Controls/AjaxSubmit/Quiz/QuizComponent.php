@@ -95,9 +95,8 @@ class QuizComponent extends FormComponent
      * @throws BadRequestException
      *
      */
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             // create and save contestant
@@ -120,7 +119,7 @@ class QuizComponent extends FormComponent
                 // send invite mail if the person does not have a login
                 $email = $person->getInfo()->email;
                 if ($email && !$person->getLogin()) {
-                    $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                    $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
                 }
             }
 

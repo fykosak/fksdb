@@ -45,7 +45,7 @@ class ContestantFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->contestYear,
-            $this->isCreating(),
+            !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminContestant']
         );
@@ -58,6 +58,7 @@ class ContestantFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        $form->getValues(); // trigger RPC
         $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
         if (isset($this->model)) {
             $strategy->updateCategory($this->model);

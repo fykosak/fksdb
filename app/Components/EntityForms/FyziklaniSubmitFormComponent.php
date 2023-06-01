@@ -6,7 +6,6 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;

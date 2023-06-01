@@ -72,7 +72,7 @@ class PaymentFormComponent extends EntityFormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
+        return $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
     }
 
     /**

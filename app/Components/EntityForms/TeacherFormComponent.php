@@ -10,13 +10,13 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\TeacherService;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -63,7 +63,7 @@ class TeacherFormComponent extends EntityFormComponent
         $container->addComponent($schoolContainer, 'school_id');
         $referencedId = $this->createPersonId(
             $this->contestYear,
-            $this->isCreating(),
+            isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminTeacher']
         );
