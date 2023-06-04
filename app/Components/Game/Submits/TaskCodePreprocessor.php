@@ -10,14 +10,21 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 
 final class TaskCodePreprocessor
 {
+    private EventModel $event;
+
+    public function __construct(EventModel $event)
+    {
+        $this->event = $event;
+    }
+
     /**
      * @throws TaskCodeException
      */
-    public static function getTeam(string $code, EventModel $event): TeamModel2
+    public function getTeam(string $code): TeamModel2
     {
         $teamId = self::extractTeamId($code);
         /** @var TeamModel2 $team */
-        $team = $event->getTeams()->where('fyziklani_team_id', $teamId)->fetch();
+        $team = $this->event->getTeams()->where('fyziklani_team_id', $teamId)->fetch();
         if (!$team) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
@@ -27,27 +34,27 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public static function getTask(string $code, EventModel $event): TaskModel
+    public function getTask(string $code): TaskModel
     {
         $taskLabel = self::extractTaskLabel($code);
         if ($taskLabel === 'XX') {
             throw new NoTaskLeftException();
         }
         /** @var TaskModel $task */
-        $task = $event->getTasks()->where('label', $taskLabel)->fetch();
+        $task = $this->event->getTasks()->where('label', $taskLabel)->fetch();
         if (!$task) {
             throw new TaskCodeException(\sprintf(_('Task %s does not exists.'), $taskLabel));
         }
         return $task;
     }
 
-    private static function extractTeamId(string $code): int
+    private function extractTeamId(string $code): int
     {
         $fullCode = self::createFullCode($code);
         return (int)substr($fullCode, 0, 6);
     }
 
-    private static function extractTaskLabel(string $code): string
+    private function extractTaskLabel(string $code): string
     {
         $fullCode = self::createFullCode($code);
         return (string)substr($fullCode, 6, 2);
@@ -56,7 +63,7 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    private static function createFullCode(string $code): string
+    private function createFullCode(string $code): string
     {
         $length = strlen($code);
         if ($length > 9) {

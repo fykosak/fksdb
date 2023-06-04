@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\CodeCloseForm;
-use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamListComponent;
-use FKSDB\Components\Game\Closing\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -73,24 +70,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function actionTeam(): void
-    {
-        try {
-            $this->getEntity()->canClose();
-        } catch (AlreadyClosedException | NotCheckedSubmitsException $exception) {
-            $this->flashMessage($exception->getMessage());
-            $this->redirect('list');
-        }
-    }
-
-    /**
      * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
@@ -107,22 +86,9 @@ class ClosePresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentCloseTeamControl(): PreviewComponent
+    protected function createComponentTeamControl(): PreviewComponent
     {
         return new PreviewComponent($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
-    {
-        return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
     protected function getORMService(): TeamService2

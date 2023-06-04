@@ -29,12 +29,13 @@ class CodeCloseForm extends FormComponent
 
     protected function handleSuccess(SubmitButton $button): void
     {
+        $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
             $code = $button->getForm()->getForm()->getValues('array')['code'];
-            $team = TaskCodePreprocessor::getTeam($code, $this->event);
+            $team = $codeProcessor->getTeam($code);
             $expectedTask = $this->handler->getNextTask($team);
             try {
-                $givenTask = TaskCodePreprocessor::getTask($code, $this->event, true);
+                $givenTask = $codeProcessor->getTask($code);
                 if (!$expectedTask) {
                     throw new GameException(
                         _('Final task mismatch') . ': ' .

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Closing;
 
+use FKSDB\Components\Game\GameException;
+use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
@@ -11,6 +13,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -27,12 +30,39 @@ class TeamListComponent extends FilterList
 
     protected function getModels(): Selection
     {
-        return $this->event->getPossiblyAttendingTeams()->order('fyziklani_team_id');
+        $query = $this->event->getPossiblyAttendingTeams()->order('points');
+        foreach ($this->filterParams as $key => $condition) {
+            if (!$condition) {
+                continue;
+            }
+            switch ($key) {
+                case 'team_id':
+                    $query->where('fyziklani_team_id', $condition);
+                    break;
+                case 'code':
+                    $codeProcessor = new TaskCodePreprocessor($this->event);
+                    try {
+                        $query->where(
+                            'fyziklani_team_id =? ',
+                            $codeProcessor->getTeam($condition)->fyziklani_team_id
+                        );
+                    } catch (GameException $exception) {
+                        $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
+                    }
+                    break;
+                case 'name':
+                    $query->where('name LIKE ?', '%' . $condition . '%');
+                    break;
+            }
+        }
+        return $query;
     }
 
     protected function configureForm(Form $form): void
     {
-        // TODO: Implement configureForm() method.
+        $form->addText('code', ('Task code'))->setOption('description', _('Find team using a task code'));
+        $form->addText('team_id', _('Team id'));
+        $form->addText('name', _('Team name'))->setOption('description', _('Works as %name%'));
     }
 
     /**

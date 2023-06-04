@@ -44,9 +44,10 @@ class FormComponent extends AjaxComponent
     public function handleSave(): void
     {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
+        $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
-            $task = TaskCodePreprocessor::getTask($data['code'], $this->event);
-            $team = TaskCodePreprocessor::getTeam($data['code'], $this->event);
+            $task = $codeProcessor->getTask($data['code']);
+            $team = $codeProcessor->getTeam($data['code']);
             $handler = $this->event->createGameHandler($this->getContext());
             $handler->handle($team, $task, $data['points'] ? +$data['points'] : null);
             foreach ($handler->logger->getMessages() as $message) {

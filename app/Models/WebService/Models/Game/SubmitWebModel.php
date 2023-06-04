@@ -42,8 +42,9 @@ class SubmitWebModel extends WebModel
                 throw new BadRequestException();
             }
             $handler = $event->createGameHandler($this->container);
-            $team = TaskCodePreprocessor::getTeam($params['code'], $event);
-            $task = TaskCodePreprocessor::getTask($params['code'], $event);
+            $codeProcessor = new TaskCodePreprocessor($event);
+            $team = $codeProcessor->getTeam($params['code']);
+            $task = $codeProcessor->getTask($params['code']);
             $points = $params['points'];
             switch ($params['method']) {
                 case 'create':

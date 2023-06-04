@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Closing;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Nette\DI\Container;
@@ -30,12 +32,27 @@ class PreviewComponent extends BaseComponent
     }
 
     /**
+     * @throws CannotAccessModelException
+     */
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
+    {
+        return new TeamSubmitsGrid($this->team, $this->getContext());
+    }
+
+    /**
      * @throws NotSetGameParametersException
      */
     public function render(): void
     {
         $this->template->event = $this->team->event;
+        $this->template->canClose = false;
+        try {
+            $this->team->canClose();
+            $this->template->canClose = true;
+        } catch (GameException $exception) {
+            $this->template->canClose = false;
+        }
         $this->template->task = $this->handler->getNextTask($this->team);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'fof.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'preview.latte');
     }
 }

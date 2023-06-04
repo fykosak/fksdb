@@ -18,7 +18,6 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -97,13 +96,12 @@ class AllSubmitsGrid extends FilterGrid
                     $query->where('fyziklani_submit.fyziklani_team_id', $condition);
                     break;
                 case 'code':
+                    $codeProcessor = new TaskCodePreprocessor($this->event);
                     try {
-                        $task = TaskCodePreprocessor::getTask($condition, $this->event);
-                        $team = TaskCodePreprocessor::getTeam($condition, $this->event);
                         $query->where(
                             'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.fyziklani_task_id =? ',
-                            $team->fyziklani_team_id,
-                            $task->fyziklani_task_id
+                            $codeProcessor->getTeam($condition)->fyziklani_team_id,
+                            $codeProcessor->getTask($condition)->fyziklani_task_id
                         );
                     } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
@@ -136,7 +134,7 @@ class AllSubmitsGrid extends FilterGrid
             $handler->revoke($submit);
             FlashMessageDump::dump($handler->logger, $this);
             $this->redirect('this');
-        } catch (BadRequestException $exception) {
+        } catch (GameException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('this');
         }
@@ -165,7 +163,7 @@ class AllSubmitsGrid extends FilterGrid
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
-        $form->addSelect('state', _('State'), $states)->setPrompt(_('-- select state --'));
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('--Select state--'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
     }
 }

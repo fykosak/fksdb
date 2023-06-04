@@ -162,8 +162,8 @@ class StoredQueryFormComponent extends EntityFormComponent
             $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
             $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger btn-sm']);
             $submit->addRemoveOnClick();
-        }, 0, true);
-        $replicator->containerClass = ModelContainer::class;
+        }, 0, true,$this->container);
+        $replicator->containerClass = ContainerWithOptions::class;
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-outline-success']);
