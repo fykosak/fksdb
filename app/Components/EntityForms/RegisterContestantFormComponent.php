@@ -96,7 +96,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
