@@ -44,9 +44,6 @@ class QuizAnswersGrid extends Grid
         /**
          * @var SubmitQuestionAnswerModel $answer
          */
-
-        $submit = $this->submit;
-
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
@@ -68,8 +65,8 @@ class QuizAnswersGrid extends Grid
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
-                function (SubmitQuestionModel $question) use ($submit): Html {
-                    $answer = $submit->contestant->getAnswer($question);
+                function (SubmitQuestionModel $question): Html {
+                    $answer = $this->submit->contestant->getAnswer($question);
                     if (isset($answer)) {
                         return Html::el('span')->setText($answer->answer);
                     }
@@ -96,8 +93,8 @@ class QuizAnswersGrid extends Grid
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
-                function (SubmitQuestionModel $question) use ($submit): Html {
-                    $answer = $submit->contestant->getAnswer($question);
+                function (SubmitQuestionModel $question): Html {
+                    $answer = $this->submit->contestant->getAnswer($question);
                     if (!isset($answer)) {
                         return Html::el('i')->setAttribute('class', 'text-warning fas fa-slash fa-flip-horizontal');
                     }

@@ -56,10 +56,10 @@ class PaymentColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
+        $factory = $this->reflectionFactory->loadColumnFactory('payment', 'state');
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
         $text = $html->getText();
-        $html->setText('#' . $model->payment_id . ' - ' . $text);
+        $html->setText(sprintf('#%d %s', $model->payment_id, $text));
         return $html;
     }
 

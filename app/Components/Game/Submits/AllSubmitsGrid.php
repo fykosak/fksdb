@@ -110,6 +110,12 @@ class AllSubmitsGrid extends FilterGrid
                 case 'not_null':
                     $query->where('fyziklani_submit.points IS NOT NULL');
                     break;
+                case 'warnings':
+                    $query->where('TIMESTAMPDIFF(SECOND,fyziklani_submit.modified,NOW()) >600')->where(
+                        'fyziklani_submit.state',
+                        SubmitState::NOT_CHECKED
+                    );
+                    break;
                 case 'task':
                     $query->where('fyziklani_submit.fyziklani_task_id', $condition);
                     break;
@@ -146,14 +152,14 @@ class AllSubmitsGrid extends FilterGrid
         $teams = [];
         /** @var TeamModel2 $team */
         foreach ($rows as $team) {
-            $teams[$team->fyziklani_team_id] = '(' . $team->fyziklani_team_id . ') ' . $team->name;
+            $teams[$team->fyziklani_team_id] = sprintf('(%d) %s', $team->fyziklani_team_id, $team->name);
         }
 
         $rows = $this->event->getTasks();
         $tasks = [];
         /** @var TaskModel $task */
         foreach ($rows as $task) {
-            $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
+            $tasks[$task->fyziklani_task_id] = sprintf('(%d) %s', $task->label, $task->name);
         }
         $states = [];
         foreach (SubmitState::cases() as $state) {
@@ -165,5 +171,7 @@ class AllSubmitsGrid extends FilterGrid
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
         $form->addSelect('state', _('State'), $states)->setPrompt(_('--Select state--'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
+        $form->addCheckbox('warnings', _('Show warnings'))
+            ->setOption('description', _('Show non checked submits inserted more that 10 minutes ago.'));
     }
 }

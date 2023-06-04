@@ -54,7 +54,7 @@ class ExportFormatFactory
             case self::CSV_QUOTE_HEAD:
                 return $this->createCSV($storedQuery, true, true);
             default:
-                throw new InvalidArgumentException('Unknown format \'' . $name . '\'.');
+                throw new InvalidArgumentException(sprintf(_('Unknown format "%s".'), $name);
         }
     }
 

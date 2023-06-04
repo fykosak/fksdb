@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
@@ -166,6 +167,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
+        throw new GameException(_('Game handler not exist for this event'));
     }
 
     public function getPaymentFactoryName(): ?string
@@ -191,7 +193,11 @@ class EventModel extends Model implements Resource, NodeCreator
         try {
             return $this->getParameters()[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->name . '.', 0, $exception);
+            throw new InvalidArgumentException(
+                sprintf('No parameter "%s" for event %s.', $name, $this->name),
+                0,
+                $exception
+            );
         }
     }
 }
