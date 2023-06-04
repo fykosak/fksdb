@@ -16,6 +16,6 @@ class NameNIdColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText(sprintf('%s (%d)', $model->name, $model->fyziklani_team_id);
+        return Html::el('span')->addText(sprintf('%s (%d)', $model->name, $model->fyziklani_team_id));
     }
 }
