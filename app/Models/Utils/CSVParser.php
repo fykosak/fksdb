@@ -28,7 +28,7 @@ class CSVParser implements \Iterator
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');
         if (!$this->file) {
-            throw new InvalidStateException("The file '" . $filename . "' cannot be read.");
+            throw new InvalidStateException(sprintf(_('The file %s cannot be read.'), $filename));
         }
     }
 

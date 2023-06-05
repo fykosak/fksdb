@@ -64,11 +64,11 @@ class PDFStamper implements StorageProcessing
     public function process(SubmitModel $submit): void
     {
         if (!$this->getInputFile()) {
-            throw new InvalidStateException('Input file not set.');
+            throw new InvalidStateException(_('Input file not set.'));
         }
 
         if (!$this->getOutputFile()) {
-            throw new InvalidStateException('Output file not set.');
+            throw new InvalidStateException(_('Output file not set.'));
         }
 
         $series = $submit->task->series;
@@ -79,7 +79,7 @@ class PDFStamper implements StorageProcessing
         try {
             $this->stampText($stampText);
         } catch (\Throwable $exception) {
-            throw new ProcessingException('Cannot add stamp to the PDF.', 0, $exception);
+            throw new ProcessingException(_('Cannot add stamp to the PDF.'), 0, $exception);
         }
     }
 

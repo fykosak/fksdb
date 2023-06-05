@@ -48,14 +48,9 @@ class BreadcrumbsComponent extends BaseComponent
     private IPresenterFactory $presenterFactory;
     /**
      * Prevents multiple storing the current request.
-     *
-     * @var bool
      */
     private bool $storedRequest = false;
 
-    /**
-     * Breadcrumbs constructor.
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);

@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
@@ -77,12 +78,15 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      * IJSONProvider
      * ****************************** */
 
+    /**
+     * @throws BadTypeException
+     */
     public function handleAutocomplete(string $acName): void
     {
         ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         $component = $this->getComponent($acName);
-        if (!($component instanceof AutocompleteSelectBox)) {
-            throw new \InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
+        if (!$component instanceof AutocompleteSelectBox) {
+            throw new BadTypeException(AutocompleteSelectBox::class, $component);
         } else {
             $provider = $component->getDataProvider();
             $data = null;

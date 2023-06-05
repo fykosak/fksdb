@@ -6,14 +6,14 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
+use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
-use FKSDB\Models\ORM\Columns\TestedColumnFactory;
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\DataTesting\TestLog;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -61,13 +61,13 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
             $logger->log(
                 new TestLog(
                     $this->getTitle(),
-                    \sprintf('%s number (%s) is not valid', $this->getTitle(), $value),
+                    \sprintf(_('%s number (%s) is not valid'), $this->getTitle(), $value),
                     Message::LVL_ERROR
                 )
             );
         } else {
             $logger->log(
-                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS)
+                new TestLog($this->getTitle(), \sprintf(_('%s is valid'), $this->getTitle()), Message::LVL_SUCCESS)
             );
         }
     }
