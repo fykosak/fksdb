@@ -52,8 +52,8 @@ class ErrorPresenter extends BasePresenter
     protected function beforeRender(): void
     {
         $this->getPageStyleContainer()->styleIds[] = 'error';
-        $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
-        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+        $this->getPageStyleContainer()->navBarClassName = 'bg-error navbar-dark';
+        $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
         parent::beforeRender();
     }
 

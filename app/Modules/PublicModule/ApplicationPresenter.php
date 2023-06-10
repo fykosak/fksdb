@@ -307,15 +307,14 @@ class ApplicationPresenter extends BasePresenter
         $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $event->event_type_id;
         switch ($event->event_type_id) {
             case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fof');
+                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-fof';
                 break;
             case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fol');
+                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-fol';
                 break;
             default:
-                $this->getPageStyleContainer()->setNavBarClassName(
-                    'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
-                );
+                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' .
+                    $event->event_type->contest->getContestSymbol();
         }
         $this->template->model = $this->getEventApplication();
     }

@@ -143,10 +143,4 @@ class PointsPresenter extends BasePresenter
     {
         return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->setWidePage();
-        parent::beforeRender();
-    }
 }

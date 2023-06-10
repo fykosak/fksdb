@@ -19,11 +19,11 @@
 <!-- Random background generator -->
 <body data-bg="{rand(1,4)}" data-style-id="{join(' ',$pageStyleContainer->styleIds)}">
 {block nav}
-<nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->getNavBarClassName()" role="navigation">
+<nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->navBarClassName" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="{$basePath}/">
-                <img src="{$basePath}{$pageStyleContainer->getNavBrandPath()}" height="30"
+                <img src="{$basePath}{$pageStyleContainer->navBrandPath}" height="30"
                      class="d-inline-block align-top" alt=""/>
             </a>
         </div>
@@ -83,8 +83,9 @@
         </div>
     </div>
     {block outerContent}
-    <div class="{$pageStyleContainer->getMainContainerClassName()}">
-            {include content}
+
+    <div class="container">
+        {include content}
         </div>
     {/block}
 </main>

@@ -49,15 +49,4 @@ class ChartPresenter extends BasePresenter
             'totalPersons' => new TotalPersonsChart($this->getContext()),
         ];
     }
-
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'list':
-                break;
-            default:
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
-    }
 }

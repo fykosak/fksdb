@@ -28,8 +28,8 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
         $contest = $this->getSelectedContest();
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
         }
         parent::beforeRender();
     }

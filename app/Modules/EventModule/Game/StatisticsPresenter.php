@@ -20,15 +20,6 @@ class StatisticsPresenter extends BasePresenter
         return !$this->getEvent()->getGameSetup()->result_hard_display;
     }
 
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'table':
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
-    }
-
     public function titleCorrelation(): PageTitle
     {
         return new PageTitle(null, _('Correlation statistics'), 'fas fa-chart-pie');

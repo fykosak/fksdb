@@ -109,13 +109,4 @@ class InboxPresenter extends BasePresenter
         $submit = $this->submitService->findByPrimary($this->id);
         return new QuizAnswersGrid($this->getContext(), $submit, true);
     }
-
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'inbox':
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
-    }
 }

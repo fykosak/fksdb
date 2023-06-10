@@ -110,18 +110,18 @@ abstract class BasePresenter extends AuthenticatedPresenter
         $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fof navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+                $this->getPageStyleContainer()->navBarClassName = 'bg-fof navbar-dark';
+                $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
                 break;
             case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-dark');
+                $this->getPageStyleContainer()->navBarClassName = 'bg-fol navbar-dark';
                 break;
             case 17:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-ctyrboj navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+                $this->getPageStyleContainer()->navBarClassName = 'bg-ctyrboj navbar-dark';
+                $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
                 break;
             default:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');
+                $this->getPageStyleContainer()->navBarClassName = 'bg-light navbar-light';
         }
         parent::beforeRender();
     }

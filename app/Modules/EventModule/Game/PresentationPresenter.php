@@ -34,10 +34,4 @@ class PresentationPresenter extends BasePresenter
             $this->getEvent()->event_type_id === 1 ? 'fyziklani.results.presentation' : 'ctyrboj.results.presentation'
         );
     }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->setWidePage();
-        parent::beforeRender();
-    }
 }

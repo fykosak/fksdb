@@ -94,8 +94,8 @@ class DispatchPresenter extends BasePresenter
 
     protected function beforeRender(): void
     {
-        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
         parent::beforeRender();
     }
 }
