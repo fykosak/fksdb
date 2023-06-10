@@ -12,6 +12,7 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
@@ -52,7 +53,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
 
     /**
      * @param mixed $element
-     * @throws BadRequestException
      */
     public function checkRequirements($element): void
     {
@@ -61,8 +61,23 @@ abstract class AuthenticatedPresenter extends BasePresenter
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
             //if ($this->isAuthorized()) { // check authorization
             $method = $this->formatAuthorizedMethod($this->getAction());
-            $this->tryCall($method, $this->getParameters());
-            //}
+            try {
+                $reflectionMethod = new \ReflectionMethod($this, $method);
+                if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+                    throw new InvalidStateException(
+                        sprintf('Method %s of %s should return bool', $reflectionMethod->getName(), get_class($this))
+                    );
+                }
+                $this->setAuthorized($reflectionMethod->invoke($this));
+            } catch (\ReflectionException $exception) {
+                throw new InvalidStateException(
+                    sprintf('Presenter %s has not implemented method %s', get_class($this), $method)
+                );
+                /* trigger_error(
+                      sprintf('Presenter %s has not implemented method %s', get_class($this), $method),
+                      E_USER_WARNING,
+                  );*/
+            }
         }
     }
 
@@ -92,7 +107,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
             $this->optionalLoginRedirect();
         }
         if (!$this->isAuthorized()) {
-            $this->unauthorizedAccess();
+            throw new ForbiddenRequestException();
         }
     }
 
@@ -118,7 +133,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
 
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
-            Debugger::log("$login signed in using token $tokenData.", 'token-login');
+            Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'token-login');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
 
             $this->getUser()->login($login);
@@ -141,10 +156,8 @@ abstract class AuthenticatedPresenter extends BasePresenter
         try {
             $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
-            Debugger::log("$login signed in using HTTP authentication.");
-
+            Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
             $this->getUser()->login($login);
-
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
@@ -190,13 +203,5 @@ abstract class AuthenticatedPresenter extends BasePresenter
                 AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
             ]
         );
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        throw new ForbiddenRequestException();
     }
 }

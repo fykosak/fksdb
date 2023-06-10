@@ -34,7 +34,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
                     }}>&times;</button>
             <div className="text-center p-2">
                 <a href={this.props.actions.getAction('download')}>
-                    <span className="display-1 w-100"><i className="fa fa-file-pdf"/></span>
+                    <span className="display-1 w-100"><i className="fas fa-file-pdf"/></span>
                     <span className="d-block">{this.props.submit.name}</span>
                 </a>
             </div>

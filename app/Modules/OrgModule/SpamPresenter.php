@@ -10,8 +10,8 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -39,12 +39,7 @@ class SpamPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
-    }
-
-    public function authorizedDetail(): void
+    public function authorizedDetail(): bool
     {
         $authorized = true;
         /** @var ContestModel $contest */
@@ -56,7 +51,12 @@ class SpamPresenter extends BasePresenter
                     $contest
                 );
         }
-        $this->setAuthorized($authorized);
+        return $authorized;
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
     }
 
     protected function getORMService(): EmailMessageService

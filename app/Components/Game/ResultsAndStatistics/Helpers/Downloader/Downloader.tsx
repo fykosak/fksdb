@@ -53,8 +53,8 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
                 <i
                     // @ts-ignore
                     title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
-                    className={isRefreshing ? 'text-success fa fa-check' : 'text-danger fa fa-exclamation-triangle'}/>
-                {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
+                    className={isRefreshing ? 'text-success fas fa-check' : 'text-danger fas fa-exclamation-triangle'}/>
+                {isSubmitting && (<i className="fas fa-spinner fa-spin"/>)}
                 {!isRefreshing && (<button className="btn btn-outline-primary btn-sm" onClick={() => {
                     const url = this.props.actions.getAction('refresh');
                     return onFetch(url);

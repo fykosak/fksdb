@@ -16,14 +16,14 @@ class ModelPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('event.model', 'default'));
+        return $this->isAllowed('event.model', 'default');
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Model of event'), 'fa fa-project-diagram');
+        return new PageTitle(null, _('Model of event'), 'fas fa-project-diagram');
     }
 
     /**

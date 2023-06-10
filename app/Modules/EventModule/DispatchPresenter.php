@@ -6,15 +6,20 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use Fykosak\Utils\UI\PageTitle;
 
 class DispatchPresenter extends AuthenticatedPresenter
 {
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('List of events'), 'fa fa-calendar-alt');
+        return new PageTitle(null, _('List of events'), 'fas fa-calendar-alt');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     protected function createComponentContestBadge(): ContestBadge

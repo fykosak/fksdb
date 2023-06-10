@@ -25,9 +25,9 @@ class RestApiPresenter extends AuthenticatedPresenter
     }
 
     /* TODO */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('webService', 'default'));
+        return $this->contestAuthorizator->isAllowed('webService', 'default');
     }
 
     /**

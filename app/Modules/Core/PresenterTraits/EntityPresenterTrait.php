@@ -25,9 +25,9 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
+        return $this->traitIsAuthorized($this->getModelResource(), 'list');
     }
 
     abstract public function setAuthorized(bool $access): void;
@@ -52,9 +52,9 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedCreate(): void
+    public function authorizedCreate(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'create'));
+        return $this->traitIsAuthorized($this->getModelResource(), 'create');
     }
 
     /**
@@ -64,9 +64,9 @@ trait EntityPresenterTrait
      * @throws GoneException
      * @throws \ReflectionException
      */
-    public function authorizedEdit(): void
+    public function authorizedEdit(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'edit'));
+        return $this->traitIsAuthorized($this->getEntity(), 'edit');
     }
 
     /**
@@ -106,9 +106,9 @@ trait EntityPresenterTrait
      * @throws GoneException
      * @throws \ReflectionException
      */
-    public function authorizedDelete(): void
+    public function authorizedDelete(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'delete'));
+        return $this->traitIsAuthorized($this->getEntity(), 'delete');
     }
 
     /**
@@ -118,34 +118,34 @@ trait EntityPresenterTrait
      * @throws GoneException
      * @throws \ReflectionException
      */
-    public function authorizedDetail(): void
+    public function authorizedDetail(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
+        return $this->traitIsAuthorized($this->getEntity(), 'detail');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of entities'), 'fa fa-table');
+        return new PageTitle(null, _('List of entities'), 'fas fa-table');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create an entity'), 'fa fa-plus');
+        return new PageTitle(null, _('Create an entity'), 'fas fa-plus');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, _('Edit an entity'), 'fa fa-pencil');
+        return new PageTitle(null, _('Edit an entity'), 'fas fa-pencil');
     }
 
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, _('Detail of the entity'), 'fa fa-eye');
+        return new PageTitle(null, _('Detail of the entity'), 'fas fa-eye');
     }
 
     public function titleDelete(): PageTitle
     {
-        return new PageTitle(null, _('Delete an entity'), 'fa fa-minus');
+        return new PageTitle(null, _('Delete an entity'), 'fas fa-minus');
     }
 
     /**

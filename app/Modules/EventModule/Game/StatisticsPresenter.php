@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -34,14 +34,38 @@ class StatisticsPresenter extends BasePresenter
         return new PageTitle(null, _('Correlation statistics'), 'fas fa-chart-pie');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCorrelation(): bool
+    {
+        return $this->isAllowed('game.statistics', 'default');
+    }
+
     public function titleTeam(): PageTitle
     {
         return new PageTitle(null, _('Teams statistics'), 'fas fa-chart-line');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedTeam(): bool
+    {
+        return $this->isAllowed('game.statistics', 'default');
+    }
+
     public function titleTask(): PageTitle
     {
         return new PageTitle(null, _('Tasks statistics'), 'fas fa-chart-bar');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedTask(): bool
+    {
+        return $this->isAllowed('game.statistics', 'default');
     }
 
     public function titleTable(): PageTitle
@@ -52,33 +76,9 @@ class StatisticsPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedTasks(): void
+    public function authorizedTable(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedTeam(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedCorrelation(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedResultsTable(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
+        return $this->isAllowed('game.statistics', 'default');
     }
 
     /**

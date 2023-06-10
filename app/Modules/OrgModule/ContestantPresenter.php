@@ -41,18 +41,18 @@ class ContestantPresenter extends BasePresenter
         return new PageTitle(
             'contestant-edit',
             sprintf(_('Edit the contestant %s'), $this->getEntity()->person->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle('contestant-create', _('Create contestant'), 'fa fa-user-plus');
+        return new PageTitle('contestant-create', _('Create contestant'), 'fas fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle('contestant-list', _('Contestants'), 'fa fa-user-graduate');
+        return new PageTitle('contestant-list', _('Contestants'), 'fas fa-user-graduate');
     }
 
     protected function createComponentGrid(): ContestantsGrid

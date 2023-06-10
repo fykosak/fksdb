@@ -11,11 +11,11 @@ use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
-use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Authorizator;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\Authorizator;
 
 class InboxPresenter extends BasePresenter
 {
@@ -33,45 +33,34 @@ class InboxPresenter extends BasePresenter
         $this->submitService = $submitService;
     }
 
-    /* ***************** AUTH ***********************/
-
-    public function authorizedInbox(): void
-    {
-        $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest())
-        );
-    }
-
-    public function authorizedList(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest()));
-    }
-
-    public function authorizedCorrected(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
-    }
-
-    public function authorizedQuizDetail(): void
-    {
-        $this->authorizedCorrected();
-    }
-
-    /* ***************** TITLES ***********************/
-
     public function titleInbox(): PageTitle
     {
-        return new PageTitle(null, _('Inbox'), 'fa fa-envelope');
+        return new PageTitle(null, _('Inbox'), 'fas fa-envelope');
+    }
+
+    public function authorizedInbox(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of submits'), 'fa fa-list-ul');
+        return new PageTitle(null, _('List of submits'), 'fas fa-list-ul');
+    }
+
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
     }
 
     public function titleCorrected(): PageTitle
     {
-        return new PageTitle(null, _('Corrected'), 'fa fa-file-signature');
+        return new PageTitle(null, _('Corrected'), 'fas fa-file-signature');
+    }
+
+    public function authorizedCorrected(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest());
     }
 
     public function titleQuizDetail(): PageTitle
@@ -79,8 +68,10 @@ class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
-    /* *********** LIVE CYCLE *************/
-
+    public function authorizedQuizDetail(): bool
+    {
+        return $this->authorizedCorrected();
+    }
 
     /**
      * @throws ForbiddenRequestException
@@ -92,8 +83,6 @@ class InboxPresenter extends BasePresenter
         $this->seriesTable->contestYear = $this->getSelectedContestYear();
         $this->seriesTable->series = $this->getSelectedSeries();
     }
-
-    /* ******************* COMPONENTS ******************/
 
     protected function createComponentInboxForm(): InboxFormComponent
     {

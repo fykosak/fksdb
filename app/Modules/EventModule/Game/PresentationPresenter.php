@@ -18,9 +18,9 @@ class PresentationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.presentation', 'default'));
+        return $this->isAllowed('game.presentation', 'default');
     }
 
     /**

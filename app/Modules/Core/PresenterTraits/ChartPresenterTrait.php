@@ -8,6 +8,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait
@@ -42,9 +43,9 @@ trait ChartPresenterTrait
 
     /**
      * @return Chart[]
+     * @throws BadTypeException
+     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws BadTypeException
-     * @throws BadTypeException
      */
     protected function getCharts(): array
     {
@@ -57,30 +58,30 @@ trait ChartPresenterTrait
      */
     abstract protected function registerCharts(): array;
 
-    abstract public function authorizedList(): void;
+    abstract public function authorizedList(): bool;
 
-    abstract public function authorizedChart(): void;
+    abstract public function authorizedChart(): bool;
 
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
+     * @throws BadRequestException
      */
     protected function selectChart(): void
     {
-        $charts = $this->getCharts();
-        $action = $this->getAction();
-        if (isset($charts[$action])) {
-            $this->selectedChart = $charts[$action];
-            $this->setView('chart');
+        if ($this->getAction() === 'chart') {
+            $charts = $this->getCharts();
+            $chart = $this->getParameter('chart');
+            if (isset($charts[$chart])) {
+                $this->selectedChart = $charts[$chart];
+            } else {
+                throw new BadRequestException(sprintf('Chart %s not found', $chart));
+            }
         }
     }
 
     abstract public function getAction(bool $fullyQualified = false): string;
 
-    /**
-     * @return static
-     */
-    abstract public function setView(string $id);
 
     protected function createComponentChart(): IComponent
     {

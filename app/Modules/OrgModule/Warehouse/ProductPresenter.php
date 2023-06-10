@@ -32,7 +32,7 @@ class ProductPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create product'), 'fa fa-plus');
+        return new PageTitle(null, _('Create product'), 'fas fa-plus');
     }
 
     public function injectService(ProductService $productService): void

@@ -14,11 +14,11 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\Model;
@@ -57,27 +57,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws GoneException|EventNotFoundException
-     */
-    public function authorizedDefault(): void
-    {
-        $event = $this->getEvent();
-        if (
-            $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
-            || $this->eventAuthorizator->isAllowed('fyziklani.team', 'edit', $event)
-        ) {
-            $this->setAuthorized(true);
-            return;
-        }
-        if (
-            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
-            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
-        ) {
-            throw new GoneException();
-        }
-    }
-
-    /**
+     * @throws EventNotFoundException
      * @throws \Throwable
      */
     public function titleDefault(): PageTitle
@@ -98,9 +78,24 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return EventParticipantModel|null
+     * @throws GoneException|EventNotFoundException
      */
-    private function getEventApplication(): ?Model
+    public function authorizedDefault(): bool
+    {
+        $event = $this->getEvent();
+        if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
+            return true;
+        }
+        if (
+            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
+            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
+        ) {
+            throw new GoneException();
+        }
+        return true;
+    }
+
+    private function getEventApplication(): ?EventParticipantModel
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
@@ -123,9 +118,18 @@ class ApplicationPresenter extends BasePresenter
         return $holder;
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function requiresLogin(): bool
     {
-        return $this->getAction() != 'default';
+        if ($this->getAction() == 'default') {
+            $this->initializeMachine();
+            if ($this->getHolder()->getModelState() == Machine::STATE_INIT) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -274,21 +278,6 @@ class ApplicationPresenter extends BasePresenter
             'eventId' => $parts[0],
             'id' => $parts[1],
         ];
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws EventNotFoundException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        if ($this->getAction() == 'default') {
-            $this->initializeMachine();
-            if ($this->getHolder()->getModelState() == Machine::STATE_INIT) {
-                return;
-            }
-        }
-        parent::unauthorizedAccess();
     }
 
     /**

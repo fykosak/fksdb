@@ -8,22 +8,32 @@ use FKSDB\Components\Charts\Contestants\AggregatedSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\TotalPersonsChart;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest());
     }
 
-    public function authorizedChart(): void
+    public function authorizedChart(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest());
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();

@@ -30,7 +30,7 @@ export default class Buttons extends React.Component<OwnProps, never> {
                             points: value,
                         }))}
                 >{submitting ? (
-                    <i className="fa fa-spinner fa-spin" aria-hidden="true"/>) : (value + '. bodu')}</button>
+                    <i className="fas fa-spinner fa-spin" aria-hidden="true"/>) : (value + '. bodu')}</button>
             );
         });
         return (

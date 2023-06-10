@@ -37,19 +37,19 @@ class PointsPresenter extends BasePresenter
         return new PageTitle(null, sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
     }
 
+    public function authorizedEntry(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest());
+    }
+
     public function titlePreview(): PageTitle
     {
         return new PageTitle(null, _('Points list'), 'fas fa-clipboard-list');
     }
 
-    public function authorizedEntry(): void
+    public function authorizedPreview(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest()));
-    }
-
-    public function authorizedPreview(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest());
     }
 
     public function actionEntry(): void

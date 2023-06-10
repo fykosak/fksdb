@@ -25,9 +25,9 @@ class TaskPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.task', 'list'));
+        return $this->isAllowed('game.task', 'list');
     }
 
     /**

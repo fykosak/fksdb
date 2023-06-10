@@ -63,17 +63,17 @@ class RegisterPresenter extends CoreBasePresenter
     /* ********************* TITLE ***************** */
     public function titleContest(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select contest'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select contest'));
     }
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select year'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select year'));
     }
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Type e-mail'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type e-mail'));
     }
 
     public function titleContestant(): PageTitle
@@ -81,7 +81,7 @@ class RegisterPresenter extends CoreBasePresenter
         return new PageTitle(
             null,
             _('Register'),
-            'fa fa-edit',
+            'fas fa-edit',
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,

@@ -14,6 +14,11 @@ class LoginPresenter extends BasePresenter
         return new PageTitle(null, _('Change login'), 'fas fa-user');
     }
 
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
     protected function createComponentLoginForm(): LoginFomComponent
     {
         return new LoginFomComponent($this->getContext(), $this->getLoggedPerson()->getLogin());

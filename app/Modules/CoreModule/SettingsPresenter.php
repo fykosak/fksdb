@@ -32,7 +32,12 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change password'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change password'), 'fas fa-cogs');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     /**

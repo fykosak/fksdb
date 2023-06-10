@@ -19,6 +19,14 @@ class PersonSchedulePresenter extends BasePresenter
         return new PageTitle(null, _('Schedule per person'), 'fas fa-list');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed('event.scheduleGroup', 'create');
+    }
+
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('My schedule'), 'fas fa-list');
@@ -27,19 +35,12 @@ class PersonSchedulePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
         $person = $this->getLoggedPerson();
-        $this->setAuthorized($person && count($person->getEventRoles($this->getEvent())));
+        return $person && count($person->getEventRoles($this->getEvent()));
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedList(): void
-    {
-        $this->setAuthorized($this->isAllowed('event.scheduleGroup', 'create'));
-    }
 
     /**
      * @throws EventNotFoundException

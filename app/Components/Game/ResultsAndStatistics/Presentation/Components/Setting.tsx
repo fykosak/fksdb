@@ -38,7 +38,7 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
                     className="btn btn-link"
                     onClick={() => this.setState({show: !this.state.show})}
                 >
-                    <i className="fa fa-cogs"/>
+                    <i className="fas fa-cogs"/>
                 </button>
             </div>
             {this.state.show && <div

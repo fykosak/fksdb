@@ -31,7 +31,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadTypeException
      * @throws InvalidLinkException
      */
-    final public function renderNav(string $root = ''): void
+    final public function renderNav(string $root): void
     {
         $structure = $this->navigationFactory->getStructure($root);
         parent::render($this->getItem($structure));
@@ -45,14 +45,14 @@ final class NavigationChooserComponent extends NavigationItemComponent
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
         $structure = $this->navigationFactory->getStructure($root);
-        $this->template->item = $this->getItem($structure);
+        $this->template->items = $this->getItems($structure);
         $this->template->subTitle = $subTitle;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
     final public function renderBoardInline(array $items, bool $subTitle = false): void
     {
-        $this->template->item = new NavItem(new Title(null, ''), '#', [], $items);
+        $this->template->items = $items;
         $this->template->subTitle = $subTitle;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
@@ -63,6 +63,17 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws InvalidLinkException
      */
     private function getItem(array $structure): NavItem
+    {
+        return new NavItem($this->getItemTitle($structure), '#', [], $this->getItems($structure));
+    }
+
+    /**
+     * @return NavItem[]
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     * @throws BadRequestException
+     */
+    private function getItems(array $structure): array
     {
         $items = [];
         foreach ($structure['parents'] as $item) {
@@ -76,7 +87,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
                 );
             }
         }
-        return new NavItem($this->getItemTitle($structure), '#', [], $items);
+        return $items;
     }
 
     public function isItemActive(array $item): bool

@@ -56,7 +56,7 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
         >
             <div className="drop-input-inner p-3">
                 <div className="text-center">
-                    <span className="display-1 d-block"><i className="fa fa-download"/></span>
+                    <span className="display-1 d-block"><i className="fas fa-download"/></span>
                     <span className="d-block p-1">
                         <span>Drag file here.</span>
                     </span>

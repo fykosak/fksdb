@@ -27,6 +27,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 /**
  * Base presenter for all application presenters.
@@ -262,9 +263,11 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
                 $method = $reflection->getMethod('title' . $this->getView());
                 $this->pageTitle = $method->invoke($this);
             } catch (\ReflectionException$exception) {
+                throw new InvalidStateException(
+                    sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
+                );
             }
         }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
     }

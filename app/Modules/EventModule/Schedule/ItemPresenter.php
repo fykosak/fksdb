@@ -73,7 +73,7 @@ class ItemPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create schedule item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create schedule item'), 'fas fa-plus');
     }
 
     /**

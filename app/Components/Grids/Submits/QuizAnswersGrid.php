@@ -100,7 +100,7 @@ class QuizAnswersGrid extends Grid
                     }
 
                     if ($answer->answer === $question->answer) {
-                        return Html::el('i')->setAttribute('class', 'text-success fa fa-check');
+                        return Html::el('i')->setAttribute('class', 'text-success fas fa-check');
                     }
 
                     return Html::el('i')->setAttribute('class', 'text-danger fas fa-times');

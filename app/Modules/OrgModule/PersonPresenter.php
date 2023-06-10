@@ -52,7 +52,12 @@ class PersonPresenter extends BasePresenter
     /* *********** TITLE ***************/
     public function titleSearch(): PageTitle
     {
-        return new PageTitle(null, _('Find person'), 'fa fa-search');
+        return new PageTitle(null, _('Find person'), 'fas fa-search');
+    }
+
+    public function authorizedSearch(): bool
+    {
+        return $this->isAnyContestAuthorized('person', 'stalk.search');
     }
 
     /**
@@ -61,7 +66,20 @@ class PersonPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
+        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fas fa-eye');
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedDetail(): bool
+    {
+        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
+        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
+        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
+
+        return $full || $restrict || $basic;
     }
 
     /**
@@ -73,45 +91,29 @@ class PersonPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
+    }
+
+    public function authorizedEdit(): bool
+    {
+        return $this->isAnyContestAuthorized($this->getEntity(), 'edit');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create person'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create person'), 'fas fa-user-plus');
     }
 
     public function titlePizza(): PageTitle
     {
-        return new PageTitle(null, _('Pizza'), 'fa fa-pizza-slice');
+        return new PageTitle(null, _('Pizza'), 'fas fa-pizza-slice');
     }
 
-    /* *********** AUTH ***************/
-    public function authorizedSearch(): void
+    public function authorizedPizza(): bool
     {
-        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
+        return $this->isAnyContestAuthorized('person', 'pizza');
     }
-
-    public function authorizedEdit(): void
-    {
-        $this->setAuthorized($this->isAnyContestAuthorized($this->getEntity(), 'edit'));
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedDetail(): void
-    {
-        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
-        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
-        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
-
-        $this->setAuthorized($full || $restrict || $basic);
-    }
-
-    /* ********************* ACTIONS **************/
 
     /**
      * @throws ModelNotFoundException
@@ -132,8 +134,6 @@ class PersonPresenter extends BasePresenter
             'stalking-log'
         );
     }
-
-    /* ******************* COMPONENTS *******************/
 
     /**
      * @throws ModelNotFoundException

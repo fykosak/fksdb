@@ -42,34 +42,33 @@ class DeduplicatePresenter extends BasePresenter
         $this->personInfoService = $personInfoService;
     }
 
-    public function authorizedPerson(): void
+    public function authorizedPerson(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('person', 'list'));
+        return $this->contestAuthorizator->isAllowed('person', 'list');
     }
 
     /**
      * @throws NotFoundException
      */
-    public function authorizedDontMerge(int $trunkId, int $mergedId): void
+    public function authorizedDontMerge(): bool
     {
-        $this->authorizedMerge($trunkId, $mergedId);
+        return $this->authorizedMerge();
     }
 
     /**
      * @throws NotFoundException
      */
-    public function authorizedMerge(int $trunkId, int $mergedId): void
+    public function authorizedMerge(): bool
     {
-        $trunkPerson = $this->personService->findByPrimary($trunkId);
-        $mergedPerson = $this->personService->findByPrimary($mergedId);
+        $trunkPerson = $this->personService->findByPrimary($this->getParameter('trunkId'));
+        $mergedPerson = $this->personService->findByPrimary($this->getParameter('mergedId'));
         if (is_null($trunkPerson) || is_null($mergedPerson)) {
             throw new NotFoundException('Person does not exists');
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        $authorized = $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
+        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
             $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge');
-        $this->setAuthorized($authorized);
     }
 
     public function titleMerge(): PageTitle
@@ -88,24 +87,34 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titlePerson(): PageTitle
     {
-        return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
+        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
     }
 
-    public function actionDontMerge(int $trunkId, int $mergedId): void
+    public function actionDontMerge(): void
     {
+        $trunkId = $this->getParameter('trunkId');
+        $mergedId = $this->getParameter('mergedId');
         $mergedPI = $this->personInfoService->findByPrimary($mergedId);
-        $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->personInfoService->storeModel($mergedData, $mergedPI);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ','),
+            ],
+            $mergedPI
+        );
 
         $trunkPI = $this->personInfoService->findByPrimary($trunkId);
-        $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->personInfoService->storeModel($trunkData, $trunkPI);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ','),
+            ],
+            $trunkPI
+        );
 
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         //$this->backLinkRedirect(true);
     }
 
-    public function actionMerge(int $trunkId, int $mergedId): void
+    public function actionMerge(): void
     {
         $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());

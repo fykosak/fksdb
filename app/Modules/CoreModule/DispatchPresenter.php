@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\Navigation\NavItem;
@@ -14,12 +13,14 @@ use Fykosak\Utils\UI\Title;
 
 class DispatchPresenter extends BasePresenter
 {
-
-    private array $contestsProperty;
-
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Home'), 'fa fa-home');
+        return new PageTitle(null, _('Home'), 'fas fa-home');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     final public function renderDefault(): void
@@ -29,13 +30,24 @@ class DispatchPresenter extends BasePresenter
         $person = $this->getLoggedPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrganisers($login);
-        $this->template->contestsProperty = $this->getContestsProperty();
     }
+
     private function getAllContestants(PersonModel $person): array
     {
         $result = [];
         /** @var ContestantModel $contestant */
-        $result[] = new NavItem(new Title(null, _('Register'), 'fa-solid fa-user-plus'), ':Public:Register:contest');
+        $result[] = new NavItem(
+            new Title(null, _('Register into competition'), 'fas fa-user-plus'),
+            ':Public:Register:contest'
+        );
+        $result[] = new NavItem(
+            new Title(null, _('My applications'), 'fas fa-calendar-days'),
+            ':Core:MyApplications:default'
+        );
+        $result[] = new NavItem(
+            new Title(null, _('My Profile'), 'fas fa-user'),
+            ':Profile:Dashboard:default'
+        );
         foreach ($person->getContestants() as $contestant) {
             $acYear = $contestant->getContestYear()->ac_year;
             $result[] = new NavItem(
@@ -51,10 +63,7 @@ class DispatchPresenter extends BasePresenter
                 ]
             );
         }
-        $result[] = new NavItem(
-            new Title(null, _('My applications'), 'fa-regular fa-calendar-days'),
-            ':Core:MyApplications:default'
-        );
+
         // <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
         return $result;
     }
@@ -76,28 +85,11 @@ class DispatchPresenter extends BasePresenter
             );
         }
         $results[] = new NavItem(
-            new Title(null, _('Events'), 'fa-regular fa-calendar-days'),
+            new Title(null, _('Events'), 'fas fa-calendar-days'),
             ':Event:Dispatch:default'
         );
         //         <img src="/images/contests/event.gif" alt="" class="w-100"/>
         return $results;
-    }
-
-    private function getContestsProperty(): array
-    {
-        if (!isset($this->contestsProperty)) {
-            $this->contestsProperty = [];
-            $query = $this->contestService->getTable();
-            /** @var ContestModel $contest */
-            foreach ($query as $contest) {
-                $this->contestsProperty[$contest->contest_id] = [
-                    'symbol' => $contest->getContestSymbol(),
-                    'model' => $contest,
-                    'icon' => 'fa fa-' . $contest->getContestSymbol(),
-                ];
-            }
-        }
-        return $this->contestsProperty;
     }
 
     protected function beforeRender(): void

@@ -17,14 +17,14 @@ class AESOPPresenter extends AuthenticatedPresenter
 {
     use YearPresenterTrait;
 
-    public function authorizedContestant(): void
+    public function authorizedContestant(): bool
     {
-        $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
-    public function authorizedEvent(): void
+    public function authorizedEvent(): bool
     {
-        $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
     /**

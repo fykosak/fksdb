@@ -39,7 +39,7 @@ abstract class SearchContainer extends ContainerWithOptions
         $submit = $this->addSubmit(
             self::SUBMIT_SEARCH,
             Html::el('span')->addHtml(
-                Html::el('i')->addAttributes(['class' => 'fa fa-search me-3'])
+                Html::el('i')->addAttributes(['class' => 'fas fa-search me-3'])
             )->addText(_('Find'))
         );
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);

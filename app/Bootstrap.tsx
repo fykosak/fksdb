@@ -72,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const originalValue = actElement.attr('data-writeonly-value');
             const originalLabel = actElement.attr('data-writeonly-label');
 
-            const button = $('<i class="fa fa-times glyphicon glyphicon-remove"/>');
+            const button = $('<i class="fas fa-times"/>');
             const actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
@@ -169,7 +169,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <h4>{label}</h4>
                         <div className="form-group">
                             <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fa fa-user me-3"/>{value}</p>
+                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
                             </div>
                             <div className="input-group-append">
                                 <button type="button"
@@ -178,7 +178,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             decompactifyContainer();
                                         }}>
-                                    <span className="fa fa-pen me-3"/>
+                                    <span className="fas fa-pen me-3"/>
                                     {translator.getText('Edit')}
                                 </button>
                                 <button type="button"
@@ -187,7 +187,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             $clearButton.click();
                                         }}>
-                                    <span className="fa fa-times me-3"/>
+                                    <span className="fas fa-times me-3"/>
                                     {translator.getText('Delete')}
                                 </button>
                             </div>

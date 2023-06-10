@@ -1,11 +1,26 @@
-{block content}
-    <h2>{_'My applications'}</h2>
-    {control eventParticipantsGrid}
-    <h2>{_'My applications as a team member'}</h2>
-    {control teamMembersGrid}
-    <h2>{_'My applications as a teacher'}</h2>
-    {control eventTeachersGrid}
-
-    <h2>{_'Events with open registration'}</h2>
-    {control newApplicationsGrid}
+{block outerContent}
+    <div class="panel panel-auto">
+        <div class="container">
+            <h2>{_'My applications'}</h2>
+            {control eventParticipantsGrid}
+        </div>
+    </div>
+    <div class="panel panel-auto">
+        <div class="container">
+            <h2>{_'My applications as a team member'}</h2>
+            {control teamMembersGrid}
+        </div>
+    </div>
+    <div class="panel panel-auto">
+        <div class="container">
+            <h2>{_'My applications as a teacher'}</h2>
+            {control eventTeachersGrid}
+        </div>
+    </div>
+    <div class="panel panel-auto">
+        <div class="container">
+            <h2>{_'Events with open registration'}</h2>
+            {control newApplicationsGrid}
+        </div>
+    </div>
 {/block}
