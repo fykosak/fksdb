@@ -3,7 +3,7 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
 .navigation-item {
-  @include navigation-item(var(--color-fykos-main), white, false, false);
+  @include navigation-item(rgb(var(--bs-dark-rgb)));
 }
 
 [data-style-id~="fykos"] {
@@ -28,4 +28,30 @@
 
 [data-style-id~="error"] {
   @include page-theme($danger);
+}
+
+.icon {
+  &::before {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    content: "";
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 1em 1em;
+    // content: url(./../../www/images/contests/fykos.svg);
+  }
+
+  &.icon-fykos {
+    &::before {
+      background-image: url(./../../www/images/contests/fykos.svg);
+    }
+  }
+
+  &.icon-vyfuk {
+    &::before {
+      background-image: url(./../../www/images/contests/vyfuk.svg);
+    }
+  }
+
 }

@@ -1,62 +1,20 @@
-{block content}
+{block outerContent}
     {varType array $contestants}
-    {varType array $contestsProperty}
     {varType array $orgs}
-	{*<h2>{_'Shortcuts'}</h2>
-	{control navigationChooser:board 'Core:Dispatch:default', true}*}
-    <h2>{_'Contestant'}</h2>
-    <p>
-        <a href="{plink :Public:Register:contest}" class="btn btn-outline-primary">{_'Register'}</a>
-    </p>
-    <nav class="d-md-flex justify-content-md-around flex-wrap">
-        {foreach $contestants as $contestId => $contestantsForContest}
-            <div class="navigation-item mb-3 d-block p-2">
-                <div class="icon d-md-inline-block d-md-block mx-1 pb-2">
-                    <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
-                            alt=""
-                    />
-                </div>
-                <div class="list-group">
-                    {foreach $contestantsForContest as $navItem}
-                        {varType Fykosak\Utils\UI\Navigation\NavItem $navItem}
-                        <a class="list-group-item-action list-group-item p-2"
-                           href="{plink $navItem->destination,$navItem->linkParams}">{$navItem->title->toHtml()}</a>
-                    {/foreach}
-                </div>
-            </div>
-        {/foreach}
-        <a href="{plink :Core:MyApplications:default}"
-           class="navigation-item mb-3 d-block navigation-item p-2">
-            <div class="icon d-sm-inline-block d-md-block mx-2">
-                <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
-            </div>
-            <span class="text d-xs-inline-block d-md-block">{_'My applications'}</span>
-        </a>
-    </nav>
-    <hr/>
-    {if count($orgs)}
-        <h2>{_'Organizer'}</h2>
-        <nav class="d-md-flex justify-content-md-around flex-wrap">
-            {foreach $orgs as $contestId => $navItem}
-                {varType Fykosak\Utils\UI\Navigation\NavItem $navItem}
-                <a href="{plink $navItem->destination,$navItem->linkParams}"
-                   class="mb-3 d-block navigation-item p-2">
-                    <div class="icon d-sm-inline-block d-md-block mx-2">
-                        <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
-                                alt=""/>
-                    </div>
-                    <span class="text d-xs-inline-block d-md-block">{$navItem->title->toHtml()}</span>
-                </a>
-            {/foreach}
-            <a href="{plink :Event:Dispatch:default}"
-               class="navigation-item mb-3 d-block navigation-item p-2">
-                <div class="icon d-sm-inline-block d-md-block mx-2">
-                    <img src="/images/contests/event.gif" alt="" class="w-100"/>
-                </div>
-                <span class="text d-xs-inline-block d-md-block">{_'Events'}</span>
-            </a>
-        </nav>
-        <hr/>
-        {*control navigationChooser:board 'Core.Dispatch.default' *}{*for relevant activites*}
-    {/if}
+    {*<h2>{_'Shortcuts'}</h2>
+    {control navigationChooser:board 'Core:Dispatch:default', true}*}
+    <div class="panel panel-auto">
+        <div class="container">
+            <h2>{_'Contestant'}</h2>
+            {control navigationChooser:boardInline $contestants, false}
+        </div>
+    </div>
+    <div class="panel panel-auto">
+        <div class="container">
+            {if count($orgs)}
+                <h2>{_'Organizer'}</h2>
+                {control navigationChooser:boardInline $orgs, false}
+            {/if}
+        </div>
+    </div>
 {/block}

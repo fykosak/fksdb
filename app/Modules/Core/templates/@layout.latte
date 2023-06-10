@@ -70,20 +70,20 @@
 {/block}
 {block main}
 <main>
-    <div class="container">
-        {block titleBody}
+    <div class="panel panel-auto">
+        <div class="container">
+            {block titleBody}
             <h1 class="page-header">{$pageTitle->toHtml(true)}</h1>
         {/block}
-    </div>
-    <div class="container">
         {block flashes}
             {foreach $flashes as $flash}
                 <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
+        </div>
     </div>
     {block outerContent}
-        <div class="{$pageStyleContainer->getMainContainerClassName()}">
+    <div class="{$pageStyleContainer->getMainContainerClassName()}">
             {include content}
         </div>
     {/block}

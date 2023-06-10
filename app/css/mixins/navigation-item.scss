@@ -1,34 +1,20 @@
-@mixin navigation-item($color,$background,$apply-hover : true,$apply-border:true) {
+@mixin navigation-item($color) {
   min-height: 12rem;
   width: 12rem;
   color: $color;
-  background-color: $background;
+  background-color: transparent;
   text-align: center;
   text-decoration: none;
-  @if $apply-border {
-    border: $color solid 1px;
-  } @else {
-    border: none;
-  }
+  border: $color solid 1px;
   transition-duration: 200ms;
   i {
     font-size: 5rem;
     display: block;
   }
-  @if $apply-hover {
-    &:hover, &:focus {
-      transition-duration: 200ms;
-      background-color: $color;
-      color: $background;
-    }
-  } @else {
-    &:hover, &:focus {
-      background-color: $background;
-      color: $color;
-      transition-duration: 200ms;
-      border-color: $color;
-      border-width: 1px;
-    }
+  &:hover, &:focus {
+    transition-duration: 200ms;
+    background-color: $color;
+    color: white;
   }
 
   @media (max-width: 767px) {

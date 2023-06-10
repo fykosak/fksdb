@@ -35,11 +35,15 @@ class DispatchPresenter extends BasePresenter
     {
         $result = [];
         /** @var ContestantModel $contestant */
+        $result[] = new NavItem(new Title(null, _('Register'), 'fa-solid fa-user-plus'), ':Public:Register:contest');
         foreach ($person->getContestants() as $contestant) {
-            $result[$contestant->contest_id] = $result[$contestant->contest_id] ?? [];
             $acYear = $contestant->getContestYear()->ac_year;
-            $result[$contestant->contest_id][] = new NavItem(
-                new Title(null, sprintf(_('Contestant in %d year (%d/%d)'), $contestant->year, $acYear, $acYear + 1)),
+            $result[] = new NavItem(
+                new Title(
+                    null,
+                    sprintf(_('Contestant in %dth year (%d/%d)'), $contestant->year, $acYear, $acYear + 1),
+                    'icon icon-' . $contestant->contest->getContestSymbol()
+                ),
                 ':Public:Dashboard:default',
                 [
                     'contestId' => $contestant->contest_id,
@@ -47,6 +51,11 @@ class DispatchPresenter extends BasePresenter
                 ]
             );
         }
+        $result[] = new NavItem(
+            new Title(null, _('My applications'), 'fa-regular fa-calendar-days'),
+            ':Core:MyApplications:default'
+        );
+        // <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
         return $result;
     }
 
@@ -55,13 +64,22 @@ class DispatchPresenter extends BasePresenter
         $results = [];
         foreach ($login->person->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = new NavItem(
-                new Title(null, sprintf(_('Organizer %s'), $org->contest->name)),
+                new Title(
+                    null,
+                    sprintf(_('Organizer %s'), $org->contest->name),
+                    'icon icon-' . $org->contest->getContestSymbol()
+                ),
                 ':Org:Dashboard:default',
                 [
                     'contestId' => $contestId,
                 ]
             );
         }
+        $results[] = new NavItem(
+            new Title(null, _('Events'), 'fa-regular fa-calendar-days'),
+            ':Event:Dispatch:default'
+        );
+        //         <img src="/images/contests/event.gif" alt="" class="w-100"/>
         return $results;
     }
 

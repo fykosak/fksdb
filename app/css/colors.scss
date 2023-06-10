@@ -45,7 +45,7 @@ $fyziklaniPoints1: #f45d01;
 
 @mixin page-theme($color) {
   .navigation-item {
-    @include navigation-item($color, white);
+    @include navigation-item($color);
   }
   .bd-callout {
     border-left-color: $color;
