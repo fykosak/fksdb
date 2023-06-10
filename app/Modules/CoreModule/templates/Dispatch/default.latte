@@ -17,16 +17,16 @@
                     />
                 </div>
                 <div class="list-group">
-                    {foreach $contestantsForContest as $contestant}
+                    {foreach $contestantsForContest as $navItem}
+                        {varType Fykosak\Utils\UI\Navigation\NavItem $navItem}
                         <a class="list-group-item-action list-group-item p-2"
-                           href="{$contestant['link']}">{$contestant['title']}</a>
+                           href="{plink $navItem->destination,$navItem->linkParams}">{$navItem->title->toHtml()}</a>
                     {/foreach}
                 </div>
             </div>
         {/foreach}
         <a href="{plink :Core:MyApplications:default}"
-                {var $className = 'navigation-item mb-3 d-block navigation-item p-2'}
-           class="{$className}">
+           class="navigation-item mb-3 d-block navigation-item p-2">
             <div class="icon d-sm-inline-block d-md-block mx-2">
                 <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
             </div>
@@ -37,20 +37,19 @@
     {if count($orgs)}
         <h2>{_'Organizer'}</h2>
         <nav class="d-md-flex justify-content-md-around flex-wrap">
-            {foreach $orgs as $contestId => $org}
-                <a href="{$org['link']}"
-                        {var $className = 'mb-3 d-block navigation-item p-2'}
-                   class="{$className}">
+            {foreach $orgs as $contestId => $navItem}
+                {varType Fykosak\Utils\UI\Navigation\NavItem $navItem}
+                <a href="{plink $navItem->destination,$navItem->linkParams}"
+                   class="mb-3 d-block navigation-item p-2">
                     <div class="icon d-sm-inline-block d-md-block mx-2">
                         <img n:attr="src => '/images/contests/' . $contestsProperty[$contestId]['symbol'] . '.svg'"
                                 alt=""/>
                     </div>
-                    <span class="text d-xs-inline-block d-md-block">{$org['title']}</span>
+                    <span class="text d-xs-inline-block d-md-block">{$navItem->title->toHtml()}</span>
                 </a>
             {/foreach}
             <a href="{plink :Event:Dispatch:default}"
-                    {var $className = 'navigation-item mb-3 d-block navigation-item p-2'}
-               class="{$className}">
+               class="navigation-item mb-3 d-block navigation-item p-2">
                 <div class="icon d-sm-inline-block d-md-block mx-2">
                     <img src="/images/contests/event.gif" alt="" class="w-100"/>
                 </div>

@@ -8,8 +8,9 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\InvalidLinkException;
+use Fykosak\Utils\UI\Title;
 
 class DispatchPresenter extends BasePresenter
 {
@@ -18,12 +19,9 @@ class DispatchPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Menu'), 'fa fa-home');
+        return new PageTitle(null, _('Home'), 'fa fa-home');
     }
 
-    /**
-     * @throws InvalidLinkException
-     */
     final public function renderDefault(): void
     {
         /** @var LoginModel $login */
@@ -33,47 +31,36 @@ class DispatchPresenter extends BasePresenter
         $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
     }
-
-    /**
-     * @throws InvalidLinkException
-     */
     private function getAllContestants(PersonModel $person): array
     {
         $result = [];
         /** @var ContestantModel $contestant */
         foreach ($person->getContestants() as $contestant) {
             $result[$contestant->contest_id] = $result[$contestant->contest_id] ?? [];
-            $result[$contestant->contest_id][] = [
-                'link' => $this->link(
-                    ':Public:Dashboard:default',
-                    [
-                        'contestId' => $contestant->contest_id,
-                        'year' => $contestant->year,
-                    ]
-                ),
-                'title' => sprintf(_('Contestant in %d'), $contestant->year),
-
-            ];
+            $acYear = $contestant->getContestYear()->ac_year;
+            $result[$contestant->contest_id][] = new NavItem(
+                new Title(null, sprintf(_('Contestant in %d year (%d/%d)'), $contestant->year, $acYear, $acYear + 1)),
+                ':Public:Dashboard:default',
+                [
+                    'contestId' => $contestant->contest_id,
+                    'year' => $contestant->year,
+                ]
+            );
         }
         return $result;
     }
 
-    /**
-     * @throws InvalidLinkException
-     */
     private function getAllOrganisers(LoginModel $login): array
     {
         $results = [];
         foreach ($login->person->getActiveOrgs() as $contestId => $org) {
-            $results[$contestId] = [
-                'link' => $this->link(
-                    ':Org:Dashboard:default',
-                    [
-                        'contestId' => $contestId,
-                    ]
-                ),
-                'title' => sprintf(_('Organizer %s'), $org->contest->name),
-            ];
+            $results[$contestId] = new NavItem(
+                new Title(null, sprintf(_('Organizer %s'), $org->contest->name)),
+                ':Org:Dashboard:default',
+                [
+                    'contestId' => $contestId,
+                ]
+            );
         }
         return $results;
     }
