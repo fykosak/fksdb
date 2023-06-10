@@ -1,10 +1,11 @@
 navigation:
-    structure:
         #AK hotlinks
-        #Core:Dispatch:default:
-            #Event:Payment:create:
-                #params:
-                    #eventId: 165
+        Core:Dispatch:default:
+            Event:Payment:create:
+                eventId: 173
+            #Schedule:PersonSchedule:default:
+            #    params:
+            #        eventId: 173
         Org.Dashboard.default:
             Org.Dashboard.default: []
 
@@ -64,31 +65,33 @@ navigation:
             Public.Submit.ajax:
                 visible: true
             Core.MyApplications.default: []
-        Fyziklani.Dashboard.default:
-            Fyziklani.Submit.create: []
-            Fyziklani.Submit.list: []
-            Fyziklani.Close.list: []
-            Fyziklani.Diplomas.default: []
-            Fyziklani.Diplomas.results: []
-            Fyziklani.Task.list: []
-            Fyziklani.GameSetup.default: []
-            Fyziklani.Seating.list: []
-            Fyziklani.Presentation.default: []
+        Game.Dashboard.default:
+            Game.Submit.create: []
+            Game.Submit.list: []
+            Game.Close.list: []
+            Game.Diplomas.default: []
+            Game.Diplomas.results: []
+            Game.Task.list: []
+            Game.GameSetup.default: []
+            Game.Seating.list: []
+            Game.Presentation.default: []
 
-        Fyziklani.Statistics.table:
-            Fyziklani.Statistics.task: []
-            Fyziklani.Statistics.team: []
-            Fyziklani.Statistics.correlation: []
-            Fyziklani.Statistics.table: []
+        Game.Statistics.table:
+            Game.Statistics.task: []
+            Game.Statistics.team: []
+            Game.Statistics.correlation: []
+            Game.Statistics.table: []
 
         Event.Dashboard.default:
+            Event.TeamApplication.detailedList: []
             Event.TeamApplication.list: []
             Event.Application.list: []
             Event.EventOrg.list: []
             Event.Payment.create: []
+            Event.Payment.detailedList: []
             Event.Payment.list: []
-            Fyziklani.Dashboard.default: []
-            Event.ScheduleGroup.list: []
+            Game.Dashboard.default: []
+            Schedule.Group.list: []
             Event.Chart.list: []
             Event.Dispatch.default: []
             Event.Dashboard.default: []
@@ -96,3 +99,11 @@ navigation:
             Warehouse.Producer.list: []
             Warehouse.Product.list: []
             Warehouse.Item.list: []
+        Profile.Dashboard.default:
+            Core.MyApplications.default: []
+            Core.MyPayments.default: []
+            Profile.Email.default: []
+            Profile.PostContact.default: []
+            Profile.Lang.default: []
+            Profile.Login.default: []
+            Core.Settings.default: []

@@ -17,32 +17,23 @@ services:
         factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
         setup:
              - setUp(%fyziklani13payment.symbolGenerator.variableSymbolStart%, %fyziklani13payment.symbolGenerator.variableSymbolEnd%, %fyziklani13payment.symbolGenerator.info%)
-    fyziklani13payment.machine:
-        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
-        setup:
-            - setEventId(137)
-            - setScheduleGroupTypes([accommodation])
-
 transitions:
     fyziklani13payment:
-        machine: fyziklani13payment.machine
+        machine: FKSDB\Models\Transitions\Machine\PaymentMachine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
-        decorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
+        decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
         transitions:
             init->new:
                 label: _('Create')
-                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
             new->waiting:
                 label: _('Confirm payment')
                 behaviorType: success
-                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
                 beforeExecute:
                     - @fyziklani13payment.symbolGenerator
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Payment\NewPaymentCallback()
             new|waiting->canceled:
-                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
                 label: _('Cancel payment')
                 behaviorType: danger
             waiting->received:

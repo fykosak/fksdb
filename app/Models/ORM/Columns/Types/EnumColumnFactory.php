@@ -30,6 +30,7 @@ class EnumColumnFactory extends ColumnFactory
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($items);
+        $control->setPrompt(_('-- select options --'));
         return $control;
     }
 
@@ -38,7 +39,7 @@ class EnumColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $enum = $model->{$this->getModelAccessKey()};
+        $enum = $model->{$this->modelAccessKey};
         if (is_null($enum)) {
             return NotSetBadge::getHtml();
         }

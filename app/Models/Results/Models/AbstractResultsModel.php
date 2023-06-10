@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
-use FKSDB\Models\Results\ModelCategory;
+use FKSDB\Models\Results\ResultsModelFactory;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Nette\Application\BadRequestException;
 use Nette\Database\Row;
+use Nette\DI\Container;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -36,25 +40,32 @@ abstract class AbstractResultsModel
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected ContestYearModel $contestYear;
     protected TaskService $taskService;
+    protected ContestYearModel $contestYear;
     protected EvaluationStrategy $evaluationStrategy;
+    protected ContestCategoryService $contestCategoryService;
 
-    public function __construct(
-        ContestYearModel $contestYear,
-        TaskService $taskService,
-        EvaluationStrategy $evaluationStrategy
-    ) {
+    /**
+     * @throws BadRequestException
+     */
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        $container->callInjects($this);
         $this->contestYear = $contestYear;
+        $this->evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($container, $contestYear);
+    }
+
+    public function inject(TaskService $taskService, ContestCategoryService $contestCategoryService): void
+    {
         $this->taskService = $taskService;
-        $this->evaluationStrategy = $evaluationStrategy;
+        $this->contestCategoryService = $contestCategoryService;
     }
 
     /**
      * @return Row[]
      * @throws \PDOException
      */
-    public function getData(ModelCategory $category): array
+    public function getData(ContestCategoryModel $category): array
     {
         $sql = $this->composeQuery($category);
 
@@ -75,7 +86,7 @@ abstract class AbstractResultsModel
         return $result;
     }
 
-    abstract protected function composeQuery(ModelCategory $category): string;
+    abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
@@ -115,12 +126,12 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return ModelCategory[]
+     * @return ContestCategoryModel[]
      */
     public function getCategories(): array
     {
         return $this->evaluationStrategy->getCategories();
     }
 
-    abstract public function getDataColumns(ModelCategory $category): array;
+    abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\Button\ControlButton;
+use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -11,19 +15,15 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 use Tracy\Debugger;
 
-class SubmitsGrid extends BaseGrid
+class SubmitsGrid extends Grid
 {
-
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 
@@ -38,46 +38,86 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        return new NDataSource($this->contestant->getSubmits());
+        return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
     }
 
-    /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('series DESC, tasknr ASC');
-        $this->addColumn('task', _('Task'))
-            ->setRenderer(fn(SubmitModel $submit): string => $submit->task->getFQName());
-        $this->addColumn('submitted_on', _('Timestamp'));
-        $this->addColumn('source', _('Method of handing'))
-            ->setRenderer(fn(SubmitModel $model): string => $model->source->value);
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(SubmitModel $submit): string => $submit->task->getFQName(),
+                new Title(null, _('Task'))
+            ),
+            'task'
+        );
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(SubmitModel $model): string => $model->submitted_on->format('c'),
+                new Title(null, _('Timestamp'))
+            ),
+            'submitted_on'
+        );
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(SubmitModel $model): string => $model->source->value,
+                new Title(null, _('Method of handing'))
+            ),
+            'source'
+        );
 
-        $this->addButton('revoke', _('Cancel'))
-            ->setClass('btn btn-sm btn-outline-warning')
-            ->setText(_('Cancel'))
-            ->setShow(fn(SubmitModel $submit): bool => $submit->canRevoke())
-            ->setLink(fn(SubmitModel $submit): string => $this->link('revoke!', $submit->submit_id))
-            ->setConfirmationDialog(fn(SubmitModel $submit): string => sprintf(
-                _('Do you really want to take the solution of task %s back?'),
-                $submit->task->getFQName()
-            ));
-        $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(
-                fn(SubmitModel $submit): string => $this->link('downloadUploaded!', $submit->submit_id)
-            )
-            ->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz());
-        $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(
-                fn(SubmitModel $submit): string => $this->link('downloadCorrected!', $submit->submit_id)
-            )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected);
+        $this->addButton(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Cancel')),
+                fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
+                'btn btn-sm me-1 btn-outline-warning',
+                fn(SubmitModel $submit): bool => $submit->canRevoke()
+            ),
+            'revoke'
+        );
+
+        $this->addButton(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Download original')),
+                fn(SubmitModel $submit): array => ['downloadUploaded!', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => !$submit->isQuiz()
+            ),
+            'download_uploaded'
+        );
+
+        $this->addButton(
+            new ControlButton(
+                $this->container,
+                $this,
+                new Title(null, _('Download corrected')),
+                fn(SubmitModel $submit): array => ['downloadCorrected!', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected
+            ),
+            'download_corrected'
+        );
+
+        $this->addButton(
+            new PresenterButton(
+                $this->container,
+                new Title(null, _('Detail')),
+                fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
+                null,
+                fn(SubmitModel $submit): bool => $submit->isQuiz()
+            ),
+            'show_quiz_detail'
+        );
 
         $this->paginate = false;
-        $this->enableSorting = false;
     }
 
     public function handleRevoke(int $id): void

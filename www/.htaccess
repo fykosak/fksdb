@@ -31,4 +31,4 @@ Options -Indexes
 	</FilesMatch>
 </IfModule>
 
-php_value max_input_vars 4000
+php_value max_input_vars 20000

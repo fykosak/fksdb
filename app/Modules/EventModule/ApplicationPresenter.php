@@ -11,14 +11,12 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
 class ApplicationPresenter extends AbstractApplicationPresenter
@@ -49,7 +47,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -77,7 +74,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
     protected function createComponentGrid(): SingleApplicationsGrid
@@ -95,16 +91,16 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
     protected function createComponentImport(): ImportComponent
     {
         return new ImportComponent(
-            new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
             $this->getContext(),
-            $this->eventDispatchFactory
+            $this->eventDispatchFactory,
+            $this->eventParticipantService,
+            $this->getEvent()
         );
     }
 

@@ -6,13 +6,8 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\TeacherService;
-use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
 class TeachersGrid extends EntityGrid
 {
@@ -30,29 +25,19 @@ class TeachersGrid extends EntityGrid
         ]);
     }
 
-    protected function getData(): IDataSource
+    protected function getData(): TypedSelection
     {
-        $teachers = $this->service->getTable()->select('teacher.*, person.family_name AS display_name');
-
-        $dataSource = new SearchableDataSource($teachers);
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        return $dataSource;
+        return $this->service->getTable();
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-        $this->addLink('teacher.edit');
-        $this->addLink('teacher.detail');
+        parent::configure();
+        $this->addORMLink('teacher.edit');
+        $this->addORMLink('teacher.detail');
     }
 }

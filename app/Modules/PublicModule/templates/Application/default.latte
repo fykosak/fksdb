@@ -1,3 +1,5 @@
 {block content}
+    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+	{ifset $model}{control valuePrinter:row 'event_participant.status', $model}<br>{/ifset}
     {control application:form}
 {/block}

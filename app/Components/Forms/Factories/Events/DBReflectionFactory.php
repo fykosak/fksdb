@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
@@ -23,18 +24,23 @@ class DBReflectionFactory extends AbstractFactory
     /** @var array tableName => columnName[] */
     private array $columns = [];
     private ORMFactory $tableReflectionFactory;
+    private EventParticipantService $eventParticipantService;
 
-    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory)
-    {
+    public function __construct(
+        Connection $connection,
+        ORMFactory $tableReflectionFactory,
+        EventParticipantService $eventParticipantService
+    ) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     public function createComponent(Field $field): BaseControl
     {
         $element = null;
         try {
-            $tableName = $field->holder->service->getTable()->getName();
+            $tableName = $this->eventParticipantService->getTable()->getName();
             $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $field->name)->createField();
         } catch (\Throwable $e) {
         }
@@ -76,7 +82,7 @@ class DBReflectionFactory extends AbstractFactory
 
     protected function setDefaultValue(BaseControl $control, Field $field): void
     {
-        if ($field->holder->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->holder->getModelState()->value === Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -87,7 +93,7 @@ class DBReflectionFactory extends AbstractFactory
 
     private function resolveColumn(Field $field): ?array
     {
-        $tableName = $field->holder->service->getTable()->getName();
+        $tableName = $this->eventParticipantService->getTable()->getName();
         $column = $this->getColumnMetadata($tableName, $field->name);
         if ($column === null) {
             throw new InvalidArgumentException("Cannot find reflection for field '$field->name'.");

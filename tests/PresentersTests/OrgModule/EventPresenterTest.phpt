@@ -25,11 +25,11 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
-        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
+        $this->event = $this->container->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
@@ -102,7 +102,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
             'id' => $this->event->event_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $event = $this->getContainer()
+        $event = $this->container
             ->getByType(EventService::class)
             ->findByPrimary($this->event->event_id);
 
@@ -116,7 +116,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
 
     private function countEvents(): int
     {
-        return $this->getContainer()->getByType(EventService::class)->getTable()->count('*');
+        return $this->container->getByType(EventService::class)->getTable()->count('*');
     }
 }
 // phpcs:disable

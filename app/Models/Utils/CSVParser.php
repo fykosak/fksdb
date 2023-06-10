@@ -44,7 +44,11 @@ class CSVParser implements \Iterator
 
     public function next(): void
     {
-        $this->currentRow = fgetcsv($this->file, 0, $this->delimiter);
+        $newRow = fgetcsv($this->file, 0, $this->delimiter);
+        if (!$newRow) {
+            return;
+        }
+        $this->currentRow = $newRow;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $result = [];
             foreach ($this->header as $i => $name) {

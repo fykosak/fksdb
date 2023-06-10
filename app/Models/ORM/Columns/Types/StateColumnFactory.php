@@ -16,7 +16,7 @@ class StateColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        $state = $model->{$this->getModelAccessKey()};
+        $state = $model->{$this->modelAccessKey};
         if (is_null($state)) {
             return NotSetBadge::getHtml();
         }

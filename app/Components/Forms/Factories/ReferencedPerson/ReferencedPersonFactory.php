@@ -6,10 +6,7 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -24,22 +21,13 @@ class ReferencedPersonFactory
     use SmartObject;
 
     private PersonService $personService;
-    private PersonFactory $personFactory;
-    private PersonProvider $personProvider;
-    private PersonScheduleFactory $personScheduleFactory;
     private Container $context;
 
     public function __construct(
         PersonService $personService,
-        PersonFactory $personFactory,
-        PersonProvider $personProvider,
-        PersonScheduleFactory $personScheduleFactory,
         Container $context
     ) {
         $this->personService = $personService;
-        $this->personFactory = $personFactory;
-        $this->personProvider = $personProvider;
-        $this->personScheduleFactory = $personScheduleFactory;
         $this->context = $context;
     }
 

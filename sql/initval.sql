@@ -1,12 +1,27 @@
 INSERT INTO contest (contest_id, name)
 VALUES (1, 'FYKOS'),
-       (2, 'VÝFUK');
+       (2, 'VÝFUK'),
+       (3, 'Vědecký čtyřboj');
+
+INSERT INTO `contest_category` (`contest_category_id`, `label`, `name_cs`, `name_en`)
+VALUES (1, 'FYKOS_1', 'Kategorie 1. ročníků', 'Category 1st study year'),
+       (2, 'FYKOS_2', 'Kategorie 2. ročníků', 'Category 2nd study year'),
+       (3, 'FYKOS_3', 'Kategorie 3. ročníků', 'Category 3rd study year'),
+       (4, 'FYKOS_4', 'Kategorie 4. ročníků', 'Category 4th study year'),
+       (5, 'VYFUK_UNK', '', ''),
+       (6, 'VYFUK_6', 'Kategorie 6. ročníků', 'Category 6th study year'),
+       (7, 'VYFUK_7', 'Kategorie 7. ročníků', 'Category 7th study year'),
+       (8, 'VYFUK_8', 'Kategorie 8. ročníků', 'Category 8th study year'),
+       (9, 'VYFUK_9', 'Kategorie 9. ročníků', 'Category 9th study year'),
+       (10, 'ALL', '', '');
+
 
 INSERT INTO study_year (study_year)
 VALUES (1),
        (2),
        (3),
        (4),
+       (5),
        (6),
        (7),
        (8),
@@ -47,15 +62,14 @@ VALUES (1, 1, 'FYKOSí Fyziklání'),
        (5, 1, 'podzimní soustředění'),
        (6, 1, 'soustředění/zájezd do CERNu'),
        (7, 1, 'Týden s aplikovanou fyzikou'),
-       (8, 2, 'MFnáboj'),
        (9, 1, 'Fyziklání online'),
        (10, 2, '(Letní) tábor'),
        (11, 2, 'Jarní setkání řešitelů'),
        (12, 2, 'Podzimní setkání řešitelů'),
-       (13, 2, 'Náboj Junior'),
        (14, 1, 'Den s experimentální fyzikou 2'),
        (15, 2, 'Výfučí Kyberkoncil'),
-       (16, 1, 'FYKOSí Online Víkend');
+       (16, 1, 'FYKOSí Online Víkend'),
+       (17, 3, 'Vědecký čtyřboj');
 
 INSERT INTO `event_status` (`status`, `description`)
 VALUES ('applied', 'obecně přihlášen'),

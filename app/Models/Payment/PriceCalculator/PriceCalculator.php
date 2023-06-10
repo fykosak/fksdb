@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Transitions\Holder\PaymentHolder;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 use FKSDB\Models\Transitions\Statement;
@@ -39,11 +36,12 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @param PaymentHolder $holder
+     * @param ...$args
      * @throws \Exception
      */
-    final public function __invoke(ModelHolder $holder): void
+    final public function __invoke(...$args): void
     {
+        [$holder] = $args;
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 
         foreach ($this->preProcess as $preProcess) {
@@ -54,17 +52,5 @@ class PriceCalculator implements Statement
             ['price' => $price->getAmount(), 'currency' => $price->getCurrency()->value],
             $holder->getModel()
         );
-    }
-
-    /**
-     * @return array[]
-     */
-    public function getGridItems(PaymentModel $modelPayment): array
-    {
-        $items = [];
-        foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
-        }
-        return $items;
     }
 }

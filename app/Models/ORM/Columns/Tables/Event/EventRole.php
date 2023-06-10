@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -28,7 +27,6 @@ class EventRole extends ColumnFactory
 
     /**
      * @throws CannotAccessModelException
-     * @throws NotImplementedException
      * @throws \ReflectionException
      */
     protected function createHtmlValue(Model $model): Html

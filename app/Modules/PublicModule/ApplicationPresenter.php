@@ -9,21 +9,21 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -39,6 +39,7 @@ class ApplicationPresenter extends BasePresenter
     private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
+    private EventParticipantService $eventParticipantService;
 
     public static function encodeParameters(int $eventId, int $id): string
     {
@@ -48,11 +49,13 @@ class ApplicationPresenter extends BasePresenter
     final public function injectTernary(
         EventService $eventService,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
-        EventDispatchFactory $eventDispatchFactory
+        EventDispatchFactory $eventDispatchFactory,
+        EventParticipantService $eventParticipantService
     ): void {
         $this->eventService = $eventService;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
@@ -77,7 +80,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws NeonSchemaException
      * @throws \Throwable
      */
     public function titleDefault(): PageTitle
@@ -99,23 +101,18 @@ class ApplicationPresenter extends BasePresenter
 
     /**
      * @return EventParticipantModel|null
-     * @throws NeonSchemaException
-     * @throws EventNotFoundException
      */
     private function getEventApplication(): ?Model
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
-            $service = $this->getHolder()->service;
-
-            $this->eventApplication = $service->findByPrimary($id);
+            $this->eventApplication = $this->eventParticipantService->findByPrimary($id);
         }
 
         return $this->eventApplication;
     }
 
     /**
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
      */
@@ -136,7 +133,6 @@ class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws NeonSchemaException
      * @throws NotFoundException
      * @throws \ReflectionException
      */
@@ -157,7 +153,11 @@ class ApplicationPresenter extends BasePresenter
 
         $this->initializeMachine();
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
+        if (
+            $this->tokenAuthenticator->isAuthenticatedByToken(
+                AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+            )
+        ) {
             $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
                 $this->tokenAuthenticator->disposeTokenData();
@@ -251,7 +251,11 @@ class ApplicationPresenter extends BasePresenter
     {
         if (!isset($this->event)) {
             $eventId = null;
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
+            if (
+                $this->tokenAuthenticator->isAuthenticatedByToken(
+                    AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                )
+            ) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
                     $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
@@ -282,7 +286,6 @@ class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws ForbiddenRequestException
-     * @throws NeonSchemaException
      * @throws EventNotFoundException
      */
     protected function unauthorizedAccess(): void
@@ -299,7 +302,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws NeonSchemaException
      * @throws EventNotFoundException
      */
     private function initializeMachine(): void
@@ -308,7 +310,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
      */
@@ -341,21 +342,20 @@ class ApplicationPresenter extends BasePresenter
     {
         parent::beforeRender();
         $event = $this->getEvent();
-        if ($event) {
-            $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $event->event_type_id;
-            switch ($event->event_type_id) {
-                case 1:
-                    $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fof');
-                    break;
-                case 9:
-                    $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fol');
-                    break;
-                default:
-                    $this->getPageStyleContainer()->setNavBarClassName(
-                        'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
-                    );
-            }
+        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $event->event_type_id;
+        switch ($event->event_type_id) {
+            case 1:
+                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fof');
+                break;
+            case 9:
+                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fol');
+                break;
+            default:
+                $this->getPageStyleContainer()->setNavBarClassName(
+                    'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
+                );
         }
+        $this->template->model = $this->getEventApplication();
     }
 
     protected function getRole(): PresenterRole

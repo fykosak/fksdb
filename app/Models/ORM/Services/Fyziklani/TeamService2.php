@@ -18,7 +18,7 @@ class TeamService2 extends Service
 
     public function isReadyForClosing(EventModel $event, ?TeamCategory $category = null): bool
     {
-        $query = $event->getParticipatingFyziklaniTeams();
+        $query = $event->getParticipatingTeams();
         if ($category) {
             $query->where('category', $category->value);
         }
@@ -33,7 +33,7 @@ class TeamService2 extends Service
     {
         $teams = [];
         /** @var TeamModel2 $team */
-        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $team) {
+        foreach ($event->getPossiblyAttendingTeams() as $team) {
             $teams[] = $team->__toArray();
         }
         return $teams;

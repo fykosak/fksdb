@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
+use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
@@ -18,11 +20,14 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Models\Submits\SubmitNotQuizException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -30,6 +35,8 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter
 {
 
+    /** @persistent */
+    public ?int $id = null;
     private SubmitService $submitService;
     private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
@@ -57,6 +64,19 @@ class SubmitPresenter extends BasePresenter
         $this->authorizedDefault();
     }
 
+    public function authorizedQuiz(): void
+    {
+        $this->authorizedDefault();
+    }
+
+    public function authorizedQuizDetail(): void
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest())
+        );
+    }
+
     public function authorizedDefault(): void
     {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
@@ -79,6 +99,18 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
+    public function titleQuiz(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
+    }
+
+    public function titleQuizDetail(): PageTitle
+    {
+        return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
+    }
+
+    /* ********************** RENDER **********************/
+
     final public function renderDefault(): void
     {
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
@@ -99,6 +131,42 @@ class SubmitPresenter extends BasePresenter
         $this->template->availableTasks = $this->getAvailableTasks();
     }
 
+    /* ********************** COMPONENTS **********************/
+
+    /**
+     * @throws TaskNotFoundException
+     * @throws ForbiddenRequestException
+     */
+    protected function createComponentQuizComponent(): QuizComponent
+    {
+        /** @var TaskModel $task */
+        $task = $this->taskService->findByPrimary($this->id);
+        if (!isset($task)) {
+            throw new TaskNotFoundException();
+        }
+
+        // check if task is opened for submitting
+        if (!$task->isOpened()) {
+            throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
+        }
+
+        return new QuizComponent($this->getContext(), $this->getLang(), $task, $this->getContestant());
+    }
+
+    /**
+     * @throws SubmitNotQuizException
+     */
+    protected function createComponentQuizDetail(): QuizAnswersGrid
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        $deadline = $submit->task->submit_deadline;
+        return new QuizAnswersGrid(
+            $this->getContext(),
+            $submit,
+            $deadline ? $submit->task->submit_deadline->getTimestamp() < time() : false
+        );
+    }
+
     /**
      * @throws BadTypeException
      */
@@ -108,9 +176,7 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        $personHistory = $this->getLoggedPerson()->getHistoryByContestYear($this->getSelectedContestYear());
-        $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
-        if ($studyYear === null) {
+        if (!$this->getContestant()->contest_category) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
         $prevDeadline = null;
@@ -123,7 +189,7 @@ class SubmitPresenter extends BasePresenter
             if ($submit && $submit->source->value == SubmitSource::POST) {
                 continue; // prevDeadline will work though
             }
-            $container = new ModelContainer();
+            $container = new ContainerWithOptions($this->getContext());
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
             $questions = $task->getQuestions();
@@ -136,8 +202,7 @@ class SubmitPresenter extends BasePresenter
                         _('Only PDF files are accepted.'),
                         'application/pdf'
                     );
-
-                if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+                if (!$task->isForCategory($this->getContestant()->contest_category)) {
                     $upload->setOption('description', _('Task is not for your category.'));
                     $upload->setDisabled();
                 }
@@ -159,7 +224,7 @@ class SubmitPresenter extends BasePresenter
                         $task->getFQName() . ' - ' . $question->getFQName(),
                         $options
                     );
-                    $existingEntry = $this->getContestant()->getAnswers($question);
+                    $existingEntry = $this->getContestant()->getAnswer($question);
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);

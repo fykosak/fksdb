@@ -10,7 +10,6 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
@@ -68,7 +67,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
     protected function getDummyHolder(): BaseHolder
@@ -116,7 +114,11 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-light');
+                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-dark');
+                break;
+            case 17:
+                $this->getPageStyleContainer()->setNavBarClassName('bg-ctyrboj navbar-dark');
+                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             default:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');

@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
 class EventDispatchFactory
 {
@@ -51,6 +53,27 @@ class EventDispatchFactory
     }
 
     /**
+     * @throws BadTypeException
+     */
+    public function getTeamMachine(EventModel $event): TeamMachine
+    {
+        switch ($event->event_type_id) {
+            case 1:
+                $machine = $this->container->getService('transitions.fof.machine');
+                break;
+            case 9:
+                $machine = $this->container->getService('transitions.fol.machine');
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        if (!$machine instanceof TeamMachine) {
+            throw new BadTypeException(TeamMachine::class, $machine);
+        }
+        return $machine;
+    }
+
+    /**
      * @throws ConfigurationNotFoundException
      */
     public function getFormLayout(EventModel $event): string
@@ -80,7 +103,6 @@ class EventDispatchFactory
 
     /**
      * @throws ConfigurationNotFoundException
-     * @throws NeonSchemaException
      */
     public function getDummyHolder(EventModel $event): BaseHolder
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -13,9 +13,10 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Security\User;
@@ -31,7 +32,6 @@ class RegisterContestantFormComponent extends EntityFormComponent
     private string $lang;
 
     private ContestAuthorizator $contestAuthorizator;
-    private ContestantService $service;
     private AccountManager $accountManager;
     private User $user;
 
@@ -49,19 +49,17 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     final public function injectTernary(
         ContestAuthorizator $contestAuthorizator,
-        ContestantService $service,
         AccountManager $accountManager,
         User $user
     ): void {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->service = $service;
         $this->accountManager = $accountManager;
         $this->user = $user;
     }
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getContext()->getParameters()['forms']['registerContestant' .
@@ -83,6 +81,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     /**
      * @throws BadTypeException
+     * @throws BadRequestException
      */
     protected function handleFormSuccess(Form $form): void
     {
@@ -91,15 +90,17 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
-        $this->service->storeModel([
-            'contest_id' => $this->contestYear->contest,
-            'person_id' => $person->person_id,
-            'year' => $this->contestYear->year,
-        ]);
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        $strategy->createContestant($person);
+
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
-            $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
-            $this->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            try {
+                $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
+                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            } catch (\Throwable $exception) {
+                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
+            }
         }
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }

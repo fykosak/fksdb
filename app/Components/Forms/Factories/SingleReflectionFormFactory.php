@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
-class SingleReflectionFormFactory
+final class SingleReflectionFormFactory
 {
+    private ORMFactory $tableReflectionFactory;
+    private Container $container;
 
-    protected ORMFactory $tableReflectionFactory;
-
-    public function __construct(ORMFactory $tableReflectionFactory)
+    public function __construct(ORMFactory $tableReflectionFactory, Container $container)
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->container = $container;
     }
 
     /**
@@ -41,45 +43,31 @@ class SingleReflectionFormFactory
     }
 
     /**
-     * @param array $args
-     * @throws BadTypeException
-     * @throws OmittedControlException
-     */
-    public function createContainer(string $tableName, array $fields, ...$args): ModelContainer
-    {
-        $container = new ModelContainer();
-
-        foreach ($fields as $fieldName) {
-            $container->addComponent($this->createField($tableName, $fieldName, ...$args), $fieldName);
-        }
-        return $container;
-    }
-
-    /**
      * @throws BadTypeException
      * @throws OmittedControlException
      */
     public function createContainerWithMetadata(
         string $table,
         array $fields,
-        FieldLevelPermission $userPermissions,
+        ?FieldLevelPermission $userPermissions = null,
         ...$args
     ): ModelContainer {
-        $container = new ModelContainer();
+        $container = new ModelContainer($this->container);
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);
             $control = $factory->createField(...$args);
-            $canWrite = $factory->hasWritePermissions($userPermissions->write);
-            $canRead = $factory->hasReadPermissions($userPermissions->read);
-            if ($control instanceof WriteOnly) {
-                $control->setWriteOnly(!$canRead);
-            } elseif ($canRead) {
+            if ($userPermissions) {
+                $canWrite = $factory->hasWritePermissions($userPermissions->write);
+                $canRead = $factory->hasReadPermissions($userPermissions->read);
+                if ($control instanceof WriteOnly) {
+                    $control->setWriteOnly(!$canRead);
+                } elseif ($canRead) {
 // do nothing
-            } else {
-                continue;
+                } else {
+                    continue;
+                }
+                $control->setDisabled(!$canWrite);
             }
-            $control->setDisabled(!$canWrite);
-
             $this->appendMetadata($control, $metadata);
             $container->addComponent($control, $field);
         }

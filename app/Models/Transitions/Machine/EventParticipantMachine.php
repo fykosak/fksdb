@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
@@ -21,7 +20,6 @@ use Nette\InvalidArgumentException;
  */
 class EventParticipantMachine extends Machine
 {
-
     public string $name = 'participant';
 
     private EventDispatchFactory $eventDispatchFactory;
@@ -40,20 +38,16 @@ class EventParticipantMachine extends Machine
     /**
      * @return Transition[]
      */
-    public function getAvailableTransitions(
-        ModelHolder $holder,
-        ?EnumColumn $sourceState = null
-    ): array {
+    public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
+    {
         return array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => $transition->canExecute($holder)
         );
     }
 
-    public function getTransitionByTarget(
-        EnumColumn $sourceState,
-        EnumColumn $target
-    ): ?Transition {
+    public function getTransitionByTarget(EnumColumn $sourceState, EnumColumn $target): ?Transition
+    {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => $transition->target->value ==
@@ -88,7 +82,6 @@ class EventParticipantMachine extends Machine
 
     /**
      * @param EventParticipantModel $model
-     * @throws NeonSchemaException
      */
     public function createHolder(Model $model): BaseHolder
     {

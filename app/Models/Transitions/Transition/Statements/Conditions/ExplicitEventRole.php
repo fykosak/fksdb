@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class ExplicitEventRole extends EventRole
 {
@@ -26,7 +25,7 @@ class ExplicitEventRole extends EventRole
         $this->resource = $resource;
     }
 
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
         return $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event);
     }

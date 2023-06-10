@@ -14,14 +14,12 @@ use Nette\Forms\Controls\BaseControl;
 class ContainerWithOptions extends Container
 {
     private array $options = [];
-    protected ?DIContainer $container;
+    protected DIContainer $container;
 
-    public function __construct(?DIContainer $container = null)
+    public function __construct(DIContainer $container = null)
     {
         $this->container = $container;
-        if ($container) {
-            $container->callInjects($this);
-        }
+        $container->callInjects($this);
     }
 
     /**
@@ -29,7 +27,7 @@ class ContainerWithOptions extends Container
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @param mixed value
+     * @param mixed $value
      * @return static
      */
     public function setOption(string $key, $value): self
@@ -44,7 +42,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific option.
-     * @param mixed  default value
+     * @param mixed $default value
      * @return mixed
      */
     final public function getOption(string $key, $default = null)

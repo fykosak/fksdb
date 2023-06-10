@@ -6,6 +6,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
@@ -31,6 +32,7 @@ trait ChartPresenterTrait
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     final public function renderList(): void
@@ -41,6 +43,8 @@ trait ChartPresenterTrait
     /**
      * @return Chart[]
      * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @throws BadTypeException
      */
     protected function getCharts(): array
     {
@@ -59,6 +63,7 @@ trait ChartPresenterTrait
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function selectChart(): void
     {

@@ -4,21 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-abstract class EntityGrid extends BaseGrid
+abstract class EntityGrid extends Grid
 {
-
     protected Service $service;
-
     private array $queryParams;
-
     private array $columns;
 
     public function __construct(
@@ -33,19 +28,17 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        $source = $this->service->getTable()->where($this->queryParams);
-        return new NDataSource($source);
+        return $this->service->getTable()->where($this->queryParams);
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
         $this->addColumns($this->columns);
     }
 }

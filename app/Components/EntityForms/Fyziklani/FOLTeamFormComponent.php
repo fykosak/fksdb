@@ -4,19 +4,43 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
-use FKSDB\Components\Forms\FormProcessing\FOLCategoryProcessing;
-
 class FOLTeamFormComponent extends TeamFormComponent
 {
-    protected function getFieldsDefinition(): array
+
+
+    protected function getProcessing(): array
+    {
+        return [
+            new FOLCategoryProcessing($this->container),
+        ];
+    }
+
+    public function render(): void
+    {
+        $this->template->event = $this->event;
+        parent::render();
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+    }
+
+    protected function getMemberFieldsDefinition(): array
     {
         return [
             'person' => [
                 'other_name' => [
                     'required' => true,
+                    'description' => _(
+                        'Usually the first part of your name. For example, "Albert".'
+                    ),
                 ],
                 'family_name' => [
                     'required' => true,
+                    'description' => _(
+                        'The second part of your name. For example, "Einstein".'
+                    ),
                 ],
             ],
             'person_info' => [
@@ -25,7 +49,7 @@ class FOLTeamFormComponent extends TeamFormComponent
                 ],
                 'born' => [
                     'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
+                    'description' => _('Only for Czech and Slovak students'),
                 ],
             ],
             'person_history' => [
@@ -53,21 +77,13 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
-    protected function getProcessing(): array
+    protected function getTeamFieldsDefinition(): array
     {
-        return [
-            new FOLCategoryProcessing($this->container),
-        ];
+        return ['name' => ['required' => true]];
     }
 
-    public function render(): void
+    protected function getTeacherFieldsDefinition(): array
     {
-        $this->template->event = $this->event;
-        parent::render();
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
+        return [];
     }
 }

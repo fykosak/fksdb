@@ -1,0 +1,50 @@
+parameters:
+    fyziklani17payment:
+        begin: 2023-01-09
+        end: 2023-02-08
+        symbolGenerator:
+            variableSymbolStart: 173230000
+            variableSymbolEnd: 173239999
+            info:
+                CZK:
+                    bank_account: 2402414686/2010
+                    bank_name: "Fio banka, a.s."
+                    recipient: "Fykos, z.s."
+                    iban: CZ55 2010 0000 0024 0241 4686
+                    constant_symbol: "0308"
+                EUR:
+                    bank_name: "Fio banka, a.s."
+                    recipient: "Fykos, z.s."
+                    iban: CZ05 2010 0000 0022 0241 4681
+                    swift: FIOBCZPPXXX
+services:
+    fyziklani17payment.symbolGenerator:
+            factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
+            setup:
+                 - setUp(%fyziklani17payment.symbolGenerator.variableSymbolStart%, %fyziklani17payment.symbolGenerator.variableSymbolEnd%, %fyziklani17payment.symbolGenerator.info%)
+transitions:
+    fyziklani17payment:
+        machine: FKSDB\Models\Transitions\Machine\PaymentMachine
+        stateEnum: FKSDB\Models\ORM\Models\PaymentState
+        decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
+        transitions:
+            init->in_progress:
+                label: _('Create')
+            in_progress->waiting:
+                label: _('Generate payment')
+                behaviorType: success
+                beforeExecute:
+                    - @fyziklani17payment.symbolGenerator
+                    - @fyziklaniPayment.priceCalculator
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Payment\NewPaymentCallback()
+            in_progress|waiting->canceled:
+                label: _('Cancel payment')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('edit')
+                behaviorType: danger
+            waiting->received:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
+                label: _('Paid')
+                behaviorType: success
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Payment\ReceivedPaymentCallback()

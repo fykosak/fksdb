@@ -13,6 +13,10 @@ class Bootstrap
     {
         $configurator = new Configurator();
 
+        if (getenv('NETTE_DEVEL') === '1') {
+            $configurator->setDebugMode(true);
+        }
+
         // Enable Nette Debugger for error visualisation & logging
         $configurator->enableTracy(__DIR__ . '/../log');
         $configurator->enableDebugger(__DIR__ . '/../log');

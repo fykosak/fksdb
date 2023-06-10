@@ -1,0 +1,11 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+<p>
+    Ahoj,<br/>
+    s lítostí ti oznamujeme, že jsi z kapacitních důvodů
+    <b>{if $holder->getPerson()->gender->value == 'F'}nebyla vybrána{else}nebyl vybrán{/if}</b>
+    jako {if $holder->getPerson()->gender->value == 'F'}účastnice{else}účastník{/if} na Letní tábor Výfuku.
+</p>
+<p>
+    Za organizátory<br/>
+    {$holder->event->getParameter('letterSignature')}
+</p>

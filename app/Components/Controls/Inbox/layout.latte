@@ -1,7 +1,7 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Submits\SeriesTable $seriesTable}
 {define table-head}
-    <tr>
+    <tr class="table-dark">
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
             <th>{$task->label}</th>

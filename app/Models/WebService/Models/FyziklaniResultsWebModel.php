@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -33,7 +33,7 @@ class FyziklaniResultsWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['event_id']);
-        $gameSetup = $event->getFyziklaniGameSetup();
+        $gameSetup = $event->getGameSetup();
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),

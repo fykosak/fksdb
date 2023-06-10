@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
 /**
@@ -21,9 +21,9 @@ class DetailResultsModel extends AbstractResultsModel
     /**
      * Definition of header.
      */
-    public function getDataColumns(ModelCategory $category): array
+    public function getDataColumns(ContestCategoryModel $category): array
     {
-        if (!isset($this->dataColumns[$category->value])) {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             $sum = 0;
             /** @var TaskModel $task */
@@ -41,9 +41,9 @@ class DetailResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->value] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->value];
+        return $this->dataColumns[$category->label];
     }
 
     public function getSeries(): int
@@ -58,7 +58,7 @@ class DetailResultsModel extends AbstractResultsModel
         $this->dataColumns = [];
     }
 
-    protected function composeQuery(ModelCategory $category): string
+    protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');

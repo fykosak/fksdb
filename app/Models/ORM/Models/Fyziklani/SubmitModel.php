@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
-use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
+use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use Fykosak\NetteORM\Model;
 use Nette\Security\Resource;
 
@@ -23,7 +23,7 @@ use Nette\Security\Resource;
  */
 class SubmitModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'fyziklani.submit';
+    public const RESOURCE_ID = 'game.submit';
 
     public function isChecked(): bool
     {
@@ -65,7 +65,7 @@ class SubmitModel extends Model implements Resource
      * @return SubmitState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

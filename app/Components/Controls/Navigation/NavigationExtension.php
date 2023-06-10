@@ -5,9 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\DI\CompilerExtension;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 
 class NavigationExtension extends CompilerExtension
 {
+    public function getConfigSchema(): Schema
+    {
+        return Expect::arrayOf(
+            Expect::arrayOf(
+                Expect::arrayOf(Expect::scalar()->nullable(), Expect::string()),
+                Expect::string()
+            ),
+            Expect::string()
+        );
+    }
 
     public function loadConfiguration(): void
     {
@@ -17,12 +29,7 @@ class NavigationExtension extends CompilerExtension
         $navbar = $this->getContainerBuilder()->addDefinition('navbar')
             ->setType(NavigationFactory::class);
 
-        $navbar->addSetup('setStructure', [$this->createFromStructure($config['structure'])]);
-    }
-
-    private function createNode(string $nodeId, array $arguments): array
-    {
-        return $this->parseIdAsLink($nodeId, $arguments);
+        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);
     }
 
     private function createFromStructure(array $structure): array
@@ -38,17 +45,14 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
-    private function parseIdAsLink(string $nodeId, array $arguments): array
+    private function createNode(string $nodeId, array $arguments): array
     {
-        $data = $arguments;
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');
-        $presenterName = substr($fullQualityAction, 0, $a);
-        $action = substr($fullQualityAction, $a + 1);
-        $data['linkPresenter'] = $presenterName;
-        $data['linkAction'] = $action;
-        $data['linkParams'] = $arguments['params'] ?? [];
-        unset($data['params']);
-        return $data;
+        return [
+            'presenter' => substr($fullQualityAction, 0, $a),
+            'action' => substr($fullQualityAction, $a + 1),
+            'params' => $arguments,
+        ];
     }
 }

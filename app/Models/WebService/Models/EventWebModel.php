@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -34,6 +34,7 @@ class EventWebModel extends WebModel
 
     /**
      * @throws \SoapFault
+     * @throws \DOMException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -55,6 +56,9 @@ class EventWebModel extends WebModel
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createPersonScheduleNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('personSchedule');
@@ -104,6 +108,9 @@ class EventWebModel extends WebModel
         return $data;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createScheduleListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('schedule');
@@ -119,6 +126,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function createScheduleListArray(EventModel $event): array
     {
         $data = [];
@@ -126,15 +136,20 @@ class EventWebModel extends WebModel
         foreach ($event->getScheduleGroups() as $group) {
             $datum = $group->__toArray();
             $datum['schedule_items'] = [];
+            $datum['scheduleItems'] = [];
             /** @var ScheduleItemModel $item */
             foreach ($group->getItems() as $item) {
                 $datum['schedule_items'][] = $item->__toArray();
+                $datum['scheduleItems'][] = $item->__toArray();
             }
             $data[] = $datum;
         }
         return $data;
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createEventDetailNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('eventDetail');
@@ -142,11 +157,14 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createTeamListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('teams');
         /** @var TeamModel2 $team */
-        foreach ($event->getFyziklaniTeams() as $team) {
+        foreach ($event->getTeams() as $team) {
             $teamNode = $team->createXMLNode($doc);
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
@@ -173,7 +191,7 @@ class EventWebModel extends WebModel
     {
         $teamsData = [];
         /** @var TeamModel2 $team */
-        foreach ($event->getFyziklaniTeams() as $team) {
+        foreach ($event->getTeams() as $team) {
             $teamData = [
                 'teamId' => $team->fyziklani_team_id,
                 'name' => $team->name,
@@ -194,6 +212,7 @@ class EventWebModel extends WebModel
             foreach ($team->getTeachers() as $teacher) {
                 $teamData['teachers'][] = [
                     'name' => $teacher->person->getFullName(),
+                    'personId' => $teacher->person->person_id,
                     'email' => $teacher->person->getInfo()->email,
                 ];
             }
@@ -206,6 +225,9 @@ class EventWebModel extends WebModel
         return $teamsData;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createParticipantListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('participants');
@@ -227,6 +249,9 @@ class EventWebModel extends WebModel
         return $participants;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createParticipantNode(EventParticipantModel $participant, \DOMDocument $doc): \DOMElement
     {
         $pNode = $participant->createXMLNode($doc);
@@ -234,6 +259,9 @@ class EventWebModel extends WebModel
         return $pNode;
     }
 
+    /**
+     * @throws \DOMException
+     */
     private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
     {
         $pNode = $member->createXMLNode($doc);
@@ -249,9 +277,11 @@ class EventWebModel extends WebModel
         $history = $member->getPersonHistory();
         return [
             'name' => $member->person->getFullName(),
+            'personId' => $member->person->person_id,
             'email' => $member->person->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->school->name_abbrev : null,
+            'studyYear' => $history ? $history->study_year : null,
             'countryIso' => $history ? (
             ($school = $history->school) ? $school->address->country->alpha_2 : null
             ) : null,
@@ -260,7 +290,7 @@ class EventWebModel extends WebModel
 
     /**
      * @throws BadRequestException
-     * #Array
+     * @throws \Exception
      */
     public function getJsonResponse(array $params): array
     {
@@ -275,7 +305,7 @@ class EventWebModel extends WebModel
             $data['participants'] = $this->createParticipantListArray($event);
         }
         $data['schedule'] = $this->createScheduleListArray($event);
-        $data['person_schedule'] = $this->createPersonScheduleArray($event);
+        $data['personSchedule'] = $this->createPersonScheduleArray($event);
         return $data;
     }
 

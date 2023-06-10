@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
@@ -31,9 +30,7 @@ use Nette\DI\Container;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements
-    AutocompleteJSONProvider,
-    NavigablePresenter
+abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
 {
     /**
      * BackLink for tree construction for breadcrumbs.
@@ -306,9 +303,9 @@ abstract class BasePresenter extends Presenter implements
         return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    protected function createComponentValuePrinter(): ColumnRendererComponent
     {
-        return new ColumnPrinterComponent($this->getContext());
+        return new ColumnRendererComponent($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent

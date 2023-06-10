@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Services\StudyYearService;
+use FKSDB\Models\ORM\Services\TaskCategoryService;
+use FKSDB\Models\Pipeline\Stage;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Services\StudyYearService;
-use FKSDB\Models\ORM\Services\TaskStudyYearService;
-use FKSDB\Models\Pipeline\Stage;
+use Nette\DI\Container;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -19,18 +20,23 @@ class StudyYearsFromXML extends Stage
     public const XML_ELEMENT_PARENT = 'study-years';
     public const XML_ELEMENT_CHILD = 'study-year';
 
-    /** @var array   contribution type => xml element */
-    private array $defaultStudyYears;
-    private TaskStudyYearService $taskStudyYearService;
+    private array $defaultCategories;
+    private TaskCategoryService $taskCategoryService;
     private StudyYearService $studyYearService;
 
     public function __construct(
-        array $defaultStudyYears,
-        TaskStudyYearService $taskStudyYearService,
-        StudyYearService $studyYearService
+        array $defaultCategories,
+        Container $container
     ) {
-        $this->defaultStudyYears = $defaultStudyYears;
-        $this->taskStudyYearService = $taskStudyYearService;
+        parent::__construct($container);
+        $this->defaultCategories = $defaultCategories;
+    }
+
+    public function inject(
+        TaskCategoryService $taskCategoryService,
+        StudyYearService $studyYearService
+    ): void {
+        $this->taskCategoryService = $taskCategoryService;
         $this->studyYearService = $studyYearService;
     }
 
@@ -52,7 +58,7 @@ class StudyYearsFromXML extends Stage
         $tasknr = (int)(string)$xMLTask->number;
 
         $task = $tasks[$tasknr];
-        $this->taskStudyYearService->explorer->getConnection()->beginTransaction();
+        $this->taskCategoryService->explorer->getConnection()->beginTransaction();
 
         // parse contributors
         $studyYears = [];
@@ -84,21 +90,21 @@ class StudyYearsFromXML extends Stage
                     new Message(_('Filling in default study years despite incorrect specification.'), Message::LVL_INFO)
                 );
             }
-            $studyYears = $this->defaultStudyYears[$data->getContestYear()->contest_id];
+            $categories = $this->defaultCategories[$data->getContestYear()->contest_id];
+        } else {
+            $categories = $studyYears;
         }
 
-        // delete old contributions
-        foreach ($task->getStudyYears() as $studyYear) {
-            $this->taskStudyYearService->disposeModel($studyYear);
+        foreach ($task->getCategories() as $category) {
+            $this->taskCategoryService->disposeModel($category);
         }
 
-        // store new contributions
-        foreach ($studyYears as $studyYear) {
-            $this->taskStudyYearService->storeModel([
+        foreach ($categories as $category) {
+            $this->taskCategoryService->storeModel([
                 'task_id' => $task->task_id,
-                'study_year' => $studyYear,
+                'contest_category_id' => $category,
             ]);
         }
-        $this->taskStudyYearService->explorer->getConnection()->commit();
+        $this->taskCategoryService->explorer->getConnection()->commit();
     }
 }

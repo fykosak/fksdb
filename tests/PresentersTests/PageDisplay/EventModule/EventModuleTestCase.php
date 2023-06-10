@@ -16,7 +16,7 @@ abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel($this->getEventData());
+        $this->event = $this->container->getByType(EventService::class)->storeModel($this->getEventData());
     }
 
     abstract protected function getEventData(): array;

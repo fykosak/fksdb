@@ -34,7 +34,7 @@
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
             {label $field/}
-            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class}
+            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class, 'required'=>null}
             {include metadata field => $field}
         </div>
     {/switch}
@@ -53,11 +53,14 @@
 {define radiolist}
     {varType Nette\Forms\Controls\RadioList $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        {label $field/}
+        {if !empty($field->getLabel()->getText())}
+            {label $field /}
+        {/if}
         {foreach $field->getItems() as $key => $item}
-            <div class="form-check mb-3">
+            {var $divClassName = $field->getContainerPrototype()->class ? 'mb-3'}
+            <div n:class="'form-check ' . $field->getContainerPrototype()->class">
                 {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
-                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class/}
+                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class /}
             </div>
         {/foreach}
         {include metadata field => $field}
@@ -65,9 +68,11 @@
 {/define}
 
 {define button}
-    {dump (string)$field->getControlPrototype()->getAttribute('class')}
     {varType Nette\Forms\Controls\Button $field}
-    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains((string)$field->getControlPrototype()->getAttribute('class'),'btn-')?' btn-outline-primary':''))}
+    {varType string $fieldClass}
+    {var $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
+    {var $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
+    {input $field class:('btn ' . (\Nette\Utils\Strings::contains($fieldClass,'btn-') ? $fieldClass : 'btn-outline-primary'))}
 {/define}
 
 {define buttonArray}

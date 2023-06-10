@@ -17,6 +17,8 @@ use Nette\Security\Resource;
  * @property-read int person_id
  * @property-read PersonModel person
  * @property-read \DateTimeInterface created
+ * @property-read int contest_category_id
+ * @property-read ContestCategoryModel contest_category
  */
 class ContestantModel extends Model implements Resource
 {
@@ -27,7 +29,7 @@ class ContestantModel extends Model implements Resource
         return $this->contest->getContestYear($this->year);
     }
 
-    public function getPersonHistory(): PersonHistoryModel
+    public function getPersonHistory(): ?PersonHistoryModel
     {
         return $this->person->getHistoryByContestYear($this->getContestYear());
     }
@@ -47,10 +49,15 @@ class ContestantModel extends Model implements Resource
         return $this->getSubmits()->where('task.series', $series);
     }
 
-    public function getAnswers(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
+    public function getSubmitForTask(TaskModel $task): ?SubmitModel
+    {
+        return $this->getSubmits()->where('task_id', $task->task_id)->fetch();
+    }
+
+    public function getAnswer(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
-            ->where('question_id', $question->submit_question_id)
+            ->where('submit_question_id', $question->submit_question_id)
             ->fetch();
     }
 }

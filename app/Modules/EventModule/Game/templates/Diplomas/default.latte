@@ -1,0 +1,57 @@
+{varType FKSDB\Modules\EventModule\Game\DiplomasPresenter $presenter}
+{varType array $items}
+
+{define card, $header, $opened, $closed, $link, $category, $accessibleButton, $inaccessibleButton}
+    {var $teamCategory = FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category)}
+    <div class="col">
+        <div class="card">
+            {var $cardClass = "bg-danger text-white"}
+            {if $presenter->isReadyAllToCalculate($teamCategory)}
+                {var $cardClass = "bg-secondary text-white"}
+            {/if}
+            <h5 class="card-header {$cardClass}">{$header}</h5>
+            <div class="card-body">
+                {if !is_null($opened) && !is_null($closed)}
+                    <div class="mb-3">
+                        <span class="card-text text-danger">opened: {$opened}</span>
+                        <span class="card-text text-success">closed: {$closed}</span>
+                        <span class="card-text">total: {$opened+$closed}</span>
+                    </div>
+                {/if}
+
+                {if $presenter->isReadyAllToCalculate($teamCategory)}
+                    <a class="btn btn-outline-secondary"
+                       href="{link $link category=>$category}">{$accessibleButton}</a>
+                {else}
+                    <span class="btn btn-outline-danger disabled">{$inaccessibleButton}</span>
+                {/if}
+            </div>
+        </div>
+    </div>
+{/define}
+
+{block content}
+    <h2 class=mt-3>Calculate ranking</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+        {foreach $items as $category=>$stats}
+            {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
+                "calculate!", $category, \sprintf(_('Calculate results for %s category'), $category), \sprintf(_('Category %s is not ready'), $category)}
+        {/foreach}
+
+        {include card, _('Global'), null, null,
+            "calculate!", null, _('Calculate global results'), _('Total results are not ready')}
+    </div>
+
+    <h2 class=mt-3>Data validation</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+        {foreach $items as $category=>$stats}
+            {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
+                "validate!", $category, \sprintf(_('Validate category %s'), $category), \sprintf(_('Category %s is not ready'), $category)}
+        {/foreach}
+
+        {include card, _('Global'), null, null,
+            "validate!", null, _('Validate all categories'), _('Total results are not ready')}
+    </div>
+{/block}

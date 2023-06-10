@@ -11,7 +11,6 @@ use Fykosak\NetteORM\Model;
  * Service class to high-level manipulation with ORM objects.
  * Use singleton descendant implementations.
  *
- * @deprecated
  * @use Service
  * @method Model storeModel(array $data, ?Model $model = null)
  */

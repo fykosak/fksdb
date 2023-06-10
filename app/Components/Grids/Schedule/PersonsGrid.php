@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use Nette\Application\UI\Presenter;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class PersonsGrid extends BaseGrid
+class PersonsGrid extends Grid
 {
-
     private ScheduleItemModel $item;
 
     public function __construct(Container $container, ScheduleItemModel $item)
@@ -24,20 +23,26 @@ class PersonsGrid extends BaseGrid
         $this->item = $item;
     }
 
-    protected function getData(): IDataSource
+    protected function getModels(): Selection
     {
-        return new NDataSource($this->item->getInterested());
+        return $this->item->getInterested();
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('person_schedule_id', _('#'));
+        $this->addColumn(
+            new RendererBaseItem(
+                $this->container,
+                fn(PersonScheduleModel $model) => $model->person_schedule_id,
+                new Title(null, _('#'))
+            ),
+            'person_schedule_id'
+        );
         $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
     }
 }

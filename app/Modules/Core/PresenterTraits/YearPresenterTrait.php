@@ -79,16 +79,9 @@ trait YearPresenterTrait
         }
     }
 
-    /**
-     * @throws BadRequestException
-     */
     private function selectYear(): ContestYearModel
     {
-        $candidate = $this->getSelectedContest()->getCurrentContestYear();
-        if (!$candidate) {
-            throw new BadRequestException(_('No year available'));
-        }
-        return $candidate;
+        return $this->getSelectedContest()->getCurrentContestYear();
     }
 
     protected function createComponentYearChooser(): YearChooserComponent

@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -26,9 +27,6 @@ use Nette\Utils\Strings;
  */
 class MailSender extends MailCallback
 {
-    public const BCC_PARAM = 'notifyBcc';
-    public const FROM_PARAM = 'notifyFrom';
-
     private string $templateFile;
 
     public function __construct(
@@ -65,7 +63,7 @@ class MailSender extends MailCallback
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenModel::TYPE_EVENT_NOTIFY,
+            AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY),
             $event->registration_end ?? $event->end,
             ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
@@ -78,10 +76,10 @@ class MailSender extends MailCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'blind_carbon_copy' => $holder->getParameter(self::BCC_PARAM) ?? null,
+            'blind_carbon_copy' => $holder->event->getParameter('notifyBcc') ?? null,
             'subject' => $this->getSubject($holder->event, $holder->getModel()),
-            'sender' => $holder->getParameter(self::FROM_PARAM),
-            'reply_to' => $holder->getParameter(self::FROM_PARAM),
+            'sender' => $holder->event->getParameter('notifyFrom'),
+            'reply_to' => $holder->event->getParameter('notifyFrom'),
         ];
     }
 

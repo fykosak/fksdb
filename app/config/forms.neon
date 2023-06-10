@@ -17,7 +17,7 @@ parameters:
                   required: true
                 class:
                   required: false
-            post_contact_d:
+            post_contact_p:
                 address:
                   required: true
             person_info:
@@ -43,16 +43,12 @@ parameters:
                   required: true
                 class:
                   required: false
-            post_contact_d:
+            post_contact_p:
                 address:
                   required: true
             person_info:
                 email:
                   required: true
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
                 origin:
                   required: false
                 agreed:

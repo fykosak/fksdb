@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -22,9 +21,6 @@ class TeamState extends FakeStringEnum implements EnumColumn
     public const CANCELLED = 'cancelled';
     public const INIT = 'init'; // virtual state for correct ORM
 
-    /**
-     * @throws NotImplementedException
-     */
     public function badge(): Html
     {
         $badge = '';
@@ -57,30 +53,49 @@ class TeamState extends FakeStringEnum implements EnumColumn
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
+    public function getBehaviorType(): string
+    {
+        switch ($this->value) {
+            case self::APPLIED:
+            case self::APPROVED:
+                return 'info';
+            case self::PENDING:
+                return 'warning';
+            case self::SPARE:
+                return 'primary';
+            case self::PARTICIPATED:
+                return 'success';
+            case self::MISSED:
+            case self::CANCELLED:
+            case self::INIT:
+                return 'secondary';
+            case self::DISQUALIFIED:
+                return 'danger';
+        }
+        return '';
+    }
+
     public function label(): string
     {
         switch ($this->value) {
             case self::APPLIED:
-                return _('applied');
+                return _('Applied');
             case self::PENDING:
-                return _('pending');
+                return _('Pending');
             case self::APPROVED:
-                return _('approved');
+                return _('Approved');
             case self::SPARE:
-                return _('spare');
+                return _('Spare');
             case self::PARTICIPATED:
-                return _('participated');
+                return _('Participated');
             case self::MISSED:
-                return _('missed');
+                return _('Missed');
             case self::DISQUALIFIED:
-                return _('disqualified');
+                return _('Disqualified');
             case self::CANCELLED:
-                return _('canceled');
+                return _('Canceled');
         }
-        throw new NotImplementedException();
+        return $this->value;
     }
 
     /**

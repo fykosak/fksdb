@@ -10,9 +10,12 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
 /**
@@ -68,6 +71,26 @@ class ContestantPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadRequestException
+     */
+    public function handleRecalculate(): void
+    {
+        $contestants = $this->getSelectedContestYear()->getContestants();
+        $strategy = ResultsModelFactory::findEvaluationStrategy(
+            $this->getContext(),
+            $this->getSelectedContestYear()
+        );
+        /** @var ContestantModel $contestant */
+        foreach ($contestants as $contestant) {
+            try {
+                $strategy->updateCategory($contestant);
+            } catch (InvalidArgumentException $exception) {
+                $this->flashMessage($exception->getMessage());
+            }
+        }
+    }
+
+    /**
      * @param Resource|string $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -80,6 +103,10 @@ class ContestantPresenter extends BasePresenter
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): Control
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());

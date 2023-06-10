@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
@@ -34,19 +35,19 @@ class StudyYearColumnFactory extends ColumnFactory
     private function createOptions(ContestYearModel $contestYear): array
     {
         $hsYears = [];
-        foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(
+        foreach (StudyYear::getHighSchoolCases() as $studyYear) {
+            $hsYears[$studyYear->numeric()] = sprintf(
                 _('grade %d (expected graduation in %d)'),
-                $studyYear,
+                $studyYear->numeric(),
                 $contestYear->getGraduationYear($studyYear)
             );
         }
 
         $primaryYears = [];
-        foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(
+        foreach (StudyYear::getPrimarySchoolCases() as $studyYear) {
+            $primaryYears[$studyYear->numeric()] = sprintf(
                 _('grade %d (expected graduation in %d)'),
-                $studyYear,
+                $studyYear->numeric(),
                 $contestYear->getGraduationYear($studyYear)
             );
         }
@@ -59,6 +60,6 @@ class StudyYearColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 }
