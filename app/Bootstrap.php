@@ -34,7 +34,7 @@ class Bootstrap
         $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
         // Load all .neon files in events data directory
-        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+        foreach (Finder::findFiles('*.neon')->from(__DIR__ . '/../data/events') as $filename => $file) {
             $configurator->addConfig($filename);
         }
         return $configurator;

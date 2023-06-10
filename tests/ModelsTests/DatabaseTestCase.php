@@ -50,7 +50,7 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function setUp(): void
     {
-        Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
+        Environment::lock(LOCK_DB . $this->instanceNo, __DIR__ . '/../temp/tester');
         $address = $this->container->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );
