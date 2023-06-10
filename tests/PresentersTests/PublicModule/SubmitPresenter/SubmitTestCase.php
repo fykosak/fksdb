@@ -36,7 +36,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Environment::lock(LOCK_UPLOAD, __DIR__ . '/../temp/tester');
+        Environment::lock(LOCK_UPLOAD, \FKSDB\Tests\TEMP_DIR);
         $serviceTask = $this->container->getByType(TaskService::class);
         $taskCategoryService = $this->container->getByType(TaskCategoryService::class);
         $this->taskAll = $serviceTask->storeModel([

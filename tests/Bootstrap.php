@@ -13,6 +13,7 @@ use Tracy\Debugger;
 // phpcs:disable
 @mkdir(__DIR__ . '/../temp/tester');
 @mkdir(__DIR__ . '/../temp/tester/log');
+const TEMP_DIR = __DIR__ . '/../temp/tester';
 require __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:enable
@@ -73,8 +74,3 @@ define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 define('LOCK_UPLOAD', __DIR__ . '/tmp/upload.lock');
 return $container;
 // phpcs:enable
-/* Allow PSR-4 loading in tests
- * "FKSDB\\Tests\\Events\\": "tests/Events/",
- * "FKSDB\\Tests\\MockEnvironment\\": "tests/MockEnvironment/",
- * "FKSDB\\Tests\\PresentersTests\\": "tests/PresentersTests/"
- */
