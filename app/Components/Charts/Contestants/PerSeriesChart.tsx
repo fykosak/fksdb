@@ -23,11 +23,11 @@ export default class PerSeriesChart extends React.Component<OwnProps> {
 
         const histogramData = [];
         for (const year in data) {
-            if (data.hasOwnProperty(year)) {
+            if (Object.hasOwn(data,year)) {
                 const histogramItems = [];
                 const datum = data[year];
                 for (const series in datum) {
-                    if (datum.hasOwnProperty(series)) {
+                    if (Object.hasOwn(datum,series)) {
                         histogramItems.push({
                             color: colorScale(series),
                             label: series,

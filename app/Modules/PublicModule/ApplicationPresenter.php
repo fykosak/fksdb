@@ -9,7 +9,6 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -23,7 +22,6 @@ use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -165,13 +163,7 @@ class ApplicationPresenter extends BasePresenter
             }
         }
 
-        if (
-            !$this->getMachine()
-                ->getAvailableTransitions(
-                    $this->getHolder(),
-                    $this->getHolder()->getModelState()
-                )
-        ) {
+        if (!$this->getMachine()->getAvailableTransitions($this->getHolder(), $this->getHolder()->getModelState())) {
             if (
                 $this->getHolder()->getModelState() == Machine::STATE_INIT
             ) {
@@ -211,7 +203,7 @@ class ApplicationPresenter extends BasePresenter
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+            $machine = $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
         }
         return $machine;
     }
@@ -292,9 +284,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if (
-                $this->getHolder()->getModelState() == Machine::STATE_INIT
-            ) {
+            if ($this->getHolder()->getModelState() == Machine::STATE_INIT) {
                 return;
             }
         }
@@ -315,24 +305,7 @@ class ApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplication(): ApplicationComponent
     {
-        $logger = new MemoryLogger();
-        $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
-        $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
-        $component->setRedirectCallback(
-            function ($modelId, $eventId) {
-                // $this->backLinkRedirect();
-                $this->redirect(
-                    'this',
-                    [
-                        'eventId' => $eventId,
-                        'id' => $modelId,
-                        self::PARAM_AFTER => true,
-                    ]
-                );
-            }
-        );
-        $component->setTemplate($this->eventDispatchFactory->getFormLayout($this->getEvent()));
-        return $component;
+        return new ApplicationComponent($this->getContext(), $this->getHolder());
     }
 
     /**

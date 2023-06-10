@@ -160,7 +160,7 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
         });
         const finalRows = [];
         for (const id in contests) {
-            if (contests.hasOwnProperty(id)) {
+            if (Object.hasOwn(contests,id)) {
                 this.rowNumber += 1;
                 finalRows.push(<g key={id} transform={'translate(0,' + this.getCurrentY() + ')'}>
                     {contests[id]}

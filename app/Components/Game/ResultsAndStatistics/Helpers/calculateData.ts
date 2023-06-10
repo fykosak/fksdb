@@ -30,7 +30,7 @@ export const calculate = (submits: Submits, teams: TeamModel[] = []): { [teamId:
         };
     });
     for (const index in submits) {
-        if (submits.hasOwnProperty(index)) {
+        if (Object.hasOwn(submits, index)) {
             const submit = submits[index];
             if (!submit.points) {
                 continue;
@@ -44,7 +44,7 @@ export const calculate = (submits: Submits, teams: TeamModel[] = []): { [teamId:
                 console.log('team ' + submit.teamId + ' nexistuje');
                 continue;
             }
-            if (submitsForTeams.hasOwnProperty(teamId)) {
+            if (Object.hasOwn(submitsForTeams,teamId)) {
                 submitsForTeams[teamId].submits[taskId] = submit;
                 submitsForTeams[teamId].points += +submit.points;
                 submitsForTeams[teamId].count++;

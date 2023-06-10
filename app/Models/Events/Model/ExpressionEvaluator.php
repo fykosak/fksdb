@@ -24,7 +24,7 @@ class ExpressionEvaluator
             return $condition($context);
             // return call_user_func($condition, $context);
         } else {
-            throw new InvalidArgumentException("Cannot evaluate condition $condition.");
+            throw new InvalidArgumentException(sprintf(_('Cannot evaluate condition %s.'), $condition));
         }
     }
 }

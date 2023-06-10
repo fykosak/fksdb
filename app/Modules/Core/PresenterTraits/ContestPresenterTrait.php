@@ -85,7 +85,7 @@ trait ContestPresenterTrait
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
             default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
+                throw new InvalidStateException(sprintf(_('Role %s is not supported'), $this->getRole()));
         }
     }
 

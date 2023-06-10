@@ -126,7 +126,7 @@ const reconstructTeamGame = (submits: Submits, tasks: TaskModel[], tasksOnBoard:
         });
     }
     for (const index in submits) {
-        if (submits.hasOwnProperty(index)) {
+        if (Object.hasOwn(submits,index)) {
             const submit: SubmitModel = submits[index];
             const {teamId: submitTeamId, created} = submit;
             if (teamId === submitTeamId) {

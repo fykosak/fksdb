@@ -10,7 +10,7 @@ export interface SubmitsForTeams {
 export const calculateSubmitsForTeams = (submits: Submits): SubmitsForTeams => {
     const submitsForTeams: SubmitsForTeams = {};
     for (const index in submits) {
-        if (submits.hasOwnProperty(index)) {
+        if (Object.hasOwn(submits,index)) {
             const submit = submits[index];
             const {teamId, taskId: taskId} = submit;
             submitsForTeams[teamId] = submitsForTeams[teamId] || {};

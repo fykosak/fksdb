@@ -53,7 +53,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
         const lineChartData: LineChartData<Date> = [];
 
         for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
+            if (Object.hasOwn(submits,index)) {
                 const submit: SubmitModel = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 meanPoints += (submit.points / numberOfTeams);

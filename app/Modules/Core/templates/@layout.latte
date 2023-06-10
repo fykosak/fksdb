@@ -69,19 +69,24 @@
 </nav>
 {/block}
 {block main}
-<main class="{$pageStyleContainer->getMainContainerClassName()}">
-        {*block breadcrumbs}
-            {control breadcrumbs}
-        {/block*}
+<main>
+    <div class="container">
         {block titleBody}
             <h1 class="page-header">{$pageTitle->toHtml(true)}</h1>
         {/block}
+    </div>
+    <div class="container">
         {block flashes}
             {foreach $flashes as $flash}
                 <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
-        {include content}
+    </div>
+    {block outerContent}
+        <div class="{$pageStyleContainer->getMainContainerClassName()}">
+            {include content}
+        </div>
+    {/block}
 </main>
 {/block}
 {block footer}

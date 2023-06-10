@@ -6,20 +6,14 @@ namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
-use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Components\Game\Submits\Form\CtyrbojPointsEntryComponent;
-use FKSDB\Components\Game\Submits\Form\FOFPointsEntryComponent;
-use FKSDB\Components\Game\Submits\Form\PointsEntryComponent;
+use FKSDB\Components\Game\Submits\Form\FormComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
@@ -39,48 +33,13 @@ class SubmitPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Submits'), 'fa fa-table');
+        return new PageTitle(null, _('List of submit'), 'fa fa-table');
     }
 
     public function titleEdit(): PageTitle
     {
         return new PageTitle(null, _('Change of scoring'), 'fas fa-pen');
     }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function titleDetail(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id),
-            'fas fa-search'
-        );
-    }
-
-    /* ***** Authorized methods *****/
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    final public function renderDetail(): void
-    {
-        $this->template->model = $this->getEntity();
-    }
-
-    /* ******** ACTION METHODS ********/
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -93,26 +52,6 @@ class SubmitPresenter extends BasePresenter
     {
         $this->template->model = $this->getEntity();
     }
-
-    /**
-     * @throws ClosedSubmittingException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function handleCheck(): void
-    {
-        $logger = new MemoryLogger();
-        $handler = $this->getEvent()->createGameHandler($this->getContext());
-        $handler->check($logger, $this->getEntity(), $this->getEntity()->points);
-        FlashMessageDump::dump($logger, $this);
-        $this->redirect('this');
-    }
-
-    /* ****** COMPONENTS **********/
 
     /**
      * @param Resource|string|null $resource
@@ -133,17 +72,10 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      */
-    protected function createComponentCreateForm(): PointsEntryComponent
+    protected function createComponentCreateForm(): FormComponent
     {
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return new FOFPointsEntryComponent($this->getContext(), $this->getEvent());
-            case 17:
-                return new CtyrbojPointsEntryComponent($this->getContext(), $this->getEvent());
-        }
-        throw new NotImplementedException();
+        return new FormComponent($this->getContext(), $this->getEvent());
     }
 
     /**

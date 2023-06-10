@@ -7,6 +7,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\UI\PageTitle;
 
 class ModelPresenter extends BasePresenter
@@ -28,6 +29,7 @@ class ModelPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentGraphComponent(): GraphComponent
     {

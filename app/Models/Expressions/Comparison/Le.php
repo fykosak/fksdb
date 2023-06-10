@@ -15,7 +15,6 @@ class Le extends EvaluatedExpression
     private $bValue;
 
     /**
-     * Le constructor.
      * @param callable|mixed $aValue
      * @param callable|mixed $bValue
      */

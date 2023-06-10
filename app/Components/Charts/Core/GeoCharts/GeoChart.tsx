@@ -53,7 +53,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
         const countryNodes = [];
         this.countryData.forEach((country, key) => {
             const isActive = this.state && country.id === this.state.active;
-            const count = data.hasOwnProperty(country.id) ? data[country.id].count : 0;
+            const count = Object.hasOwn(data,country.id) ? data[country.id].count : 0;
             countryNodes.push(<path
                 key={key}
                 fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}

@@ -26,10 +26,10 @@ export default class PerYearsChart extends React.Component<OwnProps> {
 
         const lineChartData: LineChartData<number> = [];
         for (const series in aggregatedSeries) {
-            if (aggregatedSeries.hasOwnProperty(series)) {
+            if (Object.hasOwn(aggregatedSeries,series)) {
                 const points: Array<ExtendedPointData<number>> = [];
                 for (const year in aggregatedSeries[series]) {
-                    if (aggregatedSeries[series].hasOwnProperty(year)) {
+                    if (Object.hasOwn(aggregatedSeries[series],year)) {
                         const label = <>
                             <Ordinal order={+year}/>{' ' + translator.getText('Year')} - {
                             getSeriesLabel(series)}: {

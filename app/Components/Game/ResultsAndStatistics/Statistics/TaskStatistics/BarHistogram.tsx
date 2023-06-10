@@ -1,13 +1,5 @@
-import {
-    axisBottom,
-    axisLeft,
-} from 'd3-axis';
-import {
-    ScaleLinear,
-    scaleLinear,
-    ScaleTime,
-    scaleTime,
-} from 'd3-scale';
+import { axisBottom, axisLeft } from 'd3-axis';
+import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
@@ -60,7 +52,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
 
         let maxPoints = 0;
         for (const key in taskTimeSubmits) {
-            if (taskTimeSubmits.hasOwnProperty(key)) {
+            if (Object.hasOwn(taskTimeSubmits, key)) {
                 const item = taskTimeSubmits[key];
                 const sum = availablePoints.reduce<number>((prev, current) => {
                     return prev + item[current];
@@ -73,7 +65,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
 
         const bars = [];
         for (const key in taskTimeSubmits) {
-            if (taskTimeSubmits.hasOwnProperty(key)) {
+            if (Object.hasOwn(taskTimeSubmits, key)) {
                 const item = taskTimeSubmits[key];
                 const ms = +key * aggregationTime;
                 const x1 = this.xScale(new Date(ms)) + 2;

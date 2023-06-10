@@ -16,8 +16,7 @@ class WriteOnlyInput extends TextInput implements WriteOnly
     use WriteOnlyTrait;
 
     /**
-     * WriteOnlyInput constructor.
-     * @param object|string $label
+     * @param object|string|null $label
      */
     public function __construct($label = null, int $maxLength = null)
     {

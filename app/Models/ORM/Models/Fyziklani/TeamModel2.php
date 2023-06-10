@@ -84,7 +84,7 @@ class TeamModel2 extends Model implements Resource
      * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(): bool
+    public function canClose(): void
     {
         if (!$this->hasOpenSubmitting()) {
             throw new AlreadyClosedException($this);
@@ -92,7 +92,11 @@ class TeamModel2 extends Model implements Resource
         if (!$this->hasAllSubmitsChecked()) {
             throw new NotCheckedSubmitsException($this);
         }
-        return true;
+    }
+
+    public function getSubmit(TaskModel $task): ?SubmitModel
+    {
+        return $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
     }
 
     /**
