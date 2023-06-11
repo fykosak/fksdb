@@ -13,7 +13,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -103,27 +102,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadRequestException
      */
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-fof navbar-dark';
-                $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-                break;
-            case 9:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-fol navbar-dark';
-                break;
-            case 17:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-ctyrboj navbar-dark';
-                $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-                break;
-            default:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-light navbar-light';
-        }
-        parent::beforeRender();
+        return 'event-type-' . $this->getEvent()->event_type_id;
     }
 
     /**

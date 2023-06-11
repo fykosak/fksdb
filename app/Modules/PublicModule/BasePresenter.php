@@ -34,15 +34,13 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return ['Public.Dashboard.default'];
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest) && $contest) {
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
+        if (isset($contest)) {
+            return 'contest-' . $contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
     protected function getDefaultSubTitle(): ?string

@@ -16,7 +16,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -250,9 +249,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         parent::beforeRender();
 
         $this->template->pageTitle = $this->getTitle();
-        $this->template->pageStyleContainer = $this->getPageStyleContainer();
         $this->template->lang = $this->getLang();
         $this->template->navRoots = $this->getNavRoots();
+        $this->template->styleId = $this->getStyleId();
     }
 
     public function getTitle(): PageTitle
@@ -277,13 +276,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return null;
     }
 
-    final protected function getPageStyleContainer(): PageStyleContainer
+    protected function getStyleId(): string
     {
-        static $pageStyleContainer;
-        if (!isset($pageStyleContainer)) {
-            $pageStyleContainer = new PageStyleContainer();
-        }
-        return $pageStyleContainer;
+        return 'default';
     }
 
     public function getLang(): string

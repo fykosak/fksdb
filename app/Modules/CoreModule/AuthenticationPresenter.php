@@ -276,9 +276,8 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'login';
-        parent::beforeRender();
+        return 'login';
     }
 }

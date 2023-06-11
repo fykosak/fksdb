@@ -200,14 +200,12 @@ class RegisterPresenter extends CoreBasePresenter
         return $contest->getContestYear($this->year);
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if ($contest) {
-            $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
-            $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
+        if (isset($contest)) {
+            return 'contest-' . $contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 }

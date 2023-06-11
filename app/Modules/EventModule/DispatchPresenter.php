@@ -31,12 +31,4 @@ class DispatchPresenter extends AuthenticatedPresenter
     {
         return new DispatchGrid($this->getContext());
     }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->styleIds[] = 'event';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
-        $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-        parent::beforeRender();
-    }
 }

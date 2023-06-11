@@ -47,6 +47,30 @@ $fyziklaniPoints1: #f45d01;
   .navigation-item {
     @include navigation-item($color);
   }
+
+  nav.navbar {
+    background-color: $color;
+
+    .navbar-brand {
+      background-repeat: no-repeat;
+      height: 2rem;
+      width: 5rem;
+      display: inline-block;
+      background-size: 5rem;
+    }
+
+    @if (contrast-ratio($color, white) < $min-contrast-ratio) {
+      @extend .navbar-light;
+      .navbar-brand {
+        background-image: url(../../www/images/logo/black.svg);
+      }
+    } @else {
+      @extend .navbar-dark;
+      .navbar-brand {
+        background-image: url(../../www/images/logo/white.svg);
+      }
+    }
+  }
   .bd-callout {
     border-left-color: $color;
 

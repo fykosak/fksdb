@@ -30,16 +30,14 @@ class QuizRegisterPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         /** @var TaskModel $task */
         $task = $this->taskService->findByPrimary($this->id);
-        if ($task) {
-            $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
-            $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-            $this->getPageStyleContainer()->styleIds[] = $task->contest->getContestSymbol();
+        if (isset($task)) {
+            return 'contest-' . $task->contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
     /**

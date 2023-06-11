@@ -24,7 +24,6 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
@@ -297,26 +296,22 @@ class ApplicationPresenter extends BasePresenter
         return new ApplicationComponent($this->getContext(), $this->getHolder());
     }
 
-    /**
-     * @throws BadRequestException
-     */
     protected function beforeRender(): void
     {
         parent::beforeRender();
-        $event = $this->getEvent();
-        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $event->event_type_id;
-        switch ($event->event_type_id) {
-            case 1:
-                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-fof';
-                break;
-            case 9:
-                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-fol';
-                break;
-            default:
-                $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' .
-                    $event->event_type->contest->getContestSymbol();
-        }
         $this->template->model = $this->getEventApplication();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function getStyleId(): string
+    {
+        $contest = $this->getSelectedContest();
+        if (isset($contest)) {
+            return 'contest-' . 'event-type-' . $this->getEvent()->event_type_id;
+        }
+        return parent::getStyleId();
     }
 
     protected function getRole(): PresenterRole

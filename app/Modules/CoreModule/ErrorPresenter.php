@@ -49,12 +49,9 @@ class ErrorPresenter extends BasePresenter
         }
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'error';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-error navbar-dark';
-        $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-        parent::beforeRender();
+        return 'error';
     }
 
     protected function putIntoBreadcrumbs(): void

@@ -91,11 +91,4 @@ class DispatchPresenter extends BasePresenter
         //         <img src="/images/contests/event.gif" alt="" class="w-100"/>
         return $results;
     }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
-        $this->getPageStyleContainer()->navBrandPath = '/images/logo/white.svg';
-        parent::beforeRender();
-    }
 }

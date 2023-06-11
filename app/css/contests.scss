@@ -2,31 +2,45 @@
 @import "mixins/navigation-item";
 @import "node_modules/bootstrap/scss/bootstrap";
 
-.navigation-item {
-  @include navigation-item(rgb(var(--bs-dark-rgb)));
+[data-style-id~="default"] {
+  @include page-theme(#212529);
 }
 
-[data-style-id~="fykos"] {
-  @include page-theme(var(--color-fykos-main));
+[data-style-id="contest-fykos"],
+[data-style-id="event-type-3"],
+[data-style-id="event-type-4"],
+[data-style-id="event-type-5"],
+[data-style-id="event-type-6"],
+[data-style-id="event-type-7"],
+[data-style-id="event-type-16"] {
+  @include page-theme($fykosColor);
 }
 
-[data-style-id~="vyfuk"] {
-  @include page-theme(var(--color-vyfuk-main));
+[data-style-id="contest-vyfuk"],
+[data-style-id="event-type-10"],
+[data-style-id="event-type-11"],
+[data-style-id="event-type-12"],
+[data-style-id="event-type-15"] {
+  @include page-theme($vyfukMainColor);
 }
 
-[data-style-id~="ctyrboj"], [data-style-id~="event-type-17"] {
+[data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
   @include page-theme($ctyrbojColor);
 }
 
-[data-style-id~="event-type-1"] {
-  @include page-theme(var(--color-fof-main));
+[data-style-id="event-type-1"] {
+  @include page-theme($fofMainColor);
 }
 
-[data-style-id~="event-type-9"] {
-  @include page-theme(var(--color-fol-main));
+[data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
+  @include page-theme(#ff7431);
 }
 
-[data-style-id~="error"] {
+[data-style-id="event-type-9"] {
+  @include page-theme($folMainColor);
+}
+
+[data-style-id="error"] {
   @include page-theme($danger);
 }
 
