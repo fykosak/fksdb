@@ -3554,6 +3554,22 @@ msgstr "Prázdný"
 msgid "Check submit"
 msgstr "Ověřit submit"
 
+#: ../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:4
+msgid "Instructions"
+msgstr "Instrukce"
+
+#: ../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:6
+msgid "Enter the task code either with or without the first two zeros."
+msgstr "Zadejte číslo úlohy s či bez první dvou nul."
+
+#: ../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:7
+msgid "If the input field is not green and points are not highlighted, the entered code is not valid."
+msgstr "Pokud není zadaný kód zelený a body nejsou zvýrazněny, je zadaný kód neplatný."
+
+#: ../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:8
+msgid "Select the number of points given."
+msgstr "Vyberte udělený počet bodů"
+
 #: ../app/Modules/ProfileModule/templates/Login.default.latte.latte2php:4
 msgid "Username for logging in to FKSDB and other systems"
 msgstr "Uživatelské jméno pro přihlášení do FKSDB a ostatních systémů"

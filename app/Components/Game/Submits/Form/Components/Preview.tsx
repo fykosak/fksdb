@@ -20,16 +20,18 @@ export default class Preview extends React.Component<OwnProps, never> {
         try {
             const team = getTeam(value, teams);
             const task = getTask(value, tasks);
-            return <>
-                {team && <>
-                    <h3>{translator.getText('Team')}</h3>
-                    <span className="text-success">{team.name}</span>
-                </>}
-                {task && <>
-                    <h3>{translator.getText('Task')}</h3>
-                    <span className="text-success">{task.name}</span>
-                </>}
-            </>;
+            return <div className='container'>
+                <div className='row row-cols-1 row-cols-sm-2'>
+                    {team && <div className='col'>
+                        <h3>{translator.getText('Team')}</h3>
+                        <span className="text-success">{team.name}</span>
+                    </div>}
+                    {task && <div className='col'>
+                        <h3>{translator.getText('Task')}</h3>
+                        <span className="text-success">{task.name}</span>
+                    </div>}
+                </div>
+            </div>;
         } catch (e) {
             return <span className="text-danger">{e.message}</span>
         }
