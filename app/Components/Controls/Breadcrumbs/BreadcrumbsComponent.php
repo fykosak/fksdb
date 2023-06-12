@@ -73,10 +73,6 @@ class BreadcrumbsComponent extends BaseComponent
         $this->presenterFactory = $presenterFactory;
     }
 
-    /*     * **********************
-     * Public API
-     * ********************** */
-
     /**
      * @throws \ReflectionException
      * @throws BadTypeException
@@ -108,10 +104,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /* ***********************
-     * Rendering
-     * ********************** */
-
     final public function render(): void
     {
         $request = $this->getPresenter()->getRequest();
@@ -127,10 +119,6 @@ class BreadcrumbsComponent extends BaseComponent
         $this->template->path = $path;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
     }
-
-    /*     * **********************
-     * Path traversal
-     * ********************** */
 
     public function getBackLinkUrl(): ?string
     {
@@ -246,10 +234,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /* ***********************
-     * Storing requests and their IDs
-     * ********************** */
-
     /**
      * @throws \ReflectionException
      */
@@ -325,10 +309,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
         return $result;
     }
-
-    /* ***********************
-     * Cache stored in session  *
-     * ********************** */
 
     protected function getRequestsSection(): SessionSection
     {

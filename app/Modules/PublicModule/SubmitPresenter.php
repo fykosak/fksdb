@@ -57,7 +57,6 @@ class SubmitPresenter extends BasePresenter
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    /* ******************* AUTH ************************/
     public function titleAjax(): PageTitle
     {
         return $this->titleDefault();
@@ -128,8 +127,6 @@ class SubmitPresenter extends BasePresenter
             ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
-
-    /* ********************** COMPONENTS **********************/
 
     /**
      * @throws TaskNotFoundException

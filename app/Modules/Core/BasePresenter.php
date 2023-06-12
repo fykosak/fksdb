@@ -48,7 +48,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     private ?PageTitle $pageTitle;
-    private bool $authorized = true;
+    protected bool $authorized = true;
     private array $authorizedCache = [];
     private Container $diContainer;
 
@@ -74,10 +74,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         $this->diContainer = $diContainer;
     }
 
-    /* *******************************
-     * IJSONProvider
-     * ****************************** */
-
     /**
      * @throws BadTypeException
      */
@@ -97,10 +93,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
             $this->sendResponse($response);
         }
     }
-
-    /* ********************************
-     * Nette extension for navigation
-     * ****************************** */
 
     public function setView(string $view): self
     {
@@ -161,7 +153,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
-                $this->authorizedCache[$key] = $testedPresenter->isAuthorized();
+                $this->authorizedCache[$key] = $testedPresenter->authorized;
             } catch (BadRequestException $exception) {
                 $this->authorizedCache[$key] = false;
             }
@@ -175,17 +167,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     public function checkRequirements($element): void
     {
         parent::checkRequirements($element);
-        $this->setAuthorized(true);
-    }
-
-    public function isAuthorized(): bool
-    {
-        return $this->authorized;
-    }
-
-    public function setAuthorized(bool $access): void
-    {
-        $this->authorized = $access;
+        $this->authorized = true;
     }
 
     /**
@@ -259,8 +241,17 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         if (!isset($this->pageTitle)) {
             try {
                 $reflection = new \ReflectionClass($this);
-                $method = $reflection->getMethod('title' . $this->getView());
-                $this->pageTitle = $method->invoke($this);
+                $reflectionMethod = $reflection->getMethod('title' . $this->getView());
+                if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
+                    throw new InvalidStateException(
+                        sprintf(
+                            'Method %s of %s should be public and not abstract.',
+                            $reflectionMethod->getName(),
+                            get_class($this)
+                        )
+                    );
+                }
+                $this->pageTitle = $reflectionMethod->invoke($this);
             } catch (\ReflectionException$exception) {
                 throw new InvalidStateException(
                     sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
@@ -295,10 +286,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     {
         return $this->diContainer;
     }
-
-    /*   * *******************************
-     * Extension of Nette ACL
-     *      * ****************************** */
 
     protected function createComponentNavigationChooser(): NavigationChooserComponent
     {

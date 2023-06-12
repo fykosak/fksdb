@@ -129,9 +129,6 @@ class PaymentPresenter extends BasePresenter
         }
         return (time() > $params['begin']->getTimestamp()) && (time() < $params['end']->getTimestamp());
     }
-
-    /* ********* actions *****************/
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -144,8 +141,6 @@ class PaymentPresenter extends BasePresenter
     {
         $this->template->model = $this->getEntity();
     }
-
-    /* ********* render *****************/
 
     /**
      * @throws EventNotFoundException

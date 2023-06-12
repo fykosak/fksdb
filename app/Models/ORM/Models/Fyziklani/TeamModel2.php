@@ -53,8 +53,6 @@ class TeamModel2 extends Model implements Resource
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
     }
 
-    /* ******************** SUBMITS ******************************* */
-
     public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');

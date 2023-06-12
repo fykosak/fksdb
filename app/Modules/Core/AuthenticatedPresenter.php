@@ -10,7 +10,6 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
@@ -49,41 +48,44 @@ abstract class AuthenticatedPresenter extends BasePresenter
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    /* Formats action method name.*/
-
     /**
-     * @param mixed $element
+     * @param \ReflectionMethod|\ReflectionClass $element
+     * @throws \ReflectionException
      */
     public function checkRequirements($element): void
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
-            //if ($this->isAuthorized()) { // check authorization
             $method = $this->formatAuthorizedMethod($this->getAction());
-            try {
-                $reflectionMethod = new \ReflectionMethod($this, $method);
-                if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
-                    throw new InvalidStateException(
-                        sprintf('Method %s of %s should return bool', $reflectionMethod->getName(), get_class($this))
-                    );
-                }
-                $this->setAuthorized($reflectionMethod->invoke($this));
-            } catch (\ReflectionException $exception) {
-                throw new InvalidStateException(
-                    sprintf('Presenter %s has not implemented method %s', get_class($this), $method)
-                );
-                /* trigger_error(
-                      sprintf('Presenter %s has not implemented method %s', get_class($this), $method),
-                      E_USER_WARNING,
-                  );*/
-            }
+            $this->authorized = $method->invoke($this);
         }
     }
 
-    public static function formatAuthorizedMethod(string $action): string
+    public function formatAuthorizedMethod(string $action): \ReflectionMethod
     {
-        return 'authorized' . $action;
+        try {
+            $method = 'authorized' . $action;
+            $reflectionMethod = new \ReflectionMethod($this, $method);
+            if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+                throw new InvalidStateException(
+                    sprintf('Method %s of %s should return bool.', $reflectionMethod->getName(), get_class($this))
+                );
+            }
+            if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
+                throw new InvalidStateException(
+                    sprintf(
+                        'Method %s of %s should be public and not abstract.',
+                        $reflectionMethod->getName(),
+                        get_class($this)
+                    )
+                );
+            }
+        } catch (\ReflectionException $exception) {
+            throw new InvalidStateException(
+                sprintf('Presenter %s has not implemented method %s.', get_class($this), $method)
+            );
+        }
+        return $reflectionMethod;
     }
 
     /**
@@ -95,18 +97,15 @@ abstract class AuthenticatedPresenter extends BasePresenter
         parent::startup();
         $methods = $this->getAllowedAuthMethods();
         if ($methods[self::AUTH_TOKEN]) {
-            // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
         }
-
         if ($methods[self::AUTH_HTTP]) {
             $this->tryHttpAuth();
         }
-        // if token did not succeed redirect to login credentials page
-        if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
+        if (!$this->getUser()->isLoggedIn() && $methods[self::AUTH_LOGIN]) {
             $this->optionalLoginRedirect();
         }
-        if (!$this->isAuthorized()) {
+        if (!$this->authorized) {
             throw new ForbiddenRequestException();
         }
     }
@@ -144,7 +143,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadRequestException
      * @throws \Exception
      */
     private function tryHttpAuth(): void
@@ -159,7 +157,9 @@ abstract class AuthenticatedPresenter extends BasePresenter
             Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
             $this->getUser()->login($login);
             $method = $this->formatAuthorizedMethod($this->getAction());
-            $this->tryCall($method, $this->getParameters());
+            if (!$method->invoke($this)) {
+                throw new ForbiddenRequestException();
+            }
         } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
         }

@@ -29,12 +29,15 @@ abstract class BasePresenter extends AuthenticatedPresenter
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    public function isAuthorized(): bool
+    /**
+     * @param mixed $element
+     */
+    public function checkRequirements($element): void
     {
+        parent::checkRequirements($element);
         if (!$this->isEnabled()) {
-            return false;
+            $this->authorized = false;
         }
-        return parent::isAuthorized();
     }
 
     /**

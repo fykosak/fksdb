@@ -30,8 +30,6 @@ trait EntityPresenterTrait
         return $this->traitIsAuthorized($this->getModelResource(), 'list');
     }
 
-    abstract public function setAuthorized(bool $access): void;
-
     /**
      * @param Resource|string|null $resource
      */
@@ -47,7 +45,6 @@ trait EntityPresenterTrait
 
     abstract protected function getORMService(): Service;
 
-    /* ****************** TITLES ***************************** */
     /**
      * @throws EventNotFoundException
      * @throws GoneException

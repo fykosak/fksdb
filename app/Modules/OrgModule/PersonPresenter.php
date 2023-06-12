@@ -49,7 +49,6 @@ class PersonPresenter extends BasePresenter
         $this->personFactory = $personFactory;
     }
 
-    /* *********** TITLE ***************/
     public function titleSearch(): PageTitle
     {
         return new PageTitle(null, _('Find person'), 'fas fa-search');

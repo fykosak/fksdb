@@ -60,7 +60,6 @@ class RegisterPresenter extends CoreBasePresenter
         $this->personService = $personService;
     }
 
-    /* ********************* TITLE ***************** */
     public function titleContest(): PageTitle
     {
         return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select contest'));
@@ -94,9 +93,6 @@ class RegisterPresenter extends CoreBasePresenter
     {
         return $this->contestId ? $this->contestService->findByPrimary($this->contestId) : null;
     }
-
-    /* ********************* ACTIONS ***************** */
-
 
     public function getSelectedYear(): ?int
     {

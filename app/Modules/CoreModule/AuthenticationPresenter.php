@@ -125,8 +125,6 @@ final class AuthenticationPresenter extends BasePresenter
         $this->redirect(':Core:Dispatch:');
     }
 
-    /*     * ******************* components ****************************** */
-
     /**
      * @throws \Exception
      */
