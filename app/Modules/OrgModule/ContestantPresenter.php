@@ -14,7 +14,6 @@ use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
@@ -98,7 +97,7 @@ class ContestantPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    protected function createComponentCreateForm(): Control
+    protected function createComponentCreateForm(): ContestantFormComponent
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
@@ -107,7 +106,7 @@ class ContestantPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ContestantFormComponent
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
