@@ -7,12 +7,12 @@ namespace FKSDB\Components\EntityForms\Warehouse;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -63,13 +63,10 @@ class ItemFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 
