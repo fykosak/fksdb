@@ -157,9 +157,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
             Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
             $this->getUser()->login($login);
             $method = $this->formatAuthorizedMethod($this->getAction());
-            if (!$method->invoke($this)) {
-                throw new ForbiddenRequestException();
-            }
+            $this->authorized = $method->invoke($this);
         } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
         }
