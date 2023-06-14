@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
@@ -17,7 +18,6 @@ use Tracy\Debugger;
 
 abstract class EntityFormComponent extends FormComponent
 {
-
     protected ?Model $model;
 
     public function __construct(Container $container, ?Model $model)
@@ -26,21 +26,19 @@ abstract class EntityFormComponent extends FormComponent
         $this->model = $model;
     }
 
+    /**
+     * @throws BadTypeException
+     */
     public function render(): void
     {
-        $this->setDefaults();
+        $this->setDefaults($this->getForm());
         parent::render();
     }
 
-    final protected function isCreating(): bool
-    {
-        return !isset($this->model);
-    }
-
-    final protected function handleSuccess(SubmitButton $button): void
+    final protected function handleSuccess(Form $form): void
     {
         try {
-            $this->handleFormSuccess($button->getForm());
+            $this->handleFormSuccess($form);
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $previous = $exception->getPrevious();
@@ -60,7 +58,7 @@ abstract class EntityFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('send', $this->isCreating() ? _('Create') : _('Save'));
+        return $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void
@@ -72,5 +70,5 @@ abstract class EntityFormComponent extends FormComponent
      */
     abstract protected function handleFormSuccess(Form $form): void;
 
-    abstract protected function setDefaults(): void;
+    abstract protected function setDefaults(Form $form): void;
 }

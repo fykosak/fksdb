@@ -49,13 +49,10 @@ class ProductFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 

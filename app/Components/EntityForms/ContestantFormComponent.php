@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -46,7 +45,7 @@ class ContestantFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
         $referencedId = $this->createPersonId(
             $this->contestYear,
-            $this->isCreating(),
+            !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminContestant']
         );
@@ -77,12 +76,9 @@ class ContestantFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([
+        $form->setDefaults([
             self::CONT_CONTESTANT => ['person_id' => $this->model->person_id],
         ]);
     }

@@ -98,11 +98,8 @@ class ChangeEmailComponent extends EntityFormComponent
         $this->getPresenter()->redirect('this');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
+        $form->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
     }
 }

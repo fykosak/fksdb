@@ -95,9 +95,8 @@ class QuizComponent extends FormComponent
      * @throws BadRequestException
      *
      */
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             // create and save contestant
