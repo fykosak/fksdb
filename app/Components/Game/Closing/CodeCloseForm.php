@@ -27,11 +27,11 @@ class CodeCloseForm extends FormComponent
         $this->handler = new Handler($this->container);
     }
 
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
         $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
-            $code = $button->getForm()->getForm()->getValues('array')['code'];
+            $code = $form->getValues('array')['code'];
             $team = $codeProcessor->getTeam($code);
             $expectedTask = $this->handler->getNextTask($team);
             try {
