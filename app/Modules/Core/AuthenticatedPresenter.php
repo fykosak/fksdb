@@ -56,15 +56,15 @@ abstract class AuthenticatedPresenter extends BasePresenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            $method = $this->formatAuthorizedMethod($this->getAction());
+            $method = $this->formatAuthorizedMethod();
             $this->authorized = $method->invoke($this);
         }
     }
 
-    public function formatAuthorizedMethod(string $action): \ReflectionMethod
+    public function formatAuthorizedMethod(): \ReflectionMethod
     {
+        $method = 'authorized' . $this->getAction();
         try {
-            $method = 'authorized' . $action;
             $reflectionMethod = new \ReflectionMethod($this, $method);
             if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
                 throw new InvalidStateException(
@@ -156,7 +156,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
 
             Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
             $this->getUser()->login($login);
-            $method = $this->formatAuthorizedMethod($this->getAction());
+            $method = $this->formatAuthorizedMethod();
             $this->authorized = $method->invoke($this);
         } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
