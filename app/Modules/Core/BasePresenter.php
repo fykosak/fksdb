@@ -162,15 +162,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     }
 
     /**
-     * @param mixed $element
-     */
-    public function checkRequirements($element): void
-    {
-        parent::checkRequirements($element);
-        $this->authorized = true;
-    }
-
-    /**
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void

@@ -28,7 +28,7 @@ class DispatchPresenter extends BasePresenter
         /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         $person = $this->getLoggedPerson();
-        $this->template->contestants = $person ? $this->getAllContestants($person) : [];
+        $this->template->contestants = $this->getAllContestants($person);
         $this->template->orgs = $this->getAllOrganisers($login);
     }
 
@@ -42,7 +42,7 @@ class DispatchPresenter extends BasePresenter
         );
         $result[] = new NavItem(
             new Title(null, _('My applications'), 'fas fa-calendar-days'),
-            ':Core:MyApplications:default'
+            ':Profile:MyApplications:default'
         );
         $result[] = new NavItem(
             new Title(null, _('My Profile'), 'fas fa-user'),

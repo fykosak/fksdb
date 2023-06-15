@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Service;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -32,7 +33,7 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
-     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

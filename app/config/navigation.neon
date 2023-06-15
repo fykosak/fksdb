@@ -101,8 +101,8 @@ navigation:
             Warehouse.Product.list: []
             Warehouse.Item.list: []
         Profile.Dashboard.default:
-            Core.MyApplications.default: []
-            Core.MyPayments.default: []
+            Profile.MyApplications.default: []
+            Profile.MyPayments.default: []
             Profile.Email.default: []
             Profile.PostContact.default: []
             Profile.Lang.default: []

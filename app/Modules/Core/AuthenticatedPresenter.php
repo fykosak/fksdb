@@ -26,11 +26,6 @@ use Tracy\Debugger;
  */
 abstract class AuthenticatedPresenter extends BasePresenter
 {
-
-    public const AUTH_LOGIN = 'login';
-    public const AUTH_HTTP = 'http';
-    public const AUTH_TOKEN = 'token';
-
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
@@ -51,13 +46,26 @@ abstract class AuthenticatedPresenter extends BasePresenter
     /**
      * @param \ReflectionMethod|\ReflectionClass $element
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function checkRequirements($element): void
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::TOKEN))) {
+                $this->tryAuthToken();
+            }
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::HTTP))) {
+                $this->tryHttpAuth();
+            }
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::LOGIN))) {
+                $this->optionalLoginRedirect();
+            }
             $method = $this->formatAuthorizedMethod();
             $this->authorized = $method->invoke($this);
+            if (!$this->authorized) {
+                throw new ForbiddenRequestException();
+            }
         }
     }
 
@@ -88,35 +96,17 @@ abstract class AuthenticatedPresenter extends BasePresenter
         return $reflectionMethod;
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     * @throws \Exception
-     */
-    protected function startup(): void
+    public function isAuthAllowed(AuthMethod $authMethod): bool
     {
-        parent::startup();
-        $methods = $this->getAllowedAuthMethods();
-        if ($methods[self::AUTH_TOKEN]) {
-            $this->tryAuthToken();
+        switch ($authMethod->value) {
+            case AuthMethod::LOGIN:
+            case AuthMethod::TOKEN:
+                // TODO definovať kam sa dá prihlásiť tokenom!!!
+                return true;
+            case AuthMethod::HTTP:
+                return false;
         }
-        if ($methods[self::AUTH_HTTP]) {
-            $this->tryHttpAuth();
-        }
-        if (!$this->getUser()->isLoggedIn() && $methods[self::AUTH_LOGIN]) {
-            $this->optionalLoginRedirect();
-        }
-        if (!$this->authorized) {
-            throw new ForbiddenRequestException();
-        }
-    }
-
-    public function getAllowedAuthMethods(): array
-    {
-        return [
-            self::AUTH_HTTP => false,
-            self::AUTH_LOGIN => true,
-            self::AUTH_TOKEN => true,
-        ];
+        return false;
     }
 
     /**
@@ -134,7 +124,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'token-login');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
-
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {
@@ -153,7 +142,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
         }
         try {
             $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-
             Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
             $this->getUser()->login($login);
             $method = $this->formatAuthorizedMethod();

@@ -12,9 +12,8 @@ use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Authorizator;
 
 class InboxPresenter extends BasePresenter
@@ -74,8 +73,7 @@ class InboxPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

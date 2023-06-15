@@ -11,6 +11,7 @@ use FKSDB\Components\Charts\TotalPersonsChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -33,6 +34,7 @@ class ChartPresenter extends BasePresenter
      * @throws BadTypeException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

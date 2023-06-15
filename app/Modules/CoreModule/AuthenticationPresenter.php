@@ -68,21 +68,11 @@ final class AuthenticationPresenter extends BasePresenter
      */
     public function actionLogout(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
         }
         $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
         $this->redirect('login');
-    }
-
-    /**
-     * This workaround is here because LoginUser storage
-     * returns false when only global login exists.
-     * False is return in order to AuthenticatedPresenter to correctly login the user.
-     */
-    private function isLoggedIn(): bool
-    {
-        return $this->getUser()->isLoggedIn();
     }
 
     /**
@@ -91,7 +81,7 @@ final class AuthenticationPresenter extends BasePresenter
      */
     public function actionLogin(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->initialRedirect();
         } else {
             if ($this->getParameter(self::PARAM_REASON)) {
@@ -130,7 +120,7 @@ final class AuthenticationPresenter extends BasePresenter
      */
     public function actionRecover(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->initialRedirect();
         }
     }

@@ -13,6 +13,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -31,6 +32,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param mixed $element
+     * @throws \ReflectionException
      */
     public function checkRequirements($element): void
     {
@@ -52,7 +54,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @throws NotImplementedException
-     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

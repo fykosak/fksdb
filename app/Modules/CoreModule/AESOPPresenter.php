@@ -9,6 +9,7 @@ use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthMethod;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
@@ -52,13 +53,16 @@ class AESOPPresenter extends AuthenticatedPresenter
         $this->sendResponse($model->createResponse());
     }
 
-    public function getAllowedAuthMethods(): array
+    public function isAuthAllowed(AuthMethod $authMethod): bool
     {
-        return [
-            self::AUTH_HTTP => true,
-            self::AUTH_LOGIN => true,
-            self::AUTH_TOKEN => true,
-        ];
+        switch ($authMethod->value) {
+            case AuthMethod::LOGIN:
+            case AuthMethod::HTTP:
+                return true;
+            case AuthMethod::TOKEN:
+                return false;
+        }
+        return false;
     }
 
     protected function getHttpRealm(): ?string

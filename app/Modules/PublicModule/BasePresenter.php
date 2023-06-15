@@ -8,6 +8,9 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 abstract class BasePresenter extends AuthenticatedPresenter
 {
@@ -23,6 +26,11 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return $this->contestant;
     }
 
+    /**
+     * @throws UnsupportedLanguageException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();

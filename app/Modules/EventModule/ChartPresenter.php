@@ -16,6 +16,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -46,6 +47,7 @@ class ChartPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

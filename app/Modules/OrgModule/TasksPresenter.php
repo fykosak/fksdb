@@ -14,6 +14,7 @@ use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -76,8 +77,7 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

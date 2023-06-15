@@ -218,7 +218,7 @@ class ApplicationPresenter extends BasePresenter
                 $this->forward('default', $this->getParameters());
                 break;
             case 'list':
-                $this->forward(':Core:MyApplications:default', $this->getParameters());
+                $this->forward(':Profile:MyApplications:default', $this->getParameters());
                 break;
             case 'default':
                 if (!isset($this->contestId)) {
