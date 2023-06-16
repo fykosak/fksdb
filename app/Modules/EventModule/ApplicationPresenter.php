@@ -11,12 +11,14 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 
 class ApplicationPresenter extends AbstractApplicationPresenter
 {
@@ -106,5 +108,21 @@ class ApplicationPresenter extends AbstractApplicationPresenter
             EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
         );
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentCreateForm(): Control
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        throw new NotImplementedException();
     }
 }

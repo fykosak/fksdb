@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -18,9 +17,6 @@ class FastEditComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'edit.latte');
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->container);

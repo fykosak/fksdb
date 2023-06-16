@@ -8,7 +8,6 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;

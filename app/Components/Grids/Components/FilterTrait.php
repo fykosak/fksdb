@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -21,9 +20,6 @@ trait FilterTrait
         $this->template->filterParams = $this->filterParams;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final protected function createComponentFilterForm(): FormControl
     {
         $control = new FormControl($this->getContext());

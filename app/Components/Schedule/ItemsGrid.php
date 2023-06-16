@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Schedule;
+namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;

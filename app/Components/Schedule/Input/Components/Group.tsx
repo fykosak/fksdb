@@ -1,4 +1,4 @@
-import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import { Params } from 'FKSDB/Components/Schedule/Input/ScheduleField';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import TimeDisplay from 'FKSDB/Models/ValuePrinters/DatePrinter';
 import DateDisplay from 'FKSDB/Models/ValuePrinters/DatePrinter';

@@ -7,7 +7,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -190,9 +189,6 @@ class DeduplicatePresenter extends BasePresenter
         return new DuplicateFinder($this->personService, $this->getContext());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentMergeForm(): FormControl
     {
         $control = new FormControl($this->getContext());

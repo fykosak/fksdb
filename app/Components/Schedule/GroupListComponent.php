@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Schedule;
+namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
@@ -104,6 +104,14 @@ class GroupListComponent extends ListComponent
             ),
             'detail'
         );
+        $itemsRow->addButton(
+            new PresenterButton(
+                $this->container,
+                new Title(null, _('Attendance')),
+                fn(ScheduleItemModel $model) => [':Schedule:Item:attendance', ['id' => $model->getPrimary()]]
+            ),
+            'attendance'
+        );
         $this->addButton(
             new PresenterButton(
                 $this->container,
@@ -119,6 +127,14 @@ class GroupListComponent extends ListComponent
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:edit', ['id' => $model->getPrimary()]]
             ),
             'edit'
+        );
+        $this->addButton(
+            new PresenterButton(
+                $this->container,
+                new Title(null, _('Attendance')),
+                fn(ScheduleGroupModel $model) => [':Schedule:Group:attendance', ['id' => $model->getPrimary()]]
+            ),
+            'attendance'
         );
     }
 }

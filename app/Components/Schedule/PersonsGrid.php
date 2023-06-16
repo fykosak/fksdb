@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Schedule;
+namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
@@ -43,6 +43,6 @@ class PersonsGrid extends Grid
             ),
             'person_schedule_id'
         );
-        $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
+        $this->addColumns(['person.full_name', 'event.role', 'payment.payment', 'person_schedule.state']);
     }
 }

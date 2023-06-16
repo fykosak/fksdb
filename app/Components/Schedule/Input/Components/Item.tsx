@@ -1,5 +1,5 @@
 import { translator } from '@translator/translator';
-import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import { Params } from 'FKSDB/Components/Schedule/Input/ScheduleField';
 import { changeData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';

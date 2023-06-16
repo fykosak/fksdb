@@ -6,7 +6,6 @@ namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\Form;
@@ -26,9 +25,6 @@ class CorrectedComponent extends SeriesTableComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());

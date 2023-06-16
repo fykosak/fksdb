@@ -20,16 +20,25 @@ class AuthTokenType extends FakeStringEnum implements EnumColumn
     /** @deprecated */
     public const SSO = 'sso';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function getBehaviorType(): string
     {
         throw new NotImplementedException();

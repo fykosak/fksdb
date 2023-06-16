@@ -8,13 +8,11 @@ use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Transition\FastTransitionComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Schedule\PersonGrid;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
@@ -24,7 +22,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 abstract class AbstractApplicationPresenter extends BasePresenter
@@ -175,22 +172,4 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     abstract protected function createComponentFastTransition(): FastTransitionComponent;
-
-    abstract protected function createComponentGrid(): Grid;
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
 }

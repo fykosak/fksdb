@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
+use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -20,9 +19,9 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
-use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Models\Submits\SubmitNotQuizException;
+use FKSDB\Models\Submits\TaskNotFoundException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
@@ -167,9 +166,6 @@ class SubmitPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentUploadForm(): FormControl
     {
         $control = new FormControl($this->getContext());

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
-use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Components\Schedule\Input\Handler;
+use FKSDB\Components\Schedule\Input\ScheduleException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;

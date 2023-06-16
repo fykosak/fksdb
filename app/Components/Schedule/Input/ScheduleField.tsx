@@ -1,12 +1,12 @@
 import { translator } from '@translator/translator';
-import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
+import { app } from 'FKSDB/Components/Schedule/Input/reducer';
 import InputConnector2 from './InputConnector2';
 import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { mapRegisterCallback } from 'vendor/fykosak/nette-frontend-component/src/Loader/HashMapLoader';
-import Group from 'FKSDB/Components/Forms/Controls/Schedule/Components/Group';
+import Group from 'FKSDB/Components/Schedule/Input/Components/Group';
 
 interface OwnProps {
     scheduleDef: {

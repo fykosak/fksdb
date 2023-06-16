@@ -14,7 +14,7 @@ import ResultsTable from './Components/Game/ResultsAndStatistics/Table/Main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
 import MainComponent from './Components/Game/Submits/Form/MainComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
-import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
+import { eventSchedule } from './Components/Schedule/Input/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
 

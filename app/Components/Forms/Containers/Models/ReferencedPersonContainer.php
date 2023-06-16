@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;

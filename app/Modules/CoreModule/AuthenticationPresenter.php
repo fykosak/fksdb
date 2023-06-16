@@ -86,7 +86,6 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws \Exception
      */
     public function actionLogin(): void

@@ -18,8 +18,12 @@
             <span class="col-10">{control valuePrinter:templateString $column,$group,1024}</span>
         </div>
     {/foreach}
-    <a class="btn btn-outline-primary btn-sm"
-       href="{plink :Schedule:Group:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
-    <a class="btn btn-outline-primary btn-sm"
-       href="{plink :Schedule:Group:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary btn-sm"
+           href="{plink :Schedule:Group:detail id=>$group->getPrimary()}">{_('Detail of group')}</a>
+        <a class="btn btn-outline-secondary btn-sm"
+           href="{plink :Schedule:Group:edit id=>$group->getPrimary()}">{_('Edit group')}</a>
+        <a class="btn btn-outline-secondary btn-sm"
+           href="{plink :Schedule:Group:attendance id=>$group->getPrimary()}">{_('Attendance for group')}</a>
+    </div>
 </div>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Schedule\Rests;
+namespace FKSDB\Components\Schedule\Rests;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -13,11 +13,11 @@ class TeamRestsComponent extends BaseComponent
     {
         $this->template->event = $team->event;
         $this->template->persons = $team->getPersons();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.team.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'team.latte');
     }
 
-    protected function createComponentSingleRestControl(): SingleRestComponent
+    protected function createComponentSingleRestControl(): PersonRestComponent
     {
-        return new SingleRestComponent($this->getContext());
+        return new PersonRestComponent($this->getContext());
     }
 }
