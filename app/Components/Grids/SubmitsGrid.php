@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
@@ -38,7 +38,7 @@ class SubmitsGrid extends Grid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
     }

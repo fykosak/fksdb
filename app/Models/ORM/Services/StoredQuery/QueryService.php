@@ -15,7 +15,7 @@ class QueryService extends Service
         return $this->getTable()->where('qid', $qid)->fetch();
     }
 
-    public function findByTagType(array $tagTypeIds): ?TypedSelection
+    public function findByTagType(array $tagTypeIds): TypedSelection
     {
         return $this->getTable()->where(':stored_query_tag.tag_type_id', $tagTypeIds);
     }

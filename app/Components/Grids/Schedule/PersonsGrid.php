@@ -9,8 +9,8 @@ use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PersonsGrid extends Grid
@@ -23,7 +23,7 @@ class PersonsGrid extends Grid
         $this->item = $item;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->item->getInterested();
     }

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Game;
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 class TaskGrid extends Grid
@@ -20,7 +20,7 @@ class TaskGrid extends Grid
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getTasks();
     }

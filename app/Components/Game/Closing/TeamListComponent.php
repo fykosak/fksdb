@@ -13,8 +13,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -28,7 +28,7 @@ class TeamListComponent extends FilterList
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPossiblyAttendingTeams()->order('points');
         foreach ($this->filterParams as $key => $condition) {

@@ -15,8 +15,8 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PerPersonScheduleList extends ListComponent
@@ -35,7 +35,7 @@ class PerPersonScheduleList extends ListComponent
         $this->personService = $personService;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->personService->getTable()->where(
             ':person_schedule.schedule_item.schedule_group.event_id',

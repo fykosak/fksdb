@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Events;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 class DispatchGrid extends EntityGrid
@@ -28,7 +28,7 @@ class DispatchGrid extends EntityGrid
         );
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $value = parent::getModels();
         $value->order('begin DESC');

@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -34,7 +34,7 @@ class QuizAnswersGrid extends Grid
         parent::__construct($container);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->submit->task->getQuestions()->order('label');
     }

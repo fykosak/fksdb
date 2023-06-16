@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -22,7 +22,7 @@ class TeamApplicationsGrid extends FilterGrid
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
         if (!isset($this->filterParams)) {
