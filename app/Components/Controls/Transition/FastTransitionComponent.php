@@ -39,7 +39,6 @@ class FastTransitionComponent extends TransitionComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function render(): void

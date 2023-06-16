@@ -40,17 +40,16 @@ class ProductPresenter extends BasePresenter
         $this->productService = $productService;
     }
 
-    protected function createComponentCreateForm(): Control
+    protected function createComponentCreateForm(): ProductFormComponent
     {
         return new ProductFormComponent($this->getContext(), null);
     }
 
     /**
-     * @return Control
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ProductFormComponent
     {
         return new ProductFormComponent($this->getContext(), $this->getEntity());
     }
