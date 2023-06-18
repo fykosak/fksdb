@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -19,7 +20,7 @@ use Nette\Forms\Form;
 
 abstract class AttendanceFormComponent extends FormComponent
 {
-    protected PersonService $personService;
+    private PersonService $personService;
     private PersonScheduleService $personScheduleService;
 
     public function inject(PersonService $personService, PersonScheduleService $personScheduleService): void
@@ -36,7 +37,7 @@ abstract class AttendanceFormComponent extends FormComponent
         try {
             $values = $form->getValues('array');
             $code = AttendanceCode::checkCode($this->container, $values['code']);
-            $person = $this->personService->findByPrimary($code);
+            $person = $this->personService->findByPrimary(+$code);
             if (!$person) {
                 throw new BadRequestException(_('Person not found'));
             }
@@ -51,7 +52,7 @@ abstract class AttendanceFormComponent extends FormComponent
             ) {
                 throw new BadRequestException(_('Payment not found'));
             }
-            if ($personSchedule->state === 'participated') {
+            if ($personSchedule->state->value === PersonScheduleState::PARTICIPATED) { // TODO
                 throw new BadRequestException(_('Already participated'));
             }
             if ($values['only_check']) {
@@ -60,7 +61,7 @@ abstract class AttendanceFormComponent extends FormComponent
                     Message::LVL_INFO
                 );
             } else {
-                $this->personScheduleService->storeModel(['state' => 'participated'], $personSchedule);
+                $this->personScheduleService->makeAttendance($personSchedule);
                 $this->getPresenter()->flashMessage(
                     sprintf(
                         _('Person %s successfully showed up in %s.'),

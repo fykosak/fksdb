@@ -1287,10 +1287,10 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT                                             NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT                                             NOT NULL,
-    `schedule_item_id`   INT                                             NOT NULL,
-    `state`              ENUM ('applied','participated','missed') NOT NULL DEFAULT 'applied',
+    `person_schedule_id` INT                            NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT                            NOT NULL,
+    `schedule_item_id`   INT                            NOT NULL,
+    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
     INDEX `idx_person_schedule__item` (`schedule_item_id` ASC),
     INDEX `idx_person_schedule__person` (`person_id` ASC),
     CONSTRAINT `fk_person_schedule__schedule_item`
