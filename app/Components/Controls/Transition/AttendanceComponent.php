@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transition;
 
-use FKSDB\Components\Controls\Events\AttendanceCode;
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\CodeProcessing\CodeFormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
@@ -16,12 +15,13 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class FastTransitionComponent extends TransitionComponent
+class AttendanceComponent extends CodeFormComponent
 {
+    use TransitionComponent;
+
     /** @var EnumColumn&FakeStringEnum */
     private FakeStringEnum $fromState;
     /** @var EnumColumn&FakeStringEnum */
@@ -33,44 +33,37 @@ class FastTransitionComponent extends TransitionComponent
         FakeStringEnum $fromState,
         FakeStringEnum $toState
     ) {
-        parent::__construct($container, $event);
+        parent::__construct($container);
         $this->fromState = $fromState;
         $this->toState = $toState;
+        $this->event = $event;
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function render(): void
     {
         $this->template->transition = $this->getTransition();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'fast.latte');
+        parent::render();
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'attendance.latte';
     }
 
     /**
      * @throws BadTypeException
      */
-    public function createComponentForm(): FormControl
+    private function getTransition(): Transition
     {
-        $control = new FormControl($this->container);
-        $form = $control->getForm();
-        $form->addText('code', _('Application Id'));
-        $form->addCheckbox('bypass', _('Bypass checksum'));
-        $form->addSubmit('submit', $this->getTransition()->label());
-        $form->onSuccess[] = fn(Form $form) => $this->handleSave($form);
-        return $control;
+        return $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
     }
 
-    public function handleSave(Form $form): void
+    protected function innerHandleSuccess(string $id, Form $form): void
     {
         try {
-            $values = $form->getValues('array');
-            if ($values['bypass']) {
-                $id = +$values['code'];
-            } else {
-                $id = AttendanceCode::checkCode($this->container, $values['code']);
-            }
             $machine = $this->getMachine();
             if ($this->event->isTeamEvent()) {
                 $model = $this->event->getTeams()->where('fyziklani_team_id', $id)->fetch();
@@ -96,7 +89,7 @@ class FastTransitionComponent extends TransitionComponent
             }
         } catch (NotFoundException $exception) {
             $this->getPresenter()->flashMessage(_('Application not found'), Message::LVL_ERROR);
-        } catch (UnavailableTransitionsException | ForbiddenRequestException $exception) {
+        } catch (UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
             $this->getPresenter()->flashMessage(_('Error'), Message::LVL_ERROR);
@@ -104,11 +97,15 @@ class FastTransitionComponent extends TransitionComponent
         $this->getPresenter()->redirect('this');
     }
 
+    protected function innerConfigureForm(Form $form): void
+    {
+    }
+
     /**
      * @throws BadTypeException
      */
-    private function getTransition(): Transition
+    protected function appendSubmitButton(Form $form): void
     {
-        return $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
+        $form->addSubmit('submit', $this->getTransition()->label());
     }
 }

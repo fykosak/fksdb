@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\PersonGrid;
@@ -171,5 +171,5 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
-    abstract protected function createComponentFastTransition(): FastTransitionComponent;
+    abstract protected function createComponentFastTransition(): AttendanceComponent;
 }

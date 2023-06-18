@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Attendance;
 
-use FKSDB\Components\Controls\Events\AttendanceCode;
-use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Components\CodeProcessing\CodeFormComponent;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -15,10 +14,9 @@ use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
-abstract class AttendanceFormComponent extends FormComponent
+abstract class AttendanceFormComponent extends CodeFormComponent
 {
     private PersonService $personService;
     private PersonScheduleService $personScheduleService;
@@ -32,12 +30,10 @@ abstract class AttendanceFormComponent extends FormComponent
     /**
      * @throws \Exception
      */
-    protected function handleSuccess(Form $form): void
+    protected function innerHandleSuccess(string $id, Form $form): void
     {
         try {
-            $values = $form->getValues('array');
-            $code = AttendanceCode::checkCode($this->container, $values['code']);
-            $person = $this->personService->findByPrimary(+$code);
+            $person = $this->personService->findByPrimary(+$id);
             if (!$person) {
                 throw new BadRequestException(_('Person not found'));
             }
@@ -55,6 +51,7 @@ abstract class AttendanceFormComponent extends FormComponent
             if ($personSchedule->state->value === PersonScheduleState::PARTICIPATED) { // TODO
                 throw new BadRequestException(_('Already participated'));
             }
+            $values = $form->getValues('array');
             if ($values['only_check']) {
                 $this->getPresenter()->flashMessage(
                     sprintf(_('Person %s applied in %s.'), $person->getFullName(), $personSchedule->getLabel('cs')),
@@ -72,7 +69,7 @@ abstract class AttendanceFormComponent extends FormComponent
                 );
             }
             $this->getPresenter()->redirect('this');
-        } catch (BadRequestException | ModelException | ForbiddenRequestException$exception) {
+        } catch (BadRequestException | ModelException$exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
@@ -85,9 +82,8 @@ abstract class AttendanceFormComponent extends FormComponent
 
     abstract protected function getPersonSchedule(PersonModel $person): ?PersonScheduleModel;
 
-    protected function configureForm(Form $form): void
+    protected function innerConfigureForm(Form $form): void
     {
-        $form->addText('code', _('Code'));
         $form->addCheckbox('only_check', _('Only check state'));
     }
 }

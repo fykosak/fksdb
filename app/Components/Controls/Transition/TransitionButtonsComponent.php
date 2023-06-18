@@ -9,18 +9,22 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
-class TransitionButtonsComponent extends TransitionComponent
+class TransitionButtonsComponent extends BaseComponent
 {
+    use TransitionComponent;
+
     private ModelHolder $holder;
 
     public function __construct(Container $container, EventModel $event, ModelHolder $holder)
     {
-        parent::__construct($container, $event);
+        parent::__construct($container);
         $this->holder = $holder;
+        $this->event = $event;
     }
 
     /**

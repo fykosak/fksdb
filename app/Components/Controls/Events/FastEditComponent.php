@@ -4,42 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\Message;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\Components\CodeProcessing\CodeFormComponent;
 use Nette\Forms\Form;
 
-class FastEditComponent extends BaseComponent
+class FastEditComponent extends CodeFormComponent
 {
-    final public function render(): void
+    final public function getTemplatePath(): string
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'edit.latte');
+        return __DIR__ . DIRECTORY_SEPARATOR . 'edit.latte';
     }
 
-    protected function createComponentForm(): FormControl
+    protected function innerHandleSuccess(string $id, Form $form): void
     {
-        $control = new FormControl($this->container);
-        $form = $control->getForm();
-        $form->elementPrototype->target('_blank');
-        $form->addText('code', _('Team Id'));
-        $form->addCheckbox('bypass', _('Bypass checksum'));
-        $form->addSubmit('edit', _('Edit'));
+        $this->getPresenter()->redirect('edit', ['id' => $id]);
+    }
 
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues('array');
-            try {
-                if ($values['bypass']) {
-                    $id = +$values['code'];
-                } else {
-                    $id = AttendanceCode::checkCode($this->container, $values['code']);
-                }
-            } catch (ForbiddenRequestException$exception) {
-                $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-                $this->getPresenter()->redirect('this');
-            }
-            $this->getPresenter()->redirect('edit', ['id' => $id]);
-        };
-        return $control;
+    protected function innerConfigureForm(Form $form): void
+    {
+        $form->elementPrototype->target('_blank');
+    }
+
+    protected function appendSubmitButton(Form $form): void
+    {
+        $form->addSubmit('edit', _('Edit'));
     }
 }

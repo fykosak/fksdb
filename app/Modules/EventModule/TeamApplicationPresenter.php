@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\FastEditComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -245,9 +245,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentFastTransition(): FastTransitionComponent
+    protected function createComponentFastTransition(): AttendanceComponent
     {
-        return new FastTransitionComponent(
+        return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
             TeamState::tryFrom(TeamState::APPROVED),

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events;
+namespace FKSDB\Components\CodeProcessing;
 
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
-class AttendanceCode
+class CodeValidator
 {
     /**
      * @throws ForbiddenRequestException

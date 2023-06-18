@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -100,9 +100,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentFastTransition(): FastTransitionComponent
+    protected function createComponentFastTransition(): AttendanceComponent
     {
-        return new FastTransitionComponent(
+        return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
