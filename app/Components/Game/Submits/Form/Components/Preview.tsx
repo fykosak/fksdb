@@ -1,8 +1,8 @@
-import { getTask, getTeam } from '../middleware';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { TranslatorContext } from '@translator/LangContext';
+import TaskCodePreprocessor from 'FKSDB/Components/Game/Submits/TaskCodePreprocessor';
 
 interface OwnProps {
     code: string;
@@ -20,8 +20,9 @@ export default class Preview extends React.Component<OwnProps, never> {
             return null;
         }
         try {
-            const team = getTeam(value, teams);
-            const task = getTask(value, tasks);
+            const preprocessor = new TaskCodePreprocessor(teams, tasks);
+            const team = preprocessor.getTeam(value);
+            const task = preprocessor.getTask(value);
             return <div className='container'>
                 <div className='row row-cols-1 row-cols-sm-2'>
                     {team && <div className='col'>
