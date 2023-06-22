@@ -13,31 +13,31 @@ use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
 
 /**
- * @property-read PersonModel person
- * @property-read int event_participant_id
- * @property-read int event_id
- * @property-read EventModel event
- * @property-read int person_id
- * @property-read string note poznámka
- * @property-read EventParticipantStatus status
- * @property-read \DateTimeInterface created čas vytvoření přihlášky
- * @property-read int accomodation
- * @property-read string diet speciální stravování
- * @property-read string health_restrictions alergie, léky, úrazy
- * @property-read string tshirt_size
- * @property-read string tshirt_color
- * @property-read string jumper_size
- * @property-read float price DECIMAL(6,2) vypočtená cena
- * @property-read \DateInterval arrival_time Čas příjezdu
- * @property-read string arrival_destination Místo prijezdu
- * @property-read int arrival_ticket společný lístek na cestu tam
- * @property-read \DateInterval departure_time Čas odjezdu
- * @property-read string departure_destination Místo odjezdu
- * @property-read int departure_ticket společný lístek na cestu zpět
- * @property-read int swimmer plavec?
- * @property-read string used_drugs užívané léky
- * @property-read string schedule
- * @property-read int lunch_count
+ * @property-read PersonModel $person
+ * @property-read int $event_participant_id
+ * @property-read int $event_id
+ * @property-read EventModel $event
+ * @property-read int $person_id
+ * @property-read string $note poznámka
+ * @property-read EventParticipantStatus $status
+ * @property-read \DateTimeInterface $created čas vytvoření přihlášky
+ * @property-read int $accomodation
+ * @property-read string $diet speciální stravování
+ * @property-read string $health_restrictions alergie, léky, úrazy
+ * @property-read string $tshirt_size
+ * @property-read string $tshirt_color
+ * @property-read string $jumper_size
+ * @property-read float $price DECIMAL(6,2) vypočtená cena
+ * @property-read \DateInterval $arrival_time Čas příjezdu
+ * @property-read string $arrival_destination Místo prijezdu
+ * @property-read int $arrival_ticket společný lístek na cestu tam
+ * @property-read \DateInterval $departure_time Čas odjezdu
+ * @property-read string $departure_destination Místo odjezdu
+ * @property-read int $departure_ticket společný lístek na cestu zpět
+ * @property-read int $swimmer plavec?
+ * @property-read string $used_drugs užívané léky
+ * @property-read string $schedule
+ * @property-read int $lunch_count
  */
 class EventParticipantModel extends Model implements Resource, NodeCreator
 {

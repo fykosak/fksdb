@@ -22,18 +22,18 @@ use Nette\Schema\Processor;
 use Nette\Security\Resource;
 
 /**
- * @property-read int event_year
- * @property-read int year
- * @property-read string name
- * @property-read int event_id
- * @property-read string report
- * @property-read EventTypeModel event_type
- * @property-read int event_type_id
- * @property-read \DateTimeInterface begin
- * @property-read \DateTimeInterface end
- * @property-read \DateTimeInterface|null registration_begin
- * @property-read \DateTimeInterface|null registration_end
- * @property-read string parameters
+ * @property-read int $event_year
+ * @property-read int $year
+ * @property-read string $name
+ * @property-read int $event_id
+ * @property-read string $report
+ * @property-read EventTypeModel $event_type
+ * @property-read int $event_type_id
+ * @property-read \DateTimeInterface $begin
+ * @property-read \DateTimeInterface $end
+ * @property-read \DateTimeInterface|null $registration_begin
+ * @property-read \DateTimeInterface|null $registration_end
+ * @property-read string $parameters
  */
 class EventModel extends Model implements Resource, NodeCreator
 {

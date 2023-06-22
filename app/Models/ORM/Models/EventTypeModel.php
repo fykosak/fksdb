@@ -11,10 +11,10 @@ use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
 /**
- * @property-read int event_type_id
- * @property-read int contest_id
- * @property-read ContestModel contest
- * @property-read string name
+ * @property-read int $event_type_id
+ * @property-read int $contest_id
+ * @property-read ContestModel $contest
+ * @property-read string $name
  */
 class EventTypeModel extends Model
 {
