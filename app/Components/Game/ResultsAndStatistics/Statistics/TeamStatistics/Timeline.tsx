@@ -27,7 +27,7 @@ interface OwnProps {
     teamId: number;
 }
 
-class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
+class Timeline extends ChartComponent<StateProps & OwnProps, never> {
 
     private xAxis: SVGGElement;
     private ySize: number;

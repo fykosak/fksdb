@@ -1,48 +1,39 @@
 import { data } from '../../../i18n/i18n-data';
 
-export type LangMap<TValue> = {
-    [key in availableLanguage]: TValue;
+export type LangMap<TValue, Lang extends string> = {
+    [key in Lang]: TValue;
 };
 
-type LanguageData = LangMap<{
+type LanguageData<Lang extends string> = LangMap<{
     [msqId: string]: string;
-}>;
+}, Lang>;
 
-export type availableLanguage = 'cs' | 'en' | 'sk';
+export type availableLanguage = 'cs' | 'en';
 
-class Lang {
+export class Translator<Lang extends string> {
 
-    private readonly data: LanguageData = {cs: {}, en: {}, sk: {}};
+    private readonly data: LanguageData<Lang>;
+    private readonly currentLocale: Lang = 'cs' as Lang;
 
-    private currentLocale: availableLanguage = 'cs';
-
-    public constructor(langData: LanguageData) {
-        this.data = langData;
-        window.location.search.slice(1).split('&').forEach((s) => {
-            const [key, value] = s.split('=');
-            if (key === 'lang') {
-                this.setLocale(value as availableLanguage);
-            }
-        });
-    }
-
-    public getCurrentLocale(): availableLanguage {
-        return this.currentLocale;
-    }
-
-    public setLocale(locale: availableLanguage): void {
-        this.currentLocale = locale;
+    public constructor() {
+        // @ts-ignore
+        this.data = data;
+        const el = document.getElementsByClassName('html').item(0);
+        if (el) {
+            const lang = el.getAttribute('lang');
+            this.currentLocale = lang as Lang;
+        }
     }
 
     public getText(msgId: string): string {
-        if (Object.hasOwn(this.data[this.currentLocale],msgId) && this.data[this.currentLocale][msgId]) {
+        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId]) {
             return this.data[this.currentLocale][msgId];
         }
         return msgId;
     }
 
-    public getLocalizedText(msgId: string, locale: availableLanguage): string {
-        if (Object.hasOwn(this.data[locale],msgId) && this.data[locale][msgId]) {
+    public getLocalizedText(msgId: string, locale: Lang): string {
+        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId]) {
             return this.data[locale][msgId];
         }
         return msgId;
@@ -56,10 +47,8 @@ class Lang {
                 return 'en-GB';
         }
     }
+
+    public get<T>(map: LangMap<T, Lang>): T {
+        return map[this.currentLocale];
+    }
 }
-
-export const translator = new Lang(data);
-
-export type LocalizedString = {
-    [key in availableLanguage]: string;
-};

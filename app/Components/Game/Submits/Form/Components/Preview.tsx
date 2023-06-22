@@ -1,8 +1,8 @@
-import { translator } from '@translator/translator';
 import { getTask, getTeam } from '../middleware';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     code: string;
@@ -11,8 +11,10 @@ interface OwnProps {
 }
 
 export default class Preview extends React.Component<OwnProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {code: value, tasks, teams} = this.props;
         if (!value) {
             return null;
@@ -35,6 +37,5 @@ export default class Preview extends React.Component<OwnProps, never> {
         } catch (e) {
             return <span className="text-danger">{e.message}</span>
         }
-
     }
 }

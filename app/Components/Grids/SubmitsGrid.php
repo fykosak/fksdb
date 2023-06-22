@@ -26,11 +26,13 @@ class SubmitsGrid extends Grid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
+    private string $lang;
 
-    public function __construct(Container $container, ContestantModel $contestant)
+    public function __construct(Container $container, ContestantModel $contestant, string $lang)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
+        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
@@ -48,7 +50,7 @@ class SubmitsGrid extends Grid
         $this->addColumn(
             new RendererBaseItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFQName(),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->lang),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -126,7 +128,10 @@ class SubmitsGrid extends Grid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
-                sprintf(_('Submitting of task %s cancelled.'), $submit->task->getFQName()),
+                sprintf(
+                    _('Submitting of task %s cancelled.'),
+                    $submit->task->getFullLabel($this->lang)
+                ),
                 Message::LVL_WARNING
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {

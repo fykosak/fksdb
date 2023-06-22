@@ -1,5 +1,4 @@
-import Images
-    from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/Timer/Images';
+import Images from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/Timer/Images';
 import Timer from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/Timer/Timer';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -16,7 +15,7 @@ interface OwnProps {
     event: 'fof' | 'ctyrboj';
 }
 
-class Toggler extends React.Component<StateProps & OwnProps> {
+class Toggler extends React.Component<StateProps & OwnProps, never> {
 
     public render() {
         const {visible, hardVisible} = this.props;

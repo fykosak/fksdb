@@ -9,7 +9,6 @@ export default class Code extends React.Component<WrappedFieldProps, never> {
             this.input.focus();
         }
     }
-
     public render() {
         const {meta: {valid}, input} = this.props;
         return (

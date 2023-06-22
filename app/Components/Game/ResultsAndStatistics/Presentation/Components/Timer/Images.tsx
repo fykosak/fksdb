@@ -10,7 +10,7 @@ interface StateProps {
     inserted: Date;
 }
 
-class Images extends React.Component<StateProps> {
+class Images extends React.Component<StateProps, never> {
     private timerId: number;
 
     public componentDidMount() {
