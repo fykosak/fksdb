@@ -12,10 +12,10 @@ class CodeValidator
     /**
      * @throws ForbiddenRequestException
      */
-    public static function checkCode(Container $container, string $code): string
+    public static function checkCode(Container $container, string $code, string $saltKey = 'default'): string
     {
         [$id, $checkSum] = explode('-', $code);
-        $salt = $container->getParameters()['salt'];
+        $salt = $container->getParameters()['salt'][$saltKey];
         if (crc32($id . $salt) !== +$checkSum) {
             throw new ForbiddenRequestException(_('Bad checksum'));
         }

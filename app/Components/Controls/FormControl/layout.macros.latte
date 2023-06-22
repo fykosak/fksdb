@@ -57,7 +57,6 @@
             {label $field /}
         {/if}
         {foreach $field->getItems() as $key => $item}
-            {var $divClassName = $field->getContainerPrototype()->class ? 'mb-3'}
             <div n:class="'form-check ' . $field->getContainerPrototype()->class">
                 {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
                 {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class /}
@@ -69,9 +68,8 @@
 
 {define button}
     {varType Nette\Forms\Controls\Button $field}
-    {varType string $fieldClass}
-    {var $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
-    {var $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
+    {var string $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
+    {php $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
     {input $field class:('btn ' . (\Nette\Utils\Strings::contains($fieldClass,'btn-') ? $fieldClass : 'btn-outline-primary'))}
 {/define}
 

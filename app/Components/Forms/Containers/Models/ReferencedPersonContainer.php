@@ -6,11 +6,11 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -25,7 +25,6 @@ use FKSDB\Models\Persons\Resolvers\Resolver;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
-use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -113,7 +112,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
 
         foreach ($this->getComponents() as $sub => $subContainer) {
-            if (!$subContainer instanceof \Nette\Forms\Container) {
+            if (!$subContainer instanceof ContainerWithOptions) {
                 continue;
             }
             /** @var BaseControl|ModelContainer|AddressDataContainer $component */
@@ -241,7 +240,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         if ($component instanceof WriteOnly) {
             $component->setWriteOnly($value);
-        } elseif ($component instanceof IContainer) {
+        } elseif ($component instanceof ContainerWithOptions) {
             foreach ($component->getComponents() as $subComponent) {
                 $this->setWriteOnly($subComponent, $value);
             }
@@ -252,7 +251,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         if ($component instanceof WriteOnly) {
             return true;
-        } elseif ($component instanceof IContainer) {
+        } elseif ($component instanceof ContainerWithOptions) {
             foreach ($component->getComponents() as $subComponent) {
                 if ($this->isWriteOnly($subComponent)) {
                     return true;

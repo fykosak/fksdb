@@ -153,9 +153,7 @@ class ApplicationComponent extends BaseComponent
         try {
             if (!$transition || $transition->getValidation()) {
                 try {
-                    if (!$this->connection->getPdo()->inTransaction()) {
-                        $this->connection->beginTransaction();
-                    }
+                    $this->connection->beginTransaction();
                     $values = FormUtils::emptyStrToNull($form->getValues());
                     Debugger::log(json_encode((array)$values), 'app-form');
                     foreach ($this->holder->processings as $processing) {
@@ -180,7 +178,7 @@ class ApplicationComponent extends BaseComponent
 
                     if ($transition && $transition->isCreating()) {
                         $this->getPresenter()->flashMessage(
-                            sprintf(_('Application "%s" created.'), (string)$this->holder->getModel()),
+                            sprintf(_('Application "%s" created.'), $this->holder->getModel()->person->getFullName()),
                             Message::LVL_SUCCESS
                         );
                     } elseif ($transition) {
@@ -193,12 +191,10 @@ class ApplicationComponent extends BaseComponent
                         );
                     }
                     $this->getPresenter()->flashMessage(
-                        sprintf(_('Application "%s" saved.'), (string)$this->holder->getModel()),
+                        sprintf(_('Application "%s" saved.'), $this->holder->getModel()->person->getFullName()),
                         Message::LVL_SUCCESS
                     );
-                    if ($this->connection->getPdo()->inTransaction()) {
-                        $this->connection->commit();
-                    }
+                    $this->connection->commit();
                 } catch (
                     ModelDataConflictException |
                     DuplicateApplicationException |

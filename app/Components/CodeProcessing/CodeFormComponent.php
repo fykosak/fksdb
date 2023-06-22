@@ -31,7 +31,6 @@ abstract class CodeFormComponent extends FormComponent
 
     abstract protected function innerConfigureForm(Form $form): void;
 
-
     final protected function configureForm(Form $form): void
     {
         $form->addText('code', _('Code'));
