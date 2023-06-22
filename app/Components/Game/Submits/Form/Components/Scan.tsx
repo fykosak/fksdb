@@ -1,16 +1,19 @@
-import { translator } from '@translator/translator';
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 import { Html5Qrcode } from 'html5-qrcode';
 import { Html5QrcodeError } from 'html5-qrcode/esm/core';
+import { TranslatorContext } from '@translator/LangContext';
 
 export default class Scan extends React.Component<WrappedFieldProps & Record<string, never>, { processing: boolean; error: Html5QrcodeError }> {
+    static contextType = TranslatorContext;
+
     constructor(props) {
         super(props);
         this.state = {processing: false, error: null};
     }
 
     public render() {
+        const translator = this.context;
         return <>
             <h3>{translator.getText('Scan QR-code')}</h3>
             {this.state.error && <p className="alert alert-danger">{this.state.error.toString()}</p>}
@@ -54,7 +57,7 @@ export default class Scan extends React.Component<WrappedFieldProps & Record<str
         html5QrCode.scanFile(imageFile, true)
             .then(decodedText => {
                 this.props.input.onChange(decodedText);
-                this.setState({processing: false});
+                this.setState({processing: false, error: null});
             })
             .catch((err: Html5QrcodeError) => {
                 this.setState({processing: false, error: err});

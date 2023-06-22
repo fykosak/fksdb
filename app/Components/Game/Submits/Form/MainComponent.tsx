@@ -5,6 +5,8 @@ import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import MainForm from './Components/MainForm';
 import { app } from './reducer';
+import { availableLanguage, Translator } from '@translator/translator';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     data: {
@@ -13,14 +15,17 @@ interface OwnProps {
         teams: TeamModel[];
     };
     actions: NetteActions;
+    translator: Translator<availableLanguage>;
 }
 
-export default class FOFComponent extends React.Component<OwnProps> {
+export default class FOFComponent extends React.Component<OwnProps, never> {
     public render() {
         const {data, actions} = this.props;
         const {tasks, teams, availablePoints} = data;
         return <StoreCreator app={app}>
-            <MainForm tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
+            <TranslatorContext.Provider value={this.props.translator}>
+                <MainForm tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
+            </TranslatorContext.Provider>
         </StoreCreator>;
     }
 }

@@ -2,12 +2,14 @@ import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChart';
 import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geoChartHelper';
 import * as React from 'react';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     data: Array<{
         country: string;
         created: string;
     }>;
+    translator: Translator<availableLanguage>;
 }
 
 export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, { timestamp: number }> {

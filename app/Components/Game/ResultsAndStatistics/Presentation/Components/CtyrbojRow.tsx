@@ -9,7 +9,7 @@ interface OwnProps {
     tasks: TaskModel[];
 }
 
-export default class Row extends React.Component<OwnProps> {
+export default class Row extends React.Component<OwnProps, never> {
 
     public render() {
         const {submits, team, tasks} = this.props;

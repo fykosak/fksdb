@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
 import { changeData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
@@ -9,6 +8,7 @@ import { Dispatch } from 'redux';
 import { Store } from '../reducer';
 import CapacityLabel from './CapacityLabel';
 import PriceLabel from './PriceLabel';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     item: ModelScheduleItem;
@@ -24,9 +24,11 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {item, value, onChange, params} = this.props;
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
         const isChecked = (value === scheduleItemId);
@@ -39,13 +41,13 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
             <div className="card-body">
                 <h5 className="card-title">
                     <i className={isChecked ? 'me-3 fas fa-check-circle' : 'me-3 far fa-circle'}/>
-                    {label[translator.getCurrentLocale()]}
+                    {translator.get(label)}
                 </h5>
                 {params.description && <h6 className="card-subtitle">
-                    {description[translator.getCurrentLocale()]}
+                    {translator.get(description)}
                 </h6>}
                 <p className="card-text">
-                    {params.price && <PriceLabel price={price}/>}
+                    {params.price && <PriceLabel price={price} translator={translator}/>}
                     {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
                 </p>
             </div>

@@ -1,15 +1,12 @@
-import { translator } from '@translator/translator';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import TimeDisplay from 'FKSDB/Models/ValuePrinters/TimePrinter';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { State } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/stats';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     aggregationTime: number;
@@ -25,9 +22,11 @@ interface DispatchProps {
     onSetNewState(data: State): void;
 }
 
-class Options extends React.Component<StateProps & DispatchProps> {
+class Options extends React.Component<StateProps & DispatchProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {
             aggregationTime,
             onSetNewState,
@@ -87,7 +86,8 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    onChange={(e) => {
                                        onSetNewState({fromDate: new Date(+e.target.value)});
                                    }}/>
-                            <span className="form-text"><TimeDisplay date={fromDate.toISOString()}/></span>
+                            <span className="form-text"><TimeDisplay date={fromDate.toISOString()}
+                                                                     translator={translator}/></span>
                         </div>
                     </div>
                     <div className="col-6">
@@ -102,7 +102,8 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    onChange={(e) => {
                                        onSetNewState({toDate: new Date(+e.target.value)})
                                    }}/>
-                            <span className="form-text"><TimeDisplay date={toDate.toISOString()}/></span>
+                            <span className="form-text"><TimeDisplay date={toDate.toISOString()}
+                                                                     translator={translator}/></span>
                         </div>
                     </div>
                 </div>

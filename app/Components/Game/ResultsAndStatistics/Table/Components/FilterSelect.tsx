@@ -3,17 +3,20 @@ import { connect } from 'react-redux';
 import { createFilters } from '../filter';
 import FilterComponent from './Filter';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     categories: string[];
 }
 
-class FilterSelect extends React.Component<StateProps> {
+class FilterSelect extends React.Component<StateProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
         const {categories} = this.props;
+        const translator = this.context;
         return <>
-            {createFilters(categories).map((availableFilter, key) => {
+            {createFilters(categories, translator).map((availableFilter, key) => {
                 return <FilterComponent
                     key={key}
                     filter={availableFilter}
