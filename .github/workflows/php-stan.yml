@@ -11,8 +11,17 @@ jobs:
       matrix:
         php: [ '7.4' , '8.0' , '8.1' ]
     steps:
-    - uses: actions/checkout@v3
-    - uses: php-actions/composer@v6 # or alternative dependency management
-    - uses: php-actions/phpstan@v3
-      with:
-        path: app/ tests/ tests/
+      - uses: actions/checkout@v2
+        name: Checkout
+        with:
+          submodules: recursive
+      - uses: shivammathur/setup-php@v2
+        name: Setup PHP
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, mbstring, mysql, soap, xml
+          tools: composer
+          ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
+      - uses: php-actions/phpstan@v3
+        with:
+          path: app/ tests/ tests/
