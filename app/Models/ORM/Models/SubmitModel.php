@@ -8,17 +8,17 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int submit_id
- * @property-read int contestant_id
- * @property-read ContestantModel contestant
- * @property-read int task_id
- * @property-read TaskModel task
- * @property-read \DateTimeInterface submitted_on
- * @property-read SubmitSource source
- * @property-read string note
- * @property-read float|null raw_points
- * @property-read float|null calc_points
- * @property-read int corrected FUCK MARIADB
+ * @property-read int $submit_id
+ * @property-read int $contestant_id
+ * @property-read ContestantModel $contestant
+ * @property-read int $task_id
+ * @property-read TaskModel $task
+ * @property-read \DateTimeInterface $submitted_on
+ * @property-read SubmitSource $source
+ * @property-read string $note
+ * @property-read float|null $raw_points
+ * @property-read float|null $calc_points
+ * @property-read int $corrected FUCK MARIADB
  */
 class SubmitModel extends Model implements Resource
 {

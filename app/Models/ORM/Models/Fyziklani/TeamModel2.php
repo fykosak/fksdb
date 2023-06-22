@@ -18,21 +18,21 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read int fyziklani_team_id
- * @property-read int event_id
- * @property-read EventModel event
- * @property-read string name
- * @property-read TeamState state
- * @property-read TeamCategory category
- * @property-read \DateTimeInterface created
- * @property-read string phone
- * @property-read string note
- * @property-read string password
- * @property-read int points
- * @property-read int rank_total
- * @property-read int rank_category
- * @property-read int force_a
- * @property-read GameLang game_lang
+ * @property-read int $fyziklani_team_id
+ * @property-read int $event_id
+ * @property-read EventModel $event
+ * @property-read string $name
+ * @property-read TeamState $state
+ * @property-read TeamCategory $category
+ * @property-read \DateTimeInterface $created
+ * @property-read string $phone
+ * @property-read string $note
+ * @property-read string $password
+ * @property-read int $points
+ * @property-read int $rank_total
+ * @property-read int $rank_category
+ * @property-read int $force_a
+ * @property-read GameLang $game_lang
  */
 class TeamModel2 extends Model implements Resource
 {

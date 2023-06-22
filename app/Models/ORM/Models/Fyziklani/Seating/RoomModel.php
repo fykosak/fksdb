@@ -9,9 +9,9 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 
 /**
- * @property-read int fyziklani_room_id
- * @property-read string name
- * @property-read string layout
+ * @property-read int $fyziklani_room_id
+ * @property-read string $name
+ * @property-read string $layout
  */
 class RoomModel extends Model
 {
