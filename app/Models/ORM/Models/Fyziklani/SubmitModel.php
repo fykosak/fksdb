@@ -10,16 +10,16 @@ use Fykosak\NetteORM\Model;
 use Nette\Security\Resource;
 
 /**
- * @property-read SubmitState state
- * @property-read int fyziklani_team_id
+ * @property-read SubmitState $state
+ * @property-read int $fyziklani_team_id
  * @property-read int|null points
  * @property-read int|null skipped
- * @property-read int fyziklani_task_id
- * @property-read int fyziklani_submit_id
- * @property-read int task_id
+ * @property-read int $fyziklani_task_id
+ * @property-read int $fyziklani_submit_id
+ * @property-read int $task_id
  * @property-read TeamModel2 fyziklani_team
- * @property-read TaskModel fyziklani_task
- * @property-read \DateTimeInterface modified
+ * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $modified
  */
 class SubmitModel extends Model implements Resource
 {

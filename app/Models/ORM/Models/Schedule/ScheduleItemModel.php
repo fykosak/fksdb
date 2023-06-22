@@ -16,9 +16,9 @@ use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
 
 /**
- * @property-read int schedule_item_id
- * @property-read int schedule_group_id
- * @property-read ScheduleGroupModel schedule_group
+ * @property-read int $schedule_item_id
+ * @property-read int $schedule_group_id
+ * @property-read ScheduleGroupModel $schedule_group
  * @property-read float|null price_czk
  * @property-read float|null price_eur
  * @property-read string|null name_cs

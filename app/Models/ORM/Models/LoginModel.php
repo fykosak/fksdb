@@ -11,14 +11,14 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
 /**
- * @property-read int login_id
+ * @property-read int $login_id
  * @property-read int|null person_id
  * @property-read PersonModel|null person
- * @property-read string login
- * @property-read string hash
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface last_login
- * @property-read int active
+ * @property-read string $login
+ * @property-read string $hash
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $last_login
+ * @property-read int $active
  */
 class LoginModel extends Model implements IIdentity
 {
