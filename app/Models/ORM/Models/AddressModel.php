@@ -13,9 +13,9 @@ use Fykosak\NetteORM\Model;
  * @property-read string $target
  * @property-read string $city
  * @property-read string $postal_code
- * @property-read int|null country_id
+ * @property-read int|null $country_id
  * @property-read CountryModel $country
- * @property-read int|null country_subdivision_id
+ * @property-read int|null $country_subdivision_id
  * @property-read CountrySubdivisionModel $country_subdivision
  */
 class AddressModel extends Model

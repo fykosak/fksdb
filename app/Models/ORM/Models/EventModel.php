@@ -31,8 +31,8 @@ use Nette\Security\Resource;
  * @property-read int $event_type_id
  * @property-read \DateTimeInterface $begin
  * @property-read \DateTimeInterface $end
- * @property-read \DateTimeInterface|null registration_begin
- * @property-read \DateTimeInterface|null registration_end
+ * @property-read \DateTimeInterface|null $registration_begin
+ * @property-read \DateTimeInterface|null $registration_end
  * @property-read string $parameters
  */
 class EventModel extends Model implements Resource, NodeCreator

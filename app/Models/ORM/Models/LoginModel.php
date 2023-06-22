@@ -12,8 +12,8 @@ use Nette\Security\IIdentity;
 
 /**
  * @property-read int $login_id
- * @property-read int|null person_id
- * @property-read PersonModel|null person
+ * @property-read int|null $person_id
+ * @property-read PersonModel|null $person
  * @property-read string $login
  * @property-read string $hash
  * @property-read \DateTimeInterface $created

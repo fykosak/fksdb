@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $flag_id
  * @property-read FlagModel $flag
  * @property-read int $contest_id
- * @property-read ContestModel|null contest
+ * @property-read ContestModel|null $contest
  * @property-read int $ac_year
  * @property-read int $value
  * @property-read \DateTimeInterface $modified

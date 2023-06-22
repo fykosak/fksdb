@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $since
- * @property-read int|null until
+ * @property-read int|null $until
  * @property-read string $role
  * @property-read int $order
  * @property-read string $contribution

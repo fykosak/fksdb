@@ -16,8 +16,8 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface $submitted_on
  * @property-read SubmitSource $source
  * @property-read string $note
- * @property-read float|null raw_points
- * @property-read float|null calc_points
+ * @property-read float|null $raw_points
+ * @property-read float|null $calc_points
  * @property-read int $corrected FUCK MARIADB
  */
 class SubmitModel extends Model implements Resource

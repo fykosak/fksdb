@@ -10,7 +10,7 @@ use Nette\Security\Resource;
 /**
  * @property-read int $product_id
  * @property-read int $producer_id
- * @property-read ProducerModel|null producer
+ * @property-read ProducerModel|null $producer
  * @property-read ProductCategory $category
  * @property-read string $name_cs
  * @property-read string $name_en

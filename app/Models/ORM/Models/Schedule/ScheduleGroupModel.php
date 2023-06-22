@@ -22,9 +22,9 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface $end
  * @property-read string $name_cs
  * @property-read string $name_en
- * @property-read \DateTimeInterface|null registration_begin
- * @property-read \DateTimeInterface|null registration_end
- * @property-read \DateTimeInterface|null modification_end
+ * @property-read \DateTimeInterface|null $registration_begin
+ * @property-read \DateTimeInterface|null $registration_end
+ * @property-read \DateTimeInterface|null $modification_end
  */
 class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
