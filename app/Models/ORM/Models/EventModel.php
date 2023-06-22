@@ -165,6 +165,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
+        throw new \InvalidArgumentException();
     }
 
     private function getParameters(): array
