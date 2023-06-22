@@ -8,7 +8,7 @@ abstract class FakeStringEnum
 {
     public string $value;
 
-    protected function __construct(string $value)
+    final protected function __construct(string $value)
     {
         $this->value = $value;
     }
