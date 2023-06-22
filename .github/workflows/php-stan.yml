@@ -22,6 +22,8 @@ jobs:
           extensions: curl, mbstring, mysql, soap, xml
           tools: composer
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
+      - name: Composer install
+        run: composer install --no-progress --prefer-dist
       - uses: php-actions/phpstan@v3
         with:
           path: app/ tests/ tests/
