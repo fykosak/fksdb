@@ -220,10 +220,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
             $values = [];
@@ -236,7 +233,7 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS][] = $paramData;
             }
-            $this->getForm()->setDefaults($values);
+            $form->setDefaults($values);
         }
     }
 

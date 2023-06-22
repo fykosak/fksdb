@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\FormComponent;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -47,12 +47,12 @@ abstract class FormComponent extends BaseComponent
     {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
-        $this->appendSubmitButton($control->getForm())
-            ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
+        $this->appendSubmitButton($control->getForm());
+        $control->getForm()->onSuccess[] = fn(Form $form) => $this->handleSuccess($form);
         return $control;
     }
 
-    abstract protected function handleSuccess(SubmitButton $button): void;
+    abstract protected function handleSuccess(Form $form): void;
 
     abstract protected function appendSubmitButton(Form $form): SubmitButton;
 

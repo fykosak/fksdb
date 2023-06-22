@@ -96,7 +96,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
@@ -105,12 +105,9 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([
+        $form->setDefaults([
             self::CONT_CONTESTANT => [
                 'person_id' => isset($this->person) ? $this->person->person_id
                     : ReferencedId::VALUE_PROMISE,

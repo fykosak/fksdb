@@ -72,7 +72,7 @@ class PaymentFormComponent extends EntityFormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
+        return $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
     }
 
     /**
@@ -146,15 +146,12 @@ class PaymentFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults($this->model->toArray());
+            $form->setDefaults($this->model->toArray());
             /** @var PersonPaymentContainer $itemContainer */
-            $itemContainer = $this->getForm()->getComponent('items');
+            $itemContainer = $form->getComponent('items');
             $itemContainer->setPayment($this->model);
         }
     }
