@@ -75,17 +75,16 @@ class EventFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws BadTypeException
      * @throws ConfigurationNotFoundException
      */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters');
             $paramControl->addRule(function (BaseControl $control): bool {
                 $parameters = $control->getValue();
                 try {

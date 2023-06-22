@@ -52,13 +52,10 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $this->getPresenter()->redirect(':Schedule:Group:detail', ['id' => $model->schedule_group_id]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 self::CONTAINER => $this->model->toArray(),
             ]);
         }

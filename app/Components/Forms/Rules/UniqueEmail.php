@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueEmail
@@ -13,14 +14,15 @@ class UniqueEmail
     private PersonInfoService $personInfoService;
     private ?PersonModel $ignoredPerson;
 
-    public function __construct(PersonInfoService $personInfoService)
-    {
-        $this->personInfoService = $personInfoService;
-    }
-
-    public function setIgnoredPerson(PersonModel $ignoredPerson): void
+    public function __construct(Container $container, ?PersonModel $ignoredPerson = null)
     {
         $this->ignoredPerson = $ignoredPerson;
+        $container->callInjects($this);
+    }
+
+    public function inject(PersonInfoService $personInfoService): void
+    {
+        $this->personInfoService = $personInfoService;
     }
 
     public function __invoke(BaseControl $control): bool
@@ -28,7 +30,7 @@ class UniqueEmail
         $email = $control->getValue();
 
         $conflicts = $this->personInfoService->getTable()->where(['email' => $email]);
-        if ($this->ignoredPerson && $this->ignoredPerson->person_id) {
+        if (isset($this->ignoredPerson)) {
             $conflicts->where('NOT person_id = ?', $this->ignoredPerson->person_id);
         }
         if (count($conflicts) > 0) {

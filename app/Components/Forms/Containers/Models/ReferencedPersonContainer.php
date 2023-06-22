@@ -118,16 +118,12 @@ class ReferencedPersonContainer extends ReferencedContainer
             }
             /** @var BaseControl|ModelContainer|AddressDataContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                $realValue = $this->getPersonValue(
-                    $model,
-                    $sub,
-                    $fieldName
-                ); // not extrapolated
-                $value = $this->getPersonValue(
+                $realValue = ReferencedPersonHandler::getPersonValue(
                     $model,
                     $sub,
                     $fieldName,
-                    true
+                    $this->contestYear,
+                    $this->event
                 );
                 $controlModifiable = isset($realValue) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
@@ -139,9 +135,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setHtmlAttribute('readonly', 'readonly');
                     if ($component instanceof ContainerWithOptions) {
-                        $component->setValues($value);
+                        $component->setValues($realValue);
                     } else {
-                        $component->setValue($value);
+                        $component->setValue($realValue);
                     }
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
@@ -152,16 +148,16 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, false);
                 } else {
                     if ($component instanceof AddressDataContainer) {
-                        $component->setModel($value ? $value->address : null, $mode);
+                        $component->setModel($realValue ? $realValue->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
-                        $component->setValues($value);
+                        $component->setValues($realValue);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
-                        $component->setValue($value);
+                        $component->setValue($realValue);
                     } else {
-                        $component->setDefaultValue($value);
+                        $component->setDefaultValue($realValue);
                     }
                     if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
@@ -264,24 +260,5 @@ class ReferencedPersonContainer extends ReferencedContainer
             }
         }
         return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getPersonValue(
-        ?PersonModel $person,
-        string $sub,
-        string $field,
-        bool $extrapolate = false
-    ) {
-        return ReferencedPersonHandler::getPersonValue(
-            $person,
-            $sub,
-            $field,
-            $this->contestYear,
-            $extrapolate,
-            $this->event
-        );
     }
 }

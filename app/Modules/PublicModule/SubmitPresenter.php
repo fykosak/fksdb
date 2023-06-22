@@ -171,9 +171,7 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        $personHistory = $this->getLoggedPerson()->getHistoryByContestYear($this->getSelectedContestYear());
-        $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
-        if ($studyYear === null) {
+        if (!$this->getContestant()->contest_category) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
         $prevDeadline = null;
@@ -189,6 +187,7 @@ class SubmitPresenter extends BasePresenter
             $container = new ContainerWithOptions($this->getContext());
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
+
             $upload = $container->addUpload('file', $task->getFullLabel($this->getLang()));
             $conditionedUpload = $upload
                 ->addCondition(Form::FILLED)
@@ -198,7 +197,7 @@ class SubmitPresenter extends BasePresenter
                     'application/pdf'
                 );
 
-            if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
+            if (!$task->isForCategory($this->getContestant()->contest_category)) {
                 $upload->setOption('description', _('Task is not for your category.'));
                 $upload->setDisabled();
             }

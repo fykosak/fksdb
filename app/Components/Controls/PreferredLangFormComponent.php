@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
 class PreferredLangFormComponent extends FormComponent
 {
-
     protected PersonModel $person;
-
     protected PersonInfoService $personInfoService;
 
     public function __construct(Container $container, PersonModel $person)
@@ -38,29 +37,31 @@ class PreferredLangFormComponent extends FormComponent
         return $form->addSubmit('submit', _('Save'));
     }
 
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             $this->personInfoService->storeModel(
                 ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
                 $this->person->getInfo()
             );
-            $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
+            $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         }
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $items = [];
-        foreach ($this->translator->getSupportedLanguages() as $lang) {
-            $items[$lang] = LanguageChooserComponent::$languageNames[$lang];
+        foreach (Language::cases() as $lang) {
+            $items[$lang->value] = $lang->label();
         }
-        $form->addRadioList('preferred_lang')->setItems($items);
+        $form->addSelect('preferred_lang')->setItems($items);
     }
 
     /**

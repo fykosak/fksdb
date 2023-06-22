@@ -37,15 +37,15 @@ class SeriesResultsWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $tasksData = [];
         /** @var TaskModel $task */
         foreach ($contestYear->getTasks($params['series']) as $task) {
             foreach ($evaluationStrategy->getCategories() as $category) {
-                $tasksData[$category->value] = $tasksData[$category->value] ?? [];
+                $tasksData[$category->label] = $tasksData[$category->label] ?? [];
                 $points = $evaluationStrategy->getTaskPoints($task, $category);
                 if (!is_null($points)) {
-                    $tasksData[$category->value][] = [
+                    $tasksData[$category->label][] = [
                         'taskId' => $task->task_id,
                         'points' => $points,
                         'label' => $task->label,
@@ -56,20 +56,18 @@ class SeriesResultsWebModel extends WebModel
         $results = [];
         /** @var ContestantModel $contestant */
         foreach ($contestYear->getContestants() as $contestant) {
-            $category = $evaluationStrategy->studyYearsToCategory($contestant->getPersonHistory()->study_year);
-            $submits = $contestant->getSubmitsForSeries($params['series']);
             $submitsData = [];
             $sum = 0;
             /** @var SubmitModel $submit */
-            foreach ($submits as $submit) {
-                $points = $evaluationStrategy->getSubmitPoints($submit, $category);
+            foreach ($contestant->getSubmitsForSeries($params['series']) as $submit) {
+                $points = $evaluationStrategy->getSubmitPoints($submit);
                 $sum += $points;
                 $submitsData[$submit->task_id] = $points;
             }
             if (count($submitsData)) {
                 $school = $contestant->getPersonHistory()->school;
-                $results[$category->value] = $results[$category->value] ?? [];
-                $results[$category->value][] = [
+                $results[$contestant->contest_category->label] = $results[$contestant->contest_category->label] ?? [];
+                $results[$contestant->contest_category->label][] = [
                     'contestant' => [
                         'name' => $contestant->person->getFullName(),
                         'school' => $school->name_abbrev,

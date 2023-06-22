@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
@@ -54,15 +53,12 @@ class SchoolFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONT_SCHOOL => $this->model->toArray()]);
+            $form->setDefaults([self::CONT_SCHOOL => $this->model->toArray()]);
         } else {
-            $this->getForm()->setDefaults([self::CONT_SCHOOL => ['address_id' => ReferencedId::VALUE_PROMISE]]);
+            $form->setDefaults([self::CONT_SCHOOL => ['address_id' => ReferencedId::VALUE_PROMISE]]);
         }
     }
 }

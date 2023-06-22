@@ -17,11 +17,4 @@ use Fykosak\NetteORM\Model;
  */
 class AuthTokenModel extends Model
 {
-
-    /** @const The first login for setting up a password. */
-    public const TYPE_INITIAL_LOGIN = 'initial_login';
-    /** @const Password recovery login */
-    public const TYPE_RECOVERY = 'recovery';
-    /** @const Notification about an event application. */
-    public const TYPE_EVENT_NOTIFY = 'event_notify';
 }

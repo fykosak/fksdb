@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -62,7 +63,7 @@ class MailSender extends MailCallback
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenModel::TYPE_EVENT_NOTIFY,
+            AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY),
             $event->registration_end ?? $event->end,
             ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true

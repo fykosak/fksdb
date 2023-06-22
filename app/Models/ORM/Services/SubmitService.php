@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\Service;
@@ -36,8 +37,11 @@ class SubmitService extends Service
         return $this->submitCache[$key];
     }
 
-    public static function serializeSubmit(?SubmitModel $submit, TaskModel $task, ?int $studyYear): array
-    {
+    public static function serializeSubmit(
+        ?SubmitModel $submit,
+        TaskModel $task,
+        ?ContestCategoryModel $category
+    ): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => [
@@ -47,7 +51,7 @@ class SubmitService extends Service
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,
-            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
+            'disabled' => !$task->isForCategory($category),
         ];
     }
 }

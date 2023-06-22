@@ -16,15 +16,16 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\ForbiddenRequestException;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidArgumentException;
 use Nette\Security\User;
 
 class QuizComponent extends FormComponent
@@ -36,7 +37,6 @@ class QuizComponent extends FormComponent
     private TaskModel $task;
     private ?ContestantModel $contestant;
     private User $user;
-    private ContestantService $contestantService;
     private QuizHandler $handler;
     private AccountManager $accountManager;
     private string $lang;
@@ -51,12 +51,10 @@ class QuizComponent extends FormComponent
 
     final public function inject(
         User $user,
-        ContestantService $contestantService,
         QuizHandler $handler,
         AccountManager $accountManager
     ) {
         $this->user = $user;
-        $this->contestantService = $contestantService;
         $this->handler = $handler;
         $this->accountManager = $accountManager;
     }
@@ -94,11 +92,11 @@ class QuizComponent extends FormComponent
 
     /**
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
+     * @throws BadRequestException
+     *
      */
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             // create and save contestant
@@ -110,22 +108,22 @@ class QuizComponent extends FormComponent
                 $person = $referencedId->getModel();
                 $contestant = $person->getContestantByContestYear($this->task->getContestYear());
                 // if person is not a contestant in the contest year, create him
-                $this->contestant = $contestant ?? $this->contestantService->storeModel([
-                    'contest_id' => $this->task->getContestYear()->contest_id,
-                    'person_id' => $person->person_id,
-                    'year' => $this->task->getContestYear()->year,
-                ], $contestant);
+                $strategy = ResultsModelFactory::findEvaluationStrategy(
+                    $this->getContext(),
+                    $this->task->getContestYear()
+                );
+                $this->contestant = $contestant
+                    ? $strategy->updateCategory($contestant)
+                    : $strategy->createContestant($person);
 
                 // send invite mail if the person does not have a login
                 $email = $person->getInfo()->email;
                 if ($email && !$person->getLogin()) {
-                    $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
+                    $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
                 }
             }
 
-
             // TODO define and retrive name of question field in the same place
-
             // create quiz submit
             $this->handler->storeSubmit($this->task, $this->contestant);
             // create submit for each quiz question
@@ -141,6 +139,8 @@ class QuizComponent extends FormComponent
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
+        } catch (InvalidArgumentException $exception) {
+            $this->flashMessage($exception->getMessage());
         }
     }
 }

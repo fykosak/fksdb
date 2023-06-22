@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
-use FKSDB\Models\Exceptions\NotImplementedException;
 
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
@@ -33,7 +33,7 @@ class EvaluationNullObject extends EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?float
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): ?float
     {
         throw new NotImplementedException();
     }
@@ -41,7 +41,7 @@ class EvaluationNullObject extends EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
     {
         throw new NotImplementedException();
     }
@@ -49,7 +49,7 @@ class EvaluationNullObject extends EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         throw new NotImplementedException();
     }

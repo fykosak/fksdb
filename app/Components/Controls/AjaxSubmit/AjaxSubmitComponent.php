@@ -72,8 +72,7 @@ class AjaxSubmitComponent extends AjaxComponent
      */
     protected function getData(): array
     {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
-        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
+        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $this->contestant->contest_category);
     }
 
     /**

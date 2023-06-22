@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\LoginService;
@@ -65,14 +66,14 @@ class TokenAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * @param string|null $tokenType require specific token type
+     * @param AuthTokenType|null $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
-    public function isAuthenticatedByToken(?string $tokenType = null): bool
+    public function isAuthenticatedByToken(?AuthTokenType $tokenType = null): bool
     {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
-            return $tokenType === null || $section->type == $tokenType;
+            return $tokenType === null || $section->type == $tokenType->value;
         }
         return false;
     }
