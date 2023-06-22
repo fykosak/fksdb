@@ -28,6 +28,7 @@ class ContestModel extends Model
             case 3:
                 return 'ctyrboj';
         }
+        throw new \InvalidArgumentException();
     }
 
     public function getContestYear(?int $year): ?ContestYearModel
