@@ -1,9 +1,11 @@
+@import "variables";
 @import "colors";
+
 @import "mixins/navigation-item";
 @import "node_modules/bootstrap/scss/bootstrap";
 
 [data-style-id~="default"] {
-  @include page-theme(#212529);
+  @include page-theme(#000000);
 }
 
 [data-style-id="contest-fykos"],
@@ -13,7 +15,7 @@
 [data-style-id="event-type-6"],
 [data-style-id="event-type-7"],
 [data-style-id="event-type-16"] {
-  @include page-theme($fykosColor);
+  @include page-theme($fykos-color);
 }
 
 [data-style-id="contest-vyfuk"],
@@ -21,23 +23,23 @@
 [data-style-id="event-type-11"],
 [data-style-id="event-type-12"],
 [data-style-id="event-type-15"] {
-  @include page-theme($vyfukMainColor);
+  @include page-theme($vyfuk-color);
 }
 
 [data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
-  @include page-theme($ctyrbojColor);
+  @include page-theme($ctyrboj-color);
 }
 
 [data-style-id="event-type-1"] {
-  @include page-theme($fofMainColor);
+  @include page-theme($fof-color);
 }
 
 [data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
-  @include page-theme(#ff7431);
+  @include page-theme($dsef-color);
 }
 
 [data-style-id="event-type-9"] {
-  @include page-theme($folMainColor);
+  @include page-theme($fol-color);
 }
 
 [data-style-id="error"] {

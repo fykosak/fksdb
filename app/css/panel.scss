@@ -1,5 +1,5 @@
-$panel-color-dark: #f5f5f5;
-$panel-color-light: white;
+$panel-color-dark: var(--bs-secondary-bg);
+$panel-color-light: var(--bs-body-bg);
 
 .panel {
   padding: 4.3rem 0;

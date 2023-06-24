@@ -1,4 +1,4 @@
-@import "../../../../css/colors";
+@import "../../../../css/variables";
 
 
 .game-presentation {
@@ -79,15 +79,15 @@
   }
 
   &.game-ctyrboj {
-    background-color: $ctyrbojColor;
+    background-color: $ctyrboj-color;
 
     h1 {
-      color: $ctyrbojColor;
+      color: $ctyrboj-color;
     }
 
     .head-row {
-      color: $ctyrbojColor;
-      border-bottom: solid $ctyrbojColor 1px;
+      color: $ctyrboj-color;
+      border-bottom: solid $ctyrboj-color 1px;
     }
 
     [data-ctyrboj-label] {

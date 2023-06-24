@@ -38,7 +38,7 @@ class TagsColumnFactory extends ColumnFactory
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([
-                        'class' => 'me-2 badge bg-color-' . $tag->color,
+                        'class' => 'me-2 badge bg-' . $tag->getColor(),
                         'title' => $tag->description,
                     ])
                     ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-tag me-1']))

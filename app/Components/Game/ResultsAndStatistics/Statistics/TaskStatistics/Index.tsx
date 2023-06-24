@@ -32,8 +32,8 @@ class TaskStats extends React.Component<StateProps, never> {
                         />
                     </div>
                 </div>
-                <div class="panel color-auto">
-                    <div class="container">
+                <div className="panel color-auto">
+                    <div className="container">
                         <h2>{translator.getText('Statistics from single problem')}</h2>
                         <Options/>
                     </div>
