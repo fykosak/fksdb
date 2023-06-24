@@ -39,7 +39,7 @@ class InboxFormComponent extends SeriesTableFormComponent
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
                 /** @var ContestantModel $contestant */
-                $contestant = $this->getSeriesTable()->getContestants()->where('contestant_id', $ctId)->fetch();
+                $contestant = $this->seriesTable->getContestants()->where('contestant_id', $ctId)->fetch();
                 if (!$contestant) {
                     // secure check for rewrite contestant_id.
                     throw new ForbiddenRequestException();

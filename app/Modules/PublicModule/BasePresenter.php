@@ -51,7 +51,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return parent::getStyleId();
     }
 
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year'), $this->year);
     }

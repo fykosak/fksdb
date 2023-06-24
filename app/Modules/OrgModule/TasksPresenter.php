@@ -77,6 +77,8 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void

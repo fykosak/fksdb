@@ -309,7 +309,7 @@ class ApplicationPresenter extends BasePresenter
     {
         $contest = $this->getSelectedContest();
         if (isset($contest)) {
-            return 'contest-' . 'event-type-' . $this->getEvent()->event_type_id;
+            return 'contest-' . $contest->getContestSymbol() . ' event-type-' . $this->getEvent()->event_type_id;
         }
         return parent::getStyleId();
     }

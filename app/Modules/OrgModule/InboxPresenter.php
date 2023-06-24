@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
+use FKSDB\Components\Controls\Inbox\Corrected\CorrectedFormComponent;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
@@ -14,6 +15,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Authorizator;
 
 class InboxPresenter extends BasePresenter
@@ -74,6 +77,8 @@ class InboxPresenter extends BasePresenter
 
     /**
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     protected function startup(): void
     {
@@ -87,9 +92,14 @@ class InboxPresenter extends BasePresenter
         return new InboxFormComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentCorrectedFormControl(): CorrectedComponent
+    protected function createComponentCorrectedTable(): CorrectedComponent
     {
         return new CorrectedComponent($this->getContext(), $this->seriesTable);
+    }
+
+    protected function createComponentCorrectedForm(): CorrectedFormComponent
+    {
+        return new CorrectedFormComponent($this->getContext(), $this->seriesTable);
     }
 
     protected function createComponentCheckControl(): SubmitCheckComponent

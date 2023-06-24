@@ -83,10 +83,17 @@ $fyziklaniPoints1: #f45d01;
     background-color: $color;
   }
   footer {
+    background-color: #000000;
+    color: white;
+
     a {
+      color: white;
       font-weight: bold;
       text-decoration: none;
     }
+  }
+  .subtitle {
+    color: $color;
   }
 }
 

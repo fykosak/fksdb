@@ -36,7 +36,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.tsx', '.ts', '.js', '.scss'],
         plugins: [new TsconfigPathsPlugin()],
     },
     externals: {

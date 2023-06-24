@@ -9,7 +9,6 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
@@ -33,13 +32,14 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @param mixed $element
      * @throws \ReflectionException
+     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void
     {
-        parent::checkRequirements($element);
         if (!$this->isEnabled()) {
-            $this->authorized = false;
+            throw new ForbiddenRequestException();
         }
+        parent::checkRequirements($element);
     }
 
     /**
@@ -50,18 +50,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     public function isAllowed($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
-    /**
-     * @throws NotImplementedException
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
-    {
-        if (!$this->isEnabled()) {
-            throw new NotImplementedException();
-        }
-        parent::startup();
     }
 
     protected function isEnabled(): bool
@@ -100,7 +88,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return $this->getEvent()->name;
     }

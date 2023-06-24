@@ -34,11 +34,6 @@ use Nette\InvalidStateException;
 abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
 {
     /**
-     * BackLink for tree construction for breadcrumbs.
-     * @persistent
-     */
-    public ?string $bc = null;
-    /**
      * @persistent
      * @internal
      */
@@ -47,20 +42,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
-    private ?PageTitle $pageTitle;
     protected bool $authorized = true;
     private array $authorizedCache = [];
     private Container $diContainer;
-
-    public static function publicFormatActionMethod(string $action): string
-    {
-        return static::formatActionMethod($action);
-    }
-
-    public static function getBackLinkParamName(): string
-    {
-        return 'bc';
-    }
 
     final public function injectBase(
         Container $diContainer,
@@ -92,20 +76,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }
-    }
-
-    public function setView(string $view): self
-    {
-        parent::setView($view);
-        $this->pageTitle = null;
-        return $this;
-    }
-
-    public function setBackLink(string $backLink): ?string
-    {
-        $old = $this->bc;
-        $this->bc = $backLink;
-        return $old;
     }
 
     /**
@@ -207,7 +177,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     {
         /**@var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        return $login ? $login->person : null;
+        return $this->getUser()->isLoggedIn() ? $login->person : null;
     }
 
     protected function createTemplate(): Template
@@ -229,31 +199,29 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     public function getTitle(): PageTitle
     {
-        if (!isset($this->pageTitle)) {
-            try {
-                $reflection = new \ReflectionClass($this);
-                $reflectionMethod = $reflection->getMethod('title' . $this->getView());
-                if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
-                    throw new InvalidStateException(
-                        sprintf(
-                            'Method %s of %s should be public and not abstract.',
-                            $reflectionMethod->getName(),
-                            get_class($this)
-                        )
-                    );
-                }
-                $this->pageTitle = $reflectionMethod->invoke($this);
-            } catch (\ReflectionException$exception) {
+        try {
+            $reflection = new \ReflectionClass($this);
+            $reflectionMethod = $reflection->getMethod('title' . $this->getView());
+            if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
                 throw new InvalidStateException(
-                    sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
+                    sprintf(
+                        'Method %s of %s should be public and not abstract.',
+                        $reflectionMethod->getName(),
+                        get_class($this)
+                    )
                 );
             }
+            $pageTitle = $reflectionMethod->invoke($this);
+            $pageTitle->subTitle = $this->getSubTitle();
+        } catch (\ReflectionException$exception) {
+            throw new InvalidStateException(
+                sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
+            );
         }
-        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
-        return $this->pageTitle;
+        return $pageTitle;
     }
 
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return null;
     }

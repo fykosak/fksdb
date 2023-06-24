@@ -86,8 +86,8 @@ class BreadcrumbsComponent extends BaseComponent
 
         $requestKey = $this->getRequestKey($request);
         $backLinkId = $this->getBackLinkId($requestKey);
-        $originalBackLink = $presenter->setBackLink($backLinkId);
-        $this->storeRequest($originalBackLink);
+       // $originalBackLink = $presenter->setBackLink($backLinkId);
+       // $this->storeRequest($originalBackLink);
     }
 
     public function reset(): void
@@ -194,24 +194,24 @@ class BreadcrumbsComponent extends BaseComponent
             /** @var Presenter $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
-            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
+           // $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
             $rc = ($presenterClassName)::getReflection();
-            if ($rc->hasMethod($methodName)) {
+          /*  if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {
                     $identifyingParameters[] = $param->name;
                 }
-            }
+            }*/
             $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];
-            $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
+        //    $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
             foreach ($identifyingParameters as $param) {
-                if ($param == $backLinkParameter) {
+           /*     if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
-                }
+                }*/
                 $filteredParameters[$param] = $parameters[$param] ?? null;
             }
 

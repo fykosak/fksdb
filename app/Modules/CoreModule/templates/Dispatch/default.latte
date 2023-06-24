@@ -3,13 +3,13 @@
     {varType array $orgs}
     {*<h2>{_'Shortcuts'}</h2>
     {control navigationChooser:board 'Core:Dispatch:default', true}*}
-    <div class="panel panel-auto">
+    <div class="panel color-auto">
         <div class="container">
             <h2>{_'Contestant'}</h2>
             {control navigationChooser:boardInline $contestants, false}
         </div>
     </div>
-    <div class="panel panel-auto">
+    <div class="panel color-auto">
         <div class="container">
             {if count($orgs)}
                 <h2>{_'Organizer'}</h2>

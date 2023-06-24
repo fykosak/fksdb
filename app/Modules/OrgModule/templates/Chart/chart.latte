@@ -2,7 +2,7 @@
 {block outerContent}
     {var $description = $chart->getDescription()}
     {if $description}
-        <div class="panel panel-auto">
+        <div class="panel color-auto">
             <div class="container px-3">
                 <p>
                     {$description|noescape}
@@ -10,7 +10,7 @@
             </div>
         </div>
     {/if}
-    <div class="panel panel-auto">
+    <div class="panel color-auto">
         <div class="container-fluid px-3">
             {control chart}
         </div>

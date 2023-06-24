@@ -11,8 +11,7 @@ use Nette\DI\Container;
 
 abstract class SeriesTableComponent extends BaseComponent
 {
-
-    private SeriesTable $seriesTable;
+    protected SeriesTable $seriesTable;
     private bool $displayAll;
 
     public function __construct(Container $context, SeriesTable $seriesTable, bool $displayAll = false)
@@ -25,13 +24,8 @@ abstract class SeriesTableComponent extends BaseComponent
     protected function createTemplate(): Template
     {
         $template = parent::createTemplate();
-        $template->seriesTable = $this->getSeriesTable();
+        $template->seriesTable = $this->seriesTable;
         $template->displayAll = $this->displayAll;
         return $template;
-    }
-
-    protected function getSeriesTable(): SeriesTable
-    {
-        return $this->seriesTable;
     }
 }

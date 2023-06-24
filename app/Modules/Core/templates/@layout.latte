@@ -67,23 +67,25 @@
 {/block}
 {block main}
 <main>
-    <div class="panel panel-auto">
+    <div class="panel color-auto">
         <div class="container">
             {block titleBody}
-            <h1 class="page-header">{$pageTitle->toHtml(true)}</h1>
-        {/block}
+            <div class="page-header">
+                <h1 >{$pageTitle->toHtml(false)}</h1>
+                <span class="subtitle">{$pageTitle->subTitle}</span>
+            </div>
+            {/block}
         {block flashes}
             {foreach $flashes as $flash}
-                <div class="alert alert-{$flash->type}">{$flash->message}</div>
+            <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
         </div>
     </div>
     {block outerContent}
-
     <div class="container">
         {include content}
-        </div>
+    </div>
     {/block}
 </main>
 {/block}
@@ -91,7 +93,7 @@
 <footer>
     <div class="container text-center py-3">
         <div>
-            <img src="/images/logo/black.svg" alt="logo" style="height: 2rem"/>
+            <img src="/images/logo/white.svg" alt="logo" style="height: 2rem"/>
             <span>| </span>
             <span>{_'Administrator'}: </span>
             <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>

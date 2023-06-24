@@ -12,7 +12,9 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\AuthMethod;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 class AESOPPresenter extends AuthenticatedPresenter
 {
@@ -70,6 +72,11 @@ class AESOPPresenter extends AuthenticatedPresenter
         return 'AESOP';
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();
