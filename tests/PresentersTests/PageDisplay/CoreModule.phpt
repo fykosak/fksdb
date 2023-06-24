@@ -13,9 +13,7 @@ class CoreModule extends AbstractPageDisplayTestCase
     public function getPages(): array
     {
         return [
-            ['Core:MyApplications', 'default'],
-            // ['Core:Dispatch', 'default'], disable cause of fast links
-            ['Core:MyPayments', 'default'],
+            ['Core:Dispatch', 'default'],// disable cause of fast links
             ['Core:Settings', 'default'],
         ];
     }
