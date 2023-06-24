@@ -1,52 +1,55 @@
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType FKSDB\Models\ORM\Models\PersonModel $person}
 {varType string $lang}
-{block content}
-    {var $lastKey = null}
-    {foreach $event->getScheduleGroups()->order('start') as $group}
-        {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
-        {var $personSchedule = $person->getScheduleByGroup($group)}
-        {continueIf !in_array($group->schedule_group_type->value,['weekend','weekend_info'])}
-        {if $group->start->format('Y-d-m') !== $lastKey}
-            <hr/>
-            <h2 class="my-3 fw-bold text-fof">
-                {if $group->start->format('Y-d-m') === (new \DateTime())->format('Y-d-m')}
-                    {_'Today'}
-                {else}
-                    {$group->start->format('l d. m.')}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {var $lastKey = null}
+            {foreach $event->getScheduleGroups()->order('start') as $group}
+                {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+                {var $personSchedule = $person->getScheduleByGroup($group)}
+                {continueIf !in_array($group->schedule_group_type->value,['weekend','weekend_info'])}
+                {if $group->start->format('Y-d-m') !== $lastKey}
+                    <h2 class="my-3 fw-bold text-fof">
+                        {if $group->start->format('Y-d-m') === (new \DateTime())->format('Y-d-m')}
+                            {_'Today'}
+                        {else}
+                            {$group->start->format('l d. m.')}
+                        {/if}
+                    </h2>
                 {/if}
-            </h2>
-        {/if}
-        {php $lastKey = $group->start->format('Y-d-m')}
-        <div class="{($personSchedule?'':'opacity-25 ') . 'd-flex align-items-center my-2'}">
-            <h3 class="me-3">
-                {$group->getName()[$lang]}
-            </h3>
-            {if $group->hasEnded()}
-                <div class="badge bg-secondary">{_'Block eneded'}</div>
-            {elseif $group->hasStarted()}
-                <div class="badge bg-success">{_'Block is ongoing'}</div>
-            {else}
-            {var $toStart = $group->start->getTimestamp()-time()}
-                <div class="badge bg-warning">
-                    {if $toStart < 60 * 60}
-                        {_'Block start in'} {floor($toStart / 60)} {_'minutes'}
+            {php $lastKey = $group->start->format('Y-d-m')}
+                <div class="{($personSchedule?'':'opacity-25 ') . 'd-flex align-items-center my-2'}">
+                    <h3 class="me-3">
+                        {$group->getName()[$lang]}
+                    </h3>
+                    {if $group->hasEnded()}
+                        <div class="badge bg-secondary">{_'Block eneded'}</div>
+                    {elseif $group->hasStarted()}
+                        <div class="badge bg-success">{_'Block is ongoing'}</div>
                     {else}
-                        {_'Block not started yet'}
+                    {var $toStart = $group->start->getTimestamp()-time()}
+                        <div class="badge bg-warning">
+                            {if $toStart < 60 * 60}
+                                {_'Block start in'} {floor($toStart / 60)} {_'minutes'}
+                            {else}
+                                {_'Block not started yet'}
+                            {/if}
+                        </div>
                     {/if}
+                    <span class="text-fof ms-auto">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</span>
                 </div>
-            {/if}
-            <span class="text-fof ms-auto">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</span>
-        </div>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-            {foreach $group->getItems() as $item}
-                {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item}
-                <div class="col my-2">
-                    {include item item:$item,selected: $personSchedule && $personSchedule->schedule_item_id === $item->schedule_item_id}
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+                    {foreach $group->getItems() as $item}
+                        {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item}
+                        <div class="col my-2">
+                            {include item item:$item,selected: $personSchedule && $personSchedule->schedule_item_id === $item->schedule_item_id}
+                        </div>
+                    {/foreach}
                 </div>
             {/foreach}
         </div>
-    {/foreach}
+    </div>
 {/block}
 
 {define item}

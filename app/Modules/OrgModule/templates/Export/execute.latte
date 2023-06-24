@@ -1,4 +1,14 @@
-{block content}
-    {control tagCloud:detail $model}
-    {control resultsComponent}
+{block titleBody}
+    {include parent}
+    <p class="mt-3">
+        <i class="fas fa-info-circle me-2"></i>{control valuePrinter:templateString '@stored_query.description', $model, 1024}
+    </p>
+    <p>{control valuePrinter:templateString '@stored_query.tags', $model, 1024}</p>
+{/block}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control resultsComponent}
+        </div>
+    </div>
 {/block}

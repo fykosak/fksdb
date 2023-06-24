@@ -1,9 +1,11 @@
 {varType FKSDB\Models\ORM\Models\TeacherModel $model}
-{block content}
-    {foreach ['person.person_link','teacher.since','teacher.until','teacher.note','teacher.number_brochures','teacher.state'] as $field}
-        <div class="row">
-            <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
-            <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
-        </div>
-    {/foreach}
+{block outerContent}
+    <div class="container">
+        {foreach ['person.person_link','teacher.since','teacher.until','teacher.note','teacher.number_brochures','teacher.state'] as $field}
+            <div class="row">
+                <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
+                <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+            </div>
+        {/foreach}
+    </div>
 {/block}

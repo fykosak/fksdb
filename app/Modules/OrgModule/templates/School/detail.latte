@@ -1,14 +1,22 @@
 {varType FKSDB\Models\ORM\Models\SchoolModel $model}
-{block content}
-    {foreach ['@school.name_full','@school.name','@school.name_abbrev','@school.email','@school.ic','@school.izo','@school.active','@school.note'] as $field}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {foreach ['@school.name_full','@school.name','@school.name_abbrev','@school.email','@school.ic','@school.izo','@school.active','@school.note'] as $field}
 
-        <div class="row">
-            <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{control valuePrinter:templateString $field . ':title',$model,1024}</b>
-            <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+                <div class="row">
+                    <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{control valuePrinter:templateString $field . ':title',$model,1024}</b>
+                    <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
                 {control valuePrinter:templateString $field,$model,1024}
             </span>
+                </div>
+            {/foreach}
         </div>
-    {/foreach}
-    <h2>{_'Contestants'}</h2>
-    {control contestantsFromSchoolGrid}
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Contestants'}</h2>
+            {control contestantsFromSchoolGrid}
+        </div>
+    </div>
 {/block}

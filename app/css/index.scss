@@ -173,5 +173,12 @@ main {
 
 footer {
   min-height: $footerHeight;
-  background-color: rgba(255, 255, 255, .7);
+  background-color: #000000;
+  color: white;
+
+  a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
 }

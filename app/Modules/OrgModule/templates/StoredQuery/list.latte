@@ -1,11 +1,16 @@
 {varType FKSDB\Modules\Core\BasePresenter $control}
-{block content}
-    {if $control->authorized('create')}
-        {var $pageTitle = $control->titleCreate()}
-        <a href="{plink create}" class="btn btn-outline-primary"><i
-                    class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
-    {/if}
-    <hr/>
-    {control tagCloud:list}
-    {control grid}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {if $control->authorized('create')}
+                {var $pageTitle = $control->titleCreate()}
+                <a href="{plink create}" class="btn btn-outline-primary"><i
+                            class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
+            {/if}
+        </div>
+        <div class="container">
+            {control tagCloud:list}
+            {control grid}
+        </div>
+    </div>
 {/block}

@@ -15,7 +15,11 @@
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
                 {include form}
-                <div class="text-center" style="list-style: none;">{control languageChooser}</div>
+                <div class="d-grid gap-2 mt-2">
+                    <div class="text-center btn btn-outline-secondary" style="list-style: none;">
+                        {control languageChooser}
+                    </div>
+                </div>
             </div>
         </div>
     </main>
