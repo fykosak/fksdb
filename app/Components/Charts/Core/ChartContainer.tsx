@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { ConnectedComponent } from 'react-redux';
 
-interface OwnProps<ChartProps, LegendProps> {
-    chart: React.ComponentType<ChartProps> | ConnectedComponent<React.ComponentType<any>, ChartProps>; // TODO
-    chartProps: ChartProps;
-    legendComponent?: React.ComponentType<LegendProps> | ConnectedComponent<React.ComponentType<any>, LegendProps>; // TODO
-    legendProps?: LegendProps;
+interface OwnProps<OwnChartProps, OwnLegendProps, ChartStateProps = unknown, LegendStateProps = unknown> {
+    chart: React.ComponentType<OwnChartProps> | ConnectedComponent<React.ComponentType<ChartStateProps & OwnChartProps>, OwnChartProps>;
+    chartProps: OwnChartProps;
+    legendComponent?: React.ComponentType<OwnLegendProps> | ConnectedComponent<React.ComponentType<OwnLegendProps & LegendStateProps>, OwnLegendProps>;
+    legendProps?: OwnLegendProps;
     headline?: React.ReactNode;
     containerClassName?: string;
 }
 
-export default class ChartContainer<ChartProps, LegendProps> extends React.Component<OwnProps<ChartProps, LegendProps>> {
+export default class ChartContainer<OwnChartProps, OwnLegendProps, ChartStateProps = unknown, LegendStateProps = unknown> extends React.Component<OwnProps<OwnChartProps, OwnLegendProps, ChartStateProps, LegendStateProps>, never> {
 
     public render() {
         const {legendComponent, legendProps, headline, chartProps, chart, containerClassName} = this.props;
@@ -19,10 +19,10 @@ export default class ChartContainer<ChartProps, LegendProps> extends React.Compo
                 {headline && <h3>{headline}</h3>}
                 <div className="row">
                     <div className="col-xl-9 col-lg-8 col-md-12">
-                        {React.createElement<ChartProps>(chart, chartProps)}
+                        {React.createElement<OwnChartProps>(chart, chartProps)}
                     </div>
                     {legendComponent && <div className="col-xl-3 col-lg-4 col-md-12">
-                        {React.createElement<LegendProps>(legendComponent, legendProps)}
+                        {React.createElement<OwnLegendProps>(legendComponent, legendProps)}
                     </div>}
                 </div>
             </div>

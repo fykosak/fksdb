@@ -1,11 +1,11 @@
-import { translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 const allowedTypes = [
     'application/pdf',
 ];
 
-export const handleFileUpload = (data: FileList, setError: (error: Message) => void): FormData | null | void => {
+export const handleFileUpload = (data: FileList, setError: (error: Message) => void, translator: Translator<string>): FormData | null | void => {
 
     if (data.length > 1) {
         console.log('max 1 file');

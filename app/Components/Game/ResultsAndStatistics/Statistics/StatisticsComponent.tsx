@@ -5,16 +5,17 @@ import { app } from '../reducers/store';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import TeamStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index';
 import TasksStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index';
-import CorrelationStats
-    from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index';
+import CorrelationStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
     actions: NetteActions;
     data: ResponseData;
+    translator: Translator<availableLanguage>;
 }
 
-export default class StatisticsComponent extends React.Component<OwnProps> {
+export default class StatisticsComponent extends React.Component<OwnProps, never> {
     public render() {
         const {mode} = this.props;
         let content = null;
@@ -29,7 +30,11 @@ export default class StatisticsComponent extends React.Component<OwnProps> {
             case 'correlation':
                 content = (<CorrelationStats/>);
         }
-        return <MainComponent app={app} data={this.props.data} actions={this.props.actions}>
+        return <MainComponent
+            app={app}
+            data={this.props.data}
+            actions={this.props.actions}
+            translator={this.props.translator}>
             <div className="container">
                 {content}
             </div>

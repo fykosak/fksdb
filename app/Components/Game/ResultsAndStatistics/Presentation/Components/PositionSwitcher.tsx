@@ -1,10 +1,7 @@
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { ACTION_SET_PARAMS, Params } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
@@ -22,7 +19,7 @@ interface DispatchProps {
     onSetParams(data: Params): void;
 }
 
-class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
+class PositionSwitcher extends React.Component<StateProps & DispatchProps, never> {
     private abortRun = false;
 
     public componentDidMount() {

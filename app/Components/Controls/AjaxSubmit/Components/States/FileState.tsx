@@ -1,17 +1,14 @@
-import { translator } from '@translator/translator';
 import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
-    submit: ModelSubmit;
+    submit: SubmitModel;
 }
 
 interface DispatchProps {
@@ -22,11 +19,15 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
+class FileState extends React.Component<OwnProps & DispatchProps & StateProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
+        const {submit} = this.props;
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-outline-warning" title={translator.getText('Revoke')}
+            <button aria-hidden="true" className="pull-right btn btn-outline-warning"
+                    title={translator.getText('Revoke')}
                     onClick={() => {
                         if (window.confirm(translator.getText('Remove submit?'))) {
                             this.props.onDeleteFile(this.props.actions.getAction('revoke'));
@@ -35,7 +36,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
             <div className="text-center p-2">
                 <a href={this.props.actions.getAction('download')}>
                     <span className="display-1 w-100"><i className="fa fa-file-pdf"/></span>
-                    <span className="d-block">{this.props.submit.name}</span>
+                    <span className="d-block">{translator.get(submit.name)}</span>
                 </a>
             </div>
         </div>;
@@ -44,7 +45,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchNetteFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchNetteFetch<SubmitModel>(url, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store): StateProps => {

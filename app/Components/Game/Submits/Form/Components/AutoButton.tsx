@@ -2,7 +2,7 @@ import { SubmitFormRequest } from 'FKSDB/Components/Game/Submits/Form/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
-import { translator } from '@translator/translator';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     valid: boolean;
@@ -13,6 +13,8 @@ interface OwnProps {
 }
 
 export default class AutoButton extends React.Component<OwnProps, never> {
+
+    static contextType = TranslatorContext;
 
     public componentDidUpdate() {
         const {valid, submitting, handleSubmit, onSubmit} = this.props;
@@ -26,6 +28,7 @@ export default class AutoButton extends React.Component<OwnProps, never> {
     }
 
     public render() {
+        const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit} = this.props;
         return (
             <div className="d-flex justify-content-around">

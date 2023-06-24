@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Models\Expressions\EvaluatedExpression;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Statement;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  */
-class Role extends EvaluatedExpression
+class Role implements Statement
 {
     public const ADMIN = 'admin';
 
@@ -28,6 +29,7 @@ class Role extends EvaluatedExpression
 
     public function __invoke(...$args): bool
     {
+        /** @var BaseHolder $holder */
         [$holder] = $args;
         switch ($this->role) {
             case self::ADMIN:
@@ -35,10 +37,5 @@ class Role extends EvaluatedExpression
             default:
                 return false;
         }
-    }
-
-    public function __toString(): string
-    {
-        return "role($this->role)";
     }
 }

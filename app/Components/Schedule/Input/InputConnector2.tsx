@@ -1,10 +1,7 @@
 import { setInitialData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { InputConnectorStateMap } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';
 
 export interface OwnProps {
@@ -19,7 +16,7 @@ export interface DispatchProps {
     onSetInitialData(value: number): void;
 }
 
-class InputConnector2 extends React.Component<OwnProps & StateProps & DispatchProps> {
+class InputConnector2 extends React.Component<OwnProps & StateProps & DispatchProps, never> {
 
     public componentDidMount() {
         const {input, onSetInitialData} = this.props;

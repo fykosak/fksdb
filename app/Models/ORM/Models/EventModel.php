@@ -99,7 +99,6 @@ class EventModel extends Model implements Resource, NodeCreator
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
-
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         return $this->getTeams()->where('state', TeamState::PARTICIPATED);
@@ -168,14 +167,6 @@ class EventModel extends Model implements Resource, NodeCreator
                 return new CtyrbojHandler($this, $container);
         }
         throw new GameException(_('Game handler not exist for this event'));
-    }
-
-    public function getPaymentFactoryName(): ?string
-    {
-        if ($this->event_type_id === 1) {
-            return sprintf('fyziklani%dpayment', $this->event_year);
-        }
-        return null;
     }
 
     private function getParameters(): array

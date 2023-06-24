@@ -1,11 +1,11 @@
-import { LocalizedString } from '@translator/translator';
+import { availableLanguage, LangMap } from '@translator/translator';
 import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 
 export interface ModelScheduleGroup {
     items: ModelScheduleItem[];
     scheduleGroupId: number;
     scheduleGroupType: ScheduleGroupType;
-    name: LocalizedString;
+    name: LangMap<availableLanguage, string>;
     eventId: number;
     start: string;
     end: string;
