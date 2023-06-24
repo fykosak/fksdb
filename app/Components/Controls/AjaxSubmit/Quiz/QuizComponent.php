@@ -67,7 +67,7 @@ class QuizComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $quizQuestions = new QuizContainer($this->container, $this->task, $this->contestant);
-        $quizQuestions->setOption('label', $this->task->getFQName());
+        $quizQuestions->setOption('label', $this->task->getFullLabel($this->lang));
         $form->addComponent($quizQuestions, 'quiz_questions');
 
         // show contestant registration form if contestant is null
@@ -95,9 +95,8 @@ class QuizComponent extends FormComponent
      * @throws BadRequestException
      *
      */
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
         $values = $form->getValues();
         try {
             // create and save contestant

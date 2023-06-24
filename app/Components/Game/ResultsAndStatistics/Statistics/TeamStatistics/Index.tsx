@@ -1,18 +1,15 @@
-import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
 import PointsPie from './PieChart';
 import TimeLine from './Timeline';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     teams: TeamModel[];
@@ -23,9 +20,11 @@ interface DispatchProps {
     onChangeFirstTeam(id: number): void;
 }
 
-class TeamStats extends React.Component<StateProps & DispatchProps> {
+class TeamStats extends React.Component<StateProps & DispatchProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {teams, onChangeFirstTeam, teamId} = this.props;
 
         const teamSelect = (

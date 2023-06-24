@@ -16,20 +16,20 @@ use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
 
 /**
- * @property-read int schedule_item_id
- * @property-read int schedule_group_id
- * @property-read ScheduleGroupModel schedule_group
- * @property-read float|null price_czk
- * @property-read float|null price_eur
- * @property-read string|null name_cs
- * @property-read string|null name_en
- * @property-read int|null capacity
- * @property-read string|null description_cs
- * @property-read string|null description_en
- * @property-read string|null long_description_cs
- * @property-read string|null long_description_en
- * @property-read \DateTimeInterface|null begin
- * @property-read \DateTimeInterface|null end
+ * @property-read int $schedule_item_id
+ * @property-read int $schedule_group_id
+ * @property-read ScheduleGroupModel $schedule_group
+ * @property-read float|null $price_czk
+ * @property-read float|null $price_eur
+ * @property-read string|null $name_cs
+ * @property-read string|null $name_en
+ * @property-read int|null $capacity
+ * @property-read string|null $description_cs
+ * @property-read string|null $description_en
+ * @property-read string|null $long_description_cs
+ * @property-read string|null $long_description_en
+ * @property-read \DateTimeInterface|null $begin
+ * @property-read \DateTimeInterface|null $end
  */
 class ScheduleItemModel extends Model implements Resource, NodeCreator
 {

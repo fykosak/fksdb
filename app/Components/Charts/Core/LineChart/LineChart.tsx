@@ -22,7 +22,7 @@ interface OwnProps<XValue extends Date | number> {
     };
 }
 
-export default class LineChart<XValue extends Date | number> extends ChartComponent<OwnProps<XValue>, Record<string, never>> {
+export default class LineChart<XValue extends Date | number> extends ChartComponent<OwnProps<XValue>, never> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

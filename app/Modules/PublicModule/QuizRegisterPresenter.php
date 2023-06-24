@@ -19,9 +19,8 @@ class QuizRegisterPresenter extends BasePresenter
 
     private TaskService $taskService;
 
-    final public function injectTernary(
-        TaskService $taskService
-    ): void {
+    final public function injectTernary(TaskService $taskService): void
+    {
         $this->taskService = $taskService;
     }
 

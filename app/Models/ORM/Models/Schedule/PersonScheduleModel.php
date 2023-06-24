@@ -10,11 +10,11 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 
 /**
- * @property-read PersonModel person
- * @property-read ScheduleItemModel schedule_item
- * @property-read int person_id
- * @property-read int schedule_item_id
- * @property-read int person_schedule_id
+ * @property-read PersonModel $person
+ * @property-read ScheduleItemModel $schedule_item
+ * @property-read int $person_id
+ * @property-read int $schedule_item_id
+ * @property-read int $person_schedule_id
  */
 class PersonScheduleModel extends Model
 {

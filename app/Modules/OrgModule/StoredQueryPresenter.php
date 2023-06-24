@@ -6,15 +6,14 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
 /**
@@ -98,7 +97,7 @@ class StoredQueryPresenter extends BasePresenter
         return new StoredQueryFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): StoredQueriesGrid
     {
         /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');

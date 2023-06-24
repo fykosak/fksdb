@@ -166,7 +166,7 @@ class BaseHolder implements ModelHolder
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
-    public function getState(): ?EventParticipantStatus
+    public function getState(): EventParticipantStatus
     {
         return $this->model->status;
     }

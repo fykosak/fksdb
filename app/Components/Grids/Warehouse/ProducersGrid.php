@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 class ProducersGrid extends EntityGrid
@@ -19,7 +19,7 @@ class ProducersGrid extends EntityGrid
         ]);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $query = parent::getModels();
         $query->order('name');

@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Game/Submits/Form/actions';
 import Buttons from './Buttons';
 import Code from './Code';
@@ -14,6 +13,7 @@ import { Action, Dispatch } from 'redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import { validate } from '../middleware';
 import AutoButton from 'FKSDB/Components/Game/Submits/Form/Components/AutoButton';
+import { TranslatorContext } from '@translator/LangContext';
 
 export interface OwnProps {
     tasks: TaskModel[];
@@ -32,8 +32,10 @@ interface StateProps {
 }
 
 class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
         const hasButtons = availablePoints.length;
         return (

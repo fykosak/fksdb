@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
@@ -19,7 +20,6 @@ use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
 
 /**
@@ -32,8 +32,10 @@ class PaymentPresenter extends BasePresenter
     private PaymentService $paymentService;
     private PriceCalculator $priceCalculator;
 
-    final public function injectServicePayment(PaymentService $paymentService, PriceCalculator $priceCalculator): void
-    {
+    final public function injectServicePayment(
+        PaymentService $paymentService,
+        PriceCalculator $priceCalculator
+    ): void {
         $this->paymentService = $paymentService;
         $this->priceCalculator = $priceCalculator;
     }
@@ -123,7 +125,9 @@ class PaymentPresenter extends BasePresenter
      */
     private function isPaymentAllowed(): bool
     {
-        $params = $this->getContext()->parameters[$this->getEvent()->getPaymentFactoryName()];
+        $params = $this->getContext()->parameters[$this->eventDispatchFactory->getPaymentFactoryName(
+            $this->getEvent()
+        )];
         if (!isset($params['begin']) || !isset($params['end'])) {
             return false;
         }
@@ -168,13 +172,13 @@ class PaymentPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws MissingServiceException
+     * @throws  BadTypeException
      */
     private function getMachine(): PaymentMachine
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->getContext()->getService($this->getEvent()->getPaymentFactoryName() . '.machine');
+            $machine = $this->eventDispatchFactory->getPaymentMachine($this->getEvent());
         }
         return $machine;
     }
@@ -194,11 +198,11 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
@@ -227,6 +231,7 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
@@ -241,11 +246,11 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentEditForm(): PaymentFormComponent

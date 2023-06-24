@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
@@ -6,12 +5,10 @@ import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
 import './downloader.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     error: Response | string | number | Error;
@@ -32,7 +29,9 @@ interface OwnProps {
     data: ResponseData;
 }
 
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, never> {
+
+    static contextType = TranslatorContext;
 
     public componentDidUpdate(oldProps: DispatchProps & StateProps & OwnProps) {
         const {lastUpdated: oldLastUpdated} = oldProps;
@@ -47,6 +46,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
     }
 
     public render() {
+        const translator = this.context;
         const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
         return (
             <div className="downloader-update-info bg-white">

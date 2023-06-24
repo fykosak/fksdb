@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
@@ -6,6 +5,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Row from './CtyrbojRow';
 import { Store } from '../../reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     submits: Submits;
@@ -13,9 +13,12 @@ interface StateProps {
     tasks: TaskModel[];
 }
 
-class Index extends React.Component<StateProps> {
+class Index extends React.Component<StateProps, never> {
+
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {submits, teams, tasks} = this.props;
         const submitsForTeams = {};
         for (const index in submits) {

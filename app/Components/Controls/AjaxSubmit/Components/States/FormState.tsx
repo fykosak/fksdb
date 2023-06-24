@@ -1,7 +1,6 @@
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
-import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
@@ -9,10 +8,7 @@ import { addError } from '../../actions';
 import { handleFileUpload } from '../../middleware';
 import { Store } from '../../Reducers';
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-
-interface OwnProps {
-    submit: ModelSubmit;
-}
+import { TranslatorContext } from '@translator/LangContext';
 
 interface DispatchProps {
 
@@ -32,9 +28,11 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
+class FormState extends React.Component<StateProps & DispatchProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {dragged} = this.props;
 
         return <div className={'drop-input' + (dragged ? ' dragged' : '')}
@@ -58,7 +56,7 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fas fa-download"/></span>
                     <span className="d-block p-1">
-                        <span>Drag file here.</span>
+                        <span>{translator.getText('Drag file here.')}</span>
                     </span>
                     <input
                         className="form-control"
@@ -96,7 +94,8 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
     }
 
     private handleFile(fileList: FileList): void {
-        const formData = handleFileUpload(fileList, this.props.onAddError);
+        const translator = this.context;
+        const formData = handleFileUpload(fileList, this.props.onAddError, translator);
         if (formData) {
             this.props.onFileUpload(formData, this.props.actions.getAction('upload'));
         }

@@ -8,18 +8,23 @@ import PositionSwitcher from './Components/PositionSwitcher';
 import Setting from './Components/Setting';
 import { app } from '../reducers/store';
 import './style.scss';
-import CtyrbojTable
-    from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/CtyrbojTable';
+import CtyrbojTable from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/CtyrbojTable';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     actions: NetteActions;
     data: ResponseData;
     event: 'fof' | 'ctyrboj';
+    translator: Translator<availableLanguage>;
 }
 
-export default class Main extends React.Component<OwnProps> {
+export default class Main extends React.Component<OwnProps, never> {
     public render() {
-        return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
+        return <MainComponent
+            actions={this.props.actions}
+            data={this.props.data}
+            app={app}
+            translator={this.props.translator}>
             <div className={'game-presentation fixed-top h-100 w-100 game-' + this.props.event}>
                 <Setting/>
                 <Toggler event={this.props.event}>

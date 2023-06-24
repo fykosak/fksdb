@@ -29,12 +29,14 @@ class AjaxSubmitComponent extends AjaxComponent
     private TaskModel $task;
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
+    private string $lang;
 
-    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant, string $lang)
     {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
+        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitService $submitService, SubmitHandlerFactory $submitHandlerFactory): void
@@ -107,7 +109,7 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(
                 new Message(
-                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFQName()),
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFullLabel($this->lang)),
                     Message::LVL_ERROR
                 )
             );

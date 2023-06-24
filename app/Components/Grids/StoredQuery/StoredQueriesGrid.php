@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\StoredQuery;
 use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 class StoredQueriesGrid extends Grid
@@ -30,7 +30,7 @@ class StoredQueriesGrid extends Grid
         $this->storedQueryService = $storedQueryService;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         if (count($this->activeTagIds)) {
             return $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');

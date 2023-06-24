@@ -9,8 +9,8 @@ use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -28,7 +28,7 @@ class SchoolsGrid extends FilterGrid
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
         if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {

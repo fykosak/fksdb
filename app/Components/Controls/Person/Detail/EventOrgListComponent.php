@@ -10,8 +10,8 @@ use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrgModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class EventOrgListComponent extends DetailComponent
 {
@@ -25,7 +25,7 @@ class EventOrgListComponent extends DetailComponent
         return new Title(null, _('Event organizers'));
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getEventOrgs();
     }
