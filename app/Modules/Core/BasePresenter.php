@@ -12,21 +12,30 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\Utils\Utils;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Security\AuthenticationException;
+use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
@@ -46,16 +55,95 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     private array $authorizedCache = [];
     private Container $diContainer;
 
+    protected TokenAuthenticator $tokenAuthenticator;
+    protected PasswordAuthenticator $passwordAuthenticator;
+    protected EventAuthorizator $eventAuthorizator;
+    protected ContestAuthorizator $contestAuthorizator;
+
     final public function injectBase(
         Container $diContainer,
         ContestService $contestService,
         PresenterBuilder $presenterBuilder,
-        GettextTranslator $translator
+        GettextTranslator $translator,
+        TokenAuthenticator $tokenAuthenticator,
+        PasswordAuthenticator $passwordAuthenticator,
+        ContestAuthorizator $contestAuthorizator,
+        EventAuthorizator $eventAuthorizator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
         $this->diContainer = $diContainer;
+        $this->tokenAuthenticator = $tokenAuthenticator;
+        $this->passwordAuthenticator = $passwordAuthenticator;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->eventAuthorizator = $eventAuthorizator;
+    }
+
+    /**
+     * @param \ReflectionMethod|\ReflectionClass $element
+     * @throws \ReflectionException
+     * @throws \Exception
+     */
+    public function checkRequirements($element): void
+    {
+        parent::checkRequirements($element);
+        if ($element instanceof \ReflectionClass) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::TOKEN))) {
+                $this->tryAuthToken();
+            }
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::HTTP))) {
+                $this->tryHttpAuth();
+            }
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::LOGIN))) {
+                $this->optionalLoginRedirect();
+            }
+            $method = $this->formatAuthorizedMethod();
+            $this->authorized = $method->invoke($this);
+            if (!$this->authorized) {
+                throw new ForbiddenRequestException();
+            }
+        }
+    }
+
+    public function formatAuthorizedMethod(): \ReflectionMethod
+    {
+        $method = 'authorized' . $this->getAction();
+        try {
+            $reflectionMethod = new \ReflectionMethod($this, $method);
+            if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+                throw new InvalidStateException(
+                    sprintf('Method %s of %s should return bool.', $reflectionMethod->getName(), get_class($this))
+                );
+            }
+            if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
+                throw new InvalidStateException(
+                    sprintf(
+                        'Method %s of %s should be public and not abstract.',
+                        $reflectionMethod->getName(),
+                        get_class($this)
+                    )
+                );
+            }
+        } catch (\ReflectionException $exception) {
+            throw new InvalidStateException(
+                sprintf('Presenter %s has not implemented method %s.', get_class($this), $method)
+            );
+        }
+        return $reflectionMethod;
+    }
+
+    public function isAuthAllowed(AuthMethod $authMethod): bool
+    {
+        switch ($authMethod->value) {
+            case AuthMethod::LOGIN:
+            case AuthMethod::TOKEN:
+                // TODO definovať kam sa dá prihlásiť tokenom!!!
+                return true;
+            case AuthMethod::HTTP:
+                return false;
+        }
+        return false;
     }
 
     /**
@@ -81,6 +169,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     /**
      * @throws BadRequestException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     public function authorized(string $destination, ?array $args = null): bool
     {
@@ -199,8 +288,8 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     public function getTitle(): PageTitle
     {
+        $reflection = new \ReflectionClass($this);
         try {
-            $reflection = new \ReflectionClass($this);
             $reflectionMethod = $reflection->getMethod('title' . $this->getView());
             if ($reflectionMethod->isAbstract() || !$reflectionMethod->isPublic()) {
                 throw new InvalidStateException(
@@ -212,7 +301,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
                 );
             }
             $pageTitle = $reflectionMethod->invoke($this);
-            $pageTitle->subTitle = $this->getSubTitle();
+            $pageTitle->subTitle = $pageTitle->subTitle ?? $this->getSubTitle();
         } catch (\ReflectionException$exception) {
             throw new InvalidStateException(
                 sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
@@ -264,5 +353,87 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
         return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function tryAuthToken(): void
+    {
+        $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
+
+        if (!$tokenData) {
+            return;
+        }
+
+        try {
+            $login = $this->tokenAuthenticator->authenticate($tokenData);
+            Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'token-login');
+            $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
+            $this->getUser()->login($login);
+            $this->redirect('this');
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function tryHttpAuth(): void
+    {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            $this->httpAuthPrompt();
+            return;
+        }
+        try {
+            $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
+            $this->getUser()->login($login);
+            $method = $this->formatAuthorizedMethod();
+            $this->authorized = $method->invoke($this);
+        } catch (AuthenticationException $exception) {
+            $this->httpAuthPrompt();
+        }
+    }
+
+    private function httpAuthPrompt(): void
+    {
+        $realm = $this->getHttpRealm();
+        if ($realm && $this->requiresLogin()) {
+            header('WWW-Authenticate: Basic realm="' . $realm . '"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo '<h1>Unauthorized</h1>';
+            exit;
+        }
+    }
+
+    protected function getHttpRealm(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * This method may be override, however only simple conditions
+     * can be checked there -- user session is not prepared at the
+     * moment of the call.
+     */
+    public function requiresLogin(): bool
+    {
+        return true;
+    }
+
+    private function optionalLoginRedirect(): void
+    {
+        if (!$this->requiresLogin()) {
+            return;
+        }
+        $this->redirect(
+            ':Core:Authentication:login',
+            [
+                'backlink' => $this->storeRequest(),
+                AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+            ]
+        );
     }
 }

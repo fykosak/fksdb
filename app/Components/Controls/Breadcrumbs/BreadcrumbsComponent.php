@@ -74,7 +74,6 @@ class BreadcrumbsComponent extends BaseComponent
     }
 
     /**
-     * @throws \ReflectionException
      * @throws BadTypeException
      */
     public function setBackLink(AppRequest $request): void

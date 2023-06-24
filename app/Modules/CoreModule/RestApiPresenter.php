@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Models\WebService\WebServiceModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\AuthMethod;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
-class RestApiPresenter extends AuthenticatedPresenter
+class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
 
     private WebServiceModel $server;

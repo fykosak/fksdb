@@ -10,7 +10,6 @@ use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -34,23 +33,40 @@ final class AuthenticationPresenter extends BasePresenter
     /** @persistent */
     public ?string $backlink = '';
     private AuthTokenService $authTokenService;
-    private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
         AuthTokenService $authTokenService,
-        PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
         GoogleProvider $googleProvider
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
         $this->googleProvider = $googleProvider;
+    }
+
+    public function authorizedLogin(): bool
+    {
+        return true;
+    }
+
+    public function authorizedLogout(): bool
+    {
+        return true;
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return true;
+    }
+
+    public function requiresLogin(): bool
+    {
+        return false;
     }
 
     public function titleLogin(): PageTitle

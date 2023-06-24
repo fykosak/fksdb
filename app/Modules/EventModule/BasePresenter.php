@@ -11,12 +11,10 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     /** @persistent */
     public ?int $eventId = null;

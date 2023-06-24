@@ -55,9 +55,19 @@ class RegisterPresenter extends CoreBasePresenter
     public ?int $personId = null;
     private PersonService $personService;
 
+    public function requiresLogin(): bool
+    {
+        return false;
+    }
+
     final public function injectTernary(PersonService $personService): void
     {
         $this->personService = $personService;
+    }
+
+    public function authorizedContest(): bool
+    {
+        return true;
     }
 
     public function titleContest(): PageTitle
@@ -65,14 +75,29 @@ class RegisterPresenter extends CoreBasePresenter
         return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select contest'));
     }
 
+    public function authorizedYear(): bool
+    {
+        return true;
+    }
+
     public function titleYear(): PageTitle
     {
         return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select year'));
     }
 
+    public function authorizedEmail(): bool
+    {
+        return true;
+    }
+
     public function titleEmail(): PageTitle
     {
         return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type e-mail'));
+    }
+
+    public function authorizedContestant(): bool
+    {
+        return true;
     }
 
     public function titleContestant(): PageTitle

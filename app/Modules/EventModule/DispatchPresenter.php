@@ -6,10 +6,9 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class DispatchPresenter extends AuthenticatedPresenter
+class DispatchPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
 
     public function titleDefault(): PageTitle

@@ -146,6 +146,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
     /**
      * @throws BadRequestException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     public function isItemVisible(array $item): bool
     {

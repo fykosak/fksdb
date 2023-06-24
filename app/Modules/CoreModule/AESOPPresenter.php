@@ -8,7 +8,6 @@ use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\AuthMethod;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
@@ -16,7 +15,7 @@ use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-class AESOPPresenter extends AuthenticatedPresenter
+class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 

@@ -4,21 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\WebService\SoapResponse;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 
 class WebServicePresenter extends BasePresenter
 {
-
     private \SoapServer $server;
-    private ContestAuthorizator $contestAuthorizator;
 
-    final public function injectSoapServer(\SoapServer $server, ContestAuthorizator $contestAuthorizator): void
+    final public function injectSoapServer(\SoapServer $server): void
     {
         $this->server = $server;
-        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     public function authorizedDefault(): bool
