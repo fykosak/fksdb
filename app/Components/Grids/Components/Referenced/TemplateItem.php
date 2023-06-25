@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class TemplateBaseItem extends BaseItem
+class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;

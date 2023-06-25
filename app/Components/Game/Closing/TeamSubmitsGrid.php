@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Closing;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class TeamSubmitsGrid extends Grid
+class TeamSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
     private TeamModel2 $team;

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class PersonRelatedGrid extends Grid
+class PersonRelatedGrid extends BaseGrid
 {
     protected PersonModel $person;
     protected array $definition;
