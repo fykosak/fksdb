@@ -10,12 +10,12 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read PersonModel person
- * @property-read ScheduleItemModel schedule_item
- * @property-read int person_id
- * @property-read int schedule_item_id
- * @property-read int person_schedule_id
- * @property-read PersonScheduleState|null state
+ * @property-read PersonModel $person
+ * @property-read ScheduleItemModel $schedule_item
+ * @property-read int $person_id
+ * @property-read int $schedule_item_id
+ * @property-read int $person_schedule_id
+ * @property-read PersonScheduleState|null $state
  */
 class PersonScheduleModel extends Model
 {

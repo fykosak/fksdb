@@ -24,13 +24,13 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read int person_id
- * @property-read string family_name
- * @property-read string other_name
- * @property-read string born_family_name
- * @property-read string display_name
- * @property-read PersonGender gender
- * @property-read \DateTimeInterface created
+ * @property-read int $person_id
+ * @property-read string $family_name
+ * @property-read string $other_name
+ * @property-read string $born_family_name
+ * @property-read string $display_name
+ * @property-read PersonGender $gender
+ * @property-read \DateTimeInterface $created
  */
 class PersonModel extends Model implements Resource
 {

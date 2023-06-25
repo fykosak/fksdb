@@ -12,18 +12,18 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
 
 /**
- * @property-read int task_id
- * @property-read string label
- * @property-read string name_cs
- * @property-read string name_en
- * @property-read int contest_id
- * @property-read ContestModel contest
- * @property-read int year
- * @property-read int series
- * @property-read int tasknr
- * @property-read int points
- * @property-read \DateTimeInterface submit_start
- * @property-read \DateTimeInterface submit_deadline
+ * @property-read int $task_id
+ * @property-read string $label
+ * @property-read string $name_cs
+ * @property-read string $name_en
+ * @property-read int $contest_id
+ * @property-read ContestModel $contest
+ * @property-read int $year
+ * @property-read int $series
+ * @property-read int $tasknr
+ * @property-read int $points
+ * @property-read \DateTimeInterface $submit_start
+ * @property-read \DateTimeInterface $submit_deadline
  */
 class TaskModel extends Model
 {
