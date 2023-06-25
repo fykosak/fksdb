@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
 
 /**
- * @property-read int contest_id
- * @property-read string name
+ * @property-read int $contest_id
+ * @property-read string $name
  */
 class ContestModel extends Model
 {
@@ -28,6 +28,7 @@ class ContestModel extends Model
             case 3:
                 return 'ctyrboj';
         }
+        throw new \InvalidArgumentException();
     }
 
     public function getContestYear(?int $year): ?ContestYearModel

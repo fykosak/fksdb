@@ -7,8 +7,8 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\IComponent;
-use Nette\Forms\Form;
 use Nette\Forms\Control as FormControl;
+use Nette\Forms\Form;
 use Nette\SmartObject;
 
 abstract class AbstractAdjustment implements FormAdjustment
@@ -27,11 +27,6 @@ abstract class AbstractAdjustment implements FormAdjustment
     }
 
     abstract protected function innerAdjust(Form $form, ModelHolder $holder): void;
-
-    final protected function hasWildCart(string $mask): bool
-    {
-        return strpos($mask, self::WILD_CART) !== false;
-    }
 
     /**
      * @return FormControl[]

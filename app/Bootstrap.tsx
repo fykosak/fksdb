@@ -10,53 +10,84 @@ import ParticipantAcquaintanceChart
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/AjaxSubmitComponent';
 import TimelineComponent from './Components/Controls/Person/Detail/Timeline/TimelineComponent';
-import ResultsPresentation
-    from './Components/Game/ResultsAndStatistics/Presentation/Main';
-import ResultsTable
-    from './Components/Game/ResultsAndStatistics/Table/Main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/StatisticsComponent';
+import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/Main';
+import ResultsTable from './Components/Game/ResultsAndStatistics/Table/Main';
 import MainComponent from './Components/Game/Submits/Form/MainComponent';
-import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
-
 import 'vendor/nette/forms/src/assets/netteForms.js';
 import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
-import { translator } from '@translator/translator';
+import { availableLanguage, Translator } from '@translator/translator';
+import ScheduleField from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+
+const translator = new Translator<availableLanguage>();
 
 const renderer = new Renderer();
 
-renderer.hashMapLoader.register('schedule.group-container', eventSchedule);
+renderer.hashMapLoader.register('schedule.group-container', (element, reactId, rawData) => {
+    const container = document.createElement('div');
+    element.parentElement.appendChild(container);
+    if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
+        ReactDOM.render(<ScheduleField
+            scheduleDef={JSON.parse(rawData)}
+            input={element}
+            translator={translator}/>, container);
+        return true;
+    }
+    return false;
+});
 
-renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable);
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentation, {event: 'fof'});
-renderer.hashMapLoader.registerActionsComponent('ctyrboj.results.presentation', ResultsPresentation, {event: 'ctyrboj'});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent);
-renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent);
+renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent, {translator});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable, {translator});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {
+    mode: 'team',
+    translator,
+});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {
+    mode: 'task',
+    translator,
+});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {
+    mode: 'correlation',
+    translator,
+});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentation, {
+    event: 'fof',
+    translator,
+});
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.results.presentation', ResultsPresentation, {
+    event: 'ctyrboj',
+    translator,
+});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainComponent, {translator});
+renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
-renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);
+renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart);
-renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart);
+renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {accessKey: 'participants'});
-renderer.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart);
-renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {
+    accessKey: 'participants',
+    translator,
+});
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart);
-renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {accessKey: 'teams'});
-renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {
+    accessKey: 'teams',
+    translator,
+});
+renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent);
+renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent, {translator});
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -325,7 +356,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 termFunction = extractLast;
             }
 
-            const options: Record<string, any> = {};
+            const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
                 options.source = (request, response) => {

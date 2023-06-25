@@ -19,7 +19,7 @@ interface DispatchProps {
 }
 
 
-class FilterComponent extends React.Component<OwnProps & StateProps & DispatchProps> {
+class FilterComponent extends React.Component<OwnProps & StateProps & DispatchProps, never> {
 
     public render() {
         const {active, filter, onSetFilter} = this.props;

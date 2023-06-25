@@ -1,4 +1,3 @@
-import { translator } from '@translator/translator';
 import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Game/Submits/Form/actions';
 import Scan from './Scan';
 import Buttons from './Buttons';
@@ -6,9 +5,8 @@ import Code from './Code';
 import Errors from './Errors';
 import ValueDisplay from './Preview';
 import { Store as SubmitStore } from 'FKSDB/Components/Game/Submits/Form/reducer';
-import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { DataResponse, Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
@@ -17,6 +15,7 @@ import { Action, Dispatch } from 'redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import { validate } from '../middleware';
 import AutoButton from 'FKSDB/Components/Game/Submits/Form/Components/AutoButton';
+import { TranslatorContext } from '@translator/LangContext';
 
 export interface OwnProps {
     tasks: TaskModel[];
@@ -34,9 +33,11 @@ interface StateProps {
     messages: Message[];
 }
 
-class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>> {
+class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
         const hasButtons = availablePoints && availablePoints.length;
         return (

@@ -55,7 +55,11 @@ class HandoutFormComponent extends BaseComponent
         $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
+            $control = $this->personFactory->createPersonSelect(
+                false,
+                $task->label . ' ' . $task->name_cs,
+                $orgProvider
+            );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }

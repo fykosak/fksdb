@@ -21,7 +21,7 @@ interface OwnProps {
     };
 }
 
-export default class BarHistogram extends ChartComponent<OwnProps, Record<string, never>> {
+export default class BarHistogram extends ChartComponent<OwnProps, never> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

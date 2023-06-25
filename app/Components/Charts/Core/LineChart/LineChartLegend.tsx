@@ -6,7 +6,7 @@ interface OwnProps<XValue extends Date | number> {
     data: LineChartData<XValue>;
 }
 
-export default class LineChartLegend<XValue extends Date | number> extends React.Component<OwnProps<XValue>> {
+export default class LineChartLegend<XValue extends Date | number> extends React.Component<OwnProps<XValue>, never> {
 
     public render() {
         const {data} = this.props;

@@ -6,6 +6,20 @@ namespace FKSDB\Models\Utils;
 
 class Utils
 {
+    public static function ordinal(int $order): string
+    {
+        switch ($order) {
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
+        }
+    }
+
     public static function toRoman(int $arabic): string
     {
         return match ($arabic) {

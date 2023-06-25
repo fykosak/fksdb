@@ -22,18 +22,18 @@ use Nette\Schema\Processor;
 use Nette\Security\Resource;
 
 /**
- * @property-read int event_year
- * @property-read int year
- * @property-read string name
- * @property-read int event_id
- * @property-read string report
- * @property-read EventTypeModel event_type
- * @property-read int event_type_id
- * @property-read \DateTimeInterface begin
- * @property-read \DateTimeInterface end
- * @property-read \DateTimeInterface|null registration_begin
- * @property-read \DateTimeInterface|null registration_end
- * @property-read string parameters
+ * @property-read int $event_year
+ * @property-read int $year
+ * @property-read string $name
+ * @property-read int $event_id
+ * @property-read string $report
+ * @property-read EventTypeModel $event_type
+ * @property-read int $event_type_id
+ * @property-read \DateTimeInterface $begin
+ * @property-read \DateTimeInterface $end
+ * @property-read \DateTimeInterface|null $registration_begin
+ * @property-read \DateTimeInterface|null $registration_end
+ * @property-read string $parameters
  */
 class EventModel extends Model implements Resource, NodeCreator
 {
@@ -97,7 +97,6 @@ class EventModel extends Model implements Resource, NodeCreator
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
-
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         return $this->getTeams()->where('state', TeamState::Participated->value);
@@ -169,14 +168,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
-    }
-
-    public function getPaymentFactoryName(): ?string
-    {
-        if ($this->event_type_id === 1) {
-            return sprintf('fyziklani%dpayment', $this->event_year);
-        }
-        return null;
+        throw new \InvalidArgumentException();
     }
 
     private function getParameters(): array

@@ -39,7 +39,8 @@
     "fykosak/nette-frontend-component": "dev-dev-74#d606152"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "3.6.0"
+    "squizlabs/php_codesniffer": "3.6.0",
+    "phpstan/phpstan": "1.10.21"
   },
   "authors": [
     {
@@ -83,6 +84,9 @@
     ],
     "testPSR12": [
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --extensions=php,phpt --standard=PSR12 --parallel=8 app/ tests/"
+    ],
+    "testPHPStan": [
+      "vendor/bin/phpstan analyse app tests libs"
     ]
   }
 }

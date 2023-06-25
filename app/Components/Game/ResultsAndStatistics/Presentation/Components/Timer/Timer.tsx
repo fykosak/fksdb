@@ -32,7 +32,7 @@ export const getCurrentDelta = (toStart: number, toEnd: number, inserted: Date):
 };
 
 
-class Timer extends React.Component<StateProps & OwnProps> {
+class Timer extends React.Component<StateProps & OwnProps, never> {
     private timerId;
 
     public componentDidMount() {

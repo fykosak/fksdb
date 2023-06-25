@@ -11,10 +11,10 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read int query_id
- * @property-read string qid
- * @property-read string sql
- * @property-read string name
+ * @property-read int $query_id
+ * @property-read string $qid
+ * @property-read string $sql
+ * @property-read string $name
  */
 class QueryModel extends Model implements Resource
 {

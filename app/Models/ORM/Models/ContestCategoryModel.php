@@ -7,10 +7,10 @@ namespace FKSDB\Models\ORM\Models;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int contest_category_id
- * @property-read string label
- * @property-read string name_cs
- * @property-read string name_en
+ * @property-read int $contest_category_id
+ * @property-read string $label
+ * @property-read string $name_cs
+ * @property-read string $name_en
  */
 class ContestCategoryModel extends Model
 {

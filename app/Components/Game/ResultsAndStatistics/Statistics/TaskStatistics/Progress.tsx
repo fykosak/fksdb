@@ -32,7 +32,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
+class Progress extends React.Component<StateProps & DispatchProps & OwnProps, never> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
         const tasksSubmits: Stats = {};

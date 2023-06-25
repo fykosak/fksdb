@@ -9,6 +9,11 @@ $colors: (
         'fykos': $fykosColor,
         'dsef': $dsefColor,
 );
+$border-radius:               0;
+$border-radius-sm:            0;
+$border-radius-lg:            0;
+$border-radius-xl:            0;
+$border-radius-2xl:           0;
 @import "node_modules/bootstrap/scss/bootstrap";
 @import 'node_modules/flag-icon-css/sass/flag-icon';
 @import 'node_modules/codemirror/lib/codemirror.css';

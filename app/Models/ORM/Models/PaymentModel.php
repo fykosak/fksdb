@@ -14,24 +14,24 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int payment_id
- * @property-read EventModel event
- * @property-read int event_id
- * @property-read PaymentState state
- * @property-read float price
- * @property-read string currency
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface received
- * @property-read string constant_symbol
- * @property-read string variable_symbol
- * @property-read string specific_symbol
- * @property-read string bank_account
- * @property-read string bank_name
- * @property-read string recipient
- * @property-read string iban
- * @property-read string swift
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $payment_id
+ * @property-read EventModel $event
+ * @property-read int $event_id
+ * @property-read PaymentState $state
+ * @property-read float $price
+ * @property-read string $currency
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $received
+ * @property-read string $constant_symbol
+ * @property-read string $variable_symbol
+ * @property-read string $specific_symbol
+ * @property-read string $bank_account
+ * @property-read string $bank_name
+ * @property-read string $recipient
+ * @property-read string $iban
+ * @property-read string $swift
  */
 class PaymentModel extends Model implements Resource
 {

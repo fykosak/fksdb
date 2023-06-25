@@ -9,7 +9,6 @@ use Nette\Utils\Html;
 
 abstract class Badge extends BaseComponent
 {
-
     abstract public static function getHtml(...$args): Html;
 
     final public function render(...$args): void

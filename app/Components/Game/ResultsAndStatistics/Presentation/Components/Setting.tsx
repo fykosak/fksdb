@@ -1,12 +1,9 @@
-import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import {
-    ACTION_SET_PARAMS,
-    Params,
-} from '../../actions/presentation';
+import { ACTION_SET_PARAMS, Params } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface StateProps {
     isOrg: boolean;
@@ -26,7 +23,10 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
         this.state = {show: false};
     }
 
+    static contextType = TranslatorContext;
+
     public render() {
+        const translator = this.context;
         const {isOrg, onSetParams, cols, delay, rows, hardVisible} = this.props;
         // TODO FUCK BOOTSTRAP!!!!!!!!!!!!!!!!!!!!!!
         //                data-bs-toggle="modal"

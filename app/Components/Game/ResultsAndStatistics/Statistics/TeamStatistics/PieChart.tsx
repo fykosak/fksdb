@@ -21,7 +21,7 @@ interface PointGroupItem {
     count: number;
 }
 
-class PieChart extends React.Component<StateProps & OwnProps> {
+class PieChart extends React.Component<StateProps & OwnProps, never> {
 
     public render() {
         const {submits, teamId, activePoints} = this.props;

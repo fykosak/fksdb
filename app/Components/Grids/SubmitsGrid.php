@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -26,11 +26,13 @@ class SubmitsGrid extends Grid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
+    private string $lang;
 
-    public function __construct(Container $container, ContestantModel $contestant)
+    public function __construct(Container $container, ContestantModel $contestant, string $lang)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
+        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
@@ -48,7 +50,7 @@ class SubmitsGrid extends Grid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFQName(),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->lang),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -126,7 +128,10 @@ class SubmitsGrid extends Grid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
-                sprintf(_('Submitting of task %s cancelled.'), $submit->task->getFQName()),
+                sprintf(
+                    _('Submitting of task %s cancelled.'),
+                    $submit->task->getFullLabel($this->lang)
+                ),
                 Message::LVL_WARNING
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
