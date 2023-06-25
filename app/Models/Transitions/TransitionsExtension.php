@@ -94,7 +94,7 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @param \BackedEnum|enum|string $enumClassName
+     * @param class-string<\BackedEnum> $enumClassName
      * @return EnumColumn[][]|EnumColumn[]
      */
     public static function parseMask(string $mask, string $enumClassName): array

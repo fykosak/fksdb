@@ -7,10 +7,10 @@ namespace FKSDB\Components\Grids\Schedule;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\ListComponent;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -26,7 +26,7 @@ class PerPersonScheduleList extends ListComponent
 
     public function __construct(Container $container, EventModel $event)
     {
-        parent::__construct($container, FieldLevelPermission::ALLOW_FULL);
+        parent::__construct($container, FieldLevelPermissionValue::Full);
         $this->event = $event;
     }
 
@@ -49,12 +49,12 @@ class PerPersonScheduleList extends ListComponent
      */
     protected function configure(): void
     {
-        $this->setTitle(new TemplateBaseItem($this->getContext(), '@person.full_name'));
+        $this->setTitle(new TemplateItem($this->getContext(), '@person.full_name'));
         $this->classNameCallback = fn() => 'alert alert-secondary';
         $row0 = new RowContainer($this->container);
         $this->addRow($row0, 'row0');
         $row0->addComponent(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event),
                 new Title(null, '')
@@ -69,12 +69,12 @@ class PerPersonScheduleList extends ListComponent
             new Title(null, '')
         );
         $row1->addComponent($relatedTable, 'schedule');
-        $relatedTable->addColumn(new TemplateBaseItem($this->container, '@schedule_item.name'), 'item');
-        $relatedTable->addColumn(new TemplateBaseItem($this->container, '@schedule_group.name'), 'group');
+        $relatedTable->addColumn(new TemplateItem($this->container, '@schedule_item.name'), 'item');
+        $relatedTable->addColumn(new TemplateItem($this->container, '@schedule_group.name'), 'group');
         $relatedTable->addColumn(
-            new TemplateBaseItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur'),
+            new TemplateItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur'),
             'price'
         );
-        $relatedTable->addColumn(new TemplateBaseItem($this->container, '@payment.payment'), 'payment');
+        $relatedTable->addColumn(new TemplateItem($this->container, '@payment.payment'), 'payment');
     }
 }

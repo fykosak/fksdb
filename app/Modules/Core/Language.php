@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
+use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
 enum Language: string
