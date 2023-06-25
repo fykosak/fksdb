@@ -51,46 +51,19 @@ class SubmitPresenter extends BasePresenter
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    /* ******************* AUTH ************************/
-
-    public function authorizedAjax(): void
-    {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedQuiz(): void
-    {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedQuizDetail(): void
-    {
-        $submit = $this->submitService->findByPrimary($this->id);
-        $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest())
-        );
-    }
-
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
-    }
-
-    /* ********************** TITLE **********************/
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
-    }
-
     public function titleAjax(): PageTitle
     {
         return $this->titleDefault();
     }
 
-    public function titleDefault(): PageTitle
+    public function authorizedAjax(): bool
     {
-        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
+        return $this->authorizedDefault();
+    }
+
+    final public function renderAjax(): void
+    {
+        $this->template->availableTasks = $this->getAvailableTasks();
     }
 
     public function titleQuiz(): PageTitle
@@ -98,18 +71,47 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
+    public function authorizedQuiz(): bool
+    {
+        return $this->authorizedDefault();
+    }
+
     public function titleQuizDetail(): PageTitle
     {
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
-    /* ********************** RENDER **********************/
+    public function authorizedQuizDetail(): bool
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        return $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest());
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
+    }
 
     final public function renderDefault(): void
     {
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = !$hasTasks;
         $this->template->hasForward = !$hasTasks;
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
+    }
+
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
     }
 
     private function getAvailableTasks(): TypedGroupedSelection
@@ -119,13 +121,6 @@ class SubmitPresenter extends BasePresenter
             ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
-
-    final public function renderAjax(): void
-    {
-        $this->template->availableTasks = $this->getAvailableTasks();
-    }
-
-    /* ********************** COMPONENTS **********************/
 
     /**
      * @throws TaskNotFoundException

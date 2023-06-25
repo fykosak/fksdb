@@ -29,14 +29,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     *
-     * use same method of permissions as trait
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedImport(): void
+    public function authorizedImport(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
+        return $this->traitIsAuthorized($this->getModelResource(), 'import');
     }
 
     protected function getModelResource(): string

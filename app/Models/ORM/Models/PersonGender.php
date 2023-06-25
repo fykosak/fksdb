@@ -17,11 +17,11 @@ class PersonGender extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::FEMALE:
-                return Html::el('span')->addAttributes(['class' => 'fa fa-venus']);
+                return Html::el('span')->addAttributes(['class' => 'fas fa-venus']);
             case self::MALE:
-                return Html::el('span')->addAttributes(['class' => 'fa fa-mars']);
+                return Html::el('span')->addAttributes(['class' => 'fas fa-mars']);
             default:
-                return Html::el('span')->addAttributes(['class' => 'fa fa-transgender']);
+                return Html::el('span')->addAttributes(['class' => 'fas fa-transgender']);
         }
     }
 

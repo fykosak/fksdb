@@ -31,7 +31,12 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change password'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change password'), 'fas fa-cogs');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     public function actionDefault(): void
@@ -77,7 +82,6 @@ class SettingsPresenter extends BasePresenter
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
             $group,
-            true,
             $login->hash && (!$tokenAuthentication),
             $tokenAuthentication
         );
@@ -104,39 +108,37 @@ class SettingsPresenter extends BasePresenter
 
     private function createLogin(
         ControlGroup $group,
-        bool $showPassword = true,
         bool $verifyOldPassword = false,
         bool $requirePassword = false
     ): ContainerWithOptions {
         $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
 
-        if ($showPassword) {
-            if ($verifyOldPassword) {
-                $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(
-                    'autocomplete',
-                    'current-password'
-                );
-            }
-            $newPwd = $container->addPassword('password', _('Password'));
-            $newPwd->setHtmlAttribute('autocomplete', 'new-password');
-            $newPwd->addCondition(Form::FILLED)->addRule(
-                Form::MIN_LENGTH,
-                _('The password must have at least %d characters.'),
-                6
+
+        if ($verifyOldPassword) {
+            $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(
+                'autocomplete',
+                'current-password'
             );
-
-            if ($verifyOldPassword) {
-                $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
-                    ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
-            } elseif ($requirePassword) {
-                $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
-            }
-
-            $container->addPassword('password_verify', _('Password (verification)'))
-                ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
-                ->setHtmlAttribute('autocomplete', 'new-password');
         }
+        $newPwd = $container->addPassword('password', _('Password'));
+        $newPwd->setHtmlAttribute('autocomplete', 'new-password');
+        $newPwd->addCondition(Form::FILLED)->addRule(
+            Form::MIN_LENGTH,
+            _('The password must have at least %d characters.'),
+            6
+        );
+
+        if ($verifyOldPassword) {
+            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
+                ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
+        } elseif ($requirePassword) {
+            $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
+        }
+
+        $container->addPassword('password_verify', _('Password (verification)'))
+            ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
+            ->setHtmlAttribute('autocomplete', 'new-password');
 
         return $container;
     }

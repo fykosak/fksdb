@@ -29,13 +29,13 @@ export default class Group extends React.Component<OwnProps, never> {
             {(group.registrationEnd || group.modificationEnd) &&
                 <div className="alert alert-info">
                     {group.registrationEnd && <p>
-                        <i className="fa fa-info me-2"/>
+                        <i className="fas fa-info me-2"/>
                         {translator.getText('Registration end: ')}
                         <DateDisplay date={group.registrationEnd} translator={translator}/>
                     </p>
                     }
                     {group.modificationEnd && group.modificationEnd != group.registrationEnd && <p>
-                        <i className="fa fa-info me-2"/>
+                        <i className="fas fa-info me-2"/>
                         {translator.getText('Modification end: ')}
                         <DateDisplay date={group.modificationEnd} translator={translator}/>
                     </p>

@@ -94,8 +94,8 @@ class GroupPresenter extends BasePresenter
     public function renderList(): void
     {
         $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fa fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fa fa-users'), ':Schedule:PersonSchedule:list'),
+            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),
+            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:PersonSchedule:list'),
         ];
     }
 

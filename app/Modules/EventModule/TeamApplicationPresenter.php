@@ -44,12 +44,30 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create team'), 'fa fa-calendar-plus');
+        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
+    }
+
+    public function authorizedCreate(): bool
+    {
+        $event = $this->getEvent();
+        return
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+            );
     }
 
     public function titleDetailedList(): PageTitle
     {
         return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetailedList(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
     }
 
     public function titleFastEdit(): PageTitle
@@ -66,7 +84,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fa fa-edit');
+        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
     }
 
     /**
@@ -76,34 +94,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    public function authorizedEdit(): void
+    public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
                 $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
-            )
-        );
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDetailedList(): void
-    {
-        $this->setAuthorized($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent()));
-    }
-
-    public function authorizedCreate(): void
-    {
-        $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
-            )
-        );
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
 
     public function requiresLogin(): bool

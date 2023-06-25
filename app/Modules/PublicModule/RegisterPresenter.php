@@ -54,25 +54,49 @@ class RegisterPresenter extends CoreBasePresenter
     public ?int $personId = null;
     private PersonService $personService;
 
+    public function requiresLogin(): bool
+    {
+        return false;
+    }
+
     final public function injectTernary(PersonService $personService): void
     {
         $this->personService = $personService;
     }
 
-    /* ********************* TITLE ***************** */
+    public function authorizedContest(): bool
+    {
+        return true;
+    }
+
     public function titleContest(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select contest'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select contest'));
+    }
+
+    public function authorizedYear(): bool
+    {
+        return true;
     }
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select year'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select year'));
+    }
+
+    public function authorizedEmail(): bool
+    {
+        return true;
     }
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Type e-mail'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type e-mail'));
+    }
+
+    public function authorizedContestant(): bool
+    {
+        return true;
     }
 
     public function titleContestant(): PageTitle
@@ -80,7 +104,7 @@ class RegisterPresenter extends CoreBasePresenter
         return new PageTitle(
             null,
             _('Register'),
-            'fa fa-edit',
+            'fas fa-edit',
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,
@@ -93,9 +117,6 @@ class RegisterPresenter extends CoreBasePresenter
     {
         return $this->contestId ? $this->contestService->findByPrimary($this->contestId) : null;
     }
-
-    /* ********************* ACTIONS ***************** */
-
 
     public function getSelectedYear(): ?int
     {
@@ -196,14 +217,12 @@ class RegisterPresenter extends CoreBasePresenter
         return $contest->getContestYear($this->year);
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if ($contest) {
-            $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
+        if (isset($contest)) {
+            return 'contest-' . $contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 }

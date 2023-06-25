@@ -30,28 +30,32 @@
     </div>
 {/define}
 
-{block content}
-    <h2 class=mt-3>{_'Calculate ranking'}</h2>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
-        {foreach $items as $category=>$stats}
-            {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
-                "calculate!", $category, \sprintf(_('Calculate results for %s category'), $category), \sprintf(_('Category %s is not ready'), $category)}
-        {/foreach}
-
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Calculate ranking'}</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+                {foreach $items as $category=>$stats}
+                    {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
+                    "calculate!", $category, \sprintf(_('Calculate results for %s category'), $category), \sprintf(_('Category %s is not ready'), $category)}
+                {/foreach}
         {include card, _('Global'), null, null,
-            "calculate!", null, _('Calculate global results'), _('Total results are not ready')}
+                "calculate!", null, _('Calculate global results'), _('Total results are not ready')}
+            </div>
+        </div>
     </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Data validation'}</h2>
 
-    <h2 class=mt-3>{_'Data validation'}</h2>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
-        {foreach $items as $category=>$stats}
-            {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
-                "validate!", $category, \sprintf(_('Validate category %s'), $category), \sprintf(_('Category %s is not ready'), $category)}
-        {/foreach}
-
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
+                {foreach $items as $category=>$stats}
+                    {include card, \sprintf(_('Category %s'), $category), $stats['opened'], $stats['closed'],
+                    "validate!", $category, \sprintf(_('Validate category %s'), $category), \sprintf(_('Category %s is not ready'), $category)}
+                {/foreach}
         {include card, _('Global'), null, null,
-            "validate!", null, _('Validate all categories'), _('Total results are not ready')}
+                "validate!", null, _('Validate all categories'), _('Total results are not ready')}
+            </div>
+        </div>
     </div>
 {/block}

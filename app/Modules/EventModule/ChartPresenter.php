@@ -16,6 +16,8 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 class ChartPresenter extends BasePresenter
@@ -25,29 +27,27 @@ class ChartPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
-    }
-
-    protected function getModelResource(): string
-    {
-        return 'event.chart';
+        return $this->isAllowed('event.chart', 'list');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedChart(): void
+    public function authorizedChart(): bool
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'chart'));
+        return $this->isAllowed('event.chart', 'chart');
     }
+
 
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
+     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {

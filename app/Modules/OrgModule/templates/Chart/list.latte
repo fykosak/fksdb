@@ -1,8 +1,10 @@
 {varType FKSDB\Components\Charts\Core\Chart[] $charts}
-{block content}
-    <ul>
-        {foreach $charts as $action=>$chart}
-            <li><a href="{plink $action}">{$chart->getTitle()}</a></li>
-        {/foreach}
-    </ul>
+{block outerContent}
+    <div class="container">
+        <ul>
+            {foreach $charts as $action=>$chart}
+                <li><a href="{plink 'chart', 'chart'=>$action}">{$chart->getTitle()}</a></li>
+            {/foreach}
+        </ul>
+    </div>
 {/block}

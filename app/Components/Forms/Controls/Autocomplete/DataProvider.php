@@ -19,7 +19,7 @@ interface DataProvider
     /**
      * Provider may or may not use knowledge of this update.
      *
-     * @param int $id
+     * @param mixed $id
      */
     public function setDefaultValue($id): void;
 }

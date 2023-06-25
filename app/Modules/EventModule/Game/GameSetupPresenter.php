@@ -14,15 +14,15 @@ class GameSetupPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Fyziklani game setup'), 'fa fa-cogs');
+        return new PageTitle(null, _('Fyziklani game setup'), 'fas fa-cogs');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.gameSetup', 'default'));
+        return $this->isAllowed('game.gameSetup', 'default');
     }
 
     /**

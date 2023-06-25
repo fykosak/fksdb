@@ -10,7 +10,6 @@ use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -34,33 +33,50 @@ final class AuthenticationPresenter extends BasePresenter
     /** @persistent */
     public ?string $backlink = '';
     private AuthTokenService $authTokenService;
-    private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
         AuthTokenService $authTokenService,
-        PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
         GoogleProvider $googleProvider
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
         $this->googleProvider = $googleProvider;
     }
 
+    public function authorizedLogin(): bool
+    {
+        return true;
+    }
+
+    public function authorizedLogout(): bool
+    {
+        return true;
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return true;
+    }
+
+    public function requiresLogin(): bool
+    {
+        return false;
+    }
+
     public function titleLogin(): PageTitle
     {
-        return new PageTitle(null, _('Login'));
+        return new PageTitle(null, _('Login'), 'fas fa-right-to-bracket');
     }
 
     public function titleRecover(): PageTitle
     {
-        return new PageTitle(null, _('Password recovery'));
+        return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
     }
 
     /**
@@ -68,7 +84,7 @@ final class AuthenticationPresenter extends BasePresenter
      */
     public function actionLogout(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
         }
         $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
@@ -76,21 +92,11 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * This workaround is here because LoginUser storage
-     * returns false when only global login exists.
-     * False is return in order to AuthenticatedPresenter to correctly login the user.
-     */
-    private function isLoggedIn(): bool
-    {
-        return $this->getUser()->isLoggedIn();
-    }
-
-    /**
      * @throws \Exception
      */
     public function actionLogin(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->initialRedirect();
         } else {
             if ($this->getParameter(self::PARAM_REASON)) {
@@ -124,14 +130,12 @@ final class AuthenticationPresenter extends BasePresenter
         $this->redirect(':Core:Dispatch:');
     }
 
-    /*     * ******************* components ****************************** */
-
     /**
      * @throws \Exception
      */
     public function actionRecover(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->initialRedirect();
         }
     }
@@ -275,10 +279,8 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'login';
-        $this->getPageStyleContainer()->mainContainerClassNames = [];
-        parent::beforeRender();
+        return 'login';
     }
 }

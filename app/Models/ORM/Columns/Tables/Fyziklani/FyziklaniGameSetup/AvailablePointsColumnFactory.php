@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 class AvailablePointsColumnFactory extends ColumnFactory
 {
     /**
-     * @param gameSetupModel $model
+     * @param GameSetupModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

@@ -44,9 +44,18 @@ class ExportPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute(): void
+    public function titleExecute(): PageTitle
     {
-        $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
+        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fas fa-play-circle');
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     */
+    public function authorizedExecute(): bool
+    {
+        return $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
     /**
@@ -72,15 +81,6 @@ class ExportPresenter extends BasePresenter
             return $this->queryService->findByQid($qid);
         }
         return null;
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws ModelNotFoundException
-     */
-    public function titleExecute(): PageTitle
-    {
-        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fa fa-play-circle');
     }
 
     /**

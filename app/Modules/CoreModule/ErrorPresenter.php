@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
@@ -15,7 +15,7 @@ class ErrorPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Error'));
+        return new PageTitle(null, _('Error'), 'fas fa-triangle-exclamation');
     }
 
     final public function renderDefault(?\Throwable $exception): void
@@ -49,12 +49,9 @@ class ErrorPresenter extends BasePresenter
         }
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'error';
-        $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
-        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-        parent::beforeRender();
+        return 'error';
     }
 
     protected function putIntoBreadcrumbs(): void

@@ -1,31 +1,53 @@
-{block content}
+{block outerContent}
     {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
     {varType array $groups}
     {varType bool $hasSchedule}
     {varType bool $isOrg}
-    <h2>{_'Base info'}</h2>
-    {control valuePrinter:row 'person.person_link', $model}
-    {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
-        {control valuePrinter:row 'event_participant.' . $field, $model}
-    {/foreach}
-    <hr/>
-    {foreach $groups as $groupName=>$fieldDef}
-        <h2>{$groupName}</h2>
-        {foreach $fieldDef as $field}
-            {varType array $fields}
-            {if array_key_exists($field,$fields)}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Base info'}</h2>
+            {control valuePrinter:row 'person.person_link', $model}
+            {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
                 {control valuePrinter:row 'event_participant.' . $field, $model}
-            {/if}
-        {/foreach}
-        <hr/>
+            {/foreach}
+        </div>
+    </div>
+
+    {foreach $groups as $groupName=>$fieldDef}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$groupName}</h2>
+                {foreach $fieldDef as $field}
+                    {varType array $fields}
+                    {if array_key_exists($field,$fields)}
+                        {control valuePrinter:row 'event_participant.' . $field, $model}
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
     {/foreach}
+
     {if $hasSchedule}
-        <h2>{_'Schedule'}</h2>
-        {control personScheduleGrid $model->person,$model->event}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid $model->person,$model->event}
+            </div>
+        </div>
     {/if}
-    {include ../AbstractApplication/applicationControl.latte}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Actions'}</h2>
+            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
+               class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
+        </div>
+    </div>
     {if $isOrg}
-        <h2>{_'Transitions'}</h2>
-        {control applicationTransitions}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Transitions'}</h2>
+                {control applicationTransitions}
+            </div>
+        </div>
     {/if}
 {/block}

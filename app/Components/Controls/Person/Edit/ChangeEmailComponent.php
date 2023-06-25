@@ -60,8 +60,6 @@ class ChangeEmailComponent extends EntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */

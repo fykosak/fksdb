@@ -30,7 +30,7 @@ class ItemPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Items'), 'fa fa-barcode');
+        return new PageTitle(null, _('Items'), 'fas fa-barcode');
     }
 
     public function titleEdit(): PageTitle
@@ -40,7 +40,7 @@ class ItemPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create item'), 'fas fa-plus');
     }
 
     protected function createComponentCreateForm(): ItemFormComponent

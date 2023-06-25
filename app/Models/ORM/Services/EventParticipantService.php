@@ -8,8 +8,9 @@ use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Service;
 
-class EventParticipantService extends OldServiceSingle
+class EventParticipantService extends Service
 {
     /**
      * @param EventParticipantModel|null $model

@@ -42,7 +42,7 @@ class ProducerPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create producer'), 'fa fa-plus');
+        return new PageTitle(null, _('Create producer'), 'fas fa-plus');
     }
 
     /**

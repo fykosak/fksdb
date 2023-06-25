@@ -12,4 +12,9 @@ class DashboardPresenter extends BasePresenter
     {
         return new PageTitle(null, _('My profile'), 'fas fa-user');
     }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
 }

@@ -48,7 +48,7 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function setUp(): void
     {
-        Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
+        Environment::lock(LOCK_DB . $this->instanceNo, \FKSDB\Tests\TEMP_DIR);
         $address = $this->container->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );

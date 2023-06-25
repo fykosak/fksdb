@@ -8,22 +8,34 @@ use FKSDB\Components\Charts\Contestants\AggregatedSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\TotalPersonsChart;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest());
     }
 
-    public function authorizedChart(): void
+    public function authorizedChart(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest());
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
+     */
     protected function startup(): void
     {
         parent::startup();
@@ -38,16 +50,5 @@ class ChartPresenter extends BasePresenter
             'contestantsPerYears' => new PerYearsChart($this->getContext(), $this->getSelectedContest()),
             'totalPersons' => new TotalPersonsChart($this->getContext()),
         ];
-    }
-
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'list':
-                break;
-            default:
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
     }
 }

@@ -97,7 +97,6 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
 
-    /* ****** CAPACITY CALCULATION *******/
     public function getUsedCapacity(): int
     {
         return $this->getInterested()->count();

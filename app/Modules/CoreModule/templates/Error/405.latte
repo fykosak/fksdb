@@ -1,10 +1,13 @@
 {var $robots = noindex}
-
-{block content}
-    <div class="row text-center mb-3">
-        <div class="image-error">
-            <img src="/images/404.svg" alt="405"/>
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <div class="row text-center mb-3">
+                <div class="image-error">
+                    <img src="/images/404.svg" alt="405"/>
+                </div>
+            </div>
+            <h2>{_'Chosen method is not supported.'}<span class="badge bg-warning">#405</span></h2>
         </div>
     </div>
-    <h2>{_'Chosen method is not supported.'}<span class="badge bg-warning">#405</span></h2>
 {/block}

@@ -36,7 +36,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Environment::lock(LOCK_UPLOAD, TEMP_DIR);
+        Environment::lock(LOCK_UPLOAD, \FKSDB\Tests\TEMP_DIR);
         $serviceTask = $this->container->getByType(TaskService::class);
         $taskCategoryService = $this->container->getByType(TaskCategoryService::class);
         $this->taskAll = $serviceTask->storeModel([
@@ -124,7 +124,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function createFileUpload(): array
     {
-        $file = tempnam(TEMP_DIR, 'upload');
+        $file = tempnam(__DIR__ . '/../temp/tester', 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
         return [

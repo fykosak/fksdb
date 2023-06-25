@@ -35,6 +35,15 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedFastEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
     final public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
@@ -45,9 +54,27 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new PageTitle(null, _('Fast attendance'), 'fas fa-fast-forward');
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedTransition(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
     final public function titleTransitions(): PageTitle
     {
-        return new PageTitle(null, _('Group transitions'), 'fa fa-exchange-alt');
+        return new PageTitle(null, _('Group transitions'), 'fas fa-exchange-alt');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedTransitions(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
     }
 
 
@@ -64,13 +91,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter
             return new PageTitle(
                 null,
                 sprintf(_('Application detail "%s"'), $entity->name),
-                'fa fa-user'
+                'fas fa-user'
             );
         }
         return new PageTitle(
             null,
             sprintf(_('Application detail "%s"'), $entity->__toString()),
-            'fa fa-user'
+            'fas fa-user'
         );
     }
 
