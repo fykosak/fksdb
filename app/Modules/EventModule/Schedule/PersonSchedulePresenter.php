@@ -11,9 +11,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class PersonSchedulePresenter extends BasePresenter
 {
-    /** @persistent */
-    public ?int $personId = null;
-
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Schedule per person'), 'fas fa-list');
@@ -54,7 +51,7 @@ class PersonSchedulePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentList(): PerPersonScheduleList
+    protected function createComponentGrid(): PerPersonScheduleList
     {
         return new PerPersonScheduleList($this->getContext(), $this->getEvent());
     }
