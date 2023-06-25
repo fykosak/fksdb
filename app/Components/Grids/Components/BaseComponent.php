@@ -28,8 +28,6 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     abstract protected function getModels(): Selection;
 
-    abstract protected function addColumn(BaseItem $component, string $name): void;
-
     abstract protected function addButton(BaseItem $component, string $name): void;
 
     public function render(): void
