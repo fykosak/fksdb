@@ -40,6 +40,7 @@ class PersonGrid extends Grid
     protected function configure(): void
     {
         $this->paginate = false;
+        $this->counter = false;
 
         $this->addColumn(
             new RendererBaseItem(

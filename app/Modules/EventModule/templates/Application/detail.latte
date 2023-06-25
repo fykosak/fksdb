@@ -6,10 +6,13 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
-            {control valuePrinter:row 'person.person_link', $model}
-            {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
-                {control valuePrinter:row 'event_participant.' . $field, $model}
-            {/foreach}
+            {control columnTable [
+            'person.person_link',
+            'event_participant.event_participant_id',
+            'event_participant.status',
+            'event_participant.price',
+            'event_participant.created'
+            ],$model,1024}
         </div>
     </div>
 
@@ -17,12 +20,15 @@
         <div class="panel color-auto">
             <div class="container">
                 <h2>{$groupName}</h2>
+                {var $curentFields = []}
                 {foreach $fieldDef as $field}
                     {varType array $fields}
                     {if array_key_exists($field,$fields)}
-                        {control valuePrinter:row 'event_participant.' . $field, $model}
+                        {php $curentFields[] = 'event_participant.' . $field}
                     {/if}
                 {/foreach}
+                {control columnTable $curentFields,$model,1024}
+                {php $curentFields=[]}
             </div>
         </div>
     {/foreach}

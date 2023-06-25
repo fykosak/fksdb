@@ -6,7 +6,7 @@ $fyziklaniPoints3: #98cc04;
 $fyziklaniPoints2: #eeb902;
 $fyziklaniPoints1: #f45d01;
 
-@mixin page-theme($name,$color, $nav-bg:$color) {
+@mixin page-theme($color, $nav-bg:$color) {
   .navigation-item {
     @include navigation-item($color);
   }
