@@ -8,7 +8,7 @@
             <div n:class="'alert alert-' . $payment->state->getBehaviorType()">
                 <div class="row">
                     <div class="col">
-                        <div><strong>{control valuePrinter:templateString '@payment.payment_uid', $payment,$userPermission}</strong></div>
+                        <div><strong>{control valuePrinter:templateString '@payment.payment_id', $payment,$userPermission}</strong></div>
                         <div>{control valuePrinter:templateString '@event.name', $payment,$userPermission}</div>
                     </div>
                     <div class="col">

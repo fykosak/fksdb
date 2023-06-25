@@ -155,4 +155,9 @@ class TaskModel extends Model
         // if the deadline is not specified, consider task as opened, so default to true
         return true;
     }
+
+    public function createUniqueKey(): string
+    {
+        return $this->contest_id . '-' . $this->year . '-' . $this->series . '-' . $this->label;
+    }
 }
