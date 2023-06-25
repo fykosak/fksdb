@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-abstract class EntityGrid extends Grid
+abstract class EntityGrid extends BaseGrid
 {
     protected Service $service;
     private array $queryParams;

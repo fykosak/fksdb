@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class RendererBaseItem extends BaseItem
+class RendererItem extends BaseItem
 {
     /** @var callable */
     protected $renderer;
