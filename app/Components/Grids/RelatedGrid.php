@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
-abstract class RelatedGrid extends Grid
+abstract class RelatedGrid extends BaseGrid
 {
     protected Model $model;
     protected string $tableName;

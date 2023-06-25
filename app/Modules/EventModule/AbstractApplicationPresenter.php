@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Transition\FastTransitionComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -176,7 +176,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     abstract protected function createComponentFastTransition(): FastTransitionComponent;
 
-    abstract protected function createComponentGrid(): Grid;
+    abstract protected function createComponentGrid(): BaseGrid;
 
     /**
      * @throws NotImplementedException

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Submits;
 
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
@@ -15,7 +15,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
-class QuizAnswersGrid extends Grid
+class QuizAnswersGrid extends BaseGrid
 {
 
     private SubmitModel $submit;
@@ -45,7 +45,7 @@ class QuizAnswersGrid extends Grid
          * @var SubmitQuestionAnswerModel $answer
          */
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => $question->getFQName(),
                 new Title(null, _('Name'))
@@ -54,7 +54,7 @@ class QuizAnswersGrid extends Grid
         );
 
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): int => $question->points ?? 0,
                 new Title(null, _('Points'))
@@ -63,7 +63,7 @@ class QuizAnswersGrid extends Grid
         );
 
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 function (SubmitQuestionModel $question): Html {
                     $answer = $this->submit->contestant->getAnswer($question);
@@ -82,7 +82,7 @@ class QuizAnswersGrid extends Grid
         }
 
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => $question->answer,
                 new Title(null, _('Correct answer'))
@@ -91,7 +91,7 @@ class QuizAnswersGrid extends Grid
         );
 
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 function (SubmitQuestionModel $question): Html {
                     $answer = $this->submit->contestant->getAnswer($question);
