@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-abstract class FilterList extends ListComponent
+abstract class FilterList extends BaseList
 {
     use FilterTrait;
 

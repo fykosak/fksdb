@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -137,7 +137,7 @@ class ItemPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }

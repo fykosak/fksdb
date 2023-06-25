@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
@@ -176,7 +176,7 @@ class ExportPresenter extends BasePresenter
         return false;
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }
