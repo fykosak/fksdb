@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class PersonsGrid extends Grid
+class PersonsGrid extends BaseGrid
 {
     private ScheduleItemModel $item;
 
@@ -36,7 +36,7 @@ class PersonsGrid extends Grid
     {
         $this->paginate = false;
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => $model->person_schedule_id,
                 new Title(null, _('#'))

@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -47,24 +47,24 @@ class TeamListComponent extends FilterList
     {
         $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
         $this->setTitle(
-            new TemplateBaseItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
+            new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
         );
         $row = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row, 'row0');
         $row->addComponent(
-            new TemplateBaseItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),
+            new TemplateItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),
             'state'
         );
         $row->addComponent(
-            new TemplateBaseItem($this->container, '@fyziklani_team.category', '@fyziklani_team.category:title'),
+            new TemplateItem($this->container, '@fyziklani_team.category', '@fyziklani_team.category:title'),
             'category'
         );
         $row->addComponent(
-            new TemplateBaseItem($this->container, '@fyziklani_team.game_lang', '@fyziklani_team.game_lang:title'),
+            new TemplateItem($this->container, '@fyziklani_team.game_lang', '@fyziklani_team.game_lang:title'),
             'lang'
         );
         $row->addComponent(
-            new TemplateBaseItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
+            new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
             'phone'
         );
         $memberList = new RelatedTable($this->container, function (TeamModel2 $team): array {
@@ -76,8 +76,8 @@ class TeamListComponent extends FilterList
             return $members;
         }, new Title(null, _('Members')));
         $this->addRow($memberList, 'members');
-        $memberList->addColumn(new TemplateBaseItem($this->container, '@person.full_name'), 'name');
-        $memberList->addColumn(new TemplateBaseItem($this->container, '@school.school'), 'school');
+        $memberList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $memberList->addColumn(new TemplateItem($this->container, '@school.school'), 'school');
 
         $teacherList = new RelatedTable(
             $this->container,
@@ -85,7 +85,7 @@ class TeamListComponent extends FilterList
             new Title(null, _('Teachers'))
         );
         $this->addRow($teacherList, 'teachers');
-        $teacherList->addColumn(new TemplateBaseItem($this->container, '@person.full_name'), 'name');
+        $teacherList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
         $this->addButton(
             new PresenterButton(
                 $this->container,

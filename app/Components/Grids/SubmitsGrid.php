@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -22,7 +22,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-class SubmitsGrid extends Grid
+class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -48,7 +48,7 @@ class SubmitsGrid extends Grid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->lang),
                 new Title(null, _('Task'))
@@ -56,7 +56,7 @@ class SubmitsGrid extends Grid
             'task'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format('c'),
                 new Title(null, _('Timestamp'))
@@ -64,7 +64,7 @@ class SubmitsGrid extends Grid
             'submitted_on'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->source->value,
                 new Title(null, _('Method of handing'))

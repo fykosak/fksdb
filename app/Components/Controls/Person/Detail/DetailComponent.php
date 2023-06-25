@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\ListComponent;
+use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-abstract class DetailComponent extends ListComponent
+abstract class DetailComponent extends BaseList
 {
     protected PersonModel $person;
     protected bool $isOrg;

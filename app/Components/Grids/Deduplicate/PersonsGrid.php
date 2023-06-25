@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
@@ -13,7 +12,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class PersonsGrid extends Grid
+class PersonsGrid extends BaseGrid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
@@ -34,7 +33,7 @@ class PersonsGrid extends Grid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
                 new Title(null, _('Person A')),
@@ -42,7 +41,7 @@ class PersonsGrid extends Grid
             'display_name_a'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
                     $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
@@ -52,7 +51,7 @@ class PersonsGrid extends Grid
             'display_name_b'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
                     '%0.2f',
