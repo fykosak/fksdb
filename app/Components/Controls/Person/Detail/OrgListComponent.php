@@ -40,6 +40,7 @@ class OrgListComponent extends DetailComponent
         $this->setTitle(new TemplateItem($this->container, '@contest.name'));
         $row0 = new RowContainer($this->container);
         $this->addRow($row0, 'row0');
+        $row0->addComponent(new TemplateItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(
             new TemplateItem($this->container, _('@org.since - @org.until')),
             'duration'
@@ -47,7 +48,7 @@ class OrgListComponent extends DetailComponent
 
         $row1 = new RowContainer($this->container);
         $row1->addComponent(new TemplateItem($this->container, '@org.domain_alias'), 'domain_alias');
-        $row1->addComponent(new TemplateItem($this->container, '\siganture{@org.tex_signature}'), 'tex_signature');
+        $row1->addComponent(new TemplateItem($this->container, '\signature{@org.tex_signature}'), 'tex_signature');
         $this->addRow($row1, 'row1');
         $this->addButton(
             new PresenterButton(

@@ -73,7 +73,6 @@ class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & I
                             />
                         }
                     </div>
-                    <hr/>
                     <ValueDisplay code={code} tasks={tasks} teams={teams}/>
                 </div>
             </Form>

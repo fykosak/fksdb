@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
-class PersonGrid extends Grid
+class PersonGrid extends BaseGrid
 {
     private EventModel $event;
     private PersonModel $person;
@@ -40,6 +40,7 @@ class PersonGrid extends Grid
     protected function configure(): void
     {
         $this->paginate = false;
+        $this->counter = false;
 
         $this->addColumn(
             new RendererItem(

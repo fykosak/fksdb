@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class PersonsGrid extends Grid
+class PersonsGrid extends BaseGrid
 {
     private ScheduleItemModel $item;
 

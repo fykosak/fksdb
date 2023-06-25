@@ -1,78 +1,93 @@
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{varType string $lang}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {varType FKSDB\Models\ORM\Models\PaymentModel $model}
-    {varType string $lang}
-
-            <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
-    {var $progress = 0}
-    {switch $model->state}
-        {case FKSDB\Models\ORM\Models\PaymentState::InProgress}
-        {php $progress = 1}
-        {case FKSDB\Models\ORM\Models\PaymentState::Waiting}
-        {php $progress = 2}
-        {case FKSDB\Models\ORM\Models\PaymentState::Received}
-        {php $progress = 3}
-    {/switch}
-    <div class="state-line mt-3 mb-3">
-        <div class="{($progress >= 1?'done':'ongoing') . ' circle'}">
-            <span>{_'Select items'}</span>
-        </div>
-        <div class="{($progress >= 2?'done':'ongoing') . ' line'}"></div>
-        <div class="{($progress >= 2?'done':'ongoing') . ' circle'}">
-            <span>{_'Generate payment'}</span>
-        </div>
-        <div class="{($progress >= 3?'done':'ongoing') . ' line'}"></div>
-        <div class="{($progress >= 3?'done':'ongoing') . ' circle'}">
-            <span>{_'Payment received'}</span>
+            <h2>{control printer:templateString '@payment.state', $model, 1024}</h2>
+            {var $progress = 0}
+        {switch $model->state}
+                {case FKSDB\Models\ORM\Models\PaymentState::InProgress}
+                {php $progress = 1}
+                {case FKSDB\Models\ORM\Models\PaymentState::Waiting}
+                {php $progress = 2}
+                {case FKSDB\Models\ORM\Models\PaymentState::Received}
+                {php $progress = 3}
+            {/switch}
+            <div class="state-line mt-3 mb-3">
+                <div class="{($progress >= 1?'done':'ongoing') . ' circle'}">
+                    <span>{_'Select items'}</span>
+                </div>
+                <div class="{($progress >= 2?'done':'ongoing') . ' line'}"></div>
+                <div class="{($progress >= 2?'done':'ongoing') . ' circle'}">
+                    <span>{_'Generate payment'}</span>
+                </div>
+                <div class="{($progress >= 3?'done':'ongoing') . ' line'}"></div>
+                <div class="{($progress >= 3?'done':'ongoing') . ' circle'}">
+                    <span>{_'Payment received'}</span>
+                </div>
+            </div>
         </div>
     </div>
-    <hr/>
-    {if $model->hasGeneratedSymbols()}
-        <h2>{_'Payment info'}</h2>
-        {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price','currency'] as $field}
-            {if $model->{$field}}
-                {control valuePrinter:row 'payment.' . $field, $model}
+    <div class="panel color-auto">
+        <div class="container">
+            {if $model->hasGeneratedSymbols()}
+                <h2>{_'Payment info'}</h2>
+                {control columnTable [
+                'payment.constant_symbol',
+                'payment.variable_symbol',
+                'payment.specific_symbol',
+                'payment.bank_account',
+                'payment.bank_name',
+                'payment.recipient',
+                'payment.iban',
+                'payment.swift',
+                'payment.price',
+                'payment.currency'
+                ],$model,1024}
             {/if}
-        {/foreach}
-        <hr/>
-    {/if}
-
-    <h2>{_'Person information'}</h2>
-    <div>
-        {control valuePrinter:row 'person.full_name', $model}
-        {control valuePrinter:row 'person_info.email', $model->person->getInfo()}
+        </div>
     </div>
-    <hr/>
-    <h2>{_'Items'}</h2>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>{_'Item'}</th>
-            <th>{_'Price'}</th>
-        </tr>
-        </thead>
-        <tbody>
-        {foreach $model->getRelatedPersonSchedule() as $personSchedule}
-            {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
-            <tr>
-                <td>{$personSchedule->getLabel($lang)}</td>
-                <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
-            </tr>
-        {/foreach}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payer information'}</h2>
+            {control columnTable ['person.full_name','person_info.email'], $model, 1024}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payments contains'}</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{_'Item'}</th>
+                    <th>{_'Price'}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $model->getRelatedPersonSchedule() as $personSchedule}
+                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+                    <tr>
+                        <td>{$personSchedule->getLabel($lang)}</td>
+                        <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
+                    </tr>
+                {/foreach}
         {if isset($model->price)}
-            <tr class="table-primary">
-                <td>{_'Sum'}</td>
-                <td>{$model->getPrice()->__toString()}</td>
-            </tr>
-        {/if}
-        </tbody>
+                    <tr class="table-primary">
+                        <td>{_'Sum'}</td>
+                        <td>{$model->getPrice()->__toString()}</td>
+                    </tr>
+                {/if}
+                </tbody>
 
-    </table>
-    <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+            </table>
+            <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
 
-            <hr/>
-    {control transitionButtons}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Actions'}</h2>
+            {control transitionButtons}
         </div>
     </div>
 {/block}

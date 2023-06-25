@@ -7,7 +7,7 @@ namespace FKSDB\Components\Schedule;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\ListComponent;
+use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -19,7 +19,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class GroupListComponent extends ListComponent
+class GroupListComponent extends BaseList
 {
     private EventModel $event;
 

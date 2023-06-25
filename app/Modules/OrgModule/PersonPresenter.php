@@ -25,7 +25,7 @@ use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -443,7 +443,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @throws NotImplementedException
      */
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }

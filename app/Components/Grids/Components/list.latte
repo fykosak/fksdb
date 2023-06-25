@@ -1,8 +1,8 @@
 {varType Fykosak\NetteORM\Model[] $models}
 {varType callable $classNameCallback}
 {varType Nette\Application\UI\Control $title}
-{varType FKSDB\Components\Grids\Components\ListComponent $control}
 {varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
+{varType FKSDB\Components\Grids\Components\BaseList $control}
 {block content}
     {if count($models)}
         {foreach $models as $model}

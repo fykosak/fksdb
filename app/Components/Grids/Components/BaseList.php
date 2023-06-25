@@ -5,32 +5,55 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
+use FKSDB\Components\Grids\Components\Button\ButtonGroup;
+use FKSDB\Components\Grids\Components\Container\ListRows;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 abstract class BaseList extends BaseComponent
 {
-    protected FieldLevelPermissionValue $userPermission;
+    protected ORMFactory $reflectionFactory;
+    public ButtonGroup $buttons;
+    public ListRows $rows;
+    /** @var callable */
+    protected $classNameCallback = null;
 
     public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
     {
-        parent::__construct($container);
-        $this->userPermission = $userPermission;
-        $this->monitor(Presenter::class, fn() => $this->configure());
+        parent::__construct($container, $userPermission);
+        $this->buttons = new ButtonGroup($this->container, new Title(null, ''));
+        $this->rows = new ListRows($this->container, new Title(null, ''));
+        $this->addComponent($this->buttons, 'buttons');
+        $this->addComponent($this->rows, 'rows');
     }
 
-    abstract protected function getTemplatePath(): string;
-
-    abstract protected function configure(): void;
-
-    abstract protected function getModels(): Selection;
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+    }
 
     public function render(): void
     {
-        $this->template->models = $this->getModels();
-        $this->template->userPermission = $this->userPermission;
-        $this->template->render($this->getTemplatePath());
+        $this->template->classNameCallback = $this->classNameCallback;
+        $this->template->title = $this->getComponent('title', false);
+        parent::render();
+    }
+
+    abstract protected function configure(): void;
+
+    protected function setTitle(BaseItem $title): void
+    {
+        $this->addComponent($title, 'title');
+    }
+
+    public function addRow(BaseItem $component, string $name): void
+    {
+        $this->rows->addComponent($component, $name);
+    }
+
+    public function addButton(BaseItem $component, string $name): void
+    {
+        $this->buttons->addComponent($component, $name);
     }
 }

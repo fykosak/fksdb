@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\TableRow;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
@@ -23,9 +22,10 @@ use Nette\Utils\Paginator as NettePaginator;
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
  */
-abstract class Grid extends BaseList
+abstract class BaseGrid extends BaseComponent
 {
     public bool $paginate = true;
+    public bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
     public TableRow $tableRow;
 
@@ -63,6 +63,7 @@ abstract class Grid extends BaseList
     public function render(): void
     {
         $this->template->paginate = $this->paginate;
+        $this->template->counter = $this->counter;
         parent::render();
     }
 
@@ -87,35 +88,6 @@ abstract class Grid extends BaseList
     protected function addButton(BaseItem $component, string $name): void
     {
         $this->tableRow->addButton($component, $name);
-    }
-
-    protected function addPresenterButton(
-        string $destination,
-        string $name,
-        string $label,
-        bool $checkACL = true,
-        array $params = [],
-        ?string $className = null
-    ): PresenterButton {
-        $paramMapCallback = function (Model $model) use ($params): array {
-            $hrefParams = [];
-            foreach ($params as $key => $value) {
-                $hrefParams[$key] = $model->{$value};
-            }
-            return $hrefParams;
-        };
-        $button = new PresenterButton(
-            $this->container,
-            new Title(null, _($label)),
-            fn(Model $model): array => [$destination, $paramMapCallback($model)],
-            $className,
-            fn(Model $model): bool => $checkACL ? $this->getPresenter()->authorized(
-                $destination,
-                $paramMapCallback($model)
-            ) : true
-        );
-        $this->addButton($button, $name);
-        return $button;
     }
 
     /**

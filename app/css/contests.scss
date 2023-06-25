@@ -3,11 +3,11 @@
 @import "mixins/navigation-item";
 
 [data-bs-theme="light"][data-style-id~="default"] {
-  @include page-theme("secondary", $body-color);
+  @include page-theme($body-color);
 }
 
 [data-bs-theme="dark"][data-style-id~="default"] {
-  @include page-theme("secondary", $body-color-dark, #000);
+  @include page-theme($body-color-dark, #000);
 }
 
 [data-style-id="contest-fykos"],
@@ -17,7 +17,7 @@
 [data-style-id="event-type-6"],
 [data-style-id="event-type-7"],
 [data-style-id="event-type-16"] {
-  @include page-theme("fykos", $fykos-color);
+  @include page-theme($fykos-color);
 }
 
 [data-style-id="contest-vyfuk"],
@@ -25,27 +25,27 @@
 [data-style-id="event-type-11"],
 [data-style-id="event-type-12"],
 [data-style-id="event-type-15"] {
-  @include page-theme("vyfuk", $vyfuk-color);
+  @include page-theme($vyfuk-color);
 }
 
 [data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
-  @include page-theme("ctyrboj", $ctyrboj-color);
+  @include page-theme($ctyrboj-color);
 }
 
 [data-style-id="event-type-1"] {
-  @include page-theme("fof", $fof-color);
+  @include page-theme($fof-color);
 }
 
 [data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
-  @include page-theme("dsef", $dsef-color);
+  @include page-theme($dsef-color);
 }
 
 [data-style-id="event-type-9"] {
-  @include page-theme("fol", $fol-color);
+  @include page-theme($fol-color);
 }
 
 [data-style-id="error"] {
-  @include page-theme("error", map-get($other-colors, "error"));
+  @include page-theme(map-get($other-colors, "error"));
 }
 
 .icon {

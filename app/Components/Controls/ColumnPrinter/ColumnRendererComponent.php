@@ -66,21 +66,6 @@ class ColumnRendererComponent extends BaseComponent
      * @throws CannotAccessModelException
      * @deprecated
      */
-    final public function renderRow(
-        string $field,
-        Model $model,
-        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
-    ): void {
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
-        $this->template->name = $field;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
-    }
-
-    /**
-     * @throws CannotAccessModelException
-     * @deprecated
-     */
     final public function renderListItem(
         string $field,
         Model $model,

@@ -1,11 +1,15 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel $gameSetup}
 {block outerContent}
     <div class="container">
-        <ul class="list-group">
-            {foreach ['game_start','result_display','result_hide','game_end',
-            'refresh_delay','tasks_on_board','result_hard_display','available_points'] as $field}
-                {control valuePrinter:listItem 'fyziklani_game_setup.' . $field, $gameSetup}
-            {/foreach}
-        </ul>
+        {control columnTable [
+        'fyziklani_game_setup.game_start',
+        'fyziklani_game_setup.result_display',
+        'fyziklani_game_setup.result_hide',
+        'fyziklani_game_setup.game_end',
+        'fyziklani_game_setup.refresh_delay',
+        'fyziklani_game_setup.tasks_on_board',
+        'fyziklani_game_setup.result_hard_display',
+        'fyziklani_game_setup.available_points'
+        ], $gameSetup,1024}
     </div>
 {/block}

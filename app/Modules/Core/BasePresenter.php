@@ -6,6 +6,7 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
@@ -354,9 +355,14 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnRendererComponent
+    protected function createComponentPrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
+    }
+
+    protected function createComponentColumnTable(): ColumnTableComponent
+    {
+        return new ColumnTableComponent($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent

@@ -1,8 +1,8 @@
 {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $rests}
 {varType FKSDB\Models\ORM\Models\PersonModel $person}
 {block content}
+    <h4>{$person->getFullName()}</h4>
     {if count($rests)}
-        <h3>{$person->getFullName()}</h3>
         <table class="table table-sm table-striped">
             <tbody>
             {foreach $rests as $rest}
@@ -14,4 +14,5 @@
             </tbody>
         </table>
     {/if}
+    <span class="badge bg-success"><i class="fas fa-check me-1"></i>{_'No rests found!'}</span>
 {/block}

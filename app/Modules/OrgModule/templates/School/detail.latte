@@ -2,15 +2,16 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {foreach ['@school.name_full','@school.name','@school.name_abbrev','@school.email','@school.ic','@school.izo','@school.active','@school.note'] as $field}
-
-                <div class="row">
-                    <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{control valuePrinter:templateString $field . ':title',$model,1024}</b>
-                    <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-                {control valuePrinter:templateString $field,$model,1024}
-            </span>
-                </div>
-            {/foreach}
+            {control columnTable [
+            'school.name_full',
+            'school.name',
+            'school.name_abbrev',
+            'school.email',
+            'school.ic',
+            'school.izo',
+            'school.active',
+            'school.note',
+            ] ,$model,1024}
         </div>
     </div>
     <div class="panel color-auto">

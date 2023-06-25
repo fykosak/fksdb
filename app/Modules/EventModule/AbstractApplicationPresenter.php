@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -199,4 +200,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     abstract protected function createComponentFastTransition(): AttendanceComponent;
+
+    abstract protected function createComponentGrid(): BaseGrid;
 }
