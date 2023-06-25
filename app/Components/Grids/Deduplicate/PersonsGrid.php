@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\ORM\FieldLevelPermissionValue;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PersonsGrid extends Grid
@@ -28,7 +26,7 @@ class PersonsGrid extends Grid
         $this->pairs = $pairs;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->data;
     }

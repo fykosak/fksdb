@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Tests\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\Database\Row;
 use Nette\Schema\Helpers;
-use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {

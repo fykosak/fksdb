@@ -30,7 +30,7 @@ class EnumColumnFactory extends ColumnFactory
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($items);
-        $control->setPrompt(_('-- select options --'));
+        $control->setPrompt(_('--Select options--'));
         return $control;
     }
 

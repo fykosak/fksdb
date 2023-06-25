@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 
-class TaskGrid extends FilterGrid
+class TaskGrid extends Grid
 {
     private EventModel $event;
 
@@ -21,26 +20,9 @@ class TaskGrid extends FilterGrid
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
-        $query = $this->event->getTasks();
-        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
-            return $query;
-        }
-        $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
-            $query->where(
-                'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
-                $token,
-                $token
-            );
-        }
-        return $query;
-    }
-
-    protected function configureForm(Form $form): void
-    {
-        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
+        return $this->event->getTasks();
     }
 
     /**

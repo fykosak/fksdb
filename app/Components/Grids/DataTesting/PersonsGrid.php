@@ -13,9 +13,9 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 
 class PersonsGrid extends Grid
@@ -30,7 +30,7 @@ class PersonsGrid extends Grid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->personService->getTable();
     }

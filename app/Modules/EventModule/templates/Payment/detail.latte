@@ -1,7 +1,10 @@
-{block content}
-    {varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {varType FKSDB\Models\ORM\Models\PaymentModel $model}
     {varType string $lang}
-    <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
+
+            <div class="h2">{control valuePrinter:templateString '@payment.state', $model, 1024}</div>
     {var $progress = 0}
     {switch $model->state}
         {case FKSDB\Models\ORM\Models\PaymentState::InProgress}
@@ -67,8 +70,9 @@
 
     </table>
     <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
-    <hr/>
 
+            <hr/>
     {control transitionButtons}
-
+        </div>
+    </div>
 {/block}

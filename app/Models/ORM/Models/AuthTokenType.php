@@ -19,16 +19,25 @@ enum AuthTokenType: string implements EnumColumn
     /** @deprecated */
     case SSO = 'sso';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function getBehaviorType(): string
     {
         throw new NotImplementedException();

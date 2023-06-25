@@ -20,7 +20,7 @@ class SchoolProvider implements FilteredDataProvider
      * School with school_id equal to defaultValue is suggested even when it's not
      * active.
      *
-     * @var int
+     * @var mixed
      */
     private $defaultValue;
 

@@ -6,7 +6,6 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
@@ -32,12 +31,14 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change password'), 'fa fa-cogs');
+        return new PageTitle(null, _('Change password'), 'fas fa-cogs');
     }
 
-    /**
-     * @throws BadTypeException
-     */
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
     public function actionDefault(): void
     {
         /** @var LoginModel $login */
@@ -61,9 +62,6 @@ class SettingsPresenter extends BasePresenter
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentSettingsForm(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -108,6 +106,7 @@ class SettingsPresenter extends BasePresenter
     ): ContainerWithOptions {
         $container = new ContainerWithOptions($this->getContext());
         $container->setCurrentGroup($group);
+
 
         if ($verifyOldPassword) {
             $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(

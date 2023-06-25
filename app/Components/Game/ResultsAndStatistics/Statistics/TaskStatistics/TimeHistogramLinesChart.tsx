@@ -51,7 +51,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, nev
         }
         let maxPoints = 0;
         for (const key in taskTimeSubmits) {
-            if (taskTimeSubmits.hasOwnProperty(key)) {
+            if (Object.hasOwn(taskTimeSubmits,key)) {
                 const item = taskTimeSubmits[key];
                 availablePoints.map((points) => {
                     if (!activePoints || activePoints === points) {
@@ -70,7 +70,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, nev
             5: [],
         };
         for (const key in taskTimeSubmits) {
-            if (taskTimeSubmits.hasOwnProperty(key)) {
+            if (Object.hasOwn(taskTimeSubmits,key)) {
 
                 const item = taskTimeSubmits[key];
                 const ms = +key * aggregationTime;

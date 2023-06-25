@@ -50,10 +50,10 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps, ne
         }
         let max = 0;
         for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
+            if (Object.hasOwn(submits,index)) {
                 const submit: SubmitModel = submits[index];
                 const {taskId, points} = submit;
-                if (tasksSubmits.hasOwnProperty(taskId)) {
+                if (Object.hasOwn(tasksSubmits,taskId)) {
                     tasksSubmits[taskId][points]++;
                     tasksSubmits[taskId].total++;
                     if (tasksSubmits[taskId].total > max) {
@@ -65,7 +65,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps, ne
 
         const rows = [];
         for (const index in tasksSubmits) {
-            if (tasksSubmits.hasOwnProperty(index)) {
+            if (Object.hasOwn(tasksSubmits,index)) {
                 const submit: StatItem = tasksSubmits[index];
 
                 rows.push(

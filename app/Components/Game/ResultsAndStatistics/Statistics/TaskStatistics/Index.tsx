@@ -22,34 +22,50 @@ class TaskStats extends React.Component<StateProps, never> {
         const translator = this.context;
         return (
             <>
-                <h2>{translator.getText('Global statistics')}</h2>
-                <ChartContainer
-                    chart={Progress}
-                    chartProps={{availablePoints}}
-                    headline={translator.getText('Total solved problem')}
-                />
-
-                <h2>{translator.getText('Statistics from single problem')}</h2>
-                <Options/>
-                <hr/>
+                <div className="panel color-auto">
+                    <div className="container">
+                        <h2>{translator.getText('Global statistics')}</h2>
+                        <ChartContainer
+                            chart={Progress}
+                            chartProps={{availablePoints}}
+                            headline={translator.getText('Total solved problem')}
+                        />
+                    </div>
+                </div>
+                <div className="panel color-auto">
+                    <div className="container">
+                        <h2>{translator.getText('Statistics from single problem')}</h2>
+                        <Options/>
+                    </div>
+                </div>
                 {taskId && <>
-                    <ChartContainer
-                        chart={Timeline}
-                        chartProps={{taskId}}
-                        headline={translator.getText('Timeline')}
-                    />
-                    <hr/>
-                    <ChartContainer
-                        chart={TimeHistogram}
-                        chartProps={{taskId, availablePoints}}
-                        headline={translator.getText('Time histogram')}
-                    />
-                    <hr/>
-                    <ChartContainer
-                        chart={TimeHistogramLines}
-                        chartProps={{taskId, availablePoints}}
-                        headline={translator.getText('Time histogram')}
-                    />
+                    <div className="panel color-auto">
+                        <div className="container">
+                            <ChartContainer
+                                chart={Timeline}
+                                chartProps={{taskId}}
+                                headline={translator.getText('Timeline')}
+                            />
+                        </div>
+                    </div>
+                    <div className="panel color-auto">
+                        <div className="container">
+                            <ChartContainer
+                                chart={TimeHistogram}
+                                chartProps={{taskId, availablePoints}}
+                                headline={translator.getText('Time histogram')}
+                            />
+                        </div>
+                    </div>
+                    <div className="panel color-auto">
+                        <div className="container">
+                            <ChartContainer
+                                chart={TimeHistogramLines}
+                                chartProps={{taskId, availablePoints}}
+                                headline={translator.getText('Time histogram')}
+                            />
+                        </div>
+                    </div>
                 </>}
             </>
         );

@@ -9,7 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 class PersonRelatedGrid extends Grid
@@ -30,7 +30,7 @@ class PersonRelatedGrid extends Grid
         $this->userPermissions = $userPermissions;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions->value) {

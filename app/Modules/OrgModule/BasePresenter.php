@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use SeriesPresenterTrait;
 
+    /**
+     * @throws UnsupportedLanguageException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();
@@ -24,18 +31,16 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return ['Org.Dashboard.default'];
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest) && $contest) {
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+        if (isset($contest)) {
+            return 'contest-' . $contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
     }

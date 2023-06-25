@@ -43,10 +43,10 @@ export const parseData = (data: YearsData): ParsedData => {
     let maxSeries = 0;
     const aggregatedSeries: AggregatedSeriesData = {};
     for (const year in data) {
-        if (data.hasOwnProperty(year)) {
+        if (Object.hasOwn(data,year)) {
             const datum = data[year];
             for (const series in datum) {
-                if (datum.hasOwnProperty(series)) {
+                if (Object.hasOwn(datum,series)) {
                     aggregatedSeries[series] = aggregatedSeries[series] || {};
                     aggregatedSeries[series][year] = datum[series];
                     maxValue = (datum[series] > maxValue) ? datum[series] : maxValue;

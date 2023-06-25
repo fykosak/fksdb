@@ -15,11 +15,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
-use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
 class BaseHolder implements ModelHolder
 {
@@ -34,9 +31,9 @@ class BaseHolder implements ModelHolder
     /** @var Field[] */
     private array $fields = [];
     /** @var FormAdjustment[] */
-    private array $formAdjustments = [];
+    public array $formAdjustments = [];
     /** @var Processing[] */
-    private array $processings = [];
+    public array $processings = [];
 
     public function __construct(Container $container, EventParticipantService $service)
     {
@@ -52,25 +49,6 @@ class BaseHolder implements ModelHolder
     public function addProcessing(Processing $processing): void
     {
         $this->processings[] = $processing;
-    }
-
-    /**
-     * Apply processings to the values and sets them to the ORM model.
-     */
-    public function processFormValues(ArrayHash $values, ?Transition $transition): ?EventParticipantStatus
-    {
-        $newState = $transition ? $transition->target : null;
-        foreach ($this->processings as $processing) {
-            $processing->process($values);
-        }
-        return $newState;
-    }
-
-    public function adjustForm(Form $form): void
-    {
-        foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $this);
-        }
     }
 
     public function addField(Field $field): void

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
 use Nette\InvalidStateException;
@@ -42,10 +42,6 @@ class TableMerger
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
     }
-
-    /*     * ******************************
-     * Merging
-     * ****************************** */
 
     public function setMergedPair(Model $trunkRow, Model $mergedRow): void
     {
@@ -198,10 +194,6 @@ class TableMerger
         return implode('_', $key);
     }
 
-    /*     * ******************************
-     * Logging sugar
-     * ****************************** */
-
     private function logUpdate(Model $row, iterable $changes): void
     {
         $msg = [];
@@ -244,10 +236,6 @@ class TableMerger
             )
         );
     }
-
-    /* ******************************
-     * DB reflection
-     * ****************************** */
 
     private ?array $refTables;
     private static bool $refreshReferencing = true;

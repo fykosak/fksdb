@@ -11,8 +11,8 @@ use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class ContestantListComponent extends DetailComponent
 {
@@ -21,7 +21,7 @@ class ContestantListComponent extends DetailComponent
         return FieldLevelPermissionValue::Restrict;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getContestants();
     }

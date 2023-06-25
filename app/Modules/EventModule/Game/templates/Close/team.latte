@@ -1,8 +1,6 @@
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{block content}
-    {if $event->event_type_id === 17}
-        {control teamSubmitsGrid}
-    {/if}
-    {control closeTeamControl}
+{block outerContent}
+    <div class="container">
+        {control teamControl}
+    </div>
 {/block}
 

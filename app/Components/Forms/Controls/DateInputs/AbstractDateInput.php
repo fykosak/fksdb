@@ -13,10 +13,6 @@ abstract class AbstractDateInput extends TextInput
 
     protected string $format;
 
-    /**
-     * AbstractDateInput constructor.
-     * @param string|Html|null $label
-     */
     public function __construct(string $type, string $format, ?string $label = null)
     {
         $this->format = $format;

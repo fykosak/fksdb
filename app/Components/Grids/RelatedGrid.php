@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\Grid;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 abstract class RelatedGrid extends Grid
@@ -21,7 +21,7 @@ abstract class RelatedGrid extends Grid
         $this->model = $model;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->model->related($this->tableName);
     }

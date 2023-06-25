@@ -1,5 +1,8 @@
-{block content}
-    <a href="{plink 'create'}" class="btn btn-outline-primary">{_'Create person'}</a>
-    <hr/>
-    {control formSearch}
+{block outerContent}
+    <div class="container">
+        <a href="{plink 'create'}" class="btn btn-outline-primary">{_'Create person'}</a>
+    </div>
+    <div class="container">
+        {control formSearch}
+    </div>
 {/block}

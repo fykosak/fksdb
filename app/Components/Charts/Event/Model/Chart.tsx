@@ -49,7 +49,7 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
         const nodesElements = [];
 
         for (const key in nodes) {
-            if (nodes.hasOwnProperty(key)) {
+            if (Object.hasOwn(nodes,key)) {
                 const node = nodes[key];
                 nodesElements.push(
                     <g fill="currentColor"

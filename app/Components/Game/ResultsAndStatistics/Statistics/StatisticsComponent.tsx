@@ -35,9 +35,7 @@ export default class StatisticsComponent extends React.Component<OwnProps, never
             data={this.props.data}
             actions={this.props.actions}
             translator={this.props.translator}>
-            <div className="container">
-                {content}
-            </div>
+            {content}
         </MainComponent>;
     }
 }

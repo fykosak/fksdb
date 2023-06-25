@@ -35,7 +35,7 @@ export default class EventModelComponent extends React.Component<OwnProps, never
         } = {};
         const color = scaleOrdinal(schemeCategory10);
         for (const key in nodes) {
-            if (nodes.hasOwnProperty(key)) {
+            if (Object.hasOwn(nodes,key)) {
                 simNodes[key] = {
                     label: nodes[key].label,
                     color: color(key),

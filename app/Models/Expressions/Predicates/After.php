@@ -14,7 +14,6 @@ class After extends EvaluatedExpression
     private $datetime;
 
     /**
-     * After constructor.
      * @param \DateTimeInterface|callable $datetime
      */
     public function __construct($datetime)

@@ -28,7 +28,7 @@ class InnerComponent extends React.Component<StateProps, never> {
 
         const submitsForTeamsArray: Item[] = [];
         for (const teamId in submitsForTeams) {
-            if (submitsForTeams.hasOwnProperty(teamId)) {
+            if (Object.hasOwn(submitsForTeams,teamId)) {
                 if (!category || (category === submitsForTeams[teamId].team.category)) {
                     submitsForTeamsArray.push(submitsForTeams[teamId]);
                 }
@@ -42,7 +42,7 @@ class InnerComponent extends React.Component<StateProps, never> {
         for (let col = 0; col < cols; col++) {
             const colItems = [];
             for (let row = 0; row < rows; row++) {
-                if (submitsForTeamsArray.hasOwnProperty(position)) {
+                if (Object.hasOwn(submitsForTeamsArray,position)) {
                     const item = submitsForTeamsArray[position];
                     position += 1;
                     colItems.push(<TeamRow key={item.team.teamId} item={item} position={position}

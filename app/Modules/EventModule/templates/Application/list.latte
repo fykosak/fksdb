@@ -1,1 +1,15 @@
-../AbstractApplication/list.latte
+{block outerContent}
+    <div class="container">
+        {varType FKSDB\Models\ORM\Models\EventModel $event}
+        <div class="btn-group">
+            <a n:href=":Public:Application:default eventId => $event->getPrimary()"
+                    class="btn btn-sm btn-outline-primary">{_'New application'}</a>
+            <a href="{plink import}" class="btn btn-sm btn-outline-secondary">{_'Import of applications'}</a>
+            <a n:href="transitions" class="btn btn-outline-primary btn-sm">{_'Mass transitions'}</a>
+            <a n:href="transition" class="btn btn-outline-primary btn-sm">{_'Transitions by IDs'}</a>
+        </div>
+    </div>
+    <div class="container">
+        {control grid}
+    </div>
+{/block}

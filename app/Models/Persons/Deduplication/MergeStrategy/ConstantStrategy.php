@@ -10,7 +10,6 @@ class ConstantStrategy implements MergeStrategy
     private $constant;
 
     /**
-     * ConstantStrategy constructor.
      * @param mixed $constant
      */
     public function __construct($constant)

@@ -30,10 +30,9 @@
     "css-loader": "^6.2.0",
     "sass": "^1.36.0",
     "sass-loader": "^12.1.0",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "^6.4.0",
     "flag-icon-css": "^3.5.0",
-    "bootstrap": "^5.2.0",
-    "html5-qrcode": "^2.1.6"
+    "bootstrap": "^5.3.0"
   },
   "devDependencies": {
     "@types/d3-axis": "^3.0.0",

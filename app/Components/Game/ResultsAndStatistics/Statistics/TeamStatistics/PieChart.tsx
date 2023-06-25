@@ -35,13 +35,13 @@ class PieChart extends React.Component<StateProps & OwnProps, never> {
 
         let totalSubmits = 0;
         for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
+            if (Object.hasOwn(submits,index)) {
                 const submit: SubmitModel = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
 
                     if (points !== null && points !== 0) {
-                        if (pointsCategories.hasOwnProperty(points)) {
+                        if (Object.hasOwn(pointsCategories,points)) {
                             totalSubmits++;
                             pointsCategories[points].count++;
                         }
@@ -52,7 +52,7 @@ class PieChart extends React.Component<StateProps & OwnProps, never> {
         const arcEl = arc<PieArcDatum<PointGroupItem>>().innerRadius(0).outerRadius(150);
         const filteredData: PointGroupItem[] = [];
         for (const points in pointsCategories) {
-            if (pointsCategories.hasOwnProperty(points)) {
+            if (Object.hasOwn(pointsCategories,points)) {
                 const item = pointsCategories[points];
                 if (item.count !== 0) {
                     filteredData.push(item);

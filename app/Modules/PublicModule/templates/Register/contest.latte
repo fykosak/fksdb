@@ -1,15 +1,17 @@
 {layout '../../../CoreModule/templates/@layout.latte'}
-{block content}
-    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-        <div class="col">
-            <div class="card h-100 border-fykos">
-                <img src="{$basePath}/images/contests/fykos.svg" class="card-img-top m-3" alt="fykos"
-                     style="max-height: 7rem">
-                <div class="card-body">
-                    <h3 class="card-title text-fykos">{_'FYKOS'}</h3>
-                    <p class="card-text">{_'Physics correspondence competition of CUNI MFF for high-school students.'}</p>
-                    <a class="btn btn-fykos"
-                       href="{plink 'year' ,'contestId'=>1}">{_'Register to FYKOS'}</a>
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+                <div class="col">
+                    <div class="card h-100 border-fykos">
+                        <img src="{$basePath}/images/contests/fykos.svg" class="card-img-top m-3" alt="fykos"
+                             style="max-height: 7rem">
+                        <div class="card-body">
+                            <h3 class="card-title text-fykos">{_'FYKOS'}</h3>
+                            <p class="card-text">{_'Physics correspondence competition of CUNI MFF for high-school students.'}</p>
+                            <a class="btn btn-fykos"
+                               href="{plink 'year' ,'contestId'=>1}">{_'Register to FYKOS'}</a>
                 </div>
             </div>
         </div>
@@ -23,6 +25,8 @@
                     <a class="btn btn-vyfuk"
                        href="{plink 'year' ,'contestId'=>2}">{_'Register to Výfuk'}</a>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
     </div>

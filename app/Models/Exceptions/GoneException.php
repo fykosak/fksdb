@@ -11,6 +11,6 @@ class GoneException extends BadRequestException
 {
     public function __construct(?string $message = null, ?\Throwable $previous = null)
     {
-        parent::__construct($message ?? 'Gone', IResponse::S410_GONE, $previous);
+        parent::__construct($message ?? _('Gone'), IResponse::S410_GONE, $previous);
     }
 }

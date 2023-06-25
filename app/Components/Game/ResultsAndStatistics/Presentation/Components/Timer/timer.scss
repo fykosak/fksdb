@@ -1,7 +1,8 @@
-@import "../../../../../../css/colors";
+@import "../../../../../../css/variables";
 
 .game-presentation .presentation-timer {
-  color: var(--color-fof-main);
+  color: $fof-color;
+
   justify-content: space-between;
   padding: .25em;
   font-weight: bold;
@@ -17,7 +18,7 @@
     display: flex;
     flex-wrap: wrap;
     //color: white;
-    color: var(--color-fof-main);;
+    color: $fof-color;
   }
 
   &.timer-small {
@@ -55,11 +56,11 @@
 }
 
 .game-presentation.game-ctyrboj .presentation-timer {
-  background-color: $ctyrbojColor;
+  background-color: $ctyrboj-color;
 }
 
 .game-presentation.game-fyziklani .presentation-timer {
-  background-color: var(--color-fof-main);
+  background-color: $fof-color;
 }
 
 .logo-sponsors {

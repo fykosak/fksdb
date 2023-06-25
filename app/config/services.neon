@@ -80,7 +80,7 @@ services:
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     #handlers
-    - FKSDB\Components\Forms\Controls\Schedule\Handler
+    - FKSDB\Components\Schedule\Input\Handler
 
 includes:
     - merger.neon

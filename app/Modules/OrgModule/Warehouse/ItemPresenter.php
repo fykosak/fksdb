@@ -10,9 +10,8 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\UI\Control;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
 /**
@@ -31,7 +30,7 @@ class ItemPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Items'), 'fa fa-barcode');
+        return new PageTitle(null, _('Items'), 'fas fa-barcode');
     }
 
     public function titleEdit(): PageTitle
@@ -41,10 +40,10 @@ class ItemPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create item'), 'fas fa-plus');
     }
 
-    protected function createComponentCreateForm(): Control
+    protected function createComponentCreateForm(): ItemFormComponent
     {
         return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
@@ -53,7 +52,7 @@ class ItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ItemFormComponent
     {
         return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }

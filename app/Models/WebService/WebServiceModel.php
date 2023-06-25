@@ -8,18 +8,19 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\WebService\Models\{EventListWebModel,
+use FKSDB\Models\WebService\Models\{
+    EventListWebModel,
+    ContestsModel,
     EventWebModel,
     ExportWebModel,
-    FyziklaniResultsWebModel,
+    Game,
     OrganizersWebModel,
     PaymentListWebModel,
     ResultsWebModel,
     SeriesResultsWebModel,
     SignaturesWebModel,
     StatsWebModel,
-    WebModel,
-    ContestsModel
+    WebModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -39,7 +40,9 @@ class WebServiceModel
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,

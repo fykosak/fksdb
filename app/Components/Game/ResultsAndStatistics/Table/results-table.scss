@@ -1,4 +1,4 @@
-@import "./../../../../css/colors";
+@import "./../../../../css/variables";
 
 .game-statistics-table {
   tbody {
@@ -34,33 +34,33 @@
 
   thead tr th {
     &[data-task-label^="A"] {
-      background-color: lighten($fofColor, 30%);
+      background-color: lighten($fof-color, 30%);
     }
 
     &[data-task-label^="B"] {
-      background-color: lighten($fofColor, 20%);
+      background-color: lighten($fof-color, 20%);
     }
 
     &[data-task-label^="C"] {
-      background-color: lighten($fofColor, 10%);
+      background-color: lighten($fof-color, 10%);
     }
 
     &[data-task-label^="D"] {
-      background-color: $fofColor;
+      background-color: $fof-color;
     }
 
     &[data-task-label^="E"] {
-      background-color: darken($fofColor, 10%);
+      background-color: darken($fof-color, 10%);
       color: white;
     }
 
     &[data-task-label^="F"] {
-      background-color: darken($fofColor, 20%);
+      background-color: darken($fof-color, 20%);
       color: white;
     }
 
     &[data-task-label^="G"] {
-      background-color: darken($fofColor, 30%);
+      background-color: darken($fof-color, 30%);
       color: white;
     }
   }

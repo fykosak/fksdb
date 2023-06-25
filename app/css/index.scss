@@ -1,20 +1,24 @@
-$border-radius: 0;
-$btn-border-radius-sm: 0;
-$btn-border-radius-lg: 0;
-$input-border-radius-lg: 0;
-@import "colors";
-$colors: (
-        'fof': $fofColor,
-        'fol': $folColor,
-        'fykos': $fykosColor,
-        'dsef': $dsefColor,
-);
-$border-radius:               0;
-$border-radius-sm:            0;
-$border-radius-lg:            0;
-$border-radius-xl:            0;
-$border-radius-2xl:           0;
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/variables-dark";
+
+$enable-rounded: false;
+@import "variables";
+
+// Merge the maps
+$theme-colors: map-merge($theme-colors, $custom-colors);
+
+@import "node_modules/bootstrap/scss/maps";
+$theme-colors-text: map-merge($theme-colors-text, $contest-colors-text-emphasis);
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $contest-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $contest-colors-border-subtle);
+
+$theme-colors-text-dark: map-merge($theme-colors-text-dark, $contest-colors-text-dark);
+$theme-colors-bg-subtle-dark: map-merge($theme-colors-bg-subtle-dark, $contest-colors-bg-subtle-dark);
+$theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $contest-colors-border-subtle-dark);
+
 @import "node_modules/bootstrap/scss/bootstrap";
+
 @import 'node_modules/flag-icon-css/sass/flag-icon';
 @import 'node_modules/codemirror/lib/codemirror.css';
 
@@ -27,31 +31,11 @@ $border-radius-2xl:           0;
 @import "contests";
 @import "callout";
 @import "payment";
+@import "panel";
 @import "../Components/PDFGenerators/TeamSeating/seating";
 @import "../Components/PDFGenerators/Providers/print";
 
-@each $name, $color in $colors {
-  @include color-variant($color, $name);
-}
-
-@include color-variant(#1f77b4, color-1);
-@include color-variant(#ff7f0e, color-2);
-@include color-variant(#2ca02c, color-3);
-@include color-variant(#d62728, color-4);
-@include color-variant(#9467bd, color-5);
-@include color-variant(#8c564b, color-6);
-@include color-variant(#e377c2, color-7);
-@include color-variant(#cccccc, color-8);
-@include color-variant(#bcbd22, color-9);
-@include color-variant(#17becf, color-10);
-@include color-variant(#000000, color-11);
 :root {
-  --color-fof: #{$fofColor};
-  --color-fol: #{$folColor};
-  --color-fykos: #{$fykosColor};
-  --color-dsef: #{$dsefColor};
-  --color-vyfuk: #{$vyfukMainColor};
-
   --color-fof-points-5: #{$fyziklaniPoints5};
   --color-fof-points-3: #{$fyziklaniPoints3};
   --color-fof-points-2: #{$fyziklaniPoints2};
@@ -68,19 +52,6 @@ $border-radius-2xl:           0;
   --color-variant-color-9: #bcbd22;
   --color-variant-color-10: #17becf;
   --color-variant-color-11: #000000;
-}
-
-@include color-variant($vyfukMainColor, "vyfuk");
-@include color-variant($ctyrbojColor, "ctyrboj");
-
-@include color-variant(deeppink, 'pink');
-@include color-variant(#dc3545, 'error');
-
-@include color-variant($fofColor, "fol");
-@include color-variant($folColor, "fof");
-
-.bg-white-container {
-  background-color: rgba(255, 255, 255, .85);
 }
 
 h1 .small {
@@ -103,24 +74,6 @@ main {
   min-height: 100%;
 }
 
-.list-piped {
-  & > * {
-    display: inline-block;
-  }
-
-  & > * + *:before {
-    color: #CCCCCC;
-    content: "| ";
-    padding: 0;
-  }
-}
-
-.clear-referenced {
-  position: absolute;
-  right: 1em;
-  z-index: 3;
-}
-
 .right-inner-addon {
   position: relative;
 
@@ -141,11 +94,6 @@ main {
   content: '* ';
   display: inline;
 }
-
-.dispatch-logo {
-  height: 10rem;
-}
-
 .image-error {
   width: 100%;
   text-align: center;
@@ -183,5 +131,12 @@ main {
 
 footer {
   min-height: $footerHeight;
-  background-color: rgba(255, 255, 255, .7);
+  background-color: #000000;
+  color: white;
+
+  a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
 }

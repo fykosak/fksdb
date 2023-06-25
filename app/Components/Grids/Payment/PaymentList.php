@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -31,7 +30,7 @@ class PaymentList extends FilterList
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPayments();
         foreach ($this->filterParams as $key => $param) {

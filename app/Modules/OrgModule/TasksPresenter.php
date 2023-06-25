@@ -8,15 +8,16 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Submits\SeriesTable;
-use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
+use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -45,29 +46,26 @@ class TasksPresenter extends BasePresenter
         $this->seriesTable = $seriesTable;
     }
 
-    public function authorizedImport(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
-    }
-
-    public function authorizedDispatch(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest()));
-    }
-
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Task import'), 'fas fa-download');
     }
 
-    public function titleDispatch(): PageTitle
+    public function authorizedImport(): bool
     {
-        return new PageTitle(null, _('Handout'), 'fa fa-folder-open');
+        return $this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest());
     }
 
-    /**
-     * @throws BadTypeException
-     */
+    public function titleDispatch(): PageTitle
+    {
+        return new PageTitle(null, _('Handout'), 'fas fa-folder-open');
+    }
+
+    public function authorizedDispatch(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
+    }
+
     public function actionDispatch(): void
     {
         /** @var HandoutFormComponent $control */
@@ -76,8 +74,9 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {
@@ -88,7 +87,6 @@ class TasksPresenter extends BasePresenter
 
 
     /**
-     * @throws BadTypeException
      * TODO to separate Component
      */
     protected function createComponentSeriesForm(): FormControl

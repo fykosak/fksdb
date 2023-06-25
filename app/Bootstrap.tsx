@@ -14,6 +14,7 @@ import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statisti
 import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/Main';
 import ResultsTable from './Components/Game/ResultsAndStatistics/Table/Main';
 import MainComponent from './Components/Game/Submits/Form/MainComponent';
+import ScheduleField from './Components/Schedule/Input/ScheduleField';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
 import 'vendor/nette/forms/src/assets/netteForms.js';
@@ -23,7 +24,6 @@ import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelC
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { availableLanguage, Translator } from '@translator/translator';
-import ScheduleField from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
 
 const translator = new Translator<availableLanguage>();
 
@@ -105,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const originalValue = actElement.attr('data-writeonly-value');
             const originalLabel = actElement.attr('data-writeonly-label');
 
-            const button = $('<i class="fa fa-times glyphicon glyphicon-remove"/>');
+            const button = $('<i class="fas fa-times"/>');
             const actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
@@ -179,14 +179,13 @@ window.addEventListener('DOMContentLoaded', () => {
             this.transformContainer(container, document.getElementById(container.attr('data-referenced-id')));
         },
         transformContainer: function (container: JQuery<HTMLElement>, refId: HTMLElement) {
-            const elRefId = $(refId);
             const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
             const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
             const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
             let compacted = null;
             //  const options = this.options;
-            if (elRefId) {
-                this.options.refId = elRefId;
+            if (refId) {
+                this.options.refId = $(refId);
             }
 
             function decompactifyContainer(): void {
@@ -203,7 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <h4>{label}</h4>
                         <div className="form-group">
                             <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fa fa-user me-3"/>{value}</p>
+                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
                             </div>
                             <div className="input-group-append">
                                 <button type="button"
@@ -212,7 +211,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             decompactifyContainer();
                                         }}>
-                                    <span className="fa fa-pen me-3"/>
+                                    <span className="fas fa-pen me-3"/>
                                     {translator.getText('Edit')}
                                 </button>
                                 <button type="button"
@@ -221,7 +220,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             $clearButton.click();
                                         }}>
-                                    <span className="fa fa-times me-3"/>
+                                    <span className="fas fa-times me-3"/>
                                     {translator.getText('Delete')}
                                 </button>
                             </div>
@@ -376,11 +375,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         cache[term] = data;
                         response(data);
                     });
-                    /* $.getJSON(this.element.data('ac-ajax-url'), {acQ: term}, (data, status, xhr) => {
-                         data = conservationFunction(data);
-                         cache[term] = data;
-                         response(data);
-                     });*/
                 };
                 options.minLength = 3;
             } else {
@@ -388,8 +382,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 options.source = (request, response) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
-                    response($.ui.autocomplete.filter(
-                        items, s));
+                    response($.ui.autocomplete.filter(items, s));
                 };
                 options.minLength = 3;
             }

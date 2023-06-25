@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 class EventsGrid extends EntityGrid
@@ -28,7 +28,7 @@ class EventsGrid extends EntityGrid
         ]);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $value = parent::getModels();
         $value->order('event.begin ASC');

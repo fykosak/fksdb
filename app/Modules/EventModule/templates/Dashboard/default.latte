@@ -1,18 +1,30 @@
-{block content}
+{block outerContent}
     {varType FKSDB\Models\ORM\Models\EventModel $event}
     {varType string $webUrl}
-    <h2>{_'Info'}</h2>
-    <p>{$event->report}</p>
-    <hr/>
-    {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end','event.registration_begin','event.registration_end'] as $fieldName}
-        {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$event,userPermission:1024,name:'@' . $fieldName,printer:$control['valuePrinter']}
-    {/foreach}
-    <a class="btn btn-outline-secondary mt-3"
-       href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>
-    <hr/>
-    <p><a class="col-12 row" href="{$webUrl}">{_'Event web-site'}</a></p>
-    <hr/>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            <p>{$event->report}</p>
+            {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end','event.registration_begin','event.registration_end'] as $fieldName}
+                {include row from '../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$event,userPermission:1024,name:'@' . $fieldName,printer:$control['valuePrinter']}
+            {/foreach}
+            <div class="row">
+                <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
+                    {_'Event web-site'}
+                </b>
+                <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+                    <a href="{$webUrl}">{$webUrl}</a>
+                </span>
+            </div>
+            <a class="btn btn-outline-secondary mt-3"
+               href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>
+        </div>
 
-    <h2>{_'Actions'}</h2>
-    {control navigationChooser:board 'Event.Dashboard.default'}
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Actions'}</h2>
+            {control navigationChooser:board 'Event.Dashboard.default'}
+        </div>
+    </div>
 {/block}

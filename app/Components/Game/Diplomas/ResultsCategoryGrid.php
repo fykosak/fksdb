@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 class ResultsCategoryGrid extends Grid
@@ -38,7 +38,7 @@ class ResultsCategoryGrid extends Grid
         ]);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getParticipatingTeams()
             ->where('category', $this->category->value)

@@ -23,7 +23,7 @@ class Index extends React.Component<StateProps, never> {
         const {submits, teams, tasks, filter} = this.props;
         const submitsForTeams = {};
         for (const index in submits) {
-            if (submits.hasOwnProperty(index)) {
+            if (Object.hasOwn(submits,index)) {
                 const submit = submits[index];
                 const {teamId, taskId: taskId} = submit;
                 submitsForTeams[teamId] = submitsForTeams[teamId] || {};

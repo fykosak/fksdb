@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 class EmailsGrid extends EntityGrid
@@ -23,7 +23,7 @@ class EmailsGrid extends EntityGrid
         ]);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $value = parent::getModels();
         $value->order('created DESC');

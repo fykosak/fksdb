@@ -18,7 +18,7 @@ class ItemState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = 'badge bg-color-2';
+        $badge = 'badge bg-color-5';
         switch ($this->value) {
             case self::NEW:
                 $badge = 'badge bg-color-3';

@@ -101,8 +101,8 @@ class Authorization extends FyziklaniTestCase
     {
         $params = [
             'lang' => 'cs',
-            'contestId' => (string)1,
-            'year' => (string)1,
+            'contestId' => "1",
+            'year' => "1",
             'eventId' => (string)$this->event->event_id,
             'action' => $action,
             'id' => (string)$this->submit->fyziklani_submit_id,
@@ -116,12 +116,7 @@ class Authorization extends FyziklaniTestCase
      */
     public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
-        if (!is_array($actions)) {
-            $actions = [$actions];
-        }
-        if (!is_array($results)) {
-            $results = array_fill(0, count($actions), $results);
-        }
+        $results = array_fill(0, count($actions), $results);
         $presenter = $this->createPresenter($presenterName);
         if ($person()) {
             /* Use indirect access because data provider is called before test set up. */

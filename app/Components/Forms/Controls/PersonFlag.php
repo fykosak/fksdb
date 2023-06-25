@@ -21,8 +21,7 @@ class PersonFlag extends SelectBox
     private bool $useExplicitValues = false;
 
     /**
-     * PersonFlag constructor.
-     * @param null $label
+     * @param string|Html|null $label
      */
     public function __construct($label = null)
     {

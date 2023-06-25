@@ -1,20 +1,24 @@
 {var $robots = noindex}
 
-{block content}
-    <div class="row text-center mb-3">
-        <div class="image-error">
-            <img src="/images/403.svg" alt="403"/>
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <div class="row text-center mb-3">
+                <div class="image-error">
+                    <img src="/images/403.svg" alt="403"/>
+                </div>
+            </div>
+
+            <h2>{_'You are not authorized to view this page.'}<span class="badge bg-warning">#403</span></h2>
+            <span>{_'Submitted solutions:'}</span>
+            <ul>
+                <li><a n:href=":Public:Register:">{_'Register as a contestant'}</a>
+                    ({_'It is necessary to fill in school and correspodence details and/or register for the new year'}),
+                </li>
+                <li>{_'become an organizer'},</li>
+                <li>{_'ask for a role grant'}.</li>
+                {*<li><a href="link Chooser:default">_'Pokračuj na rázcestník aktivít'</a></li>*}
+            </ul>
         </div>
     </div>
-
-    <h2>{_'You are not authorized to view this page.'}<span class="badge bg-warning">#403</span></h2>
-    <span>{_'Submitted solutions:'}</span>
-    <ul>
-        <li><a n:href=":Public:Register:">{_'Register as a contestant'}</a>
-            ({_'It is necessary to fill in school and correspodence details and/or register for the new year'}),
-        </li>
-        <li>{_'become an organizer'},</li>
-        <li>{_'ask for a role grant'}.</li>
-        {*<li><a href="link Chooser:default">_'Pokračuj na rázcestník aktivít'</a></li>*}
-    </ul>
 {/block}

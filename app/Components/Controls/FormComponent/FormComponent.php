@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -28,21 +27,13 @@ abstract class FormComponent extends BaseComponent
         return new FormControl($this->getContext());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final protected function getForm(): Form
     {
+        /** @var FormControl $control */
         $control = $this->getComponent('formControl');
-        if (!$control instanceof FormControl) {
-            throw new BadTypeException(FormControl::class, $control);
-        }
         return $control->getForm();
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final protected function createComponentFormControl(): FormControl
     {
         $control = $this->createFormControl();
@@ -54,7 +45,7 @@ abstract class FormComponent extends BaseComponent
 
     abstract protected function handleSuccess(Form $form): void;
 
-    abstract protected function appendSubmitButton(Form $form): SubmitButton;
+    abstract protected function appendSubmitButton(Form $form): void;
 
     abstract protected function configureForm(Form $form): void;
 }

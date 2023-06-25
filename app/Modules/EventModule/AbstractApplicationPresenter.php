@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Schedule\PersonGrid;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
+use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use Fykosak\Utils\UI\PageTitle;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 abstract class AbstractApplicationPresenter extends BasePresenter
@@ -36,10 +35,48 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedFastEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
     final public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
+
+    final public function titleTransition(): PageTitle
+    {
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-fast-forward');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedTransition(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
+    final public function titleTransitions(): PageTitle
+    {
+        return new PageTitle(null, _('Group transitions'), 'fas fa-exchange-alt');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedTransitions(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
 
     /**
      * @throws EventNotFoundException
@@ -54,19 +91,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter
             return new PageTitle(
                 null,
                 sprintf(_('Application detail "%s"'), $entity->name),
-                'fa fa-user'
+                'fas fa-user'
             );
         }
         return new PageTitle(
             null,
-            sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()),
-            'fa fa-user'
+            sprintf(_('Application detail "%s"'), $entity->__toString()),
+            'fas fa-user'
         );
-    }
-
-    final public function titleTransitions(): PageTitle
-    {
-        return new PageTitle(null, _('Group transitions'), 'fa fa-exchange-alt');
     }
 
     /**
@@ -102,11 +134,20 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
-    public function getHolder(): BaseHolder
+    public function getHolder(): ModelHolder
     {
-        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        return $machine->createHolder($this->getEntity());
+        return $this->getMachine()->createHolder($this->getEntity());
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    protected function getMachine(): Machine
+    {
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent());
     }
 
     protected function createComponentPersonScheduleGrid(): PersonGrid
@@ -121,12 +162,12 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
         return new ApplicationComponent(
             $this->getContext(),
-            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
             $this->getHolder()
         );
     }
@@ -138,31 +179,24 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $this->getEvent(),
             $this->getHolder()
         );
     }
 
-    abstract protected function createComponentGrid(): Grid;
-
     /**
-     * @throws NotImplementedException
+     * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): Control
+    final protected function createComponentMassTransitions(): MassTransitionsComponent
     {
-        throw new NotImplementedException();
+        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
+    abstract protected function createComponentFastTransition(): AttendanceComponent;
 }

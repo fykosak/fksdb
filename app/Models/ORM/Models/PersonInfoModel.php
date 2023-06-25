@@ -38,6 +38,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $email_parent_d
  * @property-read string $email_parent_m
  * @property-read string $pizza
+ * @property-read string|null $theme
  */
 class PersonInfoModel extends Model
 {

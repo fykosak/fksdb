@@ -10,8 +10,8 @@ use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\OrgModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class OrgListComponent extends DetailComponent
 {
@@ -20,7 +20,7 @@ class OrgListComponent extends DetailComponent
         return FieldLevelPermissionValue::Restrict;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getOrganisers();
     }

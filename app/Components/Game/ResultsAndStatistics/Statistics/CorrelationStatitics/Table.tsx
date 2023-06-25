@@ -26,7 +26,7 @@ class Table extends React.Component<StateProps, never> {
         const firstTeamSubmits: SubmitModel[] = [];
         const secondTeamSubmits: SubmitModel[] = [];
         for (const id in submits) {
-            if (submits.hasOwnProperty(id)) {
+            if (Object.hasOwn(submits,id)) {
                 const submit = submits[id];
                 if (submit.teamId === firstTeamId) {
                     firstTeamSubmits.push(submit);
@@ -40,11 +40,11 @@ class Table extends React.Component<StateProps, never> {
         const rows = [];
         const deltas = [];
         let count = 0;
-        const firstTeamData = submitsForTeams.hasOwnProperty(firstTeamId) ? submitsForTeams[firstTeamId] : {};
-        const secondTeamData = submitsForTeams.hasOwnProperty(secondTeamId) ? submitsForTeams[secondTeamId] : {};
+        const firstTeamData = Object.hasOwn(submitsForTeams,firstTeamId) ? submitsForTeams[firstTeamId] : {};
+        const secondTeamData = Object.hasOwn(submitsForTeams,secondTeamId) ? submitsForTeams[secondTeamId] : {};
         tasks.forEach((task: TaskModel, id) => {
-            const firstSubmit = firstTeamData.hasOwnProperty(task.taskId) ? firstTeamData[task.taskId] : null;
-            const secondSubmit = secondTeamData.hasOwnProperty(task.taskId) ? secondTeamData[task.taskId] : null;
+            const firstSubmit = Object.hasOwn(firstTeamData,task.taskId) ? firstTeamData[task.taskId] : null;
+            const secondSubmit = Object.hasOwn(secondTeamData,task.taskId) ? secondTeamData[task.taskId] : null;
             let delta = 0;
             if (firstSubmit && secondSubmit) {
                 count++;

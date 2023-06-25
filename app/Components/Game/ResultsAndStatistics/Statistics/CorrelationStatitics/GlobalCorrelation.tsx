@@ -40,8 +40,8 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, neve
                     return;
                 }
                 const {avgNStdDev, countFiltered, countTotal} = calculateCorrelation(
-                    submitsForTeams.hasOwnProperty(firstTeam.teamId) ? submitsForTeams[firstTeam.teamId] : {},
-                    submitsForTeams.hasOwnProperty(secondTeam.teamId) ? submitsForTeams[secondTeam.teamId] : {},
+                    Object.hasOwn(submitsForTeams,firstTeam.teamId) ? submitsForTeams[firstTeam.teamId] : {},
+                        Object.hasOwn(submitsForTeams,secondTeam.teamId) ? submitsForTeams[secondTeam.teamId] : {},
                 );
                 rows.push(<tr key={secondTeam.teamId + '__' + firstTeam.teamId}>
                     <td>{firstTeam.name}</td>

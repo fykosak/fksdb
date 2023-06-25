@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Game\Submits\CtyrbojHandler;
-use FKSDB\Components\Game\Submits\FOFHandler;
-use FKSDB\Components\Game\Submits\Handler;
+use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\Handler\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -168,7 +169,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
-        throw new \InvalidArgumentException();
+        throw new GameException(_('Game handler not exist for this event'));
     }
 
     private function getParameters(): array
@@ -186,7 +187,11 @@ class EventModel extends Model implements Resource, NodeCreator
         try {
             return $this->getParameters()[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->name . '.', 0, $exception);
+            throw new InvalidArgumentException(
+                sprintf('No parameter "%s" for event %s.', $name, $this->name),
+                0,
+                $exception
+            );
         }
     }
 }
