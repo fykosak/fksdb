@@ -3,6 +3,7 @@
 {varType string $lang}
 {varType ?string $robots}
 {varType string $styleId}
+{varType string $theme}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -17,7 +18,7 @@
     <link href="{$basePath}/assets/main.css" rel="stylesheet"/>
 </head>
 <!-- Random background generator -->
-<body data-bg="{rand(1,4)}" data-style-id="{$styleId}" data-bs-theme="light">
+<body data-bg="{rand(1,4)}" data-style-id="{$styleId}" data-bs-theme="{$theme}">
 {block nav}
 <nav class="fixed-top navbar navbar-expand-md" role="navigation">
     <div class="container-fluid">

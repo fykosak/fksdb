@@ -276,6 +276,19 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return $template;
     }
 
+    private function getTheme(): string
+    {
+        $person = $this->getLoggedPerson();
+        if (!$person) {
+            return 'light';
+        }
+        $info = $person->getInfo();
+        if (!$info) {
+            return 'light';
+        }
+        return $info->theme ?? 'light';
+    }
+
     protected function beforeRender(): void
     {
         parent::beforeRender();
@@ -284,6 +297,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         $this->template->lang = $this->getLang();
         $this->template->navRoots = $this->getNavRoots();
         $this->template->styleId = $this->getStyleId();
+        $this->template->theme = $this->getTheme();
     }
 
     public function getTitle(): PageTitle

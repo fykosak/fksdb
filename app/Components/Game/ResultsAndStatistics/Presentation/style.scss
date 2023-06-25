@@ -1,6 +1,5 @@
 @import "../../../../css/variables";
 
-
 .game-presentation {
   .subheader {
     font-weight: bold;
@@ -44,15 +43,15 @@
 
 
   &.game-fof {
-    background-color: white;//var(--color-fof-main);
+    background-color: white;
 
     h1 {
-      color: var(--color-fof-main);
+      color: $fof-color;
     }
 
     .head-row {
-      color: var(--color-fof-main);
-      border-bottom: solid var(--color-fof-main) 1px;
+      color: $fof-color;
+      border-bottom: solid $fof-color 1px;
     }
 
     .progress {

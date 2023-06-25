@@ -36,11 +36,6 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
 @import "../Components/PDFGenerators/Providers/print";
 
 :root {
-  --color-fof-main: #{$fof-color};
-  --color-fol-main: #{$fol-color};
-  --color-fykos-main: #{$fykos-color};
-  --color-vyfuk-main: #{$vyfuk-color};
-
   --color-fof-points-5: #{$fyziklaniPoints5};
   --color-fof-points-3: #{$fyziklaniPoints3};
   --color-fof-points-2: #{$fyziklaniPoints2};
@@ -57,12 +52,6 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
   --color-variant-color-9: #bcbd22;
   --color-variant-color-10: #17becf;
   --color-variant-color-11: #000000;
-}
-
-
-
-.bg-white-container {
-  background-color: rgba(255, 255, 255, .85);
 }
 
 h1 .small {
@@ -85,24 +74,6 @@ main {
   min-height: 100%;
 }
 
-.list-piped {
-  & > * {
-    display: inline-block;
-  }
-
-  & > * + *:before {
-    color: #CCCCCC;
-    content: "| ";
-    padding: 0;
-  }
-}
-
-.clear-referenced {
-  position: absolute;
-  right: 1em;
-  z-index: 3;
-}
-
 .right-inner-addon {
   position: relative;
 
@@ -123,11 +94,6 @@ main {
   content: '* ';
   display: inline;
 }
-
-.dispatch-logo {
-  height: 10rem;
-}
-
 .image-error {
   width: 100%;
   text-align: center;
