@@ -3,11 +3,7 @@ import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
 import { curveBasis, curveMonotoneX } from 'd3-shape';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
-import {
-    getAreaPath,
-    getLinePath,
-    LineChartData,
-} from 'FKSDB/Components/Charts/Core/LineChart/middleware';
+import { getAreaPath, getLinePath, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import './line-chart.scss';
 
@@ -79,13 +75,13 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
         });
 
         return (
-            <svg viewBox={this.getViewBox()} className={'chart chart-line-chart line-chart ' + this.props.className}>
+            <svg viewBox={this.getViewBox()} className={'chart line-chart ' + this.props.className}>
                 <g>
                     <g transform={this.transformXAxis()}
-                       className={'axis x-axis '}
+                       className={'axis x-axis'}
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     <g transform={this.transformYAxis()}
-                       className={'axis y-axis '}
+                       className={'axis y-axis'}
                        ref={(yAxis) => this.yAxis = yAxis}/>
                     {areas}
                     {lines}

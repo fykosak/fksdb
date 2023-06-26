@@ -81,12 +81,14 @@ class PieChart extends React.Component<StateProps & OwnProps, never> {
                 </g>
             );
         });
-        return <svg viewBox="0 0 400 400" className="chart chart-game-team-pie">
-            <g transform="translate(200,200)">
-                {paths}
-                {labels}
-            </g>
-        </svg>;
+        return <div className="chart-game-team-pie">
+            <svg viewBox="0 0 400 400" className="chart">
+                <g transform="translate(200,200)">
+                    {paths}
+                    {labels}
+                </g>
+            </svg>
+        </div>;
     }
 }
 

@@ -58,7 +58,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
             const submit = teamSubmits.filter((fSubmit) => {
                 return fSubmit.taskId === taskId;
             })[0];
-            const to = submit ? new Date(submit.created) : gameEnd;
+            const to = submit ? new Date(submit.modified) : gameEnd;
 
             const fromCoordinates = this.xScale(from);
             const toCoordinates = this.xScale(to);
@@ -86,12 +86,14 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
             );
         });
 
-        return <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize}
-                    className="chart chart-game-team-timeline">
-            <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
-               ref={(xAxis) => this.xAxis = xAxis}/>
-            {dots}
-        </svg>;
+        return <div className="chart-game-team-timeline">
+            <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize}
+                 className="chart">
+                <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
+                   ref={(xAxis) => this.xAxis = xAxis}/>
+                {dots}
+            </svg>
+        </div>;
     }
 
     private getAxis() {
@@ -128,14 +130,14 @@ const reconstructTeamGame = (submits: Submits, tasks: TaskModel[], tasksOnBoard:
     for (const index in submits) {
         if (Object.hasOwn(submits,index)) {
             const submit: SubmitModel = submits[index];
-            const {teamId: submitTeamId, created} = submit;
+            const {teamId: submitTeamId, modified} = submit;
             if (teamId === submitTeamId) {
                 if (submit.points !== null && submit.points !== 0) {
                     teamSubmits.push(submit);
                     const task = taskBuffer.shift();
                     activeTasks.push({
                         ...task,
-                        from: new Date(created),
+                        from: new Date(modified),
                     });
                 }
             }

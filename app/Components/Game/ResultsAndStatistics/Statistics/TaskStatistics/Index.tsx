@@ -1,4 +1,3 @@
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Options from './Options';
@@ -24,12 +23,8 @@ class TaskStats extends React.Component<StateProps, never> {
             <>
                 <div className="panel color-auto">
                     <div className="container">
-                        <h2>{translator.getText('Global statistics')}</h2>
-                        <ChartContainer
-                            chart={Progress}
-                            chartProps={{availablePoints}}
-                            headline={translator.getText('Total solved problem')}
-                        />
+                        <h2>{translator.getText('Total solved problem')}</h2>
+                        <Progress availablePoints={availablePoints}/>
                     </div>
                 </div>
                 <div className="panel color-auto">
@@ -41,29 +36,20 @@ class TaskStats extends React.Component<StateProps, never> {
                 {taskId && <>
                     <div className="panel color-auto">
                         <div className="container">
-                            <ChartContainer
-                                chart={Timeline}
-                                chartProps={{taskId}}
-                                headline={translator.getText('Timeline')}
-                            />
+                            <h2>{translator.getText('Timeline')}</h2>
+                            <Timeline taskId={taskId}/>
                         </div>
                     </div>
                     <div className="panel color-auto">
                         <div className="container">
-                            <ChartContainer
-                                chart={TimeHistogram}
-                                chartProps={{taskId, availablePoints}}
-                                headline={translator.getText('Time histogram')}
-                            />
+                            <h2>{translator.getText('Time histogram')}</h2>
+                            <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
                         </div>
                     </div>
                     <div className="panel color-auto">
                         <div className="container">
-                            <ChartContainer
-                                chart={TimeHistogramLines}
-                                chartProps={{taskId, availablePoints}}
-                                headline={translator.getText('Time histogram')}
-                            />
+                            <h2>{translator.getText('Time histogram')}</h2>
+                            <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
                         </div>
                     </div>
                 </>}

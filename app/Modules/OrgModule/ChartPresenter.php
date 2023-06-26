@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Charts\Contestants\AggregatedSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Charts\TotalPersonsChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -24,11 +25,6 @@ class ChartPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest());
     }
 
-    public function authorizedChart(): bool
-    {
-        return $this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest());
-    }
-
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
@@ -39,10 +35,13 @@ class ChartPresenter extends BasePresenter
     protected function startup(): void
     {
         parent::startup();
-        $this->selectChart();
+        $this->registerCharts();
     }
 
-    protected function registerCharts(): array
+    /**
+     * @return Chart[]
+     */
+    protected function getCharts(): array
     {
         return [
             'contestantsPerSeries' => new PerSeriesChart($this->getContext(), $this->getSelectedContest()),

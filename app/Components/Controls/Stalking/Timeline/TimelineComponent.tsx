@@ -111,14 +111,13 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
             {this.createContestants(contestants)}
         </g>;
         this.rowNumber += 3;
-        return <div className="row-12 chart-container person-detail-timeline">
-            <svg className="chart w-100 " viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
-                <g transform={'translate(0,' + (this.getCurrentY() - this.margin.bottom) + ')'}
-                   className="axis x-axis grid"
-                   ref={(xAxis) => this.xAxis = xAxis}/>
-                {content}
-            </svg>
-        </div>;
+        return <svg className="chart w-100 person-detail-timeline"
+                    viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
+            <g transform={'translate(0,' + (this.getCurrentY() - this.margin.bottom) + ')'}
+               className="axis x-axis grid"
+               ref={(xAxis) => this.xAxis = xAxis}/>
+            {content}
+        </svg>;
 
     }
 

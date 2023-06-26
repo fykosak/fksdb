@@ -6,7 +6,6 @@ import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { submitsByTask } from '../Middleware/submitsByTask';
-import './bar-histrogram.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
@@ -81,6 +80,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                         key={index}
                         points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                         data-points={points}
+                        fill={'var(--color-fof-points-' + points + ')'}
                     />);
                 });
 
@@ -90,7 +90,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
             }
         }
         return (
-            <svg viewBox={this.getViewBox()} className="chart chart-game-task-bar-histogram">
+            <svg viewBox={this.getViewBox()} className="chart">
                 <g>
                     {bars}
                     <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>

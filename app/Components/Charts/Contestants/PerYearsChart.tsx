@@ -33,7 +33,7 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                     if (Object.hasOwn(aggregatedSeries[series],year)) {
                         const label = <>
                             <Ordinal order={+year}/>{' ' + translator.getText('Year')} - {
-                            getSeriesLabel(series)}: {
+                            getSeriesLabel(series, this.props.translator)}: {
                             aggregatedSeries[series][year]
                         }
                         </>;
@@ -53,7 +53,7 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                         lines: true,
                         points: true,
                     },
-                    name: getSeriesLabel(series),
+                    name: getSeriesLabel(series, this.props.translator),
                     points,
                 });
             }
@@ -62,13 +62,18 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
         const yScale = scaleLinear<number, number>().domain([0, maxValue]);
         const xScale = scaleLinear<number, number>().domain([minYear - 1, maxYear + 1]);
 
-        return <ChartContainer chart={LineChart} chartProps={{
-            data: lineChartData,
-            display: {xGrid: false, yGrid: true},
-            xScale,
-            yScale,
-        }} legendComponent={LineChartLegend} legendProps={{
-            data: lineChartData,
-        }} containerClassName="contestants-per-year"/>;
+        return <ChartContainer
+            chart={LineChart}
+            chartProps={{
+                data: lineChartData,
+                display: {xGrid: false, yGrid: true},
+                xScale,
+                yScale,
+            }}
+            legendComponent={LineChartLegend}
+            legendProps={{
+                data: lineChartData,
+            }}
+        />;
     }
 }

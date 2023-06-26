@@ -30,7 +30,6 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
             return team.teamId === teamId;
         })[0];
         return <>
-
             <div className="panel color-auto">
                 <div className="container">
                     <h2>
@@ -49,34 +48,33 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
                 </div>
             </div>
             {teamId && (<>
-
                 <div className="panel color-auto">
                     <div className="container">
+                        <h2>{translator.getText('Success of submitting')}</h2>
                         <ChartContainer
                             chart={PointsPie}
                             chartProps={{teamId}}
                             legendComponent={Legend}
-                            headline={translator.getText('Success of submitting')}
                         />
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
+                        <h2>{translator.getText('Time progress')}</h2>
                         <ChartContainer
                             chart={PointsInTime}
                             chartProps={{teamId}}
                             legendComponent={Legend}
-                            headline={translator.getText('Time progress')}
                         />
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
+                        <h2>{translator.getText('Timeline')}</h2>
                         <ChartContainer
                             chart={TimeLine}
                             chartProps={{teamId}}
                             legendComponent={Legend}
-                            headline={translator.getText('Timeline')}
                         />
                     </div>
                 </div>

@@ -65,7 +65,7 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
             });
             bars.push(rows);
         });
-        return <svg viewBox={this.getViewBox()} className="chart">
+        return <svg viewBox={this.getViewBox()} className="chart bar-histogram">
             <g>
                 <g transform={this.transformXAxis()} className="axis x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
                 <g transform={this.transformYAxis()} className="axis y-axis" ref={(yAxis) => this.yAxis = yAxis}/>

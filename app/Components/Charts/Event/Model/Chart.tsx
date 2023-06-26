@@ -79,6 +79,7 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
             }
         }
         return <svg
+            className="chart"
             viewBox={`-${this.size.width / 2} -${this.size.height / 2} ${this.size.width} ${this.size.height}`}>
             <defs>
                 {this.props.colors.map((color) => {

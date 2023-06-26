@@ -33,7 +33,7 @@ interface OwnProps {
 export default class CommonChart extends React.Component<OwnProps, never> {
 
     public render() {
-        const {data, accessKey, translator} = this.props;
+        const {data, accessKey} = this.props;
 
         let minTime = 0;
         let max = 0;
@@ -96,7 +96,6 @@ export default class CommonChart extends React.Component<OwnProps, never> {
             }}
             legendProps={{data: lineChartData}}
             legendComponent={LineChartLegend}
-            headline={translator.getText('Time progress')}
         />;
     }
 }

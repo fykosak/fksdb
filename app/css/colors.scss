@@ -58,13 +58,17 @@ $fyziklaniPoints1: #f45d01;
     }
   }
   hr {
-    border-color: $color;
-    background-color: $color;
+    --fks-hr-color: #{$color};
   }
 
   .subtitle {
     color: $color;
   }
+}
+
+hr {
+  border-color: var(--fks-hr-color);
+  background-color: var(--fks-hr-color);
 }
 
 .bg-category-fykos-1 {

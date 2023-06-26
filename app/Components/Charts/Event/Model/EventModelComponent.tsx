@@ -1,5 +1,4 @@
 import * as React from 'react';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import Chart, { Link as SimLink, Node as SimNode } from './Chart';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -51,9 +50,6 @@ export default class EventModelComponent extends React.Component<OwnProps, never
                 target: simNodes[link.to],
             };
         });
-        return <ChartContainer
-            chart={Chart}
-            chartProps={{links: simLinks, nodes: Object.values(simNodes), colors: ['#ccc']}}
-        />;
+        return <Chart links={simLinks} nodes={Object.values(simNodes)} colors={['#ccc']}/>;
     }
 }

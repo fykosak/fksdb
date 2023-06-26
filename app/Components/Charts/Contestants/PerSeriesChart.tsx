@@ -46,7 +46,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
             legendData.push({
                 color: colorScale(series.toString()),
                 display: {},
-                name: getSeriesLabel(series.toString()),
+                name: getSeriesLabel(series.toString(), this.props.translator),
                 points: [],
             });
         }

@@ -109,7 +109,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, nev
                 });
             }
         });
-        return <LineChart data={lineChartData} xScale={xScale} yScale={yScale}/>;
+        return <LineChart<Date> data={lineChartData} xScale={xScale} yScale={yScale}/>;
     }
 }
 
