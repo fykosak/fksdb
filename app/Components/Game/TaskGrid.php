@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
-class TaskGrid extends Grid
+class TaskGrid extends BaseGrid
 {
     private EventModel $event;
 
