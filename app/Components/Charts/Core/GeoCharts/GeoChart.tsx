@@ -69,7 +69,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             ><title>{country.properties.name}: {count}</title>
             </path>);
         });
-        return <svg viewBox="-500 -300 1000 600" className="chart geo-chart">
+        return <svg viewBox="-500 -300 1000 600" className="chart">
             <g>
                 {countryNodes}
             </g>

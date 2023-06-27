@@ -92,7 +92,6 @@ export default class CommonChart extends React.Component<OwnProps, never> {
                 },
                 xScale,
                 yScale,
-
             }}
             legendProps={{data: lineChartData}}
             legendComponent={LineChartLegend}

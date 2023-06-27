@@ -12,6 +12,7 @@ export type LineChartDatum<XValue extends Date | number> = {
         points?: boolean;
         lines?: boolean;
         area?: boolean;
+        bars?: boolean;
     };
     curveFactory?: CurveFactory;
     points: Array<ExtendedPointData<XValue>>;

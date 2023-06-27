@@ -7,6 +7,7 @@ import Timeline from './Timeline';
 import Progress from './Progress';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/LangContext';
+import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 
 interface StateProps {
     taskId: number;

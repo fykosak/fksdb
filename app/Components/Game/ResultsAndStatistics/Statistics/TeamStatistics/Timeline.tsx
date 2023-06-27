@@ -74,7 +74,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
                 <g key={index} className={active ? 'active' : 'inactive'}>
                     <polyline
                         points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
-                        data-points={submit ? submit.points : null}
+                        stroke={submit ? ('var(--color-fof-points-' + submit.points + ')') : '#ccc'}
                     />
                     <text
                         x={(fromCoordinates + toCoordinates) / 2}
@@ -87,8 +87,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
         });
 
         return <div className="chart-game-team-timeline">
-            <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize}
-                 className="chart">
+            <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize} className="chart">
                 <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
                    ref={(xAxis) => this.xAxis = xAxis}/>
                 {dots}

@@ -8,7 +8,6 @@ import * as React from 'react';
 import './line-chart.scss';
 
 interface OwnProps<XValue extends Date | number> {
-    className?: string;
     data: LineChartData<XValue>;
     xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>;
     yScale: ScaleLinear<number, number>;
@@ -74,8 +73,8 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             }
         });
 
-        return (
-            <svg viewBox={this.getViewBox()} className={'chart line-chart ' + this.props.className}>
+        return <div className="line-chart">
+            <svg viewBox={this.getViewBox()} className="chart">
                 <g>
                     <g transform={this.transformXAxis()}
                        className={'axis x-axis'}
@@ -88,7 +87,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
                     {dots}
                 </g>
             </svg>
-        );
+        </div>;
     }
 
     private getAxis(): void {

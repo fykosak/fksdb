@@ -1,8 +1,5 @@
 .chart-game-team-pie {
   path.arc {
-    stroke: white;
-    stroke-width: 5px;
-
     &[data-points="5"] {
       fill: var(--color-fof-points-5);
     }

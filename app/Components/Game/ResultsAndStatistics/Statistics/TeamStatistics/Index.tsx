@@ -1,15 +1,14 @@
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
-import Legend from './Legend';
 import PointsInTime from './LineChart';
-import PointsPie from './PieChart';
+import PieChart from './PieChart';
 import TimeLine from './Timeline';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/LangContext';
+import Legend from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Legend';
 
 interface StateProps {
     teams: TeamModel[];
@@ -50,32 +49,26 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
             {teamId && (<>
                 <div className="panel color-auto">
                     <div className="container">
+                        <h2>{translator.getText('Legend')}</h2>
+                        <Legend/>
+                    </div>
+                </div>
+                <div className="panel color-auto">
+                    <div className="container">
                         <h2>{translator.getText('Success of submitting')}</h2>
-                        <ChartContainer
-                            chart={PointsPie}
-                            chartProps={{teamId}}
-                            legendComponent={Legend}
-                        />
+                        <PieChart teamId={teamId}/>
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
                         <h2>{translator.getText('Time progress')}</h2>
-                        <ChartContainer
-                            chart={PointsInTime}
-                            chartProps={{teamId}}
-                            legendComponent={Legend}
-                        />
+                        <PointsInTime teamId={teamId}/>
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
                         <h2>{translator.getText('Timeline')}</h2>
-                        <ChartContainer
-                            chart={TimeLine}
-                            chartProps={{teamId}}
-                            legendComponent={Legend}
-                        />
+                        <TimeLine teamId={teamId}/>
                     </div>
                 </div>
             </>)}

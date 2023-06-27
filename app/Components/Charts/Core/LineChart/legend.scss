@@ -3,14 +3,27 @@
     margin-bottom: 1rem;
     align-items: center;
 
-    .icon.icon-line {
-      border-width: 1rem;
-      border-radius: 1rem;
-      height: 2px;
-    }
+    .icon {
+      display: inline-block;
 
-    .legend-item-name {
-      font-weight: bold;
+      &.icon-line {
+        border-width: 1rem;
+        border-radius: 1rem;
+        height: 2px;
+      }
+
+      &.icon-point {
+        border-width: 1em;
+        border-radius: 1em;
+        height: 1em;
+        width: 1em;
+      }
+
+      &.icon-bar {
+        border-radius: 0;
+        height: 1em;
+        width: 1em;
+      }
     }
   }
 }
