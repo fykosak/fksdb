@@ -1,21 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
 
-class LogicAnd extends VariadicExpression {
-
-    protected function evaluate(...$args): bool {
+class LogicAnd extends VariadicExpression
+{
+    public function __invoke(...$args): bool
+    {
         foreach ($this->arguments as $argument) {
             if (!$this->evaluateArgument($argument, ...$args)) {
                 return false;
             }
         }
         return true;
-    }
-
-    protected function getInfix(): string {
-        return '&&';
     }
 }

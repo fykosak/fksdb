@@ -1,72 +1,68 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use Nette\Database\Table\Selection;
+use Nette\DI\Container;
+use Nette\Forms\Form;
 
-class TeamApplicationsGrid extends AbstractApplicationsGrid {
+class TeamApplicationsGrid extends FilterGrid
+{
+    protected EventModel $event;
+
+    public function __construct(EventModel $event, Container $container)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
+    protected function getModels(): Selection
+    {
+        $query = $this->event->getTeams();
+        if (!isset($this->filterParams)) {
+            return $query;
+        }
+        foreach ($this->filterParams as $key => $filterParam) {
+            switch ($key) {
+                case 'status':
+                    $query->where('state', $filterParam);
+            }
+        }
+        return $query;
+    }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-
+    protected function configure(): void
+    {
         $this->paginate = false;
-
         $this->addColumns([
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.status',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.state',
+            'fyziklani_team.game_lang',
+            'fyziklani_team.category',
+            'fyziklani_team.force_a',
+            'fyziklani_team.phone',
         ]);
-        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
-            $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            $position = $model->getPosition();
-            if (is_null($position)) {
-                return NotSetBadge::getHtml();
-            }
-            return $position->getRoom()->name;
-        });
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
-        $this->addCSVDownloadButton();
-        parent::configure($presenter);
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
+        //$this->addCSVDownloadButton();
     }
 
-    protected function getSource(): GroupedSelection {
-        return $this->event->getTeams();
-    }
-
-    protected function getHoldersColumns(): array {
-        return [
-            'note',
-            'game_lang',
-            'category',
-            'force_a',
-            'phone',
-            'password',
-        ];
-    }
-
-    protected function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_E_FYZIKLANI_TEAM;
+    protected function configureForm(Form $form): void
+    {
+        $items = [];
+        foreach (TeamState::cases() as $state) {
+            $items[$state->value] = $state->label();
+        }
+        $form->addSelect('status', _('State'), $items)->setPrompt(_('Select state'));
     }
 }

@@ -1,13 +1,13 @@
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
 {foreach $transitions as $transition}
     {continueIf $transition->isCreating()}
-    {continueIf $transition->isTerminating()}
     <h3>{_($transition->getLabel())}</h3>
     <p>
-        <small class="text-muted">{$transition->getMask()}</small>
+        <small class="text-muted">{$transition->getLabel()}</small>
     </p>
     <p>
-        {var $className = 'btn btn-'.$transition->getBehaviorType()}
-        <a class="{$className}" href="{link transition! $transition->getName()}">{_'Evalute'}</a>
+        {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
+        <a class="{$className}" href="{link transition! $transition->getId()}">{_'Evalute'}</a>
     </p>
     <hr/>
 {/foreach}

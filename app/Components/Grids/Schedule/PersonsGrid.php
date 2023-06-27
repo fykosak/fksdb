@@ -1,44 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-class PersonsGrid extends BaseGrid {
+class PersonsGrid extends BaseGrid
+{
+    private ScheduleItemModel $item;
 
-    private ModelScheduleItem $item;
-
-    public function __construct(Container $container, ModelScheduleItem $item) {
+    public function __construct(Container $container, ScheduleItemModel $item)
+    {
         parent::__construct($container);
         $this->item = $item;
     }
 
-    protected function getData(): IDataSource {
-        return new NDataSource($this->item->getInterested());
+    protected function getModels(): Selection
+    {
+        return $this->item->getInterested();
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
         $this->paginate = false;
-        $this->addColumn('person_schedule_id', _('#'));
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(PersonScheduleModel $model) => $model->person_schedule_id,
+                new Title(null, _('#'))
+            ),
+            'person_schedule_id'
+        );
         $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
-    }
-
-    protected function getModelClassName(): string {
-        return ModelPersonSchedule::class;
     }
 }

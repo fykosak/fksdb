@@ -1,46 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
-use Nette\DI\Container;
 
-/**
- * Class Stalking
- * @package Persons
- */
-abstract class StalkingTestCase extends DatabaseTestCase {
-    use MockApplicationTrait;
-
-    /** @var int */
-    protected $personId;
-
+abstract class StalkingTestCase extends DatabaseTestCase
+{
+    protected PersonModel $person;
     protected IPresenter $fixture;
 
-    /**
-     * Stalking constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
-
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->personId = $this->insert(DbNames::TAB_PERSON, [
+        $this->person = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'born_family_name' => 'Travisový',
             'display_name' => 'Tester Githubový',
             'gender' => 'M',
         ]);
-        $this->insert(DbNames::TAB_PERSON_INFO, [
-            'person_id' => $this->personId,
+        $this->container->getByType(PersonInfoService::class)->storeModel([
+            'person_id' => $this->person->person_id,
             'preferred_lang' => 'cs',
             'born' => '1989-11-17',
             'id_number' => 'ABCD1234',
@@ -63,30 +53,36 @@ abstract class StalkingTestCase extends DatabaseTestCase {
             'email_parent_d' => 'tester_d@example.com',
             'email_parent_m' => 'tester_m@example.com',
         ]);
-
-        $userPersonId = $this->insert(DbNames::TAB_PERSON, [
+        $userPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $userPersonId, 'active' => 1]);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $userPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]);
+        $login = $this->container->getByType(LoginService::class)->storeModel(
+            ['person_id' => $userPerson->person_id, 'active' => 1]
+        );
+        $this->container->getByType(OrgService::class)->storeModel(
+            ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
+        $this->container->getByType(GrantService::class)->storeModel(
+            ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
+        );
         $this->fixture = $this->createPresenter('Org:Person');
-        $this->authenticate($loginId, $this->fixture);
+        $this->authenticateLogin($login, $this->fixture);
     }
 
     abstract protected function getUserRoleId(): int;
 
-    final protected function createRequest(): Request {
+    final protected function createRequest(): Request
+    {
         return new Request('Org:Person', 'GET', [
             'action' => 'detail',
             'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
             'series' => 1,
-            'id' => $this->personId,
+            'id' => $this->person->person_id,
         ]);
     }
 }

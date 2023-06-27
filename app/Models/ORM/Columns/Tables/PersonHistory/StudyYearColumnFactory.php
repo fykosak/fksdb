@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\YearCalculator;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-class StudyYearColumnFactory extends ColumnFactory {
+class StudyYearColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param array $args
-     * @return BaseControl
      * @throws \InvalidArgumentException
      */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         [$contestYear] = $args;
         if (\is_null($contestYear)) {
             throw new \InvalidArgumentException();
@@ -30,19 +32,24 @@ class StudyYearColumnFactory extends ColumnFactory {
         return $control;
     }
 
-    private function createOptions(ModelContestYear $contestYear): array {
+    private function createOptions(ContestYearModel $contestYear): array
+    {
         $hsYears = [];
-        foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
-                $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear));
+        foreach (StudyYear::getHighSchoolCases() as $studyYear) {
+            $hsYears[$studyYear->numeric()] = sprintf(
+                _('grade %d (expected graduation in %d)'),
+                $studyYear->numeric(),
+                $contestYear->getGraduationYear($studyYear)
+            );
         }
 
         $primaryYears = [];
-        foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
-                $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear));
+        foreach (StudyYear::getPrimarySchoolCases() as $studyYear) {
+            $primaryYears[$studyYear->numeric()] = sprintf(
+                _('grade %d (expected graduation in %d)'),
+                $studyYear->numeric(),
+                $contestYear->getGraduationYear($studyYear)
+            );
         }
 
         return [
@@ -51,7 +58,8 @@ class StudyYearColumnFactory extends ColumnFactory {
         ];
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+    protected function createHtmlValue(Model $model): Html
+    {
+        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 }

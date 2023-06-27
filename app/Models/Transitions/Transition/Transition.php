@@ -1,138 +1,120 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\InvalidArgumentException;
-use Nette\SmartObject;
-use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Statement;
+use Nette\SmartObject;
 
-class Transition {
-
+class Transition
+{
     use SmartObject;
 
-    public const TYPE_SUCCESS = Logger::SUCCESS;
-    public const TYPE_WARNING = Logger::WARNING;
-    public const TYPE_DANGEROUS = Logger::ERROR;
-    public const TYPE_PRIMARY = Logger::PRIMARY;
-    public const TYPE_DEFAULT = 'secondary';
-
-    protected const AVAILABLE_BEHAVIOR_TYPE = [
-        self::TYPE_SUCCESS,
-        self::TYPE_WARNING,
-        self::TYPE_DANGEROUS,
-        self::TYPE_DEFAULT,
-        self::TYPE_PRIMARY,
-    ];
-    /** @var callable|bool */
+    /** @var callable */
     protected $condition;
-    private string $behaviorType = self::TYPE_DEFAULT;
+    public BehaviorType $behaviorType;
     private string $label;
-    /** @var callable[] */
-    public array $beforeExecuteCallbacks = [];
-    /** @var callable[] */
-    public array $afterExecuteCallbacks = [];
-    protected string $sourceState;
-    protected string $targetState;
-    protected ExpressionEvaluator $evaluator;
+    /** @var Statement[] */
+    public array $beforeExecute = [];
+    /** @var Statement[] */
+    public array $afterExecute = [];
 
-    public function setSourceState(string $sourceState): void {
-        $this->sourceState = $sourceState;
+    protected bool $validation;
+
+    public EnumColumn $source;
+    public EnumColumn $target;
+
+    public function setSourceStateEnum(EnumColumn $sourceState): void
+    {
+        $this->source = $sourceState;
     }
 
-    public function getSourceState(): string {
-        return $this->sourceState;
+    public function setTargetStateEnum(EnumColumn $targetState): void
+    {
+        $this->target = $targetState;
     }
 
-    public function matchSource(string $source): bool {
-        return $this->getSourceState() === $source || $this->getSourceState() === Machine::STATE_ANY;
+    public function isCreating(): bool
+    {
+        return $this->source->value === 'init' || $this->source->value === Machine::STATE_INIT;
     }
 
-    public function setTargetState(string $targetState): void {
-        $this->targetState = $targetState;
+    public function getId(): string
+    {
+        return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
     }
 
-    public function getTargetState(): string {
-        return $this->targetState;
-    }
-
-    public function isCreating(): bool {
-        return $this->sourceState === Machine::STATE_INIT;
-    }
-
-    public function isTerminating(): bool {
-        return $this->getTargetState() === Machine::STATE_TERMINATED;
-    }
-
-    public function getId(): string {
-        return static::createId($this->sourceState, $this->targetState);
-    }
-
-    public static function createId(string $sourceState, string $targetState): string {
-        return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
-    }
-
-    public function getBehaviorType(): string {
-        return $this->behaviorType;
-    }
-
-    public function setBehaviorType(string $behaviorType): void {
-        if (!in_array($behaviorType, static::AVAILABLE_BEHAVIOR_TYPE)) {
-            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $behaviorType));
-        }
+    public function setBehaviorType(BehaviorType $behaviorType): void
+    {
         $this->behaviorType = $behaviorType;
     }
 
-    protected function getEvaluator(): ExpressionEvaluator {
-        return $this->evaluator;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void {
-        $this->evaluator = $evaluator;
-    }
-
-    public function getLabel(): string {
+    public function getLabel(): string
+    {
         return _($this->label);
     }
 
-    public function setLabel(string $label): void {
-        $this->label = $label;
+    public function setLabel(?string $label): void
+    {
+        $this->label = $label ?? '';
     }
 
     /**
-     * @param callable|bool $callback
+     * @param callable|bool $condition
      */
-    public function setCondition($callback): void {
-        $this->condition = $callback;
+    public function setCondition($condition): void
+    {
+        $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
-    protected function isConditionFulfilled(...$args): bool {
-        return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
+    public function canExecute(ModelHolder $holder): bool
+    {
+        if (!isset($this->condition)) {
+            return true;
+        }
+        return (bool)($this->condition)($holder);
     }
 
-    public function canExecute2(ModelHolder $model): bool {
-        return $this->isConditionFulfilled($model);
+    public function getValidation(): bool
+    {
+        return $this->validation ?? true;
     }
 
-    public function addBeforeExecute(callable $callBack): void {
-        $this->beforeExecuteCallbacks[] = $callBack;
+    public function setValidation(?bool $validation): void
+    {
+        $this->validation = $validation ?? true;
     }
 
-    public function addAfterExecute(callable $callBack): void {
-        $this->afterExecuteCallbacks[] = $callBack;
+    public function addBeforeExecute(callable $callBack): void
+    {
+        $this->beforeExecute[] = $callBack;
     }
 
-    final public function callBeforeExecute(...$args): void {
-        foreach ($this->beforeExecuteCallbacks as $callback) {
-            $callback(...$args);
+    public function addAfterExecute(callable $callBack): void
+    {
+        $this->afterExecute[] = $callBack;
+    }
+
+    final public function callBeforeExecute(ModelHolder $holder): void
+    {
+        foreach ($this->beforeExecute as $callback) {
+            $callback($holder);
         }
     }
 
-    final public function callAfterExecute(...$args): void {
-        foreach ($this->afterExecuteCallbacks as $callback) {
-            $callback(...$args);
+    final public function callAfterExecute(ModelHolder $holder): void
+    {
+        try {
+            foreach ($this->afterExecute as $callback) {
+                $callback($holder);
+            }
+        } catch (\Throwable $exception) {
+            throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);
         }
     }
 }

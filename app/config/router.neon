@@ -10,11 +10,11 @@ parameters:
         org: fykos.org
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payments|my-applications
+    rootPresenters: settings|my-payments|my-applications|my-profile|my-account
 
     # Pipe-separated list of modules
     constestModules: org|public|warehouse
-    eventModules: event|fyziklani
+    eventModules: event|game|schedule
 
     # Pipe-separated list of contest names
     contests: fykos|vyfuk
@@ -32,6 +32,11 @@ fksrouter:
             flags: [ONE_WAY]
 
         # Backward compatibility
+        -
+            mask: 'api/<webServiceName>'
+            module: Core
+            presenter: RestApi
+            action: default
         -
             mask: 'web-service/<action>'
             module: Org
@@ -64,7 +69,9 @@ fksrouter:
             mask: 'auth/<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
-
+        -
+            mask: 'profile/<presenter=Dashboard>/<action=default>'
+            module: Profile
         -
             mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
@@ -91,6 +98,9 @@ fksrouter:
         # Application itself (note the presenters w/out module are handled specially)
         -
             mask: '<module %eventModules%>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
+            presenter: Dashboard
+        -
+            mask: 'event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             module: Event
             presenter: Dashboard
 

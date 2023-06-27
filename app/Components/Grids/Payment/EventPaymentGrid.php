@@ -1,49 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPayment;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class EventPaymentGrid extends RelatedGrid {
+class EventPaymentGrid extends RelatedGrid
+{
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(EventModel $event, Container $container)
+    {
         parent::__construct($container, $event, 'payment');
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
+        parent::configure();
         $this->addColumns([
-            'payment.payment_uid',
+            'payment.payment_id',
             'person.full_name',
             'payment.price',
             'payment.state',
             'payment.variable_symbol',
         ]);
 
-        $this->addLink('payment.detail', false);
+        $this->addORMLink('payment.detail');
         $this->paginate = false;
-        $this->addCSVDownloadButton();
-    }
-
-    protected function getModelClassName(): string {
-        return ModelPayment::class;
+       // $this->addCSVDownloadButton();
     }
 }

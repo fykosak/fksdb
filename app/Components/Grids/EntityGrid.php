@@ -1,43 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractService;
-use Nette\Application\UI\Presenter;
+use Fykosak\NetteORM\Service;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
 
-abstract class EntityGrid extends BaseGrid {
-
-    protected AbstractService $service;
-
+abstract class EntityGrid extends BaseGrid
+{
+    protected Service $service;
     private array $queryParams;
-
     private array $columns;
 
-    public function __construct(Container $container, string $serviceClassName, array $columns = [], array $queryParams = []) {
+    public function __construct(
+        Container $container,
+        string $classNameService,
+        array $columns = [],
+        array $queryParams = []
+    ) {
         parent::__construct($container);
-        $this->service = $container->getByType($serviceClassName);
+        $this->service = $container->getByType($classNameService);
         $this->queryParams = $queryParams;
         $this->columns = $columns;
     }
 
-    protected function getData(): IDataSource {
-        $source = $this->service->getTable()->where($this->queryParams);
-        return new NDataSource($source);
+    protected function getModels(): Selection
+    {
+        return $this->service->getTable()->where($this->queryParams);
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
         $this->addColumns($this->columns);
     }
 }

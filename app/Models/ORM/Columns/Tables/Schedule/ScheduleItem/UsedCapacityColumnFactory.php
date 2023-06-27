@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
-use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Utils\Html;
 
-class UsedCapacityColumnFactory extends ColumnFactory {
+class UsedCapacityColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelScheduleItem $model
-     * @return Html
+     * @param ScheduleItemModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(Model $model): Html
+    {
         return (new NumberPrinter(null, null, 0, NumberPrinter::NULL_VALUE_ZERO))($model->getUsedCapacity());
     }
 }

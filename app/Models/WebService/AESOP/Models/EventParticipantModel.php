@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 
-class EventParticipantModel extends EventModel {
-
-    public function createResponse(): PlainTextResponse {
+class EventParticipantModel extends EventModel
+{
+    public function createResponse(): PlainTextResponse
+    {
         $query = $this->explorer->query(
             "select ap.*, 
 if(ep.`status`='participated','','N') as `status`
@@ -23,7 +26,7 @@ order by surname, name",
             $this->mapEventNameToTypeId(),
             $this->contestYear->year,
         );
-        $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
+        $event = $this->eventService->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
         return $this->formatResponse(
             $this->getDefaultParams() + [
                 'max-rank' => $query->getRowCount(),
@@ -35,13 +38,16 @@ order by surname, name",
         );
     }
 
-    protected function getMask(): string {
+    protected function getMask(): string
+    {
         $maskMapping = [
             'sous.j' => 'sous.jaro',
             'sous.p' => 'sous.podzim',
             'setkani.j' => 'setkani.jaro',
             'setkani.p' => 'setkani.podzim',
         ];
-        return $this->contestYear->getContest()->getContestSymbol() . '.' . $maskMapping[$this->eventName] ?? $this->eventName;
+        return $this->contestYear->contest->getContestSymbol()
+            . '.'
+            . $maskMapping[$this->eventName] ?? $this->eventName;
     }
 }

@@ -1,108 +1,127 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Services\OrgService;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-class OrgPresenter extends BasePresenter {
+class OrgPresenter extends BasePresenter
+{
     use EntityPresenterTrait {
         getEntity as traitGetEntity;
     }
 
-    private ServiceOrg $serviceOrg;
+    private OrgService $orgService;
 
-    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
-        $this->serviceOrg = $serviceOrg;
+    final public function injectServiceOrg(OrgService $orgService): void
+    {
+        $this->orgService = $orgService;
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Edit organizer %s'), $this->getEntity()->person->getFullName()),
+            'fa fa-user-edit'
+        );
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
-    }
-
-    public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Create an organiser'), 'fa fa-user-plus');
-    }
-
-    public function getTitleList(): PageTitle {
-        return new PageTitle(_('Organisers'), 'fa fa-user-tie');
-    }
-
-    /**
-     * @return ModelOrg
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     */
-    public function getEntity(): ModelOrg {
-        /** @var ModelOrg $entity */
+    public function getEntity(): OrgModel
+    {
+        /** @var OrgModel $entity */
         $entity = $this->traitGetEntity();
         if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
+            throw new ForbiddenRequestException(_('Editing organizer outside chosen seminar'));
         }
         return $entity;
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    final public function renderDetail(): void {
-        $this->template->model = $this->getEntity();
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Org %s'), $this->getEntity()->person->getFullName()), 'fa fa-user');
     }
 
-    protected function getORMService(): ServiceOrg {
-        return $this->serviceOrg;
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create an organizer'), 'fa fa-user-plus');
     }
 
-    protected function getModelResource(): string {
-        return ModelOrg::RESOURCE_ID;
-    }
-
-    protected function createComponentCreateForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), null);
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Organizers'), 'fa fa-user-tie');
     }
 
     /**
-     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentEditForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
+    final public function renderDetail(): void
+    {
+        $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentGrid(): OrgsGrid {
+    protected function getORMService(): OrgService
+    {
+        return $this->orgService;
+    }
+
+    protected function getModelResource(): string
+    {
+        return OrgModel::RESOURCE_ID;
+    }
+
+    protected function createComponentCreateForm(): OrgFormComponent
+    {
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    protected function createComponentEditForm(): OrgFormComponent
+    {
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
+    }
+
+    protected function createComponentGrid(): OrgsGrid
+    {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

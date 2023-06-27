@@ -1,15 +1,14 @@
-import { translator } from '@translator/translator';
 import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { changeData } from 'FKSDB/Models/FrontEnd/InputConnector/actions';
+import { changeData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { Store } from '../reducer';
-import CapacityLabel from './Parts/CapacityLabel';
-import DescriptionLabel from './Parts/DescriptionLabel';
-import PriceLabel from './Parts/PriceLabel';
+import CapacityLabel from './CapacityLabel';
+import PriceLabel from './PriceLabel';
+import { TranslatorContext } from '@translator/LangContext';
 
 interface OwnProps {
     item: ModelScheduleItem;
@@ -25,48 +24,46 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps, never> {
+    static contextType = TranslatorContext;
 
     public render() {
+        const translator = this.context;
         const {item, value, onChange, params} = this.props;
         const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
         const isChecked = (value === scheduleItemId);
 
-        return <div className="mb-3">
-                <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
-                <span
-                    className={isChecked ? 'fas fa-check-circle' : 'far fa-circle'}
-                    onClick={() => {
-                        isChecked ? onChange(null) : onChange(scheduleItemId);
-                    }}
-                />
-                    <span className="ml-3">
-                        {label[translator.getCurrentLocale()]} {
-                        params.display.description && <DescriptionLabel description={description}/>
-                    }</span>
-            </span>
-            <span className="text-muted">
-                {params.display.price && <PriceLabel price={price}/>}
-                {params.display.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
-            </span>
+        return <div
+            className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : '')}
+            onClick={() => {
+                isChecked ? onChange(null) : onChange(scheduleItemId);
+            }}>
+            <div className="card-body">
+                <h5 className="card-title">
+                    <i className={isChecked ? 'me-3 fas fa-check-circle' : 'me-3 far fa-circle'}/>
+                    {translator.get(label)}
+                </h5>
+                {params.description && <h6 className="card-subtitle">
+                    {translator.get(description)}
+                </h6>}
+                <p className="card-text">
+                    {params.price && <PriceLabel price={price} translator={translator}/>}
+                    {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                </p>
+            </div>
         </div>;
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
     return {
-        onChange: (value: number) => dispatch(changeData(ownProps.item.scheduleGroupId.toString(), value)),
+        onChange: (value: number) => dispatch(changeData('data', value)),
     };
 };
 
-const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const {item} = ownProps;
-    let value = null;
-    if (state.inputConnector.data.hasOwnProperty(item.scheduleGroupId.toString())) {
-        value = state.inputConnector.data[item.scheduleGroupId.toString()];
-    }
+const mapStateToProps = (state: Store): StateProps => {
     return {
-        value,
+        value: state.inputConnector.data.data,
     };
 };
 

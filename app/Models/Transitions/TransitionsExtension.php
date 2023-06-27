@@ -1,70 +1,111 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
-use Nette\DI\CompilerExtension;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\Transition\BehaviorType;
 use FKSDB\Models\Transitions\Transition\Transition;
+use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 
-class TransitionsExtension extends CompilerExtension {
+class TransitionsExtension extends CompilerExtension
+{
+    public function getConfigSchema(): Schema
+    {
+        return Expect::arrayOf(self::getMachineSchema(), Expect::string());
+    }
 
-    public function loadConfiguration(): void {
+    public static function getMachineSchema(): Structure
+    {
+        return Expect::structure([
+            'machine' => Expect::string(),
+            'stateEnum' => Expect::string(),
+            'decorator' => Expect::type(\Nette\DI\Definitions\Statement::class)->nullable(),
+            'transitions' => Expect::arrayOf(
+                Expect::structure([
+                    'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
+                    'label' => Helpers::createExpressionSchemaType(),
+                    'validation' => Helpers::createBoolExpressionSchemaType(true)->default(true),
+                    'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
+                    'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
+                    'behaviorType' => Expect::anyOf('success', 'warning', 'danger', 'primary', 'secondary')
+                        ->default('secondary'),
+                ])->castTo('array'),
+                Expect::string()
+            ),
+        ])->castTo('array');
+    }
+
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
-            foreach ($machine['transitions'] as $mask => $transition) {
-                [$sources, $target] = self::parseMask($mask);
-                foreach ($sources as $source) {
-                    $this->createTransition($machineName, $source, $target, $transition);
+            self::createMachine($this, $machineName, $machine);
+        }
+    }
+    public static function createMachine(CompilerExtension $extension, string $name, array $config): ServiceDefinition
+    {
+        $factory = $extension->getContainerBuilder()
+            ->addDefinition($extension->prefix($name . '.machine'))
+            ->setFactory($config['machine']);
+        if (isset($config['decorator'])) {
+            $factory->addSetup('decorateTransitions', [$config['decorator']]);
+        }
+        foreach ($config['transitions'] as $mask => $transitionConfig) {
+            [$sources, $target] = self::parseMask($mask, $config['stateEnum']);
+            foreach ($sources as $source) {
+                $transition = $extension->getContainerBuilder()->addDefinition(
+                    $extension->prefix(
+                        $name . '.' .
+                        ($source->value) . '.' .
+                        ($target->value)
+                    )
+                )
+                    ->addTag($name)
+                    ->setType(Transition::class)
+                    ->addSetup('setValidation', [$transitionConfig['validation']])
+                    ->addSetup('setCondition', [$transitionConfig['condition']])
+                    ->addSetup('setSourceStateEnum', [$source])
+                    ->addSetup('setTargetStateEnum', [$target])
+                    ->addSetup('setLabel', [Helpers::resolveMixedExpression($transitionConfig['label'])])
+                    ->addSetup(
+                        'setBehaviorType',
+                        [
+                            BehaviorType::tryFrom($transitionConfig['behaviorType']),
+                        ]
+                    );
+                foreach ($transitionConfig['afterExecute'] as $callback) {
+                    $transition->addSetup('addAfterExecute', [$callback]);
                 }
+                foreach ($transitionConfig['beforeExecute'] as $callback) {
+                    $transition->addSetup('addBeforeExecute', [$callback]);
+                }
+                $factory->addSetup('addTransition', [$transition]);
             }
         }
+        return $factory;
     }
 
-    public function beforeCompile(): void {
-        parent::beforeCompile();
-        $config = $this->getConfig();
-        foreach ($config as $machineName => $machine) {
-            $this->setUpMachine($machineName, $machine);
-        }
-    }
-
-    private function setUpMachine(string $machineName, array $machineConfig): void {
-        $builder = $this->getContainerBuilder();
-        $machineDefinition = $builder->getDefinition($machineConfig['machine']);
-        foreach ($builder->findByTag($machineName) as $name => $transition) {
-            $machineDefinition->addSetup('addTransition', [$builder->getDefinition($name)]);
-        }
-        if (isset($machineConfig['transitionsDecorator'])) {
-            $machineDefinition->addSetup('decorateTransitions', [$machineConfig['transitionsDecorator']]);
-        }
-    }
-
-    private function createTransition(string $machineName, string $source, string $target, array $transitionConfig): void {
-        $builder = $this->getContainerBuilder();
-        $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
-            ->addTag($machineName)
-            ->setType(Transition::class)
-            ->addSetup('setSourceState', [$source])
-            ->addSetup('setTargetState', [$target])
-            ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
-        if (isset($transitionConfig['behaviorType'])) {
-            $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType']]);
-        }
-        if (isset($transitionConfig['beforeExecute'])) {
-            foreach ($transitionConfig['beforeExecute'] as $callback) {
-                $factory->addSetup('addBeforeExecute', [$callback]);
-            }
-        }
-        if (isset($transitionConfig['afterExecute'])) {
-            foreach ($transitionConfig['afterExecute'] as $callback) {
-                $factory->addSetup('addAfterExecute', [$callback]);
-            }
-        }
-    }
-
-    public static function parseMask(string $mask): array {
-        [$source, $target] = explode('->', $mask);
-        return [explode('|', $source), $target];
+    /**
+     * @param EnumColumn|string $enumClassName
+     * @return EnumColumn[][]|EnumColumn[]
+     */
+    public static function parseMask(string $mask, string $enumClassName): array
+    {
+        [$sources, $target] = explode('->', $mask);
+        return [
+            array_map(
+                fn(string $state): ?EnumColumn => $enumClassName::tryFrom($state),
+                explode('|', $sources)
+            ),
+            $enumClassName::tryFrom($target),
+        ];
     }
 }

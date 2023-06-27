@@ -1,33 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\GraphComponent;
+use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
-class ModelPresenter extends BasePresenter {
+class ModelPresenter extends BasePresenter
+{
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
+    public function authorizedDefault(): void
+    {
+        $this->setAuthorized($this->isAllowed('event.model', 'default'));
     }
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-project-diagram'));
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Model of event'), 'fa fa-project-diagram');
     }
 
     /**
-     * @return GraphComponent
      * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
      */
-    protected function createComponentGraphComponent(): GraphComponent {
+    protected function createComponentGraphComponent(): GraphComponent
+    {
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        return new GraphComponent($this->getContext(), $machine->getPrimaryMachine());
+        return new GraphComponent($this->getContext(), $machine);
     }
 }

@@ -6,12 +6,14 @@ import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLeg
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     data: YearsData;
+    translator: Translator<availableLanguage>;
 }
 
-export default class PerSeriesChart extends React.Component<OwnProps, {}> {
+export default class PerSeriesChart extends React.Component<OwnProps, never> {
 
     public render() {
         const colorScale = scaleOrdinal(schemeCategory10);
@@ -39,7 +41,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, {}> {
             }
         }
 
-        const legendData: LineChartData = [];
+        const legendData: LineChartData<number> = [];
         for (let series = 1; series <= maxSeries; series++) {
             legendData.push({
                 color: colorScale(series.toString()),
@@ -51,7 +53,13 @@ export default class PerSeriesChart extends React.Component<OwnProps, {}> {
 
         return <ChartContainer
             chart={BarHistogram}
-            chartProps={{xScale, yScale, data: histogramData}}
+            chartProps={{xScale,
+                yScale,
+                data: histogramData,
+                display: {
+                    xGrid: false, yGrid: true
+                }
+            }}
             legendComponent={LineChartLegend}
             legendProps={{data: legendData}}
         />;

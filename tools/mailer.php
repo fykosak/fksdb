@@ -1,7 +1,12 @@
 <?php
 
-use FKSDB\Models\ORM\Models\ModelEmailMessage;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+declare(strict_types=1);
+
+use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EmailMessageState;
+use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use Nette\DI\Container;
 use Nette\Mail\Mailer;
 use Tracy\Debugger;
@@ -17,12 +22,15 @@ if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['
 /** @var Mailer $mailer */
 $mailer = $container->getByType(Mailer::class);
 
-/** @var ServiceEmailMessage $serviceEmailMessage */
-$serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
+/** @var EmailMessageService $serviceEmailMessage */
+$serviceEmailMessage = $container->getByType(EmailMessageService::class);
+$serviceUnsubscribedEmail = $container->getByType(UnsubscribedEmailService::class);
 $argv = $_SERVER['argv'];
-$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $container->getParameters()['spamMailer']['defaultLimit']);
+$query = $serviceEmailMessage->getMessagesToSend(
+    $argv[1] ? (int)$argv[1] : (int)$container->getParameters()['spamMailer']['defaultLimit']
+);
 $counter = 0;
-/** @var ModelEmailMessage $model */
+/** @var EmailMessageModel $model */
 foreach ($query as $model) {
     $counter++;
     if ($counter > SAFE_LIMIT) {
@@ -30,11 +38,15 @@ foreach ($query as $model) {
         break;
     }
     try {
-        $message = $model->toMessage();
+        $message = $model->toMessage($serviceUnsubscribedEmail);
+
         $mailer->send($message);
-        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
-    } catch (Throwable $e) {
-        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_FAILED]);
-        Debugger::log($e, 'mailer-exceptions');
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::SENT, 'sent' => new DateTime()], $model);
+    } catch (UnsubscribedEmailException $exception) {
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::REJECTED], $model);
+        Debugger::log($exception, 'mailer-exceptions-unsubscribed');
+    } catch (Throwable $exception) {
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::FAILED], $model);
+        Debugger::log($exception, 'mailer-exceptions');
     }
 }

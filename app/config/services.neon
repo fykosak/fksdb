@@ -4,13 +4,7 @@
 
 services:
     ## extends nette
-    nette.mailer:
-        factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
-        setup:
-            - setLogPath(%logDir%/mail)
-    readOnlyConnection:
-        factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
-        autowired: false
+    nette.mailer: Nette\Mail\SendmailMailer()
     ## need setUp
     submitUploatedStorage:
         factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
@@ -23,13 +17,12 @@ services:
 
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
     #auth
-    - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
-    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
+    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
     - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     #auth
     - FKSDB\Models\Authorization\ContestAuthorizator
@@ -41,54 +34,39 @@ services:
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ORMFactory
     # Events
-    events.dataValidator: FKSDB\Models\Events\Model\Holder\DataValidator
-    events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
-    #fyziklani
-    - FKSDB\Models\Fyziklani\Submit\HandlerFactory
-    #github
-    - FKSDB\Models\Github\EventFactory
      #localization
-    - FKSDB\Models\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #maitenance
-    - FKSDB\Models\Maintenance\Updater
+    -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #main
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Models\Persons\ReferencedPersonHandlerFactory
-    - FKSDB\Models\Persons\ExtendedPersonHandlerFactory
-    - FKSDB\Models\Persons\SelfResolver
-    - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
+    - FKSDB\Models\Persons\Resolvers\SelfResolver
+    - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
     - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
+    - FKSDB\Models\Submits\QuizHandler
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
     - FKSDB\Models\Submits\SeriesTable
     #results
     - FKSDB\Models\Results\SQLResultsCache
     - FKSDB\Models\Results\ResultsModelFactory
     #strored query
-    - FKSDB\Models\StoredQuery\StoredQueryFactory(@readOnlyConnection,...)
-    #stats
-    - FKSDB\Models\Stats\StatsModelFactory
+    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection)
     #tasks
-
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
-    - FKSDB\Models\YearCalculator
-    - FKSDB\Models\SeriesCalculator
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
-    - FKSDB\Components\Controls\Events\ExpressionPrinter
 
     ## forms
     #provider
@@ -98,11 +76,9 @@ services:
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
-    - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
-    - FKSDB\Components\Forms\Factories\PersonScheduleFactory
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 

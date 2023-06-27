@@ -1,67 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class ContestantsGrid extends BaseGrid {
+class ContestantsGrid extends BaseGrid
+{
+    private ContestYearModel $contestYear;
 
-    private ModelContestYear $contestYear;
-
-    public function __construct(Container $container, ModelContestYear $contestYear) {
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
         parent::__construct($container);
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): IDataSource {
-        return new NDataSource($this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->contestYear->year));
+    protected function getModels(): Selection
+    {
+        return $this->contestYear->getContestants()->order('person.other_name ASC');
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
-
-        $this->setDefaultOrder('person.other_name ASC');
+    protected function configure(): void
+    {
         $this->addColumns([
             'person.full_name',
+            'contestant.contest_category',
             'person_history.study_year',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
-            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
-        });
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
+                    'school',
+                    'school'
+                )->render(
+                    $row->getPersonHistory(),
+                    1024
+                ),
+                new Title(null, _('School'))
+            ),
+            'school_name',
+        );
 
-        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
-        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
-
-        $this->addGlobalButton('add')
-            ->setLabel(_('Create contestant'))
-            ->setLink($this->getPresenter()->link('create'));
+        $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
 
         $this->paginate = false;
-    }
-
-    protected function getModelClassName(): string {
-        return ModelContestant::class;
     }
 }

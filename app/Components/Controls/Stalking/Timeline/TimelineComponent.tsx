@@ -1,10 +1,11 @@
 import { axisBottom } from 'd3-axis';
-import { scaleOrdinal, ScaleTime } from 'd3-scale';
+import { scaleOrdinal, scaleTime, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
 import * as React from 'react';
 import './style.scss';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface Event {
     begin: string;
@@ -58,9 +59,10 @@ interface Props {
             orgs: Org[];
         };
     };
+    translator: Translator<availableLanguage>;
 }
 
-export default class TimelineComponent extends ChartComponent<Props, {}> {
+export default class TimelineComponent extends ChartComponent<Props, Record<string, never>> {
     private colorScale;
     private readonly lineHeight = 30;
     private rowNumber;
@@ -81,8 +83,8 @@ export default class TimelineComponent extends ChartComponent<Props, {}> {
         this.rowNumber = 0;
         const {
             events: {eventOrgs, eventParticipants, eventTeachers},
-            scale: {max, min},
             states: {orgs, contestants},
+            scale: {max, min},
         } = this.props.data;
         this.scale = this.createTimeXScale(new Date(min), new Date(max));
         const content = <g transform="translate(0,15)" className="content">
@@ -100,7 +102,7 @@ export default class TimelineComponent extends ChartComponent<Props, {}> {
                     <rect x={since}
                           width={until - since}
                           height={this.lineHeight}>
-                        <title>''</title>
+                        <title/>
                     </rect>
                     <text y={this.lineHeight / 2}
                           x={(since + until) / 2}>Org #{org.model.orgId}</text>
@@ -112,12 +114,16 @@ export default class TimelineComponent extends ChartComponent<Props, {}> {
         return <div className="row-12 chart-container person-detail-timeline">
             <svg className="chart w-100 " viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
                 <g transform={'translate(0,' + (this.getCurrentY() - this.margin.bottom) + ')'}
-                   className={'axis x-axis grid'}
+                   className="axis x-axis grid"
                    ref={(xAxis) => this.xAxis = xAxis}/>
                 {content}
             </svg>
         </div>;
 
+    }
+
+    private createTimeXScale(start: Date, end: Date): ScaleTime<number, number> {
+        return scaleTime<number>().domain([start, end]).range(this.getInnerXSize());
     }
 
     private getCurrentY(): number {

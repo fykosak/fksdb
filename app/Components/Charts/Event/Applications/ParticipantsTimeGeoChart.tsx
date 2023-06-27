@@ -2,12 +2,14 @@ import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChart';
 import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geoChartHelper';
 import * as React from 'react';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     data: Array<{
         country: string;
         created: string;
     }>;
+    translator: Translator<availableLanguage>;
 }
 
 export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, { timestamp: number }> {
@@ -34,7 +36,7 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
             <div className="form-group">
                 <input type="range"
                        step={day}
-                       className="form-control"
+                       className="form-range"
                        max={Math.ceil(maxTimestamp / day) * day}
                        min={Math.floor(minTimestamp / day) * day}
                        onChange={(event) => {

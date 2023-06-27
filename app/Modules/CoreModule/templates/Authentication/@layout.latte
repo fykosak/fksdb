@@ -1,7 +1,8 @@
 {layout '../@layout.latte'}
 {block nav}{/block}{*nav is emepty*}
+{varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
 {block main}
-    <main class="{$pageStyleContainer->mainContainerClassName}">
+    <main class="{$pageStyleContainer->getMainContainerClassName()}">
         <div class="login-form-container card">
             <div class="row mx-3" style="height:7rem">
                 <img class="col-6" src="{$basePath}/images/contests/fykos-gray.svg" alt="fykos"/>
@@ -15,7 +16,7 @@
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
                 {include form}
-                <div class="text-center">{control languageChooser}</div>
+                <div class="text-center" style="list-style: none;">{control languageChooser}</div>
             </div>
         </div>
     </main>

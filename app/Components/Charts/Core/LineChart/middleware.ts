@@ -1,65 +1,63 @@
 import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { area, CurveFactory, curveLinear, line } from 'd3-shape';
+import { ReactNode } from 'react';
 
-export type LineChartData = Array<{
-    name: string | JSX.Element;
+export type LineChartData<XValue extends Date | number> = LineChartDatum<XValue>[];
+
+export type LineChartDatum<XValue extends Date | number> = {
+    name: ReactNode;
     description?: string;
-    color: string;
+    color?: string;
     display: {
         points?: boolean;
         lines?: boolean;
         area?: boolean;
     };
     curveFactory?: CurveFactory;
-    points: Array<ExtendedPointData<Date | number>>;
-}>;
+    points: Array<ExtendedPointData<XValue>>;
+};
 
-export interface ExtendedPointData<T> extends PointData<T> {
+export interface ExtendedPointData<XValue extends Date | number> extends PointData<XValue> {
     active?: boolean;
     color?: string;
-    label?: string | JSX.Element;
+    label?: ReactNode;
 }
 
-export interface PointData<X = Date | number> {
-    xValue: X;
+export interface PointData<XValue extends Date | number> {
+    xValue: XValue;
     yValue: number;
 }
 
-export function getLinePath(
-    xScale: ScaleTime<number, number> | ScaleLinear<number, number>,
+export const getLinePath = <XValue extends Date | number>(
+    xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>,
     yScale: ScaleLinear<number, number>,
-    data: PointData[],
+    data: PointData<XValue>[],
     curve: CurveFactory = curveLinear,
-): string {
-    return line<PointData>()
-        .x((element: PointData) => {
-            if (element.xValue instanceof Date) {
-                return xScale(new Date(element.xValue));
-            }
+): string => {
+    return line<PointData<XValue>>()
+        .x((element) => {
             return xScale(element.xValue);
         })
-        .y((element: PointData) => {
+        .y((element) => {
             return yScale(element.yValue);
         })
         .curve(curve)(data);
 }
 
-export function getAreaPath(
-    xScale: ScaleTime<number, number> | ScaleLinear<number, number>,
+export const getAreaPath = <XValue extends Date | number>(
+    xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>,
     yScale: ScaleLinear<number, number>,
-    data: PointData[],
+    data: PointData<XValue>[],
     y0: number,
     curve: CurveFactory = curveLinear,
-): string {
-    return area<PointData>()
+): string => {
+    return area<PointData<XValue>>()
         .x((element) => {
-            if (element.xValue instanceof Date) {
-                return xScale(new Date(element.xValue));
-            }
             return xScale(element.xValue);
         })
         .y0(y0)
         .y1((element) => {
             return yScale(element.yValue);
-        }).curve(curve)(data);
+        })
+        .curve(curve)(data);
 }

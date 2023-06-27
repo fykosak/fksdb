@@ -1,74 +1,101 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Callbacks;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Statement;
+use Nette\SmartObject;
 
-class MailCallback implements TransitionCallback {
+abstract class MailCallback implements Statement
+{
+    use SmartObject;
 
-    protected ServiceEmailMessage $serviceEmailMessage;
+    protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
-    protected string $templateFile;
-    protected array $emailData;
+    protected AccountManager $accountManager;
+    protected AuthTokenService $authTokenService;
 
-    /**
-     * MailCallback constructor.
-     * @param string $templateFile
-     * @param array $emailData
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @param MailTemplateFactory $mailTemplateFactory
-     */
     public function __construct(
-        string $templateFile,
-        array $emailData,
-        ServiceEmailMessage $serviceEmailMessage,
-        MailTemplateFactory $mailTemplateFactory
+        EmailMessageService $emailMessageService,
+        MailTemplateFactory $mailTemplateFactory,
+        AuthTokenService $authTokenService,
+        AccountManager $accountManager
     ) {
-        $this->templateFile = $templateFile;
-        $this->emailData = $emailData;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->accountManager = $accountManager;
+        $this->authTokenService = $authTokenService;
     }
 
-    /**
-     * @param ModelHolder $holder
-     * @param mixed ...$args
-     * @return void
-     * @throws BadTypeException
-     * @throws UnsupportedLanguageException|CannotAccessModelException
-     */
-    public function __invoke(ModelHolder $holder, ...$args): void {
-        $this->invoke($holder, ...$args);
-    }
 
     /**
-     * @param ModelHolder $holder
-     * @param mixed ...$args
-     * @return void
+     * @param ...$args
+     * @throws \ReflectionException
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
-     * @throws CannotAccessModelException
      */
-    public function invoke(ModelHolder $holder, ...$args): void {
-        $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
-        if (is_null($person)) {
-            throw new BadTypeException(ModelPerson::class, $person);
+    public function __invoke(...$args): void
+    {
+        [$holder] = $args;
+        foreach ($this->getPersonsFromHolder($holder) as $person) {
+            $data = $this->getData($holder);
+            $data['recipient_person_id'] = $person->person_id;
+            $data['text'] = $this->createMessageText($holder, $person);
+            $this->emailMessageService->addMessageToSend($data);
         }
-        $data = $this->emailData;
-        $data['recipient'] = $person->getInfo()->email;
-
-        $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
-            $this->templateFile,
-            $person->getPreferredLang(),
-            ['model' => $holder->getModel()]
-        );
-        $this->serviceEmailMessage->addMessageToSend($data);
     }
+
+    /**
+     * @throws BadTypeException
+     */
+    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
+    {
+        return $this->mailTemplateFactory->renderWithParameters(
+            $this->getTemplatePath($holder),
+            $person->getPreferredLang(),
+            [
+                'person' => $person,
+                'holder' => $holder,
+                'token' => $this->createToken($person, $holder),
+            ]
+        );
+    }
+
+    final protected function resolveLogin(PersonModel $person): LoginModel
+    {
+        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+    }
+
+    protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
+    {
+        return null;
+    }
+
+
+    /**
+     * @return PersonModel[]
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     */
+    protected function getPersonsFromHolder(ModelHolder $holder): array
+    {
+        $person = $holder->getModel()->getReferencedModel(PersonModel::class);
+        if (is_null($person)) {
+            throw new BadTypeException(PersonModel::class, $person);
+        }
+        return [$person];
+    }
+
+    abstract protected function getTemplatePath(ModelHolder $holder): string;
+
+    abstract protected function getData(ModelHolder $holder): array;
 }

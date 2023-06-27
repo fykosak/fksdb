@@ -1,0 +1,35 @@
+{block content}
+    {varType FKSDB\Components\Grids\Components\BaseGrid $control}
+    {varType bool $paginate}
+    {varType array $flashes}
+    {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
+    {varType int $userPermission}
+    {php $control->getPaginator()->setItemCount($models->count('*'))}
+    {if $paginate}
+        {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}
+    {/if}
+    {foreach $flashes as $flash}
+        <div class="alert alert-{$flash->type}">
+            {$flash->message}
+        </div>
+    {/foreach}
+    <div class="row my-3">
+        <div class="offset-8 col-4">
+        <span class="badge bg-primary float-end">
+            {_'Total'} {$control->getPaginator()->getItemCount()}
+            {switch $control->getPaginator()->getItemCount()}
+                {case 1}{_'záznam'}
+                {case 2,3,4}{_'záznamy'}
+                {default}{_'záznamů'}
+            {/switch}
+            {if $control->getPaginator()->getItemCount() && $paginate}
+                {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
+            {/if}
+        </span>
+        </div>
+    </div>
+    {include table from './Container/table.latte' models=>$models,head:true,userPermission:$userPermission,tableRow:$control->tableRow,className:'table table-sm table-hover table-striped'}
+    {if $paginate}
+        {control paginator}
+    {/if}
+{/block}

@@ -1,42 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Exports;
 
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exports\Formats\CSVFormat;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-class ExportFormatFactory {
-
+class ExportFormatFactory
+{
     use SmartObject;
 
-    /** @deprecated */
-    public const AESOP = 'aesop';
     public const CSV_HEADLESS = 'csv';
     public const CSV_HEAD = 'csvh';
     public const CSV_QUOTE_HEAD = 'csvqh';
 
     private Container $container;
-
     private StoredQueryFactory $storedQueryFactory;
-
-    private ServiceEvent $serviceEvent;
-
-    private ServiceContest $serviceContest;
-
+    private EventService $eventService;
+    private ContestService $contestService;
     public array $defaultFormats;
 
-    public function __construct(Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
+    public function __construct(
+        Container $container,
+        StoredQueryFactory $storedQueryFactory,
+        EventService $eventService,
+        ContestService $contestService
+    ) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->serviceEvent = $serviceEvent;
-        $this->serviceContest = $serviceContest;
+        $this->eventService = $eventService;
+        $this->contestService = $contestService;
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Save CSV (without head)'),
@@ -44,16 +44,9 @@ class ExportFormatFactory {
         ];
     }
 
-    /**
-     * @param string $name
-     * @param StoredQuery $storedQuery
-     * @return ExportFormat
-     * @throws GoneException
-     */
-    public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat {
+    public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat
+    {
         switch (strtolower($name)) {
-            case self::AESOP:
-                throw new GoneException();
             case self::CSV_HEADLESS:
                 return $this->createCSV($storedQuery, false);
             case self::CSV_HEAD:
@@ -65,7 +58,11 @@ class ExportFormatFactory {
         }
     }
 
-    private function createCSV(StoredQuery $storedQuery, bool $header, bool $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+    private function createCSV(
+        StoredQuery $storedQuery,
+        bool $header,
+        bool $quote = CSVFormat::DEFAULT_QUOTE
+    ): CSVFormat {
         return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 }

@@ -1,50 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ModelsTests;
-/** @var Container $container */
+
+// phpcs:disable
 $container = require '../Bootstrap.php';
 
+// phpcs:enable
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use FKSDB\Models\ORM\Services\ServiceAddress;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
 
-class ServiceAddressTest extends TestCase {
+class ServiceAddressTest extends TestCase
+{
 
-    private ServiceAddress $fixture;
+    private AddressHandler $fixture;
 
-    /**
-     * ServiceAddressTest constructor.
-     * @param ServiceAddress $service
-     */
-    public function __construct(ServiceAddress $service) {
-        $this->fixture = $service;
+    public function __construct(Container $container)
+    {
+        $this->fixture = new AddressHandler($container);
     }
 
     /**
      * @dataProvider getPostalCodeData
      */
-    public function testStudyYear(string $postalCode, ?int $region): void {
-        if ($region === null) {
-            Assert::exception(function () use ($postalCode) {
-                $this->fixture->inferRegion($postalCode);
-            }, InvalidPostalCode::class);
-        } else {
-            $inferredRegion = $this->fixture->inferRegion($postalCode);
-            Assert::equal($region, $inferredRegion);
-        }
+    public function testStudyYear(string $postalCode, ?int $countryId): void
+    {
+        $countryData = $this->fixture->inferCountry($postalCode);
+        Assert::equal($countryId, $countryData ? $countryData['country_id'] : $countryData);
     }
 
-    public function getPostalCodeData(): array {
+    public function getPostalCodeData(): array
+    {
         return [
-            ['01233', 2],
-            ['67401', 3],
+            ['01233', CountryService::SLOVAKIA],
+            ['67401', CountryService::CZECH_REPUBLIC],
             ['654a5', null],
             ['354 0', null],
         ];
     }
 }
 
-$testCase = new ServiceAddressTest($container->getByType(ServiceAddress::class));
+// phpcs:disable
+$testCase = new ServiceAddressTest($container);
 $testCase->run();
+// phpcs:enable

@@ -1,0 +1,46 @@
+.chart {
+  &.points-in-time {
+    circle {
+      stroke: white;
+      stroke-width: 2.5;
+    }
+
+    path {
+      &.line {
+        stroke: #1175da;
+        stroke-width: 5px;
+        fill: none;
+      }
+
+      &.line-small {
+        stroke: gray;
+        opacity: 0.5;
+        stroke-width: 2px;
+        fill: none;
+      }
+    }
+  }
+
+  .axis {
+    .tick .grid-line {
+      stroke-dasharray: 10 10;
+      stroke: #ccc;
+    }
+  }
+
+  &.line-chart {
+    .line {
+      fill: none;
+      stroke-width: 2px;
+    }
+
+    .area {
+      opacity: .1;
+    }
+  }
+  g polygon:hover {
+    filter: brightness(60%);
+  }
+}
+
+

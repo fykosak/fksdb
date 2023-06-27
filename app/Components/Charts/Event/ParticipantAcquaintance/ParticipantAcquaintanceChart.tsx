@@ -1,8 +1,10 @@
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import InnerParticipantAcquaintanceChart, { OwnProps } from 'FKSDB/Components/Charts/Event/ParticipantAcquaintance/InnerParticipantAcquaintanceChart';
+import InnerParticipantAcquaintanceChart, {
+    OwnProps,
+} from 'FKSDB/Components/Charts/Event/ParticipantAcquaintance/InnerParticipantAcquaintanceChart';
 import * as React from 'react';
 
-export default class ParticipantAcquaintanceChart extends React.Component<OwnProps, {}> {
+export default class ParticipantAcquaintanceChart extends React.Component<OwnProps, never> {
 
     public render() {
         return <ChartContainer

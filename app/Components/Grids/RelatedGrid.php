@@ -1,25 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use Fykosak\NetteORM\Model;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 
-abstract class RelatedGrid extends BaseGrid {
-
-    protected AbstractModel $model;
+abstract class RelatedGrid extends BaseGrid
+{
+    protected Model $model;
     protected string $tableName;
 
-    public function __construct(Container $container, AbstractModel $model, string $tableName) {
+    public function __construct(Container $container, Model $model, string $tableName)
+    {
         parent::__construct($container);
         $this->tableName = $tableName;
         $this->model = $model;
     }
 
-    protected function getData(): IDataSource {
-        $query = $this->model->related($this->tableName);
-        return new NDataSource($query);
+    protected function getModels(): Selection
+    {
+        return $this->model->related($this->tableName);
+    }
+
+    protected function configure(): void
+    {
     }
 }

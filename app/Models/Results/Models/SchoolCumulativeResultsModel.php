@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
-use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Connection;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Database\Row;
-use Nette\InvalidStateException;
+use Nette\DI\Container;
 use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
+ * @deprecated
  */
-class SchoolCumulativeResultsModel extends AbstractResultsModel {
+class SchoolCumulativeResultsModel extends AbstractResultsModel
+{
 
     protected array $series;
     /**
@@ -23,22 +24,21 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     private array $dataColumns = [];
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection) {
-        parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
+    public function __construct(
+        Container $container,
+        CumulativeResultsModel $cumulativeResultsModel,
+        ContestYearModel $contestYear
+    ) {
+        parent::__construct($container, $contestYear);
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
     /**
      * Definition of header.
-     *
-     * @param ModelCategory $category
-     * @return array
      */
-    public function getDataColumns(ModelCategory $category): array {
-        if ($this->series === null) {
-            throw new InvalidStateException('Series not specified.');
-        }
-        if (!isset($this->dataColumns[$category->id])) {
+    public function getDataColumns(ContestCategoryModel $category): array
+    {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             foreach ($this->getSeries() as $series) {
                 $dataColumns[] = [
@@ -67,19 +67,21 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                 self::COL_DEF_LIMIT => 0, //not well defined
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->id] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->id];
+        return $this->dataColumns[$category->label];
     }
 
-    public function getSeries(): array {
+    public function getSeries(): array
+    {
         return $this->series;
     }
 
     /**
-     * @param array $series
+     * @param int[] $series
      */
-    public function setSeries($series): void {
+    public function setSeries(array $series): void
+    {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
         // invalidate cache of columns
@@ -87,26 +89,27 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return ModelCategory[]
+     * @return ContestCategoryModel[]
      */
-    public function getCategories(): array {
-        //return $this->evaluationStrategy->getCategories();
+    public function getCategories(): array
+    {
         return [
-            new ModelCategory(ModelCategory::CAT_ALL),
+            $this->contestCategoryService->findByLabel(ContestCategoryModel::ALL),
         ];
     }
 
-    protected function composeQuery(ModelCategory $category): string {
+    protected function composeQuery(ContestCategoryModel $category): string
+    {
         throw new NotSupportedException();
     }
 
     /**
-     * @param ModelCategory $category
      * @return Row[]
      */
-    public function getData(ModelCategory $category): array {
+    public function getData(ContestCategoryModel $category): array
+    {
         $categories = [];
-        if ($category->id == ModelCategory::CAT_ALL) {
+        if ($category->label === ContestCategoryModel::ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
         } else {
             $categories[] = $category;
@@ -126,17 +129,13 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         }
         $result = [];
         foreach ($data as $schoolName => $dataRow) {
-            usort($dataRow, function ($a, $b) {
-                return ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1;
-            });
+            usort($dataRow, fn($a, $b) => ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1);
             $resultRow = $this->createResultRow($dataRow, $category);
             $resultRow[self::DATA_NAME] = $schoolName;
             $resultRow[self::DATA_SCHOOL] = $schoolName;
             $result[] = $resultRow;
         }
-        usort($result, function ($a, $b) {
-            return ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1;
-        });
+        usort($result, fn($a, $b) => ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1);
 
         $prevSum = false;
         for ($i = 0; $i < count($result); $i++) {
@@ -162,11 +161,13 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         return $result;
     }
 
-    private function weightVector(int $i): float {
+    private function weightVector(int $i): float
+    {
         return max([1.0 - 0.1 * $i, 0.1]);
     }
 
-    private function createResultRow(array $schoolContestants, ModelCategory $category): array {
+    private function createResultRow(array $schoolContestants, ContestCategoryModel $category): array
+    {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;
@@ -192,7 +193,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             }
             $resultRow[self::ALIAS_UNWEIGHTED_SUM] += $schoolContestants[$i][self::ALIAS_SUM];
         }
-        $resultRow[self::ALIAS_PERCENTAGE] = ($resultRow[self::ALIAS_CONTESTANTS_COUNT] > 0) ? round($resultRow[self::ALIAS_PERCENTAGE] / (float)$resultRow[self::ALIAS_CONTESTANTS_COUNT]) : null;
+        $resultRow[self::ALIAS_PERCENTAGE] = ($resultRow[self::ALIAS_CONTESTANTS_COUNT] > 0) ? round(
+            $resultRow[self::ALIAS_PERCENTAGE] / (float)$resultRow[self::ALIAS_CONTESTANTS_COUNT]
+        ) : null;
         foreach ($resultRow as $key => $value) {
             if (is_float($value)) {
                 $resultRow[$key] = round($value);

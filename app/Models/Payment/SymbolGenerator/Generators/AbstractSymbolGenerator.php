@@ -1,54 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
-use FKSDB\Models\ORM\Models\ModelPayment;
-use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 
-abstract class AbstractSymbolGenerator implements TransitionCallback {
+abstract class AbstractSymbolGenerator implements Statement
+{
+    protected PaymentService $paymentService;
 
-    protected ServicePayment $servicePayment;
-
-    public function __construct(ServicePayment $servicePayment) {
-        $this->servicePayment = $servicePayment;
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @param $args
-     * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    abstract protected function create(ModelPayment $modelPayment, ...$args): array;
+    abstract protected function create(PaymentModel $modelPayment): array;
 
     /**
-     * @param ModelHolder $holder
-     * @param $args
+     * @param ...$args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws BadTypeException
      */
-    final public function __invoke(ModelHolder $holder, ...$args): void {
-        /** @var ModelPayment $model */
+    final public function __invoke(...$args): void
+    {
+        [$holder] = $args;
+        if (!$holder instanceof PaymentHolder) {
+            throw new BadTypeException(PaymentHolder::class, $holder);
+        }
         $model = $holder->getModel();
-        $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel($model, $info);
-    }
-
-    /**
-     * @param ModelHolder $holder
-     * @param $args
-     * @throws AlreadyGeneratedSymbolsException
-     * @throws UnsupportedCurrencyException
-     */
-    final public function invoke(ModelHolder $holder, ...$args): void {
-        /** @var ModelPayment $model */
-        $model = $holder->getModel();
-        $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel($model, $info);
+        $info = $this->create($model);
+        $this->paymentService->storeModel($info, $model);
     }
 }

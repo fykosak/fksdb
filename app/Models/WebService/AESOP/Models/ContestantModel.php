@@ -1,55 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\Results\ModelCategory;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-class ContestantModel extends AESOPModel {
+class ContestantModel extends AESOPModel
+{
 
-    protected ServiceTask $serviceTask;
-
-    private ?ModelCategory $category;
+    protected TaskService $taskService;
+    private ?ContestCategoryModel $category;
 
     /**
      * ContestantModel constructor.
-     * @param Container $container
-     * @param ModelContestYear $contestYear
-     * @param string|null $category
      * @throws BadRequestException
      */
-    public function __construct(Container $container, ModelContestYear $contestYear, ?string $category) {
+    public function __construct(Container $container, ContestYearModel $contestYear, ?string $category)
+    {
         parent::__construct($container, $contestYear);
         $this->category = $this->getCategory($category);
         $container->callInjects($this);
     }
 
-    public function injectTaskService(ServiceTask $serviceTask): void {
-        $this->serviceTask = $serviceTask;
+    public function injectTaskService(TaskService $taskService): void
+    {
+        $this->taskService = $taskService;
     }
 
     /**
-     * @return PlainTextResponse
      * @throws BadRequestException
      */
-    public function createResponse(): PlainTextResponse {
-        $query = $this->explorer->query("select ac.*, IF(ac.`x-points_ratio` >= 0.5, 'Y', 'N') AS `successful`
+    public function createResponse(): PlainTextResponse
+    {
+        $query = $this->explorer->query(
+            "select ac.*, IF(ac.`x-points_ratio` >= 0.5, 'Y', 'N') AS `successful`
          FROM v_aesop_contestant ac
 WHERE
 	ac.`x-contest_id` = ?
         AND ac.`x-ac_year` = ?
-        AND (1=1 or ? = 0) -- hack for parameters
                                                order by surname, name",
             $this->contestYear->contest_id,
-            $this->contestYear->ac_year,
-            $this->category->id
+            $this->contestYear->ac_year
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
@@ -63,26 +64,24 @@ WHERE
         );
     }
 
-    protected function getMask(): string {
-        return $this->contestYear->getContest()->getContestSymbol() . '.rocnik.' . $this->category->id;
+    protected function getMask(): string
+    {
+        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->label;
     }
 
     /**
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
-     *
-     * @return int|double|null
      * @throws BadRequestException
      */
-    public function getMaxPoints(): ?int {
-        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+    public function getMaxPoints(): ?int
+    {
+        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         if (!$this->category) {
             return null;
         }
-        $tasks = $this->serviceTask->getTable()
-            ->where('contest_id', $this->contestYear->contest_id)
-            ->where('year', $this->contestYear->year)
-            ->where('series BETWEEN 1 AND 6');
+        $tasks = $this->contestYear->getTasks()->where('series BETWEEN 1 AND 6');
         $sum = 0;
+        /** @var TaskModel $task */
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
@@ -90,15 +89,13 @@ WHERE
     }
 
     /**
-     *
-     * @param string|null $stringCategory
-     * @return ModelCategory|null
      * @throws BadRequestException
      */
-    private function getCategory(?string $stringCategory): ?ModelCategory {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+    private function getCategory(?string $stringCategory): ?ContestCategoryModel
+    {
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->id == $stringCategory) {
+            if ($category->label == $stringCategory) {
                 return $category;
             }
         }
@@ -106,17 +103,15 @@ WHERE
     }
 
     /**
-     * @param ResultSet $data
-     * @return array
      * @throws BadRequestException
      */
-    private function filterCategory(ResultSet $data): array {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+    private function filterCategory(ResultSet $data): array
+    {
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
 
         $studyYears = [];
         if ($this->category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($this->category);
-            $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 
         $graduationYears = [];
@@ -134,7 +129,8 @@ WHERE
         return $result;
     }
 
-    private function calculateRank(array $data): array {
+    private function calculateRank(array $data): array
+    {
         $points = [];
         foreach ($data as $row) {
             if (!isset($points[$row[self::POINTS]])) {
@@ -159,10 +155,11 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ModelContestYear $contestYear): ?int {
+    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
+    {
         if (is_null($studyYear)) {
             return null;
         }
-        return YearCalculator::getGraduationYear($studyYear, $contestYear);
+        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
     }
 }

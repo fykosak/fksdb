@@ -1,18 +1,16 @@
-import { translator } from '@translator/translator';
-import {
-    scaleLinear,
-    scaleOrdinal,
-} from 'd3-scale';
+import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { ModelEvent } from 'FKSDB/Models/ORM/Models/modelEvent';
+import { EventModel } from 'FKSDB/Models/ORM/Models/EventModel';
 import * as React from 'react';
+import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
     events: {
-        [eventId: number]: ModelEvent;
+        [eventId: number]: EventModel;
     };
     teams?: {
         [eventId: number]: Array<{
@@ -29,16 +27,17 @@ export interface Data {
 interface OwnProps {
     data: Data;
     accessKey: 'participants' | 'teams';
+    translator: Translator<availableLanguage>;
 }
 
-export default class CommonChart extends React.Component<OwnProps, {}> {
+export default class CommonChart extends React.Component<OwnProps, never> {
 
     public render() {
-        const {data, accessKey} = this.props;
+        const {data, accessKey, translator} = this.props;
 
         let minTime = 0;
         let max = 0;
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
 
         const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {
@@ -83,17 +82,6 @@ export default class CommonChart extends React.Component<OwnProps, {}> {
         const yScale = scaleLinear<number, number>().domain([0, max]);
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        const legend = () => {
-            return <div className={'list-group'}>
-                {lineChartData.map((datum, key) => {
-                    return <div
-                        key={key}
-                        className={'list-group-item'}
-                        style={{color: datum.color}}>{datum.name}</div>;
-                })}
-            </div>;
-        };
-
         return <ChartContainer
             chart={LineChart}
             chartProps={{
@@ -106,7 +94,8 @@ export default class CommonChart extends React.Component<OwnProps, {}> {
                 yScale,
 
             }}
-            legendComponent={legend}
+            legendProps={{data: lineChartData}}
+            legendComponent={LineChartLegend}
             headline={translator.getText('Time progress')}
         />;
     }

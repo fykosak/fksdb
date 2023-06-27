@@ -1,42 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ModelsTests;
 
+// phpcs:disable
 $container = require '../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Models\WebService\WebServiceModel;
-use Nette\DI\Container;
-use SoapVar;
 use Tester\Assert;
 
-class WebServiceModelTest extends DatabaseTestCase {
-
-    private Container $container;
-
+class WebServiceModelTest extends DatabaseTestCase
+{
     private WebServiceModel $fixture;
 
-    /**
-     * WebServiceModelTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->container = $container;
-    }
-
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-
         $this->fixture = $this->container->getService('webServiceModel');
-        $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
+        $this->createPerson('Homer', 'Simpson', null, ['login' => 'homer', 'hash' => '123456']);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    protected function tearDown(): void {
-        parent::tearDown();
-    }
-
-    public function testResults(): void {
+    public function testResults(): void
+    {
         $header = [
             'username' => 'homer',
             'password' => '123456',
@@ -51,9 +39,11 @@ class WebServiceModelTest extends DatabaseTestCase {
         ];
         $result = $this->fixture->GetResults((object)$resultsReq);
 
-        Assert::type(SoapVar::class, $result);
+        Assert::type(\SoapVar::class, $result);
     }
 }
 
+// phpcs:disable
 $testCase = new WebServiceModelTest($container);
 $testCase->run();
+// phpcs:enable

@@ -1,29 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions;
 
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
-abstract class EvaluatedExpression {
+abstract class EvaluatedExpression implements Statement
+{
     use SmartObject;
 
     /**
      * @param mixed $evaluated
-     * @param ...$args
      * @return mixed
      */
-    final protected function evaluateArgument($evaluated, ...$args) {
+    final protected function evaluateArgument($evaluated, ...$args)
+    {
         if (is_callable($evaluated)) {
             return $evaluated(...$args);
         } else {
             return $evaluated;
         }
     }
-
-    /**
-     * @param array ...$args
-     * @return mixed
-     */
-    abstract public function __invoke(...$args);
-
 }

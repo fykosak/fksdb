@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\ContestCategoryService;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
-use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Connection;
+use FKSDB\Models\Results\ResultsModelFactory;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Nette\Application\BadRequestException;
 use Nette\Database\Row;
+use Nette\DI\Container;
 
 /**
  * General results sheet with contestants and their ranks.
  */
-abstract class AbstractResultsModel {
+abstract class AbstractResultsModel
+{
 
     public const COL_DEF_LABEL = 'label';
     public const COL_DEF_LIMIT = 'limit';
@@ -34,27 +40,36 @@ abstract class AbstractResultsModel {
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected ModelContestYear $contestYear;
-    protected ServiceTask $serviceTask;
-    protected Connection $connection;
+    protected TaskService $taskService;
+    protected ContestYearModel $contestYear;
     protected EvaluationStrategy $evaluationStrategy;
+    protected ContestCategoryService $contestCategoryService;
 
-    public function __construct(ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection, EvaluationStrategy $evaluationStrategy) {
+    /**
+     * @throws BadRequestException
+     */
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        $container->callInjects($this);
         $this->contestYear = $contestYear;
-        $this->serviceTask = $serviceTask;
-        $this->connection = $connection;
-        $this->evaluationStrategy = $evaluationStrategy;
+        $this->evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($container, $contestYear);
+    }
+
+    public function inject(TaskService $taskService, ContestCategoryService $contestCategoryService): void
+    {
+        $this->taskService = $taskService;
+        $this->contestCategoryService = $contestCategoryService;
     }
 
     /**
-     * @param ModelCategory $category
      * @return Row[]
      * @throws \PDOException
      */
-    public function getData(ModelCategory $category): array {
+    public function getData(ContestCategoryModel $category): array
+    {
         $sql = $this->composeQuery($category);
 
-        $stmt = $this->connection->query($sql);
+        $stmt = $this->taskService->explorer->query($sql);
         $result = $stmt->fetchAll();
 
         // reverse iteration to get ranking ranges
@@ -71,27 +86,13 @@ abstract class AbstractResultsModel {
         return $result;
     }
 
-    /**
-     * Unused?
-     * @return array
-     */
-    public function getMetaColumns(): array {
-        return [
-            self::DATA_NAME,
-            self::DATA_SCHOOL,
-            self::DATA_RANK_FROM,
-            self::DATA_RANK_TO,
-        ];
-    }
-
-    abstract protected function composeQuery(ModelCategory $category): string;
+    abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
-     * @param iterable $conditions
-     * @return string
      */
-    protected function conditionsToWhere(iterable $conditions): string {
+    protected function conditionsToWhere(iterable $conditions): string
+    {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
@@ -119,33 +120,18 @@ abstract class AbstractResultsModel {
         return '(' . implode(') and (', $where) . ')';
     }
 
-    protected function getTasks(int $series): TypedTableSelection {
-        return $this->serviceTask->getTable()
-            ->select('task_id, label, points,series')
-            ->where([
-                'contest_id' => $this->contestYear->contest_id,
-                'year' => $this->contestYear->year,
-                'series' => $series,
-            ])
-            ->order('tasknr');
+    protected function getTasks(int $series): TypedGroupedSelection
+    {
+        return $this->contestYear->getTasks($series)->order('tasknr');
     }
 
     /**
-     * @return ModelCategory[]
+     * @return ContestCategoryModel[]
      */
-    abstract public function getCategories(): array;
+    public function getCategories(): array
+    {
+        return $this->evaluationStrategy->getCategories();
+    }
 
-    /**
-     * Single series number or array of them.
-     * @param int[]|int $series
-     * TODO int[] OR int
-     */
-    abstract public function setSeries($series): void;
-
-    /**
-     * @return int[]|int (see setSeries)
-     */
-    abstract public function getSeries();
-
-    abstract public function getDataColumns(ModelCategory $category): array;
+    abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

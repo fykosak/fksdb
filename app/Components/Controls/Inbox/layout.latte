@@ -1,6 +1,7 @@
 {layout '../@layout.latte'}
+{varType FKSDB\Models\Submits\SeriesTable $seriesTable}
 {define table-head}
-    <tr class="bg-contest">
+    <tr class="table-dark">
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
             <th>{$task->label}</th>
@@ -10,19 +11,26 @@
 {block content}
     {var $table = $seriesTable->getSubmitsTable()}
     <table class="table table-striped table-sm">
+        <div class="mb-3 text-end">
+            {var $contestantCount = count($table)}
+            {var $submitsCount = count($seriesTable->getSubmits())}
+            {_'Total'} {$contestantCount} {_('active')} {($contestantCount == 1) ? _('řešitel') : (($contestantCount >= 2 && $contestantCount <= 4) ? _('řešitelé') : _('řešitelů'))},
+            {$submitsCount} {($submitsCount == 1) ? _('solution') : _('solutions')}
+        </div>
         <thead>
         {include table-head}
         </thead>
         <tbody>
         {var $counter = 0}
         {foreach $seriesTable->getContestants() as $contestant}
-            {if $displayAll || isset($table[$contestant->ct_id])}
-                {do $counter++}
+            {varType FKSDB\Models\ORM\Models\ContestantModel $contestant}
+            {if $displayAll || isset($table[$contestant->contestant_id])}
+                {php $counter++}
                 <tr>
-                    <th scope="row">{$contestant->getPerson()->getFullName()}</th>
+                    <th scope="row">{$contestant->person->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
-                        {var $submit = isset($table[$contestant->ct_id][$task->task_id])?$table[$contestant->ct_id][$task->task_id]:null}
-                        {include submit-row, submit=>$submit,ctId=>$contestant->ct_id,taskId=>$task->task_id}
+                        {var $submit = isset($table[$contestant->contestant_id][$task->task_id])?$table[$contestant->contestant_id][$task->task_id]:null}
+                        {include submit-row, submit=>$submit,ctId=>$contestant->contestant_id,taskId=>$task->task_id}
                     {/foreach}
                 </tr>
             {/if}

@@ -1,8 +1,29 @@
 {layout '../../../CoreModule/templates/@layout.latte'}
-
 {block content}
-    {foreach $contests as $contest}
-        <a href="{plink 'year' ,'contestId'=>$contest->contest_id}"
-                n:class="'col-12 btn btn-lg btn-block ','btn-'.$contest->getContestSymbol()">{$contest->name}</a>
-    {/foreach}
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+        <div class="col">
+            <div class="card h-100 border-fykos">
+                <img src="{$basePath}/images/contests/fykos.svg" class="card-img-top m-3" alt="fykos"
+                     style="max-height: 7rem">
+                <div class="card-body">
+                    <h3 class="card-title text-fykos">{_'FYKOS'}</h3>
+                    <p class="card-text">{_'Physics correspondence competition of CUNI MFF for high-school students.'}</p>
+                    <a class="btn btn-fykos"
+                       href="{plink 'year' ,'contestId'=>1}">{_'Register to FYKOS'}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 border-vyfuk">
+                <img src="{$basePath}/images/contests/vyfuk.svg" class="card-img-top m-3" alt="vyfuk"
+                     style="max-height: 7rem">
+                <div class="card-body">
+                    <h3 class="card-title text-vyfuk">{_'Výfuk'}</h3>
+                    <p class="card-text">{_'Physics correspondence seminar of CUNI MFF for the students of elementary schools.'}</p>
+                    <a class="btn btn-vyfuk"
+                       href="{plink 'year' ,'contestId'=>2}">{_'Register to Výfuk'}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {/block}

@@ -1,0 +1,72 @@
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
+{default FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $team = null}
+{default bool $showTeamId = false}
+{default bool $showBigNav = false}
+{default bool $showSeatId = false}
+{default bool $showTeamCategory = false}
+{default string|null $sector = null}
+
+<h1 style="font-size: 200%">
+    {block headline}
+        (0000) Team
+    {/block}
+    {block logo}
+        <img src="{$basePath}/images/fyziklani/fyziklani_2023_logo.png" alt="" style="float:right;max-width: 25%"/>
+    {/block}
+</h1>
+{embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang->value:null}
+    {block seats}
+        {foreach $room->getSeats() as $seat}
+            {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
+            {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
+            <g transform="{$cor}">
+                {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $selectedTeam = null}
+                {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
+                {if $team}
+                    {if $occuiedTeamSeat && $occuiedTeamSeat->fyziklani_team->fyziklani_team_id === $team->fyziklani_team_id}
+                        {do $selectedTeam = $team}
+                    {/if}
+                {else}
+                    {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->fyziklani_team:null}
+                {/if}
+
+                {var $className = $selectedTeam?' occupied':' free'}
+                {if $showTeamCategory && $selectedTeam}
+                    {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
+                {/if}
+                <circle
+                        class="{$className . ' team-seat'}"
+                        r="15"
+                        cx="0"
+                        cy="0"
+                />
+                {if $showTeamId && $selectedTeam}
+                    <g transform="translate(0,18)">
+                        <text>{$selectedTeam->fyziklani_team_id}</text>
+                    </g>
+                {/if}
+                {if $showSeatId}
+                    <g transform="translate(0,-25)">
+                        <text>{$seat->getPrimary()}</text>
+                    </g>
+                {/if}
+                {if $showBigNav && $selectedTeam}
+                    <circle
+                            style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15;"
+                            r="80"
+                            cx="0"
+                            cy="0"
+                    />
+                {/if}
+            </g>
+        {/foreach}
+    {/block}
+{/embed}
+<div style="clear: both"></div>
+<br>
+<br>
+<br>
+<br>
+
+{block upperContent}{/block}

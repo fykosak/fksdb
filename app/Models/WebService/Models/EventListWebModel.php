@@ -1,35 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
 
-class EventListWebModel extends WebModel {
+class EventListWebModel extends WebModel
+{
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
 
-    public function inject(ServiceEvent $serviceEvent): void {
-        $this->serviceEvent = $serviceEvent;
+    public function inject(EventService $eventService): void
+    {
+        $this->eventService = $eventService;
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws \SoapFault
+     * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->eventTypeIds)) {
             throw new \SoapFault('Sender', 'Unknown eventType.');
         }
-        $query = $this->serviceEvent->getTable()->where('event_type_id', (array)$args->eventTypeIds);
+        $query = $this->eventService->getTable()->where('event_type_id', (array)$args->eventTypeIds);
         $document = new \DOMDocument();
         $document->formatOutput = true;
         $rootNode = $document->createElement('events');
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         foreach ($query as $event) {
             $rootNode->appendChild($event->createXMLNode($document));
         }
         return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
+    }
+
+    public function getJsonResponse(array $params): array
+    {
+        $query = $this->eventService->getTable()->where('event_type_id', $params['event_type_ids']);
+        $events = [];
+        /** @var EventModel $event */
+        foreach ($query as $event) {
+            $events[$event->event_id] = $event->__toArray();
+        }
+        return $events;
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int'))->required(),
+        ]);
     }
 }

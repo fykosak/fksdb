@@ -6,7 +6,7 @@ export interface OwnProps {
     level: string;
 }
 
-export default class Card extends React.Component<OwnProps, {}> {
+export default class Card extends React.Component<OwnProps, never> {
 
     public render() {
         const {level, headline, children} = this.props;

@@ -1,53 +1,58 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\PhoneNumber;
 
-use FKSDB\Models\ORM\Models\ModelRegion;
-use FKSDB\Models\ORM\Services\ServiceRegion;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\Models\CountryModel;
+use FKSDB\Models\ORM\Services\CountryService;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
 
-class PhoneNumberFactory {
+class PhoneNumberFactory
+{
+    private CountryService $countryService;
+    private TypedSelection $table;
 
-    private ServiceRegion $serviceRegion;
-
-    private TypedTableSelection $table;
-
-    public function __construct(ServiceRegion $serviceRegion) {
-        $this->serviceRegion = $serviceRegion;
-        $this->table = $this->serviceRegion->getTable();
+    public function __construct(CountryService $countryService)
+    {
+        $this->countryService = $countryService;
+        $this->table = $this->countryService->getTable();
     }
 
-    private function getAllRegions(): TypedTableSelection {
-        return $this->table;
-    }
-
-    public function formatPhone(string $number): Html {
+    public function formatPhone(string $number): Html
+    {
         try {
-            $region = $this->getRegion($number);
-            if ($region) {
+            $country = $this->getCountry($number);
+            if ($country) {
                 $flag = Html::el('span')
-                    ->addAttributes(['class' => 'phone-flag mr-3'])
-                    ->addHtml(Html::el('img')
-                        ->addAttributes(['src' => '/images/flags/4x3/' . \strtolower($region->country_iso) . '.svg']));
-                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
+                    ->addAttributes(['class' => 'phone-flag me-3'])
+                    ->addHtml(
+                        Html::el('i')
+                            ->addAttributes([
+                                'class' => 'flag-icon flag-icon-' . \strtolower($country->alpha_2),
+                            ])
+                    );
+                return Html::el('span')->addHtml($flag)->addText($country->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
-        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
+        return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?ModelRegion {
-        /** @var ModelRegion $region */
-        foreach ($this->getAllRegions() as $region) {
-            if ($region->matchPhone($number)) {
-                return $region;
+    private function getCountry(string $number): ?CountryModel
+    {
+        /** @var CountryModel $country */
+        foreach ($this->table as $country) {
+            if ($country->matchPhone($number)) {
+                return $country;
             }
         }
         return null;
     }
 
-    public function isValid(string $number): bool {
-        return !!$this->getRegion($number);
+    public function isValid(string $number): bool
+    {
+        return (bool)$this->getCountry($number);
     }
 }

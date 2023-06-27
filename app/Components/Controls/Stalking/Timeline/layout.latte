@@ -6,12 +6,12 @@
         <g transform="translate(0,15)">
             <g class="events">
                 {foreach $events as $type=>$rows}
-                    {do $rowNumber++}
+                    {php $rowNumber++}
                     {var $transform = 'translate(0,'.($rowNumber*$lineHeight).')'}
                     <g transform="{$transform}">
                         {foreach $rows as $row}
                             {var $x = $scale($row['event']->begin)*$width}
-                            {var $fill = $row['event']->getContest()->contest_id===1?'#1175da':'#ff4800' }
+                            {var $fill = $row['event']->event_type->contest_id===1?'#1175da':'#ff4800' }
                             <circle r="7.5" cx="{$x}" fill="{$fill}" stroke="black" stroke-width="1">
                                 <title>{sprintf(_('%s at event %s'),$type,$row['event'])}</title>
                             </circle>
@@ -23,22 +23,22 @@
                 {foreach $longTimeEvents as  $type=>$rows}
                     {var $contestntsContests = []}
                     {foreach $rows as $row}
-                        {var $contest =  $row['model']->getContest()}
+                        {var $contest =  $row['model']->event_type->contest}
                         {if $type=='orgs'}
-                            {do $rowNumber++}
+                            {php $rowNumber++}
                         {else}
                             {if in_array($contest->contest_id,$contestntsContests)}
                             {else}
-                                {do $rowNumber++}
-                                {var $contestntsContests[]=$contest->contest_id}
+                                {php $rowNumber++}
+                                {php $contestntsContests[]=$contest->contest_id}
                             {/if}
                         {/if}
                         {var $x1 = $scale($row['since'])*$width}
                         {var $x2 = $scale($row['until'])*$width}
-                        {var $fill = $row['model']->getContest()->contest_id===1?'#1175da':'#ff4800' }
+                        {var $fill = $row['model']->->event_type->contest_id===1?'#1175da':'#ff4800' }
                         <rect x="{$x1}" y="{$rowNumber*$lineHeight}" width="{$x2-$x1}"
                               height="{$lineHeight}" fill="{$fill}">
-                            <title>{sprintf(_('%s at event %s'),$type,$row['model']->getContest())}</title>
+                            <title>{sprintf(_('%s at event %s'),$type,$row['model']->->event_type->contest)}</title>
                         </rect>
 
                     {/foreach}

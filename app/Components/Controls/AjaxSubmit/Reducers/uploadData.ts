@@ -1,12 +1,15 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from 'FKSDB/Models/FrontEnd/Fetch/actions';
-import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
-import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
+import {
+    ACTION_FETCH_SUCCESS,
+    ActionFetchSuccess,
+} from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
 
 export interface State {
-    submit?: ModelSubmit;
+    submit?: SubmitModel;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ModelSubmit>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<SubmitModel>>): State => {
     return {
         submit: {...action.data.data},
     };

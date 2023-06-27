@@ -1,92 +1,104 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelOrg|null $model
+ * @property OrgModel|null $model
  */
-class OrgFormComponent extends AbstractEntityFormComponent {
-
+class OrgFormComponent extends EntityFormComponent
+{
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'org';
-
-    private ServiceOrg $serviceOrg;
-    private ModelContest $contest;
+    private ContestYearModel $contestYear;
+    private ContestAuthorizator $contestAuthorizator;
+    private OrgService $orgService;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(Container $container, ModelContest $contest, ?ModelOrg $model) {
+    public function __construct(Container $container, ContestYearModel $contestYear, ?OrgModel $model)
+    {
         parent::__construct($container, $model);
-        $this->contest = $contest;
+        $this->contestYear = $contestYear;
     }
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg): void {
+    final public function injectPrimary(
+        SingleReflectionFormFactory $singleReflectionFormFactory,
+        OrgService $orgService,
+        ContestAuthorizator $contestAuthorizator
+    ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->serviceOrg = $serviceOrg;
+        $this->orgService = $orgService;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = $this->createOrgContainer();
-        $personInput = $this->createPersonSelect();
-        if (!$this->isCreating()) {
-            $personInput->setDisabled(true);
-        }
-        $container->addComponent($personInput, 'person_id', 'since');
+        $referencedId = $this->createPersonId(
+            $this->contestYear,
+            !isset($this->model),
+            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            $this->getContext()->getParameters()['forms']['adminOrg']
+        );
+        $container->addComponent($referencedId, 'person_id', 'since');
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+    protected function handleFormSuccess(Form $form): void
+    {
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         if (!isset($data['contest_id'])) {
-            $data['contest_id'] = $this->contest->contest_id;
+            $data['contest_id'] = $this->contestYear->contest_id;
         }
-        $this->serviceOrg->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('Org has been updated.') : _('Org has been created.'), Message::LVL_SUCCESS);
+        $this->orgService->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void {
+    protected function setDefaults(Form $form): void
+    {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 
     /**
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createOrgContainer(): ModelContainer {
-        $container = new ModelContainer();
+    private function createOrgContainer(): ContainerWithOptions
+    {
+        $container = new ContainerWithOptions($this->container);
 
         foreach (['since', 'until'] as $field) {
             $control = $this->singleReflectionFormFactory->createField(
                 'org',
                 $field,
-                $this->contest->getFirstYear(),
-                $this->contest->getLastYear()
+                $this->contestYear->contest->getFirstYear(),
+                $this->contestYear->contest->getLastYear()
             );
             $container->addComponent($control, $field);
         }

@@ -1,5 +1,6 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 <p>
-    You are now a member of the team <em>{$holder->getPrimaryHolder()->getModel()->__toString()}</em> at {$event->name}.
+    You are now a member of the team <em>{$holder->getModel()->__toString()}</em> at {$holder->event->name}.
 </p>
-{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/eventEdit.en.latte'}
 {include 'inc/closing.en.latte'}

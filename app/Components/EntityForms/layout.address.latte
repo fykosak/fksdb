@@ -1,0 +1,17 @@
+{layout '../Controls/FormComponent/layout.latte'}
+{varType FKSDB\Models\ORM\Models\PostContactType $type}
+{varType bool $hasAddress}
+{block content}
+    {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY}
+        <p class="alert-info alert">
+            <i class="fas fa-info-circle me-1"></i>{_'Fill only if different from the permanent address, otherwise mail will be send there.'}
+        </p>
+    {/if}
+    {include parent}
+    {if $type->value === FKSDB\Models\ORM\Models\PostContactType::DELIVERY && $hasAddress}
+        <div class="alert alert-warning">
+            <p><i class="fas fa-info-circle me-1"></i>{_'If the delivery address is the same as the permanent one, it can be deleted. Mail will be sent to the permanent address.'}</p>
+            <a href="{link delete!}" class="btn btn-danger">{_'Remove delivery address'}</a>
+        </div>
+    {/if}
+{/block}

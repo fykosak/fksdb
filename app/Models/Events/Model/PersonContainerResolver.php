@@ -1,54 +1,65 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\ResolutionMode;
+use FKSDB\Models\Persons\Resolvers\Resolver;
+use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\VisibilityResolver;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
-use FKSDB\Models\Persons\SelfResolver;
 
-class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver {
-
+class PersonContainerResolver implements Resolver
+{
     use SmartObject;
 
     private Field $field;
-
     /** @var callable */
-    private $condition;
-
+    private $modifiableCondition;
+    /** @var callable */
+    private $visibleCondition;
     private SelfResolver $selfResolver;
 
-    private ExpressionEvaluator $evaluator;
-
     /**
-     * PersonContainerResolver constructor.
-     * @param Field $field
-     * @param callable|bool $condition
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
+     * @param callable|bool $modifiableCondition
+     * @param callable|bool $visibleCondition
      */
-    public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
+    public function __construct(
+        Field $field,
+        $modifiableCondition,
+        $visibleCondition,
+        SelfResolver $selfResolver
+    ) {
         $this->field = $field;
-        $this->condition = $condition;
+        $this->modifiableCondition = $modifiableCondition;
+        $this->visibleCondition = $visibleCondition;
         $this->selfResolver = $selfResolver;
-        $this->evaluator = $evaluator;
     }
 
-    public function getResolutionMode(?ModelPerson $person): string {
+    public function getResolutionMode(?PersonModel $person): ResolutionMode
+    {
         if (!$person) {
-            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
         }
-        return ($this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        return ($this->isModifiable($person)) ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
+            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
     }
 
-    public function isModifiable(?ModelPerson $person): bool {
-        return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
+    public function isModifiable(?PersonModel $person): bool
+    {
+        return $this->selfResolver->isModifiable($person) ||
+        is_callable($this->modifiableCondition)
+            ? ($this->modifiableCondition)($this->field->holder)
+            : $this->modifiableCondition;
     }
 
-    public function isVisible(?ModelPerson $person): bool {
-        return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
+    public function isVisible(?PersonModel $person): bool
+    {
+        return $this->selfResolver->isVisible($person) ||
+        is_callable($this->visibleCondition)
+            ? ($this->visibleCondition)($this->field->holder)
+            : $this->visibleCondition;
     }
 }

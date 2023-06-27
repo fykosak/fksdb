@@ -1,0 +1,19 @@
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{var $team = $holder->getModel()}
+{var $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+
+<p>
+    Hello,<br/>
+    You have been successfully registered for {$team->event->name}. You are now a member of the team <em>{$team->name}</em>.
+</p>
+<p>
+    You can look at the details of your application at <a href="{$detailLink}">{$detailLink}</a>, changes are possible until {$holder->getModel()->event->registration_end|date:'M d, Y; H:i, P'} after logging in in <a n:href="//:Core:MyApplications:default">My Applications</a>
+    or via the link below:<br/>
+    <a href="{$editLink}">{$editLink}</a>.
+</p>
+<p>
+    With kind regards,<br/>
+    FKSDB
+</p>

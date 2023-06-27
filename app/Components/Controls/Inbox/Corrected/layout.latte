@@ -1,4 +1,6 @@
 {layout '../layout.latte'}
+{varType FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage $correctedSubmitStorage}
+{varType FKSDB\Models\ORM\Models\SubmitModel|null $submit}
 {block content}
     {control form}
     <hr/>
@@ -6,7 +8,7 @@
 {/block}
 {define submit-row}
     {if $submit}
-        {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
+    {if $submit->corrected && ($correctedSubmitStorage->fileExists($submit) || $submit->isQuiz())}
             <td class="bg-success text-white">#{$submit->submit_id}</td>
         {elseif !$correctedSubmitStorage->fileExists($submit) && !$submit->corrected}
             <td class="bg-danger text-white">#{$submit->submit_id}</td>

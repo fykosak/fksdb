@@ -10,6 +10,7 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { arc } from 'd3-shape';
 import * as React from 'react';
 import './style.scss';
+import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
     person: {
@@ -25,6 +26,7 @@ interface State {
 
 export interface OwnProps {
     data: Data[];
+    translator: Translator<availableLanguage>;
 }
 
 export default class InnerParticipantAcquaintanceChart extends React.Component<OwnProps, State> {
@@ -61,9 +63,10 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
             }
 
             return <path
+                key={index}
                 className={'arc ' + className}
                 d={arcGenerator(datum)}
-                cursor={'pointer'}
+                cursor="pointer"
                 fill={this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'}
                 onClick={() => {
                     this.setState({activeId: this.state.activeId === index ? null : index});
@@ -88,7 +91,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 count = datum.value;
             }
 
-            return <g transform={'translate(' + textArc.centroid(datum).join(',') + ')'}>
+            return <g key={index} transform={'translate(' + textArc.centroid(datum).join(',') + ')'}>
                 <text
                     transform={'rotate(' + ((isOther ? (angle - Math.PI / 2) : angle + Math.PI / 2) * 180 / Math.PI) + ')'}
                     textAnchor={isOther ? 'start' : 'end'}
@@ -110,7 +113,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
         const colorScale = scaleOrdinal(schemeCategory10);
         const ribbonCreator = ribbon<Chord, string>().radius(this.innerRadius);
         return <>
-            {layout.map((datum) => {
+            {layout.map((datum, index) => {
                 let className = 'default';
                 if (this.state.activeId !== null) {
                     className = 'inactive';
@@ -118,12 +121,14 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 if (datum.source.index === this.state.activeId || datum.target.index === this.state.activeId) {
                     className = 'active';
                 }
-                // @ts-ignore: Type 'void' is not assignable to type 'string'.
+
+                // @ts-ignore
                 const dAttr: string = ribbonCreator(datum);
                 return <path
+                    key={index}
                     className={'ribbon ' + className}
                     d={dAttr}
-                    fill={colorScale(datum.source.index + '-' + datum.source.subindex)}
+                    fill={colorScale(datum.source.index + '-' /*+ datum.source.subindex*/)}
                 />;
             })}
         </>;

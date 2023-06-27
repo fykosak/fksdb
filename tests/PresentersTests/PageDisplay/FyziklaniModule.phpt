@@ -1,38 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use DateTime;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
-/**
- * Class FyziklaniModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class FyziklaniModule extends EventModuleTestCase {
+// phpcs:enable
+class FyziklaniModule extends EventModuleTestCase
+{
 
-    protected function getEventData(): array {
+    protected function getEventData(): array
+    {
         return [
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'TEST FOF',
         ];
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->insert(DbNames::TAB_FYZIKLANI_GAME_SETUP, [
-            'event_id' => $this->eventId,
-            'game_start' => new DateTime(),
-            'result_display' => new DateTime(),
-            'result_hide' => new DateTime(),
-            'game_end' => new DateTime(),
+        $this->container->getByType(GameSetupService::class)->storeModel([
+            'event_id' => $this->event->event_id,
+            'game_start' => new \DateTime(),
+            'result_display' => new \DateTime(),
+            'result_hide' => new \DateTime(),
+            'game_end' => new \DateTime(),
             'refresh_delay' => 1000,
             'tasks_on_board' => 7,
             'result_hard_display' => false,
@@ -40,31 +42,29 @@ class FyziklaniModule extends EventModuleTestCase {
         ]);
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
-            ['Fyziklani:Close', 'list'],
-            ['Fyziklani:Dashboard', 'default'],
-            ['Fyziklani:Diplomas', 'default',],
-            ['Fyziklani:Diplomas', 'results'],
-            ['Fyziklani:GameSetup', 'default',],
-            ['Fyziklani:Results', 'correlationStatistics'],
-            ['Fyziklani:Results', 'list'],
-            ['Fyziklani:Results', 'presentation'],
-            ['Fyziklani:Results', 'table'],
-            ['Fyziklani:Results', 'taskStatistics'],
-            ['Fyziklani:Results', 'teamStatistics'],
-            ['Fyziklani:Submit', 'create'],
-            ['Fyziklani:Submit', 'list'],
-            ['Fyziklani:Task', 'import'],
-            ['Fyziklani:Task', 'list'],
+            ['Game:Close', 'list'],
+            ['Game:Dashboard', 'default'],
+            ['Game:Diplomas', 'default',],
+            ['Game:Diplomas', 'results'],
+            ['Game:GameSetup', 'default'],
+            ['Game:Statistics', 'table'],
+            ['Game:Statistics', 'team'],
+            ['Game:Statistics', 'task'],
+            ['Game:Statistics', 'correlation'],
+            ['Game:Presentation', 'default'],
+            ['Game:Submit', 'create'],
+            ['Game:Submit', 'list'],
+            ['Game:Task', 'list'],
+            ['Game:Seating', 'list'],
+            ['Game:Seating', 'print'],
         ];
-    }
-
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_FYZIKLANI_GAME_SETUP]);
-        parent::tearDown();
     }
 }
 
+// phpcs:disable
 $testCase = new FyziklaniModule($container);
 $testCase->run();
+// phpcs:enable

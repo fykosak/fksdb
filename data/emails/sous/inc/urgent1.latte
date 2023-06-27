@@ -1,4 +1,5 @@
-<p>
-Protože jsi se zatím nijak neozval{if $person->gender == 'F'}a{/if},
-tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdříve.
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+<p>Ahoj,<br>
+protože ses zatím nijak neozval{if $holder->getPerson()->gender->value == 'F'}a{/if},
+tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdříve. Níže přikládáme kopii zvacího e-mailu.
 </p>

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Utils;
 
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
-class CSVParser implements \Iterator {
-
-
+class CSVParser implements \Iterator
+{
     use SmartObject;
 
     public const INDEX_NUMERIC = 0;
@@ -21,7 +22,8 @@ class CSVParser implements \Iterator {
     private ?array $currentRow = null;
     private ?array $header;
 
-    public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
+    public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';')
+    {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');
@@ -30,16 +32,23 @@ class CSVParser implements \Iterator {
         }
     }
 
-    public function current(): array {
+    public function current(): array
+    {
         return $this->currentRow;
     }
 
-    public function key(): ?int {
+    public function key(): ?int
+    {
         return $this->rowNumber;
     }
 
-    public function next(): void {
-        $this->currentRow = fgetcsv($this->file, 0, $this->delimiter);
+    public function next(): void
+    {
+        $newRow = fgetcsv($this->file, 0, $this->delimiter);
+        if (!$newRow) {
+            return;
+        }
+        $this->currentRow = $newRow;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $result = [];
             foreach ($this->header as $i => $name) {
@@ -50,7 +59,8 @@ class CSVParser implements \Iterator {
         $this->rowNumber++;
     }
 
-    public function rewind(): void {
+    public function rewind(): void
+    {
         rewind($this->file);
         $this->rowNumber = 0;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
@@ -66,7 +76,8 @@ class CSVParser implements \Iterator {
         }
     }
 
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $eof = feof($this->file);
         if ($eof) {
             fclose($this->file);

@@ -1,70 +1,52 @@
-import { translator } from '@translator/translator';
-import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
 import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
-import NetteInputConnector from 'FKSDB/Models/FrontEnd/InputConnector/NetteInputConnector';
-import { App } from 'FKSDB/Models/FrontEnd/Loader/Loader';
-import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import InputConnector2 from './InputConnector2';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import './style.scss';
+import Group from 'FKSDB/Components/Forms/Controls/Schedule/Components/Group';
+import { TranslatorContext } from '@translator/LangContext';
+import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
     scheduleDef: {
-        groups: ModelScheduleGroup[];
+        group: ModelScheduleGroup;
         options: Params;
     };
-    input: HTMLInputElement;
-    mode: string;
+    input: HTMLInputElement | HTMLSelectElement;
+    translator: Translator<availableLanguage>;
 }
 
 export interface Params {
-    display: {
-        groupTime: boolean;
-        groupLabel: boolean;
-        capacity: boolean;
-        description: boolean;
-        price: boolean;
-    };
+    groupTime: boolean;
+    groupLabel: boolean;
+    capacity: boolean;
+    description: boolean;
+    price: boolean;
 }
 
-class ScheduleField extends React.Component<OwnProps, {}> {
+export default class ScheduleField extends React.Component<OwnProps, never> {
+    static contextType = TranslatorContext;
+
+    public componentDidMount() {
+        this.props.input.style.display = 'none';
+        this.props.input.required = false;
+        const label = this.props.input.parentElement.getElementsByTagName('label')[0];
+        if (label && label instanceof HTMLLabelElement) {
+            label.style.display = 'none';
+        }
+    }
 
     public render() {
+        const translator = this.context;
+        const {group, options} = this.props.scheduleDef;
         return <StoreCreator app={app}>
-            <>
-                <NetteInputConnector input={this.props.input}/>
-                {this.getComponentByMode()}
-            </>
+            <TranslatorContext.Provider value={this.props.translator}>
+                <InputConnector2 input={this.props.input}/>
+                {group
+                    ? <Group group={group} params={options}/>
+                    : <span className="text-muted">{translator.getText('No items found.')}</span>
+                }
+            </TranslatorContext.Provider>
         </StoreCreator>;
     }
-
-    private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.groups.length === 0) {
-            return <span className="text text-muted">{translator.getText('No items found.')}</span>;
-        }
-        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
-    }
 }
-
-export const eventSchedule: App = (element, reactId, rawData) => {
-    const [module, component, mode] = reactId.split('.');
-    if (module !== 'event') {
-        return false;
-    }
-    if (component !== 'schedule') {
-        return false;
-    }
-
-    const scheduleDef = JSON.parse(rawData);
-    const container = document.createElement('div');
-    element.parentElement.appendChild(container);
-    if (!(element instanceof HTMLInputElement)) {
-        return false;
-    }
-    element.style.display = 'none';
-
-    ReactDOM.render(<ScheduleField scheduleDef={scheduleDef} input={element} mode={mode}/>, container);
-
-    return true;
-};

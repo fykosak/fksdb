@@ -1,13 +1,22 @@
 {layout '../@layout.latte'}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
-{varType int $userPermissions}
+{varType int $userPermission}
 {define person}
-    <div class="card-columns mt-3">
-        {control stalkingComponent "base_info", $person, $userPermissions}
-        {control stalkingComponent "extended_info", $person, $userPermissions}
-        {control stalkingComponent "academic_degree", $person, $userPermissions}
-        {control stalkingComponent "login", $person, $userPermissions}
-        {control flag $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control stalkingComponent "base_info"}
+        </div>
+        <div class="col">
+            {control stalkingComponent "extended_info"}
+        </div>
+        <div class="col">
+            {control stalkingComponent "academic_degree"}
+        </div>
+        <div class="col">
+            {control stalkingComponent "login"}
+        </div>
+        <div class="col">
+            {control flag}
+        </div>
     </div>
 {/define}
 
@@ -17,30 +26,45 @@
 {/define}
 
 {define contact}
-    <div class="card-columns mt-3">
-        {control stalkingComponent "contact_info", $person, $userPermissions}
-        {control stalkingComponent "contact_parents", $person, $userPermissions}
-        {control address $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control stalkingComponent "contact_info"}
+        </div>
+        <div class="col">
+            {control stalkingComponent "contact_parents"}
+        </div>
+        <div class="col">
+            {control deliveryAddress}
+        </div>
+        <div class="col">
+            {control permanentAddress}
+        </div>
     </div>
     <h3>{_'Emails'}</h3>
     {control emailMessageGrid}
 {/define}
 
 {define contests}
-    <h3>{_'Contestants'}</h3>
-    {control contestantBasesGrid}
     <h3>{_'Task contribution'}</h3>
     {control taskContributionsGrid}
-    <div class="card-columns mt-3">
-
-        {control stalkingComponent "org", $person, $userPermissions}
-        {control role $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control orgList}
+        </div>
+        <div class="col">
+            {control role}
+        </div>
+        <div class="col">
+            {control contestantBasesGrid}
+        </div>
     </div>
 {/define}
 
 {define events}
     <h3>{_'Event participants'}</h3>
     {control eventParticipantsGrid}
+    <h3>{_'Team members'}</h3>
+    {control teamMembersGrid}
     <h3>{_'Payments'}</h3>
     {control paymentsGrid}
     <h3>{_'Event orgs'}</h3>
@@ -53,27 +77,29 @@
 {/define}
 
 {define validation}
-    <div class="card-columns mt-3">
-        {control validation $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control validation}
+        </div>
     </div>
 {/define}
 
 {block content}
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-person"
-           role="tab"><i class="fa fa-user mr-1"></i>{_'Person'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-person-history"
-           role="tab"><i class="fa fa-university mr-1"></i>{_'Person history'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contact"
-           role="tab"><i class="fa fa-phone mr-1"></i>{_'Contact'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contests"
-           role="tab"><i class="fa fa-trophy mr-1"></i>{_'Contests'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-events"
-           role="tab"><i class="fa fa-calendar mr-1"></i>{_'Events'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-validation"
-           role="tab"><i class="fa fa-check mr-1"></i>{_'Validation'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-timeline"
-           role="tab"><i class="fa fa-clock-o mr-1"></i>{_'Timeline'}</a>
+        <a class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-person"
+           role="tab"><i class="fa fa-user me-1"></i>{_'Person'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-person-history"
+           role="tab"><i class="fa fa-university me-1"></i>{_'Person history'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contact"
+           role="tab"><i class="fa fa-phone me-1"></i>{_'Contact'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contests"
+           role="tab"><i class="fa fa-trophy me-1"></i>{_'Contests'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-events"
+           role="tab"><i class="fa fa-calendar me-1"></i>{_'Events'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-validation"
+           role="tab"><i class="fa fa-check me-1"></i>{_'Validation'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-timeline"
+           role="tab"><i class="fa fa-clock-o me-1"></i>{_'Timeline'}</a>
     </div>
 
     <div class="tab-content mt-3" id="nav-tabContent">
@@ -96,7 +122,11 @@
             {include validation}
         </div>
         <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
-            {control timeline $person}
+            {if $userPermission < FKSDB\Models\ORM\FieldLevelPermission::ALLOW_RESTRICT}
+                {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
+            {else}
+                {control timeline}
+            {/if}
         </div>
     </div>
 

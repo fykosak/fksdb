@@ -1,12 +1,12 @@
-{* General template for any event. *}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 <p>
-    Potvrzujeme přijetí přihlášky osoby {$person->getFullname()} na akci <em>{$event}</em>,
+    Potvrzujeme přijetí přihlášky osoby {$holder->getPerson()->getFullName()} na akci <em>{$holder->event}</em>,
     která se koná
-    {if $event->end && $event->end->getTimestamp() !== $event->begin->getTimestamp()}
-    {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'}.
+    {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
+        {$holder->event->begin|date:'j. n. Y'}–{$holder->event->end|date:'j. n. Y'}.
     {else}
-    {$event->begin|date:'j.n. Y'}.
+        {$holder->event->begin|date:'j. n. Y'}.
     {/if}
 </p>
-{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/eventEdit.cs.latte'}
 {include 'inc/closing.cs.latte'}

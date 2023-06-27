@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms;
 
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\HiddenField;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
  */
-class OptimisticForm extends Form {
+class OptimisticForm extends Form
+{
 
     private const FINGERPRINT = '__fp';
 
@@ -24,7 +26,8 @@ class OptimisticForm extends Form {
      * @param callable $fingerprintCallback returns fingerprint of current version of the data
      * @param callable $defaultsCallback returns current version of data, formatted as an array
      */
-    public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
+    public function __construct(callable $fingerprintCallback, callable $defaultsCallback)
+    {
         parent::__construct();
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
@@ -33,11 +36,11 @@ class OptimisticForm extends Form {
 
     /**
      * @param null $data Must be always null! Defaults callback is used to produce the values.
-     * @param bool $erase
      * @return static
      * @throws \LogicException
      */
-    public function setDefaults($data = null, bool $erase = false): self {
+    public function setDefaults($data = null, bool $erase = false): self
+    {
         if ($data !== null) {
             throw new \LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
@@ -52,18 +55,17 @@ class OptimisticForm extends Form {
         return $this;
     }
 
-    /**
-     * @return HiddenField|IComponent
-     */
-    private function getFingerprintInput(): HiddenField {
-        return $this[self::FINGERPRINT];
+    private function getFingerprintInput(): HiddenField
+    {
+        return $this->getComponent(self::FINGERPRINT);
     }
 
-    public function isValid(): bool {
+    public function isValid(): bool
+    {
         $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 
-        if ($receivedFingerprint != $currentFingerprint) {
+        if ($receivedFingerprint !== $currentFingerprint) {
             $this->addError(_('There has been a change in the data of this form since it was shown.'));
             $this->setFingerprint($currentFingerprint);
             parent::setValues(($this->defaultsCallback)());
@@ -72,7 +74,8 @@ class OptimisticForm extends Form {
         return parent::isValid();
     }
 
-    private function setFingerprint(string $fingerprint): void {
+    private function setFingerprint(string $fingerprint): void
+    {
         $this->getFingerprintInput()->setValue($fingerprint);
     }
 }

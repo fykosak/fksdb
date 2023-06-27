@@ -1,64 +1,79 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Services\EventOrgService;
+use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelEventOrg|null $model
+ * @property EventOrgModel|null $model
  */
-class EventOrgFormComponent extends AbstractEntityFormComponent {
-
+class EventOrgFormComponent extends EntityFormComponent
+{
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'event_org';
 
-    private ServiceEventOrg $serviceEventOrg;
-    private ModelEvent $event;
+    private EventOrgService $eventOrgService;
+    private ContestAuthorizator $contestAuthorizator;
+    private EventModel $event;
 
-    public function __construct(Container $container, ModelEvent $event, ?ModelEventOrg $model) {
+    public function __construct(Container $container, EventModel $event, ?EventOrgModel $model)
+    {
         parent::__construct($container, $model);
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceEventOrg $serviceEventOrg): void {
-        $this->serviceEventOrg = $serviceEventOrg;
+    final public function injectPrimary(
+        EventOrgService $eventOrgService,
+        ContestAuthorizator $contestAuthorizator
+    ): void {
+        $this->eventOrgService = $eventOrgService;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    protected function configureForm(Form $form): void {
-        $container = new ModelContainer();
-        $personInput = $this->createPersonSelect();
-        $personInput->setDisabled(isset($this->model));
-        $container->addComponent($personInput, 'person_id');
+    protected function configureForm(Form $form): void
+    {
+        $container = new ContainerWithOptions($this->container);
+        $referencedId = $this->createPersonId(
+            $this->event->getContestYear(),
+            !isset($this->model),
+            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
+            $this->getContext()->getParameters()['forms']['adminEventOrg']
+        );
+        $container->addComponent($referencedId, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+    protected function handleFormSuccess(Form $form): void
+    {
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        $this->serviceEventOrg->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('Event org has been updated') : _('Event org has been created'), Message::LVL_SUCCESS);
+        $this->eventOrgService->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Event org has been updated') : _('Event org has been created'),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void {
+    protected function setDefaults(Form $form): void
+    {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 }

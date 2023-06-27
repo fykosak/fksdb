@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -12,7 +13,8 @@ use Nette\Utils\Html;
  * @todo Implement AJAX loading
  *       Should return school_id or null.
  */
-class AutocompleteSelectBox extends TextBase {
+class AutocompleteSelectBox extends TextBase
+{
 
     private const SELECTOR_CLASS = 'autocomplete-select';
     private const PARAM_NAME = 'acName';
@@ -37,9 +39,8 @@ class AutocompleteSelectBox extends TextBase {
 
     private bool $attachedJSON = false;
 
-    private bool $attachedJS = false;
-
-    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
+    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null)
+    {
         parent::__construct($label);
 
         $this->monitor(AutocompleteJSONProvider::class, function (AutocompleteJSONProvider $provider) {
@@ -51,34 +52,33 @@ class AutocompleteSelectBox extends TextBase {
                 ]);
             }
         });
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/autocompleteSelect.js');
-            }
-        });
 
         $this->ajax = $ajax;
         $this->renderMethod = $renderMethod;
     }
 
-    public function getDataProvider(): ?DataProvider {
+    public function getDataProvider(): ?DataProvider
+    {
         return $this->dataProvider ?? null;
     }
 
-    public function getRenderMethod(): ?string {
+    public function getRenderMethod(): ?string
+    {
         return $this->renderMethod;
     }
 
-    public function isAjax(): bool {
+    public function isAjax(): bool
+    {
         return $this->ajax;
     }
 
-    public function isMultiSelect(): bool {
+    public function isMultiSelect(): bool
+    {
         return $this->multiSelect;
     }
 
-    public function setDataProvider(DataProvider $dataProvider): void {
+    public function setDataProvider(DataProvider $dataProvider): void
+    {
         if ($this->ajax && !($dataProvider instanceof FilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
@@ -86,10 +86,11 @@ class AutocompleteSelectBox extends TextBase {
         $this->dataProvider->setDefaultValue($this->getValue());
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $control = parent::getControl();
         $control->addAttributes([
-            'data-ac' => (int)true,
+            'data-ac' => 1,
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
@@ -102,14 +103,14 @@ class AutocompleteSelectBox extends TextBase {
             if ($this->isMultiSelect()) {
                 $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
-                    $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
+                    $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
                 $control->addAttributes([
                     'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
                 ]);
             } else {
-                $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
+                $defaultTextValue = $this->getDataProvider()->getItemLabel((int)$defaultValue);
                 $control->addAttributes([
                     'value' => $defaultValue,
                 ]);
@@ -128,7 +129,8 @@ class AutocompleteSelectBox extends TextBase {
         return $control;
     }
 
-    public function loadHttpData(): void {
+    public function loadHttpData(): void
+    {
         $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
@@ -138,7 +140,7 @@ class AutocompleteSelectBox extends TextBase {
             $wasSent = false;
         }
         if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
-            $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->caption));
+            $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->label));
             $this->setValue(null);
         } else {
             parent::loadHttpData();
@@ -149,7 +151,8 @@ class AutocompleteSelectBox extends TextBase {
      * @param mixed $value
      * @return static
      */
-    public function setValue($value): self {
+    public function setValue($value): self
+    {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
@@ -173,7 +176,8 @@ class AutocompleteSelectBox extends TextBase {
      * @param mixed $value
      * @return static
      */
-    public function setDefaultValue($value): self {
+    public function setDefaultValue($value): self
+    {
         if (isset($this->dataProvider)) {
             $this->dataProvider->setDefaultValue($value);
         }
@@ -183,11 +187,13 @@ class AutocompleteSelectBox extends TextBase {
     /**
      * @return mixed
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
-    public function setMultiSelect(bool $multiSelect): void {
+    public function setMultiSelect(bool $multiSelect): void
+    {
         $this->multiSelect = $multiSelect;
     }
 }

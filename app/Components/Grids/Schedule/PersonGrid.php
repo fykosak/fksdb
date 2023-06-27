@@ -1,50 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use Nette\Application\UI\Presenter;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\GridException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Table\Selection;
 
-class PersonGrid extends BaseGrid {
-
-    public function setData(ModelEvent $event, ModelPerson $person): void {
-        $query = $person->getScheduleForEvent($event);
-        $dataSource = new NDataSource($query);
-        $this->setDataSource($dataSource);
-    }
+class PersonGrid extends BaseGrid
+{
+    private EventModel $event;
+    private PersonModel $person;
 
     /**
-     * @param ModelPerson|null $person
-     * @param ModelEvent|null $event
      * @throws \InvalidArgumentException
-     * @throws GridException
      */
-    final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
-        if (!$event || !$person) {
-            throw new \InvalidArgumentException();
-        }
-        $this->setData($event, $person);
+    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
+    {
+        $this->event = $event;
+        $this->person = $person;
         parent::render();
     }
 
+    protected function getModels(): Selection
+    {
+        return $this->person->getScheduleForEvent($this->event);
+    }
+
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
         $this->paginate = false;
 
-        $this->addColumn('person_schedule_id', _('#'));
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(PersonScheduleModel $model) => $model->person_schedule_id,
+                new Title(null, _('#'))
+            ),
+            'person_schedule_id'
+        );
         $this->addColumns([
             'schedule_group.name',
             'schedule_item.name',
@@ -54,7 +58,7 @@ class PersonGrid extends BaseGrid {
         ]);
     }
 
-    protected function getModelClassName(): string {
-        return ModelPersonSchedule::class;
+    protected function getData(): void
+    {
     }
 }

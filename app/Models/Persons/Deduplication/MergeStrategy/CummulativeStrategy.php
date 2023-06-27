@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-class CummulativeStrategy implements MergeStrategy {
-
+class CummulativeStrategy implements MergeStrategy
+{
     private ?string $precedence;
 
-    public function __construct(?string $precedence = null) {
+    public function __construct(?string $precedence = null)
+    {
         $this->precedence = $precedence;
     }
 
@@ -15,7 +18,8 @@ class CummulativeStrategy implements MergeStrategy {
      * @param mixed $merged
      * @return mixed
      */
-    public function mergeValues($trunk, $merged) {
+    public function mergeValues($trunk, $merged)
+    {
         if ($merged === null) {
             return $trunk;
         }
@@ -38,9 +42,9 @@ class CummulativeStrategy implements MergeStrategy {
     /**
      * @param mixed $trunk
      * @param mixed $merged
-     * @return bool
      */
-    private function equals($trunk, $merged): bool {
+    private function equals($trunk, $merged): bool
+    {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {

@@ -1,32 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
-class EventDispatchFactory {
-
+class EventDispatchFactory
+{
     private array $definitions = [];
 
     private Container $container;
 
     private string $templateDir;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
-    public function setTemplateDir(string $templateDir): void {
+    public function setTemplateDir(string $templateDir): void
+    {
         $this->templateDir = $templateDir;
     }
 
-    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void {
+    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
+    {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,
@@ -36,32 +44,72 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return Machine
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(ModelEvent $event): Machine {
+    public function getEventMachine(EventModel $event): EventParticipantMachine
+    {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
     }
 
     /**
-     * @param ModelEvent $event
-     * @return string
+     * @throws BadTypeException
+     */
+    public function getPaymentMachine(EventModel $event): PaymentMachine
+    {
+        $machine = $this->container->getService(
+            $this->getPaymentFactoryName($event) . '.machine'
+        );
+        if (!$machine instanceof PaymentMachine) {
+            throw new BadTypeException(PaymentMachine::class, $machine);
+        }
+        return $machine;
+    }
+
+    public function getPaymentFactoryName(EventModel $event): ?string
+    {
+        if ($event->event_type_id === 1) {
+            return sprintf('fyziklani%dpayment', $event->event_year);
+        }
+        return null;
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function getTeamMachine(EventModel $event): TeamMachine
+    {
+        switch ($event->event_type_id) {
+            case 1:
+                $machine = $this->container->getService('transitions.fof.machine');
+                break;
+            case 9:
+                $machine = $this->container->getService('transitions.fol.machine');
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        if (!$machine instanceof TeamMachine) {
+            throw new BadTypeException(TeamMachine::class, $machine);
+        }
+        return $machine;
+    }
+
+    /**
      * @throws ConfigurationNotFoundException
      */
-    public function getFormLayout(ModelEvent $event): string {
+    public function getFormLayout(EventModel $event): string
+    {
         $definition = $this->findDefinition($event);
         return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
     }
 
     /**
-     * @param ModelEvent $event
-     * @return array
      * @throws ConfigurationNotFoundException
      */
-    private function findDefinition(ModelEvent $event): array {
+    private function findDefinition(EventModel $event): array
+    {
         $key = $this->createKey($event);
         foreach ($this->definitions as $definition) {
             if (in_array($key, $definition['keys'])) {
@@ -77,20 +125,19 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return Holder
      * @throws ConfigurationNotFoundException
-     * @throws NeonSchemaException
      */
-    public function getDummyHolder(ModelEvent $event): Holder {
+    public function getDummyHolder(EventModel $event): BaseHolder
+    {
         $definition = $this->findDefinition($event);
-        /** @var Holder $holder */
+        /** @var BaseHolder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
-        $holder->inferEvent($event);
+        $holder->setEvent($event);
         return $holder;
     }
 
-    private function createKey(ModelEvent $event): string {
+    private function createKey(EventModel $event): string
+    {
         return $event->event_type_id . '-' . $event->event_year;
     }
 }

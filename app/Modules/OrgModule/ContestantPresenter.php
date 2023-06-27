@@ -1,76 +1,114 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\EntityForms\ContestantFormComponent;
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\UI\Form;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
+use Nette\InvalidArgumentException;
+use Nette\Security\Resource;
 
 /**
- * @method ModelContestant getModel()
+ * @method ContestantModel getEntity(bool $throw = true)
  */
-class ContestantPresenter extends ExtendedPersonPresenter {
+class ContestantPresenter extends BasePresenter
+{
+    use EntityPresenterTrait;
 
-    protected string $fieldsDefinition = 'adminContestant';
+    private ContestantService $contestantService;
 
-    private ServiceContestant $serviceContestant;
-
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
-        $this->serviceContestant = $serviceContestant;
+    final public function injectServiceContestant(ContestantService $contestantService): void
+    {
+        $this->contestantService = $contestantService;
     }
 
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user-edit'));
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            'contestant-edit',
+            sprintf(_('Edit the contestant %s'), $this->getEntity()->person->getFullName()),
+            'fa fa-user-edit'
+        );
     }
 
-    public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create contestant'), 'fa fa-user-plus'));
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle('contestant-create', _('Create contestant'), 'fa fa-user-plus');
     }
 
-    public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-user-graduate'));
+    public function titleList(): PageTitle
+    {
+        return new PageTitle('contestant-list', _('Contestants'), 'fa fa-user-graduate');
     }
 
-    protected function createComponentGrid(): ContestantsGrid {
+    protected function createComponentGrid(): ContestantsGrid
+    {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
-    protected function appendExtendedContainer(Form $form): void {
-        // no container for contestant
+    protected function getORMService(): ContestantService
+    {
+        return $this->contestantService;
     }
 
-    protected function getORMService(): ServiceContestant {
-        return $this->serviceContestant;
+    protected function getModelResource(): string
+    {
+        return ContestantModel::RESOURCE_ID;
     }
 
-    protected function getAcYearFromModel(): ?ModelContestYear {
-        $model = $this->getModel();
-        if (!$model) {
-            return null;
+    /**
+     * @throws BadRequestException
+     */
+    public function handleRecalculate(): void
+    {
+        $contestants = $this->getSelectedContestYear()->getContestants();
+        $strategy = ResultsModelFactory::findEvaluationStrategy(
+            $this->getContext(),
+            $this->getSelectedContestYear()
+        );
+        /** @var ContestantModel $contestant */
+        foreach ($contestants as $contestant) {
+            try {
+                $strategy->updateCategory($contestant);
+            } catch (InvalidArgumentException $exception) {
+                $this->flashMessage($exception->getMessage());
+            }
         }
-        return $model->getContestYear();
     }
 
-    public function messageCreate(): string {
-        return _('Contestant %s created.');
+    /**
+     * @param Resource|string $resource
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    public function messageEdit(): string {
-        return _('Contestant %s modified.');
+    protected function createComponentCreateForm(): Control
+    {
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
-    public function messageError(): string {
-        return _('Error while creating the contestant.');
-    }
-
-    public function messageExists(): string {
-        return _('Contestant already exists.');
-    }
-
-    protected function getModelResource(): string {
-        return ModelContestant::RESOURCE_ID;
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 }

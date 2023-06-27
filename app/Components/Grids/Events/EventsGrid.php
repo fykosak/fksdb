@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\EventService;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
-class EventsGrid extends EntityGrid {
+class EventsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container, ModelContestYear $contestYear) {
-        parent::__construct($container, ServiceEvent::class, [
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        parent::__construct($container, EventService::class, [
             'event.event_id',
             'event.event_type',
             'event.name',
@@ -26,21 +28,26 @@ class EventsGrid extends EntityGrid {
         ]);
     }
 
+    protected function getModels(): Selection
+    {
+        $value = parent::getModels();
+        $value->order('event.begin ASC');
+        return $value;
+    }
+
     /**
-     * @param Presenter $presenter
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
-        $this->setDefaultOrder('event.begin ASC');
+    protected function configure(): void
+    {
+        parent::configure();
 
-        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
+        $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event.application.list');
+       // $this->addORMLink('event.application.list');
 
-        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organizers'), true, ['eventId' => 'event_id']);
     }
 }

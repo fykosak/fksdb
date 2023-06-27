@@ -1,61 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceSchool;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\SchoolService;
+use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\Selection;
-use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use FKSDB\Models\SQL\SearchableDataSource;
 
-class SchoolsGrid extends EntityGrid {
+class SchoolsGrid extends FilterGrid
+{
+    private SchoolService $service;
 
-    public function __construct(Container $container) {
-        parent::__construct($container, ServiceSchool::class, [], []);
+    public function injectService(SchoolService $service): void
+    {
+        $this->service = $service;
     }
 
-    protected function getData(): IDataSource {
-        $schools = $this->service->getTable();
-        $dataSource = new SearchableDataSource($schools);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        return $dataSource;
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
+    }
+
+    protected function getModels(): Selection
+    {
+        $query = $this->service->getTable();
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
+        foreach ($tokens as $token) {
+            $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+        }
+        return $query;
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
+        $this->addColumn(
+            new RendererItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
+            'name'
+        );
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(SchoolModel $school): string => $school->address->city,
+                new Title(null, _('City'))
+            ),
+            'city'
+        );
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(SchoolModel $row): Html => Html::el('span')
+                    ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
+                    ->addText(($row->active)),
+                new Title(null, _('Active?'))
+            ),
+            'active'
+        );
 
-        //
-        // columns
-        //
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
-            $school = ModelSchool::createFromActiveRow($row);
-            return $school->getAddress()->city;
-        });
-        $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row): Html {
-            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
-        });
-
-        $this->addLink('school.edit');
-        $this->addLink('school.detail');
+        $this->addORMLink('school.edit');
+        $this->addORMLink('school.detail');
     }
 }

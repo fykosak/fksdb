@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls;
 
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-class PersonFlag extends SelectBox {
+class PersonFlag extends SelectBox
+{
 
     public const FLAG_YES = 'flag-yes';
     // It's necessary that value for FLAG_NO cannot coerce to false/null.
@@ -21,7 +24,8 @@ class PersonFlag extends SelectBox {
      * PersonFlag constructor.
      * @param null $label
      */
-    public function __construct($label = null) {
+    public function __construct($label = null)
+    {
         $items = [
             self::FLAG_YES => _('Yes'),
             self::FLAG_NO => _('No'),
@@ -31,9 +35,10 @@ class PersonFlag extends SelectBox {
     }
 
     /**
-     * @return bool|float|int|mixed|string|null
+     * @return bool|int|string|null
      */
-    public function getValue() {
+    public function getValue()
+    {
         if ($this->useExplicitValues) {
             return parent::getValue();
         }
@@ -52,7 +57,8 @@ class PersonFlag extends SelectBox {
      * @param mixed $value
      * @return static
      */
-    public function setValue($value): self {
+    public function setValue($value): self
+    {
         if ($value === true || $value === '1' || $value === 1) {
             parent::setValue(self::FLAG_YES);
         } elseif ($value === false || $value === '0' || $value === 0) {
@@ -63,7 +69,8 @@ class PersonFlag extends SelectBox {
         return $this;
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $oldMapped = $this->useExplicitValues;
         $this->useExplicitValues = true;
         $control = parent::getControl();

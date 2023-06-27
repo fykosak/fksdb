@@ -1,115 +1,128 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
-use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\BadRequestException;
-use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\UI\PageTitle;
+use Nette\Security\Authorizator;
+use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Permission;
 
-class InboxPresenter extends BasePresenter {
-
+class InboxPresenter extends BasePresenter
+{
     use SeriesPresenterTrait;
 
-    private SeriesTable $seriesTable;
+    /** @persistent */
+    public ?int $id = null;
 
-    final public function injectSeriesTable(SeriesTable $seriesTable): void {
+    private SeriesTable $seriesTable;
+    private SubmitService $submitService;
+
+    final public function injectSeriesTable(SeriesTable $seriesTable, SubmitService $submitService): void
+    {
         $this->seriesTable = $seriesTable;
+        $this->submitService = $submitService;
     }
 
     /* ***************** AUTH ***********************/
 
-    public function authorizedInbox(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+    public function authorizedInbox(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest())
+        );
     }
 
-    public function authorizedList(): void {
+    public function authorizedList(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
-    public function authorizedHandout(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'edit', $this->getSelectedContest()));
+    public function authorizedCorrected(): void
+    {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
-    public function authorizedCorrected(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
+    public function authorizedQuizDetail(): void
+    {
+        $this->authorizedCorrected();
     }
 
     /* ***************** TITLES ***********************/
 
-    public function titleInbox(): void {
-        $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope'));
+    public function titleInbox(): PageTitle
+    {
+        return new PageTitle(null, _('Inbox'), 'fa fa-envelope');
     }
 
-    public function titleHandout(): void {
-        $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-folder-open'));
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of submits'), 'fa fa-list-ul');
     }
 
-    public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-list-ul'));
+    public function titleCorrected(): PageTitle
+    {
+        return new PageTitle(null, _('Corrected'), 'fa fa-file-signature');
     }
 
-    public function titleCorrected(): void {
-        $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-file-signature'));
+    public function titleQuizDetail(): PageTitle
+    {
+        return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
     /* *********** LIVE CYCLE *************/
+
+
     /**
      * @throws ForbiddenRequestException
      * @throws BadRequestException
      */
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
-        $this->seriesTable->setContestYear($this->getSelectedContestYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
-    }
-
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    public function actionHandout(): void {
-        /** @var HandoutFormComponent $control */
-        $control = $this->getComponent('handoutForm');
-        $control->setDefaults();
-
-        // This workaround fixes inproper caching of referenced tables.
-        // $connection = $this->servicePerson->getConnection();
-        // $connection->getCache()->clean(array(Cache::ALL => true));
-        // $connection->getDatabaseReflection()->setConnection($connection);
+        $this->seriesTable->contestYear = $this->getSelectedContestYear();
+        $this->seriesTable->series = $this->getSelectedSeries();
     }
 
     /* ******************* COMPONENTS ******************/
 
-    protected function createComponentInboxForm(): InboxFormComponent {
+    protected function createComponentInboxForm(): InboxFormComponent
+    {
         return new InboxFormComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentHandoutForm(): HandoutFormComponent {
-        return new HandoutFormComponent($this->getContext(), $this->seriesTable);
-    }
-
-    protected function createComponentCorrectedFormControl(): CorrectedComponent {
+    protected function createComponentCorrectedFormControl(): CorrectedComponent
+    {
         return new CorrectedComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentCheckControl(): SubmitCheckComponent {
+    protected function createComponentCheckControl(): SubmitCheckComponent
+    {
         return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentSubmitsTableControl(): SubmitsPreviewComponent {
+    protected function createComponentSubmitsTableControl(): SubmitsPreviewComponent
+    {
         return new SubmitsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function beforeRender(): void {
+    protected function createComponentQuizDetail(): QuizAnswersGrid
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        return new QuizAnswersGrid($this->getContext(), $submit, true);
+    }
+
+    protected function beforeRender(): void
+    {
         switch ($this->getAction()) {
             case 'inbox':
                 $this->getPageStyleContainer()->setWidePage();

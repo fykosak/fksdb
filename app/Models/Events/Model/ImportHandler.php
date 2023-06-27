@@ -1,78 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
-use Nette\DI\Container;
-use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-class ImportHandler {
-
+class ImportHandler
+{
     use SmartObject;
 
     public const STATELESS_IGNORE = 'ignore';
     public const STATELESS_KEEP = 'keep';
 
-    public const KEY_NAME = 'person_id';
-
-    private Container $container;
-
-    private SingleEventSource $source;
-
     private CSVParser $parser;
+    private EventDispatchFactory $eventDispatchFactory;
+    private EventParticipantService $eventParticipantService;
+    private EventModel $event;
 
-    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
-        $this->container = $container;
+    public function __construct(
+        CSVParser $parser,
+        EventDispatchFactory $eventDispatchFactory,
+        EventParticipantService $eventParticipantService,
+        EventModel $event
+    ) {
         $this->parser = $parser;
-        $this->source = $source;
+        $this->event = $event;
+        $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
-     * @param ApplicationHandler $handler
-     * @param string $errorMode
-     * @param string $stateless
-     * @return bool
      * @throws ImportHandlerException
-     * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
-     * @throws MissingServiceException
+     * @throws \Throwable
      */
-    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool
+    {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $baseHolderName = $primaryBaseHolder->getName();
-
         $handler->setErrorMode($errorMode);
         $handler->beginTransaction();
         $hasError = false;
         foreach ($this->parser as $row) {
             $values = ArrayHash::from($this->rowToValues($row));
-            $keyValue = $values[$baseHolderName][self::KEY_NAME];
-            if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
+            $keyValue = $values['participant']['person_id'];
+            if (
+                !isset($values['participant']['status'])
+                || !$values['participant']['status']
+            ) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } elseif ($stateless == self::STATELESS_KEEP) {
-                    unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
+                    unset($values['participant']['status']);
                 }
             }
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $this->eventDispatchFactory->getDummyHolder($this->event);
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import failed.'), null, $exception);
+                    throw new ImportHandlerException(_('Import failed.'), 0, $exception);
                 }
             }
         }
@@ -80,30 +77,30 @@ class ImportHandler {
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
+    private function prepareColumnName(string $columnName): array
+    {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
-            return [$baseHolder->getName(), $parts[0]];
+            return ['participant', $parts[0]];
         } else {
             return $parts;
         }
     }
 
     /**
-     * @param iterable $row
-     * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues(iterable $row): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+    private function rowToValues(iterable $row): array
+    {
+        $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
         $values = [];
         $fieldExists = false;
-        $fieldNames = array_keys($primaryBaseHolder->getFields());
+        $fieldNames = array_keys($holder->getFields());
         foreach ($row as $columnName => $value) {
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];
@@ -120,23 +117,16 @@ class ImportHandler {
     }
 
     /**
-     * @return Holder[]
-     * @throws NeonSchemaException
+     * @return BaseHolder[]
      */
-    private function createHoldersMap(): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
-
-        $result = [];
-        foreach ($this->source->getHolders() as $pkValue => $holder) {
-            if (self::KEY_NAME == $pkName) {
-                $keyValue = $pkValue;
-            } else {
-                $fields = $holder->getPrimaryHolder()->getFields();
-                $keyValue = $fields[self::KEY_NAME]->getValue();
-            }
-            $result[$keyValue] = $holder;
+    private function createHoldersMap(): array
+    {
+        $holders = [];
+        $machine = $this->eventDispatchFactory->getEventMachine($this->event);
+        /** @var EventParticipantModel $model */
+        foreach ($this->event->getParticipants() as $model) {
+            $holders[$model->person_id] = $machine->createHolder($model);
         }
-        return $result;
+        return $holders;
     }
 }

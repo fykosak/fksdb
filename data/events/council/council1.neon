@@ -1,16 +1,15 @@
 events:
     council:
-        event_type_id: [15]
-        eventYears: [1]
-        baseMachines:
-            PARTICIPANT:
+        eventTypeIds: [15]
+        eventYears: [1,2]
+        holder:
                 fields:
                     person_id:
                         label: _('Person')
                         required: true
                         modifiable: %events.council.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.council.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.council.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
                     note:
                        label: _('Další poznámky')
                        description: 'Součástí programu bude také „Výfučí přednášková noc“, a jako organizátoři bychom chtěli zjistit, co vás baví. Máš-li nějakého koníčka, nebo se o něco zajímáš, můžeš si na toto téma nachystat krátkou prezentaci/přednášku a představit ho ostatním účastníkům. Pokud si chceš takovou prezentaci připravit, napiš nám prosím do poznámek výše téma tvého přednesu.'

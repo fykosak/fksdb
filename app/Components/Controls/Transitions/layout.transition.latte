@@ -1,10 +1,16 @@
 {layout ../@layout.latte}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
 {block content}
-    <div class="btn-group">
-        {foreach $buttons as $button}
-            <a href="{link transition! $button->getId()}" n:class="'btn btn-'.$button->getBehaviorType()">
-                {$button->getLabel()}
-            </a>
-        {/foreach}
-    </div>
+    {if count($transitions)}
+        <div class="btn-group">
+            {foreach $transitions as $transition}
+                {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
+                <a href="{link transition! $transition->getId()}" class="{$className}">
+                    {$transition->getLabel()}
+                </a>
+            {/foreach}
+        </div>
+    {else}
+        <div>{FKSDB\Components\Badges\NoTransitionBadge::getHtml()}</div>
+    {/if}
 {/block}

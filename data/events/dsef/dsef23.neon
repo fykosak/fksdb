@@ -1,7 +1,7 @@
 parameters:
     events:
         dsef23:
-            appCond: or(regOpen(), role('admin'))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
             person:
                 person:
                     other_name:
@@ -18,105 +18,61 @@ parameters:
                 post_contact_p:
                     address:
                         required: true
-
 events:
     dsef23:
-        event_type_id: 2
+        eventTypeIds: [2]
         eventYears: [23]
         formLayout: dsef.form
-        paramScheme:
-            notifyBcc:
-                default: dsef@fykos.cz
-            notifyFrom:
-                default: Den s experimentální fyzikou <dsef@fykos.cz>
-
-        baseMachines:
-            PARTICIPANT_DSEF:
-                service: @event.ServiceMDsefParticipant
-
-                states:
-                    - applied
-                    - applied.tsaf
-                    - applied.notsaf
-                    - spare.tsaf
-                    - participated
-                    - missed
-                    - cancelled
-
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     # to spare
                     __init->spare.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
                     # to applied
                     __init->applied:
                         condition: %events.dsef23.appCond%
                         label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     __init|spare.tsaf->applied.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied.tsaf->applied.notsaf:
-                        condition: role('admin')
-                        visible: false
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                     applied->applied.tsaf:
                         condition: %events.dsef23.appCond%
-                        visible: false
                     # to end-states
                     applied|applied.tsaf|applied.notsaf->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied|applied.tsaf|applied.notsaf->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     # cancel and termination
                     applied|applied.notsaf->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
                     spare.tsaf->cancelled:
-                        condition: role('admin')
-                        visible: false
-
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.dsef23.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.dsef23.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.dsef23.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
-                    lunch_count:
-                        modifiable: %events.dsef23.appCond%
-                        description:  à 30 Kč
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT_DSEF
-                    label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.dsef23.appCond%
+                    default: fromLogin
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.dsef23.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                lunch_count:
+                    modifiable: %events.dsef23.appCond%
+                    description:  à 30 Kč
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
-
             processings:
                 - @events.privacyPolicy

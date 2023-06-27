@@ -1,31 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\WebService\Models\{EventListWebModel,
+    EventWebModel,
+    ExportWebModel,
+    FyziklaniResultsWebModel,
+    OrganizersWebModel,
+    PaymentListWebModel,
+    ResultsWebModel,
+    SeriesResultsWebModel,
+    SignaturesWebModel,
+    StatsWebModel,
+    WebModel,
+    ContestsModel
+};
+use Nette\Application\BadRequestException;
+use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
+use Nette\Http\IResponse;
+use Nette\Schema\Processor;
 use Nette\Security\AuthenticationException;
+use Nette\SmartObject;
 use Tracy\Debugger;
 
-class WebServiceModel {
+class WebServiceModel
+{
+    use SmartObject;
 
-    private ModelLogin $authenticatedLogin;
+    private LoginModel $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetOrganizers' => Models\OrganizersWebModel::class,
-        'GetEventList' => Models\EventListWebModel::class,
-        'GetEvent' => Models\EventWebModel::class,
-        'GetExport' => Models\ExportWebModel::class,
-        'GetSignatures' => Models\SignaturesWebModel::class,
-        'GetResults' => Models\ResultsWebModel::class,
-        'GetStats' => Models\StatsWebModel::class,
+        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'contest.organizers' => OrganizersWebModel::class,
+        'GetOrganizers' => OrganizersWebModel::class,
+        'GetEventList' => EventListWebModel::class,
+        'GetEvent' => EventWebModel::class,
+        'GetExport' => ExportWebModel::class,
+        'GetSignatures' => SignaturesWebModel::class,
+        'GetResults' => ResultsWebModel::class,
+        'GetStats' => StatsWebModel::class,
+        'GetPaymentList' => PaymentListWebModel::class,
+        'GetSeriesResults' => SeriesResultsWebModel::class,
+        'GetContests' => ContestsModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator) {
+    public function __construct(Container $container, PasswordAuthenticator $authenticator)
+    {
         $this->authenticator = $authenticator;
         $this->container = $container;
     }
@@ -33,11 +62,11 @@ class WebServiceModel {
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
      *
-     * @param \stdClass $args
      * @throws \SoapFault
      * @throws \Exception
      */
-    public function authenticationCredentials(\stdClass $args): void {
+    public function authenticationCredentials(\stdClass $args): void
+    {
         if (!isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new \SoapFault('Sender', 'Missing credentials.');
@@ -52,42 +81,36 @@ class WebServiceModel {
     }
 
     /**
-     * @param string $name
-     * @param \stdClass[] $arguments
-     * @return \SoapVar
-     * @throws \SoapFault
+     * @throws GoneException
      * @throws \ReflectionException
+     * @throws \SoapFault
      */
-    public function __call(string $name, array $arguments): \SoapVar {
+    public function __call(string $name, array $args): \SoapVar
+    {
         $this->checkAuthentication(__FUNCTION__);
-        if (isset(self::WEB_MODELS[$name])) {
-            $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
-            if (!$reflection->isSubclassOf(WebModel::class)) {
-                throw new \SoapFault('Server', 'Server error');
-            }
-            /** @var WebModel $webModel */
-            $webModel = $reflection->newInstance($this->container);
-            $webModel->setLogin($this->authenticatedLogin);
-            return $webModel->getResponse(...$arguments);
+        $webModel = $this->getWebModel($name);
+        if (!$webModel) {
+            throw new \SoapFault('Server', 'Undefined method');
         }
-        throw new \SoapFault('Sender', 'Undefined method');
+        return $webModel->getResponse(...$args);
     }
 
     /**
-     * @param string $serviceName
      * @throws \SoapFault
      */
-    private function checkAuthentication(string $serviceName): void {
+    private function checkAuthentication(string $nameService): void
+    {
         if (!isset($this->authenticatedLogin)) {
-            $msg = sprintf('Unauthenticated access to %s.', $serviceName);
+            $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
-            $this->log(sprintf('Called %s ', $serviceName));
+            $this->log(sprintf('Called %s ', $nameService));
         }
     }
 
-    private function log(string $msg): void {
+    private function log(string $msg): void
+    {
         if (!isset($this->authenticatedLogin)) {
             $message = 'unauthenticated@';
         } else {
@@ -95,5 +118,51 @@ class WebServiceModel {
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    private function getWebModel(string $name): ?WebModel
+    {
+        $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
+        if ($webModelClass) {
+            $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
+            if (!$reflection->isSubclassOf(WebModel::class)) {
+                return null;
+            }
+            /** @var WebModel $model */
+            $model = $reflection->newInstance($this->container);
+            $model->setLogin($this->authenticatedLogin ?? null);
+            return $model;
+        }
+        return null;
+    }
+
+    /**
+     * @throws \ReflectionException|BadRequestException
+     */
+    public function getJsonResponse(string $name, array $arguments): JsonResponse
+    {
+        $webModel = $this->getWebModel($name);
+        if (!$webModel) {
+            throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
+        }
+        $arguments = $this->processArguments($webModel, $arguments);
+        return new JsonResponse($webModel->getJsonResponse($arguments));
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    private function processArguments(WebModel $webModel, array $arguments): array
+    {
+        static $processor;
+        if (!isset($processor)) {
+            $processor = new Processor();
+        }
+        $schema = $webModel->getExpectedParams();
+        $schema->otherItems()->castTo('array');
+        return $processor->process($schema, $arguments);
     }
 }

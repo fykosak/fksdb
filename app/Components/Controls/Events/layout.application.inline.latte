@@ -1,20 +1,21 @@
-{varType array $transitions}
+{layout ../@layout.latte}
 
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType array $transitions}
-
-{if count($transitions)}
-    {varType FKSDB\Models\Events\Machine\Transition $transition}
-    {foreach $transitions as $transition}
-        {var $className = 'btn btn-sm btn-' . $transition->getBehaviorType()}
-        {if $transition->isCreating()}
-            <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
-               class="{$className}">{$transition->getLabel()}</a>
-        {else}
-            <a n:href="transition! $transition->getName()"
-                    class="{$className}">{$transition->getLabel()}</a>
-        {/if}
-    {/foreach}
-{else}
-    <em>{_'none'}</em>
-{/if}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{block content}
+    {if count($transitions)}
+        <div class="btn-group">
+        {foreach $transitions as $transition}
+                {var $className = 'btn btn-sm btn-outline-' . $transition->behaviorType->value}
+                {if $transition->isCreating()}
+                    <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
+                       class="{$className}">{$transition->getLabel()}</a>
+                {else}
+                    <a n:href="transition! $transition->getId()" class="{$className}">{$transition->getLabel()}</a>
+                {/if}
+            {/foreach}
+        </div>
+    {else}
+        <div>{FKSDB\Components\Badges\NoTransitionBadge::getHtml()}</div>
+    {/if}
+{/block}

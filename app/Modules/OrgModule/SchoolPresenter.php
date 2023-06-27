@@ -1,100 +1,113 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\SchoolService;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelSchool getEntity()
+ * @method SchoolModel getEntity()
  */
-class SchoolPresenter extends BasePresenter {
+class SchoolPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
-    private ServiceSchool $serviceSchool;
+    private SchoolService $schoolService;
 
-    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
-        $this->serviceSchool = $serviceSchool;
+    final public function injectServiceSchool(SchoolService $schoolService): void
+    {
+        $this->schoolService = $schoolService;
     }
 
-    public function getTitleList(): PageTitle {
-        return new PageTitle(_('Schools'), 'fa fa-school');
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Schools'), 'fa fa-school');
     }
 
-    public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Create school'), 'fa fa-plus');
-    }
-
-    /**
-     * @return void
-     *
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     */
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen'));
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create school'), 'fa fa-plus');
     }
 
     /**
-     * @return void
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen');
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    final public function renderDetail(): void {
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev),
+            'fa fa-university'
+        );
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentGrid(): SchoolsGrid {
+    protected function createComponentGrid(): SchoolsGrid
+    {
         return new SchoolsGrid($this->getContext());
     }
 
     /**
-     * @return SchoolFormComponent
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentEditForm(): SchoolFormComponent {
+    protected function createComponentEditForm(): SchoolFormComponent
+    {
         return new SchoolFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentCreateForm(): SchoolFormComponent {
+    protected function createComponentCreateForm(): SchoolFormComponent
+    {
         return new SchoolFormComponent($this->getContext(), null);
     }
 
     /**
-     * @return ContestantsFromSchoolGrid
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid {
+    protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid
+    {
         return new ContestantsFromSchoolGrid($this->getEntity(), $this->getContext());
     }
 
     /**
-     * @param Resource|string $resource
-     * @param string|null $privilege
-     * @return bool
+     * @param Resource|string|null $resource
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
-    protected function getORMService(): ServiceSchool {
-        return $this->serviceSchool;
+    protected function getORMService(): SchoolService
+    {
+        return $this->schoolService;
     }
 }

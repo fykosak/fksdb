@@ -1,5 +1,4 @@
 import Ordinal from '@translator/Ordinal';
-import { translator } from '@translator/translator';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
@@ -9,22 +8,24 @@ import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLeg
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './ContestatnsData';
+import { availableLanguage, Translator } from '@translator/translator';
 
 export interface OwnProps {
     data: YearsData;
+    translator: Translator<availableLanguage>;
 }
 
-export default class PerYearsChart extends React.Component<OwnProps, {}> {
+export default class PerYearsChart extends React.Component<OwnProps, never> {
 
     public render() {
-        const {data} = this.props;
+        const {data, translator} = this.props;
         const colorScale = scaleOrdinal(schemeCategory10);
         const colorCallback = (series: seriesType) => {
             return series === 'year' ? '#000' : colorScale(series);
         };
         const {aggregatedSeries, maxValue} = parseData(data);
 
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
         for (const series in aggregatedSeries) {
             if (aggregatedSeries.hasOwnProperty(series)) {
                 const points: Array<ExtendedPointData<number>> = [];

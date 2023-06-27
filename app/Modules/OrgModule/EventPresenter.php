@@ -1,81 +1,90 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
+use Fykosak\Utils\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
 
 /**
- * @method ModelEvent getEntity()
+ * @method EventModel getEntity()
  */
-class EventPresenter extends BasePresenter {
-
+class EventPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
 
-    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
-        $this->serviceEvent = $serviceEvent;
+    final public function injectServiceEvent(EventService $eventService): void
+    {
+        $this->eventService = $eventService;
     }
 
-    public function getTitleList(): PageTitle {
-        return new PageTitle(_('Events'), 'fa fa-calendar-alt');
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Events'), 'fa fa-calendar-alt');
     }
 
-    public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Add event'), 'fa fa-calendar-plus');
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Add event'), 'fa fa-calendar-plus');
     }
 
     /**
-     * @return void
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day');
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function actionDelete(): void {
+    public function actionDelete(): void
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): EventsGrid {
+    protected function createComponentGrid(): EventsGrid
+    {
         return new EventsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
-    protected function createComponentCreateForm(): EventFormComponent {
+    protected function createComponentCreateForm(): EventFormComponent
+    {
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
-     * @return EventFormComponent
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentEditForm(): EventFormComponent {
+    protected function createComponentEditForm(): EventFormComponent
+    {
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceEvent {
-        return $this->serviceEvent;
+    protected function getORMService(): EventService
+    {
+        return $this->eventService;
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

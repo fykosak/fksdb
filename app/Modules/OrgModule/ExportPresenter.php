@@ -1,81 +1,95 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\StoredQuery\StoredQuery;
-use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Models\UI\PageTitle;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
+use FKSDB\Models\StoredQuery\StoredQuery;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * @method ModelStoredQuery getEntity()
+ * @method QueryModel getEntity()
  */
-class ExportPresenter extends BasePresenter {
-
+class ExportPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $queryService;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery, StoredQueryFactory $storedQueryFactory): void {
-        $this->serviceStoredQuery = $serviceStoredQuery;
+    final public function injectServiceStoredQuery(
+        QueryService $queryService,
+        StoredQueryFactory $storedQueryFactory
+    ): void {
+        $this->queryService = $queryService;
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    protected function startup(): void {
-        switch ($this->getAction()) {
-            case 'edit':
-                $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
-            case 'compose':
-                $this->redirect(':Org:StoredQuery:create', $this->getParameters());
-            case 'list':
-                $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
-            case 'show':
-                $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
-        }
-        parent::startup();
-    }
-
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute(): void {
+    public function authorizedExecute(): void
+    {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function titleExecute(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
+    public function getStoredQuery(): StoredQuery
+    {
+        if (!isset($this->storedQuery)) {
+            $model = $this->getQueryByQId();
+            if (!$model) {
+                $model = $this->getEntity();
+            }
+            $this->storedQuery = $this->storedQueryFactory->createQuery($this, $model);
+        }
+        return $this->storedQuery;
+    }
+
+    public function getQueryByQId(): ?QueryModel
+    {
+        $qid = $this->getParameter('qid');
+        if ($qid) {
+            return $this->queryService->findByQid($qid);
+        }
+        return null;
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function actionExecute(): void {
-        $storedQuery = $this->getStoredQuery();
-        if ($storedQuery && $this->getParameter('qid')) {
+    public function titleExecute(): PageTitle
+    {
+        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fa fa-play-circle');
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     */
+    public function actionExecute(): void
+    {
+        if ($this->getParameter('qid')) {
             $parameters = [];
             foreach ($this->getParameters() as $key => $value) {
                 if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {
@@ -92,87 +106,78 @@ class ExportPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    final public function renderExecute(): void {
-        $this->template->model = $this->getStoredQuery()->getQueryPattern();
+    final public function renderExecute(): void
+    {
+        $this->template->model = $this->getStoredQuery()->queryPattern;
     }
 
-    public function getAllowedAuthMethods(): array {
-        $methods = parent::getAllowedAuthMethods();
-        if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods[self::AUTH_HTTP] = true;
+    protected function startup(): void
+    {
+        switch ($this->getAction()) {
+            case 'edit':
+                $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
+                break;
+            case 'compose':
+                $this->redirect(':Org:StoredQuery:create', $this->getParameters());
+                break;
+            case 'list':
+                $this->forward(':Org:StoredQuery:list', $this->getParameters());
+                break;
+            case 'show':
+                $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
-        return $methods;
+        parent::startup();
     }
 
-    protected function getHttpRealm(): ?string {
+    protected function getHttpRealm(): ?string
+    {
         return 'FKSDB-export';
     }
 
     /**
-     * @return StoredQuery
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function getStoredQuery(): StoredQuery {
-        if (!isset($this->storedQuery)) {
-            $model = $this->getQueryByQId();
-            if (!$model) {
-                $model = $this->getEntity();
-            }
-            $this->storedQuery = $this->storedQueryFactory->createQuery($this, $model);
-        }
-        return $this->storedQuery;
-    }
-
-    public function getQueryByQId(): ?ModelStoredQuery {
-        $qid = $this->getParameter('qid');
-        if ($qid) {
-            return $this->serviceStoredQuery->findByQid($qid);
-        }
-        return null;
-    }
-
-    /**
-     * @return ResultsComponent
-     * @throws BadRequestException
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentResultsComponent(): ResultsComponent {
+    protected function createComponentResultsComponent(): ResultsComponent
+    {
         $control = new ResultsComponent($this->getContext());
-        $control->setStoredQuery($this->getStoredQuery());
+        $control->storedQuery = $this->getStoredQuery();
         return $control;
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent
+    {
         return new StoredQueryTagCloudComponent($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function getORMService(): ServiceStoredQuery {
-        return $this->serviceStoredQuery;
+    protected function getORMService(): QueryService
+    {
+        return $this->queryService;
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return false;
     }
 
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         throw new NotImplementedException();
     }
 }

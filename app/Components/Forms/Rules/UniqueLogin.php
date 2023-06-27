@@ -1,34 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\LoginService;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
-class UniqueLogin {
+class UniqueLogin
+{
+    private LoginService $loginService;
+    private ?LoginModel $ignoredLogin;
 
-    private ServiceLogin $serviceLogin;
-
-    private ?ModelLogin $ignoredLogin;
-
-    public function __construct(ServiceLogin $serviceLogin) {
-        $this->serviceLogin = $serviceLogin;
-    }
-
-    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void {
+    public function __construct(Container $container, ?LoginModel $ignoredLogin = null)
+    {
         $this->ignoredLogin = $ignoredLogin;
+        $container->callInjects($this);
     }
 
-    public function __invoke(BaseControl $control): bool {
-        $login = $control->getValue();
+    public function inject(LoginService $loginService): void
+    {
+        $this->loginService = $loginService;
+    }
 
+    public function __invoke(BaseControl $control): bool
+    {
+        $login = $control->getValue();
         if (!$login) {
             return true;
         }
-
-        $conflicts = $this->serviceLogin->getTable()->where(['login' => $login]);
-        if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
+        $conflicts = $this->loginService->getTable()->where(['login' => $login]);
+        if (isset($this->ignoredLogin)) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }
         if (count($conflicts) > 0) {

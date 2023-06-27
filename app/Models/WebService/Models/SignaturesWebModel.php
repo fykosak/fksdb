@@ -1,43 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
 
-class SignaturesWebModel extends WebModel {
-
+/**
+ * @deprecated replaced by \FKSDB\Models\WebService\Models\OrganizersWebModel
+ */
+class SignaturesWebModel extends WebModel
+{
     use SmartObject;
 
-    private ServiceContest $serviceContest;
+    private ContestService $contestService;
 
-    public function inject(ServiceContest $serviceContest): void {
-        $this->serviceContest = $serviceContest;
+    public function inject(ContestService $contestService): void
+    {
+        $this->contestService = $contestService;
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws \SoapFault
+     * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->serviceContest->findByPrimary($args->contestId);
+        $contest = $this->contestService->findByPrimary($args->contestId);
 
         $doc = new \DOMDocument();
 
         $rootNode = $doc->createElement('signatures');
-        $orgs = $contest->related(DbNames::TAB_ORG);
-        foreach ($orgs as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+        $organisers = $contest->getOrganisers();
+        /** @var OrgModel $org */
+        foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'texSignature' => $org->tex_signature,
                 'domainAlias' => $org->domain_alias,
             ], $doc, $orgNode);

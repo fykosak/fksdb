@@ -1,11 +1,9 @@
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
-{varType FKSDB\Models\ORM\Models\ModelEvent $event}
-{varType string $token}
-<p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    jelikož jsi byl{if $person->gender == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $person->gender == 'F'}á{else}ý{/if},
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+<p>{if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    jelikož jsi byl{if $holder->getPerson()->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
     je nám ctí Tě pozvat na Letní tábor Výfuku, který se tentokrát koná
-    {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
+    {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'} {$holder->event->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
     her v přírodě. Na konci tábora proběhne slavnostní vyhlášení vítězů letošního ročníku Výfuku.
 </p>
@@ -13,8 +11,8 @@
 <p>
     Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
     aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
-    <a n:href="//:Public:Application:, at => $token">{link //:Public:Application:, at => $token}</a><br/>
-    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline')|date:'j.n. Y'}.
+    <a n:href="//:Public:Application:, at => $token->token">{link //:Public:Application:, at => $token->token}</a><br/>
+    Nejlépe ihned, nejpozději však do {$holder->event->getParameter('deadline')|date:'j.n. Y'}.
     Další pokyny a podrobnosti Ti přijdou později v jiné zprávě.
     V případě, že máte Ty nebo Tví rodiče jakékoliv otázky, neváhejte nás kotaktovat
     na vyfuk@vyfuk.mff.cuni.cz .
@@ -22,7 +20,7 @@
 
 <p>
     Za organizátory Výfuku se na Tebe těší <br/>
-    {$holder->getParameter('letterSignature')}
+    {$holder->event->getParameter('letterSignature')}
 </p>
 
 

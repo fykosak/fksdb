@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting;
 
-use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Utils\Html;
 
-class TestLog extends Message {
-
+class TestLog extends Message
+{
     public const LVL_SKIP = 'secondary';
 
     public ?Html $detail;
 
     public string $testName;
 
-    public function __construct(string $testName, string $message, string $level, ?Html $detail = null) {
+    public function __construct(string $testName, string $message, string $level, ?Html $detail = null)
+    {
         parent::__construct($message, $level);
         $this->detail = $detail;
         $this->testName = $testName;
@@ -23,17 +26,18 @@ class TestLog extends Message {
     /**
      * @return string[]
      */
-    public static function getAvailableLevels(): array {
-        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
+    public static function getAvailableLevels(): array
+    {
+        return [self::LVL_ERROR, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
-    public function mapLevelToIcon(): string {
+    public function mapLevelToIcon(): string
+    {
         switch ($this->level) {
-            case self::LVL_DANGER:
+            case self::LVL_ERROR:
                 return 'fas fa-times';
             case self::LVL_WARNING:
                 return 'fa fa-warning';
@@ -49,10 +53,10 @@ class TestLog extends Message {
     }
 
     /**
-     * @return Html
      * @throws NotImplementedException
      */
-    public function createHtmlIcon(): Html {
+    public function createHtmlIcon(): Html
+    {
         $icon = Html::el('span');
         $icon->addAttributes([
             'class' => $this->mapLevelToIcon(),

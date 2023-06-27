@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
+
+// phpcs:disable
+$container = require '../../../Bootstrap.php';
+
+// phpcs:enable
 
 use DateTime;
 
-$container = require '../../../Bootstrap.php';
-
-/**
- * Class EventModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class TeamEvent extends EventModuleTestCase {
-    protected function getEventData(): array {
+class TeamEvent extends EventModuleTestCase
+{
+    protected function getEventData(): array
+    {
         return [
             'event_type_id' => 1,
             'year' => 1,
@@ -22,25 +25,24 @@ class TeamEvent extends EventModuleTestCase {
         ];
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
             ['Event:Chart', 'list'],
-            ['Event:Chart', 'participantAcquaintance'],
-            ['Event:Chart', 'singleApplicationProgress'],
             ['Event:Chart', 'teamApplicationProgress'],
+            ['Event:Chart', 'model'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
-            ['Event:Model', 'default'],
-            ['Event:Seating', 'default'],
-            ['Event:Seating', 'preview'],
-            ['Event:Seating', 'list'],
             ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'transitions'],
+            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'detailedList'],
         ];
     }
 }
 
+// phpcs:disable
 $testCase = new TeamEvent($container);
 $testCase->run();
+// phpcs:enable

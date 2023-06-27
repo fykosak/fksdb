@@ -1,6 +1,9 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType string[]|string[][] $linkArgs}
 <p>
-    Changes are possible until {$event->registration_end|date:'%B %e, %Y %k:%M %Z'} after <a n:href="//:Authentication:login">sign in</a>
-    or by accessing via the private link below:<br/>
-    {var $link= $control->link(...$linkArgs)}
-    <a href="{$link}">{$link}</a>
+    Changes are possible until {$holder->event->registration_end|date:'M d, Y; H:i, P'} after
+    <a n:href="//:Core:Authentication:login">logging in</a> in <a n:href="//:Core:MyApplications:default">My
+        Applications</a> or via this private link:<br/>
+    {var $link = $control->link(...$linkArgs)}
+    <a href="{$link}">{$link}</a>.
 </p>

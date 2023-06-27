@@ -1,6 +1,6 @@
-{var $state = $holder->getPrimaryHolder()->getModelState()}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 <p>
-    Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
+    Změna přihlášky týmu <em>{$holder->getModel()}</em>. Aktuální stav &ndash; <em>{$holder->getModelState()->label()}</em>.
 </p>
-{include 'inc/eventEdit.cs.latte' event => $event, token => $token}
+{include 'inc/eventEdit.cs.latte'}
 {include 'inc/closing.cs.latte'}

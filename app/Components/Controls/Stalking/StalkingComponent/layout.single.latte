@@ -1,8 +1,9 @@
 {layout '../@layout.latte'}
+{block headline}{$headline}{/block}
 {block content}
     {if is_null($model)}
         <div class="card-body">
-            {control noRecords}
+            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
         </div>
     {else}
         {foreach $rows as $field}

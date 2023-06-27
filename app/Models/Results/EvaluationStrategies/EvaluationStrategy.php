@@ -1,59 +1,137 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\ContestCategoryService;
+use Nette\DI\Container;
+use Nette\InvalidArgumentException;
 
-abstract class EvaluationStrategy {
+abstract class EvaluationStrategy
+{
+    private Container $container;
+    protected ContestCategoryService $contestCategoryService;
+    private ContestantService $contestantService;
+    protected ContestYearModel $contestYear;
+
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        $this->container = $container;
+        $this->contestYear = $contestYear;
+        $this->container->callInjects($this);
+    }
+
+    public function injectService(
+        ContestCategoryService $contestCategoryService,
+        ContestantService $contestantService
+    ): void {
+        $this->contestCategoryService = $contestCategoryService;
+        $this->contestantService = $contestantService;
+    }
 
     /**
      * Should return SQL expression with points for given task.
      * There are available tables 'contestant' aliased to 'ct' and
      * 'submit' aliased to 's'.
-     *
-     * @param ActiveRow $task
-     * @return string
      */
-    abstract public function getPointsColumn(ActiveRow $task): string;
+    abstract public function getPointsColumn(TaskModel $task): string;
 
     /**
      * Should return SQL expression with points for given submit.
      * There are available tables 'contestant' aliased to 'ct',
      * 'submit' aliased to 's' and 'task' to 't'.
      * The returned expression is summed over group by series and contestant.
-     *
-     * @return string|null
      */
     abstract public function getSumColumn(): string;
 
     /**
-     * @param ModelCategory $category
      * @return array of int (study years of students with category)
      */
-    abstract public function categoryToStudyYears(ModelCategory $category): array;
+    final public function categoryToStudyYears(ContestCategoryModel $category): array
+    {
+        $map = $this->getCategoryMap();
+        if (isset($map[$category->label])) {
+            return $map[$category->label];
+        }
+        throw new InvalidArgumentException('Invalid category ' . $category->label);
+    }
+
+    private function studyYearsToCategory(PersonModel $person): ContestCategoryModel
+    {
+        $map = $this->getCategoryMap();
+        $personHistory = $person->getHistoryByContestYear($this->contestYear);
+        foreach ($map as $key => $values) {
+            if (in_array($personHistory->study_year, $values, true)) {
+                return $this->contestCategoryService->findByLabel((string)$key);
+            }
+        }
+        throw new InvalidArgumentException(
+            sprintf(
+                _('Invalid studyYear %i for person %s.'),
+                $personHistory->study_year,
+                $person->getFullName()
+            )
+        );
+    }
+
+    final public function createContestant(PersonModel $person): ?ContestantModel
+    {
+        $category = $this->studyYearsToCategory($person);
+        /** @var ContestantModel $contestant */
+        $contestant = $this->contestantService->storeModel([
+            'contest_id' => $this->contestYear->contest,
+            'person_id' => $person->person_id,
+            'year' => $this->contestYear->year,
+            'contest_category_id' => $category->contest_category_id,
+        ]);
+        return $contestant;
+    }
+
+    final public function updateCategory(ContestantModel $contestant): ?ContestantModel
+    {
+        $category = $this->studyYearsToCategory($contestant->person);
+        if ($category->contest_category_id === $contestant->contest_category_id) {
+            return $contestant;
+        }
+        /** @var ContestantModel $contestant */
+        $contestant = $this->contestantService->storeModel([
+            'contest_category_id' => $category->contest_category_id,
+        ], $contestant);
+        return $contestant;
+    }
+
+    abstract public function getSubmitPoints(SubmitModel $submit): ?float;
+
+    abstract protected function getCategoryMap(): array;
 
     /**
-     * @return ModelCategory[]
+     * @return ContestCategoryModel[]
      */
-    abstract public function getCategories(): array;
+    final public function getCategories(): array
+    {
+        return array_map(
+            fn($value) => $this->contestCategoryService->findByLabel((string)$value),
+            array_keys($this->getCategoryMap())
+        );
+    }
 
     /**
      * Should return points for correctly solved task (aka Student Pilný) as part
      * of SQL query.
      * For columns available see getSumColumn.
-     *
-     * @param ModelCategory $category
-     * @return string
      */
-    abstract public function getTaskPointsColumn(ModelCategory $category): string;
+    abstract public function getTaskPointsColumn(ContestCategoryModel $category): string;
 
     /**
      * Should return points for correctly solved task (aka Student Pilný).
-     *
-     * @param ActiveRow $task
-     * @param ModelCategory $category
-     * @return int
      */
-    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int;
+    abstract public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): ?float;
 }

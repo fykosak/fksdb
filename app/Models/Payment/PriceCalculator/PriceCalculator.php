@@ -1,50 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
-use FKSDB\Models\ORM\Models\ModelPayment;
-use FKSDB\Models\ORM\Services\ServicePayment;
-use FKSDB\Models\Payment\Price;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Transitions\Statement;
+use Fykosak\Utils\Price\Currency;
+use Fykosak\Utils\Price\MultiCurrencyPrice;
 
-class PriceCalculator implements TransitionCallback {
+class PriceCalculator implements Statement
+{
 
-    private ServicePayment $servicePayment;
+    private PaymentService $paymentService;
     /** @var Preprocess[] */
     private array $preProcess = [];
 
-    public function __construct(ServicePayment $servicePayment) {
-        $this->servicePayment = $servicePayment;
-    }
-
-    public function addPreProcess(Preprocess $preProcess): void {
-        $this->preProcess[] = $preProcess;
-    }
-
-    final public function __invoke(ModelHolder $holder, ...$args): void {
-        $price = new Price(0, $holder->getModel()->currency);
-        foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($holder->getModel());
-            $price->add($subPrice);
-        }
-        $this->servicePayment->updateModel($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+    public function __construct(PaymentService $paymentService)
+    {
+        $this->paymentService = $paymentService;
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @return array[]
+     * @return Currency[]
      */
-    public function getGridItems(ModelPayment $modelPayment): array {
-        $items = [];
-        foreach ($this->preProcess as $preProcess) {
-            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
-        }
-        return $items;
+    public function getAllowedCurrencies(): array
+    {
+        return Currency::cases();
     }
 
-    public function invoke(ModelHolder $holder, ...$args): void {
-        $this->__invoke($holder, ...$args);
+    public function addPreProcess(Preprocess $preProcess): void
+    {
+        $this->preProcess[] = $preProcess;
+    }
+
+    /**
+     * @param ...$args
+     * @throws \Exception
+     */
+    final public function __invoke(...$args): void
+    {
+        [$holder] = $args;
+        $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
+
+        foreach ($this->preProcess as $preProcess) {
+            $multiPrice->add($preProcess->calculate($holder->getModel()));
+        }
+        $price = $multiPrice->getPrice($holder->getModel()->getCurrency());
+        $this->paymentService->storeModel(
+            ['price' => $price->getAmount(), 'currency' => $price->getCurrency()->value],
+            $holder->getModel()
+        );
     }
 }

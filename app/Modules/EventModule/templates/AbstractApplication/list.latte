@@ -1,10 +1,10 @@
 {block content}
-    {varType FKSDB\Models\ORM\Models\ModelEvent $event}
+    {varType FKSDB\Models\ORM\Models\EventModel $event}
     <div class="btn-group">
         <a n:href=":Public:Application:default eventId => $event->getPrimary()"
-                class="btn btn-sm btn-primary">{_'New application'}</a>
-        <a href="{plink import}" class="btn btn-sm btn-secondary">{_'Import of applications'}</a>
-        <a n:href="transitions" class="btn btn-primary btn-sm">{_'Mass transitions'}</a>
+                class="btn btn-sm btn-outline-primary">{_'New application'}</a>
+        <a href="{plink import}" class="btn btn-sm btn-outline-secondary">{_'Import of applications'}</a>
+        <a n:href="transitions" class="btn btn-outline-primary btn-sm">{_'Mass transitions'}</a>
     </div>
     {control grid}
 {/block}

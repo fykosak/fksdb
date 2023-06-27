@@ -1,53 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use FKSDB\Models\SQL\SearchableDataSource;
+use Nette\Forms\Form;
 
-class OrgsGrid extends BaseGrid {
+class OrgsGrid extends FilterGrid
+{
+    private ContestModel $contest;
 
-    private ModelContest $contest;
-
-    public function __construct(Container $container, ModelContest $contest) {
+    public function __construct(Container $container, ContestModel $contest)
+    {
         parent::__construct($container);
         $this->contest = $contest;
     }
 
-    protected function getData(): IDataSource {
-        $orgs = $this->contest->related(DbNames::TAB_ORG);
+    protected function getModels(): Selection
+    {
+        $query = $this->contest->getOrganisers()->order('since DESC');
+        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+            return $query;
+        }
+        $tokens = preg_split('/\s+/', $this->filterParams['term']);
+        foreach ($tokens as $token) {
+            $query->where(
+                'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
+                            LIKE CONCAT(\'%\', ? , \'%\')',
+                $token
+            );
+        }
+        return $query;
+    }
 
-        $dataSource = new SearchableDataSource($orgs);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
-                            LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        return $dataSource;
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
-
-        $this->setDefaultOrder('since DESC');
+    protected function configure(): void
+    {
 
         $this->addColumns([
             'person.full_name',
@@ -56,11 +57,7 @@ class OrgsGrid extends BaseGrid {
             'org.role',
         ]);
 
-        $this->addLink('org.edit', true);
-        $this->addLink('org.detail', true);
-    }
-
-    protected function getModelClassName(): string {
-        return ModelOrg::class;
+        $this->addORMLink('org.edit', true);
+        $this->addORMLink('org.detail', true);
     }
 }

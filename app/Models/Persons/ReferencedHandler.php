@@ -1,26 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\AbstractModel;
-use Nette\Database\Table\ActiveRow;
-use Nette\Utils\ArrayHash;
+use Fykosak\NetteORM\Model;
 
-interface ReferencedHandler {
+abstract class ReferencedHandler
+{
+    protected ResolutionMode $resolution;
 
-    public const RESOLUTION_OVERWRITE = 'overwrite';
-    public const RESOLUTION_KEEP = 'keep';
-    public const RESOLUTION_EXCEPTION = 'exception';
+    final public function getResolution(): ResolutionMode
+    {
+        return $this->resolution;
+    }
 
-    public function getResolution(): string;
+    final public function setResolution(ResolutionMode $resolution): void
+    {
+        $this->resolution = $resolution;
+    }
 
-    public function setResolution(string $resolution): void;
+    abstract public function store(array $values, ?Model $model = null): ?Model;
 
-    public function update(ActiveRow $model, ArrayHash $values): void;
-
-    public function createFromValues(ArrayHash $values): AbstractModel;
-
-    public function isSecondaryKey(string $field): bool;
-
-    public function findBySecondaryKey(string $field, string $key): ?AbstractModel;
+    protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
+    {
+        foreach ($values as $key => $value) {
+            if (isset($model[$key]) && $model[$key] != $value) {
+                switch ($this->resolution->value) {
+                    case ResolutionMode::EXCEPTION:
+                        throw new ModelDataConflictException(
+                            $subKey ? [$subKey => [$key => $value]] : [$key => $value]
+                        );
+                    case ResolutionMode::KEEP:
+                        unset($values[$key]);
+                        break;
+                    case ResolutionMode::OVERWRITE:
+                        break;
+                }
+            }
+        }
+        return $values;
+    }
 }

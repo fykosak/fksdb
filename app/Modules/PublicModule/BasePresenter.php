@@ -1,56 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelPerson;
 
-abstract class BasePresenter extends AuthenticatedPresenter {
-
+abstract class BasePresenter extends AuthenticatedPresenter
+{
     use YearPresenterTrait;
 
-    private ?ModelContestant $contestant;
+    private ?ContestantModel $contestant;
 
-    protected function startup(): void {
-        parent::startup();
-        $this->yearTraitStartup();
-    }
-
-    public function getContestant(): ?ModelContestant {
+    public function getContestant(): ?ContestantModel
+    {
         if (!isset($this->contestant)) {
-            /** @var ModelPerson $person */
-            $person = $this->user->getIdentity()->getPerson();
-            $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
-                'contest_id' => $this->getSelectedContestYear()->contest_id,
-                'year' => $this->getSelectedContestYear()->year,
-            ])->fetch();
-
-            $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
+            $this->contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
         }
         return $this->contestant;
     }
 
-    protected function getNavRoots(): array {
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->yearTraitStartup();
+    }
+
+    protected function getNavRoots(): array
+    {
         return ['Public.Dashboard.default'];
     }
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $contest = $this->getSelectedContest();
         if (isset($contest) && $contest) {
-            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
             $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
+            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         }
         parent::beforeRender();
     }
 
-    protected function getDefaultSubTitle(): ?string {
+    protected function getDefaultSubTitle(): ?string
+    {
         return sprintf(_('%d. year'), $this->year);
     }
 
-    protected function getRole(): string {
-        return 'contestant';
+    protected function getRole(): PresenterRole
+    {
+        return PresenterRole::tryFrom(PresenterRole::CONTESTANT);
     }
 }

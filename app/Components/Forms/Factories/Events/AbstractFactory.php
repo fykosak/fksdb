@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
-abstract class AbstractFactory implements FieldFactory {
+abstract class AbstractFactory implements FieldFactory
+{
 
-    public function setFieldDefaultValue(BaseControl $control, Field $field): void {
+    public function setFieldDefaultValue(BaseControl $control, Field $field): void
+    {
         if (!$field->isModifiable()) {
             $control->setDisabled();
         }
@@ -17,33 +20,15 @@ abstract class AbstractFactory implements FieldFactory {
         $this->appendRequiredRule($control, $field);
     }
 
-    final protected function appendRequiredRule(BaseControl $control, Field $field): void {
-        $container = $control->getParent();
+    final protected function appendRequiredRule(BaseControl $control, Field $field): void
+    {
         if ($field->isRequired()) {
-            $conditioned = $control;
-            foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
-                if ($determiningField === $field) {
-                    $conditioned = $control;
-                    break;
-                }
-                /*
-                 * NOTE: If the control doesn't exists, it's hidden and as such cannot condition further requirements.
-                 */
-                if (isset($container[$name])) {
-                    $conditioned = $conditioned->addConditionOn($container[$name], Form::FILLED);
-                }
-            }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
+            $control->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->label));
         }
     }
 
-    public function validate(Field $field, DataValidator $validator): void {
-        if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
-        }
-    }
-
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void
+    {
         $control->setDefaultValue($field->getValue());
     }
 }

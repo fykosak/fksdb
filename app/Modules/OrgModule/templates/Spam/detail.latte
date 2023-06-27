@@ -1,15 +1,19 @@
+{varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 {block content}
     {foreach [
-'email_message.email_message_id',
-'email_message.recipient',
-'email_message.sender',
-'email_message.reply_to',
-'email_message.subject',
-'email_message.carbon_copy',
-'email_message.blind_carbon_copy',
-'email_message.state',
-] as $row}
-        {control valuePrinter:row $row,$model}
+    'email_message.email_message_id',
+    'email_message.recipient',
+    'email_message.sender',
+    'email_message.reply_to',
+    'email_message.subject',
+    'email_message.carbon_copy',
+    'email_message.blind_carbon_copy',
+    'email_message.state',
+    ] as $row}
+        <div class="row">
+            <b class="col-2">{control valuePrinter:templateString '@' . $row . ':title',$model,1024}</b>
+            <span class="col-10">{control valuePrinter:templateString '@' . $row,$model,1024}</span>
+        </div>
     {/foreach}
     <div class="row mt-1">
         <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Sent'}
@@ -31,7 +35,7 @@
     <div class="row mt-1">
         <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Text'}</b>
         <div class="embed-responsive embed-responsive-1by1">
-            <iframe class="embed-responsive-item" srcdoc="{$model->text}"></iframe>
+            <iframe class="embed-responsive-item w-100" style="min-height: 30rem" srcdoc="{$model->text}"></iframe>
         </div>
     </div>
 {/block}

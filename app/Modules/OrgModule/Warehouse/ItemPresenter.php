@@ -1,58 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
+use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\ItemService;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceItem;
-use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class ItemPresenter extends BasePresenter {
+/**
+ * @method ItemModel getEntity(bool $throw = true)
+ */
+class ItemPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
-    private ServiceItem $serviceItem;
+    private ItemService $itemService;
 
-    public function injectService(ServiceItem $serviceItem): void {
-        $this->serviceItem = $serviceItem;
+    public function injectService(ItemService $itemService): void
+    {
+        $this->itemService = $itemService;
     }
 
-    public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-barcode'));
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Items'), 'fa fa-barcode');
     }
 
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit item'), 'fas fa-pen'));
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Edit item'), 'fas fa-pen');
     }
 
-    public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-plus'));
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create item'), 'fa fa-plus');
     }
 
-    protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentCreateForm(): Control
+    {
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
 
-    protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
-    protected function createComponentGrid(): ItemsGrid {
+    protected function createComponentGrid(): ItemsGrid
+    {
         return new ItemsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-    protected function getORMService(): ServiceItem {
-        return $this->serviceItem;
+    protected function getORMService(): ItemService
+    {
+        return $this->itemService;
     }
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAllowed($resource, $privilege);
     }
 }

@@ -1,31 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
 
-class ItemsGrid extends RelatedGrid {
+class ItemsGrid extends RelatedGrid
+{
 
-    public function __construct(Container $container, ModelScheduleGroup $group) {
+    public function __construct(Container $container, ScheduleGroupModel $group)
+    {
         parent::__construct($container, $group, 'schedule_item');
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws \ReflectionException
      */
-    protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+    protected function configure(): void
+    {
+        parent::configure();
         $this->addColumns([
             'schedule_item.schedule_item_id',
             'schedule_item.name_cs',
@@ -34,14 +32,9 @@ class ItemsGrid extends RelatedGrid {
             'schedule_item.price_eur',
             'schedule_item.capacity',
             'schedule_item.used_capacity',
-            'schedule_item.require_id_number',
         ]);
         $this->paginate = false;
-        $this->addLinkButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
-        $this->addLinkButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
-    }
-
-    protected function getModelClassName(): string {
-        return ModelScheduleItem::class;
+        $this->addPresenterButton(':Schedule:Item:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addPresenterButton(':Schedule:Item:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
     }
 }

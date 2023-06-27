@@ -1,43 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 use FKSDB\Components\EntityForms\SchoolFormComponent;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\CountryService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
-/**
- * Class EventPresenterTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
+class SchoolPresenterTest extends AbstractOrgPresenterTestCase
+{
+    private SchoolModel $school;
 
-    private int $schoolId;
-
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->loginUser();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
-        $addressId = $this->insert(DbNames::TAB_ADDRESS, [
+        $this->container->getByType(OrgService::class)->storeModel(
+            ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
+        $address = $this->container->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
             'city' => 'PU',
             'postal_code' => '02001',
-            'region_id' => '1',
+            'country_id' => (string)CountryService::SLOVAKIA,
         ]);
-        $this->schoolId = $this->insert(DbNames::TAB_SCHOOL, [
-            'address_id' => $addressId,
+        $this->school = $this->container->getByType(SchoolService::class)->storeModel([
+            'address_id' => $address->address_id,
             'name' => 'Test school',
             'name_abbrev' => 'T school',
         ]);
     }
 
-    public function testList(): void {
+    public function testList(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -45,74 +53,81 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::contains('PU', $html);
     }
 
-    public function testCreate(): void {
+    public function testCreate(): void
+    {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
-                SchoolFormComponent::CONT_ADDRESS => [
+            SchoolFormComponent::CONT_SCHOOL => [
+                'name' => 'Test school',
+                'name_abbrev' => 'T school',
+                'address_id' => ReferencedId::VALUE_PROMISE,
+                'address_id_container' => [
                     'first_row' => 'PU',
                     'second_row' => 'PU',
                     'target' => 'PU',
                     'city' => 'PU',
                     'postal_code' => '02001',
-                    'region_id' => '1',
+                    'country_id' => (string)CountryService::SLOVAKIA,
                 ],
-                SchoolFormComponent::CONT_SCHOOL => [
-                    'name' => 'Test school',
-                    'name_abbrev' => 'T school',
-                ],
-            ]
-        );
+            ],
+        ]);
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init + 1, $after);
     }
 
-    public function testEdit(): void {
+    public function testEdit(): void
+    {
         $init = $this->countSchools();
-        $response = $this->createFormRequest('edit',
+        $response = $this->createFormRequest(
+            'edit',
             [
-                SchoolFormComponent::CONT_ADDRESS => [
-                    'first_row' => 'PU',
-                    'second_row' => 'PU',
-                    'target' => 'PU',
-                    'city' => 'PU edited',
-                    'postal_code' => '02001',
-                    'region_id' => '1',
-                ],
                 SchoolFormComponent::CONT_SCHOOL => [
                     'name' => 'Test school edited',
                     'name_abbrev' => 'T school',
+                    'address_id' => (string)$this->school->address_id,
+                    'address_id_container' => [
+                        'first_row' => 'PU',
+                        'second_row' => 'PU',
+                        'target' => 'PU',
+                        'city' => 'PU edited',
+                        'postal_code' => '02001',
+                        'country_id' => (string)CountryService::SLOVAKIA,
+                    ],
                 ],
             ],
             [
-                'id' => $this->schoolId,
-            ]);
-        if ($response instanceof TextResponse) {
-            file_put_contents('t.html', (string)$response->getSource());
-        }
+                'id' => $this->school->school_id,
+            ]
+        );
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init, $after);
 
-        $school = $this->explorer->query('SELECT * FROM school where school_id=?', $this->schoolId)->fetch();
+        $school = $this->container
+            ->getByType(SchoolService::class)
+            ->findByPrimary($this->school->school_id);
+
         Assert::equal('Test school edited', $school->name);
-        $school = $this->explorer->query('SELECT * FROM address where address_id=?', $school->address_id)->fetch();
-        Assert::equal('PU edited', $school->city);
+        $address = $this->container
+            ->getByType(AddressService::class)
+            ->findByPrimary($school->address_id);
+
+        Assert::equal('PU edited', $address->city);
     }
 
-    protected function getPresenterName(): string {
+    protected function getPresenterName(): string
+    {
         return 'Org:School';
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_SCHOOL, DbNames::TAB_ADDRESS]);
-        parent::tearDown();
-    }
-
-    private function countSchools(): int {
-        return $this->explorer->query('SELECT * FROM school')->getRowCount();
+    private function countSchools(): int
+    {
+        return $this->container->getByType(SchoolService::class)->getTable()->count('*');
     }
 }
 
+// phpcs:disable
 $testCase = new SchoolPresenterTest($container);
 $testCase->run();
+// phpcs:enable

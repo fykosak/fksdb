@@ -1,15 +1,12 @@
-{varType FKSDB\Components\Controls\Navigation\NavigationChooserComponent $control}
-
+{varType Fykosak\Utils\UI\Navigation\NavItem $item}
+{varType bool $subTitle}
 {block content}
-    {var $hasNode = false}
     <nav class="d-md-flex justify-content-md-around flex-wrap">
-        {foreach $items as $item}
-            {continueIf !$control->isItemVisible($item)}
-            {var $hasNode = true}
-            <a href="{$control->getItemLink($item)}"
-               class="mb-3 d-block navigation-item p-2">
-                <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getItemTitle($item)->icon}"></i></span>
-                <span class="text d-xs-inline-block d-md-block">{$control->getItemTitle($item)->title}</span>
+        {foreach $item->children as $subItem}
+            {dump $subItem}
+            <a href="{$control->getPresenter()->link($subItem->destination,$subItem->linkParams)}"
+               class="mb-3 d-block navigation-item p-2 d-flex align-items-center justify-content-center">
+                {$subItem->title->toHtml($subTitle)}
             </a>
         {/foreach}
     </nav>

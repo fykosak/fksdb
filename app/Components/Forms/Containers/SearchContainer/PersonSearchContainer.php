@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-class PersonSearchContainer extends SearchContainer {
+class PersonSearchContainer extends SearchContainer
+{
     public const SEARCH_EMAIL = 'email';
     public const SEARCH_ID = 'id';
     public const SEARCH_NONE = 'none';
@@ -23,27 +26,36 @@ class PersonSearchContainer extends SearchContainer {
 
     protected PersonProvider $personProvider;
 
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
 
-    public function __construct(Container $container, string $searchType) {
+    public function __construct(Container $container, string $searchType)
+    {
         parent::__construct($container);
         $this->searchType = $searchType;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
+    final public function injectPrimary(
+        PersonFactory $personFactory,
+        PersonService $personService,
+        PersonProvider $provider
+    ): void {
         $this->personFactory = $personFactory;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->personProvider = $provider;
     }
 
-    protected function createSearchControl(): ?BaseControl {
+    protected function createSearchControl(): ?BaseControl
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Invalid e-mail.'));
-                $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
-                $control->setHtmlAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setOption(
+                    'description',
+                    _('First of all try to find the person in our database using e-mail address')
+                );
+                $control->setHtmlAttribute('placeholder', 'your-email@example.com');
                 $control->setHtmlAttribute('autocomplete', 'email');
                 return $control;
             case self::SEARCH_ID:
@@ -55,31 +67,25 @@ class PersonSearchContainer extends SearchContainer {
         }
     }
 
-    protected function getSearchCallback(): callable {
+    protected function getSearchCallback(): callable
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term): ?ModelPerson {
-                    return $this->servicePerson->findByEmail($term);
-                };
+                return fn($term): ?PersonModel => $this->personService->findByEmail($term);
             case self::SEARCH_ID:
-                return function ($term): ?ModelPerson {
-                    return $this->servicePerson->findByPrimary($term);
-                };
+                return fn($term): ?PersonModel => $this->personService->findByPrimary($term);
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
-    protected function getTermToValuesCallback(): callable {
+    protected function getTermToValuesCallback(): callable
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term): array {
-                    return ['person_info' => ['email' => $term]];
-                };
+                return fn($term): array => ['person_info' => ['email' => $term]];
             case self::SEARCH_ID:
-                return function (): array {
-                    return [];
-                };
+                return fn(): array => [];
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }

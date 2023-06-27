@@ -23,67 +23,33 @@ parameters:
                         required: true
                     study_year:
                         required: true
-                        description: " "
 
 events:
     dsef2_1:
-        event_type_id: 14
+        eventTypeIds: [14]
         eventYears: [1]
         formLayout: dsef.form
-        paramScheme:
-            notifyBcc:
-                default: dsef@fykos.cz
-            notifyFrom:
-                default: Den s experimentální fyzikou <dsef@fykos.cz>
-            accomodationCapacity:
-                default: 0
-
-        baseMachines:
-            PARTICIPANT:
-                service: @event.ServiceMDsefParticipant
-
-                states: %events.defaultDsef.states%
-
-                transitions: %events.defaultDsef.transitions%
-
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.dsef2_1.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.defaultDsef.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
-                    accomodation:
-                        label: _('Ubytování')
-                        description: %events.dsef2_1.accomodation%
-                        modifiable: %events.defaultDsef.appCond%
-                    lunch_count:
-                        modifiable: %events.defaultDsef.appCond%
-                        description:  "2 zdarma, další à 40 Kč"
-                    note:
-                        label: _('Jaké další semináře a olympiády řešíš?')
-                        description: "Uveď další fyzikální, matematické či informatické vzdělávací či soutěžní akce, kterých se účastníš (stačí zkratky)."
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
         machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
-                    label: _('Účastník')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+                transitions: %events.defaultDsef.transitions%
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.defaultDsef.appCond%
+                    default: fromLogin
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.dsef2_1.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                lunch_count:
+                    modifiable: %events.defaultDsef.appCond%
+                    description:  "2 zdarma, další à 40 Kč"
+                note:
+                    label: _('Jaké další semináře a olympiády řešíš?')
+                    description: "Uveď další fyzikální, matematické či informatické vzdělávací či soutěžní akce, kterých se účastníš (stačí zkratky)."
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - FKSDB\Models\Events\FormAdjustments\ResourceAvailability(['participant.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                #- FKSDB\Models\Events\FormAdjustments\ResourceAvailability(['participant.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
 

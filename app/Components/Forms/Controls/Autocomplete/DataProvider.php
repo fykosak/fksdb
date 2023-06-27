@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-interface DataProvider {
-
+interface DataProvider
+{
     public const LABEL = 'label';
     public const VALUE = 'value';
 
@@ -17,8 +19,7 @@ interface DataProvider {
     /**
      * Provider may or may not use knowledge of this update.
      *
-     * @param int id
-     * @return void
+     * @param int $id
      */
     public function setDefaultValue($id): void;
 }
