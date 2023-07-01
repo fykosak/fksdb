@@ -1,0 +1,12 @@
+.node-chart {
+  circle {
+    stroke: none;
+    fill: var(--color);
+  }
+
+  text {
+    fill: var(--color);
+    font-size: .5rem;
+    font-weight: bold;
+  }
+}

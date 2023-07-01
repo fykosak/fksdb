@@ -3,11 +3,11 @@ import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './ContestatnsData';
+import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './contestatns-data';
 import { availableLanguage, Translator } from '@translator/translator';
 
 export interface OwnProps {
@@ -39,7 +39,10 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                         </>;
                         points.push({
                             active: true,
-                            color: colorCallback(series),
+                            color: {
+                                active: colorCallback(series),
+                                inactive: colorCallback(series),
+                            },
                             label,
                             xValue: +year,
                             yValue: +aggregatedSeries[series][year],

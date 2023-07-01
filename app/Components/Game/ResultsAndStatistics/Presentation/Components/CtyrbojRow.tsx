@@ -36,23 +36,21 @@ export default class Row extends React.Component<OwnProps, never> {
                 key={taskIndex}
             />);
         });
-        return (
-            <tr>
-                <td><strong>{team.name}</strong></td>
-                <td>{sum}</td>
-                <td data-ctyrboj-label="A">
+        return <tr>
+            <td><strong>{team.name}</strong></td>
+            <td>{sum}</td>
+            <td data-ctyrboj-label="A">
                     <span
                         className="d-flex justify-content-evenly align-item-center">{taskMap.A}</span></td>
-                <td data-ctyrboj-label="B">
+            <td data-ctyrboj-label="B">
                     <span
                         className="d-flex justify-content-evenly align-item-center">{taskMap.B}</span></td>
-                <td data-ctyrboj-label="C">
+            <td data-ctyrboj-label="C">
                     <span
                         className="d-flex justify-content-evenly align-item-center">{taskMap.C}</span></td>
-                <td data-ctyrboj-label="D">
+            <td data-ctyrboj-label="D">
                     <span
                         className="d-flex justify-content-evenly align-item-center">{taskMap.D}</span></td>
-            </tr>
-        );
+        </tr>;
     }
 }

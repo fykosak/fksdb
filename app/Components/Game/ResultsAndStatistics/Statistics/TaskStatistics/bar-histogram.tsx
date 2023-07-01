@@ -80,7 +80,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                         key={index}
                         points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                         data-points={points}
-                        fill={'var(--color-fof-points-' + points + ')'}
+                        style={{'--bar-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
                     />);
                 });
 
@@ -89,7 +89,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                 </g>);
             }
         }
-        return (
+        return <div className="bar-histogram">
             <svg viewBox={this.getViewBox()} className="chart">
                 <g>
                     {bars}
@@ -97,7 +97,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                     <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
                 </g>
             </svg>
-        );
+        </div>;
     }
 
     private getAxis(): void {

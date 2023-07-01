@@ -10,13 +10,11 @@ export default class Card extends React.Component<OwnProps, never> {
 
     public render() {
         const {level, headline, children} = this.props;
-        return (
-            <div className={'card border-' + level}>
-                <div className={'card-header card-' + level}>{headline}</div>
-                <div className="card-block card-body">
-                    {children}
-                </div>
+        return <div className={'card border-' + level}>
+            <div className={'card-header card-' + level}>{headline}</div>
+            <div className="card-block card-body">
+                {children}
             </div>
-        );
+        </div>;
     }
 }

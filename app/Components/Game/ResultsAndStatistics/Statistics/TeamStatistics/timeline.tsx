@@ -70,20 +70,18 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
                     active = activePoints === submit.points;
                 }
             }
-            return (
-                <g key={index} className={active ? 'active' : 'inactive'}>
-                    <polyline
-                        points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
-                        stroke={submit ? ('var(--color-fof-points-' + submit.points + ')') : '#ccc'}
-                    />
-                    <text
-                        x={(fromCoordinates + toCoordinates) / 2}
-                        y={yCoordinates - 1}
-                    >
-                        <tspan>{task.label}</tspan>
-                    </text>
-                </g>
-            );
+            return <g key={index} className={active ? 'active' : 'inactive'}>
+                <polyline
+                    points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
+                    style={{'--polyline-color': submit ? ('var(--color-fof-points-' + submit.points + ')') : '#ccc'} as React.CSSProperties}
+                />
+                <text
+                    x={(fromCoordinates + toCoordinates) / 2}
+                    y={yCoordinates - 1}
+                >
+                    <tspan>{task.label}</tspan>
+                </text>
+            </g>;
         });
 
         return <div className="chart-game-team-timeline">

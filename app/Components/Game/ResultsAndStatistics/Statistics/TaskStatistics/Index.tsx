@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Options from './Options';
-import TimeHistogram from './BarHistogram';
-import TimeHistogramLines from './TimeHistogramLinesChart';
-import Timeline from './Timeline';
-import Progress from './Progress';
+import TimeHistogram from './bar-histogram';
+import TimeHistogramLines from './histogram-lines';
+import Timeline from './timeline';
+import Progress from './progress';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/LangContext';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 
 interface StateProps {
     taskId: number;
@@ -20,42 +19,40 @@ class TaskStats extends React.Component<StateProps, never> {
     public render() {
         const {taskId, availablePoints} = this.props;
         const translator = this.context;
-        return (
-            <>
+        return <>
+            <div className="panel color-auto">
+                <div className="container">
+                    <h2>{translator.getText('Total solved problem')}</h2>
+                    <Progress availablePoints={availablePoints}/>
+                </div>
+            </div>
+            <div className="panel color-auto">
+                <div className="container">
+                    <h2>{translator.getText('Statistics from single problem')}</h2>
+                    <Options/>
+                </div>
+            </div>
+            {taskId && <>
                 <div className="panel color-auto">
                     <div className="container">
-                        <h2>{translator.getText('Total solved problem')}</h2>
-                        <Progress availablePoints={availablePoints}/>
+                        <h2>{translator.getText('Timeline')}</h2>
+                        <Timeline taskId={taskId}/>
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
-                        <h2>{translator.getText('Statistics from single problem')}</h2>
-                        <Options/>
+                        <h2>{translator.getText('Time histogram')}</h2>
+                        <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
                     </div>
                 </div>
-                {taskId && <>
-                    <div className="panel color-auto">
-                        <div className="container">
-                            <h2>{translator.getText('Timeline')}</h2>
-                            <Timeline taskId={taskId}/>
-                        </div>
+                <div className="panel color-auto">
+                    <div className="container">
+                        <h2>{translator.getText('Time histogram')}</h2>
+                        <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
                     </div>
-                    <div className="panel color-auto">
-                        <div className="container">
-                            <h2>{translator.getText('Time histogram')}</h2>
-                            <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
-                        </div>
-                    </div>
-                    <div className="panel color-auto">
-                        <div className="container">
-                            <h2>{translator.getText('Time histogram')}</h2>
-                            <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
-                        </div>
-                    </div>
-                </>}
-            </>
-        );
+                </div>
+            </>}
+        </>;
     }
 }
 

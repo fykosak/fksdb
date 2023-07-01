@@ -1,6 +1,6 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';

@@ -1,6 +1,6 @@
 import * as ReactDOM from 'react-dom';
-import PerSeriesChart from './Components/Charts/Contestants/PerSeriesChart';
-import PerYearsChart from './Components/Charts/Contestants/PerYearsChart';
+import PerSeriesChart from './Components/Charts/Contestants/per-series-chart';
+import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
 import ApplicationRationGeoChart from './Components/Charts/Event/Applications/ApplicationRationGeoChart';
 import ParticipantsTimeGeoChart from './Components/Charts/Event/Applications/ParticipantsTimeGeoChart';
 import TeamsGeoChart from './Components/Charts/Event/Applications/TeamsGeoChart';

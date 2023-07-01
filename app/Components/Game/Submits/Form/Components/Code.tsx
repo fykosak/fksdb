@@ -11,8 +11,7 @@ export default class Code extends React.Component<WrappedFieldProps, never> {
     }
     public render() {
         const {meta: {valid}, input} = this.props;
-        return (
-            <span className={'form-group ' + (valid ? 'has-success' : 'has-error')}>
+        return <span className={'form-group ' + (valid ? 'has-success' : 'has-error')}>
                 <input
                     ref={(inputEl) => this.input = inputEl}
                     {...input}
@@ -21,7 +20,6 @@ export default class Code extends React.Component<WrappedFieldProps, never> {
                     placeholder="XXXXXXYYX"
                     autoFocus
                 />
-            </span>
-        );
+            </span>;
     }
 }

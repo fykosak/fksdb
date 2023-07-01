@@ -1,7 +1,7 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
-import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
-import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
+import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
@@ -35,21 +35,12 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
             teams,
         } = this.props;
 
-        const teamSubmits: Array<{
-            active: boolean;
-            color: string;
-            xValue: Date;
-            yValue: number;
-            label: string;
-        }> = [];
+        const teamSubmits: ExtendedPointData<Date>[] = [];
 
         let maxPoints = 0;
         let meanPoints = 0;
         const numberOfTeams = teams.length;
-        const meanTeamData: Array<{
-            yValue: number;
-            xValue: Date;
-        }> = [];
+        const meanTeamData: ExtendedPointData<Date>[] = [];
         const lineChartData: LineChartData<Date> = [];
 
         for (const index in submits) {
@@ -58,6 +49,11 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
                 const {teamId: submitTeamId, points} = submit;
                 meanPoints += (submit.points / numberOfTeams);
                 meanTeamData.push({
+                    active: false,
+                    color: {
+                        active: null,
+                        inactive: null,
+                    },
                     xValue: new Date(submit.modified),
                     yValue: meanPoints,
                 });
@@ -70,7 +66,10 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
                         maxPoints += +points;
                         teamSubmits.push({
                             active: (!(activePoints && (activePoints !== submit.points))),
-                            color: 'var(--color-fof-points-' + submit.points + ')',
+                            color: {
+                                active: 'var(--color-fof-points-' + submit.points + ')',
+                                inactive: 'var(--color-fof-points-' + submit.points + ')',
+                            },
                             label: currentTask.label,
                             xValue: new Date(submit.modified),
                             yValue: maxPoints,
@@ -93,6 +92,11 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
             name: 'mean team',
             points: [
                 {
+                    active: false,
+                    color: {
+                        active: null,
+                        inactive: null,
+                    },
                     xValue: gameStart,
                     yValue: 0,
                 },
@@ -110,13 +114,23 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
             name: 'TeamId ' + teamId,
             points: [
                 {
+                    active: false,
                     xValue: gameStart,
                     yValue: 0,
+                    color: {
+                        active: null,
+                        inactive: null,
+                    },
                 },
                 ...teamSubmits,
                 {
+                    active: false,
                     xValue: gameEnd,
                     yValue: maxPoints,
+                    color: {
+                        active: null,
+                        inactive: null,
+                    },
                 },
             ],
         });

@@ -43,12 +43,23 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             if (datum.display.lines) {
                 const lineEl = getLinePath<XValue>(xScale, yScale, datum.points,
                     datum.curveFactory ? datum.curveFactory : curveBasis);
-                lines.push(<path key={index} d={lineEl} className={'line'} stroke={datum.color}/>);
+                lines.push(<path
+                    key={index}
+                    d={lineEl}
+                    className="line"
+                    stroke={datum.color}
+                />);
             }
             if (datum.display.area) {
                 const areaPath = getAreaPath<XValue>(xScale, yScale, datum.points, yScale(0),
                     datum.curveFactory ? datum.curveFactory : curveMonotoneX);
-                areas.push(<path key={index} d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
+                areas.push(<path
+                    key={index}
+                    d={areaPath}
+                    className="area"
+                    stroke={datum.color}
+                    fill={datum.color}
+                />);
             }
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {
@@ -56,7 +67,10 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
                         className={point.active ? 'active' : 'inactive'}
                         key={index + '-' + key}
                         r="7.5"
-                        fill={point.color}
+                        style={{
+                            '--point-color-active': point.color.active,
+                            '--point-color-inactive': point.color.inactive,
+                        } as React.CSSProperties}
                         cy={yScale(point.yValue)}
                         cx={xScale(point.xValue)}
                     >

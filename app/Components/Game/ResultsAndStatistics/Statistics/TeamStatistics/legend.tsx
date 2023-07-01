@@ -30,24 +30,25 @@ class Legend extends React.Component<StateProps, never> {
                 default:
                     pointsLabel = translator.getText('bodů');
             }
-            return (<div key={points}
-                         className="col-12 chart-legend-item"
-                         onMouseEnter={() => {
-                             onSetNewState({activePoints: +points})
-                         }}
-                         onMouseLeave={() => {
-                             onSetNewState({activePoints: null})
-                         }}>
-                <i className="icon icon-circle" data-points={points}/>
+            return <div key={points}
+                        className="col chart-legend-item"
+                        onMouseEnter={() => {
+                            onSetNewState({activePoints: +points})
+                        }}
+                        onMouseLeave={() => {
+                            onSetNewState({activePoints: null})
+                        }}>
+                <i className="icon icon-circle"
+                   data-points={points}
+                   style={{'--item-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
+                />
                 <strong>{points + ' ' + pointsLabel}</strong>
-            </div>);
+            </div>;
         });
 
-        return (
-            <div className="chart-legend chart-legend-game align-content-center col-lg-4 d-flex flex-wrap">
-                {legend}
-            </div>
-        );
+        return <div className="chart-legend chart-legend-game align-content-center d-flex flex-wrap">
+            {legend}
+        </div>;
     }
 }
 

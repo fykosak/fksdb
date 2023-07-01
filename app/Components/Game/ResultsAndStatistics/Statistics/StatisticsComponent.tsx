@@ -22,13 +22,13 @@ export default class StatisticsComponent extends React.Component<OwnProps, never
         switch (mode) {
             case 'team':
             default:
-                content = (<TeamStats/>);
+                content = <TeamStats/>;
                 break;
             case 'task':
-                content = (<TasksStats/>);
+                content = <TasksStats/>;
                 break;
             case 'correlation':
-                content = (<CorrelationStats/>);
+                content = <CorrelationStats/>;
         }
         return <MainComponent
             app={app}

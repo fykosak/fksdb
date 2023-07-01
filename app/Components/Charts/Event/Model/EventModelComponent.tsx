@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Chart, { Link as SimLink, Node as SimNode } from './Chart';
+import NodeChart, { Link as SimLink, Node as SimNode } from './node-chart';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -50,6 +50,6 @@ export default class EventModelComponent extends React.Component<OwnProps, never
                 target: simNodes[link.to],
             };
         });
-        return <Chart links={simLinks} nodes={Object.values(simNodes)} colors={['#ccc']}/>;
+        return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['#ccc']}/>;
     }
 }

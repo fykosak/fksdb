@@ -79,12 +79,10 @@ class InnerComponent extends React.Component<StateProps, never> {
             }
 
         }
-        return (
-            <div className="p-3 h-100 bg-white">
-                <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
-                <div className="row justify-content-around">{resultsItems}</div>
-            </div>
-        );
+        return <div className="p-3 h-100 bg-white">
+            <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
+            <div className="row justify-content-around">{resultsItems}</div>
+        </div>;
     }
 }
 

@@ -28,7 +28,7 @@ interface OwnProps {
     colors: string[];
 }
 
-export default class Chart extends ChartComponent<OwnProps, Record<string, never>> {
+export default class NodeChart extends ChartComponent<OwnProps, Record<string, never>> {
     private simulation = null;
 
     public componentDidMount() {
@@ -53,6 +53,7 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
                 const node = nodes[key];
                 nodesElements.push(
                     <g fill="currentColor"
+                       style={{'--color': node.color} as React.CSSProperties}
                        key={key}
                        strokeLinecap="round"
                        onClick={() => {
@@ -71,24 +72,25 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
                             fill={node.color}
                             r="7.5"
                         />
-                        <text x="8" y="0.31rem" fontSize=".5rem" fontWeight="bold" fill={node.color}>
+                        <text x="8" y="0.31rem">
                             {node.label}
                         </text>
                     </g>,
                 );
             }
         }
-        return <svg
-            className="chart"
-            viewBox={`-${this.size.width / 2} -${this.size.height / 2} ${this.size.width} ${this.size.height}`}>
-            <defs>
-                {this.props.colors.map((color) => {
-                    return <marker
-                        key={color}
-                        viewBox="-5 0 10 10"
-                        id={'arrow-end-' + color.slice(1)}
-                        refX="10"
-                        refY="5"
+        return <div className="node-chart">
+            <svg
+                className="chart"
+                viewBox={`-${this.size.width / 2} -${this.size.height / 2} ${this.size.width} ${this.size.height}`}>
+                <defs>
+                    {this.props.colors.map((color) => {
+                        return <marker
+                            key={color}
+                            viewBox="-5 0 10 10"
+                            id={'arrow-end-' + color.slice(1)}
+                            refX="10"
+                            refY="5"
                         markerWidth="10"
                         markerHeight="10"
                         orient="auto"
@@ -129,9 +131,10 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
                 </g>;
 
             })}</g>
-            <g className="nodes">
-                {nodesElements}
-            </g>
-        </svg>;
+                <g className="nodes">
+                    {nodesElements}
+                </g>
+            </svg>
+        </div>;
     }
 }

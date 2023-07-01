@@ -76,29 +76,25 @@ class Timeline extends React.Component<StateProps & OwnProps, never> {
 
             const submitted = new Date(submit.modified);
 
-            return (
-                <g style={{opacity: 1}} key={index}>
-                    <circle
-                        cx={this.xScale(submitted)}
-                        cy={50}
-                        r={5}
-                        fill={'var(--color-fof-points-' + submit.points + ')'}
-                    ><title>
-                        {submit.currentTeam.name + '-' + submit.modified.toString()}
-                    </title>
-                    </circle>
-                </g>
-            );
+            return <g style={{opacity: 1}} key={index}>
+                <circle
+                    cx={this.xScale(submitted)}
+                    cy={50}
+                    r={5}
+                    style={{'--point-color': 'var(--color-fof-points-' + submit.points + ')'} as React.CSSProperties}
+                ><title>
+                    {submit.currentTeam.name + '-' + submit.modified.toString()}
+                </title>
+                </circle>
+            </g>;
         });
-        return (
-            <div className="chart-game-task-timeline">
-                <svg viewBox="0 0 600 100" className="chart ">
-                    <g transform="translate(0,70)" className="x axis"
-                       ref={(xAxis) => this.xAxis = xAxis}/>
-                    {dots}
-                </svg>
-            </div>
-        );
+        return <div className="chart-game-task-timeline">
+            <svg viewBox="0 0 600 100" className="chart ">
+                <g transform="translate(0,70)" className="x axis"
+                   ref={(xAxis) => this.xAxis = xAxis}/>
+                {dots}
+            </svg>
+        </div>;
     }
 
     private getAxis() {

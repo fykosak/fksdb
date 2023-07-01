@@ -1,11 +1,11 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/BarHistogram';
+import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
+import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './contestatns-data';
 import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {

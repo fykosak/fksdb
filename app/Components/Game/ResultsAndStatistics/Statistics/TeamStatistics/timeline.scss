@@ -15,6 +15,7 @@
   }
 
   polyline {
+    stroke: var(--polyline-color);
     stroke-linecap: round;
     stroke-width: 2;
   }

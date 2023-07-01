@@ -82,10 +82,10 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps, ne
                                     return <div
                                         className="progress-bar"
                                         key={i}
-                                        data-points={value}
                                         style={{
+                                            '--bar-color': 'var(--color-fof-points-' + value + ')',
                                             width: (submit[value] / max) * 100 + '%',
-                                        }}>
+                                        } as React.CSSProperties}>
                                         {submit[value]}
                                     </div>;
                                 })}
@@ -96,7 +96,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps, ne
 
             }
         }
-        return (<div className="chart chart-game-task-progress">{rows}</div>);
+        return <div className="chart chart-game-task-progress">{rows}</div>;
     }
 }
 
