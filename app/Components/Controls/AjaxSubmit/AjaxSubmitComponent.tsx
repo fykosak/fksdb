@@ -17,7 +17,7 @@ interface Props {
 export default class AjaxSubmitComponent extends React.Component<Props, never> {
 
     public render() {
-        return <ActionsStoreCreator<Store>
+        return <ActionsStoreCreator<Store, SubmitModel>
             initialData={{
                 actions: this.props.actions,
                 data: this.props.data,

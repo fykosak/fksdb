@@ -21,7 +21,7 @@ export default class MainComponent<Store> extends React.Component<OwnProps<Store
             data: this.props.data,
             messages: [],
         };
-        return <ActionsStoreCreator<Store> initialData={initialData} app={this.props.app}>
+        return <ActionsStoreCreator<Store, ResponseData> initialData={initialData} app={this.props.app}>
             <TranslatorContext.Provider value={this.props.translator}>
                 <Downloader data={this.props.data}/>
                 {this.props.children}
