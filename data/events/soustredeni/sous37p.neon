@@ -69,7 +69,7 @@ events:
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\Callbacks\Sous\Reminder3MailCallback()
                     
-                    # reject spare
+                    # spare reject
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Odmítnout účast')
