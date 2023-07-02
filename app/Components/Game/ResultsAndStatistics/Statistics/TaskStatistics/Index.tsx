@@ -22,13 +22,13 @@ class TaskStats extends React.Component<StateProps, never> {
         return <>
             <div className="panel color-auto">
                 <div className="container">
-                    <h2>{translator.getText('Total solved problem')}</h2>
+                    <h2>{translator.getText('Total solved problems')}</h2>
                     <Progress availablePoints={availablePoints}/>
                 </div>
             </div>
             <div className="panel color-auto">
                 <div className="container">
-                    <h2>{translator.getText('Statistics from single problem')}</h2>
+                    <h2>{translator.getText('Statistics of single problem')}</h2>
                     <Options/>
                 </div>
             </div>
