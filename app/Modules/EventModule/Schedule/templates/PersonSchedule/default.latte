@@ -31,7 +31,7 @@
                     {var $toStart = $group->start->getTimestamp()-time()}
                         <div class="badge bg-warning">
                             {if $toStart < 60 * 60}
-                                {_'Block start in'} {floor($toStart / 60)} {_'minutes'}
+                                {_'Block starts in'} {floor($toStart / 60)} {_'minutes'}
                             {else}
                                 {_'Block has not started yet'}
                             {/if}
