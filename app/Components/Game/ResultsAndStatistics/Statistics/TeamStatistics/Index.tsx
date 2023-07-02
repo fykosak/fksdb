@@ -32,7 +32,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
             <div className="panel color-auto">
                 <div className="container">
                     <h2>
-                        {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
+                        {translator.getText('Statistics of team ') + (selectedTeam ? selectedTeam.name : '')}
                     </h2>
                     <p>
                         <select className="form-control" onChange={(event) => {
