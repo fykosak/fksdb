@@ -42,7 +42,7 @@ class Handler
         $this->logger->log(
             new Message(
                 \sprintf(
-                    _('Team "%s" has successfully closed submitting, with total %d points.'),
+                    _('Team "%s" rating was successfully closeded with total %d points.'),
                     $team->name,
                     $sum
                 ),
