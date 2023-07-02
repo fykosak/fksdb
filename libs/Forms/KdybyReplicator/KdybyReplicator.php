@@ -309,7 +309,7 @@ class Replicator extends Container
 
     private static ?string $registered = null;
 
-    public static function register(string $methodName = 'addDynamic'): void
+    public static function register(\Nette\DI\Container $container, string $methodName = 'addDynamic'): void
     {
         if (self::$registered) {
             Container::extensionMethod(self::$registered, function () {
@@ -318,7 +318,7 @@ class Replicator extends Container
         }
 
         Container::extensionMethod($methodName, function (Container $container, $name, $factory, $createDefault = 0) {
-            return $container[$name] = new Replicator($factory, $this->container, $createDefault);
+            return $container[$name] = new Replicator($factory, $container, $createDefault);
         });
 
         if (self::$registered) {
@@ -363,5 +363,3 @@ class Replicator extends Container
         self::$registered = $methodName;
     }
 }
-
-Replicator::register();

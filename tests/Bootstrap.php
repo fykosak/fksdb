@@ -67,7 +67,7 @@ $configurator = Bootstrap::boot();
 $container = $configurator->createContainer();
 
 // Register addons
-Replicator::register();
+Replicator::register($container);
 
 /* Always acquire locks in the order as below! */
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');

@@ -20,7 +20,7 @@ $configurator = Bootstrap::boot();
 // vytvoření DI kontejneru
 $container = $configurator->createContainer();
 // Register addons
-Replicator::register();
+Replicator::register($container);
 // DI kontejner vytvoří objekt Nette\Application\Application
 $application = $container->getByType(Application::class);
 // spuštění Nette aplikace
