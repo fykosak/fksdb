@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
-use FKSDB\Components\Grids\RelatedGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
-class ItemsGrid extends RelatedGrid
+class ItemsGrid extends BaseGrid
 {
+    private ScheduleGroupModel $group;
 
     public function __construct(Container $container, ScheduleGroupModel $group)
     {
-        parent::__construct($container, $group, 'schedule_item');
+        parent::__construct($container);
+        $this->group = $group;
+    }
+
+    protected function getModels(): TypedGroupedSelection
+    {
+        return $this->group->getItems();
     }
 
     /**
@@ -23,7 +31,6 @@ class ItemsGrid extends RelatedGrid
      */
     protected function configure(): void
     {
-        parent::configure();
         $this->addColumns([
             'schedule_item.schedule_item_id',
             'schedule_item.name_cs',

@@ -1,6 +1,5 @@
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChart';
-import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geoChartHelper';
+import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
+import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-helper';
 import * as React from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
 
@@ -32,7 +31,7 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
             }
         });
         const value = this.state ? this.state.timestamp : maxTimestamp;
-        return <div className="chart-container participant-time-geo-chart">
+        return <>
             <div className="form-group">
                 <input type="range"
                        step={day}
@@ -45,7 +44,7 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
                        value={value}/>
                 <small className="form-text text-muted">{(new Date(value)).toISOString()}</small>
             </div>
-            <ChartContainer chart={GeoChart} chartProps={{data: geoData, scaleType: SCALE_LOG}}/>
-        </div>;
+            <GeoChart data={geoData} scaleType={SCALE_LOG}/>
+        </>;
     }
 }

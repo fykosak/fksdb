@@ -1,6 +1,5 @@
 import * as React from 'react';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import Chart, { Link as SimLink, Node as SimNode } from './Chart';
+import NodeChart, { Link as SimLink, Node as SimNode } from '../../Core/NodeChart/node-chart';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -26,7 +25,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class EventModelComponent extends React.Component<OwnProps, never> {
+export default class ModelChart extends React.Component<OwnProps, never> {
 
     public render() {
         const {data: {links, nodes}} = this.props;
@@ -51,9 +50,6 @@ export default class EventModelComponent extends React.Component<OwnProps, never
                 target: simNodes[link.to],
             };
         });
-        return <ChartContainer
-            chart={Chart}
-            chartProps={{links: simLinks, nodes: Object.values(simNodes), colors: ['#ccc']}}
-        />;
+        return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['#ccc']}/>;
     }
 }

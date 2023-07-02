@@ -1,8 +1,9 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
+import './bar-histogram.scss';
 
 interface OwnProps {
     xScale: ScaleLinear<number, number>;
@@ -56,22 +57,25 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
                 const y1 = this.props.yScale(item.yValue);
                 const y2 = this.props.yScale(0);
                 rows.push(<polygon
-                    key={index}
-                    points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
-                    fill={item.color}>
-                    <title>{item.yValue}</title>
-                    </polygon>
+                        key={index}
+                        points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
+                        style={{'--bar-color': item.color} as React.CSSProperties}
+                    >
+                        <title>{item.yValue}</title>
+                    </polygon>,
                 );
             });
             bars.push(rows);
         });
-        return <svg viewBox={this.getViewBox()} className="chart">
-            <g>
-                <g transform={this.transformXAxis()} className="axis x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                <g transform={this.transformYAxis()} className="axis y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
-                {bars}
-            </g>
-        </svg>;
+        return <div className="bar-histogram">
+            <svg viewBox={this.getViewBox()} className="chart">
+                <g>
+                    <g transform={this.transformXAxis()} className="axis x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
+                    <g transform={this.transformYAxis()} className="axis y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
+                    {bars}
+                </g>
+            </svg>
+        </div>;
     }
 
     private getAxis(): void {
@@ -86,18 +90,18 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
         select(this.yAxis).call(yAxis);
 
         if (display && display.xGrid) {
-            selectAll(".x-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("y2",(-this.size.height + this.margin.top + this.margin.bottom))
-                .attr("stroke","currentcolor");
+            selectAll('.x-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('y2',(-this.size.height + this.margin.top + this.margin.bottom))
+                .attr('stroke','currentcolor');
         }
         if (display && display.yGrid) {
-            selectAll(".y-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("x2",(this.size.width - this.margin.left - this.margin.right))
-                .attr("stroke","currentcolor");
+            selectAll('.y-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('x2',(this.size.width - this.margin.left - this.margin.right))
+                .attr('stroke','currentcolor');
         }
     }
 }

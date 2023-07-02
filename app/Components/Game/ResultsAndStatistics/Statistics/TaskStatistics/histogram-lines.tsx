@@ -1,6 +1,6 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveMonotoneX } from 'd3-shape';
-import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import * as React from 'react';
@@ -23,7 +23,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, never> {
+class HistogramLines extends React.Component<StateProps & OwnProps, never> {
 
     public render() {
         const {
@@ -109,7 +109,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, nev
                 });
             }
         });
-        return <LineChart data={lineChartData} xScale={xScale} yScale={yScale}/>;
+        return <LineChart<Date> data={lineChartData} xScale={xScale} yScale={yScale}/>;
     }
 }
 
@@ -125,4 +125,4 @@ const mapStateToProps = (state: Store): StateProps => {
     };
 };
 
-export default connect(mapStateToProps, null)(TimeHistogramLinesChart);
+export default connect(mapStateToProps, null)(HistogramLines);

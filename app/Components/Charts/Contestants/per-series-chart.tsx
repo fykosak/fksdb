@@ -1,11 +1,11 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/BarHistogram';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
+import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
+import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
+import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './contestatns-data';
 import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
@@ -45,22 +45,25 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
         for (let series = 1; series <= maxSeries; series++) {
             legendData.push({
                 color: colorScale(series.toString()),
-                display: {},
-                name: getSeriesLabel(series.toString()),
+                display: {
+                    bars: true,
+                },
+                name: getSeriesLabel(series.toString(), this.props.translator),
                 points: [],
             });
         }
 
         return <ChartContainer
             chart={BarHistogram}
-            chartProps={{xScale,
+            chartProps={{
+                xScale,
                 yScale,
                 data: histogramData,
                 display: {
-                    xGrid: false, yGrid: true
-                }
+                    xGrid: false, yGrid: true,
+                },
             }}
-            legendComponent={LineChartLegend}
+            legendComponent={Legend}
             legendProps={{data: legendData}}
         />;
     }

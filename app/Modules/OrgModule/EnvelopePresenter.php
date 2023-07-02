@@ -34,6 +34,11 @@ class EnvelopePresenter extends BasePresenter
         return new PageTitle(null, _('Envelopes for person generator'), 'fas fa-envelope');
     }
 
+    public function authorizeddefault(): bool
+    {
+        return true;
+    }
+
     protected function createComponentOutput(): ProviderComponent
     {
         return new ProviderComponent(

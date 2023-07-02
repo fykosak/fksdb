@@ -1,12 +1,11 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { submitsByTask } from '../Middleware/submitsByTask';
-import './bar-histrogram.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
@@ -81,6 +80,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                         key={index}
                         points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                         data-points={points}
+                        style={{'--bar-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
                     />);
                 });
 
@@ -89,15 +89,15 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                 </g>);
             }
         }
-        return (
-            <svg viewBox={this.getViewBox()} className="chart chart-game-task-bar-histogram">
+        return <div className="bar-histogram">
+            <svg viewBox={this.getViewBox()} className="chart">
                 <g>
                     {bars}
                     <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
                     <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
                 </g>
             </svg>
-        );
+        </div>;
     }
 
     private getAxis(): void {

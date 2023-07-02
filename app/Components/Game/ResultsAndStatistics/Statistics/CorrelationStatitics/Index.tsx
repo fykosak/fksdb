@@ -27,8 +27,8 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, never
         const translator = this.context;
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;
         const teamsOptions = teams.map((team) => {
-            return (<option key={team.teamId} value={team.teamId}
-            >{team.name}</option>);
+            return <option key={team.teamId} value={team.teamId}
+            >{team.name}</option>;
         });
 
         const teamSelect = (
@@ -71,13 +71,11 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, never
                 ((firstSelectedTeam && secondSelectedTeam) ? (firstSelectedTeam.name + ' VS ' + secondSelectedTeam.name) : '')}</h2>
         );
 
-        return (
-            <>
-                {headline}
-                {teamSelect}
-                {(firstTeamId && secondTeamId) ? /*<Table/>*/null : <GlobalCorrelation/>}
-            </>
-        );
+        return <>
+            {headline}
+            {teamSelect}
+            {(firstTeamId && secondTeamId) ? /*<Table/>*/null : <GlobalCorrelation/>}
+        </>;
     }
 }
 

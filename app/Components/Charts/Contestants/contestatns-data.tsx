@@ -1,7 +1,6 @@
 import Ordinal from '@translator/Ordinal';
 import * as React from 'react';
-import { useContext } from 'react';
-import { TranslatorContext } from '@translator/LangContext';
+import { availableLanguage, Translator } from '@translator/translator';
 
 export type seriesType = string | 'year';
 
@@ -11,8 +10,7 @@ export interface YearsData {
     };
 }
 
-export const getSeriesLabel = (series: seriesType): JSX.Element => {
-    const translator = useContext(TranslatorContext);
+export const getSeriesLabel = (series: seriesType, translator: Translator<availableLanguage>): JSX.Element => {
     if (series === 'year') {
         return <>{translator.getText('Full year')}</>;
     }

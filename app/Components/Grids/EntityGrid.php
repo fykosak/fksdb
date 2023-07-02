@@ -10,6 +10,9 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @deprecated
+ */
 abstract class EntityGrid extends BaseGrid
 {
     protected Service $service;

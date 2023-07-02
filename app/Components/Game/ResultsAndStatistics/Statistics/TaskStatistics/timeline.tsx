@@ -67,38 +67,34 @@ class Timeline extends React.Component<StateProps & OwnProps, never> {
         }
 
         taskSubmits.sort((a, b) => {
-            return (new Date(a.created)).getTime() - (new Date(b.created)).getTime();
+            return (new Date(a.modified)).getTime() - (new Date(b.modified)).getTime();
         });
         const dots = taskSubmits.filter((submit) => {
-            const created = new Date(submit.created);
+            const created = new Date(submit.modified);
             return created.getTime() > fromDate.getTime() && created.getTime() < toDate.getTime();
         }).map((submit, index: number) => {
 
-            const submitted = new Date(submit.created);
+            const submitted = new Date(submit.modified);
 
-            return (
-                <g style={{opacity: 1}} key={index}>
-                    <circle
-                        cx={this.xScale(submitted)}
-                        cy={50}
-                        r={5}
-                        data-points={submit.points}
-                    ><title>
-                        {submit.currentTeam.name + '-' + submit.created.toString()}
-                    </title>
-                    </circle>
-                </g>
-            );
+            return <g style={{opacity: 1}} key={index}>
+                <circle
+                    cx={this.xScale(submitted)}
+                    cy={50}
+                    r={5}
+                    style={{'--point-color': 'var(--color-fof-points-' + submit.points + ')'} as React.CSSProperties}
+                ><title>
+                    {submit.currentTeam.name + '-' + submit.modified.toString()}
+                </title>
+                </circle>
+            </g>;
         });
-        return (
-            <div className="col-lg-12">
-                <svg viewBox="0 0 600 100" className="chart chart-game-task-timeline">
-                    <g transform="translate(0,70)" className="x axis"
-                       ref={(xAxis) => this.xAxis = xAxis}/>
-                    {dots}
-                </svg>
-            </div>
-        );
+        return <div className="chart-game-task-timeline">
+            <svg viewBox="0 0 600 100" className="chart ">
+                <g transform="translate(0,70)" className="x axis"
+                   ref={(xAxis) => this.xAxis = xAxis}/>
+                {dots}
+            </svg>
+        </div>;
     }
 
     private getAxis() {

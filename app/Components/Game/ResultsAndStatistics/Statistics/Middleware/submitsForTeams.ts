@@ -16,7 +16,7 @@ export const calculateSubmitsForTeams = (submits: Submits): SubmitsForTeams => {
             submitsForTeams[teamId] = submitsForTeams[teamId] || {};
             submitsForTeams[teamId][taskId] = {
                 ...submit,
-                timestamp: (new Date(submit.created)).getTime(),
+                timestamp: (new Date(submit.modified)).getTime(),
             };
         }
     }

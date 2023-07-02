@@ -2,17 +2,12 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
 import { curveBasis, curveMonotoneX } from 'd3-shape';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
-import {
-    getAreaPath,
-    getLinePath,
-    LineChartData,
-} from 'FKSDB/Components/Charts/Core/LineChart/middleware';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
+import { getAreaPath, getLinePath, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import './line-chart.scss';
 
 interface OwnProps<XValue extends Date | number> {
-    className?: string;
     data: LineChartData<XValue>;
     xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>;
     yScale: ScaleLinear<number, number>;
@@ -48,20 +43,36 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             if (datum.display.lines) {
                 const lineEl = getLinePath<XValue>(xScale, yScale, datum.points,
                     datum.curveFactory ? datum.curveFactory : curveBasis);
-                lines.push(<path key={index} d={lineEl} className={'line'} stroke={datum.color}/>);
+                lines.push(<path
+                    key={index}
+                    d={lineEl}
+                    className="line"
+                    style={{
+                        '--line-color': datum.color,
+                    } as React.CSSProperties}
+                />);
             }
             if (datum.display.area) {
                 const areaPath = getAreaPath<XValue>(xScale, yScale, datum.points, yScale(0),
                     datum.curveFactory ? datum.curveFactory : curveMonotoneX);
-                areas.push(<path key={index} d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
+                areas.push(<path
+                    key={index}
+                    d={areaPath}
+                    className="area"
+                    style={{
+                        '--area-color': datum.color,
+                    } as React.CSSProperties}
+                />);
             }
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {
                     dots.push(<circle
-                        className={point.active ? 'active' : 'inactive'}
+                        className={'point ' + (point.active ? 'active' : '')}
                         key={index + '-' + key}
                         r="7.5"
-                        fill={point.color}
+                        style={{
+                            '--point-color': point.active ? point.color.active : point.color.inactive,
+                        } as React.CSSProperties}
                         cy={yScale(point.yValue)}
                         cx={xScale(point.xValue)}
                     >
@@ -78,21 +89,21 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             }
         });
 
-        return (
-            <svg viewBox={this.getViewBox()} className={'chart chart-line-chart line-chart ' + this.props.className}>
+        return <div className="line-chart">
+            <svg viewBox={this.getViewBox()} className="chart">
                 <g>
                     <g transform={this.transformXAxis()}
-                       className={'axis x-axis '}
+                       className="axis x-axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     <g transform={this.transformYAxis()}
-                       className={'axis y-axis '}
+                       className="axis y-axis"
                        ref={(yAxis) => this.yAxis = yAxis}/>
                     {areas}
                     {lines}
                     {dots}
                 </g>
             </svg>
-        );
+        </div>;
     }
 
     private getAxis(): void {
@@ -104,18 +115,18 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
         select(this.yAxis).call(yAxis);
 
         if (display && display.xGrid) {
-            selectAll(".x-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("y2",(-this.size.height + this.margin.top + this.margin.bottom))
-                .attr("stroke","currentcolor");
+            selectAll('.x-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('y2',(-this.size.height + this.margin.top + this.margin.bottom))
+                .attr('stroke','currentcolor');
         }
         if (display && display.yGrid) {
-            selectAll(".y-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("x2",(this.size.width - this.margin.left - this.margin.right))
-                .attr("stroke","currentcolor");
+            selectAll('.y-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('x2',(this.size.width - this.margin.left - this.margin.right))
+                .attr('stroke','currentcolor');
         }
     }
 }

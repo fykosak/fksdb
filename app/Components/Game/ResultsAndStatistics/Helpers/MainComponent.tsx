@@ -21,13 +21,11 @@ export default class MainComponent<Store> extends React.Component<OwnProps<Store
             data: this.props.data,
             messages: [],
         };
-        return (
-            <ActionsStoreCreator initialData={initialData} app={this.props.app}>
-                <TranslatorContext.Provider value={this.props.translator}>
-                    <Downloader data={this.props.data}/>
-                    {this.props.children}
-                </TranslatorContext.Provider>
-            </ActionsStoreCreator>
-        );
+        return <ActionsStoreCreator initialData={initialData} app={this.props.app}>
+            <TranslatorContext.Provider value={this.props.translator}>
+                <Downloader data={this.props.data}/>
+                {this.props.children}
+            </TranslatorContext.Provider>
+        </ActionsStoreCreator>;
     }
 }

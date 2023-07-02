@@ -41,7 +41,6 @@ class PersonRelatedGrid extends BaseGrid
      */
     protected function configure(): void
     {
-
         $this->paginate = false;
         $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {

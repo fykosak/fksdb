@@ -3,7 +3,7 @@ import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitMo
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import './pie.scss';
+import './pie-chart.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
@@ -63,30 +63,29 @@ class PieChart extends React.Component<StateProps & OwnProps, never> {
         const pie = getPieData<PointGroupItem>(filteredData);
         // TODO types
         const paths = pie.map((item: PieArcDatum<PointGroupItem>, index: number) => {
-            return (<path
-                    className={'arc ' + ((activePoints && (activePoints !== item.data.points)) ? 'inactive' : 'active')}
-                    d={arcEl(item)}
-                    key={index}
-                    data-points={item.data.points}
-                />
-            );
+            return <path
+                className={'arc ' + ((activePoints && (activePoints !== item.data.points)) ? '' : 'active')}
+                d={arcEl(item)}
+                key={index}
+                style={{'--arc-color': 'var(--color-fof-points-' + item.data.points + ')'} as React.CSSProperties}
+            />;
         });
 
         const labels = pie.map((item: PieArcDatum<PointGroupItem>, index: number) => {
-            return (
-                <g key={index}>
-                    <text transform={'translate(' + arcEl.centroid(item).toString() + ')'}>
-                        <tspan>{Math.floor(item.data.count * 100 / totalSubmits)}%</tspan>
-                    </text>
-                </g>
-            );
+            return <g key={index}>
+                <text transform={'translate(' + arcEl.centroid(item).toString() + ')'}>
+                    <tspan>{Math.floor(item.data.count * 100 / totalSubmits)}%</tspan>
+                </text>
+            </g>;
         });
-        return <svg viewBox="0 0 400 400" className="chart chart-game-team-pie">
-            <g transform="translate(200,200)">
-                {paths}
-                {labels}
-            </g>
-        </svg>;
+        return <div className="chart-game-team-pie">
+            <svg viewBox="0 0 400 400" className="chart">
+                <g transform="translate(200,200)">
+                    {paths}
+                    {labels}
+                </g>
+            </svg>
+        </div>;
     }
 }
 

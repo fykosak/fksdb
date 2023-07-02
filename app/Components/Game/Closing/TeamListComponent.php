@@ -8,7 +8,7 @@ use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -83,14 +83,14 @@ class TeamListComponent extends FilterList
         };
         $row1 = new RowContainer($this->container);
         $row1->addComponent(
-            new TemplateBaseItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
+            new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
             'name'
         );
-        $row1->addComponent(new TemplateBaseItem($this->container, '@fyziklani_team.category'), 'category');
-        $row1->addComponent(new TemplateBaseItem($this->container, '@fyziklani_team.state'), 'state');
+        $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
+        $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
         $this->addRow($row1, 'row1');
         $row2 = new RowContainer($this->container);
-        $row2->addComponent(new TemplateBaseItem($this->container, _('points: @fyziklani_team.points')), 'points');
+        $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
         $this->addRow($row2, 'row2');
     }
 }

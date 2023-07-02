@@ -32,11 +32,9 @@ class Images extends React.Component<StateProps, never> {
         const label = this.getLabel(toStart, toEnd);
         if (label === null) return null;
 
-        return (
-            <div className="presentation-images">
-                {this.getLabel(toStart, toEnd)}
-            </div>
-        );
+        return <div className="presentation-images">
+            {this.getLabel(toStart, toEnd)}
+        </div>;
     }
 
     private getLabel(toStart: number, toEnd: number): string {

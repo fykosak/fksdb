@@ -58,22 +58,20 @@ class Timer extends React.Component<StateProps & OwnProps, never> {
         const h = date.getUTCHours();
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
-        return (
-            <div className={'row presentation-timer timer-' + mode}>
+        return <div className={'row presentation-timer timer-' + mode}>
                 <span className="col">
                     <span className="time-value">{(h < 10 ? '0' + h : '' + h)}</span>
                     <span className="time-label">Hours/Hodin</span>
                 </span>
-                <span className="col">
+            <span className="col">
                     <span className="time-value">{(m < 10 ? '0' + m : '' + m)}</span>
                     <span className="time-label">Minutes/Minut</span>
                 </span>
-                <span className="col">
+            <span className="col">
                     <span className="time-value">{(s < 10 ? '0' + s : '' + s)}</span>
                     <span className="time-label">Seconds/Sekund</span>
                 </span>
-            </div>
-        );
+        </div>;
     }
 }
 

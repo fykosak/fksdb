@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Fykosak\NetteORM\TypedSelection;

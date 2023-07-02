@@ -39,6 +39,7 @@ $contest-colors-text-emphasis: (
         "dsef": shade-color($dsef-color, 60%),
         "ctyrboj":shade-color($ctyrboj-color, 60%),
 );
+
 $contest-colors-bg-subtle: (
         "fof": tint-color($fof-color, 80%),
         "fol":tint-color($fol-color, 80%),
@@ -65,6 +66,7 @@ $contest-colors-text-dark: (
         "dsef": tint-color($dsef-color, 40%),
         "ctyrboj": tint-color($ctyrboj-color, 40%),
 );
+
 $contest-colors-bg-subtle-dark: (
         "fof": shade-color($fof-color, 80%),
         "fol": shade-color($fol-color, 80%),
@@ -73,7 +75,6 @@ $contest-colors-bg-subtle-dark: (
         "dsef": shade-color($dsef-color, 80%),
         "ctyrboj":shade-color($ctyrboj-color, 80%),
 );
-
 
 $contest-colors-border-subtle-dark: (
         "fof": shade-color($fof-color, 40%),

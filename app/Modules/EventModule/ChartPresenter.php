@@ -14,11 +14,8 @@ use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 
 class ChartPresenter extends BasePresenter
 {
@@ -33,26 +30,12 @@ class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedChart(): bool
-    {
-        return $this->isAllowed('event.chart', 'chart');
-    }
-
-
-    /**
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws NotImplementedException
-     * @throws BadRequestException
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {
         parent::startup();
-        $this->selectChart();
+        $this->registerCharts();
     }
 
     /**
@@ -60,7 +43,7 @@ class ChartPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function registerCharts(): array
+    protected function getCharts(): array
     {
         if ($this->getEvent()->isTeamEvent()) {
             return [

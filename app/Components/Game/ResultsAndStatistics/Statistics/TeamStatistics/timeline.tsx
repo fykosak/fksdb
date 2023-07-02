@@ -2,7 +2,7 @@ import { axisBottom } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import { timeMinute } from 'd3-time';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';
@@ -58,7 +58,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
             const submit = teamSubmits.filter((fSubmit) => {
                 return fSubmit.taskId === taskId;
             })[0];
-            const to = submit ? new Date(submit.created) : gameEnd;
+            const to = submit ? new Date(submit.modified) : gameEnd;
 
             const fromCoordinates = this.xScale(from);
             const toCoordinates = this.xScale(to);
@@ -70,28 +70,27 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
                     active = activePoints === submit.points;
                 }
             }
-            return (
-                <g key={index} className={active ? 'active' : 'inactive'}>
-                    <polyline
-                        points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
-                        data-points={submit ? submit.points : null}
-                    />
-                    <text
-                        x={(fromCoordinates + toCoordinates) / 2}
-                        y={yCoordinates - 1}
-                    >
-                        <tspan>{task.label}</tspan>
-                    </text>
-                </g>
-            );
+            return <g key={index} className={active ? 'active' : 'inactive'}>
+                <polyline
+                    points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
+                    style={{'--polyline-color': submit ? ('var(--color-fof-points-' + submit.points + ')') : '#ccc'} as React.CSSProperties}
+                />
+                <text
+                    x={(fromCoordinates + toCoordinates) / 2}
+                    y={yCoordinates - 1}
+                >
+                    <tspan>{task.label}</tspan>
+                </text>
+            </g>;
         });
 
-        return <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize}
-                    className="chart chart-game-team-timeline">
-            <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
-               ref={(xAxis) => this.xAxis = xAxis}/>
-            {dots}
-        </svg>;
+        return <div className="chart-game-team-timeline">
+            <svg viewBox={'0 0 ' + this.size.width + ' ' + this.ySize} className="chart">
+                <g transform={'translate(0,' + (this.ySize - this.margin.bottom) + ')'} className="x axis"
+                   ref={(xAxis) => this.xAxis = xAxis}/>
+                {dots}
+            </svg>
+        </div>;
     }
 
     private getAxis() {
@@ -128,14 +127,14 @@ const reconstructTeamGame = (submits: Submits, tasks: TaskModel[], tasksOnBoard:
     for (const index in submits) {
         if (Object.hasOwn(submits,index)) {
             const submit: SubmitModel = submits[index];
-            const {teamId: submitTeamId, created} = submit;
+            const {teamId: submitTeamId, modified} = submit;
             if (teamId === submitTeamId) {
                 if (submit.points !== null && submit.points !== 0) {
                     teamSubmits.push(submit);
                     const task = taskBuffer.shift();
                     activeTasks.push({
                         ...task,
-                        from: new Date(created),
+                        from: new Date(modified),
                     });
                 }
             }

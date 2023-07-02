@@ -15,7 +15,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Subm
     };
 };
 
-export const uploadData = (state: State = {}, action): State => {
+export const upload = (state: State = {}, action): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);

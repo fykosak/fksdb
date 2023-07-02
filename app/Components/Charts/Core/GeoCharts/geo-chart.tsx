@@ -1,7 +1,8 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { scaleLinear, scaleLog } from 'd3-scale';
 import * as React from 'react';
-import { findMax, GeoData } from './geoChartHelper';
+import { findMax, GeoData } from './geo-helper';
+import './geo-chart.scss';
 
 interface OwnProps {
     data: GeoData;
@@ -10,6 +11,7 @@ interface OwnProps {
 
 export const SCALE_LINEAR = 'linear';
 export const SCALE_LOG = 'log';
+
 export default class GeoChart extends React.Component<OwnProps, { active?: string }> {
 
     private countryData = [];
@@ -56,9 +58,10 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             const count = Object.hasOwn(data,country.id) ? data[country.id].count : 0;
             countryNodes.push(<path
                 key={key}
-                fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}
-                stroke="#000"
-                strokeWidth={0.5}
+                className={isActive ? 'active' : ''}
+                style={{
+                    '--color': isActive ? activeColorScale(count) : inactiveColorScale(count),
+                } as React.CSSProperties}
                 onMouseOver={() => {
                     this.setState({active: country.id});
                 }}
@@ -69,10 +72,12 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             ><title>{country.properties.name}: {count}</title>
             </path>);
         });
-        return <svg viewBox="-500 -300 1000 600" className="chart geo-chart">
-            <g>
-                {countryNodes}
-            </g>
-        </svg>;
+        return <div className="geo-chart">
+            <svg viewBox="-500 -300 1000 600" className="chart">
+                <g>
+                    {countryNodes}
+                </g>
+            </svg>
+        </div>;
     }
 }
