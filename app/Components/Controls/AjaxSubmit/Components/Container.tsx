@@ -38,7 +38,7 @@ class UploadContainer extends React.Component<StateProps, never> {
     private getInnerContainer(translator: Translator<availableLanguage>) {
         const {submit, submitting} = this.props;
         if (submit.disabled) {
-            return <p className="alert alert-info">{translator.getText('Task is not for your category.')}</p>;
+            return <p className="alert alert-info">{translator.getText('Task is not available for your category.')}</p>;
         }
         if (submitting) {
             return <LoadingState/>;
