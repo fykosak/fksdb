@@ -19,6 +19,27 @@ class FOFCategoryProcessing extends FormProcessing
         return $values;
     }
 
+    protected static function getTeamMembersYears(array $members, EventModel $event): array
+    {
+        $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
+
+        if (!count($members)) {
+            throw new NoMemberException();
+        }
+
+        // calculate stats
+        foreach ($members as $member) {
+            $history = $member->getHistory($event->getContestYear()->ac_year);
+            if ($history->study_year >= 1 && $history->study_year <= 4) {
+                $years[$history->study_year] += 1;
+            } else {
+                $years[0] += 1; // ZŠ
+            }
+        }
+
+        return $years;
+    }
+
     /**
      *   Open (staří odkudkoliv - pokazí to i jeden člen týmu)
      *   Zahraniční
@@ -30,6 +51,7 @@ class FOFCategoryProcessing extends FormProcessing
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {
+        $years = self::getTeamMembersYears($members, $event);
         if (!count($members)) {
             throw new NoMemberException();
         }
@@ -38,9 +60,9 @@ class FOFCategoryProcessing extends FormProcessing
         }
 
         $avg = $this->getCoefficientAvg($members, $event);
-        if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) { // TODO FIX!!!!
+        if ($avg <= 2 && $years[4] == 0 && $years[3] <= 2) {
             return TeamCategory::tryFrom(TeamCategory::C);
-        } elseif ($avg <= 3 && $year[4] <= 2) {
+        } elseif ($avg <= 3 && $years[4] <= 2) {
             return TeamCategory::tryFrom(TeamCategory::B);
         } else {
             return TeamCategory::tryFrom(TeamCategory::A);
@@ -52,26 +74,12 @@ class FOFCategoryProcessing extends FormProcessing
      */
     public static function getCoefficientAvg(array $members, EventModel $event): float
     {
-        $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
-
-        if (!count($members)) {
-            throw new NoMemberException();
-        }
-
-        // calculate stats
-        foreach ($members as $member) {
-            $history = $member->getHistory($event->getContestYear()->ac_year);
-            if ($history->study_year >= 1 && $history->study_year <= 4) {
-                $year[$history->study_year] += 1;
-            } else {
-                $year[0] += 1; // ZŠ
-            }
-        }
+        $years = self::getTeamMembersYears($members, $event);
         $sum = 0;
         $cnt = 0;
         for ($y = 0; $y <= 4; ++$y) {
-            $sum += $year[$y] * $y;
-            $cnt += $year[$y];
+            $sum += $years[$y] * $y;
+            $cnt += $years[$y];
         }
         return $sum / $cnt;
     }
