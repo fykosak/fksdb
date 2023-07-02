@@ -2,7 +2,7 @@ import { axisBottom } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import { timeMinute } from 'd3-time';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
 import * as React from 'react';

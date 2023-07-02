@@ -1,7 +1,7 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
 import './bar-histogram.scss';
 
@@ -90,18 +90,18 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
         select(this.yAxis).call(yAxis);
 
         if (display && display.xGrid) {
-            selectAll(".x-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("y2",(-this.size.height + this.margin.top + this.margin.bottom))
-                .attr("stroke","currentcolor");
+            selectAll('.x-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('y2',(-this.size.height + this.margin.top + this.margin.bottom))
+                .attr('stroke','currentcolor');
         }
         if (display && display.yGrid) {
-            selectAll(".y-axis g.tick")
-                .append("line").lower()
-                .attr("class","grid-line")
-                .attr("x2",(this.size.width - this.margin.left - this.margin.right))
-                .attr("stroke","currentcolor");
+            selectAll('.y-axis g.tick')
+                .append('line').lower()
+                .attr('class','grid-line')
+                .attr('x2',(this.size.width - this.margin.left - this.margin.right))
+                .attr('stroke','currentcolor');
         }
     }
 }

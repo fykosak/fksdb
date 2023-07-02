@@ -52,6 +52,27 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
   --color-variant-color-9: #bcbd22;
   --color-variant-color-10: #17becf;
   --color-variant-color-11: #000000;
+
+  --color-contest-1: #{$fykos-color};
+  --color-contest-2: #{$vyfuk-color};
+  --color-contest-3: #{$ctyrboj-color};
+
+  --color-event-type-1: #{$fof-color};
+  --color-event-type-2: #{$dsef-color};
+  --color-event-type-3: #{$fykos-color};
+  --color-event-type-4: #{$fykos-color};
+  --color-event-type-5: #{$fykos-color};
+  --color-event-type-7: #{$fykos-color};
+
+  --color-event-type-9: #{$fol-color};
+  --color-event-type-10: #{$vyfuk-color};
+  --color-event-type-11: #{$vyfuk-color};
+  --color-event-type-12: #{$vyfuk-color};
+
+  --color-event-type-14: #{$dsef-color};
+  --color-event-type-15: #{$vyfuk-color};
+  --color-event-type-16: #{$fykos-color};
+  --color-event-type-17: #{$ctyrboj-color};
 }
 
 html, body {

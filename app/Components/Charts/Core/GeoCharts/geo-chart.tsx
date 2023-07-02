@@ -1,7 +1,7 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { scaleLinear, scaleLog } from 'd3-scale';
 import * as React from 'react';
-import { findMax, GeoData } from './geoChartHelper';
+import { findMax, GeoData } from './geo-helper';
 import './geo-chart.scss';
 
 interface OwnProps {
@@ -58,14 +58,10 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             const count = Object.hasOwn(data,country.id) ? data[country.id].count : 0;
             countryNodes.push(<path
                 key={key}
-                className={isActive ? 'active' : 'inactive'}
+                className={isActive ? 'active' : ''}
                 style={{
-                    '--active-color': activeColorScale(count),
-                    '--inactive-color': inactiveColorScale(count),
+                    '--color': isActive ? activeColorScale(count) : inactiveColorScale(count),
                 } as React.CSSProperties}
-                fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}
-                stroke="#000"
-                strokeWidth={0.5}
                 onMouseOver={() => {
                     this.setState({active: country.id});
                 }}

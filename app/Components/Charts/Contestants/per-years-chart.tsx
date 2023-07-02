@@ -2,9 +2,9 @@ import Ordinal from '@translator/Ordinal';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
+import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './contestatns-data';
@@ -73,7 +73,7 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                 xScale,
                 yScale,
             }}
-            legendComponent={LineChartLegend}
+            legendComponent={Legend}
             legendProps={{
                 data: lineChartData,
             }}

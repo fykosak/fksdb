@@ -1,7 +1,7 @@
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
 import * as React from 'react';
 import { connect } from 'react-redux';

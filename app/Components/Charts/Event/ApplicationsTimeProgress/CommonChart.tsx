@@ -1,11 +1,11 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
+import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { EventModel } from 'FKSDB/Models/ORM/Models/EventModel';
 import * as React from 'react';
-import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
@@ -102,7 +102,7 @@ export default class CommonChart extends React.Component<OwnProps, never> {
                 yScale,
             }}
             legendProps={{data: lineChartData}}
-            legendComponent={LineChartLegend}
+            legendComponent={Legend}
         />;
     }
 }

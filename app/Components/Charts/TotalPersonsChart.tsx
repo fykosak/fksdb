@@ -1,7 +1,7 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
+import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -95,7 +95,7 @@ export default class TotalPersonsChart extends React.Component<OwnProps, never> 
                 xScale,
                 yScale,
             }}
-            legendComponent={LineChartLegend}
+            legendComponent={Legend}
             legendProps={{data: lineChartData}}
         />;
     }

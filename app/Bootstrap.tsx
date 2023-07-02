@@ -18,11 +18,11 @@ import * as React from 'react';
 import 'vendor/nette/forms/src/assets/netteForms.js';
 import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
-import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
+import ModelChart from 'FKSDB/Components/Charts/Event/Model/model-chart';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { availableLanguage, Translator } from '@translator/translator';
-import TimelineComponent from 'FKSDB/Components/Controls/Stalking/Timeline/TimelineComponent';
+import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
 import ScheduleField from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
 
 const translator = new Translator<availableLanguage>();
@@ -68,7 +68,7 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainCom
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
-renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Timeline, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart, {translator});
@@ -87,7 +87,7 @@ renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress',
 });
 renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent, {translator});
+renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
 
 window.addEventListener('DOMContentLoaded', () => {

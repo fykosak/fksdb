@@ -4,19 +4,18 @@
   }
 
   path.arc {
+    fill: var(--color);
+    cursor: pointer;
+    opacity: .2;
+
     &.active {
       opacity: 1;
-    }
-
-    &.inactive {
-      opacity: .2;
     }
   }
 
   path.ribbon {
-    &.default {
-      opacity: 0.2;
-    }
+    fill: var(--color);
+    opacity: 0.2;
 
     &.active {
       opacity: 0.75;
@@ -24,6 +23,19 @@
 
     &.inactive {
       opacity: 0;
+    }
+  }
+
+  text.label {
+    text-anchor: end;
+    alignment-baseline: central;
+
+    &.other {
+      text-anchor: start;
+    }
+
+    &.active {
+      font-weight: bold;
     }
   }
 }

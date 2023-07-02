@@ -1,9 +1,7 @@
 .geo-chart {
   path {
-    fill: var(--inactive-color);
-
-    &.active {
-      fill: var(--active-color);
-    }
+    fill: var(--color);
+    stroke: #000;
+    stroke-width: .5;
   }
 }

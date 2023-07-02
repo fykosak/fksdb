@@ -53,7 +53,7 @@ export default class ParticipantAcquaintanceChart extends React.Component<OwnPro
             .outerRadius(this.outerRadius);
 
         return <>{groups.map((datum, index) => {
-            let className = 'inactive';
+            let className = '';
             if (this.state.activeId !== null && datum.index === this.state.activeId) {
                 className = 'active';
             }
@@ -62,8 +62,7 @@ export default class ParticipantAcquaintanceChart extends React.Component<OwnPro
                 key={index}
                 className={'arc ' + className}
                 d={arcGenerator(datum)}
-                cursor="pointer"
-                fill={this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'}
+                style={{'--color': this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'} as React.CSSProperties}
                 onClick={() => {
                     this.setState({activeId: this.state.activeId === index ? null : index});
                 }}/>;
@@ -87,12 +86,13 @@ export default class ParticipantAcquaintanceChart extends React.Component<OwnPro
                 count = datum.value;
             }
 
-            return <g key={index} transform={'translate(' + textArc.centroid(datum).join(',') + ')'}>
+            return <g
+                key={index}
+                transform={'translate(' + textArc.centroid(datum).join(',') + ')'}
+            >
                 <text
+                    className={'label' + (isActive ? ' active' : '') + (isOther ? ' other' : '')}
                     transform={'rotate(' + ((isOther ? (angle - Math.PI / 2) : angle + Math.PI / 2) * 180 / Math.PI) + ')'}
-                    textAnchor={isOther ? 'start' : 'end'}
-                    alignmentBaseline="central"
-                    fontWeight={isActive ? 'bold' : ''}
                 >{this.getPerson(index).person.name}
                     {count !== null ? (' (' + count + ')') : null}</text>
             </g>;
@@ -124,7 +124,7 @@ export default class ParticipantAcquaintanceChart extends React.Component<OwnPro
                     key={index}
                     className={'ribbon ' + className}
                     d={dAttr}
-                    fill={colorScale(datum.source.index + '-' /*+ datum.source.subindex*/)}
+                    style={{'--color': colorScale(datum.source.index + '-' + datum.target.index)} as React.CSSProperties}
                 />;
             })}
         </>;
