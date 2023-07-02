@@ -14,9 +14,8 @@ use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 
 class ChartPresenter extends BasePresenter
 {
@@ -25,34 +24,18 @@ class ChartPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): void
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
-    }
-
-    protected function getModelResource(): string
-    {
-        return 'event.chart';
+        return $this->isAllowed('event.chart', 'list');
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedChart(): void
-    {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'chart'));
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws NotImplementedException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {
         parent::startup();
-        $this->selectChart();
+        $this->registerCharts();
     }
 
     /**
@@ -60,7 +43,7 @@ class ChartPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function registerCharts(): array
+    protected function getCharts(): array
     {
         if ($this->getEvent()->isTeamEvent()) {
             return [

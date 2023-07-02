@@ -5,11 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Nette\DI\Container;
 
-class MassTransitionsComponent extends TransitionComponent
+class MassTransitionsComponent extends BaseComponent
 {
+    use TransitionComponent;
+
+    public function __construct(Container $container, EventModel $event)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
     /**
      * @throws BadTypeException
      */

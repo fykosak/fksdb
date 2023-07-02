@@ -27,19 +27,17 @@ export default class Row extends React.Component<OwnProps, never> {
                 count++;
                 sum += +points;
             }
-            return (<td data-points={points} key={taskIndex}>{points ? points : null}</td>);
+            return <td data-points={points} key={taskIndex}>{points ? points : null}</td>;
         });
 
         const average = count > 0 ? Math.round(sum / count * 100) / 100 : '-';
-        return (
-            <tr style={{display: visible ? '' : 'none'}}>
-                <td/>
-                <td>{team.name}</td>
-                <td className="sum">{sum}</td>
-                <td>{count}</td>
-                <td>{average}</td>
-                {cools}
-            </tr>
-        );
+        return <tr style={{display: visible ? '' : 'none'}}>
+            <td/>
+            <td>{team.name}</td>
+            <td className="sum">{sum}</td>
+            <td>{count}</td>
+            <td>{average}</td>
+            {cools}
+        </tr>;
     }
 }

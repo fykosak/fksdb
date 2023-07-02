@@ -1,6 +1,7 @@
 {block content}
     {varType FKSDB\Components\Grids\Components\BaseGrid $control}
     {varType bool $paginate}
+    {varType bool $counter}
     {varType array $flashes}
     {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
     {varType int $userPermission}
@@ -13,8 +14,10 @@
             {$flash->message}
         </div>
     {/foreach}
-    <div class="row my-3">
-        <div class="offset-8 col-4">
+    {if $counter}
+        <div class="row my-3">
+
+            <div class="offset-8 col-4">
         <span class="badge bg-primary float-end">
             {_'Total'} {$control->getPaginator()->getItemCount()}
             {switch $control->getPaginator()->getItemCount()}
@@ -26,8 +29,9 @@
                 {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
             {/if}
         </span>
+            </div>
         </div>
-    </div>
+    {/if}
     {include table from './Container/table.latte' models=>$models,head:true,userPermission:$userPermission,tableRow:$control->tableRow,className:'table table-sm table-hover table-striped'}
     {if $paginate}
         {control paginator}

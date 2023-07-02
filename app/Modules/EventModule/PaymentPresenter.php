@@ -21,6 +21,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
+use Tracy\Debugger;
 
 /**
  * @method PaymentModel getEntity
@@ -42,7 +43,15 @@ class PaymentPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create payment'), 'fa fa-credit-card');
+        return new PageTitle(null, _('Create payment'), 'fas fa-credit-card');
+    }
+
+    public function authorizedCreate(): bool
+    {
+        $event = $this->getEvent();
+        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'org-create', $event)
+            || ($this->isPaymentAllowed() &&
+                $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $event));
     }
 
     /**
@@ -58,8 +67,22 @@ class PaymentPresenter extends BasePresenter
         return new PageTitle(
             null,
             \sprintf(_('Edit payment #%s'), $this->getEntity()->payment_id),
-            'fa fa-credit-card'
+            'fas fa-credit-card'
         );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedEdit(): bool
+    {
+        $event = $this->getEvent();
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)
+            || ($this->isPaymentAllowed() && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
 
     /**
@@ -75,59 +98,29 @@ class PaymentPresenter extends BasePresenter
         return new PageTitle(
             null,
             \sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id),
-            'fa fa-credit-card',
+            'fas fa-credit-card',
         );
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
+        return new PageTitle(null, _('List of payments'), 'fas fa-credit-card');
     }
 
     public function titleDetailedList(): PageTitle
     {
-        return new PageTitle(null, _('Detailed list of payments'), 'fa fa-credit-card');
+        return new PageTitle(null, _('Detailed list of payments'), 'fas fa-credit-card');
     }
 
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedDetailedList(): void
+    public function authorizedDetailedList(): bool
     {
-        $this->authorizedList();
+        return $this->authorizedList();
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    public function authorizedEdit(): void
-    {
-        $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)
-            || ($this->isPaymentAllowed()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
-            )
-        );
-    }
-
-    public function authorizedCreate(): void
-    {
-        $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'org-create', $event)
-            || ($this->isPaymentAllowed()
-                && $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $event)
-            )
-        );
-    }
-
-    /* ********* Authorization *****************/
     /**
      * @throws EventNotFoundException
      */
@@ -141,9 +134,6 @@ class PaymentPresenter extends BasePresenter
         }
         return (time() > $params['begin']->getTimestamp()) && (time() < $params['end']->getTimestamp());
     }
-
-    /* ********* actions *****************/
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -156,8 +146,6 @@ class PaymentPresenter extends BasePresenter
     {
         $this->template->model = $this->getEntity();
     }
-
-    /* ********* render *****************/
 
     /**
      * @throws EventNotFoundException

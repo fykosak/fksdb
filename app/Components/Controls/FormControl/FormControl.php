@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\FormControl;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
@@ -20,15 +19,10 @@ class FormControl extends BaseComponent
         return new Form();
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function getForm(): Form
     {
+        /** @var Form $component */
         $component = $this->getComponent('form');
-        if (!$component instanceof Form) {
-            throw new BadTypeException(Form::class, $component);
-        }
         return $component;
     }
 

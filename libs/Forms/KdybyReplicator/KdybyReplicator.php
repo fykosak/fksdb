@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Kdyby\Extension\Forms\Replicator;
 
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
@@ -15,7 +16,6 @@ use Nette\Forms\IControl;
 use Nette\Forms\ISubmitterControl;
 use Nette\InvalidArgumentException;
 use Nette\MemberAccessException;
-use Nette\Reflection\ClassType;
 use Nette\Utils\Arrays;
 
 /**
@@ -34,7 +34,6 @@ class Replicator extends Container
 {
     public bool $forceDefault;
     public int $createDefault;
-    public string $containerClass = Container::class;
     /** @var callable */
     protected $factoryCallback;
     private bool $submittedBy = false;
@@ -47,9 +46,9 @@ class Replicator extends Container
      */
     public function __construct(
         callable $factory,
+        \Nette\DI\Container $container,
         int $createDefault = 0,
-        bool $forceDefault = false,
-        ?\Nette\DI\Container $container = null
+        bool $forceDefault = false
     ) {
         $this->container = $container;
         $this->monitor(Presenter::class);
@@ -95,7 +94,7 @@ class Replicator extends Container
      */
     protected function createComponent(string $name): ?IComponent
     {
-        $container = $this->createContainer();
+        $container = new ContainerWithOptions($this->container);
         $container->currentGroup = $this->currentGroup;
         $this->addComponent($container, $name, $this->getFirstControlName());
 
@@ -109,12 +108,6 @@ class Replicator extends Container
         $controls = iterator_to_array($this->getComponents(false, IControl::class));
         $firstControl = reset($controls);
         return $firstControl ? $firstControl->name : null;
-    }
-
-    protected function createContainer(): Container
-    {
-        $class = $this->containerClass;
-        return new $class($this->container);
     }
 
     public function isSubmittedBy(): bool
@@ -137,7 +130,7 @@ class Replicator extends Container
      * @param string|int $name
      * @throws InvalidArgumentException
      */
-    public function createOne($name = null): Container
+    public function createOne($name = null): ContainerWithOptions
     {
         if (!isset($name)) {
             $names = array_keys(iterator_to_array($this->getContainers()));
@@ -149,7 +142,7 @@ class Replicator extends Container
             throw new InvalidArgumentException("Container with name '$name' already exists.");
         }
 
-        return $this[$name];
+        return $this->getComponent($name);
     }
 
 
@@ -203,15 +196,6 @@ class Replicator extends Container
         }
     }
 
-    /**
-     * @return array|null
-     */
-    protected function getContainerValues(string $name)
-    {
-        $post = $this->getHttpData();
-        return $post[$name] ?? null;
-    }
-
     private function getHttpData(): array
     {
         if (!isset($this->httpPost)) {
@@ -228,7 +212,7 @@ class Replicator extends Container
     {
         if (!$container->parent === $this) {
             throw new InvalidArgumentException(
-                'Given component ' . $container->name . ' is not children of ' . $this->name . '.'
+                'Given component ' . $container->name . ' is not children of ' . $this->getName() . '.'
             );
         }
 
@@ -246,8 +230,8 @@ class Replicator extends Container
         $this->removeComponent($container);
 
         // reflection is required to hack form groups
-        $groupRefl = ClassType::from(ControlGroup::class);
-        $controlsProperty = $groupRefl->getProperty('controls');
+        $groupReflection = new \ReflectionClass(ControlGroup::class);
+        $controlsProperty = $groupReflection->getProperty('controls');
         $controlsProperty->setAccessible(true);
 
         // walk groups and clean then from removed components
@@ -269,7 +253,7 @@ class Replicator extends Container
 
         // remove affected & empty groups
         if ($cleanUpGroups && $affected) {
-            foreach ($this->getForm()->getComponents(false, '\Nette\Forms\Container') as $container) {
+            foreach ($this->getForm()->getComponents(false, Container::class) as $container) {
                 if ($index = array_search($container->currentGroup, $affected, true)) {
                     unset($affected[$index]);
                 }
@@ -334,30 +318,30 @@ class Replicator extends Container
         }
 
         Container::extensionMethod($methodName, function (Container $container, $name, $factory, $createDefault = 0) {
-            return $container[$name] = new Replicator($factory, $createDefault);
+            return $container[$name] = new Replicator($factory, $this->container, $createDefault);
         });
 
         if (self::$registered) {
             return;
         }
 
-        SubmitButton::extensionMethod('addRemoveOnClick', function (SubmitButton $_this, $callback = null) {
-            $replicator = $_this->lookup(__NAMESPACE__ . '\Replicator');
-            $_this->setValidationScope(null);
-            $_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
+        SubmitButton::extensionMethod('addRemoveOnClick', function (SubmitButton $button, $callback = null) {
+            $replicator = $button->lookup(self::class);
+            $button->setValidationScope(null);
+            $button->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
                 /** @var Replicator $replicator */
                 if (is_callable($callback)) {
                     $callback($replicator, $button->parent);
                 }
                 $replicator->remove($button->parent);
             };
-            return $_this;
+            return $button;
         });
 
         SubmitButton::extensionMethod(
             'addCreateOnClick',
             function (SubmitButton $button, $allowEmpty = false, $callback = null) {
-                $replicator = $button->lookup(__NAMESPACE__ . '\Replicator');
+                $replicator = $button->lookup(self::class);
                 $button->onClick[] = function () use ($replicator, $allowEmpty, $callback) {
                     /** @var Replicator $replicator */
                     if (!is_bool($allowEmpty)) {
@@ -380,5 +364,4 @@ class Replicator extends Container
     }
 }
 
-class_alias(__NAMESPACE__ . '\Replicator', 'Kdyby\Forms\Containers\Replicator');
 Replicator::register();

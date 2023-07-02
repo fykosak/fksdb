@@ -10,7 +10,6 @@ $container = require '../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Models\ORM\Services\CountryService;
-use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;

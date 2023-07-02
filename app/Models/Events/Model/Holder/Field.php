@@ -66,8 +66,6 @@ class Field
         $this->factory->setFieldDefaultValue($control, $this);
     }
 
-    /* ********* "Runtime" operations *********     */
-
     public function isRequired(): bool
     {
         if (is_callable($this->required)) {

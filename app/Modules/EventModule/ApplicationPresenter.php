@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
 
 class ApplicationPresenter extends AbstractApplicationPresenter
 {
@@ -27,14 +29,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     *
-     * use same method of permissions as trait
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedImport(): void
+    public function authorizedImport(): bool
     {
-        $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
+        return $this->traitIsAuthorized($this->getModelResource(), 'import');
     }
 
     protected function getModelResource(): string
@@ -98,13 +98,29 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentFastTransition(): FastTransitionComponent
+    protected function createComponentFastTransition(): AttendanceComponent
     {
-        return new FastTransitionComponent(
+        return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
         );
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentCreateForm(): Control
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        throw new NotImplementedException();
     }
 }

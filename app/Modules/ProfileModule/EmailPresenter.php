@@ -21,12 +21,22 @@ class EmailPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change email'), 'fa fa-envelope');
+        return new PageTitle(null, _('Change email'), 'fas fa-envelope');
     }
 
     public function titleConfirm(): PageTitle
     {
-        return new PageTitle(null, _('Confirm new email'), 'fa fa-cogs');
+        return new PageTitle(null, _('Confirm new email'), 'fas fa-cogs');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
+    public function authorizedConfirm(): bool
+    {
+        return true;
     }
 
     public function actionConfirm(): void

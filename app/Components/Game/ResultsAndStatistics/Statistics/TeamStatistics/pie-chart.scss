@@ -1,0 +1,14 @@
+.chart-game-team-pie {
+  path.arc {
+    fill: var(--arc-color);
+    opacity: 0.1;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  text {
+    text-anchor: middle;
+  }
+}

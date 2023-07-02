@@ -30,20 +30,18 @@ export default class AutoButton extends React.Component<OwnProps, never> {
     public render() {
         const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit} = this.props;
-        return (
-            <div className="d-flex justify-content-around">
-                <button
-                    className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
-                    type="button"
-                    disabled={!valid || submitting}
-                    onClick={handleSubmit((values: { code: string }) =>
-                        onSubmit({
-                            ...values,
-                            points: null,
-                        }))}
-                >{submitting ? (
-                    <i className="fa fa-spinner fa-spin" aria-hidden="true"/>) : translator.getText('Submit')}</button>
-            </div>
-        );
+        return <div className="d-flex justify-content-around">
+            <button
+                className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
+                type="button"
+                disabled={!valid || submitting}
+                onClick={handleSubmit((values: { code: string }) =>
+                    onSubmit({
+                        ...values,
+                        points: null,
+                    }))}
+            >{submitting ? (
+                <i className="fas fa-spinner fa-spin" aria-hidden="true"/>) : translator.getText('Submit')}</button>
+        </div>;
     }
 }

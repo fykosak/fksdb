@@ -4,22 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
@@ -50,7 +48,7 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function setUp(): void
     {
-        Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
+        Environment::lock(LOCK_DB . $this->instanceNo, \FKSDB\Tests\TEMP_DIR);
         $address = $this->container->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );

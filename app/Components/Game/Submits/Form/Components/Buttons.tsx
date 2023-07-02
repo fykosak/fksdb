@@ -18,25 +18,22 @@ export default class Buttons extends React.Component<OwnProps, never> {
         const {valid, submitting, handleSubmit, onSubmit, availablePoints} = this.props;
 
         const buttons = availablePoints.map((value, index) => {
-            return (
-                <button
-                    className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
-                    key={index}
-                    type="button"
-                    disabled={!valid || submitting}
-                    onClick={handleSubmit((values: { code: string }) =>
-                        onSubmit({
-                            ...values,
-                            points: value,
-                        }))}
-                >{submitting ? (
-                    <i className="fa fa-spinner fa-spin" aria-hidden="true"/>) : (value + '. bodu')}</button>
-            );
+            return <button
+                className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
+                key={index}
+                type="button"
+                disabled={!valid || submitting}
+                onClick={handleSubmit((values: { code: string }) =>
+                    onSubmit({
+                        ...values,
+                        points: value,
+                    }))}
+            >{submitting ? (
+                <i className="fas fa-spinner fa-spin" aria-hidden="true"/>) : (value + '. bodu')}
+            </button>;
         });
-        return (
-            <div className="d-flex justify-content-around">
-                {buttons}
-            </div>
-        );
+        return <div className="d-flex justify-content-around">
+            {buttons}
+        </div>;
     }
 }

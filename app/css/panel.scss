@@ -1,0 +1,35 @@
+$panel-color-dark: var(--bs-secondary-bg);
+$panel-color-light: var(--bs-body-bg);
+
+.panel {
+  padding: 4.3rem 0;
+
+  &:first-of-type {
+    padding: .5rem 0;
+  }
+
+  &.panel-dark, &.color-auto:nth-of-type(2n) {
+    background-color: $panel-color-dark;
+  }
+
+  &.panel-light, &.color-auto:nth-of-type(2n+1) {
+    background-color: $panel-color-light;
+  }
+
+  .page-header {
+    margin-bottom: 2.1rem;
+  }
+
+  .subtitle {
+    font-weight: bold;
+    font-size: 1.6rem;
+  }
+
+  h1, h2 {
+    font-weight: 600;
+  }
+
+  h2 {
+    margin-bottom: 2.1rem;
+  }
+}

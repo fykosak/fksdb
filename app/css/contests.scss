@@ -1,31 +1,75 @@
+@import "variables";
 @import "colors";
 @import "mixins/navigation-item";
-@import "node_modules/bootstrap/scss/bootstrap";
 
-.navigation-item {
-  @include navigation-item(var(--color-fykos-main), white, false, false);
+[data-bs-theme="light"][data-style-id~="default"] {
+  @include page-theme($body-color);
 }
 
-[data-style-id~="fykos"] {
-  @include page-theme(var(--color-fykos-main));
+[data-bs-theme="dark"][data-style-id~="default"] {
+  @include page-theme($body-color-dark, #000);
 }
 
-[data-style-id~="vyfuk"] {
-  @include page-theme(var(--color-vyfuk-main));
+[data-style-id="contest-fykos"],
+[data-style-id="event-type-3"],
+[data-style-id="event-type-4"],
+[data-style-id="event-type-5"],
+[data-style-id="event-type-6"],
+[data-style-id="event-type-7"],
+[data-style-id="event-type-16"] {
+  @include page-theme($fykos-color);
 }
 
-[data-style-id~="ctyrboj"], [data-style-id~="event-type-17"] {
-  @include page-theme($ctyrbojColor);
+[data-style-id="contest-vyfuk"],
+[data-style-id="event-type-10"],
+[data-style-id="event-type-11"],
+[data-style-id="event-type-12"],
+[data-style-id="event-type-15"] {
+  @include page-theme($vyfuk-color);
 }
 
-[data-style-id~="event-type-1"] {
-  @include page-theme(var(--color-fof-main));
+[data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
+  @include page-theme($ctyrboj-color);
 }
 
-[data-style-id~="event-type-9"] {
-  @include page-theme(var(--color-fol-main));
+[data-style-id="event-type-1"] {
+  @include page-theme($fof-color);
 }
 
-[data-style-id~="error"] {
-  @include page-theme($danger);
+[data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
+  @include page-theme($dsef-color);
+}
+
+[data-style-id="event-type-9"] {
+  @include page-theme($fol-color);
+}
+
+[data-style-id="error"] {
+  @include page-theme(map-get($other-colors, "error"));
+}
+
+.icon {
+  &::before {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    content: "";
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 1em 1em;
+    // content: url(./../../www/images/contests/fykos.svg);
+  }
+
+  &.icon-fykos {
+    &::before {
+      background-image: url(./../../www/images/contests/fykos.svg);
+    }
+  }
+
+  &.icon-vyfuk {
+    &::before {
+      background-image: url(./../../www/images/contests/vyfuk.svg);
+    }
+  }
+
 }

@@ -1,11 +1,11 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
-import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
+import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
+import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { EventModel } from 'FKSDB/Models/ORM/Models/EventModel';
 import * as React from 'react';
-import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
+import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
@@ -33,7 +33,7 @@ interface OwnProps {
 export default class CommonChart extends React.Component<OwnProps, never> {
 
     public render() {
-        const {data, accessKey, translator} = this.props;
+        const {data, accessKey} = this.props;
 
         let minTime = 0;
         let max = 0;
@@ -50,18 +50,26 @@ export default class CommonChart extends React.Component<OwnProps, never> {
 
                 const eventData = apps.sort((a, b) => {
                     return ((new Date(a.created)).getTime() - (new Date(b.created)).getTime());
-                }).map((team) => {
+                }).map((team): ExtendedPointData<number> => {
                     sum++;
                     const x = ((new Date(team.created)).getTime() - begin.getTime()) / (1000 * 60 * 60 * 24);
                     minTime = minTime < x ? minTime : x;
                     return {
-                        color: null,
+                        active: false,
+                        color: {
+                            active: null,
+                            inactive: null,
+                        },
                         xValue: x,
                         yValue: sum,
                     };
                 });
                 eventData.push({
-                    color: null,
+                    active: false,
+                    color: {
+                        active: null,
+                        inactive: null,
+                    },
                     xValue: 0,
                     yValue: sum,
                 });
@@ -92,11 +100,9 @@ export default class CommonChart extends React.Component<OwnProps, never> {
                 },
                 xScale,
                 yScale,
-
             }}
             legendProps={{data: lineChartData}}
-            legendComponent={LineChartLegend}
-            headline={translator.getText('Time progress')}
+            legendComponent={Legend}
         />;
     }
 }

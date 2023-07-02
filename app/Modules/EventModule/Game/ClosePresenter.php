@@ -34,6 +34,15 @@ class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed($this->getModelResource(), 'default');
+    }
+
+    /**
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -49,25 +58,15 @@ class ClosePresenter extends BasePresenter
         );
     }
 
-    /* ******* authorized methods ***********/
-
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedTeam(): void
+    public function authorizedTeam(): bool
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
+        return $this->isAllowed($this->getModelResource(), 'default');
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedList(): void
-    {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
-    }
 
     /**
      * @param Resource|string|null $resource

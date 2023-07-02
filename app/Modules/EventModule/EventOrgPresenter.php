@@ -35,12 +35,12 @@ class EventOrgPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Organizers of event'), 'fa fa-user-tie');
+        return new PageTitle(null, _('Organizers of event'), 'fas fa-user-tie');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create organizer of event'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create organizer of event'), 'fas fa-user-plus');
     }
 
     /**
@@ -56,7 +56,7 @@ class EventOrgPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Edit organizer of event "%s"'), $this->getEntity()->person->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
     }
 

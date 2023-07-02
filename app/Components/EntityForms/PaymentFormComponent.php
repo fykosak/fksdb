@@ -22,7 +22,6 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Security\User;
 
@@ -70,9 +69,9 @@ class PaymentFormComponent extends EntityFormComponent
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    protected function appendSubmitButton(Form $form): void
     {
-        return $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
+        $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
     }
 
     /**

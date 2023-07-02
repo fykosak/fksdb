@@ -6,14 +6,13 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Components\Schedule\Input\ExistingPaymentException;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -81,9 +80,6 @@ class ApplicationComponent extends BaseComponent
         $this->template->render($this->getTemplateFile());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $result = new FormControl($this->getContext());
@@ -157,9 +153,7 @@ class ApplicationComponent extends BaseComponent
         try {
             if (!$transition || $transition->getValidation()) {
                 try {
-                    if (!$this->connection->getPdo()->inTransaction()) {
-                        $this->connection->beginTransaction();
-                    }
+                    $this->connection->beginTransaction();
                     $values = FormUtils::emptyStrToNull($form->getValues());
                     Debugger::log(json_encode((array)$values), 'app-form');
                     foreach ($this->holder->processings as $processing) {
@@ -184,7 +178,7 @@ class ApplicationComponent extends BaseComponent
 
                     if ($transition && $transition->isCreating()) {
                         $this->getPresenter()->flashMessage(
-                            sprintf(_('Application "%s" created.'), (string)$this->holder->getModel()),
+                            sprintf(_('Application "%s" created.'), $this->holder->getModel()->person->getFullName()),
                             Message::LVL_SUCCESS
                         );
                     } elseif ($transition) {
@@ -197,12 +191,10 @@ class ApplicationComponent extends BaseComponent
                         );
                     }
                     $this->getPresenter()->flashMessage(
-                        sprintf(_('Application "%s" saved.'), (string)$this->holder->getModel()),
+                        sprintf(_('Application "%s" saved.'), $this->holder->getModel()->person->getFullName()),
                         Message::LVL_SUCCESS
                     );
-                    if ($this->connection->getPdo()->inTransaction()) {
-                        $this->connection->commit();
-                    }
+                    $this->connection->commit();
                 } catch (
                     ModelDataConflictException |
                     DuplicateApplicationException |

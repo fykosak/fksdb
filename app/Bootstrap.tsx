@@ -1,6 +1,6 @@
 import * as ReactDOM from 'react-dom';
-import PerSeriesChart from './Components/Charts/Contestants/PerSeriesChart';
-import PerYearsChart from './Components/Charts/Contestants/PerYearsChart';
+import PerSeriesChart from './Components/Charts/Contestants/per-series-chart';
+import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
 import ApplicationRationGeoChart from './Components/Charts/Event/Applications/ApplicationRationGeoChart';
 import ParticipantsTimeGeoChart from './Components/Charts/Event/Applications/ParticipantsTimeGeoChart';
 import TeamsGeoChart from './Components/Charts/Event/Applications/TeamsGeoChart';
@@ -18,12 +18,12 @@ import * as React from 'react';
 import 'vendor/nette/forms/src/assets/netteForms.js';
 import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
-import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
+import ModelChart from 'FKSDB/Components/Charts/Event/Model/model-chart';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { availableLanguage, Translator } from '@translator/translator';
-import TimelineComponent from 'FKSDB/Components/Controls/Stalking/Timeline/TimelineComponent';
-import ScheduleField from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
+import ScheduleField from 'FKSDB/Components/Schedule/Input/ScheduleField';
 
 const translator = new Translator<availableLanguage>();
 
@@ -68,7 +68,7 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainCom
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
-renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Timeline, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart, {translator});
@@ -87,7 +87,7 @@ renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress',
 });
 renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent, {translator});
+renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -105,7 +105,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const originalValue = actElement.attr('data-writeonly-value');
             const originalLabel = actElement.attr('data-writeonly-label');
 
-            const button = $('<i class="fa fa-times glyphicon glyphicon-remove"/>');
+            const button = $('<i class="fas fa-times"/>');
             const actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
@@ -202,7 +202,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         <h4>{label}</h4>
                         <div className="form-group">
                             <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fa fa-user me-3"/>{value}</p>
+                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
                             </div>
                             <div className="input-group-append">
                                 <button type="button"
@@ -211,7 +211,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             decompactifyContainer();
                                         }}>
-                                    <span className="fa fa-pen me-3"/>
+                                    <span className="fas fa-pen me-3"/>
                                     {translator.getText('Edit')}
                                 </button>
                                 <button type="button"
@@ -220,7 +220,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                         onClick={() => {
                                             $clearButton.click();
                                         }}>
-                                    <span className="fa fa-times me-3"/>
+                                    <span className="fas fa-times me-3"/>
                                     {translator.getText('Delete')}
                                 </button>
                             </div>

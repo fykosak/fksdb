@@ -14,6 +14,11 @@ class LangPresenter extends BasePresenter
         return new PageTitle(null, _('Preferred language'), 'fas fa-language');
     }
 
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
     protected function createComponentPreferredLangForm(): PreferredLangFormComponent
     {
         return new PreferredLangFormComponent($this->getContext(), $this->getLoggedPerson());

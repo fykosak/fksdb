@@ -4,11 +4,8 @@ namespace FKSDB\Tools;
 
 use FKSDB\Bootstrap;
 
-define('LIBS_DIR', __DIR__ . '/../libs');
-define('APP_DIR', __DIR__ . '/../app');
-
 // Load Nette Framework
-require APP_DIR . '/Bootstrap.php';
+require __DIR__ . '../app/Bootstrap.php';
 
 // Configure application
 $configurator = Bootstrap::boot();

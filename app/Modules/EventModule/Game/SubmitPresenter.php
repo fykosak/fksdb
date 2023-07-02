@@ -25,7 +25,6 @@ class SubmitPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    /* ***** Title methods *****/
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Scoring'), 'fas fa-pen');
@@ -33,7 +32,7 @@ class SubmitPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of submit'), 'fa fa-table');
+        return new PageTitle(null, _('List of submit'), 'fas fa-table');
     }
 
     public function titleEdit(): PageTitle

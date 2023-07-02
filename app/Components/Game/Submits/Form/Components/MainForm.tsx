@@ -38,18 +38,17 @@ class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & I
         const translator = this.context;
         const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = this.props;
         const hasButtons = availablePoints.length;
-        return (
-            <Form
-                onSubmit={handleSubmit(onSubmit)}
-                onKeyPress={(event) => {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                    }
-                }}>
-                {messages.map((message, key) => {
-                    return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
-                })}
-                <div className="offset-lg-3 col-lg-6 col-md-12">
+        return <Form
+            onSubmit={handleSubmit(onSubmit)}
+            onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                }
+            }}>
+            {messages.map((message, key) => {
+                return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
+            })}
+            <div className="offset-lg-3 col-lg-6 col-md-12">
                     <div className="row mb-3">
                         <h3>{translator.getText('Code')}</h3>
                         <div className="form-group">
@@ -73,11 +72,9 @@ class MainForm extends React.Component<StateProps & OwnProps & DispatchProps & I
                             />
                         }
                     </div>
-                    <hr/>
-                    <ValueDisplay code={code} tasks={tasks} teams={teams}/>
-                </div>
-            </Form>
-        );
+                <ValueDisplay code={code} tasks={tasks} teams={teams}/>
+            </div>
+        </Form>;
     }
 }
 

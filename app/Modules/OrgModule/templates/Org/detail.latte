@@ -1,9 +1,20 @@
 {varType FKSDB\Models\ORM\Models\OrgModel $model}
-{block content}
-    {foreach ['org.org_id','person.person_id','person.person_link','contest.contest','org.since','org.until','org.role','org.order','org.contribution','org.tex_signature','org.domain_alias'] as $field}
-        <div class="row">
-            <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
-            <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'org.org_id',
+            'person.person_id',
+            'person.person_link',
+            'contest.contest',
+            'org.since',
+            'org.until',
+            'org.role',
+            'org.order',
+            'org.contribution',
+            'org.tex_signature',
+            'org.domain_alias',
+            ], $model,1024}
         </div>
-    {/foreach}
+    </div>
 {/block}

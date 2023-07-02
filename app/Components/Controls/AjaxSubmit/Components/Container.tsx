@@ -41,16 +41,16 @@ class UploadContainer extends React.Component<StateProps, never> {
             return <p className="alert alert-info">{translator.getText('Task is not for your category.')}</p>;
         }
         if (submitting) {
-            return (<LoadingState/>);
+            return <LoadingState/>;
         }
         if (submit.isQuiz) {
             return <a className="btn btn-primary"
                       href={this.props.actions.getAction('quiz')}>{translator.getText('Submit using quiz form')}</a>;
         }
         if (submit.submitId) {
-            return (<File submit={submit}/>);
+            return <File submit={submit}/>;
         } else {
-            return (<Form/>);
+            return <Form/>;
         }
     }
 }

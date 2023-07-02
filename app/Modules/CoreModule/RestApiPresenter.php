@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\WebService\WebServiceModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthMethod;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
-class RestApiPresenter extends AuthenticatedPresenter
+class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
 
     private WebServiceModel $server;
     /** @persistent */
     public string $webServiceName;
 
-    final public function injectSoapServer(WebServiceModel $server, ContestAuthorizator $contestAuthorizator): void
+    final public function injectSoapServer(WebServiceModel $server): void
     {
         $this->server = $server;
-        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /* TODO */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('webService', 'default'));
+        return $this->contestAuthorizator->isAllowed('webService', 'default');
     }
 
     /**
@@ -48,13 +46,16 @@ class RestApiPresenter extends AuthenticatedPresenter
         }
     }
 
-    public function getAllowedAuthMethods(): array
+    public function isAuthAllowed(AuthMethod $authMethod): bool
     {
-        return [
-            self::AUTH_HTTP => true,
-            self::AUTH_LOGIN => true,
-            self::AUTH_TOKEN => false,
-        ];
+        switch ($authMethod->value) {
+            case AuthMethod::LOGIN:
+            case AuthMethod::HTTP:
+                return true;
+            case AuthMethod::TOKEN:
+                return false;
+        }
+        return false;
     }
 
     protected function getHttpRealm(): ?string

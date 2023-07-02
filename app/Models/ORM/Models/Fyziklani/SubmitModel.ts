@@ -2,7 +2,7 @@ export interface SubmitModel {
     points: number | null;
     taskId: number;
     teamId: number;
-    created: string;
+    modified: string;
 }
 
 export interface Submits {

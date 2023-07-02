@@ -11,6 +11,7 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
+use Tracy\Debugger;
 
 abstract class Machine
 {
@@ -101,8 +102,6 @@ abstract class Machine
     {
         return $this->selectTransition($this->getAvailableTransitions($holder));
     }
-
-    /* ********** execution ******** */
 
     protected function isAvailable(Transition $transition, ModelHolder $holder): bool
     {

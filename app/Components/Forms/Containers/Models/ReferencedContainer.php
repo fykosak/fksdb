@@ -16,7 +16,6 @@ use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -93,12 +92,12 @@ abstract class ReferencedContainer extends ContainerWithOptions
         }
     }
 
-    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void
+    public function setConflicts(iterable $conflicts, ?ContainerWithOptions $container = null): void
     {
         $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
-            if ($component instanceof Container) {
+            if ($component instanceof ContainerWithOptions) {
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
                 $component->addError(_('Field does not match an existing record.'));

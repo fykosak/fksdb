@@ -44,7 +44,6 @@ class CompareStrategy implements MergeStrategy
     /**
      * @param mixed $trunk
      * @param mixed $merged
-     * @return int
      */
     private function compare($trunk, $merged): int
     {

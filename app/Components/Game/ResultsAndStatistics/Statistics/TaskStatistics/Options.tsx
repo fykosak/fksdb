@@ -41,28 +41,26 @@ class Options extends React.Component<StateProps & DispatchProps, never> {
         if (!toDate || !fromDate) {
             return null;
         }
-        return (
-            <>
-                <h3>{translator.getText('Options')}</h3>
-
-                <div className="row">
-                    <div className="col-6">
-                        <div className="form-group">
-                            <label>Task</label>
-                            <select value={taskId} className="form-control" onChange={(event) => {
-                                onSetNewState({taskId: +event.target.value})
-                            }}>
-                                <option value={null}>--{translator.getText('select task')}--</option>
-                                {tasks.map((task) => {
-                                    return (<option key={task.taskId} value={task.taskId}>{task.label}</option>);
-                                })}
-                            </select>
-                        </div>
+        return <>
+            <h3>{translator.getText('Options')}</h3>
+            <div className="row">
+                <div className="col-6">
+                    <div className="form-group">
+                        <label>Task</label>
+                        <select value={taskId} className="form-control" onChange={(event) => {
+                            onSetNewState({taskId: +event.target.value})
+                        }}>
+                            <option value={null}>--{translator.getText('select task')}--</option>
+                            {tasks.map((task) => {
+                                return <option key={task.taskId} value={task.taskId}>{task.label}</option>;
+                            })}
+                        </select>
                     </div>
-                    <div className="col-6">
-                        <div className="form-group">
-                            <label>{translator.getText('Aggregation time')}</label>
-                            <input type="range" max={30 * 60 * 1000} min={60 * 1000}
+                </div>
+                <div className="col-6">
+                    <div className="form-group">
+                        <label>{translator.getText('Aggregation time')}</label>
+                        <input type="range" max={30 * 60 * 1000} min={60 * 1000}
                                    value={aggregationTime}
                                    step={60 * 1000}
                                    className="form-range"
@@ -107,8 +105,7 @@ class Options extends React.Component<StateProps & DispatchProps, never> {
                         </div>
                     </div>
                 </div>
-            </>
-        );
+        </>;
     }
 }
 

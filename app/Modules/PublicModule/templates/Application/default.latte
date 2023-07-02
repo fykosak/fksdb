@@ -1,5 +1,9 @@
-{block content}
-    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-	{ifset $model}{control valuePrinter:row 'event_participant.status', $model}<br>{/ifset}
-    {control application:form}
+{block outerContent}
+    <div class="container">
+        {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+	    {ifset $model}
+            {control columnTable ['event_participant.status'], $model,1024}<br>
+        {/ifset}
+        {control application:form}
+    </div>
 {/block}

@@ -15,6 +15,7 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
 class EventDispatchFactory
 {
@@ -69,7 +70,7 @@ class EventDispatchFactory
     public function getPaymentFactoryName(EventModel $event): ?string
     {
         if ($event->event_type_id === 1) {
-            return sprintf('fyziklani%dpayment', $event->event_year);
+            return sprintf('transitions.fyziklani%dpayment', $event->event_year);
         }
         return null;
     }
