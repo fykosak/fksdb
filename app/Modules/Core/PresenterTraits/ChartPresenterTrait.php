@@ -40,6 +40,10 @@ trait ChartPresenterTrait
      */
     abstract protected function getCharts(): array;
 
+    /**
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
     protected function registerCharts(): void
     {
         foreach ($this->getCharts() as $name => $component) {

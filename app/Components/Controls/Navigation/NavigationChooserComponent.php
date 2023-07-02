@@ -72,6 +72,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws BadRequestException
+     * @throws \ReflectionException
      */
     private function getItems(array $structure): array
     {
