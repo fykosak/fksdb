@@ -2,35 +2,30 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Schedule;
+namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
+use Nette\DI\Container;
 
-class PersonGrid extends BaseGrid
+class PersonsGrid extends BaseGrid
 {
-    private EventModel $event;
-    private PersonModel $person;
+    private ScheduleItemModel $item;
 
-    /**
-     * @throws \InvalidArgumentException
-     */
-    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
+    public function __construct(Container $container, ScheduleItemModel $item)
     {
-        $this->event = $event;
-        $this->person = $person;
-        parent::render();
+        parent::__construct($container);
+        $this->item = $item;
     }
 
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->person->getScheduleForEvent($this->event);
+        return $this->item->getInterested();
     }
 
     /**
@@ -40,8 +35,6 @@ class PersonGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->counter = false;
-
         $this->addColumn(
             new RendererItem(
                 $this->container,
@@ -50,16 +43,6 @@ class PersonGrid extends BaseGrid
             ),
             'person_schedule_id'
         );
-        $this->addColumns([
-            'schedule_group.name',
-            'schedule_item.name',
-            'schedule_item.price_czk',
-            'schedule_item.price_eur',
-            'payment.payment',
-        ]);
-    }
-
-    protected function getData(): void
-    {
+        $this->addColumns(['person.full_name', 'event.role', 'payment.payment', 'person_schedule.state']);
     }
 }

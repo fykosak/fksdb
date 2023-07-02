@@ -66,9 +66,6 @@ class TasksPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function actionDispatch(): void
     {
         /** @var HandoutFormComponent $control */
@@ -90,7 +87,6 @@ class TasksPresenter extends BasePresenter
 
 
     /**
-     * @throws BadTypeException
      * TODO to separate Component
      */
     protected function createComponentSeriesForm(): FormControl

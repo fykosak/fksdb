@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\Grids\Schedule\PerPersonScheduleList;
+use FKSDB\Components\Schedule\PerPersonScheduleList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;

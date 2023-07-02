@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\ImportHandlerException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
@@ -36,9 +35,6 @@ class ImportComponent extends BaseComponent
         $this->connection = $connection;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentFormImport(): FormControl
     {
         $control = new FormControl($this->getContext());

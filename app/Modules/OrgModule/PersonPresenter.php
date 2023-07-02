@@ -13,7 +13,6 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -143,9 +142,6 @@ class PersonPresenter extends BasePresenter
         return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentFormSearch(): FormControl
     {
         $control = new FormControl($this->getContext());

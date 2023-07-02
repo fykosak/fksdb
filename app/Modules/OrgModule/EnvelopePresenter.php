@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson\PageComponent;
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Database\Explorer;
@@ -49,9 +48,6 @@ class EnvelopePresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());

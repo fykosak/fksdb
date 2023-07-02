@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -13,7 +12,6 @@ use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class PreferredLangFormComponent extends FormComponent
@@ -32,9 +30,9 @@ class PreferredLangFormComponent extends FormComponent
         $this->personInfoService = $personInfoService;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    protected function appendSubmitButton(Form $form): void
     {
-        return $form->addSubmit('submit', _('Save'));
+        $form->addSubmit('submit', _('Save'));
     }
 
     protected function handleSuccess(Form $form): void
@@ -64,9 +62,6 @@ class PreferredLangFormComponent extends FormComponent
         $form->addSelect('preferred_lang')->setItems($items);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);

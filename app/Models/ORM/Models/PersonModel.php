@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
@@ -258,6 +259,11 @@ class PersonModel extends Model implements Resource
     public function getScheduleByGroup(ScheduleGroupModel $group): ?PersonScheduleModel
     {
         return $this->getSchedule()->where('schedule_item.schedule_group_id', $group->schedule_group_id)->fetch();
+    }
+
+    public function getScheduleByItem(ScheduleItemModel $item): ?PersonScheduleModel
+    {
+        return $this->getSchedule()->where('schedule_item_id', $item->schedule_item_id)->fetch();
     }
 
     public function getSchedule(): TypedGroupedSelection

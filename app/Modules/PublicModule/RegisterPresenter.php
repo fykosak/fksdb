@@ -6,7 +6,6 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\EntityForms\RegisterContestantFormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -189,9 +188,6 @@ class RegisterPresenter extends CoreBasePresenter
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentEmailForm(): FormControl
     {
         $control = new FormControl($this->getContext());

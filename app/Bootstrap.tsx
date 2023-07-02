@@ -23,7 +23,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { availableLanguage, Translator } from '@translator/translator';
 import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
-import ScheduleField from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import ScheduleField from 'FKSDB/Components/Schedule/Input/ScheduleField';
 
 const translator = new Translator<availableLanguage>();
 

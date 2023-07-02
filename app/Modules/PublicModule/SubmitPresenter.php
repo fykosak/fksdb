@@ -10,7 +10,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
@@ -157,9 +156,6 @@ class SubmitPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentUploadForm(): FormControl
     {
         $control = new FormControl($this->getContext());

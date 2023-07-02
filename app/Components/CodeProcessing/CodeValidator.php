@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events;
+namespace FKSDB\Components\CodeProcessing;
 
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
-class AttendanceCode
+class CodeValidator
 {
     /**
      * @throws ForbiddenRequestException
      */
-    public static function checkCode(Container $container, string $code): int
+    public static function checkCode(Container $container, string $code, string $saltKey = 'default'): string
     {
         [$id, $checkSum] = explode('-', $code);
-        $salt = $container->getParameters()['salt'];
+        $salt = $container->getParameters()['salt'][$saltKey];
         if (crc32($id . $salt) !== +$checkSum) {
             throw new ForbiddenRequestException(_('Bad checksum'));
         }
-        return +$id;
+        return $id;
     }
 }

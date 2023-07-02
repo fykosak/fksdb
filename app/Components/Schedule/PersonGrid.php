@@ -2,30 +2,35 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Schedule;
+namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
 
-class PersonsGrid extends BaseGrid
+class PersonGrid extends BaseGrid
 {
-    private ScheduleItemModel $item;
+    private EventModel $event;
+    private PersonModel $person;
 
-    public function __construct(Container $container, ScheduleItemModel $item)
+    /**
+     * @throws \InvalidArgumentException
+     */
+    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
     {
-        parent::__construct($container);
-        $this->item = $item;
+        $this->event = $event;
+        $this->person = $person;
+        parent::render();
     }
 
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->item->getInterested();
+        return $this->person->getScheduleForEvent($this->event);
     }
 
     /**
@@ -35,6 +40,8 @@ class PersonsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
+        $this->counter = false;
+
         $this->addColumn(
             new RendererItem(
                 $this->container,
@@ -43,6 +50,16 @@ class PersonsGrid extends BaseGrid
             ),
             'person_schedule_id'
         );
-        $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
+        $this->addColumns([
+            'schedule_group.name',
+            'schedule_item.name',
+            'schedule_item.price_czk',
+            'schedule_item.price_eur',
+            'payment.payment',
+        ]);
+    }
+
+    protected function getData(): void
+    {
     }
 }

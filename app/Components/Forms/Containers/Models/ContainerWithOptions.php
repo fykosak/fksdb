@@ -16,7 +16,7 @@ class ContainerWithOptions extends Container
     private array $options = [];
     protected DIContainer $container;
 
-    public function __construct(DIContainer $container = null)
+    public function __construct(DIContainer $container)
     {
         $this->container = $container;
         $container->callInjects($this);

@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\FastEditComponent;
-use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transition\FastTransitionComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -16,6 +15,7 @@ use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamListComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
+use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -241,9 +241,9 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentFastTransition(): FastTransitionComponent
+    protected function createComponentFastTransition(): AttendanceComponent
     {
-        return new FastTransitionComponent(
+        return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
             TeamState::tryFrom(TeamState::APPROVED),
