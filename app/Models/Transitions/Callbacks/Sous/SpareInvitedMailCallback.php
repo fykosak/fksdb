@@ -7,7 +7,7 @@ namespace FKSDB\Models\Transitions\Callbacks\Sous;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-class AppliedInterestedMailCallback extends EventParticipantCallback
+class SpareInvitedMailCallback extends EventParticipantCallback
 {
     protected function getTemplatePath(ModelHolder $holder): string
     {
