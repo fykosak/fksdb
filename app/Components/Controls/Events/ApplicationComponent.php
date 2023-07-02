@@ -184,7 +184,7 @@ class ApplicationComponent extends BaseComponent
                     } elseif ($transition) {
                         $this->getPresenter()->flashMessage(
                             sprintf(
-                                _('State of application "%s" changed.'),
+                                _('Application state "%s" changed.'),
                                 $this->holder->getModel()->person->getFullName()
                             ),
                             Message::LVL_INFO
