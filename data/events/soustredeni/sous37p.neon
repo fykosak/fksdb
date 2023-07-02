@@ -34,6 +34,7 @@ events:
                         condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Odmítnout účast')
                         behaviorType: danger
+                    # reminders
                     # 1. reminder
                     spare->spare1:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
@@ -67,18 +68,19 @@ events:
                         label: _('Poslat třetí upomínku')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\Callbacks\Sous\Reminder3MailCallback()
-                    # Reject spare
+                    
+                    # reject spare
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Odmítnout účast')
                         behaviorType: danger
-                    # Confirm participation
+                    # confirm participation
                     interested->applied:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Potvrdit účast')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\Callbacks\Sous\AppliedInterestedMailCallback()
-                    # Invite spare
+                    # invite spare
                     spare->invited:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite as participant')
@@ -99,7 +101,7 @@ events:
                         label: _('Invite as participant')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\Callbacks\Sous\SpareInvitedMailCallback()
-                    # After sous
+                    # after sous
                     applied->participated:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Participated')
@@ -107,6 +109,7 @@ events:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Missed')
 
+                    # used in special cases, when it's undesirable to send reminders (e.g. I'll know at later date, will let you know)
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Cancel application')

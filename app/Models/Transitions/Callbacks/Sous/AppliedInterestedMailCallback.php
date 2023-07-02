@@ -18,7 +18,7 @@ class AppliedInterestedMailCallback extends EventParticipantCallback
     {
         return [
             'subject' => 'Podzimní soustředění FYKOSu',
-            'blind_carbon_copy' => 'Letní tábor Výfuku <soustredeni@fykos.cz>',
+            'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
         ];
     }
