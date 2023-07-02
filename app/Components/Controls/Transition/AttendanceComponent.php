@@ -78,12 +78,12 @@ class AttendanceComponent extends CodeFormComponent
             $machine->execute($this->getTransition(), $holder);
             if ($this->event->isTeamEvent()) {
                 $this->getPresenter()->flashMessage(
-                    sprintf(_('Transition successful team: (%d) %s'), $model->fyziklani_team_id, $model->name),
+                    sprintf(_('Transition successful for team: (%d) %s'), $model->fyziklani_team_id, $model->name),
                     Message::LVL_SUCCESS
                 );
             } else {
                 $this->getPresenter()->flashMessage(
-                    sprintf(_('Transition successful application: %s'), $model->person->getFullName()),
+                    sprintf(_('Transition successful for application: %s'), $model->person->getFullName()),
                     Message::LVL_SUCCESS
                 );
             }
