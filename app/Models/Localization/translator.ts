@@ -18,7 +18,7 @@ export class Translator<Lang extends string> {
     public constructor() {
         // @ts-ignore
         this.data = data;
-        const el = document.getElementsByClassName('html').item(0);
+        const el = document.getElementsByTagName('html').item(0);
         if (el) {
             const lang = el.getAttribute('lang');
             this.currentLocale = lang as Lang;
