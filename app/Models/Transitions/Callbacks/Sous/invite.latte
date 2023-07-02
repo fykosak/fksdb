@@ -1,6 +1,9 @@
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{varType string[]|string[][] $linkArgs}
-{var $link = $control->link(...$linkArgs)}
+{var $link = $control->link('//:Public:Application:',
+    ['eventId'=> $holder->event->event_id,
+    'contestId'=>$holder->event->event_type->contest_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
 
 <p>
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
