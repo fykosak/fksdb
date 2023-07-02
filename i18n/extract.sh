@@ -6,13 +6,11 @@ LATTE_FILES="app libs data"
 NEON_FILES="app/config data/events"
 TSX_FILES="app"
 
-
 # Output
 POT_FILE=i18n/messages.pot
 
 # Locale directory
 LOCALE=i18n/locale
-
 
 # ---------------------
 # implementation
@@ -33,13 +31,15 @@ function neon2php {
 	sed "s/_(\(['\"].*\))[^)]*\$/<?php _(\1) ?>/" $1 | \
 	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
+
 function tsx2php {
-sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
+	sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
 }
+
 function ts2php {
-sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
+	sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`
@@ -83,5 +83,5 @@ find $TSX_FILES -iname "*.$TS_SUFFIX" | xargs rm
 #
 # Merge to PO files
 #
-find $ROOT/$LOCALE -iname "messages.po" -exec msgmerge -U {} $POT_FILE \;
+find $ROOT/$LOCALE -iname "messages.po" -exec msgmerge --sort-by-file -U {} $POT_FILE \;
 

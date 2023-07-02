@@ -75,7 +75,7 @@ abstract class EvaluationStrategy
         }
         throw new InvalidArgumentException(
             sprintf(
-                _('Invalid studyYear %i for person %s.'),
+                _('Invalid studyYear %d for person %s.'),
                 $personHistory->study_year,
                 $person->getFullName()
             )
