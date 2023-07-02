@@ -42,7 +42,6 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
                         'created' => $team->created->format('c'),
                     ];
                 }
-
             }
         } else {
             /** @var EventParticipantModel $participant */

@@ -50,5 +50,4 @@ trait ChartPresenterTrait
             $this->addComponent($component, $name);
         }
     }
-
 }

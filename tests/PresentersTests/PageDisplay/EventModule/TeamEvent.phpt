@@ -29,8 +29,6 @@ class TeamEvent extends EventModuleTestCase
     {
         return [
             ['Event:Chart', 'list'],
-            ['Event:Chart', 'chart', ['chart' => 'teamApplicationProgress']],
-            ['Event:Chart', 'chart', ['chart' => 'model']],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],

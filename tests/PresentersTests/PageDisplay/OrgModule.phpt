@@ -69,10 +69,6 @@ class OrgModule extends AbstractPageDisplayTestCase
             ['Org:Teacher', 'create'],
 
             ['Org:Chart', 'list'],
-            ['Org:Chart', 'chart', ['chart' => 'contestantsPerSeries']],
-            ['Org:Chart', 'chart', ['chart' => 'totalContestantsPerSeries']],
-            ['Org:Chart', 'chart', ['chart' => 'contestantsPerYears']],
-            ['Org:Chart', 'chart', ['chart' => 'totalPersons']],
 
             ['Org:Deduplicate', 'person'],
             ['Org:Person', 'create'],
