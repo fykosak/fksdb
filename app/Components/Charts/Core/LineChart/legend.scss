@@ -1,32 +1,31 @@
-.chart-legend.chart-legend-line-chart {
-  .chart-legend-item {
-    margin-bottom: 1rem;
-    align-items: center;
+.chart-legend-item {
+  margin-bottom: 1rem;
+  align-items: center;
+  color: var(--item-color);
 
-    .icon {
-      display: inline-block;
+  .icon {
+    display: inline-block;
 
-      &.icon-line {
-        background-color: var(--item-color);
-        border-width: 1rem;
-        border-radius: 1rem;
-        height: 2px;
-      }
+    &.icon-line {
+      background-color: var(--item-color);
+      border-width: 1rem;
+      border-radius: 1rem;
+      height: 2px;
+    }
 
-      &.icon-point {
-        background-color: var(--item-color);
-        border-width: 1em;
-        border-radius: 1em;
-        height: 1em;
-        width: 1em;
-      }
+    &.icon-point {
+      background-color: var(--item-color);
+      border-width: 1em;
+      border-radius: 1em;
+      height: 1em;
+      width: 1em;
+    }
 
-      &.icon-bar {
-        background-color: var(--item-color);
-        border-radius: 0;
-        height: 1em;
-        width: 1em;
-      }
+    &.icon-bar {
+      background-color: var(--item-color);
+      border-radius: 0;
+      height: 1em;
+      width: 1em;
     }
   }
 }

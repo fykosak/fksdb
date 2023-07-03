@@ -17,12 +17,6 @@ class PDFStamper implements StorageProcessing
 
     /** @var int used font size in pt */
     private int $fontSize;
-
-    /**
-     * @var string printf mask for arguments: series, label, contestant's name
-     */
-    private const STAMP_MASK = 'S%dU%s, %s, %s';
-
     public function __construct(int $fontSize)
     {
         $this->fontSize = $fontSize;
@@ -53,11 +47,6 @@ class PDFStamper implements StorageProcessing
         return $this->fontSize;
     }
 
-    public function getStampMask(): string
-    {
-        return self::STAMP_MASK;
-    }
-
     /**
      * @throws ProcessingException
      */
@@ -75,7 +64,7 @@ class PDFStamper implements StorageProcessing
         $label = $submit->task->label;
         $person = $submit->contestant->person;
 
-        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
+        $stampText = sprintf('S%dU%s, %s, %s', $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
         } catch (\Throwable $exception) {

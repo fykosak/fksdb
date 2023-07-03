@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventTypeModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class SingleComponent extends FrontEndComponent implements Chart
@@ -45,9 +46,9 @@ class SingleComponent extends FrontEndComponent implements Chart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Applications time progress');
+        return new Title(null, _('Applications time progress'), 'fas fa-line-chart');
     }
 
     public function getDescription(): ?string

@@ -22,7 +22,6 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
 @import 'node_modules/flag-icon-css/sass/flag-icon';
 @import 'node_modules/codemirror/lib/codemirror.css';
 
-@import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
 @import "../Components/Charts/style";
 @import "../Components/Charts/legend";
@@ -154,5 +153,18 @@ footer {
     color: white;
     font-weight: bold;
     text-decoration: none;
+  }
+}
+
+.fks-divider {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid var(--fks-page-theme-color);
+  line-height: 0.1em;
+  margin: .5rem 0 1rem;
+
+  span {
+    background: #fff;
+    padding: 0 .5rem;
   }
 }

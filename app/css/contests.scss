@@ -3,13 +3,18 @@
 @import "navigation-item";
 
 [data-bs-theme="light"][data-style-id~="default"] {
-  --fks-page-theme-color: #{$body-color};
-  @include page-theme($body-color, #000);
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
 [data-bs-theme="dark"][data-style-id~="default"] {
   --fks-page-theme-color: #{$body-color-dark};
   @include page-theme($body-color-dark, #000);
+}
+
+[data-style-id~="login"] {
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
 [data-style-id="contest-fykos"],

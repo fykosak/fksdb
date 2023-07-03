@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { setNewState } from '../../actions/stats';
 import { State } from '../../reducers/stats';
-import './legend.scss';
 import { TranslatorContext } from '@translator/LangContext';
+import LegendItem from 'FKSDB/Components/Charts/Core/LineChart/legend-item';
 
 interface StateProps {
     onSetNewState(data: State): void;
@@ -30,23 +30,18 @@ class Legend extends React.Component<StateProps, never> {
                 default:
                     pointsLabel = translator.getText('bodů');
             }
-            return <div key={points}
-                        className="col chart-legend-item"
-                        onMouseEnter={() => {
-                            onSetNewState({activePoints: +points})
-                        }}
-                        onMouseLeave={() => {
-                            onSetNewState({activePoints: null})
-                        }}>
-                <i className="icon icon-circle"
-                   data-points={points}
-                   style={{'--item-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
-                />
-                <strong>{points + ' ' + pointsLabel}</strong>
-            </div>;
+            return <LegendItem
+                key={points}
+                item={{
+                    name: points + ' ' + pointsLabel,
+                    color: 'var(--color-fof-points-' + points + ')',
+                    display: {
+                        points: true,
+                    },
+                }}/>;
         });
 
-        return <div className="chart-legend chart-legend-game align-content-center d-flex flex-wrap">
+        return <div className="chart-legend row row-cols-lg-5">
             {legend}
         </div>;
     }

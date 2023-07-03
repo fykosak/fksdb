@@ -12,11 +12,12 @@ export default class ChartContainer<OwnChartProps, OwnLegendProps, ChartStatePro
 
     public render() {
         const {legendComponent, legendProps, chartProps, chart} = this.props;
-        return <div className="row">
-            <div className="col-xl-9 col-lg-8 col-md-12">
+        return <div>
+            <div>
                 {React.createElement<OwnChartProps>(chart, chartProps)}
             </div>
-            <div className="col-xl-3 col-lg-4 col-md-12">
+            <h3>Legend</h3>
+            <div>
                 {React.createElement<OwnLegendProps>(legendComponent, legendProps)}
             </div>
         </div>;

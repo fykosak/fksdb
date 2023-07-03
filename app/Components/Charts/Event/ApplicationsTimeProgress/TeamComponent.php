@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class TeamComponent extends FrontEndComponent implements Chart
@@ -36,9 +37,9 @@ class TeamComponent extends FrontEndComponent implements Chart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Team applications time progress');
+        return new Title(null, _('Team applications time progress'), 'fas fa-line-chart');
     }
 
     public function getDescription(): ?string

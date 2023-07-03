@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
@@ -23,9 +24,9 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
         $this->event = $event;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Participants per country');
+        return new Title(null, _('Participants per country'), 'fas fa-earth-europe');
     }
 
     protected function getData(): array

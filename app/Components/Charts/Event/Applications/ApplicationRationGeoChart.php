@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class ApplicationRationGeoChart extends ApplicationsPerCountryChart
@@ -15,9 +16,9 @@ class ApplicationRationGeoChart extends ApplicationsPerCountryChart
         parent::__construct($context, $event, 'chart.events.application-ratio.geo');
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Participants per team');
+        return new Title(null, _('Participants per team'), 'fas fa-earth-europe');
     }
 
     protected function getData(): array

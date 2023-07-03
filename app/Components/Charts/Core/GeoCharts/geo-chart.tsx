@@ -69,7 +69,8 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
                     this.setState({active: null});
                 }}
                 d={geoPath().projection(projection)(country)}
-            ><title>{country.properties.name}: {count}</title>
+            >
+                <title>{country.properties.name}: {count}</title>
             </path>);
         });
         return <div className="geo-chart">

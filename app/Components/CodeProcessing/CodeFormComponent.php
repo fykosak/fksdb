@@ -17,7 +17,7 @@ abstract class CodeFormComponent extends FormComponent
         try {
             $values = $form->getValues('array');
             if ($values['bypass']) {
-                $id = +$values['code'];
+                $id = CodeValidator::bypassCode($values['code']);
             } else {
                 $id = CodeValidator::checkCode($this->container, $values['code']);
             }

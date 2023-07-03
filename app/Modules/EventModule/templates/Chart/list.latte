@@ -3,7 +3,7 @@
     {foreach $charts as $action=>$chart}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{$chart->getTitle()}</h2>
+                <h2>{$chart->getTitle()->toHtml()}</h2>
                 <p>{$chart->getDescription()}</p>
                 {control $action}
             </div>

@@ -7,6 +7,7 @@ namespace FKSDB\Components\Charts\Event\Model;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class GraphComponent extends FrontEndComponent implements Chart
@@ -48,9 +49,9 @@ class GraphComponent extends FrontEndComponent implements Chart
         return ['nodes' => $nodes, 'links' => $edges];
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Model of event');
+        return new Title(null, _('Model of event'), 'fas fa-diagram-project');
     }
 
     public function getDescription(): ?string

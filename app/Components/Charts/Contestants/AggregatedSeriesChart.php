@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Charts\Contestants;
 
+use Fykosak\Utils\UI\Title;
 use Nette\Database\Explorer;
 
 class AggregatedSeriesChart extends AbstractPerSeriesChart
@@ -45,9 +46,9 @@ group by year, series',
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Total contestants per series');
+        return new Title(null, _('Total contestants per series'), 'fas fa-chart-column');
     }
 
     public function getDescription(): ?string
