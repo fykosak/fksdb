@@ -166,7 +166,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
-        throw new GameException(_('Game handler not exist for this event'));
+        throw new GameException(_('Game handler does not exist for this event'));
     }
 
     private function getParameters(): array

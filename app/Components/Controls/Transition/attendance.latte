@@ -2,7 +2,6 @@
 {varType FKSDB\Models\Transitions\Transition\Transition $transition}
 
 {block content}
-    {* TODO preklad *}
-    <p class="alert-info alert">{_'Automaticky vykoná prechod: '}{$transition->source->label()}->{$transition->target->label()}</p>
+    <p class="alert-info alert">{_'Transition will be processed automatically: '}{$transition->source->label()}->{$transition->target->label()}</p>
     {control form}
 {/block}

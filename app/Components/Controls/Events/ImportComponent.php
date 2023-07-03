@@ -87,7 +87,7 @@ class ImportComponent extends BaseComponent
             $this->getPresenter()->flashMessage(_('Import failed.'), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
             $this->connection->rollBack();
-            $this->getPresenter()->flashMessage(_('Import ran with errors.'), Message::LVL_WARNING);
+            $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
         }
         $this->getPresenter()->redirect('this');
     }

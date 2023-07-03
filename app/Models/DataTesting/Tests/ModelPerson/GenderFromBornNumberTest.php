@@ -14,7 +14,7 @@ class GenderFromBornNumberTest extends PersonTest
 {
     public function __construct()
     {
-        parent::__construct('gender_from_born_number', _('Gender from born number'));
+        parent::__construct('gender_from_born_number', _('Gender from born ID'));
     }
 
     public function run(Logger $logger, PersonModel $person): void
@@ -31,14 +31,14 @@ class GenderFromBornNumberTest extends PersonTest
             return;
         }
         if (!$info->born_id) {
-            $logger->log(new TestLog($this->title, _('Born number is not set'), TestLog::LVL_SKIP));
+            $logger->log(new TestLog($this->title, _('Born ID is not set'), TestLog::LVL_SKIP));
             return;
         }
 
         if (BornNumber::getGender($info->born_id)->value != $person->gender->value) {
-            $logger->log(new TestLog($this->title, _('Gender not match born number'), Message::LVL_ERROR));
+            $logger->log(new TestLog($this->title, _('Gender not match born ID'), Message::LVL_ERROR));
         } else {
-            $logger->log(new TestLog($this->title, _('Gender match born number'), Message::LVL_SUCCESS));
+            $logger->log(new TestLog($this->title, _('Gender match born ID'), Message::LVL_SUCCESS));
         }
     }
 }

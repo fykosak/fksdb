@@ -16,7 +16,7 @@ export default class TaskCodePreprocessor {
             return currentTeam.teamId === +teamId;
         });
         if (!filterTeams.length) {
-            throw new Error('Team does not exists.');
+            throw new Error('Team does not exist.');
         }
         return filterTeams[0];
     }
@@ -30,7 +30,7 @@ export default class TaskCodePreprocessor {
             return currentTask.label === taskLabel;
         });
         if (!filterTask.length) {
-            throw new Error('Task does not exists.');
+            throw new Error('Task does not exist.');
         }
         return filterTask[0];
     }

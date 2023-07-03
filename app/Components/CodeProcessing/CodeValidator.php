@@ -17,7 +17,7 @@ class CodeValidator
         [$id, $checkSum] = explode('-', $code);
         $salt = $container->getParameters()['salt'][$saltKey];
         if (crc32($id . $salt) !== +$checkSum) {
-            throw new ForbiddenRequestException(_('Bad checksum'));
+            throw new ForbiddenRequestException(_('Wrong checksum'));
         }
         return $id;
     }

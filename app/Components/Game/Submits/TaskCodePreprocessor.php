@@ -26,7 +26,7 @@ final class TaskCodePreprocessor
         /** @var TeamModel2 $team */
         $team = $this->event->getTeams()->where('fyziklani_team_id', $teamId)->fetch();
         if (!$team) {
-            throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
+            throw new TaskCodeException(\sprintf(_('Team %s does not exist.'), $teamId));
         }
         return $team;
     }
@@ -43,7 +43,7 @@ final class TaskCodePreprocessor
         /** @var TaskModel $task */
         $task = $this->event->getTasks()->where('label', $taskLabel)->fetch();
         if (!$task) {
-            throw new TaskCodeException(\sprintf(_('Task %s does not exists.'), $taskLabel));
+            throw new TaskCodeException(\sprintf(_('Task %s does not exist.'), $taskLabel));
         }
         return $task;
     }

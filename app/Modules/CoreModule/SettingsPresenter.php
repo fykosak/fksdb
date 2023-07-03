@@ -137,7 +137,7 @@ class SettingsPresenter extends BasePresenter
         }
 
         $container->addPassword('password_verify', _('Password (verification)'))
-            ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
+            ->addRule(Form::EQUAL, _('The submitted passwords does not match.'), $newPwd)
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         return $container;

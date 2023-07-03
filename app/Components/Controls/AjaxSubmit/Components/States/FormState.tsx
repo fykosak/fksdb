@@ -56,7 +56,7 @@ class FormState extends React.Component<StateProps & DispatchProps, never> {
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fas fa-download"/></span>
                     <span className="d-block p-1">
-                        <span>{translator.getText('Drag file here.')}</span>
+                        <span>{translator.getText('Drop pdf file here.')}</span>
                     </span>
                     <input
                         className="form-control"
