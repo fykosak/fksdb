@@ -81,10 +81,10 @@ html, body {
   /* The html and body elements cannot have any padding or margin. */
 }
 
-$footerHeight: 100px;
+$footer-height: 100px;
 body {
   margin: 0 auto;
-  padding: $footerHeight 0;
+  padding: $footer-height 0;
 }
 
 main {
@@ -107,7 +107,7 @@ main {
 }
 
 .required .control-label:before {
-  color: #b94a48;
+  color: #{$danger};
   content: '* ';
   display: inline;
 }
@@ -118,7 +118,6 @@ main {
   img {
     height: 20rem;
   }
-
 }
 
 .card-columns {
@@ -147,7 +146,7 @@ main {
 }
 
 footer {
-  min-height: $footerHeight;
+  min-height: $footer-height;
   background-color: #000000;
   color: white;
 

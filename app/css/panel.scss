@@ -3,17 +3,18 @@ $panel-color-light: var(--bs-body-bg);
 
 .panel {
   padding: 4.3rem 0;
+  background-color: var(--panel-bg);
 
   &:first-of-type {
     padding: .5rem 0;
   }
 
   &.panel-dark, &.color-auto:nth-of-type(2n) {
-    background-color: $panel-color-dark;
+    --panel-bg: #{$panel-color-dark};
   }
 
   &.panel-light, &.color-auto:nth-of-type(2n+1) {
-    background-color: $panel-color-light;
+    background-color: #{$panel-color-light};
   }
 
   .page-header {

@@ -1,5 +1,5 @@
 /* general setting */
-@import "./mixins/navigation-item";
+@import "navigation-item";
 
 $fyziklaniPoints5: #2d7dd2;
 $fyziklaniPoints3: #98cc04;
@@ -7,10 +7,6 @@ $fyziklaniPoints2: #eeb902;
 $fyziklaniPoints1: #f45d01;
 
 @mixin page-theme($color, $nav-bg:$color) {
-  .navigation-item {
-    @include navigation-item($color);
-  }
-
   nav.navbar {
     background-color: $nav-bg;
 
@@ -60,15 +56,15 @@ $fyziklaniPoints1: #f45d01;
   hr {
     --fks-hr-color: #{$color};
   }
+}
 
-  .subtitle {
-    color: $color;
-  }
+.subtitle {
+  color: var(--fks-page-theme-color);
 }
 
 hr {
-  border-color: var(--fks-hr-color);
-  background-color: var(--fks-hr-color);
+  border-color: var(--fks-page-theme-color);
+  background-color: var(--fks-page-theme-color);
 }
 
 .bg-category-fykos-1 {

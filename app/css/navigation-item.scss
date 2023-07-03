@@ -1,19 +1,21 @@
-@mixin navigation-item($color) {
+.navigation-item {
   min-height: 12rem;
   width: 12rem;
-  color: $color;
+  color: var(--fks-page-theme-color);
   background-color: transparent;
   text-align: center;
   text-decoration: none;
-  border: $color solid 1px;
+  border: var(--fks-page-theme-color) solid 1px;
   transition-duration: 200ms;
+
   i {
     font-size: 5rem;
     display: block;
   }
+
   &:hover, &:focus {
     transition-duration: 200ms;
-    background-color: $color;
+    background-color: var(--fks-page-theme-color);
     color: white;
   }
 

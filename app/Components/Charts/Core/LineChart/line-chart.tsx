@@ -36,7 +36,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
         yScale.range(this.getInnerYSize());
         xScale.range(this.getInnerXSize());
 
-        const dots = [];
+        const points = [];
         const areas = [];
         const lines = [];
         data.forEach((datum, index) => {
@@ -66,7 +66,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             }
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {
-                    dots.push(<circle
+                    points.push(<circle
                         className={'point ' + (point.active ? 'active' : '')}
                         key={index + '-' + key}
                         r="7.5"
@@ -98,9 +98,15 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
                     <g transform={this.transformYAxis()}
                        className="axis y-axis"
                        ref={(yAxis) => this.yAxis = yAxis}/>
-                    {areas}
-                    {lines}
-                    {dots}
+                    {areas.length && <g className="areas">
+                        {areas}
+                    </g>}
+                    {lines.length && <g className="lines">
+                        {lines}
+                    </g>}
+                    {points.length && <g className="points">
+                        {points}
+                    </g>}
                 </g>
             </svg>
         </div>;

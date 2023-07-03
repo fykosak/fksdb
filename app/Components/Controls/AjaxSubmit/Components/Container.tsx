@@ -4,7 +4,7 @@ import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
 import Card from 'FKSDB/Models/UI/Card';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import MessageBox from './MessageBox';
+import MessageBox from './message-box';
 import File from './States/FileState';
 import Form from './States/FormState';
 import LoadingState from './States/LoadingState';

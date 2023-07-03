@@ -13,7 +13,7 @@ class MessageBox extends React.Component<StateProps, never> {
         const {messages} = this.props;
         return <>
             {messages.map((message, index) =>
-                <div key={index} className={'react-message alert alert-' + message.level}> {message.text}</div>)}
+                <div key={index} className={'alert alert-' + message.level}> {message.text}</div>)}
         </>;
     }
 }
