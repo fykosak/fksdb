@@ -32,7 +32,11 @@ jobs:
         extensions: curl, mbstring, mysql, soap, xml
         tools: composer
         ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
+    - uses: actions/setup-python@v4
+      name: Setup Python
     - run: composer install # netteForms.js
+    - run: python i18n/compile-js.py # netteForms.js
+      name: Compile i18n-data.ts
     - run: npm ci
     - run: npm run build
       env:
