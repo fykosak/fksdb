@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-03 15:26+0200\n"
+"POT-Creation-Date: 2023-07-03 17:57+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -422,9 +422,12 @@ msgid "Uploaded unregister corrected submit #%d"
 msgstr "Submit #%d je opravený a uploadovaný, ale opravení není registrováno"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:68
-#, php-format
-msgid "Test done, found %d errors"
-msgstr "Test proběhl s(e) %d error(y)"
+#, fuzzy, php-format
+msgid "Test done, found %d error"
+msgid_plural "Test done, found %d errors"
+msgstr[0] "Test proběhl s %d errorem"
+msgstr[1] "Test proběhl se %d errory"
+msgstr[2] "Test proběhl se %d errory"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/layout.latte.latte2php:3
 msgid "Check files"
@@ -585,7 +588,7 @@ msgstr "Zpět na můj profil"
 
 #: ../app/Components/Controls/Person/PizzaComponent.php:43
 msgid "Get pizza!"
-msgstr "Dej pizzu!"
+msgstr "Dej pizzu! 🍕"
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:9
 #: ../app/Modules/OrgModule/PersonPresenter.php:87
@@ -643,6 +646,12 @@ msgstr "Role"
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:100
 msgid "Validation"
 msgstr "Validace údajů"
+
+#: ../app/Components/Controls/Stalking/Timeline/layout.latte.latte2php:16
+#: ../app/Components/Controls/Stalking/Timeline/layout.latte.latte2php:41
+#, fuzzy, php-format
+msgid "%s at event %s"
+msgstr "Upravit akci %s"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:24
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:92
@@ -1118,6 +1127,7 @@ msgid "This item has already assigned another payment"
 msgstr "Tato položka je již zahrnuta v jiné platbě."
 
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:51
+#: ../app/Modules/CoreModule/templates/Authentication/recover.latte.latte2php:6
 #: ../app/Modules/PublicModule/RegisterPresenter.php:178
 #: ../app/config/orm.neon.neon2php:451
 msgid "E-mail"
@@ -1352,7 +1362,7 @@ msgstr "První řádek"
 
 #: ../app/Components/Forms/Referenced/Address/AddressDataContainer.php:39
 msgid "First optional row of the address (e.g. title)"
-msgstr "Druhý (nepovinný) řádek adresy"
+msgstr "První (nepovinný) řádek adresy (např. titul)"
 
 #: ../app/Components/Forms/Referenced/Address/AddressDataContainer.php:43
 msgid "Second row"
@@ -1440,8 +1450,12 @@ msgid "Close"
 msgstr "Uzavřené"
 
 #: ../app/Components/Game/Closing/list.latte.latte2php:23
-msgid "points"
-msgstr "Bodů"
+#, fuzzy, php-format
+msgid "%d point"
+msgid_plural "%d points"
+msgstr[0] "%d bod"
+msgstr[1] "%d body"
+msgstr[2] "%d bodů"
 
 #: ../app/Components/Game/Diplomas/NotClosedTeamException.php:17
 #, php-format
@@ -1461,8 +1475,19 @@ msgstr "Pořadí"
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:13
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:42
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:54
+#, php-format
 msgid "Global"
 msgstr "Globální"
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:7
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:22
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:38
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:50
+#, fuzzy, php-format
+msgid "Category %s"
+msgstr "Kategorie"
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
 msgid "Results for some teams are not closed yet"
@@ -1839,6 +1864,11 @@ msgid_plural "Total of %d records"
 msgstr[0] "Celkem %d záznam"
 msgstr[1] "Celkem %d záznamy"
 msgstr[2] "Celkem %d záznamů"
+
+#: ../app/Components/Grids/Components/grid.latte.latte2php:21
+#, php-format
+msgid "(Showing from %d to %d)"
+msgstr "(Zobrazeno od %d do %d)"
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:13
@@ -2405,6 +2435,8 @@ msgid "__date_time"
 msgstr "d. m. Y, H:i"
 
 #: ../app/Models/ORM/Columns/Types/DateTime/TimeColumnFactory.php:19
+#: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:39
+#: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:61
 msgid "__time"
 msgstr "H:i"
 
@@ -3231,6 +3263,12 @@ msgstr "Zkratky"
 msgid "Bad Request"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:10
+#: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:18
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:10
+msgid "Pokračuj na rázcestník aktivít"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
 msgstr "Nejste oprávněni ke zobrazení této stránky"
@@ -3413,6 +3451,36 @@ msgstr "Podrobnosti odevzdání #%d"
 #: ../app/Modules/EventModule/Game/TaskPresenter.php:22
 msgid "Tasks"
 msgstr "Úlohy"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:39
+#, php-format
+msgid "Calculate results for %s category"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:39
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:51
+#, fuzzy, php-format
+msgid "Category %s is not ready"
+msgstr "Měna %s není podporována"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+#, fuzzy
+msgid "Calculate global results"
+msgstr "Celkové výsledky"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:55
+msgid "Total results are not ready"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:51
+#, php-format
+msgid "Validate category %s"
+msgstr "Validovat kategorii %s"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:55
+msgid "Validate all categories"
+msgstr "Validovat všechny kategorie"
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:2
 msgid "All teams"
@@ -4615,8 +4683,8 @@ msgid "Place of birth"
 msgstr "Místo narození"
 
 #: ../app/config/orm.neon.neon2php:509
-msgid "City and region (for diplomas)."
-msgstr "Město a okres (kvůli diplomům)."
+msgid "City and region"
+msgstr "Město a okres"
 
 #: ../app/config/orm.neon.neon2php:512
 msgid "Current role"
@@ -5876,24 +5944,8 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#, fuzzy, php-format
-#~ msgid "%s at event %s"
-#~ msgstr "Upravit akci %s"
-
 #~ msgid "Birthday is required field."
 #~ msgstr "Pole narození je povinné"
-
-#, fuzzy
-#~ msgid "Calculate global results"
-#~ msgstr "Celkové výsledky"
-
-#, fuzzy, php-format
-#~ msgid "Category %s"
-#~ msgstr "Kategorie"
-
-#, fuzzy, php-format
-#~ msgid "Category %s is not ready"
-#~ msgstr "Měna %s není podporována"
 
 #, fuzzy
 #~ msgid "Content-Type"
@@ -5923,18 +5975,11 @@ msgstr ""
 #~ msgid "Total"
 #~ msgstr "Celkově"
 
-#~ msgid "Validate all categories"
-#~ msgstr "Validovat všechny kategorie"
-
-#~ msgid "Validate category %s"
-#~ msgstr "Validovat kategorii %s"
-
 #~ msgid "academic_degree"
 #~ msgstr "Akademický rok"
 
 #~ msgid "active"
 #~ msgstr "aktivní"
-
 
 #, fuzzy
 #~ msgid "events"

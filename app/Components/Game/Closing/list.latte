@@ -20,7 +20,7 @@
                            class="btn btn-outline-success">{_'Close'}</a>
                     {/try}
                 {else}
-                    {$team->points} {_'points'}
+                    {sprintf(ngettext("%d point", '%d points', abs($team->points)), $team->points)}
                 {/if}
             </div>
         </div>

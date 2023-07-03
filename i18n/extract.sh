@@ -24,8 +24,8 @@ ROOT=`dirname ${BASH_SOURCE[0]}`/..
 
 # TODO find ngettext when on multiple lines
 function latte2php {
-    perl -0777 -pe "s/{_\(?'([^}]*)'\)?}/<?php _('\1') ?>/g" $1 |\
-    perl -0777 -pe "s/{_\(?\"([^}]*)\"\)?}/<?php _(\"\1\") ?>/g" |\
+    perl -0777 -pe "s/{?_\(?'([^}]*)'\)?}?/<?php _('\1') ?>/g" $1 |\
+    perl -0777 -pe "s/{?_\(?\"([^}]*)\"\)?}?/<?php _(\"\1\") ?>/g" |\
     perl -0777 -pe "s/ngettext\((.*),(.*),(.*)\)/<?php ngettext(\1,\2,\3) ?>/g" >$1.$LATTE_SUFFIX
 }
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-03 15:26+0200\n"
+"POT-Creation-Date: 2023-07-03 17:57+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -422,8 +422,10 @@ msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:68
 #, php-format
-msgid "Test done, found %d errors"
-msgstr ""
+msgid "Test done, found %d error"
+msgid_plural "Test done, found %d errors"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/layout.latte.latte2php:3
 msgid "Check files"
@@ -636,6 +638,12 @@ msgstr ""
 #: ../app/Components/Controls/Stalking/Components/layout.validation.latte.latte2php:3
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:100
 msgid "Validation"
+msgstr ""
+
+#: ../app/Components/Controls/Stalking/Timeline/layout.latte.latte2php:16
+#: ../app/Components/Controls/Stalking/Timeline/layout.latte.latte2php:41
+#, php-format
+msgid "%s at event %s"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:24
@@ -1115,6 +1123,7 @@ msgid "This item has already assigned another payment"
 msgstr ""
 
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:51
+#: ../app/Modules/CoreModule/templates/Authentication/recover.latte.latte2php:6
 #: ../app/Modules/PublicModule/RegisterPresenter.php:178
 #: ../app/config/orm.neon.neon2php:451
 msgid "E-mail"
@@ -1437,8 +1446,11 @@ msgid "Close"
 msgstr ""
 
 #: ../app/Components/Game/Closing/list.latte.latte2php:23
-msgid "points"
-msgstr ""
+#, php-format
+msgid "%d point"
+msgid_plural "%d points"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Game/Diplomas/NotClosedTeamException.php:17
 #, php-format
@@ -1458,7 +1470,18 @@ msgstr ""
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:13
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:42
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:54
+#, php-format
 msgid "Global"
+msgstr ""
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:7
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:22
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:38
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:50
+#, php-format
+msgid "Category %s"
 msgstr ""
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
@@ -1836,6 +1859,11 @@ msgid "Total of %d record"
 msgid_plural "Total of %d records"
 msgstr[0] ""
 msgstr[1] ""
+
+#: ../app/Components/Grids/Components/grid.latte.latte2php:21
+#, php-format
+msgid "(Showing from %d to %d)"
+msgstr ""
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:13
@@ -2403,6 +2431,8 @@ msgid "__date_time"
 msgstr "jS \\of M Y H:i"
 
 #: ../app/Models/ORM/Columns/Types/DateTime/TimeColumnFactory.php:19
+#: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:39
+#: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:61
 msgid "__time"
 msgstr "H:i"
 
@@ -3226,6 +3256,12 @@ msgstr ""
 msgid "Bad Request"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:10
+#: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:18
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:10
+msgid "Pokračuj na rázcestník aktivít"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
 msgstr ""
@@ -3407,6 +3443,35 @@ msgstr ""
 
 #: ../app/Modules/EventModule/Game/TaskPresenter.php:22
 msgid "Tasks"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:39
+#, php-format
+msgid "Calculate results for %s category"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:39
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:51
+#, php-format
+msgid "Category %s is not ready"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+msgid "Calculate global results"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:55
+msgid "Total results are not ready"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:51
+#, php-format
+msgid "Validate category %s"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:55
+msgid "Validate all categories"
 msgstr ""
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:2
@@ -4609,7 +4674,7 @@ msgid "Place of birth"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:509
-msgid "City and region (for diplomas)."
+msgid "City and region"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:512
