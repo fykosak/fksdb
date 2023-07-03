@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-02 15:16+0200\n"
+"POT-Creation-Date: 2023-07-03 15:26+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -435,8 +435,9 @@ msgid "Test done, found %d errors"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/layout.latte.latte2php:3
+#, fuzzy
 msgid "Check files"
-msgstr ""
+msgstr "Nová platba"
 
 #: ../app/Components/Controls/Inbox/SubmitsPreview/layout.latte.latte2php:12
 #: ../app/Components/Controls/Inbox/SubmitsPreview/layout.latte.latte2php:19
@@ -500,9 +501,18 @@ msgid "Person"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:17
-#: ../app/Components/Grids/Components/grid.latte.latte2php:19
-msgid "Total"
-msgstr ""
+#, php-format
+msgid "Total of %d active contestant"
+msgid_plural "Total of %d active contestants"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../app/Components/Controls/Inbox/layout.latte.latte2php:18
+#, fuzzy, php-format
+msgid "%d solution"
+msgid_plural "%d solutions"
+msgstr[0] "Zoznam platieb"
+msgstr[1] "Zoznam platieb"
 
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:40
 #, fuzzy
@@ -600,8 +610,9 @@ msgid "Preferred language has been set."
 msgstr ""
 
 #: ../app/Components/Controls/Schedule/Rests/layout.team.latte.latte2php:2
+#, fuzzy
 msgid "Rests"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:6
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:86
@@ -638,13 +649,15 @@ msgstr ""
 
 #: ../app/Components/Controls/Stalking/Components/layout.validation.latte.latte2php:3
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:100
+#, fuzzy
 msgid "Validation"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:24
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:92
+#, fuzzy
 msgid "Person history"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:43
 msgid "Emails"
@@ -655,8 +668,9 @@ msgid "Task contribution"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:64
+#, fuzzy
 msgid "Event participants"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:66
 msgid "Team members"
@@ -685,12 +699,14 @@ msgid "Schedule"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:94
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:96
+#, fuzzy
 msgid "Contests"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:98
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:57
@@ -715,8 +731,9 @@ msgid "Parameter %label is numeric."
 msgstr ""
 
 #: ../app/Components/Controls/StoredQuery/layout.results.latte.latte2php:27
+#, fuzzy
 msgid "Detail of the query"
-msgstr ""
+msgstr "Zoznam akcií"
 
 #: ../app/Components/Controls/Transitions/TransitionButtonsComponent.php:48
 msgid "Some error emerged"
@@ -1440,6 +1457,15 @@ msgstr ""
 msgid "Team \"%s\" has successfully closed submitting, with total %d points."
 msgstr ""
 
+#: ../app/Components/Game/Closing/ctyrboj.latte.latte2php:1
+#: ../app/Components/Game/Closing/fof.latte.latte2php:5
+msgid "Confirm and close submitting."
+msgstr ""
+
+#: ../app/Components/Game/Closing/fof.latte.latte2php:2
+msgid "Úloha u vydavačů"
+msgstr ""
+
 #: ../app/Components/Game/Closing/list.latte.latte2php:20
 msgid "Close"
 msgstr ""
@@ -1462,6 +1488,11 @@ msgstr ""
 
 #: ../app/Components/Game/Diplomas/RankingStrategy.php:68
 msgid "Rank"
+msgstr ""
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:13
+msgid "Global"
 msgstr ""
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
@@ -1847,17 +1878,12 @@ msgstr ""
 msgid "Reset filter"
 msgstr ""
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:21
-msgid "záznam"
-msgstr ""
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:22
-msgid "záznamy"
-msgstr ""
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:23
-msgid "záznamů"
-msgstr ""
+#: ../app/Components/Grids/Components/grid.latte.latte2php:19
+#, php-format
+msgid "Total of %d record"
+msgid_plural "Total of %d records"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:13
@@ -1866,8 +1892,9 @@ msgstr ""
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:36
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:40
+#, fuzzy
 msgid "Next"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:41
 msgid "Person A"
@@ -2055,24 +2082,29 @@ msgid "Correctors B"
 msgstr "Zoznam platieb"
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.topHotel.latte.latte2php:5
+#, fuzzy
 msgid "A sector"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.topHotel.latte.latte2php:6
+#, fuzzy
 msgid "B sector"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.topHotel.latte.latte2php:7
+#, fuzzy
 msgid "C sector"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.topHotel.latte.latte2php:8
+#, fuzzy
 msgid "D sector"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Components/PDFGenerators/TeamSeating/Rooms/layout.topHotel.latte.latte2php:9
+#, fuzzy
 msgid "E sector"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Models/Authentication/AccountManager.php:87
 msgid "Create an account"
@@ -3278,6 +3310,10 @@ msgstr ""
 msgid "Shortcuts"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:9
+msgid "Bad Request"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
 msgstr ""
@@ -3307,9 +3343,14 @@ msgstr "Zvoliť typ"
 msgid "ask for a role grant"
 msgstr ""
 
-#: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
-msgid "Chosen method is not supported."
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:9
+msgid "Whoooops! We are sorry, but the requested page does not exist."
 msgstr ""
+
+#: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
+#, fuzzy
+msgid "Chosen method is not supported."
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/CoreModule/templates/Error/410.latte.latte2php:8
 msgid "Gone!"
@@ -3325,8 +3366,9 @@ msgid "My applications as a team member"
 msgstr "Zoznam platieb"
 
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:6
+#, fuzzy
 msgid "My applications as a teacher"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:9
 msgid "Events with open registration"
@@ -3466,8 +3508,9 @@ msgid "Tasks"
 msgstr ""
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:2
+#, fuzzy
 msgid "All teams"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:5
 msgid "All team includes catogory and position Id"
@@ -3478,8 +3521,9 @@ msgid "Empty"
 msgstr ""
 
 #: ../app/Modules/EventModule/Game/templates/Submit/detail.latte.latte2php:24
+#, fuzzy
 msgid "Check submit"
-msgstr ""
+msgstr "Nová platba"
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:45
 #, fuzzy
@@ -3555,8 +3599,9 @@ msgid "Create item"
 msgstr ""
 
 #: ../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:5
+#, fuzzy
 msgid "Schedule item"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:9
 msgid "Id"
@@ -3568,8 +3613,19 @@ msgid "Edit item"
 msgstr ""
 
 #: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:2
+#, fuzzy
 msgid "Schedule group"
-msgstr ""
+msgstr "Uprava platby #%s"
+
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:22
+#, fuzzy
+msgid "Detail of group"
+msgstr "Zoznam platieb"
+
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:24
+#, fuzzy
+msgid "Edit group"
+msgstr "Zoznam platieb"
 
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:14
 msgid "Today"
@@ -3635,8 +3691,9 @@ msgid "Mass transitions"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:6
+#, fuzzy
 msgid "Base info"
-msgstr ""
+msgstr "Nová platba"
 
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:28
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:105
@@ -3649,8 +3706,9 @@ msgid "Info"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:13
+#, fuzzy
 msgid "Event web-site"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/EventModule/templates/EventOrg/create.latte.latte2php:2
 #: ../app/Modules/OrgModule/PersonPresenter.php:82
@@ -3659,8 +3717,9 @@ msgid "Create person"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:16
+#, fuzzy
 msgid "Select items"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:20
 #: ../app/config/payments/payment16.neon.neon2php:31
@@ -3675,16 +3734,18 @@ msgid "Payment info"
 msgstr "Nová platba"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:38
+#, fuzzy
 msgid "Person information"
-msgstr ""
+msgstr "Zoznam platieb"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:62
 msgid "Sum"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:69
+#, fuzzy
 msgid "Edit items"
-msgstr ""
+msgstr "Uprava platby #%s"
 
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:60
 msgid "Rank & points"
@@ -3696,12 +3757,14 @@ msgid "Teacher"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:86
+#, fuzzy
 msgid "Participants"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:93
+#, fuzzy
 msgid "Parcipant"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:109
 msgid "Seating"
@@ -4062,12 +4125,14 @@ msgid "Invalidovate points cache"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:9
+#, fuzzy
 msgid "Recalculate all points"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:11
+#, fuzzy
 msgid "Calculate quiz points"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/OrgModule/templates/Spam/detail.latte.latte2php:27
 #: ../app/config/orm.neon.neon2php:401 ../app/config/orm.neon.neon2php:723
@@ -4086,12 +4151,14 @@ msgid "Type"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:34
+#, fuzzy
 msgid "Execute query"
-msgstr ""
+msgstr "Uprava platby #%s"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:37
+#, fuzzy
 msgid "Edit query"
-msgstr ""
+msgstr "Uprava platby #%s"
 
 #: ../app/Modules/ProfileModule/EmailPresenter.php:29
 msgid "Confirm new email"
@@ -4256,8 +4323,9 @@ msgid "Register for the next year"
 msgstr "Registrácia"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:21
+#, fuzzy
 msgid "Next year"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/config/fyziklani/default.neon.neon2php:8
 #: ../app/config/fyziklani/default.neon.neon2php:35
@@ -5983,13 +6051,85 @@ msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
+#~ msgid "#nav-contests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "#nav-validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy, php-format
+#~ msgid "%s at event %s"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
 #~ msgid "Accommodation for %s from %s to %s"
 #~ msgstr "Ubytnovanie neexistuje"
 
 #, fuzzy
-#~ msgid "Edit personal information"
-#~ msgstr "Zoznam platieb"
+#~ msgid "Calculate global results"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Zvoliť typ"
 
 #, fuzzy
 #~ msgid "Payment UId"
 #~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Validate all categories"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy, php-format
+#~ msgid "Validate category %s"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "sectors"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "team"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "validate!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "{plink import}"
+#~ msgstr "Časový vývoj prihlášiek"

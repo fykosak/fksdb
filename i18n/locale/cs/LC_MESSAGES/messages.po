@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-02 15:16+0200\n"
+"POT-Creation-Date: 2023-07-03 15:26+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.3\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../app/Bootstrap.tsx.tsx2php:211 ../app/Bootstrap.tsx.tsx2php:216
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:47
@@ -60,7 +61,7 @@ msgstr "Výfuk"
 
 #: ../app/Components/Badges/ContestBadge.php:30
 msgid "Vědecký čtyřboj"
-msgstr ""
+msgstr "Vědecký čtyřboj"
 
 #: ../app/Components/Badges/NoRecordsBadge.php:14
 msgid "No records"
@@ -120,7 +121,7 @@ msgstr "Týmy dle zemí."
 #: ../app/Components/Charts/Event/ApplicationsTimeProgress/CommonChart.tsx.tsx2php:99
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
 msgid "Time progress"
-msgstr "Počet přihlášek v čase"
+msgstr "Vývoj v čase"
 
 #: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:50
 msgid "Applications time progress"
@@ -179,7 +180,7 @@ msgstr "Soubor není v pořádku"
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:100
 msgid "Upload successful"
-msgstr "Nahrání úspěšné"
+msgstr "Úspěšné nahrání"
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:112
 #, php-format
@@ -202,7 +203,7 @@ msgstr "Odevzdat pomocí kvízového formuláře"
 #: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:30
 #: ../app/Components/Game/Submits/AllSubmitsGrid.php:75
 msgid "Revoke"
-msgstr "Ovolat"
+msgstr "Odvolat"
 
 #: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:32
 msgid "Remove submit?"
@@ -210,7 +211,7 @@ msgstr "Smazat odevzdání?"
 
 #: ../app/Components/Controls/AjaxSubmit/Components/States/FormState.tsx.tsx2php:59
 msgid "Drag file here."
-msgstr ""
+msgstr "Přetáhněte soubory sem"
 
 #: ../app/Components/Controls/AjaxSubmit/Components/States/LoadingState.tsx.tsx2php:10
 msgid "Loading"
@@ -319,7 +320,7 @@ msgstr "Pouze CSV soubory jsou přijímány."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:62
 msgid "Error mode"
-msgstr "Cování při chybě."
+msgstr "Chování při chybě."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:64
 msgid "Stop import and rollback."
@@ -331,15 +332,15 @@ msgstr "Přeskočit přihlášku a pokračovat."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:69
 msgid "Stateless applications."
-msgstr "Přihlláška bez stavu."
+msgstr "Přihláška bez stavu."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:71
 msgid "Ignore."
-msgstr "Ignorovat"
+msgstr "Ignorovat."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:72
 msgid "Keep original state."
-msgstr "Ponechat původní stav"
+msgstr "Ponechat původní stav."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:76
 #: ../app/Modules/OrgModule/TasksPresenter.php:121
@@ -435,6 +436,7 @@ msgid "Download"
 msgstr "Stáhnout"
 
 #: ../app/Components/Controls/Inbox/SubmitsPreview/layout.latte.latte2php:29
+#, fuzzy
 msgid "Not graded."
 msgstr "Neohodnoceno."
 
@@ -491,9 +493,20 @@ msgid "Person"
 msgstr "Osoba"
 
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:17
-#: ../app/Components/Grids/Components/grid.latte.latte2php:19
-msgid "Total"
-msgstr "Celkově"
+#, php-format
+msgid "Total of %d active contestant"
+msgid_plural "Total of %d active contestants"
+msgstr[0] "Celkem %d aktivní účastník"
+msgstr[1] "Celkem %d aktivní účastníci"
+msgstr[2] "Celkem %d aktivních účastníků"
+
+#: ../app/Components/Controls/Inbox/layout.latte.latte2php:18
+#, php-format
+msgid "%d solution"
+msgid_plural "%d solutions"
+msgstr[0] "%d řešení"
+msgstr[1] "%d řešení"
+msgstr[2] "%d řešení"
 
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:40
 msgid "Contest year @contestant.year"
@@ -542,7 +555,7 @@ msgstr "Organizátoři"
 
 #: ../app/Components/Controls/Person/Detail/OrgListComponent.php:44
 msgid "@org.since - @org.until"
-msgstr ""
+msgstr "@org.since - @org.until"
 
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:75
 msgid "This email is already in use."
@@ -572,18 +585,18 @@ msgstr "Zpět na můj profil"
 
 #: ../app/Components/Controls/Person/PizzaComponent.php:43
 msgid "Get pizza!"
-msgstr "Daj pizzu!"
+msgstr "Dej pizzu!"
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:9
 #: ../app/Modules/OrgModule/PersonPresenter.php:87
 #: ../app/config/orm.neon.neon2php:559
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:10
 #: ../app/config/orm.neon.neon2php:531
 msgid "ISIC"
-msgstr ""
+msgstr "ISIC"
 
 #: ../app/Components/Controls/PreferredLangFormComponent.php:48
 msgid "Preferred language has been set."
@@ -629,7 +642,7 @@ msgstr "Role"
 #: ../app/Components/Controls/Stalking/Components/layout.validation.latte.latte2php:3
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:100
 msgid "Validation"
-msgstr "Validace"
+msgstr "Validace údajů"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:24
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:92
@@ -650,7 +663,7 @@ msgstr "Účastníci akce"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:66
 msgid "Team members"
-msgstr "Členové týmu"
+msgstr "Člen týmu"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:68
 msgid "Payments"
@@ -673,7 +686,7 @@ msgstr "Program"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:94
 msgid "Contact"
-msgstr "Kontaktní údaje"
+msgstr "Kontakt"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:96
 msgid "Contests"
@@ -707,7 +720,7 @@ msgstr "Podrobnosti akce"
 
 #: ../app/Components/Controls/Transitions/TransitionButtonsComponent.php:48
 msgid "Some error emerged"
-msgstr "Objevil se nějaký error :)"
+msgstr "Objevil se nějaký error 🫠"
 
 #: ../app/Components/Controls/layout.schoolCheck.latte.latte2php:3
 msgid "Teams per school"
@@ -893,7 +906,7 @@ msgstr "Org byl aktualizován."
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:75
 msgid "Proceed to summary"
-msgstr "Pokračuj na souhrn"
+msgstr "Pokračovat na souhrn"
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:75
 msgid "Save payment"
@@ -935,7 +948,7 @@ msgstr "E-mailová pozvánka odeslána"
 
 #: ../app/Components/EntityForms/RegisterContestantFormComponent.php:102
 msgid "E-mail invitation failed to sent."
-msgstr "E-mailová pozvánka se neodeslala."
+msgstr "E-mailovou pozvánku se nepovedlo odeslat."
 
 #: ../app/Components/EntityForms/ScheduleGroupFormComponent.php:49
 #, php-format
@@ -1010,6 +1023,8 @@ msgid ""
 "The name of the parameter can only contain lowercase \n"
 "                letters of the english alphabet, numbers, and an underscore."
 msgstr ""
+"Jméno parametru může obsahovat pouze malá písmena anglické abecedy,čísla a "
+"podtržítko."
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:193
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:13
@@ -1028,7 +1043,7 @@ msgstr "Výchozí hodnota"
 
 #: ../app/Components/EntityForms/TeacherFormComponent.php:79
 msgid "Teacher has been created"
-msgstr "Učitel byl vytvořen."
+msgstr "Učitel byl vytvořen"
 
 #: ../app/Components/EntityForms/TeacherFormComponent.php:79
 msgid "Teacher has been updated"
@@ -1048,7 +1063,7 @@ msgstr "Produkt"
 
 #: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 msgid "Product has been created."
-msgstr "Produkt vytvořen"
+msgstr "Produkt vytvořen."
 
 #: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 msgid "Product has been updated."
@@ -1061,7 +1076,7 @@ msgstr "Výrobce"
 
 #: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:79
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: ../app/Components/EntityForms/layout.address.latte.latte2php:7
 msgid ""
@@ -1411,6 +1426,15 @@ msgstr "Tým %s má nezkontrolovaná odevzdání"
 msgid "Team \"%s\" has successfully closed submitting, with total %d points."
 msgstr "Tým %s má úspěšně uzavřené bodování s celkovým bodovým skóre %d."
 
+#: ../app/Components/Game/Closing/ctyrboj.latte.latte2php:1
+#: ../app/Components/Game/Closing/fof.latte.latte2php:5
+msgid "Confirm and close submitting."
+msgstr "Potvrdit a uzavřít odevzdávání."
+
+#: ../app/Components/Game/Closing/fof.latte.latte2php:2
+msgid "Úloha u vydavačů"
+msgstr "Úloha u vydavačů"
+
 #: ../app/Components/Game/Closing/list.latte.latte2php:20
 msgid "Close"
 msgstr "Uzavřené"
@@ -1434,6 +1458,11 @@ msgstr "Tým"
 #: ../app/Components/Game/Diplomas/RankingStrategy.php:68
 msgid "Rank"
 msgstr "Pořadí"
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:13
+msgid "Global"
+msgstr "Globální"
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
 msgid "Results for some teams are not closed yet"
@@ -1803,17 +1832,13 @@ msgstr "Filtrovat"
 msgid "Reset filter"
 msgstr "Vymazat filter"
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:21
-msgid "záznam"
-msgstr ""
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:22
-msgid "záznamy"
-msgstr ""
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:23
-msgid "záznamů"
-msgstr ""
+#: ../app/Components/Grids/Components/grid.latte.latte2php:19
+#, php-format
+msgid "Total of %d record"
+msgid_plural "Total of %d records"
+msgstr[0] "Celkem %d záznam"
+msgstr[1] "Celkem %d záznamy"
+msgstr[2] "Celkem %d záznamů"
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:13
@@ -2838,9 +2863,9 @@ msgid "Some fields don't match an existing record."
 msgstr "Některá pole neodpovídají existujícímu záznamu."
 
 #: ../app/Models/Results/EvaluationStrategies/EvaluationStrategy.php:78
-#, fuzzy, php-format
+#, php-format
 msgid "Invalid studyYear %d for person %s."
-msgstr "Neplatný ročník studia %i pro osobu %s."
+msgstr "Neplatný ročník studia %d pro osobu %s."
 
 #: ../app/Models/Submits/QuizHandler.php:71
 #: ../app/Modules/PublicModule/QuizRegisterPresenter.php:58
@@ -3202,6 +3227,10 @@ msgstr "Přihlásit se pomocí Google účtu"
 msgid "Shortcuts"
 msgstr "Zkratky"
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:9
+msgid "Bad Request"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
 msgstr "Nejste oprávněni ke zobrazení této stránky"
@@ -3227,6 +3256,10 @@ msgstr "Stát se organizátorem"
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:17
 msgid "ask for a role grant"
 msgstr "Požádat o udělení role"
+
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:9
+msgid "Whoooops! We are sorry, but the requested page does not exist."
+msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
 msgid "Chosen method is not supported."
@@ -3460,7 +3493,7 @@ msgstr "Můj program"
 
 #: ../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:6
 msgid "List of groups"
-msgstr "Seznam skupin"
+msgstr "Seznam místností"
 
 #: ../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:7
 #: ../app/Modules/OrgModule/Warehouse/ItemPresenter.php:44
@@ -3484,6 +3517,14 @@ msgstr "Upravit položku"
 msgid "Schedule group"
 msgstr "Skupina programu"
 
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:22
+msgid "Detail of group"
+msgstr "Podrobnosti skupiny"
+
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:24
+msgid "Edit group"
+msgstr "Upravit skupinu"
+
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:14
 msgid "Today"
 msgstr "Dnes"
@@ -3494,7 +3535,7 @@ msgstr "Blok skončil"
 
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:28
 msgid "Block is ongoing"
-msgstr "Blok probíha"
+msgstr "Blok probíhá"
 
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:33
 msgid "Block start in"
@@ -3506,7 +3547,7 @@ msgstr "minuty"
 
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:35
 msgid "Block not started yet"
-msgstr "Blok ješte nezačal"
+msgstr "Blok ještě nezačal"
 
 #: ../app/Modules/EventModule/TeamApplicationPresenter.php:47
 msgid "Create team"
@@ -3984,7 +4025,7 @@ msgstr "Typ"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:34
 msgid "Execute query"
-msgstr "Spustot dotaz"
+msgstr "Spustit export"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:37
 msgid "Edit query"
@@ -5835,17 +5876,31 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
+#, fuzzy, php-format
+#~ msgid "%s at event %s"
+#~ msgstr "Upravit akci %s"
+
 #~ msgid "Birthday is required field."
 #~ msgstr "Pole narození je povinné"
 
-#~ msgid "Calculate quiz points."
-#~ msgstr "Spočítat body kvízových úloh."
+#, fuzzy
+#~ msgid "Calculate global results"
+#~ msgstr "Celkové výsledky"
+
+#, fuzzy, php-format
+#~ msgid "Category %s"
+#~ msgstr "Kategorie"
+
+#, fuzzy, php-format
+#~ msgid "Category %s is not ready"
+#~ msgstr "Měna %s není podporována"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Ročník"
 
 #~ msgid "Edit personal information"
 #~ msgstr "Upravit osobní informace"
-
-#~ msgid "Global"
-#~ msgstr "Globální"
 
 #~ msgid "Require Id number"
 #~ msgstr "Číslo občanského průkazu je vyžadováno"
@@ -5865,11 +5920,57 @@ msgstr ""
 #~ msgid "This option is only available to secondary school students."
 #~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
 
+#~ msgid "Total"
+#~ msgstr "Celkově"
+
+#~ msgid "Validate all categories"
+#~ msgstr "Validovat všechny kategorie"
+
+#~ msgid "Validate category %s"
+#~ msgstr "Validovat kategorii %s"
+
+#~ msgid "academic_degree"
+#~ msgstr "Akademický rok"
+
 #~ msgid "active"
 #~ msgstr "aktivní"
 
-#~ msgid "solution"
-#~ msgstr "řešení"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Akce"
+
+#, fuzzy
+#~ msgid "labels"
+#~ msgstr "Štítky"
+
+#, fuzzy
+#~ msgid "login"
+#~ msgstr "Přihlašovací jméno"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Navigace"
+
+#, fuzzy
+#~ msgid "signatures"
+#~ msgstr "Podpis v TeXu"
 
 #~ msgid "solutions"
 #~ msgstr "řešení"
+
+#, fuzzy
+#~ msgid "team"
+#~ msgstr "Všechny týmy"
+
+#, fuzzy
+#~ msgid "team_members"
+#~ msgstr "Členové týmu"
+
+#, fuzzy
+#~ msgid "validate!"
+#~ msgstr "Neplatný tým"
+
+#, fuzzy
+#~ msgid "viewport"
+#~ msgstr "Reportovat"

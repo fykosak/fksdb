@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-02 15:16+0200\n"
+"POT-Creation-Date: 2023-07-03 15:26+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -491,9 +491,18 @@ msgid "Person"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:17
-#: ../app/Components/Grids/Components/grid.latte.latte2php:19
-msgid "Total"
-msgstr ""
+#, php-format
+msgid "Total of %d active contestant"
+msgid_plural "Total of %d active contestants"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../app/Components/Controls/Inbox/layout.latte.latte2php:18
+#, php-format
+msgid "%d solution"
+msgid_plural "%d solutions"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:40
 msgid "Contest year @contestant.year"
@@ -1414,6 +1423,15 @@ msgstr ""
 msgid "Team \"%s\" has successfully closed submitting, with total %d points."
 msgstr ""
 
+#: ../app/Components/Game/Closing/ctyrboj.latte.latte2php:1
+#: ../app/Components/Game/Closing/fof.latte.latte2php:5
+msgid "Confirm and close submitting."
+msgstr ""
+
+#: ../app/Components/Game/Closing/fof.latte.latte2php:2
+msgid "Úloha u vydavačů"
+msgstr ""
+
 #: ../app/Components/Game/Closing/list.latte.latte2php:20
 msgid "Close"
 msgstr ""
@@ -1436,6 +1454,11 @@ msgstr ""
 
 #: ../app/Components/Game/Diplomas/RankingStrategy.php:68
 msgid "Rank"
+msgstr ""
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:13
+msgid "Global"
 msgstr ""
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:17
@@ -1807,19 +1830,12 @@ msgstr ""
 msgid "Reset filter"
 msgstr ""
 
-#: ../app/Components/Grids/Components/grid.latte.latte2php:21
-#, fuzzy
-msgid "záznam"
-msgstr "records"
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:22
-#, fuzzy
-msgid "záznamy"
-msgstr "records"
-
-#: ../app/Components/Grids/Components/grid.latte.latte2php:23
-msgid "záznamů"
-msgstr "records"
+#: ../app/Components/Grids/Components/grid.latte.latte2php:19
+#, php-format
+msgid "Total of %d record"
+msgid_plural "Total of %d records"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:13
@@ -3206,6 +3222,10 @@ msgstr ""
 msgid "Shortcuts"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:9
+msgid "Bad Request"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
 msgstr ""
@@ -3230,6 +3250,10 @@ msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:17
 msgid "ask for a role grant"
+msgstr ""
+
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:9
+msgid "Whoooops! We are sorry, but the requested page does not exist."
 msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
@@ -3486,6 +3510,14 @@ msgstr ""
 
 #: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:2
 msgid "Schedule group"
+msgstr ""
+
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:22
+msgid "Detail of group"
+msgstr ""
+
+#: ../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:24
+msgid "Edit group"
 msgstr ""
 
 #: ../app/Modules/EventModule/Schedule/templates/PersonSchedule/default.latte.latte2php:14
@@ -4131,6 +4163,7 @@ msgid "Register to Výfuk"
 msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/year.latte.latte2php:8
+#, fuzzy
 msgid "year-fykos"
 msgstr "Year"
 
@@ -5845,6 +5878,25 @@ msgstr "Chosen person is already registered to the event."
 
 #~ msgid "Ubytování"
 #~ msgstr "Accommodation"
+
+#, fuzzy
+#~ msgid "card-body"
+#~ msgstr "points"
+
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "jS \\of M Y"
+
+#, fuzzy
+#~ msgid "záznam"
+#~ msgstr "records"
+
+#, fuzzy
+#~ msgid "záznamy"
+#~ msgstr "records"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
 
 #~ msgid "Účastník"
 #~ msgstr "Participant"
