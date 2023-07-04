@@ -1,7 +1,6 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
-import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
@@ -17,7 +16,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
 
     public render() {
         const colorScale = scaleOrdinal(schemeCategory10);
-        const {data} = this.props;
+        const {data, translator} = this.props;
         const {maxValue, maxSeries} = parseData(data);
         const [minYear, maxYear] = getMinMaxYear(data);
         const yScale = scaleLinear<number, number>().domain([0, maxValue]);
@@ -53,18 +52,12 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
             });
         }
 
-        return <ChartContainer
-            chart={BarHistogram}
-            chartProps={{
-                xScale,
-                yScale,
-                data: histogramData,
-                display: {
-                    xGrid: false, yGrid: true,
-                },
-            }}
-            legendComponent={Legend}
-            legendProps={{data: legendData}}
-        />;
+        return <>
+            <BarHistogram xScale={xScale} yScale={yScale} data={histogramData} display={{
+                xGrid: false, yGrid: true,
+            }}/>
+            <h3>{translator.getText('Legend')}</h3>
+            <Legend data={data}/>
+        </>;
     }
 }

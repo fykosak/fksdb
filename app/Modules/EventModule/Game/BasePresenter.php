@@ -16,10 +16,8 @@ abstract class BasePresenter extends EventBasePresenter
     protected TeamService2 $teamService;
     protected SubmitService $submitService;
 
-    final public function injectGameBase(
-        SubmitService $submitService,
-        TeamService2 $teamService
-    ): void {
+    final public function injectGameBase(SubmitService $submitService, TeamService2 $teamService): void
+    {
         $this->submitService = $submitService;
         $this->teamService = $teamService;
     }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 19:45+0200\n"
+"POT-Creation-Date: 2023-07-04 20:37+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -97,6 +97,14 @@ msgstr ""
 
 #: ../app/Components/Charts/Contestants/contestatns-data.tsx.tsx2php:18
 msgid "series"
+msgstr ""
+
+#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:59
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:54
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:70
+#: ../app/Modules/EventModule/Game/templates/Close/list.latte.latte2php:13
+msgid "Legend"
 msgstr ""
 
 #: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:35
@@ -1730,13 +1738,6 @@ msgstr "Zoznam akcií"
 #, fuzzy
 msgid "Success of submitting"
 msgstr "Zoznam platieb"
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:54
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:70
-#: ../app/Modules/EventModule/Game/templates/Close/list.latte.latte2php:13
-msgid "Legend"
-msgstr ""
 
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
 #, fuzzy
@@ -4592,7 +4593,7 @@ msgid "Change post contact"
 msgstr ""
 
 #: ../app/Modules/ProfileModule/templates/Login.default.latte.latte2php:5
-msgid "Username for logging in to FKSDB and other systems"
+msgid "Username for logging into FKSDB and other systems"
 msgstr ""
 
 #: ../app/Modules/ProfileModule/templates/MyApplications.default.latte.latte2php:10
@@ -4723,7 +4724,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:12
 msgid ""
-"Physics correspondence competition of CUNI MFF for high-school students."
+"Physics correspondence competition of CUNI FMP for high-school students."
 msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:14
@@ -4733,7 +4734,7 @@ msgstr "Registrácia"
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:24
 msgid ""
-"Physics correspondence seminar of CUNI MFF for the students of elementary "
+"Physics correspondence seminar of CUNI FMP for the students of elementary "
 "schools."
 msgstr ""
 

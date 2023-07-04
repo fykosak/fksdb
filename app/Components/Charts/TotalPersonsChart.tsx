@@ -59,27 +59,27 @@ export default class TotalPersonsChart extends React.Component<OwnProps, never> 
             points: false,
         };
         lineChartData.push({
-            color: 'gray',
+            color: 'var(--bs-gray)',
             display,
             name: translator.getText('All'),
             points: pointsAll,
         });
 
         lineChartData.push({
-            color: '#1175da',
+            color: 'var(--bs-indigo)',
             display,
             name: translator.getText('Male'),
             points: pointsMale,
         });
 
         lineChartData.push({
-            color: '#da1175',
+            color: 'var(--bs-pink)',
             display,
             name: translator.getText('Female'),
             points: pointsFemale,
         });
         lineChartData.push({
-            color: '#da7511',
+            color: 'var(--bs-yellow)',
             display,
             name: translator.getText('Person Id'),
             points: pointsPersonId,

@@ -25,8 +25,6 @@ $other-colors: (
         "color-9": #bcbd22,
         "color-10": #17becf,
         "color-11": #000000,
-        "pink": deeppink,
-        "error": #dc3545,
 );
 
 $custom-colors: map-merge($contest-colors, $other-colors);
