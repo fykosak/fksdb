@@ -51,7 +51,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
                     <div className="container">
                         <h2>{translator.getText('Success of submitting')}</h2>
                         <PieChart teamId={teamId}/>
-                        <h3>Legend</h3>
+                        <h3>{translator.getText('Legend')}</h3>
                         <Legend/>
                     </div>
                 </div>
@@ -59,7 +59,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
                     <div className="container">
                         <h2>{translator.getText('Time progress')}</h2>
                         <PointsInTime teamId={teamId}/>
-                        <h3>Legend</h3>
+                        <h3>{translator.getText('Legend')}</h3>
                         <Legend/>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, never> {
                     <div className="container">
                         <h2>{translator.getText('Timeline')}</h2>
                         <TimeLine teamId={teamId}/>
-                        <h3>Legend</h3>
+                        <h3>{translator.getText('Legend')}</h3>
                         <Legend/>
                     </div>
                 </div>

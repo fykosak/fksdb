@@ -11,7 +11,6 @@ import './timeline.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {
-    activePoints: number;
     submits: Submits;
     tasks: TaskModel[];
     gameStart: Date;
@@ -44,7 +43,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
     }
 
     public render() {
-        const {teamId, submits, tasks, gameStart, gameEnd, activePoints, tasksOnBoard} = this.props;
+        const {teamId, submits, tasks, gameStart, gameEnd, tasksOnBoard} = this.props;
 
         const {activeTasks, teamSubmits} = reconstructTeamGame(submits, tasks, tasksOnBoard, gameStart, teamId);
 
@@ -63,14 +62,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
             const fromCoordinates = this.xScale(from);
             const toCoordinates = this.xScale(to);
             const yCoordinates = this.yScale(index);
-            let active = true;
-            if (activePoints) {
-                active = false;
-                if (submit) {
-                    active = activePoints === submit.points;
-                }
-            }
-            return <g key={index} className={active ? 'active' : 'inactive'}>
+            return <g key={index}>
                 <polyline
                     points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
                     style={{'--polyline-color': submit ? ('var(--color-fof-points-' + submit.points + ')') : '#ccc'} as React.CSSProperties}
@@ -101,7 +93,6 @@ class Timeline extends ChartComponent<StateProps & OwnProps, never> {
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),
         gameStart: new Date(state.timer.gameStart),
         submits: state.data.submits,

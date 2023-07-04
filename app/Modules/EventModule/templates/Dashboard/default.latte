@@ -1,6 +1,5 @@
 {block outerContent}
     {varType FKSDB\Models\ORM\Models\EventModel $event}
-    {varType string $webUrl}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
@@ -14,23 +13,21 @@
             'event.registration_begin',
             'event.registration_end',
             ], $event, 1024}
-            {*<div class="row">
-                <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
-                    {_'Event web-site'}
-                </b>
-                <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-                    <a href="{$webUrl}">{$webUrl}</a>
-                </span>
-            </div>*}
             <a class="btn btn-outline-secondary mt-3"
-               href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>
+               href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit event'}</a>
         </div>
 
     </div>
     <div class="panel color-auto">
         <div class="container">
+            <h2>{_'Application'}</h2>
+            {control navigationChooser:board 'Event.Dashboard.default#application'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
             <h2>{_'Actions'}</h2>
-            {control navigationChooser:board 'Event.Dashboard.default'}
+            {control navigationChooser:board 'Event.Dashboard.default#other'}
         </div>
     </div>
 {/block}

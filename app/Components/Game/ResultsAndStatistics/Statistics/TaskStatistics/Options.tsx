@@ -75,17 +75,22 @@ class Options extends React.Component<StateProps & DispatchProps, never> {
                     <div className="col-6">
                         <div className="form-group">
                             <label>{translator.getText('From')}</label>
-                            <input type="range"
-                                   className="form-range"
-                                   value={fromDate.getTime()}
-                                   min={gameStart.getTime()}
-                                   max={toDate.getTime()}
-                                   step={60 * 1000}
-                                   onChange={(e) => {
-                                       onSetNewState({fromDate: new Date(+e.target.value)});
-                                   }}/>
-                            <span className="form-text"><TimeDisplay date={fromDate.toISOString()}
-                                                                     translator={translator}/></span>
+                            <input
+                                type="range"
+                                className="form-range"
+                                value={fromDate.getTime()}
+                                min={gameStart.getTime()}
+                                max={toDate.getTime()}
+                                step={60 * 1000}
+                                onChange={(e) => {
+                                    onSetNewState({fromDate: new Date(+e.target.value)});
+                                }}/>
+                            <span className="form-text">
+                                <TimeDisplay
+                                    date={fromDate.toISOString()}
+                                    translator={translator}
+                                />
+                            </span>
                         </div>
                     </div>
                     <div className="col-6">

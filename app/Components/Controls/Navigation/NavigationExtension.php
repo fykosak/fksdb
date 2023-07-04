@@ -45,14 +45,15 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
-    private function createNode(string $nodeId, array $arguments): array
+    private function createNode(string $nodeId, array $params): array
     {
-        $fullQualityAction = str_replace('.', ':', $nodeId);
-        $a = strrpos($fullQualityAction, ':');
+        [$link, $fragment] = explode('#', $nodeId);
+        [$module, $presenter, $action] = explode('.', $link);
         return [
-            'presenter' => substr($fullQualityAction, 0, $a),
-            'action' => substr($fullQualityAction, $a + 1),
-            'params' => $arguments,
+            'presenter' => $module . ':' . $presenter,
+            'action' => $action,
+            'params' => $params,
+            'fragment' => $fragment,
         ];
     }
 }

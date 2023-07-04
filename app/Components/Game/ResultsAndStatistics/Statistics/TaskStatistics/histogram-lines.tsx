@@ -14,7 +14,6 @@ interface StateProps {
     gameStart: Date;
     gameEnd: Date;
     toDate: Date;
-    activePoints: number;
     aggregationTime: number;
 }
 
@@ -34,7 +33,6 @@ class HistogramLines extends React.Component<StateProps & OwnProps, never> {
             taskId,
             submits,
             aggregationTime,
-            activePoints,
             availablePoints,
         } = this.props;
         const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
@@ -54,9 +52,7 @@ class HistogramLines extends React.Component<StateProps & OwnProps, never> {
             if (Object.hasOwn(taskTimeSubmits,key)) {
                 const item = taskTimeSubmits[key];
                 availablePoints.map((points) => {
-                    if (!activePoints || activePoints === points) {
-                        maxPoints = maxPoints < item[points] ? item[points] : maxPoints;
-                    }
+                    maxPoints = maxPoints < item[points] ? item[points] : maxPoints;
                 });
             }
         }
@@ -86,28 +82,26 @@ class HistogramLines extends React.Component<StateProps & OwnProps, never> {
         }
         const lineChartData: LineChartData<Date> = [];
         availablePoints.forEach((points) => {
-            if (!activePoints || activePoints === points) {
-                lineChartData.push({
-                    color: 'var(--color-fof-points-' + points + ')',
-                    curveFactory: curveMonotoneX,
-                    display: {
-                        area: true,
-                        lines: true,
-                        points: false,
+            lineChartData.push({
+                color: 'var(--color-fof-points-' + points + ')',
+                curveFactory: curveMonotoneX,
+                display: {
+                    area: true,
+                    lines: true,
+                    points: false,
+                },
+                name: points.toString(),
+                points: [
+                    {
+                        xValue: gameStart,
+                        yValue: 0,
                     },
-                    name: points.toString(),
-                    points: [
-                        {
-                            xValue: gameStart,
-                            yValue: 0,
-                        },
-                        ...pointsData[points],
-                        {
-                            xValue: gameEnd,
-                            yValue: 0,
-                        }],
-                });
-            }
+                    ...pointsData[points],
+                    {
+                        xValue: gameEnd,
+                        yValue: 0,
+                    }],
+            });
         });
         return <LineChart<Date> data={lineChartData} xScale={xScale} yScale={yScale}/>;
     }
@@ -115,7 +109,6 @@ class HistogramLines extends React.Component<StateProps & OwnProps, never> {
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.timer.gameStart,
         gameEnd: state.timer.gameEnd,

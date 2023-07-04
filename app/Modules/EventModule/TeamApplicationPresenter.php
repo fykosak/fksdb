@@ -69,12 +69,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
     }
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-fast-forward');
-    }
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

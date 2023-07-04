@@ -14,7 +14,6 @@ interface StateProps {
     tasks: TaskModel[];
     gameStart: Date;
     gameEnd: Date;
-    activePoints: number;
     teams: TeamModel[];
 }
 
@@ -29,7 +28,6 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
             teamId,
             submits,
             tasks,
-            activePoints,
             gameEnd,
             gameStart,
             teams,
@@ -65,7 +63,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
                     if (points !== null && points !== 0) {
                         maxPoints += +points;
                         teamSubmits.push({
-                            active: (!(activePoints && (activePoints !== submit.points))),
+                            active: false,
                             color: {
                                 active: 'var(--color-fof-points-' + submit.points + ')',
                                 inactive: 'var(--color-fof-points-' + submit.points + ')',
@@ -140,7 +138,6 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),
         gameStart: new Date(state.timer.gameStart),
         submits: state.data.submits,

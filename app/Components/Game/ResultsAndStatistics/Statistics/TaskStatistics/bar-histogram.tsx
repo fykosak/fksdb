@@ -12,7 +12,6 @@ interface StateProps {
     submits: Submits;
     fromDate: Date;
     toDate: Date;
-    activePoints: number;
     aggregationTime: number;
 }
 
@@ -44,10 +43,9 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
             taskId,
             submits,
             aggregationTime,
-            activePoints,
             availablePoints,
         } = this.props;
-        const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime, activePoints);
+        const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
 
         let maxPoints = 0;
         for (const key in taskTimeSubmits) {
@@ -111,7 +109,6 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.timer.gameStart,
         submits: state.data.submits,

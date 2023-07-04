@@ -7,7 +7,7 @@ export type LineChartData<XValue extends Date | number> = LineChartDatum<XValue>
 export type LineChartDatum<XValue extends Date | number> = {
     name: ReactNode;
     description?: string;
-    color?: string;
+    color: string;
     display: {
         points?: boolean;
         lines?: boolean;

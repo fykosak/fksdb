@@ -50,30 +50,29 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
 
-    final public function titleTransition(): PageTitle
+    final public function titleAttendance(): PageTitle
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-fast-forward');
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
     }
 
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedTransition(): bool
+    public function authorizedAttendance(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
     }
 
-    final public function titleTransitions(): PageTitle
+    final public function titleMass(): PageTitle
     {
-        return new PageTitle(null, _('Group transitions'), 'fas fa-exchange-alt');
+        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
     }
-
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedTransitions(): bool
+    public function authorizedMass(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
     }
@@ -101,6 +100,12 @@ abstract class AbstractApplicationPresenter extends BasePresenter
             'fas fa-user'
         );
     }
+
+    public function titleFastEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
+    }
+
 
     /**
      * @throws EventNotFoundException

@@ -5,7 +5,7 @@ interface Props {
     item: {
         name: ReactNode
         description?: string;
-        color: string;
+        color?: string;
         display: {
             points?: boolean;
             lines?: boolean;
@@ -19,7 +19,8 @@ export default class LegendItem extends React.Component<Props, never> {
     public render() {
         const {item} = this.props;
 
-        return <div className="chart-legend-item row" style={{'--item-color': item.color} as React.CSSProperties}>
+        return <div className="chart-legend-item row"
+                    style={{'--item-color': item.color ? item.color : '#ccc'} as React.CSSProperties}>
             <div className="col-2 d-flex align-items-center">
                 {item.display.lines &&
                     <span className="icon icon-line"/>

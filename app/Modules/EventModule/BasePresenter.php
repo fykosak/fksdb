@@ -112,6 +112,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     protected function getNavRoots(): array
     {
-        return ['Event.Dashboard.default'];
+        return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
     }
 }

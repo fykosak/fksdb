@@ -9,7 +9,6 @@ import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store
 interface StateProps {
     teams: TeamModel[];
     submits: Submits;
-    activePoints: number;
 }
 
 interface OwnProps {
@@ -24,7 +23,7 @@ interface PointGroupItem {
 class PieChart extends React.Component<StateProps & OwnProps, never> {
 
     public render() {
-        const {submits, teamId, activePoints} = this.props;
+        const {submits, teamId} = this.props;
 
         const pointsCategories: { [key: number]: PointGroupItem } = {
             1: {points: 1, count: 0},
@@ -64,7 +63,7 @@ class PieChart extends React.Component<StateProps & OwnProps, never> {
         // TODO types
         const paths = pie.map((item: PieArcDatum<PointGroupItem>, index: number) => {
             return <path
-                className={'arc ' + ((activePoints && (activePoints !== item.data.points)) ? '' : 'active')}
+                className="arc"
                 d={arcEl(item)}
                 key={index}
                 style={{'--arc-color': 'var(--color-fof-points-' + item.data.points + ')'} as React.CSSProperties}
@@ -97,7 +96,6 @@ const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieAr
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        activePoints: state.statistics.activePoints,
         submits: state.data.submits,
         teams: state.data.teams,
     };

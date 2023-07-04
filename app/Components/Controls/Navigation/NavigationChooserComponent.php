@@ -30,6 +30,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     final public function renderNav(string $root): void
     {
@@ -41,6 +42,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
@@ -61,6 +63,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     private function getItem(array $structure): NavItem
     {
