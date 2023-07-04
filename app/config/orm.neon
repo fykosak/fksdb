@@ -509,7 +509,7 @@ orm:
             birthplace:
                 type: string
                 title: _('Place of birth')
-                description: _('City and region (for diplomas).')
+                description: _('City and region')
                 permission: FULL
             career:
                 title: _('Current role')

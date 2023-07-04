@@ -19,14 +19,9 @@
 
             <div class="offset-8 col-4">
         <span class="badge bg-primary float-end">
-            {_'Total'} {$control->getPaginator()->getItemCount()}
-            {switch $control->getPaginator()->getItemCount()}
-                {case 1}{_'záznam'}
-                {case 2,3,4}{_'záznamy'}
-                {default}{_'záznamů'}
-            {/switch}
+            {sprintf(ngettext('Total of %d record', 'Total of %d records', $control->getPaginator()->getItemCount()), $control->getPaginator()->getItemCount())}
             {if $control->getPaginator()->getItemCount() && $paginate}
-                {sprintf(_('(Zobrazeno %d až %d)'),$control->getPaginator()->getFirstItemOnPage(),$control->getPaginator()->getLastItemOnPage())}
+                {sprintf(_('(Showing from %d to %d)'), $control->getPaginator()->getFirstItemOnPage(), $control->getPaginator()->getLastItemOnPage())}
             {/if}
         </span>
             </div>
