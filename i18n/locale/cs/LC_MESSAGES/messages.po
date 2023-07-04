@@ -32,7 +32,7 @@ msgstr "Body invalidovány."
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:88
 msgid "Error during invalidation."
-msgstr "Cyhba při invalidaci"
+msgstr "Chyba při invalidaci"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:106
 msgid "Points recounted."
@@ -276,7 +276,7 @@ msgstr "Upravit dotaz %s"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:46
 msgid "Create query"
-msgstr "Vytvořit export"
+msgstr "Vytvořit dotaz"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:51
 msgid "Exports"
@@ -311,7 +311,7 @@ msgstr "Upravit učitele %s"
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:46
 msgid "Create new teacher"
-msgstr "Vytvoř nového učitele"
+msgstr "Vytvořit nového učitele"
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:51
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:78
@@ -380,12 +380,12 @@ msgstr "Upravit výrobce"
 
 #: ../app/Modules/OrgModule/Warehouse/ProducerPresenter.php:46
 msgid "Create producer"
-msgstr "Vytvořit... výrobce :)"
+msgstr "Vytvořit výrobce"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:40
 #, php-format
 msgid "Edit organizer %s"
-msgstr "Upravit orga %s"
+msgstr "Upravit organizátora %s"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:55
 msgid "Editing organizer outside chosen seminar"
@@ -394,7 +394,7 @@ msgstr "Úprava organizátora mimo vybraný seminář"
 #: ../app/Modules/OrgModule/OrgPresenter.php:67
 #, php-format
 msgid "Org %s"
-msgstr ""
+msgstr "Organizátor %s"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:72
 msgid "Create an organizer"
@@ -490,7 +490,7 @@ msgstr "%d. ročník"
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:91
 #, php-format
 msgid "Application for %s: %s"
-msgstr "Přihlášky pro %s: %s"
+msgstr "Přihláška pro %s: %s"
 
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:145
 msgid "Unknown application."
