@@ -18,18 +18,6 @@ class Legend extends React.Component<StateProps, never> {
         const availablePoints = [1, 2, 3, 5];
         const {onSetNewState} = this.props;
         const legend = availablePoints.map((points: number) => {
-            let pointsLabel;
-            switch (points) {
-                case 1:
-                    pointsLabel = translator.getText('bod');
-                    break;
-                case 2:
-                case 3:
-                    pointsLabel = translator.getText('body');
-                    break;
-                default:
-                    pointsLabel = translator.getText('bodů');
-            }
             return (<div key={points}
                          className="col-12 chart-legend-item"
                          onMouseEnter={() => {
@@ -39,7 +27,7 @@ class Legend extends React.Component<StateProps, never> {
                              onSetNewState({activePoints: null})
                          }}>
                 <i className="icon icon-circle" data-points={points}/>
-                <strong>{points + ' ' + pointsLabel}</strong>
+                <strong>{points + ' ' + translator.nGetText('point', 'points', points)}</strong>
             </div>);
         });
 

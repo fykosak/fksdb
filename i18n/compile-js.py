@@ -8,24 +8,31 @@ import sys
 output_path = './i18n-data.ts'
 js_pattern = re.compile('^#: .*\.tsx')
 
-# TODO add support for context and plurals
-msg_pattern = re.compile('^(?P<type>msgid|msgstr) "(?P<value>.*)"$')
+msg_pattern = re.compile('(?P<type>(msgid|msgstr|msgid_plural)(\[(?P<index>\d+)\])?) "(?P<value>.*)"')
 
 def parse_record(record):
-    res = {}
+    attributes = {}
     for line in record:
         msg_match = msg_pattern.match(line)
         if line == "" or line[0] == "#":
             continue
         elif msg_match:
-            typ = msg_match.group('type')
+            type = msg_match.group('type')
             value = msg_match.group('value')
-            res[typ] = value
-        elif line[0] == '"': #multiline strings
-            res[typ] += line[1:-1]
+            attributes[type] = value
+        # TODO not supported in extract
+        #elif line[0] == '"': #multiline strings
+        #    res[type] += line[1:-1]
         else:
             raise ValueError("\"{}\" is not a valid record.".format(line))
-    return res['msgid'], res['msgstr']
+    if 'msgid_plural' in attributes:
+        res = {}
+        for index in range(0,3):
+            if (f'msgstr[{index}]' in attributes):
+                res[index] = attributes[f'msgstr[{index}]']
+        return attributes['msgid'], res
+
+    return attributes['msgid'], attributes['msgstr']
 
 def parse(filename):
     res = {}

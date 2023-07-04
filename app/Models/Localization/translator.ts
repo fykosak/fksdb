@@ -32,6 +32,23 @@ export class Translator<Lang extends string> {
         return msgId;
     }
 
+    private pluralFormId(count: number): number {
+        if (count == 1 || count == -1) return 0;
+        if ((count >= 2 && count <= 4) || (count >= -4 && count <= -2)) return 1;
+        return 2;
+    }
+
+    public nGetText(msgId: string, msgIdPlural: string, count: number): string {
+        const formId: number = this.pluralFormId(count);
+        if (this.data[this.currentLocale].hasOwnProperty(msgId) && this.data[this.currentLocale][msgId] &&
+            this.data[this.currentLocale][msgId].hasOwnProperty(formId) && this.data[this.currentLocale][msgId][formId]) {
+            return this.data[this.currentLocale][msgId][formId];
+        }
+
+        if (formId == 0) return msgId;
+        return msgIdPlural;
+    }
+
     public getLocalizedText(msgId: string, locale: Lang): string {
         if (this.data[locale].hasOwnProperty(msgId) && this.data[locale][msgId]) {
             return this.data[locale][msgId];
