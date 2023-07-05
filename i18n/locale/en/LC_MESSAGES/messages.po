@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 20:37+0200\n"
+"POT-Creation-Date: 2023-07-05 23:28+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 2.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: ../app/Bootstrap.tsx.tsx2php:210 ../app/Bootstrap.tsx.tsx2php:215
+#: ../app/Bootstrap.tsx.tsx2php:202 ../app/Bootstrap.tsx.tsx2php:207
 #: ../app/Components/Controls/Events/FastEditComponent.php:29
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:47
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:51
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../app/Bootstrap.tsx.tsx2php:219 ../app/Bootstrap.tsx.tsx2php:224
+#: ../app/Bootstrap.tsx.tsx2php:212 ../app/Bootstrap.tsx.tsx2php:217
 msgid "Delete"
 msgstr ""
 
@@ -84,6 +84,10 @@ msgstr ""
 msgid "Total contestants per series"
 msgstr ""
 
+#: ../app/Components/Charts/Contestants/ParticipantGeoChart.php:26
+msgid "Participant per country"
+msgstr ""
+
 #: ../app/Components/Charts/Contestants/PerSeriesChart.php:38
 msgid "Contestants per series"
 msgstr ""
@@ -100,37 +104,32 @@ msgstr ""
 msgid "series"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:59
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:54
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:70
+#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:62
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:69
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/time-progress.tsx.tsx2php:94
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:99
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:28
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:43
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:51
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:59
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:54
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:62
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:70
 #: ../app/Modules/EventModule/Game/templates/Close/list.latte.latte2php:13
 msgid "Legend"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:35
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:29
 #: ../app/config/orm.neon.neon2php:31 ../app/config/orm.neon.neon2php:655
 msgid "Year"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:21
-msgid "Participants per team"
-msgstr ""
-
-#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:29
+#: ../app/Components/Charts/Event/Applications/TimeGeoChart.php:29
 msgid "Participants per country"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:21
-msgid "Teams per country"
-msgstr ""
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:51
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/ProgressComponent.php:55
 msgid "Applications time progress"
-msgstr ""
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:42
-msgid "Team applications time progress"
 msgstr ""
 
 #: ../app/Components/Charts/Event/Model/GraphComponent.php:54
@@ -152,21 +151,21 @@ msgid ""
 "assigned person_ids."
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:64
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:63
 msgid "All"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:71
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:70
 #: ../app/Models/ORM/Models/PersonGender.php:35
 msgid "Male"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:78
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:77
 #: ../app/Models/ORM/Models/PersonGender.php:32
 msgid "Female"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:84
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:83
 #: ../app/config/orm.neon.neon2php:395
 msgid "Person Id"
 msgstr ""
@@ -735,8 +734,8 @@ msgid "Events"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:102
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:38
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:68
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:68
 msgid "Timeline"
 msgstr ""
 
@@ -850,11 +849,11 @@ msgid "Note"
 msgstr ""
 
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:67
-msgid "Event org has been created"
+msgid "Event organizer has been created"
 msgstr ""
 
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:67
-msgid "Event org has been updated"
+msgid "Event organizer has been updated"
 msgstr ""
 
 #: ../app/Components/EntityForms/Fyziklani/DuplicateMemberException.php:14
@@ -948,7 +947,7 @@ msgstr ""
 
 #: ../app/Components/EntityForms/Fyziklani/TooManySchoolsException.php:16
 #, php-format
-msgid "Only 2 different schools can be represented in the team (got %d: %s)."
+msgid "Only 2 different schools can be represented by the team (got %d: %s)."
 msgstr ""
 
 #: ../app/Components/EntityForms/FyziklaniSubmitFormComponent.php:58
@@ -969,11 +968,11 @@ msgid "User information has been saved."
 msgstr ""
 
 #: ../app/Components/EntityForms/OrgFormComponent.php:75
-msgid "Org has been created."
+msgid "Organizer has been created."
 msgstr ""
 
 #: ../app/Components/EntityForms/OrgFormComponent.php:75
-msgid "Org has been updated."
+msgid "Organizer has been updated."
 msgstr ""
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:74
@@ -1467,7 +1466,7 @@ msgstr ""
 
 #: ../app/Components/Game/Closing/NotCheckedSubmitsException.php:16
 #, php-format
-msgid "Team %s has non checked submits"
+msgid "Team %s has unchecked submits"
 msgstr ""
 
 #: ../app/Components/Game/Closing/TeamListComponent.php:50
@@ -1585,10 +1584,6 @@ msgstr ""
 msgid "Not public results"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:63
-msgid "This function don't turn on if results are public!"
-msgstr ""
-
 #: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:71
 msgid "Turn off"
 msgstr ""
@@ -1623,7 +1618,7 @@ msgstr ""
 
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:44
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:55
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:41
 msgid "select team"
 msgstr ""
 
@@ -1666,19 +1661,6 @@ msgstr ""
 msgid "per task"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:25
-msgid "Total solved problems"
-msgstr ""
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:31
-msgid "Statistics of single problem"
-msgstr ""
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:44
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:50
-msgid "Time histogram"
-msgstr ""
-
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:53
 msgid "select task"
 msgstr ""
@@ -1695,15 +1677,28 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:35
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:26
+msgid "Total solved problems"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:34
+msgid "Statistics of single problem"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:49
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:57
+msgid "Time histogram"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:35
 msgid "Statistics of team "
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:52
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:52
 msgid "Success of submitting"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:60
 msgid "Time progress"
 msgstr ""
 
@@ -1880,7 +1875,8 @@ msgid "Select category"
 msgstr ""
 
 #: ../app/Components/Grids/Application/TeamListComponent.php:146
-msgid "Game lang"
+#: ../app/config/orm.neon.neon2php:821
+msgid "Game language"
 msgstr ""
 
 #: ../app/Components/Grids/Application/TeamListComponent.php:146
@@ -2304,12 +2300,12 @@ msgid "Expecting logged user."
 msgstr ""
 
 #: ../app/Models/Authorization/EventRole/ContestOrgRole.php:25
-msgid "Contest org"
+msgid "Contest organizer"
 msgstr ""
 
 #: ../app/Models/Authorization/EventRole/EventOrgRole.php:25
 #, php-format
-msgid "Event org: %s"
+msgid "Event organizer: %s"
 msgstr ""
 
 #: ../app/Models/Authorization/EventRole/FyziklaniTeamMemberRole.php:27
@@ -2407,7 +2403,7 @@ msgid "Gone"
 msgstr ""
 
 #: ../app/Models/Exceptions/NotFoundException.php:15
-msgid "Resource no found"
+msgid "Resource not found"
 msgstr ""
 
 #: ../app/Models/Exceptions/NotImplementedException.php:16
@@ -3470,6 +3466,7 @@ msgid "Contestant in %dth year (%d/%d)"
 msgstr ""
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:78
+#: ../app/Modules/OrgModule/OrgPresenter.php:52
 #, php-format
 msgid "Organizer %s"
 msgstr ""
@@ -4147,11 +4144,6 @@ msgstr ""
 #: ../app/Modules/OrgModule/OrgPresenter.php:40
 #, php-format
 msgid "Edit organizer %s"
-msgstr ""
-
-#: ../app/Modules/OrgModule/OrgPresenter.php:52
-#, php-format
-msgid "Org %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:57
@@ -5168,10 +5160,6 @@ msgstr ""
 
 #: ../app/config/orm.neon.neon2php:812
 msgid "Total rank"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:821
-msgid "Game language"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:824
@@ -6302,30 +6290,30 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Chosen person is already registered to the event."
 
-#~ msgid "Program akce"
-#~ msgstr "Event program"
+#~ msgid "Účastník"
+#~ msgstr "Participant"
 
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#, fuzzy
-#~ msgid "card-body"
-#~ msgstr "points"
-
-#, fuzzy
-#~ msgid "date"
-#~ msgstr "jS \\of M Y"
-
-#, fuzzy
-#~ msgid "záznam"
+#~ msgid "záznamů"
 #~ msgstr "records"
 
 #, fuzzy
 #~ msgid "záznamy"
 #~ msgstr "records"
 
-#~ msgid "záznamů"
+#, fuzzy
+#~ msgid "záznam"
 #~ msgstr "records"
 
-#~ msgid "Účastník"
-#~ msgstr "Participant"
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "jS \\of M Y"
+
+#, fuzzy
+#~ msgid "card-body"
+#~ msgstr "points"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"

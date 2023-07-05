@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 20:37+0200\n"
+"POT-Creation-Date: 2023-07-05 23:28+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.3\n"
 
-#: ../app/Bootstrap.tsx.tsx2php:210 ../app/Bootstrap.tsx.tsx2php:215
+#: ../app/Bootstrap.tsx.tsx2php:202 ../app/Bootstrap.tsx.tsx2php:207
 #: ../app/Components/Controls/Events/FastEditComponent.php:29
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:47
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:51
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Edit"
 msgstr "Upravit"
 
-#: ../app/Bootstrap.tsx.tsx2php:219 ../app/Bootstrap.tsx.tsx2php:224
+#: ../app/Bootstrap.tsx.tsx2php:212 ../app/Bootstrap.tsx.tsx2php:217
 msgid "Delete"
 msgstr "Odstranit"
 
@@ -83,6 +83,11 @@ msgstr "Přístup zamítnut"
 msgid "Total contestants per series"
 msgstr "Celkový počet účastníků po sériích"
 
+#: ../app/Components/Charts/Contestants/ParticipantGeoChart.php:26
+#, fuzzy
+msgid "Participant per country"
+msgstr "Účastníci dle zemí."
+
 #: ../app/Components/Charts/Contestants/PerSeriesChart.php:38
 msgid "Contestants per series"
 msgstr "Účastníci po sériích"
@@ -99,38 +104,33 @@ msgstr "Celý rok"
 msgid "series"
 msgstr "série"
 
-#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:59
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:54
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:70
+#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:62
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:69
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/time-progress.tsx.tsx2php:94
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:99
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:28
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:43
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:51
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:59
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:54
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:62
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:70
 #: ../app/Modules/EventModule/Game/templates/Close/list.latte.latte2php:13
 msgid "Legend"
 msgstr "Legenda"
 
-#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:35
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:29
 #: ../app/config/orm.neon.neon2php:31 ../app/config/orm.neon.neon2php:655
 msgid "Year"
 msgstr "Rok"
 
-#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:21
-msgid "Participants per team"
-msgstr "Účastníci dle týmů."
-
-#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:29
+#: ../app/Components/Charts/Event/Applications/TimeGeoChart.php:29
 msgid "Participants per country"
 msgstr "Účastníci dle zemí."
 
-#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:21
-msgid "Teams per country"
-msgstr "Týmy dle zemí."
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:51
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/ProgressComponent.php:55
 msgid "Applications time progress"
 msgstr "Počet přihlášených soutěžících v čase"
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:42
-msgid "Team applications time progress"
-msgstr "Počet přihlášených týmů v čase"
 
 #: ../app/Components/Charts/Event/Model/GraphComponent.php:54
 #: ../app/Modules/EventModule/ModelPresenter.php:26
@@ -152,21 +152,21 @@ msgid ""
 msgstr ""
 "Graf zobrazuje vývoj v počtu lidí ve FKSDB a počtu přiřazených person_id."
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:64
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:63
 msgid "All"
 msgstr "Vše"
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:71
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:70
 #: ../app/Models/ORM/Models/PersonGender.php:35
 msgid "Male"
 msgstr "Muž"
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:78
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:77
 #: ../app/Models/ORM/Models/PersonGender.php:32
 msgid "Female"
 msgstr "Žena"
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:84
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:83
 #: ../app/config/orm.neon.neon2php:395
 msgid "Person Id"
 msgstr "Osobní ID"
@@ -741,8 +741,8 @@ msgid "Events"
 msgstr "Akce"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:102
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:38
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:68
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:68
 msgid "Timeline"
 msgstr "Časový průběh"
 
@@ -1092,7 +1092,8 @@ msgstr "Jméno parametru je příliš dlouhé."
 msgid ""
 "The name of the parameter can only contain lowercase \n"
 "                letters of the english alphabet, numbers, and an underscore."
-msgstr "Jméno parametru může obsahovat pouze malá písmena\n"
+msgstr ""
+"Jméno parametru může obsahovat pouze malá písmena\n"
 "                anglické abecedy, čísla a podtržítka."
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:190
@@ -1270,7 +1271,8 @@ msgid "The field %label is required."
 msgstr "Pole %label je povinné."
 
 #: ../app/Components/Forms/Factories/FlagFactory.php:39
-msgid "I wish to receive information about FMP and the events they organize."
+#, fuzzy
+msgid "I wish to receive information about MFF and the events they organize."
 msgstr "Přeji si dostávat informace o MFF a akcích, které pořádají."
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:35
@@ -1586,10 +1588,6 @@ msgstr "Možnosti"
 msgid "Not public results"
 msgstr "Neveřejné výsledkovky"
 
-#: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:63
-msgid "Don't turn on this function don't turn on if results are public!"
-msgstr "Tuto funkci nezapínej pokud jsou výsledky veřejné!"
-
 #: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:71
 msgid "Turn off"
 msgstr "Vypnout"
@@ -1624,7 +1622,7 @@ msgstr "Oba týmy"
 
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:44
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:55
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:41
 msgid "select team"
 msgstr "vyber tým"
 
@@ -1667,19 +1665,6 @@ msgstr "oba týmy"
 msgid "per task"
 msgstr "na úlohu"
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:25
-msgid "Total solved problems"
-msgstr "Celkem vyřešených úloh"
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:31
-msgid "Statistics of single problem"
-msgstr "Statistiky jedné úlohy"
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:44
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:50
-msgid "Time histogram"
-msgstr "Časový histogram"
-
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:53
 msgid "select task"
 msgstr "vyber úlohu"
@@ -1696,16 +1681,29 @@ msgstr "Od"
 msgid "To"
 msgstr "Do"
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:35
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:26
+msgid "Total solved problems"
+msgstr "Celkem vyřešených úloh"
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:34
+msgid "Statistics of single problem"
+msgstr "Statistiky jedné úlohy"
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:49
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:57
+msgid "Time histogram"
+msgstr "Časový histogram"
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:35
 #, fuzzy
 msgid "Statistics of team "
 msgstr "Statistiky týmu "
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:52
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:52
 msgid "Success of submitting"
 msgstr "Úspěšné odevzdání"
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:60
 msgid "Time progress"
 msgstr "Počet přihlášek v čase"
 
@@ -1883,6 +1881,7 @@ msgid "Select category"
 msgstr "Vyberte kategorii"
 
 #: ../app/Components/Grids/Application/TeamListComponent.php:146
+#: ../app/config/orm.neon.neon2php:821
 msgid "Game language"
 msgstr "Herní jazyk"
 
@@ -3330,7 +3329,6 @@ msgid "No contest available"
 msgstr "Žádná dostupná soutěž"
 
 #: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:93
-
 msgid "Model does not exists"
 msgstr "Model neexistuje"
 
@@ -3478,6 +3476,7 @@ msgid "Contestant in %dth year (%d/%d)"
 msgstr "Soutěžící ročníku %d (%d/%d)"
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:78
+#: ../app/Modules/OrgModule/OrgPresenter.php:52
 #, php-format
 msgid "Organizer %s"
 msgstr "Organizátor %s"
@@ -4160,11 +4159,6 @@ msgstr "Detail kvízu"
 #, php-format
 msgid "Edit organizer %s"
 msgstr "Upravit organizátora %s"
-
-#: ../app/Modules/OrgModule/OrgPresenter.php:52
-#, php-format
-msgid "Organizer %s"
-msgstr "Organizátor %s"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:57
 msgid "Create an organizer"
@@ -5183,10 +5177,6 @@ msgstr "Pořadí v kategorii"
 #: ../app/config/orm.neon.neon2php:812
 msgid "Total rank"
 msgstr "Celkové pořadí"
-
-#: ../app/config/orm.neon.neon2php:821
-msgid "Game language"
-msgstr "Herní jazyk"
 
 #: ../app/config/orm.neon.neon2php:824
 msgid "Force A"
@@ -6313,115 +6303,127 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#~ msgid "Require Id number"
-#~ msgstr "Číslo občanského průkazu je vyžadováno"
+#~ msgid "Group transitions"
+#~ msgstr "Skupinové přechody"
 
-#~ msgid "Sector"
-#~ msgstr "Sektor"
+#~ msgid "Detail of the submit #%d"
+#~ msgstr "Podrobnosti odevzdání #%d"
 
-#~ msgid "Edit personal information"
-#~ msgstr "Upravit osobní informace"
+#~ msgid "Sealing of the scoring"
+#~ msgstr "Uzavření bodování"
 
-#~ msgid "Set new game password."
-#~ msgstr "Nastavit nové herní heslo"
-
-#~ msgid "Settings"
-#~ msgstr "Nastavení"
-
-#~ msgid "Calculate quiz points."
-#~ msgstr "Spočítat body kvízových úloh."
-
-#~ msgid "Invalid task"
-#~ msgstr "Neplatná úloha"
-
-#~ msgid "Invalid team"
-#~ msgstr "Neplatný tým"
-
-#~ msgid "...reading code..."
-#~ msgstr "...čtu kód..."
-
-#~ msgid "Scan QR-code"
-#~ msgstr "Oskenovat QR-kód"
-
-#~ msgid "Global statistics"
-#~ msgstr "Globální statistiky"
-
-#~ msgid "points"
-#~ msgstr "Bodů"
-
-#~ msgid "Check submit"
-#~ msgstr "Ověřit submit"
-
-#~ msgid "Event web-site"
-#~ msgstr "Web akce"
-
-#~ msgid "Import of applications"
-#~ msgstr "Import přihlášek"
-
-#~ msgid "Id"
-#~ msgstr "Id"
-
-#~ msgid "Wrong task number."
-#~ msgstr "Špatné číslo úlohy."
-
-#~ msgid "Task given and validated."
-#~ msgstr "Úloha zadána a ověřena."
-
-#~ msgid "Task was given."
-#~ msgstr "Úloha byla vydána."
-
-#~ msgid "Rank"
-#~ msgstr "Pořadí"
-
-#~ msgid "Keep original state."
-#~ msgstr "Ponechat původní stav"
-
-#~ msgid "Ignore."
-#~ msgstr "Ignorovat"
-
-#~ msgid "Stateless applications."
-#~ msgstr "Přihlláška bez stavu."
-
-#~ msgid "Skip the application and continue."
-#~ msgstr "Přeskočit přihlášku a pokračovat."
-
-#~ msgid "Stop import and rollback."
-#~ msgstr "Zastavit import a rollbackovat"
-
-#~ msgid "Error mode"
-#~ msgstr "Cování při chybě."
-
-#~ msgid "Event org"
-#~ msgstr "Organizátor akce"
-
-#~ msgid "Team member"
-#~ msgstr "Člen týmu"
-
-#~ msgid "This option is only available to secondary school students."
-#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
-
-#~ msgid "This option is only available to Czech and Slovak students."
-#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
-
-#~ msgid "Birthday is required field."
-#~ msgstr "Pole narození je povinné"
-
-#~ msgid "CSV does not contain correct heading."
-#~ msgstr "CSV neobsahuje správné nadpisy"
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Stav přihlášky \"%s\" změněn"
 
 #~ msgid ""
 #~ "There is not a transition from state \"%s\" of machine \"%s\" to state "
 #~ "\"%s\"."
 #~ msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
 
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Stav přihlášky \"%s\" změněn"
+#~ msgid "CSV does not contain correct heading."
+#~ msgstr "CSV neobsahuje správné nadpisy"
 
-#~ msgid "Sealing of the scoring"
-#~ msgstr "Uzavření bodování"
+#~ msgid "Birthday is required field."
+#~ msgstr "Pole narození je povinné"
 
-#~ msgid "Detail of the submit #%d"
-#~ msgstr "Podrobnosti odevzdání #%d"
+#~ msgid "This option is only available to Czech and Slovak students."
+#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
 
-#~ msgid "Group transitions"
-#~ msgstr "Skupinové přechody"
+#~ msgid "This option is only available to secondary school students."
+#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
+
+#~ msgid "Team member"
+#~ msgstr "Člen týmu"
+
+#~ msgid "Event org"
+#~ msgstr "Organizátor akce"
+
+#~ msgid "Error mode"
+#~ msgstr "Cování při chybě."
+
+#~ msgid "Stop import and rollback."
+#~ msgstr "Zastavit import a rollbackovat"
+
+#~ msgid "Skip the application and continue."
+#~ msgstr "Přeskočit přihlášku a pokračovat."
+
+#~ msgid "Stateless applications."
+#~ msgstr "Přihlláška bez stavu."
+
+#~ msgid "Ignore."
+#~ msgstr "Ignorovat"
+
+#~ msgid "Keep original state."
+#~ msgstr "Ponechat původní stav"
+
+#~ msgid "Rank"
+#~ msgstr "Pořadí"
+
+#~ msgid "Task was given."
+#~ msgstr "Úloha byla vydána."
+
+#~ msgid "Task given and validated."
+#~ msgstr "Úloha zadána a ověřena."
+
+#~ msgid "Wrong task number."
+#~ msgstr "Špatné číslo úlohy."
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Import of applications"
+#~ msgstr "Import přihlášek"
+
+#~ msgid "Event web-site"
+#~ msgstr "Web akce"
+
+#~ msgid "Check submit"
+#~ msgstr "Ověřit submit"
+
+#~ msgid "points"
+#~ msgstr "Bodů"
+
+#~ msgid "Global statistics"
+#~ msgstr "Globální statistiky"
+
+#~ msgid "Scan QR-code"
+#~ msgstr "Oskenovat QR-kód"
+
+#~ msgid "...reading code..."
+#~ msgstr "...čtu kód..."
+
+#~ msgid "Invalid team"
+#~ msgstr "Neplatný tým"
+
+#~ msgid "Invalid task"
+#~ msgstr "Neplatná úloha"
+
+#~ msgid "Calculate quiz points."
+#~ msgstr "Spočítat body kvízových úloh."
+
+#~ msgid "Settings"
+#~ msgstr "Nastavení"
+
+#~ msgid "Set new game password."
+#~ msgstr "Nastavit nové herní heslo"
+
+#~ msgid "Edit personal information"
+#~ msgstr "Upravit osobní informace"
+
+#~ msgid "Sector"
+#~ msgstr "Sektor"
+
+#~ msgid "Require Id number"
+#~ msgstr "Číslo občanského průkazu je vyžadováno"
+
+#~ msgid "Don't turn on this function don't turn on if results are public!"
+#~ msgstr "Tuto funkci nezapínej pokud jsou výsledky veřejné!"
+
+#~ msgid "Team applications time progress"
+#~ msgstr "Počet přihlášených týmů v čase"
+
+#~ msgid "Teams per country"
+#~ msgstr "Týmy dle zemí."
+
+#~ msgid "Participants per team"
+#~ msgstr "Účastníci dle týmů."

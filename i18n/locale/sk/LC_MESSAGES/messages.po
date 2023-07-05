@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-04 20:37+0200\n"
+"POT-Creation-Date: 2023-07-05 23:28+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
-#: ../app/Bootstrap.tsx.tsx2php:210 ../app/Bootstrap.tsx.tsx2php:215
+#: ../app/Bootstrap.tsx.tsx2php:202 ../app/Bootstrap.tsx.tsx2php:207
 #: ../app/Components/Controls/Events/FastEditComponent.php:29
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:47
 #: ../app/Components/Controls/Person/Detail/EventOrgListComponent.php:51
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../app/Bootstrap.tsx.tsx2php:219 ../app/Bootstrap.tsx.tsx2php:224
+#: ../app/Bootstrap.tsx.tsx2php:212 ../app/Bootstrap.tsx.tsx2php:217
 msgid "Delete"
 msgstr ""
 
@@ -83,6 +83,11 @@ msgstr ""
 msgid "Total contestants per series"
 msgstr ""
 
+#: ../app/Components/Charts/Contestants/ParticipantGeoChart.php:26
+#, fuzzy
+msgid "Participant per country"
+msgstr "Registrácia"
+
 #: ../app/Components/Charts/Contestants/PerSeriesChart.php:38
 msgid "Contestants per series"
 msgstr ""
@@ -99,38 +104,32 @@ msgstr ""
 msgid "series"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:59
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:54
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:62
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:70
+#: ../app/Components/Charts/Contestants/per-series-chart.tsx.tsx2php:62
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:69
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/time-progress.tsx.tsx2php:94
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:99
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:28
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:43
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:51
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:59
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:54
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:62
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:70
 #: ../app/Modules/EventModule/Game/templates/Close/list.latte.latte2php:13
 msgid "Legend"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:35
+#: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:29
 #: ../app/config/orm.neon.neon2php:31 ../app/config/orm.neon.neon2php:655
 msgid "Year"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:21
-msgid "Participants per team"
-msgstr ""
-
-#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:29
+#: ../app/Components/Charts/Event/Applications/TimeGeoChart.php:29
 msgid "Participants per country"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:21
-msgid "Teams per country"
-msgstr ""
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:51
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/ProgressComponent.php:55
 msgid "Applications time progress"
-msgstr "Časový vývoj prihlášiek"
-
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:42
-#, fuzzy
-msgid "Team applications time progress"
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Components/Charts/Event/Model/GraphComponent.php:54
@@ -153,21 +152,21 @@ msgid ""
 "assigned person_ids."
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:64
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:63
 msgid "All"
 msgstr "Všetky"
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:71
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:70
 #: ../app/Models/ORM/Models/PersonGender.php:35
 msgid "Male"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:78
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:77
 #: ../app/Models/ORM/Models/PersonGender.php:32
 msgid "Female"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:84
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:83
 #: ../app/config/orm.neon.neon2php:395
 msgid "Person Id"
 msgstr ""
@@ -755,8 +754,8 @@ msgid "Events"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:102
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:38
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:68
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:68
 msgid "Timeline"
 msgstr ""
 
@@ -877,12 +876,14 @@ msgid "Note"
 msgstr ""
 
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:67
-msgid "Event org has been created"
-msgstr ""
+#, fuzzy
+msgid "Event organizer has been created"
+msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:67
-msgid "Event org has been updated"
-msgstr ""
+#, fuzzy
+msgid "Event organizer has been updated"
+msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/Fyziklani/DuplicateMemberException.php:14
 #, php-format
@@ -970,7 +971,7 @@ msgstr ""
 
 #: ../app/Components/EntityForms/Fyziklani/TooManySchoolsException.php:16
 #, php-format
-msgid "Only 2 different schools can be represented in the team (got %d: %s)."
+msgid "Only 2 different schools can be represented by the team (got %d: %s)."
 msgstr ""
 
 #: ../app/Components/EntityForms/FyziklaniSubmitFormComponent.php:58
@@ -992,12 +993,14 @@ msgid "User information has been saved."
 msgstr ""
 
 #: ../app/Components/EntityForms/OrgFormComponent.php:75
-msgid "Org has been created."
-msgstr ""
+#, fuzzy
+msgid "Organizer has been created."
+msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/OrgFormComponent.php:75
-msgid "Org has been updated."
-msgstr ""
+#, fuzzy
+msgid "Organizer has been updated."
+msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/PaymentFormComponent.php:74
 msgid "Proceed to summary"
@@ -1495,7 +1498,7 @@ msgstr ""
 
 #: ../app/Components/Game/Closing/NotCheckedSubmitsException.php:16
 #, php-format
-msgid "Team %s has non checked submits"
+msgid "Team %s has unchecked submits"
 msgstr ""
 
 #: ../app/Components/Game/Closing/TeamListComponent.php:50
@@ -1613,10 +1616,6 @@ msgstr ""
 msgid "Not public results"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:63
-msgid "This function don't turn on if results are public!"
-msgstr ""
-
 #: ../app/Components/Game/ResultsAndStatistics/Presentation/Components/Setting.tsx.tsx2php:71
 msgid "Turn off"
 msgstr ""
@@ -1652,7 +1651,7 @@ msgstr ""
 
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:44
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:55
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:41
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:41
 #, fuzzy
 msgid "select team"
 msgstr "Zvoliť typ"
@@ -1699,19 +1698,6 @@ msgstr ""
 msgid "per task"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:25
-msgid "Total solved problems"
-msgstr ""
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:31
-msgid "Statistics of single problem"
-msgstr ""
-
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:44
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:50
-msgid "Time histogram"
-msgstr ""
-
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:53
 #, fuzzy
 msgid "select task"
@@ -1729,17 +1715,30 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:35
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:26
+msgid "Total solved problems"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:34
+msgid "Statistics of single problem"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:49
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index.tsx.tsx2php:57
+msgid "Time histogram"
+msgstr ""
+
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:35
 #, fuzzy
 msgid "Statistics of team "
 msgstr "Zoznam akcií"
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:52
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:52
 #, fuzzy
 msgid "Success of submitting"
 msgstr "Zoznam platieb"
 
-#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:60
 #, fuzzy
 msgid "Time progress"
 msgstr "Časový vývoj prihlášiek"
@@ -1923,9 +1922,9 @@ msgid "Select category"
 msgstr "Zvoliť typ"
 
 #: ../app/Components/Grids/Application/TeamListComponent.php:146
-#, fuzzy
-msgid "Game lang"
-msgstr "Meno"
+#: ../app/config/orm.neon.neon2php:821
+msgid "Game language"
+msgstr ""
 
 #: ../app/Components/Grids/Application/TeamListComponent.php:146
 #, fuzzy
@@ -2378,12 +2377,13 @@ msgid "Expecting logged user."
 msgstr ""
 
 #: ../app/Models/Authorization/EventRole/ContestOrgRole.php:25
-msgid "Contest org"
-msgstr ""
+#, fuzzy
+msgid "Contest organizer"
+msgstr "Zvoliť typ"
 
 #: ../app/Models/Authorization/EventRole/EventOrgRole.php:25
 #, fuzzy, php-format
-msgid "Event org: %s"
+msgid "Event organizer: %s"
 msgstr "Zvoliť typ"
 
 #: ../app/Models/Authorization/EventRole/FyziklaniTeamMemberRole.php:27
@@ -2484,7 +2484,7 @@ msgstr ""
 
 #: ../app/Models/Exceptions/NotFoundException.php:15
 #, fuzzy
-msgid "Resource no found"
+msgid "Resource not found"
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Models/Exceptions/NotImplementedException.php:16
@@ -3569,6 +3569,7 @@ msgid "Contestant in %dth year (%d/%d)"
 msgstr "Registrácia"
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:78
+#: ../app/Modules/OrgModule/OrgPresenter.php:52
 #, php-format
 msgid "Organizer %s"
 msgstr ""
@@ -4286,11 +4287,6 @@ msgstr ""
 #, fuzzy, php-format
 msgid "Edit organizer %s"
 msgstr "Zvoliť typ"
-
-#: ../app/Modules/OrgModule/OrgPresenter.php:52
-#, php-format
-msgid "Org %s"
-msgstr ""
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:57
 #, fuzzy
@@ -5351,10 +5347,6 @@ msgstr ""
 
 #: ../app/config/orm.neon.neon2php:812
 msgid "Total rank"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:821
-msgid "Game language"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:824
@@ -6498,83 +6490,11 @@ msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
-#~ msgid "Skip the application and continue."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Stateless applications."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Check submit"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Import of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Event web-site"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "#nav-contests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "#nav-validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "//:Core:MyApplications:default"
+#~ msgid "{plink import}"
 #~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
-#~ msgid ":Public:Register:"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "<?php _('Execute query') ?>"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "<?php _('Remove parameter') ?>"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Accommodation for %s from %s to %s"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "Content-Type"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Payment UId"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "badge bg-info"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "events"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "navigation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "recalculateAll!"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "sectors"
+#~ msgid "validate!"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
@@ -6582,9 +6502,93 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "validate!"
+#~ msgid "sectors"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "{plink import}"
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Payment UId"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Accommodation for %s from %s to %s"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "#nav-validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "#nav-contests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Import of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Check submit"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Stateless applications."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Skip the application and continue."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Event org: %s"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Game lang"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Team applications time progress"
 #~ msgstr "Časový vývoj prihlášiek"
