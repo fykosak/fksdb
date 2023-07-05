@@ -84,7 +84,6 @@ msgid "Total contestants per series"
 msgstr "Celkový počet účastníků po sériích"
 
 #: ../app/Components/Charts/Contestants/ParticipantGeoChart.php:26
-#, fuzzy
 msgid "Participant per country"
 msgstr "Účastníci dle zemí."
 
@@ -207,7 +206,6 @@ msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:41
-#, fuzzy
 msgid "Task is not available for your category."
 msgstr "Úloha není pro vaši kategorii."
 
@@ -428,12 +426,12 @@ msgid "Uploaded unregister corrected submit #%d"
 msgstr "Nahraná opravená úloha #%d není registrovaná"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:68
-#, fuzzy, php-format
+#, php-format
 msgid "Test done, found %d error"
 msgid_plural "Test done, found %d errors"
 msgstr[0] "Test proběhl s %d errorem"
 msgstr[1] "Testy proběhly se %d errory"
-msgstr[2] "Testy proběhly se %d errory"
+msgstr[2] "Testy proběhly s %d errory"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/layout.latte.latte2php:3
 msgid "Check files"
@@ -537,7 +535,7 @@ msgstr[1] "Celkem %d aktivní soutěžící"
 msgstr[2] "Celkem %d aktivních soutěžících"
 
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:24
-#, fuzzy, php-format
+#, php-format
 msgid "%d solution"
 msgid_plural "%d solutions"
 msgstr[0] "%d řešení"
@@ -1271,7 +1269,6 @@ msgid "The field %label is required."
 msgstr "Pole %label je povinné."
 
 #: ../app/Components/Forms/Factories/FlagFactory.php:39
-#, fuzzy
 msgid "I wish to receive information about MFF and the events they organize."
 msgstr "Přeji si dostávat informace o MFF a akcích, které pořádají."
 
@@ -1465,9 +1462,9 @@ msgid ""
 msgstr ""
 
 #: ../app/Components/Game/Closing/Handler.php:45
-#, fuzzy, php-format
+#, php-format
 msgid "Team \"%s\" rating was successfully closeded with total %d points."
-msgstr "Tým %s má úspěšně uzavřené bodování s celkovým bodovým skóre %d."
+msgstr "Tým \"%s\" má úspěšně uzavřené bodování s celkovým bodovým skóre %d."
 
 #: ../app/Components/Game/Closing/NotCheckedSubmitsException.php:16
 #, php-format
@@ -1695,7 +1692,6 @@ msgid "Time histogram"
 msgstr "Časový histogram"
 
 #: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index.tsx.tsx2php:35
-#, fuzzy
 msgid "Statistics of team "
 msgstr "Statistiky týmu "
 
@@ -1776,7 +1772,6 @@ msgid "Team %s has closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 
 #: ../app/Components/Game/Submits/ControlMismatchException.php:11
-#, fuzzy
 msgid "Wrong code."
 msgstr "Špatný kód úlohy"
 
@@ -3120,9 +3115,9 @@ msgid "Export format %s not supported."
 msgstr "Formát exportu %s není podporován"
 
 #: ../app/Models/StoredQuery/StoredQueryParameter.php:61
-#, fuzzy, php-format
+#, php-format
 msgid "Unsupported parameter type \"%s\"."
-msgstr "Nepodporovaný formát \"%s\"."
+msgstr "Nepodporovaný typ parametru \"%s\"."
 
 #: ../app/Models/Submits/FileSystemStorage/CorrectedStorage.php:90
 #: ../app/Models/Submits/FileSystemStorage/UploadedStorage.php:161
@@ -3152,13 +3147,12 @@ msgid "Error when deleting %s."
 msgstr "Chyba při mazání %s."
 
 #: ../app/Models/Submits/PDFStamper.php:56
-#, fuzzy
 msgid "Input file not set."
-msgstr "Vstupní složka není nastavena."
+msgstr "Vstupní soubor není nastaven."
 
 #: ../app/Models/Submits/PDFStamper.php:60
 msgid "Output file not set."
-msgstr "Výstupní složka není nastavena."
+msgstr "Výstupní soubor není nastavena."
 
 #: ../app/Models/Submits/PDFStamper.php:71
 msgid "Cannot add stamp to the PDF."
@@ -3520,7 +3514,6 @@ msgid "Password (verification)"
 msgstr "Heslo (ověření)."
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:140
-#, fuzzy
 msgid "The submitted passwords does not match."
 msgstr "Zadaná hesla se neshodují."
 
@@ -3804,9 +3797,8 @@ msgid "All teams"
 msgstr "Všechny týmy"
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:10
-#, fuzzy
 msgid "All teams including category and position Id"
-msgstr "Všechny týmy včetně kategorie a id pozice"
+msgstr "Všechny týmy včetně kategorie a Id pozice"
 
 #: ../app/Modules/EventModule/Game/templates/Seating/preview.latte.latte2php:39
 msgid "Empty"
@@ -5045,7 +5037,6 @@ msgid "Place of birth"
 msgstr "Místo narození"
 
 #: ../app/config/orm.neon.neon2php:512
-#, fuzzy
 msgid "City and region"
 msgstr "Město a okres (kvůli diplomům)."
 
