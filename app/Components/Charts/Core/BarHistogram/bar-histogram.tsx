@@ -1,28 +1,30 @@
 import { axisBottom, axisLeft } from 'd3-axis';
-import { ScaleLinear } from 'd3-scale';
+import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { select, selectAll } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
 import './bar-histogram.scss';
 
-interface OwnProps {
-    xScale: ScaleLinear<number, number>;
-    yScale: ScaleLinear<number, number>;
-    data: Array<{
-        xValue: number;
-        items: Array<{
-            yValue: number;
-            label: string;
-            color: string;
-        }>;
+export interface BarItemDatum<XValue extends number | Date> {
+    xValue: XValue;
+    items: Array<{
+        yValue: number;
+        label: string;
+        color: string;
     }>;
+}
+
+interface OwnProps<XValue extends number | Date> {
+    xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>;
+    yScale: ScaleLinear<number, number>;
+    data: BarItemDatum<XValue>[];
     display?: {
         xGrid: boolean;
         yGrid: boolean;
     };
 }
 
-export default class BarHistogram extends ChartComponent<OwnProps, never> {
+export default class BarHistogram<XValue extends number | Date> extends ChartComponent<OwnProps<XValue>, never> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -65,7 +67,7 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
                     </polygon>,
                 );
             });
-            bars.push(rows);
+            bars.push(<g className="bar">{rows}</g>);
         });
         return <div className="bar-histogram">
             <svg viewBox={this.getViewBox()} className="chart">
@@ -80,7 +82,7 @@ export default class BarHistogram extends ChartComponent<OwnProps, never> {
 
     private getAxis(): void {
         const {xScale, yScale, display} = this.props;
-        const xAxis = axisBottom<number>(xScale);
+        const xAxis = axisBottom(xScale);
         const yAxis = axisLeft<number>(yScale);
         xAxis.tickValues(this.props.data.map((group) => group.xValue).map((value) => {
             return +value;

@@ -86,7 +86,7 @@ export default class NodeChart extends ChartComponent<OwnProps, Record<string, n
                             style={{'--marker-color': color} as React.CSSProperties}
                             key={color}
                             viewBox="-5 0 10 10"
-                            id={'arrow-end-' + color.slice(1)}
+                            id={'arrow-end'}
                             refX="10"
                             refY="5"
                             markerWidth="10"
@@ -99,20 +99,19 @@ export default class NodeChart extends ChartComponent<OwnProps, Record<string, n
             </defs>
             <g className="links">{links.map((item, index) => {
                 let path;
-                const markKey = item.color.slice(1);
                 const source = item.source as Node;
                 const target = item.target as Node;
                 if (item.type === 'bi-dir') {
                     path = <path
                         d={`M ${source.x} ${source.y} L ${target.x} ${target.y}`}
-                        markerEnd={`url(#arrow-end-${markKey})`}
-                        markerStart={`url(#arrow-start-${markKey})`}/>;
+                        markerEnd={`url(#arrow-end)`}
+                        markerStart={`url(#arrow-start)`}/>;
                 } else {
                     const r = Math.hypot(target.x - source.x, target.y - source.y);
                     const rot = Math.atan((target.y - source.y) / (target.x - source.x)) * 180 / Math.PI;
                     path = <path
                         d={`M ${source.x} ${source.y} A ${r} ${r} ${rot} 0 1 ${target.x} ${target.y}`}
-                        markerEnd={`url(#arrow-end-${markKey})`}/>;
+                        markerEnd={`url(#arrow-end)`}/>;
                 }
                 return <g key={index} style={{
                     '--color': item.color,

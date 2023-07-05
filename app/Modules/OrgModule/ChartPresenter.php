@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Charts\Contestants\AggregatedSeriesChart;
+use FKSDB\Components\Charts\Contestants\ParticipantGeoChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\Core\Chart;
@@ -48,6 +49,7 @@ class ChartPresenter extends BasePresenter
             'totalContestantsPerSeries' => new AggregatedSeriesChart($this->getContext(), $this->getSelectedContest()),
             'contestantsPerYears' => new PerYearsChart($this->getContext(), $this->getSelectedContest()),
             'totalPersons' => new TotalPersonsChart($this->getContext()),
+            'geo' => new ParticipantGeoChart($this->getContext(), $this->getSelectedContestYear()),
         ];
     }
 }

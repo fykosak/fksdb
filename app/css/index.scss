@@ -26,7 +26,6 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
 @import "../Components/Charts/style";
 @import "../Components/Charts/legend";
 @import "colors";
-@import "points";
 @import "contests";
 @import "callout";
 @import "payment";

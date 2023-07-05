@@ -1,7 +1,6 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
-import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
+import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -87,16 +86,18 @@ export default class TotalPersonsChart extends React.Component<OwnProps, never> 
 
         const yScale = scaleLinear<number, number>().domain([0, data[data.length - 1].personId]);
         const xScale = scaleTime().domain([new Date(data[0].created), new Date()]);
-        return <ChartContainer
-            chart={LineChart}
-            chartProps={{
-                data: lineChartData,
-                display: {xGrid: true, yGrid: true},
-                xScale,
-                yScale,
-            }}
-            legendComponent={Legend}
-            legendProps={{data: lineChartData}}
-        />;
+        return <>
+            <LineChart<Date>
+                data={lineChartData}
+                xScale={xScale}
+                yScale={yScale}
+                display={{
+                    xGrid: true,
+                    yGrid: true,
+                }}
+            />
+            <h2>{this.props.translator.getText('Legend')}</h2>
+            <Legend data={lineChartData}/>
+        </>;
     }
 }

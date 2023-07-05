@@ -81,7 +81,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
         const yScale = scaleLinear<number, number>().domain([0, Math.max(maxPoints, meanPoints)]);
 
         lineChartData.push({
-            color: '#ccc',
+            color: 'var(--bs-gray)',
             display: {
                 area: false,
                 lines: true,
@@ -102,7 +102,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, never> {
             ],
         });
         lineChartData.push({
-            color: '#1175da',
+            color: 'var(--fks-page-theme)',
             curveFactory: curveLinear,
             display: {
                 area: false,

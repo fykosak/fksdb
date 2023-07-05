@@ -59,7 +59,6 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
         }
         this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(this.getInnerYSize());
         this.xScale = scaleTime().domain([fromDate, toDate]).range(this.getInnerXSize());
-
         const bars = [];
         for (const key in taskTimeSubmits) {
             if (Object.hasOwn(taskTimeSubmits, key)) {
@@ -70,8 +69,8 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
 
                 let sum = 0;
                 const polygons = [];
+                let y1 = this.yScale(0);
                 availablePoints.forEach((points, index) => {
-                    const y1 = this.yScale(sum);
                     sum += item[points];
                     const y2 = this.yScale(sum);
                     polygons.push(<polygon
@@ -80,6 +79,7 @@ class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, 
                         data-points={points}
                         style={{'--bar-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
                     />);
+                    y1 = y2;
                 });
 
                 bars.push(<g key={key}>

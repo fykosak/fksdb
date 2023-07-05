@@ -3,6 +3,7 @@ import { scaleLinear, scaleLog } from 'd3-scale';
 import * as React from 'react';
 import { findMax, GeoData } from './geo-helper';
 import './geo-chart.scss';
+import type { Feature } from 'geojson';
 
 interface OwnProps {
     data: GeoData;
@@ -14,7 +15,7 @@ export const SCALE_LOG = 'log';
 
 export default class GeoChart extends React.Component<OwnProps, { active?: string }> {
 
-    private countryData = [];
+    private countryData: Feature[] = [];
 
     public componentDidMount() {
         fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson').then((response) => {
@@ -55,7 +56,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
         const countryNodes = [];
         this.countryData.forEach((country, key) => {
             const isActive = this.state && country.id === this.state.active;
-            const count = Object.hasOwn(data,country.id) ? data[country.id].count : 0;
+            const count = Object.hasOwn(data, country.id) ? data[country.id] : 0;
             countryNodes.push(<path
                 key={key}
                 className={isActive ? 'active' : ''}
@@ -63,7 +64,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
                     '--color': isActive ? activeColorScale(count) : inactiveColorScale(count),
                 } as React.CSSProperties}
                 onMouseOver={() => {
-                    this.setState({active: country.id});
+                    this.setState({active: country.id as string});
                 }}
                 onMouseLeave={() => {
                     this.setState({active: null});
@@ -75,9 +76,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
         });
         return <div className="geo-chart">
             <svg viewBox="-500 -300 1000 600" className="chart">
-                <g>
-                    {countryNodes}
-                </g>
+                {countryNodes}
             </svg>
         </div>;
     }

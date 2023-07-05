@@ -56,21 +56,29 @@ export const parseData = (data: YearsData): ParsedData => {
     return {maxValue, maxSeries, aggregatedSeries};
 };
 
-export const getSeriesColor = (series: number): string => {
+export const getSeriesColor = (series: string): string => {
     switch (series) {
-        case 1:
-            return;
-        case 2:
-            return;
-        case 3:
-            return;
-        case 4:
-            return;
-        case 5:
-            return;
-        case 6:
-            return;
+        case '1':
+            return 'var(--bs-blue)';
+        case '2':
+            return 'var(--bs-indigo)';
+        case '3':
+            return 'var(--bs-purple)';
+        case '4':
+            return 'var(--bs-pink)';
+        case '5':
+            return 'var(--bs-red)';
+        case '6':
+            return 'var(--bs-orange)';
+        case '7':
+            return 'var(--bs-yellow)';
+        case '8':
+            return 'var(--bs-green)';
+        case '9':
+            return 'var(--bs-teal)';
+        case '10':
+            return 'var(--bs-cyan)';
         default:
-            return;
+            return 'var(--bs-black)';
     }
 }

@@ -1,10 +1,9 @@
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { scaleLinear } from 'd3-scale';
 import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
-import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
+import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './contestatns-data';
+import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestatns-data';
 import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
@@ -15,7 +14,6 @@ interface OwnProps {
 export default class PerSeriesChart extends React.Component<OwnProps, never> {
 
     public render() {
-        const colorScale = scaleOrdinal(schemeCategory10);
         const {data, translator} = this.props;
         const {maxValue, maxSeries} = parseData(data);
         const [minYear, maxYear] = getMinMaxYear(data);
@@ -30,7 +28,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
                 for (const series in datum) {
                     if (Object.hasOwn(datum,series)) {
                         histogramItems.push({
-                            color: colorScale(series),
+                            color: getSeriesColor(series),
                             label: series,
                             yValue: datum[series],
                         });
@@ -43,7 +41,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
         const legendData: LineChartData<number> = [];
         for (let series = 1; series <= maxSeries; series++) {
             legendData.push({
-                color: colorScale(series.toString()),
+                color: getSeriesColor(series.toString()),
                 display: {
                     bars: true,
                 },
@@ -53,11 +51,16 @@ export default class PerSeriesChart extends React.Component<OwnProps, never> {
         }
 
         return <>
-            <BarHistogram xScale={xScale} yScale={yScale} data={histogramData} display={{
-                xGrid: false, yGrid: true,
-            }}/>
+            <BarHistogram
+                xScale={xScale}
+                yScale={yScale}
+                data={histogramData}
+                display={{
+                    xGrid: false, yGrid: true,
+                }}
+            />
             <h3>{translator.getText('Legend')}</h3>
-            <Legend data={data}/>
+            <Legend data={legendData}/>
         </>;
     }
 }

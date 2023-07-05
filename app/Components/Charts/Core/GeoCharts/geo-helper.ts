@@ -1,7 +1,5 @@
 export interface GeoData {
-    [countryISO: string]: {
-        count: number;
-    };
+    [countryISO: string]: number;
 }
 
 export const findMax = (data: GeoData): number => {
@@ -9,7 +7,7 @@ export const findMax = (data: GeoData): number => {
     for (const country in data) {
         if (Object.hasOwn(data,country)) {
             const datum = data[country];
-            max = max > datum.count ? max : datum.count;
+            max = max > datum ? max : datum;
         }
     }
     return max;

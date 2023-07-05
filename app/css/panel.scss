@@ -1,6 +1,3 @@
-$panel-color-dark: var(--bs-secondary-bg);
-$panel-color-light: var(--bs-body-bg);
-
 .panel {
   padding: 4.3rem 0;
   background-color: var(--panel-bg);
@@ -10,11 +7,11 @@ $panel-color-light: var(--bs-body-bg);
   }
 
   &.panel-dark, &.color-auto:nth-of-type(2n) {
-    --panel-bg: #{$panel-color-dark};
+    --panel-bg: var(--bs-secondary-bg);
   }
 
   &.panel-light, &.color-auto:nth-of-type(2n+1) {
-    background-color: #{$panel-color-light};
+    background-color: var(--bs-body-bg);
   }
 
   .page-header {

@@ -11,7 +11,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, { timestamp: number }> {
+export default class TimeGeoChart extends React.Component<OwnProps, { timestamp: number }> {
 
     public render() {
         const day = (1000 * 60 * 60 * 24);
@@ -26,8 +26,8 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
             maxTimestamp = maxTimestamp > time ? maxTimestamp : time;
             minTimestamp = minTimestamp < time ? minTimestamp : time;
             if (!this.state || time < this.state.timestamp) {
-                geoData[datum.country] = geoData[datum.country] || {count: 0};
-                geoData[datum.country].count++;
+                geoData[datum.country] = geoData[datum.country] || 0;
+                geoData[datum.country]++;
             }
         });
         const value = this.state ? this.state.timestamp : maxTimestamp;

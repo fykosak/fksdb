@@ -1,11 +1,7 @@
 .line-chart svg {
   circle.point {
-    opacity: 0.1;
+    opacity: 1;
     fill: var(--point-color);
-
-    &.active {
-      opacity: 1;
-    }
   }
 
   .line {

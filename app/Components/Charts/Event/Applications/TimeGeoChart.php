@@ -13,7 +13,7 @@ use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
+class TimeGeoChart extends FrontEndComponent implements Chart
 {
 
     protected EventModel $event;

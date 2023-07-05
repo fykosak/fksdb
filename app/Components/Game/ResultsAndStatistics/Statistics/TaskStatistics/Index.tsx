@@ -7,6 +7,7 @@ import Timeline from './timeline';
 import Progress from './progress';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/LangContext';
+import Legend from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/legend';
 
 interface StateProps {
     taskId: number;
@@ -24,6 +25,8 @@ class TaskStats extends React.Component<StateProps, never> {
                 <div className="container">
                     <h2>{translator.getText('Total solved problems')}</h2>
                     <Progress availablePoints={availablePoints}/>
+                    <h3>{translator.getText('Legend')}</h3>
+                    <Legend/>
                 </div>
             </div>
             <div className="panel color-auto">
@@ -37,18 +40,24 @@ class TaskStats extends React.Component<StateProps, never> {
                     <div className="container">
                         <h2>{translator.getText('Timeline')}</h2>
                         <Timeline taskId={taskId}/>
+                        <h3>{translator.getText('Legend')}</h3>
+                        <Legend/>
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
                         <h2>{translator.getText('Time histogram')}</h2>
                         <TimeHistogram taskId={taskId} availablePoints={availablePoints}/>
+                        <h3>{translator.getText('Legend')}</h3>
+                        <Legend/>
                     </div>
                 </div>
                 <div className="panel color-auto">
                     <div className="container">
                         <h2>{translator.getText('Time histogram')}</h2>
                         <TimeHistogramLines taskId={taskId} availablePoints={availablePoints}/>
+                        <h3>{translator.getText('Legend')}</h3>
+                        <Legend/>
                     </div>
                 </div>
             </>}

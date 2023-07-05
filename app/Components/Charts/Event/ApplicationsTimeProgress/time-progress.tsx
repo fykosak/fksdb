@@ -1,58 +1,49 @@
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { EventModel } from 'FKSDB/Models/ORM/Models/EventModel';
 import * as React from 'react';
-import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
+import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { availableLanguage, Translator } from '@translator/translator';
 
 export interface Data {
     events: {
         [eventId: number]: EventModel;
     };
-    teams?: {
-        [eventId: number]: Array<{
-            created: string;
-        }>;
-    };
-    participants?: {
-        [eventId: number]: Array<{
-            created: string;
-        }>;
+    applications: {
+        [eventId: number]: string[];
     };
 }
 
 interface OwnProps {
     data: Data;
-    accessKey: 'participants' | 'teams';
     translator: Translator<availableLanguage>;
 }
 
-export default class CommonChart extends React.Component<OwnProps, never> {
+export default class TimeProgress extends React.Component<OwnProps, never> {
 
     public render() {
-        const {data, accessKey} = this.props;
+        const {data} = this.props;
 
         let minTime = 0;
         let max = 0;
         const lineChartData: LineChartData<number> = [];
 
         const colorScale = scaleOrdinal(schemeCategory10);
-        for (const eventId in data[accessKey]) {
-            if (Object.hasOwn(data[accessKey],eventId) && Object.hasOwn(data.events,eventId)) {
+        for (const eventId in data.applications) {
+            if (Object.hasOwn(data.applications, eventId) && Object.hasOwn(data.events, eventId)) {
                 const event = data.events[eventId];
-                const apps = data[accessKey][eventId];
+                const applications = data.applications[eventId];
 
                 const begin = new Date(event.begin);
                 let sum = 0;
 
-                const eventData = apps.sort((a, b) => {
-                    return ((new Date(a.created)).getTime() - (new Date(b.created)).getTime());
-                }).map((team): ExtendedPointData<number> => {
+                const eventData = applications.sort((a, b) => {
+                    return ((new Date(a)).getTime() - (new Date(b)).getTime());
+                }).map((application): ExtendedPointData<number> => {
                     sum++;
-                    const x = ((new Date(team.created)).getTime() - begin.getTime()) / (1000 * 60 * 60 * 24);
+                    const x = ((new Date(application)).getTime() - begin.getTime()) / (1000 * 60 * 60 * 24);
                     minTime = minTime < x ? minTime : x;
                     return {
                         active: false,
@@ -90,19 +81,18 @@ export default class CommonChart extends React.Component<OwnProps, never> {
         const yScale = scaleLinear<number, number>().domain([0, max]);
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        return <ChartContainer
-            chart={LineChart}
-            chartProps={{
-                data: lineChartData,
-                display: {
+        return <>
+            <LineChart<number>
+                data={lineChartData}
+                xScale={xScale}
+                yScale={yScale}
+                display={{
                     xGrid: true,
                     yGrid: true,
-                },
-                xScale,
-                yScale,
-            }}
-            legendProps={{data: lineChartData}}
-            legendComponent={Legend}
-        />;
+                }}
+            />
+            <h2>{this.props.translator.getText('Legend')}</h2>
+            <Legend data={lineChartData}/>
+        </>;
     }
 }

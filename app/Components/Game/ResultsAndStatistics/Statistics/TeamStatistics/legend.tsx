@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TranslatorContext } from '@translator/LangContext';
-import LegendItem from 'FKSDB/Components/Charts/Core/LineChart/legend-item';
+import LegendItem from 'FKSDB/Components/Charts/Core/Legend/legend-item';
 
 export default class Legend extends React.Component<Record<never, never>, never> {
     static contextType = TranslatorContext;

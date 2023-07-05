@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { LineChartData } from './middleware';
 import './legend.scss';
-import LegendItem from 'FKSDB/Components/Charts/Core/LineChart/legend-item';
+import LegendItem, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend-item';
 
-interface OwnProps<XValue extends Date | number> {
-    data: LineChartData<XValue>;
+interface OwnProps {
+    data: LegendItemDatum[];
 }
 
-export default class Legend<XValue extends Date | number> extends React.Component<OwnProps<XValue>, never> {
+export default class Legend extends React.Component<OwnProps, never> {
     public render() {
         const {data} = this.props;
 

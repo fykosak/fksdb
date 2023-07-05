@@ -1,12 +1,6 @@
 .chart-game-team-timeline {
   g {
-    &.active {
-      opacity: 1
-    }
-
-    &.inactive {
-      opacity: 0.1
-    }
+    opacity: 1;
   }
 
   text {

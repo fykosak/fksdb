@@ -44,12 +44,12 @@ export default class ModelChart extends React.Component<OwnProps, never> {
         const simLinks = links.map<SimLink>((link): SimLink => {
             return {
                 label: link.label,
-                color: '#ccc',
+                color: 'var(--bs-gray)',
                 type: 'one-way',
                 source: simNodes[link.from],
                 target: simNodes[link.to],
             };
         });
-        return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['#ccc']}/>;
+        return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['var(--bs-gray)']}/>;
     }
 }

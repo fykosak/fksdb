@@ -1,13 +1,11 @@
 import Ordinal from '@translator/Ordinal';
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { scaleLinear } from 'd3-scale';
 import { curveCatmullRom } from 'd3-shape';
-import ChartContainer from 'FKSDB/Components/Charts/Core/chart-container';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import Legend from 'FKSDB/Components/Charts/Core/LineChart/legend';
+import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './contestatns-data';
+import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestatns-data';
 import { availableLanguage, Translator } from '@translator/translator';
 
 export interface OwnProps {
@@ -19,10 +17,6 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
 
     public render() {
         const {data, translator} = this.props;
-        const colorScale = scaleOrdinal(schemeCategory10);
-        const colorCallback = (series: seriesType) => {
-            return series === 'year' ? '#000' : colorScale(series);
-        };
         const {aggregatedSeries, maxValue} = parseData(data);
 
         const lineChartData: LineChartData<number> = [];
@@ -40,8 +34,8 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                         points.push({
                             active: true,
                             color: {
-                                active: colorCallback(series),
-                                inactive: colorCallback(series),
+                                active: getSeriesColor(series),
+                                inactive: getSeriesColor(series),
                             },
                             label,
                             xValue: +year,
@@ -50,7 +44,7 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
                     }
                 }
                 lineChartData.push({
-                    color: colorCallback(series),
+                    color: getSeriesColor(series),
                     curveFactory: curveCatmullRom,
                     display: {
                         lines: true,
@@ -65,18 +59,15 @@ export default class PerYearsChart extends React.Component<OwnProps, never> {
         const yScale = scaleLinear<number, number>().domain([0, maxValue]);
         const xScale = scaleLinear<number, number>().domain([minYear - 1, maxYear + 1]);
 
-        return <ChartContainer
-            chart={LineChart}
-            chartProps={{
-                data: lineChartData,
-                display: {xGrid: false, yGrid: true},
-                xScale,
-                yScale,
-            }}
-            legendComponent={Legend}
-            legendProps={{
-                data: lineChartData,
-            }}
-        />;
+        return <>
+            <LineChart<number>
+                data={lineChartData}
+                xScale={xScale}
+                yScale={yScale}
+                display={{xGrid: false, yGrid: true}}
+            />
+            <h2>{translator.getText('Legend')}</h2>
+            <Legend data={lineChartData}/>
+        </>;
     }
 }

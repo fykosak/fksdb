@@ -1,10 +1,8 @@
 import * as ReactDOM from 'react-dom';
 import PerSeriesChart from './Components/Charts/Contestants/per-series-chart';
 import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
-import ApplicationRationGeoChart from './Components/Charts/Event/Applications/ApplicationRationGeoChart';
-import ParticipantsTimeGeoChart from './Components/Charts/Event/Applications/ParticipantsTimeGeoChart';
-import TeamsGeoChart from './Components/Charts/Event/Applications/TeamsGeoChart';
-import CommonChart from './Components/Charts/Event/ApplicationsTimeProgress/CommonChart';
+import TimeGeoChart from './Components/Charts/Event/Applications/time-geo-chart';
+import TimeProgress from './Components/Charts/Event/ApplicationsTimeProgress/time-progress';
 import ParticipantAcquaintanceChart
     from './Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart';
 import TotalPersonsChart from './Components/Charts/TotalPersonsChart';
@@ -24,6 +22,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import { availableLanguage, Translator } from '@translator/translator';
 import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
 import ScheduleField from 'FKSDB/Components/Schedule/Input/ScheduleField';
+import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 
 const translator = new Translator<availableLanguage>();
 
@@ -72,20 +71,12 @@ renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Tim
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.contestants.geo', ParticipantGeo, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {
-    accessKey: 'participants',
-    translator,
-});
 renderer.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart, {translator});
-renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', TimeGeoChart, {translator});
 
-renderer.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart, {translator});
-renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {
-    accessKey: 'teams',
-    translator,
-});
-renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeProgress, {translator});
 
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
@@ -205,21 +196,23 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
                             </div>
                             <div className="input-group-append">
-                                <button type="button"
-                                        className="btn btn-outline-secondary"
-                                        title={translator.getText('Edit')}
-                                        onClick={() => {
-                                            decompactifyContainer();
-                                        }}>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-secondary"
+                                    title={translator.getText('Edit')}
+                                    onClick={() => {
+                                        decompactifyContainer();
+                                    }}>
                                     <span className="fas fa-pen me-3"/>
                                     {translator.getText('Edit')}
                                 </button>
-                                <button type="button"
-                                        className="btn btn-outline-warning"
-                                        title={translator.getText('Delete')}
-                                        onClick={() => {
-                                            $clearButton.click();
-                                        }}>
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-warning"
+                                    title={translator.getText('Delete')}
+                                    onClick={() => {
+                                        $clearButton.click();
+                                    }}>
                                     <span className="fas fa-times me-3"/>
                                     {translator.getText('Delete')}
                                 </button>

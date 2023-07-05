@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 
-interface Props {
-    item: {
-        name: ReactNode
-        description?: string;
-        color?: string;
-        display: {
-            points?: boolean;
-            lines?: boolean;
-            area?: boolean;
-            bars?: boolean;
-        };
+export interface LegendItemDatum{
+    name: ReactNode
+    description?: string;
+    color?: string;
+    display: {
+        points?: boolean;
+        lines?: boolean;
+        area?: boolean;
+        bars?: boolean;
     };
+}
+interface Props {
+    item: LegendItemDatum;
 }
 
 export default class LegendItem extends React.Component<Props, never> {
