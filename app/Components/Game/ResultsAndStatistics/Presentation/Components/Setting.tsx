@@ -60,7 +60,7 @@ class Setting extends React.Component<StateProps & DispatchProps, { show: boolea
                                         {translator.getText('Not public results')}
                                     </p>
                                     <p className="form-text text-danger">
-                                        {translator.getText('This function don\'t turn on if results are public!')}
+                                        {translator.getText('Don't turn on this function don't turn on if results are public!)}
                                     </p>
                                     <button
                                         className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-outline-warning'}
