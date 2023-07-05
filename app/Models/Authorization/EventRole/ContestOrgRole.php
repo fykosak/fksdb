@@ -22,6 +22,6 @@ class ContestOrgRole extends EventRole
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-6'])
-            ->addText(_('Contest org'));
+            ->addText(_('Contest organizer'));
     }
 }

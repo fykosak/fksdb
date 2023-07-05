@@ -64,7 +64,7 @@ class EventOrgFormComponent extends EntityFormComponent
         }
         $this->eventOrgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Event org has been updated') : _('Event org has been created'),
+            isset($this->model) ? _('Event organizer has been updated') : _('Event organizer has been created'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');

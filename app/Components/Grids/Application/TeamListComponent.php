@@ -143,7 +143,7 @@ class TeamListComponent extends FilterList
         foreach (GameLang::cases() as $lang) {
             $gameLang[$lang->value] = $lang->label();
         }
-        $form->addSelect('game_lang', _('Game lang'), $gameLang)->setPrompt(_('Select language'));
+        $form->addSelect('game_lang', _('Game language'), $gameLang)->setPrompt(_('Select language'));
 
         $states = [];
         foreach (TeamState::cases() as $teamState) {
