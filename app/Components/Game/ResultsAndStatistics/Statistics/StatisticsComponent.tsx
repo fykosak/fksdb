@@ -3,8 +3,8 @@ import MainComponent from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Ma
 import * as React from 'react';
 import { app } from '../reducers/store';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import TeamStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/Index';
-import TasksStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/Index';
+import TeamStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index';
+import TasksStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index';
 import CorrelationStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/Index';
 import { availableLanguage, Translator } from '@translator/translator';
 

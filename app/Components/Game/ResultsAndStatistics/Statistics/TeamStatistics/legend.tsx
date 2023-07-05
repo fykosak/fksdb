@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TranslatorContext } from '@translator/LangContext';
-import LegendItem from 'FKSDB/Components/Charts/Core/Legend/legend-item';
+import Item from 'FKSDB/Components/Charts/Core/Legend/item';
 
 export default class Legend extends React.Component<Record<never, never>, never> {
     static contextType = TranslatorContext;
@@ -21,7 +21,7 @@ export default class Legend extends React.Component<Record<never, never>, never>
                 default:
                     pointsLabel = translator.getText('bodů');
             }
-            return <LegendItem
+            return <Item
                 key={points}
                 item={{
                     name: points + ' ' + pointsLabel,

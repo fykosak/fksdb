@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './legend.scss';
-import LegendItem, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend-item';
+import Item, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
 interface OwnProps {
     data: LegendItemDatum[];
@@ -12,7 +12,7 @@ export default class Legend extends React.Component<OwnProps, never> {
 
         return <div className="chart-legend row row-cols-lg-5">
             {data.map((item, index) => {
-                return <LegendItem item={item} key={index}/>
+                return <Item item={item} key={index}/>
             })}
         </div>;
     }
