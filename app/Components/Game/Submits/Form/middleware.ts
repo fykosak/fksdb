@@ -1,6 +1,6 @@
-import { OwnProps } from './Components/MainForm';
+import { OwnProps } from './Components/main-form';
 import { FormErrors } from 'redux-form';
-import TaskCodePreprocessor from 'FKSDB/Components/Game/Submits/TaskCodePreprocessor';
+import TaskCodePreprocessor from 'FKSDB/Components/Game/Submits/task-code-preprocessor';
 
 export const validate = (values: { code?: string }, props: OwnProps): FormErrors<{ code?: string }> => {
     const errors: FormErrors<{ code?: string }> = {};

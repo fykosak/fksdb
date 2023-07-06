@@ -8,10 +8,6 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class ParticipantGeo extends React.Component<OwnProps, never> {
-
-    public render() {
-        console.log(this.props.data);
-        return <GeoChart data={this.props.data} scaleType={SCALE_LOG}/>
-    }
+export default function ParticipantGeo(props: OwnProps) {
+    return <GeoChart data={props.data} scaleType={SCALE_LOG}/>
 }

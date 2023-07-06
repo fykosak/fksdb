@@ -1,5 +1,5 @@
 import { Translator } from '@translator/translator';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 
 export class Filter {
     public name: string;

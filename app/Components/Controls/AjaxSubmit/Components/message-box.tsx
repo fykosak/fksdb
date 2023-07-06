@@ -8,14 +8,12 @@ interface StateProps {
     messages: Message[];
 }
 
-class MessageBox extends React.Component<StateProps, never> {
-    public render() {
-        const {messages} = this.props;
-        return <>
-            {messages.map((message, index) =>
-                <div key={index} className={'alert alert-' + message.level}> {message.text}</div>)}
-        </>;
-    }
+function MessageBox(props: StateProps) {
+    const {messages} = props;
+    return <>
+        {messages.map((message, index) =>
+            <div key={index} className={'alert alert-' + message.level}> {message.text}</div>)}
+    </>;
 }
 
 interface Store {

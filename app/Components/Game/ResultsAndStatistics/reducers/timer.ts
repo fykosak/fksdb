@@ -1,4 +1,4 @@
-import { ResponseData } from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Downloader/Downloader';
+import { ResponseData } from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Downloader/downloader';
 import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,

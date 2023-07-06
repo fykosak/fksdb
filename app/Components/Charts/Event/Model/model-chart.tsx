@@ -25,31 +25,28 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default class ModelChart extends React.Component<OwnProps, never> {
-
-    public render() {
-        const {data: {links, nodes}} = this.props;
-        const simNodes: {
-            [key: number]: SimNode;
-        } = {};
-        const color = scaleOrdinal(schemeCategory10);
-        for (const key in nodes) {
-            if (Object.hasOwn(nodes,key)) {
-                simNodes[key] = {
-                    label: nodes[key].label,
-                    color: color(key),
-                };
-            }
-        }
-        const simLinks = links.map<SimLink>((link): SimLink => {
-            return {
-                label: link.label,
-                color: 'var(--bs-gray)',
-                type: 'one-way',
-                source: simNodes[link.from],
-                target: simNodes[link.to],
+export default function ModelChart(props: OwnProps) {
+    const {data: {links, nodes}} = props;
+    const simNodes: {
+        [key: number]: SimNode;
+    } = {};
+    const color = scaleOrdinal(schemeCategory10);
+    for (const key in nodes) {
+        if (Object.hasOwn(nodes, key)) {
+            simNodes[key] = {
+                label: nodes[key].label,
+                color: color(key),
             };
-        });
-        return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['var(--bs-gray)']}/>;
+        }
     }
+    const simLinks = links.map<SimLink>((link): SimLink => {
+        return {
+            label: link.label,
+            color: 'var(--bs-gray)',
+            type: 'one-way',
+            source: simNodes[link.from],
+            target: simNodes[link.to],
+        };
+    });
+    return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['var(--bs-gray)']}/>;
 }

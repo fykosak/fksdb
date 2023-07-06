@@ -1,4 +1,4 @@
-import Ordinal from '@translator/Ordinal';
+import Ordinal from '@translator/ordinal';
 import * as React from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
 

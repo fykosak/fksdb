@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Charts\Core\Chart;
+use FKSDB\Components\Charts\Event\Applications\ProgressComponent;
 use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
-use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\ProgressComponent;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -45,7 +45,8 @@ class ChartPresenter extends BasePresenter
     protected function getCharts(): array
     {
         $charts = [
-            'progress' => new ProgressComponent($this->getContext(), $this->getEvent()),
+            'timeProgress' => new ProgressComponent($this->getContext(), $this->getEvent(), 'time-progress'),
+            'barProgress' => new ProgressComponent($this->getContext(), $this->getEvent(), 'bar-progress'),
             'timeGeo' => new TimeGeoChart($this->getContext(), $this->getEvent()),
             'model' => new GraphComponent(
                 $this->getContext(),

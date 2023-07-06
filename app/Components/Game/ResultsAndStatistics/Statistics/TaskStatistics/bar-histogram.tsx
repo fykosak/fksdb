@@ -2,10 +2,10 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { submitsByTask } from '../Middleware/submitsByTask';
+import { submitsByTask } from '../Middleware/submits-by-task';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface StateProps {

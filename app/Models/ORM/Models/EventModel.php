@@ -63,6 +63,16 @@ class EventModel extends Model implements Resource, NodeCreator
         return $this->name;
     }
 
+    public function getName(): string
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return 'Fyziklání' . ' ' . $this->begin->format('Y');
+            default:
+                return $this->name;
+        }
+    }
+
     public function isTeamEvent(): bool
     {
         return in_array($this->event_type_id, EventModel::TEAM_EVENTS);
@@ -136,7 +146,7 @@ class EventModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,
-            'name' => $this->name,
+            'name' => $this->getName(),
             'eventTypeId' => $this->event_type_id,
         ];
     }

@@ -1,0 +1,55 @@
+import { Params } from 'FKSDB/Components/Schedule/Input/schedule-field';
+import { ScheduleGroupModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-group-model';
+import TimeDisplay from 'FKSDB/Models/ValuePrinters/time-printer';
+import DateDisplay from 'FKSDB/Models/ValuePrinters/date-printer';
+import * as React from 'react';
+import { useContext } from 'react';
+import ScheduleItem from './item';
+import { TranslatorContext } from '@translator/context';
+
+interface OwnProps {
+    group: ScheduleGroupModel;
+    params: Params;
+}
+
+export default function Group(props: OwnProps) {
+    const translator = useContext(TranslatorContext);
+    const {group, params} = props;
+    return <div className="ms-3">
+        <h5 className="mb-3">
+            {translator.get(group.name)}
+            {params.groupTime && (
+                <small className="ms-3 text-muted">
+                    <TimeDisplay date={group.start} translator={translator}/> - <TimeDisplay date={group.end}
+                                                                                             translator={translator}/>
+                </small>)}
+        </h5>
+        {(group.registrationEnd || group.modificationEnd) &&
+            <div className="alert alert-info">
+                {group.registrationEnd && <p>
+                    <i className="fas fa-info me-2"/>
+                    {translator.getText('Registration end: ')}
+                    <DateDisplay date={group.registrationEnd} translator={translator}/>
+                </p>
+                }
+                {group.modificationEnd && group.modificationEnd != group.registrationEnd && <p>
+                    <i className="fas fa-info me-2"/>
+                    {translator.getText('Modification end: ')}
+                    <DateDisplay date={group.modificationEnd} translator={translator}/>
+                </p>
+                }
+            </div>
+        }
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+            {group.items.map((item, index) => {
+                return <div key={index} className="col">
+                    <ScheduleItem
+                        params={params}
+                        type={group.scheduleGroupType}
+                        item={item}
+                        />
+                    </div>;
+                })}
+            </div>
+        </div>;
+}

@@ -2,7 +2,7 @@ import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { Action, Dispatch } from 'redux';
 import { focus, reset } from 'redux-form';
-import { FORM_NAME } from './Components/MainForm';
+import { FORM_NAME } from './Components/main-form';
 
 export interface SubmitFormRequest {
     code: string;

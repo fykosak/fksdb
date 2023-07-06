@@ -3,7 +3,7 @@ import {
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-import { SubmitModel } from 'FKSDB/Models/ORM/Models/SubmitModel';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/submit-model';
 
 export interface State {
     submit?: SubmitModel;

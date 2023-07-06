@@ -1,5 +1,5 @@
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
@@ -32,72 +32,70 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class Progress extends React.Component<StateProps & DispatchProps & OwnProps, never> {
-    public render() {
-        const {submits, tasks, onChangeTask, availablePoints} = this.props;
-        const tasksSubmits: Stats = {};
+function Progress(props: StateProps & DispatchProps & OwnProps) {
+    const {submits, tasks, onChangeTask, availablePoints} = props;
+    const tasksSubmits: Stats = {};
 
-        for (const task of tasks) {
-            const {taskId} = task;
-            tasksSubmits[taskId] = {
-                ...task,
-                5: 0,
-                3: 0,
-                2: 0,
-                1: 0,
-                total: 0,
-            };
-        }
-        let max = 0;
-        for (const index in submits) {
-            if (Object.hasOwn(submits,index)) {
-                const submit: SubmitModel = submits[index];
-                const {taskId, points} = submit;
-                if (Object.hasOwn(tasksSubmits,taskId)) {
-                    tasksSubmits[taskId][points]++;
-                    tasksSubmits[taskId].total++;
-                    if (tasksSubmits[taskId].total > max) {
-                        max = tasksSubmits[taskId].total;
-                    }
+    for (const task of tasks) {
+        const {taskId} = task;
+        tasksSubmits[taskId] = {
+            ...task,
+            5: 0,
+            3: 0,
+            2: 0,
+            1: 0,
+            total: 0,
+        };
+    }
+    let max = 0;
+    for (const index in submits) {
+        if (Object.hasOwn(submits, index)) {
+            const submit: SubmitModel = submits[index];
+            const {taskId, points} = submit;
+            if (Object.hasOwn(tasksSubmits, taskId)) {
+                tasksSubmits[taskId][points]++;
+                tasksSubmits[taskId].total++;
+                if (tasksSubmits[taskId].total > max) {
+                    max = tasksSubmits[taskId].total;
                 }
             }
         }
-
-        const rows = [];
-        for (const index in tasksSubmits) {
-            if (Object.hasOwn(tasksSubmits,index)) {
-                const submit: StatItem = tasksSubmits[index];
-
-                rows.push(
-                    <div className="row" key={index}>
-                        <div className="col-lg-2">
-                            <a href="#" onClick={() => {
-                                onChangeTask(submit.taskId);
-                            }}>
-                                {submit.label + '-'}</a>
-                        </div>
-                        <div className="col-lg-10">
-                            <div className="progress">
-                                {availablePoints.map((value, i) => {
-                                    return <div
-                                        className="progress-bar"
-                                        key={i}
-                                        style={{
-                                            '--bar-color': 'var(--color-fof-points-' + value + ')',
-                                            width: (submit[value] / max) * 100 + '%',
-                                        } as React.CSSProperties}>
-                                        {submit[value]}
-                                    </div>;
-                                })}
-                            </div>
-                        </div>
-                    </div>,
-                );
-
-            }
-        }
-        return <div className="chart chart-game-task-progress">{rows}</div>;
     }
+
+    const rows = [];
+    for (const index in tasksSubmits) {
+        if (Object.hasOwn(tasksSubmits, index)) {
+            const submit: StatItem = tasksSubmits[index];
+
+            rows.push(
+                <div className="row" key={index}>
+                    <div className="col-lg-2">
+                        <a href="#" onClick={() => {
+                            onChangeTask(submit.taskId);
+                        }}>
+                            {submit.label + '-'}</a>
+                    </div>
+                    <div className="col-lg-10">
+                        <div className="progress">
+                            {availablePoints.map((value, i) => {
+                                return <div
+                                    className="progress-bar"
+                                    key={i}
+                                    style={{
+                                        '--bar-color': 'var(--color-fof-points-' + value + ')',
+                                        width: (submit[value] / max) * 100 + '%',
+                                    } as React.CSSProperties}>
+                                    {submit[value]}
+                                </div>;
+                            })}
+                        </div>
+                    </div>
+                </div>,
+            );
+
+        }
+    }
+    return <div className="chart chart-game-task-progress">{rows}</div>;
 }
 
 const mapStateToProps = (state: Store): StateProps => {

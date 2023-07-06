@@ -1,12 +1,12 @@
-import { ResponseData } from '../../ResultsAndStatistics/Helpers/Downloader/Downloader';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
+import { ResponseData } from '../../ResultsAndStatistics/Helpers/Downloader/downloader';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TaskModel';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
+import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 
 export interface State {
     submits: Submits;

@@ -1,8 +1,8 @@
 import { axisBottom } from 'd3-axis';
 import { ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
+import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import './timeline.scss';

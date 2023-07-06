@@ -1,0 +1,30 @@
+import Downloader, { ResponseData } from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Downloader/downloader';
+import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import * as React from 'react';
+import { Action, Reducer } from 'redux';
+import { availableLanguage, Translator } from '@translator/translator';
+import { TranslatorContext } from '@translator/context';
+
+interface OwnProps<Store> {
+    actions: NetteActions;
+    data: ResponseData;
+    children: React.ReactNode;
+    app: Reducer<Store, Action<string>>;
+    translator: Translator<availableLanguage>;
+}
+
+export default function MainComponent<Store>(props: OwnProps<Store>) {
+    const {app, actions, data, children, translator} = props;
+    const initialData = {
+        actions: actions,
+        data: data,
+        messages: [],
+    };
+    return <ActionsStoreCreator<Store, ResponseData> initialData={initialData} app={app}>
+        <TranslatorContext.Provider value={translator}>
+            <Downloader data={data}/>
+            {children}
+        </TranslatorContext.Provider>
+    </ActionsStoreCreator>;
+}

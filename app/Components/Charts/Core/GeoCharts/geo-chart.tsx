@@ -1,9 +1,10 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
-import { scaleLinear, scaleLog } from 'd3-scale';
+import { scaleSequential, scaleSequentialLog } from 'd3-scale';
 import * as React from 'react';
 import { findMax, GeoData } from './geo-helper';
 import './geo-chart.scss';
 import type { Feature } from 'geojson';
+import { interpolateBuGn } from 'd3-scale-chromatic';
 
 interface OwnProps {
     data: GeoData;
@@ -29,24 +30,19 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
     public render() {
         const {data, scaleType} = this.props;
         const max = findMax(data);
-        let inactiveColorScale = null;
-        let activeColorScale = null;
+        let colorScale = null;
         switch (scaleType) {
             default:
             case SCALE_LINEAR:
-                inactiveColorScale = scaleLinear<string, string>();
-                activeColorScale = scaleLinear<string, string>();
-                inactiveColorScale.domain([0, max + 1]);
-                activeColorScale.domain([0, max + 1]);
+                colorScale = scaleSequential(interpolateBuGn);
+                // colorScale = scaleLinear<string, string>();
+                colorScale.domain([0, max + 1]);
                 break;
             case SCALE_LOG:
-                inactiveColorScale = scaleLog<string, string>();
-                activeColorScale = scaleLog<string, string>();
-                inactiveColorScale.domain([0.1, max + 1]);
-                activeColorScale.domain([0.1, max + 1]);
+                colorScale = scaleSequentialLog(interpolateBuGn);
+                //colorScale = scaleLog<string, string>();
+                colorScale.domain([0.1, max + 1]);
         }
-        inactiveColorScale.range(['#dc3545', '#28a745']);
-        activeColorScale.range(['#fc5565', '#48c765']);
 
         const projection = geoNaturalEarth1()
             .scale(180)
@@ -55,20 +51,10 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
 
         const countryNodes = [];
         this.countryData.forEach((country, key) => {
-            const isActive = this.state && country.id === this.state.active;
             const count = Object.hasOwn(data, country.id) ? data[country.id] : 0;
             countryNodes.push(<path
                 key={key}
-                className={isActive ? 'active' : ''}
-                style={{
-                    '--color': isActive ? activeColorScale(count) : inactiveColorScale(count),
-                } as React.CSSProperties}
-                onMouseOver={() => {
-                    this.setState({active: country.id as string});
-                }}
-                onMouseLeave={() => {
-                    this.setState({active: null});
-                }}
+                style={{'--color': colorScale(count)} as React.CSSProperties}
                 d={geoPath().projection(projection)(country)}
             >
                 <title>{country.properties.name}: {count}</title>
