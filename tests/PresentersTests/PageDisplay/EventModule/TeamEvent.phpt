@@ -33,9 +33,13 @@ class TeamEvent extends EventModuleTestCase
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
+
+            ['Event:TeamApplication', 'attendance'],
+            ['Event:TeamApplication', 'create'],
+            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'fastEdit'],
             ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'detailedList'],
-            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'mass'],
         ];
     }
 }
