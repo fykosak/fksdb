@@ -7,9 +7,8 @@ interface OwnProps {
     usedCapacity: number;
 }
 
-export default function CapacityLabel(props: OwnProps) {
+export default function CapacityLabel({capacity, usedCapacity}: OwnProps) {
     const translator = useContext(TranslatorContext);
-    const {capacity, usedCapacity} = props;
     if (capacity === null) {
         return null;
     }

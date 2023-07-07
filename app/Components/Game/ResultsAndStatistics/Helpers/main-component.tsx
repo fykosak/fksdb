@@ -14,8 +14,7 @@ interface OwnProps<Store> {
     translator: Translator<availableLanguage>;
 }
 
-export default function MainComponent<Store>(props: OwnProps<Store>) {
-    const {app, actions, data, children, translator} = props;
+export default function MainComponent<Store>({app, actions, data, children, translator}: OwnProps<Store>) {
     const initialData = {
         actions: actions,
         data: data,

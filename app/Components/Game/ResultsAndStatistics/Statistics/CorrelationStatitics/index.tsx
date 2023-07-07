@@ -1,30 +1,17 @@
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewState } from '../../actions/stats';
 import GlobalCorrelation from './global-correlation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    teams: TeamModel[];
-    firstTeamId: number;
-    secondTeamId: number;
-}
-
-interface DispatchProps {
-
-    onChangeFirstTeam(id: number): void;
-
-    onChangeSecondTeam(id: number): void;
-}
-
-function CorrelationStats(props: StateProps & DispatchProps) {
-
+export default function CorrelationStats() {
     const translator = useContext(TranslatorContext);
-    const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = props;
+    const firstTeamId = useSelector((state: Store) => state.statistics.firstTeamId);
+    const secondTeamId = useSelector((state: Store) => state.statistics.secondTeamId);
+    const teams = useSelector((state: Store) => state.data.teams);
+    const dispatch = useDispatch();
     const teamsOptions = teams.map((team) => {
         return <option key={team.teamId} value={team.teamId}
         >{team.name}</option>;
@@ -35,10 +22,8 @@ function CorrelationStats(props: StateProps & DispatchProps) {
             <div className="col-6">
                 <select
                     className="form-control"
-                    onChange={(event) => {
-                        onChangeFirstTeam(+event.target.value);
-                    }}
-                    value={props.firstTeamId}
+                    onChange={(event) => dispatch(setNewState({firstTeamId: +event.target.value}))}
+                    value={firstTeamId}
                 >
                     <option value={null}>--{translator.getText('select team')}--</option>
                     {teamsOptions}
@@ -47,9 +32,9 @@ function CorrelationStats(props: StateProps & DispatchProps) {
             <div className="col-6">
                 <select
                     className="form-control"
-                    onChange={(event) => {
-                        onChangeSecondTeam(+event.target.value);
-                    }} value={props.secondTeamId}
+                    onChange={(event) =>
+                        dispatch(setNewState({secondTeamId: +event.target.value}))}
+                    value={secondTeamId}
                 >
                     <option value={null}>--{translator.getText('select team')}--</option>
                     {teamsOptions}
@@ -76,20 +61,3 @@ function CorrelationStats(props: StateProps & DispatchProps) {
         {(firstTeamId && secondTeamId) ? /*<Table/>*/null : <GlobalCorrelation/>}
     </>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        firstTeamId: state.statistics.firstTeamId,
-        secondTeamId: state.statistics.secondTeamId,
-        teams: state.data.teams,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
-        onChangeSecondTeam: (teamId) => dispatch(setNewState({secondTeamId: +teamId})),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CorrelationStats);

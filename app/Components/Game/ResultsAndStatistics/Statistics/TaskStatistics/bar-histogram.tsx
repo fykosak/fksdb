@@ -1,119 +1,79 @@
 import { axisBottom, axisLeft } from 'd3-axis';
-import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { submitsByTask } from '../Middleware/submits-by-task';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
-
-interface StateProps {
-    submits: Submits;
-    fromDate: Date;
-    toDate: Date;
-    aggregationTime: number;
-}
 
 interface OwnProps {
     taskId: number;
     availablePoints: number[];
 }
 
-class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
+export default function BarHistogram({taskId, availablePoints}: OwnProps) {
+    const aggregationTime = useSelector((state: Store) => state.statistics.aggregationTime);
+    const start = useSelector((state: Store) => state.timer.gameStart);
+    const submits = useSelector((state: Store) => state.data.submits);
+    const end = useSelector((state: Store) => state.timer.gameEnd);
+    const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
 
-    private xAxis: SVGGElement;
-    private yAxis: SVGGElement;
-
-    private xScale: ScaleTime<number, number>;
-    private yScale: ScaleLinear<number, number>;
-
-    public componentDidMount() {
-        this.getAxis();
-    }
-
-    public componentDidUpdate() {
-        this.getAxis();
-    }
-
-    public render() {
-        const {
-            toDate,
-            fromDate,
-            taskId,
-            submits,
-            aggregationTime,
-            availablePoints,
-        } = this.props;
-        const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
-
-        let maxPoints = 0;
-        for (const key in taskTimeSubmits) {
-            if (Object.hasOwn(taskTimeSubmits, key)) {
-                const item = taskTimeSubmits[key];
-                const sum = availablePoints.reduce<number>((prev, current) => {
-                    return prev + item[current];
-                }, 0);
-                maxPoints = maxPoints < sum ? sum : maxPoints;
-            }
+    let maxPoints = 0;
+    for (const key in taskTimeSubmits) {
+        if (Object.hasOwn(taskTimeSubmits, key)) {
+            const item = taskTimeSubmits[key];
+            const sum = availablePoints.reduce<number>((prev, current) => {
+                return prev + item[current];
+            }, 0);
+            maxPoints = maxPoints < sum ? sum : maxPoints;
         }
-        this.yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(this.getInnerYSize());
-        this.xScale = scaleTime().domain([fromDate, toDate]).range(this.getInnerXSize());
-        const bars = [];
-        for (const key in taskTimeSubmits) {
-            if (Object.hasOwn(taskTimeSubmits, key)) {
-                const item = taskTimeSubmits[key];
-                const ms = +key * aggregationTime;
-                const x1 = this.xScale(new Date(ms)) + 2;
-                const x2 = this.xScale(new Date(ms + aggregationTime)) - 2;
+    }
+    const yScale = scaleLinear<number, number>().domain([0, maxPoints]).range(ChartComponent.getInnerYSize());
+    const xScale = scaleTime().domain([start, end]).range(ChartComponent.getInnerXSize());
+    const bars = [];
+    for (const key in taskTimeSubmits) {
+        if (Object.hasOwn(taskTimeSubmits, key)) {
+            const item = taskTimeSubmits[key];
+            const ms = +key * aggregationTime;
+            const x1 = xScale(new Date(ms)) + 2;
+            const x2 = xScale(new Date(ms + aggregationTime)) - 2;
 
-                let sum = 0;
-                const polygons = [];
-                let y1 = this.yScale(0);
-                availablePoints.forEach((points, index) => {
-                    sum += item[points];
-                    const y2 = this.yScale(sum);
-                    polygons.push(<polygon
-                        key={index}
-                        points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
-                        data-points={points}
-                        style={{'--bar-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
-                    />);
-                    y1 = y2;
-                });
+            let sum = 0;
+            const polygons = [];
+            let y1 = yScale(0);
+            availablePoints.forEach((points, index) => {
+                sum += item[points];
+                const y2 = yScale(sum);
+                polygons.push(<polygon
+                    key={index}
+                    points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
+                    data-points={points}
+                    style={{'--bar-color': 'var(--color-fof-points-' + points + ')'} as React.CSSProperties}
+                />);
+                y1 = y2;
+            });
 
-                bars.push(<g key={key}>
-                    {polygons}
-                </g>);
-            }
+            bars.push(<g key={key}>
+                {polygons}
+            </g>);
         }
-        return <div className="bar-histogram">
-            <svg viewBox={this.getViewBox()} className="chart">
-                <g>
-                    {bars}
-                    <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                    <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
-                </g>
-            </svg>
-        </div>;
     }
-
-    private getAxis(): void {
-        const xAxis = axisBottom<Date>(this.xScale);
-        select(this.xAxis).call(xAxis);
-
-        const yAxis = axisLeft<number>(this.yScale);
-        select(this.yAxis).call(yAxis);
-    }
+    return <div className="bar-histogram">
+        <svg viewBox={ChartComponent.getViewBox()} className="chart">
+            <g>
+                {bars}
+                <g transform={ChartComponent.transformXAxis()} className="x-axis" ref={(xAxisRef) => {
+                    const xAxis = axisBottom<Date>(xScale);
+                    select(xAxisRef).call(xAxis);
+                }
+                }/>
+                <g transform={ChartComponent.transformYAxis()} className="y-axis"
+                   ref={(yAxisRef) => {
+                       const yAxis = axisLeft<number>(yScale);
+                       select(yAxisRef).call(yAxis);
+                   }}/>
+            </g>
+        </svg>
+    </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        aggregationTime: state.statistics.aggregationTime,
-        fromDate: state.timer.gameStart,
-        submits: state.data.submits,
-        toDate: state.timer.gameEnd,
-    };
-};
-
-export default connect(mapStateToProps, null)(BarHistogram);

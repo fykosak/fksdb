@@ -7,8 +7,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-export default function TeamRow(props: OwnProps) {
-    const {item, position, availablePoints} = props;
+export default function TeamRow({item, position, availablePoints}: OwnProps) {
 
     const average = item.count > 0 ? Math.round(item.points / item.count * 100) / 100 : '-';
     return <div className="row team-row" key={item.team.teamId}>

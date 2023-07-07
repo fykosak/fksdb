@@ -1,5 +1,5 @@
 import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
-import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-helper';
+import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
 import * as React from 'react';
 import { useState } from 'react';
 import { availableLanguage, Translator } from '@translator/translator';

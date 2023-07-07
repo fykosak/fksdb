@@ -1,35 +1,20 @@
 import { scaleLinear } from 'd3-scale';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewState } from '../../actions/stats';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submits-for-teams';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    submits: Submits;
-    tasks: TaskModel[];
-    teams: TeamModel[];
-    firstTeamId: number;
-    secondTeamId: number;
-}
-
-interface DispatchProps {
-    onChangeFirstTeam(id: number): void;
-
-    onChangeSecondTeam(id: number): void;
-}
-
-function GlobalCorrelation(props: StateProps & DispatchProps) {
+export default function GlobalCorrelation() {
     const translator = useContext(TranslatorContext);
     const color = scaleLinear<string, string>().domain([0, 1000 * 1000]).range(['#ff0000', '#ffffff']);
-    const {submits, teams} = props;
+    const submits = useSelector((state: Store) => state.data.submits);
+    const teams = useSelector((state: Store) => state.data.teams);
+    const dispatch = useDispatch();
+
     const submitsForTeams = calculateSubmitsForTeams(submits);
     const rows = [];
     teams.forEach((firstTeam) => {
@@ -51,8 +36,7 @@ function GlobalCorrelation(props: StateProps & DispatchProps) {
                 <td>{countTotal}</td>
                 <td>
                         <span className="btn btn-outline-primary btn-sm" onClick={() => {
-                            props.onChangeFirstTeam(firstTeam.teamId);
-                            props.onChangeSecondTeam(secondTeam.teamId);
+                            dispatch(setNewState({secondTeamId: +secondTeam.teamId, firstTeamId: +firstTeam.teamId}));
                         }}>Detail</span>
                 </td>
             </tr>);
@@ -72,22 +56,3 @@ function GlobalCorrelation(props: StateProps & DispatchProps) {
         <tbody>{rows}</tbody>
     </table>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        firstTeamId: state.statistics.firstTeamId,
-        secondTeamId: state.statistics.secondTeamId,
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
-        onChangeSecondTeam: (teamId) => dispatch(setNewState({secondTeamId: +teamId})),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(GlobalCorrelation);

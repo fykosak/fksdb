@@ -5,8 +5,6 @@ export interface State {
     firstTeamId?: number;
     secondTeamId?: number;
     aggregationTime?: number;
-    fromDate?: Date;
-    toDate?: Date;
 }
 
 export const stats = (state: State = {aggregationTime: 5 * 60 * 1000}, action: ActionSetNewState): State => {

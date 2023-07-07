@@ -7,8 +7,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function PricePrinter(props: OwnProps) {
-    const {price: {EUR, CZK}, translator} = props;
+export default function PricePrinter( {price: {EUR, CZK}, translator} : OwnProps) {
     if ((!EUR || +EUR.amount === 0) && (!CZK || +CZK.amount === 0)) {
         return <span>{translator.getText('for free')}</span>;
     }

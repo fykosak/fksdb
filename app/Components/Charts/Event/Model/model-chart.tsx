@@ -25,8 +25,8 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function ModelChart(props: OwnProps) {
-    const {data: {links, nodes}} = props;
+export default function ModelChart({data: {links, nodes}}: OwnProps) {
+
     const simNodes: {
         [key: number]: SimNode;
     } = {};

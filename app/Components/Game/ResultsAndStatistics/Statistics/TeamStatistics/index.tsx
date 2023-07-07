@@ -1,8 +1,6 @@
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewState } from '../../actions/stats';
 import PointsInTime from './line-chart';
 import PieChart from './pie-chart';
@@ -11,18 +9,11 @@ import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store
 import { TranslatorContext } from '@translator/context';
 import Legend from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/legend';
 
-interface StateProps {
-    teams: TeamModel[];
-    teamId: number;
-}
-
-interface DispatchProps {
-    onChangeFirstTeam(id: number): void;
-}
-
-function TeamStats(props: StateProps & DispatchProps) {
+export default function TeamStats() {
     const translator = useContext(TranslatorContext);
-    const {teams, onChangeFirstTeam, teamId} = props;
+    const teamId = useSelector((state: Store) => state.statistics.firstTeamId);
+    const teams = useSelector((state: Store) => state.data.teams);
+    const dispatch = useDispatch();
     const selectedTeam = teams.filter((team) => {
         return team.teamId === teamId;
     })[0];
@@ -34,7 +25,7 @@ function TeamStats(props: StateProps & DispatchProps) {
                 </h2>
                 <p>
                     <select className="form-control" onChange={(event) => {
-                        onChangeFirstTeam(+event.target.value);
+                        dispatch(setNewState({firstTeamId: +event.target.value}))
                     }}>
                         <option value={null}>--{translator.getText('select team')}--</option>
                         {teams.map((team) => {
@@ -72,18 +63,3 @@ function TeamStats(props: StateProps & DispatchProps) {
         </>}
     </>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        teamId: state.statistics.firstTeamId,
-        teams: state.data.teams,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TeamStats);

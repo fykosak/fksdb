@@ -8,8 +8,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function DateDisplay(props: OwnProps) {
-    const {date, options, translator} = props;
+export default function DateDisplay({date, options, translator}: OwnProps) {
     const dateObject = new Date(date);
     return <span>{dateObject.toLocaleDateString(translator.getBCP47(), options)} {dateObject.toLocaleTimeString(translator.getBCP47(), options)}</span>;
 }

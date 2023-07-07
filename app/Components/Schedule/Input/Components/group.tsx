@@ -12,9 +12,8 @@ interface OwnProps {
     params: Params;
 }
 
-export default function Group(props: OwnProps) {
+export default function Group({group, params}: OwnProps) {
     const translator = useContext(TranslatorContext);
-    const {group, params} = props;
     return <div className="ms-3">
         <h5 className="mb-3">
             {translator.get(group.name)}

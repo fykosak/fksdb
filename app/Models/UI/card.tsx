@@ -6,8 +6,7 @@ export interface OwnProps {
     level: string;
 }
 
-export default function Card(props: OwnProps) {
-    const {level, headline, children} = props;
+export default function Card({level, headline, children}: OwnProps) {
     return <div className={'card border-' + level}>
         <div className={'card-header card-' + level}>{headline}</div>
         <div className="card-block card-body">

@@ -14,9 +14,8 @@ export interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function  PerYearsChart (props:OwnProps) {
+export default function PerYearsChart({data, translator}: OwnProps) {
 
-    const {data, translator} = props;
     const {aggregatedSeries, maxValue} = parseData(data);
 
     const lineChartData: LineChartData<number> & LegendItemDatum[] = [];

@@ -82,10 +82,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
     };
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(Downloader);
+export default connect(mapStateToProps, mapDispatchToProps)(Downloader);
 
 export interface ResponseData {
     availablePoints: number[];

@@ -1,51 +1,21 @@
 import * as React from 'react';
 import { Filter } from '../filter';
-import { Action, Dispatch } from 'redux';
 import { ACTION_SET_FILTER } from '../../actions/table';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
 interface OwnProps {
     filter: Filter;
 }
 
-interface StateProps {
-    active: boolean;
-    categories: string[];
-}
+export default function FilterComponent({filter}: OwnProps) {
 
-interface DispatchProps {
-    onSetFilter(filter: Filter | null): void;
-}
-
-function FilterComponent(props: OwnProps & StateProps & DispatchProps) {
-
-    const {active, filter, onSetFilter} = props;
+    const dispatch = useDispatch();
+    const activeFilter = useSelector((state: Store) => state.tableFilter.filter);
+    const active = filter.same(activeFilter);
     return <a
         href="#"
         className={'btn ms-3 ' + (active ? 'btn-outline-success' : 'btn-outline-secondary')}
-        onClick={() => {
-            onSetFilter(active ? null : filter);
-        }}
+        onClick={() => dispatch({filter: active ? null : filter, type: ACTION_SET_FILTER})}
     >{filter.getHeadline()}</a>;
 }
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onSetFilter: (filter: Filter) => dispatch({
-            filter,
-            type: ACTION_SET_FILTER,
-        }),
-    };
-};
-const mapStateToPros = (state: Store, ownProps: OwnProps): StateProps => {
-    return {
-        categories: state.data.categories,
-        active: ownProps.filter.same(state.tableFilter.filter),
-    };
-};
-
-export default connect(
-    mapStateToPros,
-    mapDispatchToProps,
-)(FilterComponent);

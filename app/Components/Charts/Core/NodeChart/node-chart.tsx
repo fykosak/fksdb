@@ -8,7 +8,7 @@ import {
     SimulationNodeDatum,
 } from 'd3-force';
 import * as React from 'react';
-import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
+import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 import './node-chart.scss';
 
 export interface Link extends SimulationLinkDatum<Node> {
@@ -29,7 +29,7 @@ interface OwnProps {
     colors: string[];
 }
 
-export default class NodeChart extends ChartComponent<OwnProps, Record<string, never>> {
+export default class NodeChart extends React.Component<OwnProps, Record<string, never>> {
     private simulation = null;
 
     public componentDidMount() {
@@ -39,6 +39,7 @@ export default class NodeChart extends ChartComponent<OwnProps, Record<string, n
     }
 
     public render() {
+
         const {links, nodes} = this.props;
         this.simulation = forceSimulation<Node>(nodes)
             .force('link', forceLink(links))
@@ -79,7 +80,7 @@ export default class NodeChart extends ChartComponent<OwnProps, Record<string, n
         return <div className="node-chart">
             <svg
                 className="chart"
-                viewBox={`-${this.size.width / 2} -${this.size.height / 2} ${this.size.width} ${this.size.height}`}>
+                viewBox={`-${ChartComponent.size.width / 2} -${ChartComponent.size.height / 2} ${ChartComponent.size.width} ${ChartComponent.size.height}`}>
                 <defs>
                     {this.props.colors.map((color) => {
                         return <marker

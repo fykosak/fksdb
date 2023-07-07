@@ -1,31 +1,20 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
-import { ACTION_SET_PARAMS, Params } from '../../actions/presentation';
+import { useDispatch, useSelector } from 'react-redux';
+import { ACTION_SET_PARAMS } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    isOrg: boolean;
-    delay: number;
-    rows: number;
-    cols: number;
-    hardVisible: boolean;
-}
-
-interface DispatchProps {
-    onSetParams(data: Params): void;
-}
-
-function Setting(props: StateProps & DispatchProps) {
+export default function Setting() {
 
     const [show, setShow] = useState<boolean>(false);
     const translator = useContext(TranslatorContext);
-    const {isOrg, onSetParams, cols, delay, rows, hardVisible} = props;
-    // TODO FUCK BOOTSTRAP!!!!!!!!!!!!!!!!!!!!!!
-    //                data-bs-toggle="modal"
-    //                 data-bs-target="#fyziklaniPresentationModal"
+    const isOrg = useSelector((state: Store) => state.presentation.isOrg);
+    const cols = useSelector((state: Store) => state.presentation.cols);
+    const delay = useSelector((state: Store) => state.presentation.delay);
+    const rows = useSelector((state: Store) => state.presentation.rows);
+    const hardVisible = useSelector((state: Store) => state.presentation.hardVisible);
+    const dispatch = useDispatch();
     return <>
         <div className="fixed-bottom float-start" style={{zIndex: 10001}}>
             <button
@@ -61,7 +50,7 @@ function Setting(props: StateProps & DispatchProps) {
                                     className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-outline-warning'}
                                     onClick={(event) => {
                                         event.preventDefault();
-                                        onSetParams({hardVisible: !hardVisible});
+                                        dispatch({data: {hardVisible: !hardVisible}, type: ACTION_SET_PARAMS});
                                     }}>
                                     {hardVisible ? translator.getText('Turn off') : translator.getText('Turn on')}
                                 </button>
@@ -79,9 +68,10 @@ function Setting(props: StateProps & DispatchProps) {
                                     max={60 * 1000}
                                     min={1000}
                                     step={1000}
-                                    onChange={(e) => {
-                                        onSetParams({delay: +e.target.value});
-                                    }}/>
+                                    onChange={(e) => dispatch({
+                                        data: {delay: +e.target.value},
+                                        type: ACTION_SET_PARAMS,
+                                    })}/>
                             </div>
                         </div>
                         <hr/>
@@ -95,9 +85,7 @@ function Setting(props: StateProps & DispatchProps) {
                                 max="3"
                                 min="1"
                                 step={0}
-                                onChange={(e) => {
-                                    onSetParams({cols: +e.target.value});
-                                }}
+                                onChange={(e) => dispatch({data: {cols: +e.target.value}, type: ACTION_SET_PARAMS})}
                             />
                         </div>
                         <hr/>
@@ -111,9 +99,8 @@ function Setting(props: StateProps & DispatchProps) {
                                 max={100}
                                 min={1}
                                 step={1}
-                                onChange={(e) => {
-                                    onSetParams({rows: +e.target.value});
-                                }}/>
+                                onChange={(e) => dispatch({data: {rows: +e.target.value}, type: ACTION_SET_PARAMS})}
+                            />
                         </div>
                     </div>
                 </div>
@@ -121,23 +108,3 @@ function Setting(props: StateProps & DispatchProps) {
         </div>}
     </>
 }
-
-const mapStateToPros = (state: Store): StateProps => {
-    return {
-        isOrg: state.presentation.isOrg,
-        cols: state.presentation.cols,
-        delay: state.presentation.delay,
-        rows: state.presentation.rows,
-        hardVisible: state.presentation.hardVisible,
-    };
-};
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onSetParams: (data) => dispatch({
-            data,
-            type: ACTION_SET_PARAMS,
-        }),
-    };
-};
-
-export default connect(mapStateToPros, mapDispatchToProps)(Setting);

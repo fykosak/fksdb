@@ -1,20 +1,10 @@
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewState } from '../../actions/stats';
 import './progress.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
-
-interface StateProps {
-    tasks: TaskModel[];
-    submits: Submits;
-}
-
-interface DispatchProps {
-    onChangeTask(taskId: number): void;
-}
 
 interface StatItem extends TaskModel {
     5: number;
@@ -32,10 +22,11 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-function Progress(props: StateProps & DispatchProps & OwnProps) {
-    const {submits, tasks, onChangeTask, availablePoints} = props;
+export default function Progress({availablePoints}: OwnProps) {
+    const submits = useSelector((state: Store) => state.data.submits);
+    const tasks = useSelector((state: Store) => state.data.tasks);
     const tasksSubmits: Stats = {};
-
+    const dispatch = useDispatch();
     for (const task of tasks) {
         const {taskId} = task;
         tasksSubmits[taskId] = {
@@ -70,10 +61,12 @@ function Progress(props: StateProps & DispatchProps & OwnProps) {
             rows.push(
                 <div className="row" key={index}>
                     <div className="col-lg-2">
-                        <a href="#" onClick={() => {
-                            onChangeTask(submit.taskId);
-                        }}>
-                            {submit.label + '-'}</a>
+                        <a
+                            href="#"
+                            onClick={() => dispatch(setNewState({taskId: +submit.taskId}))}
+                        >
+                            {submit.label + '-'}
+                        </a>
                     </div>
                     <div className="col-lg-10">
                         <div className="progress">
@@ -97,17 +90,3 @@ function Progress(props: StateProps & DispatchProps & OwnProps) {
     }
     return <div className="chart chart-game-task-progress">{rows}</div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-    };
-};
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onChangeTask: (taskId) => dispatch(setNewState({taskId: +taskId})),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Progress);

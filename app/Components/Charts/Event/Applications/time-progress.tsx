@@ -25,9 +25,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function TimeProgress(props: OwnProps) {
-
-    const {data, translator} = props;
+export default function TimeProgress({data, translator}: OwnProps) {
     let minTime = 0;
     let max = 0;
     const lineChartData: LineChartData<number> & LegendItemDatum[] = [];

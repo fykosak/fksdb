@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
 import Range from 'FKSDB/Components/Charts/Event/Applications/range';
 import './bar-progress.scss';
-import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
+import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 
 export interface Data {
     events: {
@@ -25,9 +25,8 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function BarProgress(props: OwnProps) {
+export default function BarProgress({data, translator}: OwnProps) {
 
-    const {data, translator} = props;
     const [time, setTime] = useState<number>(0);
     let minDelta = 0;
     const colorScale = scaleOrdinal(schemeCategory10);
@@ -59,18 +58,16 @@ export default function BarProgress(props: OwnProps) {
     const bars = barData.map(({eventId, sum, color}) => {
         const x1 = xScale(0);
         const x2 = xScale(sum);
-        const y1 = yScale(eventId);
-        const y2 = yScale.bandwidth();
-        return <g transform={'translate(' + x1 + ',' + y1 + ')'} key={eventId} className="bar">
+        return <g transform={'translate(' + x1 + ',' + yScale(eventId) + ')'} key={eventId} className="bar">
             <rect
                 fill={color}
-                height={y2}
+                height={yScale.bandwidth()}
                 width={x2 - x1 + 5}
             />
             <text
                 x="10"
                 y={yScale.bandwidth() / 2}
-            >{props.data.events[eventId].name}: {sum}</text>
+            >{data.events[eventId].name}: {sum}</text>
         </g>;
     });
 

@@ -1,59 +1,33 @@
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addError } from '../../actions';
 import { handleFileUpload } from '../../middleware';
 import { Store } from '../../Reducers';
-import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { TranslatorContext } from '@translator/context';
 
-interface DispatchProps {
-
-    onDropItem(item: FileList): void;
-
-    onFileUpload(data: FormData, url: string): void;
-
-    onDragStart(): void;
-
-    onDragEnd(): void;
-
-    onAddError(error: Message): void;
-}
-
-interface StateProps {
-    dragged: boolean;
-    actions: NetteActions;
-}
-
-function FormState({
-                       dragged,
-                       onDragEnd,
-                       onDragStart,
-                       onAddError,
-                       actions,
-                       onDropItem,
-                       onFileUpload,
-                   }: StateProps & DispatchProps) {
+export default function FormState() {
     const translator = useContext(TranslatorContext);
+    const dispatch = useDispatch();
+    const actions = useSelector((state: Store) => state.fetch.actions);
+    const dragged = useSelector((state: Store) => state.dragNDrop.dragged);
 
     const handleDragEnd = (event: React.DragEvent<HTMLDivElement>): void => {
         event.preventDefault();
-        onDragEnd();
+        dispatch(dragEnd());
     }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
         event.preventDefault();
-        onDragStart();
+        dispatch(dragStart());
     }
 
     const onUploadFile = (event: React.DragEvent<HTMLDivElement>): void => {
         event.preventDefault();
         const data: FileList = event.dataTransfer.files;
-        onDropItem(data);
+        dispatch(dropItem<FileList>(data))
         handleFile(data);
     }
 
@@ -63,9 +37,9 @@ function FormState({
     }
 
     const handleFile = (fileList: FileList): void => {
-        const formData = handleFileUpload(fileList, onAddError, translator);
+        const formData = handleFileUpload(fileList, (error) => dispatch(addError(error)), translator);
         if (formData) {
-            onFileUpload(formData, actions.getAction('upload'));
+            dispatchNetteFetch(actions.getAction('upload'), dispatch, formData)
         }
     }
     return <div className={'drop-input' + (dragged ? ' dragged' : '')}
@@ -103,21 +77,3 @@ function FormState({
         </div>
     </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        actions: state.fetch.actions,
-        dragged: state.dragNDrop.dragged,
-    };
-};
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onAddError: (error) => dispatch(addError(error)),
-        onDragEnd: () => dispatch(dragEnd()),
-        onDragStart: () => dispatch(dragStart()),
-        onDropItem: (item) => dispatch(dropItem<FileList>(item)),
-        onFileUpload: (values, url: string) => dispatchNetteFetch(url, dispatch, values),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormState);

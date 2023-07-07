@@ -2,34 +2,21 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
-
-interface StateProps {
-    submits: Submits;
-    tasks: TaskModel[];
-    gameStart: Date;
-    gameEnd: Date;
-    teams: TeamModel[];
-}
 
 interface OwnProps {
     teamId: number;
 }
 
-function PointsInTime(props: StateProps & OwnProps) {
-    const {
-        teamId,
-        submits,
-        tasks,
-        gameEnd,
-        gameStart,
-        teams,
-    } = props;
+export default function PointsInTime({teamId}: OwnProps) {
+    const gameEnd = new Date(useSelector((state: Store) => state.timer.gameEnd));
+    const gameStart = new Date(useSelector((state: Store) => state.timer.gameStart));
+    const submits = useSelector((state: Store) => state.data.submits);
+    const tasks = useSelector((state: Store) => state.data.tasks);
+    const teams = useSelector((state: Store) => state.data.teams);
 
     const teamSubmits: ExtendedPointData<Date>[] = [];
 
@@ -39,9 +26,10 @@ function PointsInTime(props: StateProps & OwnProps) {
     const meanTeamData: ExtendedPointData<Date>[] = [];
     const lineChartData: LineChartData<Date> = [];
 
-    for (const index in submits) {
-        if (Object.hasOwn(submits, index)) {
-            const submit: SubmitModel = submits[index];
+    const submitArray: SubmitModel[] = Object.values(submits);
+    submitArray
+        .sort((a, b) => (new Date(a.modified)).getTime() - (new Date(b.modified)).getTime())
+        .forEach((submit) => {
             const {teamId: submitTeamId, points} = submit;
             meanPoints += (submit.points / numberOfTeams);
             meanTeamData.push({
@@ -72,14 +60,13 @@ function PointsInTime(props: StateProps & OwnProps) {
                     });
                 }
             }
-        }
-    }
+        });
 
     const xScale = scaleTime<number, number>().domain([gameStart, gameEnd]);
     const yScale = scaleLinear<number, number>().domain([0, Math.max(maxPoints, meanPoints)]);
 
     lineChartData.push({
-        color: 'var(--bs-gray)',
+        color: 'var(--bs-gray-400)',
         display: {
             area: false,
             lines: true,
@@ -100,7 +87,7 @@ function PointsInTime(props: StateProps & OwnProps) {
         ],
     });
     lineChartData.push({
-        color: 'var(--fks-page-theme)',
+        color: 'var(--bs-gray-600)',
         curveFactory: curveLinear,
         display: {
             area: false,
@@ -132,15 +119,3 @@ function PointsInTime(props: StateProps & OwnProps) {
     });
     return <LineChart<Date> data={lineChartData} xScale={xScale} yScale={yScale}/>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        gameEnd: new Date(state.timer.gameEnd),
-        gameStart: new Date(state.timer.gameStart),
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(PointsInTime);

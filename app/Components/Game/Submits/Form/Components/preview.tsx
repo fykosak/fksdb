@@ -11,9 +11,8 @@ interface OwnProps {
     teams: TeamModel[];
 }
 
-export default function Preview(props: OwnProps) {
+export default function Preview({code: value, tasks, teams}: OwnProps) {
     const translator = useContext(TranslatorContext);
-    const {code: value, tasks, teams} = props;
     if (!value) {
         return null;
     }

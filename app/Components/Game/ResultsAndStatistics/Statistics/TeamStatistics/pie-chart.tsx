@@ -1,15 +1,9 @@
 import { arc, pie, PieArcDatum } from 'd3-shape';
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import './pie-chart.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
-
-interface StateProps {
-    teams: TeamModel[];
-    submits: Submits;
-}
 
 interface OwnProps {
     teamId: number;
@@ -20,8 +14,9 @@ interface PointGroupItem {
     count: number;
 }
 
-function PieChart(props: StateProps & OwnProps) {
-    const {submits, teamId} = props;
+export default function PieChart({teamId}: OwnProps) {
+
+    const submits = useSelector((state: Store) => state.data.submits);
     const pointsCategories: { [key: number]: PointGroupItem } = {
         1: {points: 1, count: 0},
         2: {points: 2, count: 0},
@@ -89,12 +84,3 @@ const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieAr
         return +item.count;
     })(data);
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        submits: state.data.submits,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(PieChart);

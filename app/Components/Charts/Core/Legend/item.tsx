@@ -17,9 +17,7 @@ interface Props {
     item: LegendItemDatum;
 }
 
-export default function Item(props: Props) {
-    const {item} = props;
-
+export default function Item({item}: Props) {
     return <div
         className="chart-legend-item row"
         style={{'--item-color': item.color ? item.color : '#ccc'} as React.CSSProperties}

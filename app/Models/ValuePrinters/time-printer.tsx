@@ -8,10 +8,8 @@ interface OwnProps {
     translator: Translator<string>;
 }
 
-export default function TimeDisplay(props: OwnProps) {
-    const {options, translator} = props;
-    const date = new Date(props.date);
-    return <span>{date.toLocaleTimeString(translator.getBCP47(), options ? options : {
+export default function TimeDisplay({options, translator, date}: OwnProps) {
+    return <span>{(new Date(date)).toLocaleTimeString(translator.getBCP47(), options ? options : {
         hour: 'numeric',
         minute: 'numeric',
     })}</span>;

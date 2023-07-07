@@ -2,37 +2,22 @@ import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveMonotoneX } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { submitsByTask } from '../Middleware/submits-by-task';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
-
-interface StateProps {
-    submits: Submits;
-    fromDate: Date;
-    gameStart: Date;
-    gameEnd: Date;
-    toDate: Date;
-    aggregationTime: number;
-}
 
 interface OwnProps {
     taskId: number;
     availablePoints: number[];
 }
 
-function HistogramLines(props: StateProps & OwnProps) {
-    const {
-        fromDate,
-        toDate,
-        gameStart,
-        gameEnd,
-        taskId,
-        submits,
-        aggregationTime,
-        availablePoints,
-    } = props;
+export default function HistogramLines({taskId, availablePoints}: OwnProps) {
+
+    const aggregationTime = useSelector((state: Store) => state.statistics.aggregationTime);
+    const gameEnd = useSelector((state: Store) => state.timer.gameEnd);
+    const gameStart = useSelector((state: Store) => state.timer.gameStart);
+    const submits = useSelector((state: Store) => state.data.submits);
     const taskTimeSubmits = submitsByTask(submits, taskId, aggregationTime);
 
     let i = Math.floor(gameStart.getTime() / aggregationTime);
@@ -55,7 +40,7 @@ function HistogramLines(props: StateProps & OwnProps) {
         }
     }
     const yScale = scaleLinear<number, number>().domain([0, maxPoints]);
-    const xScale = scaleTime().domain([fromDate, toDate]);
+    const xScale = scaleTime().domain([gameStart, gameEnd]);
 
     const pointsData = {
         1: [],
@@ -103,16 +88,3 @@ function HistogramLines(props: StateProps & OwnProps) {
     });
     return <LineChart<Date> data={lineChartData} xScale={xScale} yScale={yScale}/>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        aggregationTime: state.statistics.aggregationTime,
-        fromDate: state.timer.gameStart,
-        gameEnd: state.timer.gameEnd,
-        gameStart: state.timer.gameStart,
-        submits: state.data.submits,
-        toDate: state.timer.gameEnd,
-    };
-};
-
-export default connect(mapStateToProps, null)(HistogramLines);

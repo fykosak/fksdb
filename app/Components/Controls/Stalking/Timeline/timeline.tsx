@@ -1,8 +1,7 @@
 import { axisBottom } from 'd3-axis';
-import { scaleOrdinal, scaleTime, ScaleTime } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { scaleTime, ScaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
-import ChartComponent from 'FKSDB/Components/Charts/Core/chart-component';
+import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
 import './timeline.scss';
 import { availableLanguage, Translator } from '@translator/translator';
@@ -62,80 +61,27 @@ interface Props {
     translator: Translator<availableLanguage>;
 }
 
-export default class Timeline extends ChartComponent<Props, Record<string, never>> {
-    private colorScale;
-    private readonly lineHeight = 30;
-    private rowNumber;
-    private scale: ScaleTime<number, number>;
+export default function Timeline(props: Props) {
+    const lineHeight = 30;
+    let rowNumber;
 
-    private readonly rectProperty = {
+    const rectProperty = {
         rx: 7.5,
         ry: 7.5,
         height: 15,
     };
-
-    private xAxis: SVGGElement;
-
-    public componentDidMount() {
-        this.getAxis();
+    const createTimeXScale = (start: Date, end: Date): ScaleTime<number, number> => {
+        return scaleTime<number>().domain([start, end]).range(ChartComponent.getInnerXSize());
     }
 
-    public componentDidUpdate() {
-        this.getAxis();
+    const getCurrentY = (): number => {
+        return rowNumber * lineHeight;
     }
 
-    public render() {
-        this.colorScale = scaleOrdinal(schemeCategory10);
-        this.rowNumber = 0;
-        const {
-            events: {eventOrgs, eventParticipants, eventTeachers},
-            states: {orgs, contestants},
-            scale: {max, min},
-        } = this.props.data;
-        this.scale = this.createTimeXScale(new Date(min), new Date(max));
-        const content = <g transform="translate(0,15)">
-            {this.createEvents(eventOrgs, 'Event org')}
-            {this.createEvents(eventParticipants, 'Event participant')}
-            {this.createEvents(eventTeachers, 'Event teacher')}
-
-            {orgs.length && orgs.map((org, index) => {
-                this.rowNumber += 1;
-                const y = (this.rowNumber * this.lineHeight);
-                return <g transform={'translate(0,' + y + ')'}>{this.createRect(
-                    index,
-                    org.model.contestId,
-                    'Org #' + org.model.orgId,
-                    org.since,
-                    org.until,
-                )}</g>;
-            })}
-            {this.createContestants(contestants)}
-        </g>;
-        this.rowNumber += 3;
-        return <div className="person-detail-timeline">
-            <svg className="chart"
-                 style={{'--line-height': this.lineHeight} as React.CSSProperties}
-                 viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
-                <g transform={'translate(0,' + (this.getCurrentY() - this.margin.bottom) + ')'}
-                   className="axis x-axis grid"
-                   ref={(xAxis) => this.xAxis = xAxis}/>
-                {content}
-            </svg>
-        </div>;
-    }
-
-    private createTimeXScale(start: Date, end: Date): ScaleTime<number, number> {
-        return scaleTime<number>().domain([start, end]).range(this.getInnerXSize());
-    }
-
-    private getCurrentY(): number {
-        return this.rowNumber * this.lineHeight;
-    }
-
-    private createEvents(data: Array<{ event: Event }>, label: string) {
-        return <g transform={'translate(0,' + this.getCurrentY() + ')'}>
-            {data.length && (this.rowNumber += 1) && data.map((datum, index) => {
-                const cx = this.scale(new Date(datum.event.begin));
+    const createEvents = (data: Array<{ event: Event }>, label: string) => {
+        return <g transform={'translate(0,' + getCurrentY() + ')'}>
+            {data.length && (rowNumber += 1) && data.map((datum, index) => {
+                const cx = scale(new Date(datum.event.begin));
                 return <circle
                     style={{'--color': 'var(--color-event-type-' + datum.event.eventTypeId + ')'} as React.CSSProperties}
                     key={index}
@@ -148,12 +94,12 @@ export default class Timeline extends ChartComponent<Props, Record<string, never
         </g>;
     }
 
-    private createContestants(contestants: Contestant[]) {
+    const createContestants = (contestants: Contestant[]) => {
         const contests = {};
         contestants.forEach((contestant, index) => {
             contests[contestant.model.contestId] = contests[contestant.model.contestId] || [];
-            this.createRect(index, contestant.model.contestId, 'Contestant #' + contestant.model.contestantId, contestant.since, contestant.until)
-            contests[contestant.model.contestId].push(this.createRect(
+            createRect(index, contestant.model.contestId, 'Contestant #' + contestant.model.contestantId, contestant.since, contestant.until)
+            contests[contestant.model.contestId].push(createRect(
                 index,
                 contestant.model.contestId,
                 'Contestant #' + contestant.model.contestantId,
@@ -164,8 +110,8 @@ export default class Timeline extends ChartComponent<Props, Record<string, never
         const finalRows = [];
         for (const id in contests) {
             if (Object.hasOwn(contests, id)) {
-                this.rowNumber += 1;
-                finalRows.push(<g key={id} transform={'translate(0,' + this.getCurrentY() + ')'}>
+                rowNumber += 1;
+                finalRows.push(<g key={id} transform={'translate(0,' + getCurrentY() + ')'}>
                     {contests[id]}
                 </g>);
             }
@@ -173,9 +119,9 @@ export default class Timeline extends ChartComponent<Props, Record<string, never
         return finalRows;
     }
 
-    private createRect(index: number, contestId: number, label: string, since: string, until: string): JSX.Element {
-        const sinceDate = this.scale(new Date(since));
-        const untilDate = this.scale(new Date(until));
+    const createRect = (index: number, contestId: number, label: string, since: string, until: string): JSX.Element => {
+        const sinceDate = scale(new Date(since));
+        const untilDate = scale(new Date(until));
         return <g
             key={index}
             style={{'--color': 'var(--color-contest-' + contestId + ')'} as React.CSSProperties}
@@ -183,19 +129,57 @@ export default class Timeline extends ChartComponent<Props, Record<string, never
             <rect
                 x={sinceDate}
                 width={untilDate - sinceDate}
-                {...this.rectProperty}
+                {...rectProperty}
             >
                 <title>{label}</title>
             </rect>
             <text
-                y={this.rectProperty.height / 2}
+                y={rectProperty.height / 2}
                 x={(sinceDate + untilDate) / 2}
             >{label}</text>
         </g>;
     }
 
-    private getAxis(): void {
-        const xAxis = axisBottom(this.scale).tickSizeInner(-this.getCurrentY());
-        select(this.xAxis).call(xAxis);
-    }
+    rowNumber = 0;
+    const {
+        events: {eventOrgs, eventParticipants, eventTeachers},
+        states: {orgs, contestants},
+        scale: {max, min},
+    } = props.data;
+    const scale = createTimeXScale(new Date(min), new Date(max));
+    const content = <g transform="translate(0,15)">
+        {createEvents(eventOrgs, 'Event org')}
+        {createEvents(eventParticipants, 'Event participant')}
+        {createEvents(eventTeachers, 'Event teacher')}
+
+        {orgs.length && orgs.map((org, index) => {
+            rowNumber += 1;
+            const y = (rowNumber * lineHeight);
+            return <g transform={'translate(0,' + y + ')'} key={index}>
+                {createRect(
+                    index,
+                    org.model.contestId,
+                    'Org #' + org.model.orgId,
+                    org.since,
+                    org.until,
+                )}
+            </g>;
+        })}
+        {createContestants(contestants)}
+    </g>;
+    rowNumber += 3;
+    return <div className="person-detail-timeline">
+        <svg className="chart"
+             style={{'--line-height': lineHeight} as React.CSSProperties}
+             viewBox={'0 0 ' + ChartComponent.size.width + ' ' + getCurrentY()}>
+            <g transform={'translate(0,' + (getCurrentY() - ChartComponent.margin.bottom) + ')'}
+               className="axis x-axis grid"
+               ref={(xAxisRef) => {
+                   const xAxis = axisBottom(scale).tickSizeInner(-getCurrentY());
+                   select(xAxisRef).call(xAxis);
+               }}/>
+            {content}
+        </svg>
+    </div>;
+
 }

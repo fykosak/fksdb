@@ -15,8 +15,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function StatisticsComponent(props: OwnProps) {
-    const {mode} = props;
+export default function StatisticsComponent({mode,actions,data,translator}: OwnProps) {
     let content = null;
     switch (mode) {
         case 'team':
@@ -31,9 +30,9 @@ export default function StatisticsComponent(props: OwnProps) {
     }
     return <MainComponent
         app={app}
-        data={props.data}
-        actions={props.actions}
-        translator={props.translator}>
+        data={data}
+        actions={actions}
+        translator={translator}>
         {content}
     </MainComponent>;
 }

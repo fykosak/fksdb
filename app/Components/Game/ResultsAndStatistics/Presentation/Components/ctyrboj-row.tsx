@@ -9,8 +9,7 @@ interface OwnProps {
     tasks: TaskModel[];
 }
 
-export default function Row(props: OwnProps) {
-    const {submits, team, tasks} = props;
+export default function Row({submits, team, tasks}: OwnProps) {
     let sum = 0;
     const taskMap = {
         A: [],

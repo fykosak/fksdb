@@ -6,6 +6,12 @@
   text {
     font-size: 10px;
     text-anchor: middle;
+    alignment-baseline: central;
+    font-weight: bold;
+  }
+
+  rect {
+    fill: var(--color);
   }
 
   polyline {

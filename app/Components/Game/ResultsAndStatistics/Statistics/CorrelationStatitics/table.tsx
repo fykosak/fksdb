@@ -1,26 +1,21 @@
-import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getTimeLabel } from '../Middleware/correlation';
 import { getAverageNStandardDeviation } from '../Middleware/std-dev';
 import { calculateSubmitsForTeams } from '../Middleware/submits-for-teams';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    submits: Submits;
-    tasks: TaskModel[];
-    teams: TeamModel[];
-    firstTeamId: number;
-    secondTeamId: number;
-}
-
-function Table(props: StateProps) {
+export default function Table() {
     const translator = useContext(TranslatorContext);
-    const {firstTeamId, secondTeamId, submits, tasks} = props;
+    const firstTeamId = useSelector((state: Store) => state.statistics.firstTeamId);
+    const secondTeamId = useSelector((state: Store) => state.statistics.secondTeamId);
+    const submits = useSelector((state: Store) => state.data.submits);
+    const tasks = useSelector((state: Store) => state.data.tasks);
+
     const firstTeamSubmits: SubmitModel[] = [];
     const secondTeamSubmits: SubmitModel[] = [];
     for (const id in submits) {
@@ -79,15 +74,3 @@ function Table(props: StateProps) {
         </p>
     </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        firstTeamId: state.statistics.firstTeamId,
-        secondTeamId: state.statistics.secondTeamId,
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(Table);

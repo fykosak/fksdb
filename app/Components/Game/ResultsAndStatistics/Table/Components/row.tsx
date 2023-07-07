@@ -10,9 +10,7 @@ interface OwnProps {
     visible: boolean;
 }
 
-export default function Row(props: OwnProps) {
-    const {submits, team, tasks, visible} = props;
-
+export default function Row({submits, team, tasks, visible}: OwnProps) {
     let count = 0;
     let sum = 0;
     const cools = tasks.map((task, taskIndex) => {

@@ -1,10 +1,13 @@
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { scaleSequential, scaleSequentialLog } from 'd3-scale';
 import * as React from 'react';
-import { findMax, GeoData } from './geo-helper';
 import './geo-chart.scss';
 import type { Feature } from 'geojson';
 import { interpolateBuGn } from 'd3-scale-chromatic';
+
+export interface GeoData {
+    [countryISO: string]: number;
+}
 
 interface OwnProps {
     data: GeoData;
@@ -29,18 +32,16 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
 
     public render() {
         const {data, scaleType} = this.props;
-        const max = findMax(data);
+        const max = Math.max(...Object.values(data));
         let colorScale = null;
         switch (scaleType) {
             default:
             case SCALE_LINEAR:
                 colorScale = scaleSequential(interpolateBuGn);
-                // colorScale = scaleLinear<string, string>();
                 colorScale.domain([0, max + 1]);
                 break;
             case SCALE_LOG:
                 colorScale = scaleSequentialLog(interpolateBuGn);
-                //colorScale = scaleLog<string, string>();
                 colorScale.domain([0.1, max + 1]);
         }
 

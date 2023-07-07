@@ -4,8 +4,7 @@ import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/schedule-gro
 import { ScheduleItemModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Store } from '../reducer';
 import CapacityLabel from './capacity-label';
 import PriceLabel from './price-label';
@@ -17,25 +16,18 @@ interface OwnProps {
     params: Params;
 }
 
-interface DispatchProps {
-    onChange(value: number): void;
-}
-
-interface StateProps {
-    value: number;
-}
-
-function Item(props: OwnProps & DispatchProps & StateProps) {
+export default function Item({item, params}: OwnProps) {
 
     const translator = useContext(TranslatorContext);
-    const {item, value, onChange, params} = props;
+    const value = useSelector((state: Store) => state.inputConnector.data.data);
+    const dispatch = useDispatch();
     const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
     const isChecked = (value === scheduleItemId);
 
     return <div
         className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : '')}
         onClick={() => {
-            isChecked ? onChange(null) : onChange(scheduleItemId);
+            isChecked ? dispatch(changeData('data', null)) : dispatch(changeData('data', scheduleItemId));
         }}>
         <div className="card-body">
             <h5 className="card-title">
@@ -52,17 +44,3 @@ function Item(props: OwnProps & DispatchProps & StateProps) {
         </div>
     </div>;
 }
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
-    return {
-        onChange: (value: number) => dispatch(changeData('data', value)),
-    };
-};
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        value: state.inputConnector.data.data,
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Item);

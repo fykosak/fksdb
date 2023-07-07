@@ -14,16 +14,16 @@ interface Props {
     translator: Translator<availableLanguage>;
 }
 
-export default function AjaxSubmitComponent(props: Props) {
+export default function AjaxSubmitComponent({actions, data, translator}: Props) {
     return <ActionsStoreCreator<Store, SubmitModel>
         initialData={{
-            actions: props.actions,
-            data: props.data,
+            actions: actions,
+            data: data,
             messages: [],
         }}
         app={app}
     >
-        <TranslatorContext.Provider value={props.translator}>
+        <TranslatorContext.Provider value={translator}>
             <UploadContainer/>
         </TranslatorContext.Provider>
     </ActionsStoreCreator>;

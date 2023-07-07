@@ -97,7 +97,4 @@ const mapStateToPros = (state: Store): StateProps => {
     };
 };
 
-export default connect(
-    mapStateToPros,
-    mapDispatchToProps,
-)(PositionSwitcher);
+export default connect(mapStateToPros, mapDispatchToProps)(PositionSwitcher);

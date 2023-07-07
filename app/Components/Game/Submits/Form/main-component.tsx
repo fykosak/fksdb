@@ -18,9 +18,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function Component(props: OwnProps) {
-    const {data, actions, translator} = props;
-    const {tasks, teams, availablePoints} = data;
+export default function Component({data: {tasks, teams, availablePoints}, actions, translator}: OwnProps) {
     return <StoreCreator app={app}>
         <TranslatorContext.Provider value={translator}>
             <MainForm tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>

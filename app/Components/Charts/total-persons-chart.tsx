@@ -17,8 +17,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function  TotalPersonsChart (props:OwnProps) {
-    const {data, translator} = props;
+export default function TotalPersonsChart({data, translator}: OwnProps) {
     const lineChartData: LineChartData<Date> & LegendItemDatum[] = [];
     const pointsAll: PointData<Date>[] = [];
     const pointsMale: PointData<Date>[] = [];

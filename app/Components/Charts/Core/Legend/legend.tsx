@@ -6,8 +6,7 @@ interface OwnProps {
     data: LegendItemDatum[];
 }
 
-export default function Legend(props: OwnProps) {
-    const {data} = props;
+export default function Legend({data}: OwnProps) {
     return <div className="chart-legend row row-cols-lg-5">
         {data.map((item, index) => {
             return <Item item={item} key={index}/>

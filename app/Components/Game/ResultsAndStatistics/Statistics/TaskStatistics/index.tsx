@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Options from './options';
 import TimeHistogram from './bar-histogram';
 import TimeHistogramLines from './histogram-lines';
@@ -10,13 +10,10 @@ import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store
 import { TranslatorContext } from '@translator/context';
 import Legend from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/legend';
 
-interface StateProps {
-    taskId: number;
-    availablePoints: number[];
-}
+export default function TaskStats() {
 
-function TaskStats(props: StateProps) {
-    const {taskId, availablePoints} = props;
+    const availablePoints = useSelector((state: Store) => state.data.availablePoints);
+    const taskId = useSelector((state: Store) => state.statistics.taskId);
     const translator = useContext(TranslatorContext);
     return <>
         <div className="panel color-auto">
@@ -61,12 +58,3 @@ function TaskStats(props: StateProps) {
         </>}
     </>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        availablePoints: state.data.availablePoints,
-        taskId: state.statistics.taskId,
-    };
-};
-
-export default connect(mapStateToProps, null)(TaskStats);

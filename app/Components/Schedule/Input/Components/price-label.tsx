@@ -8,8 +8,7 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function PriceLabel(props: OwnProps) {
-    const {price, translator} = props;
+export default function PriceLabel({price, translator}: OwnProps) {
     return <small className="ms-3">
         {translator.getText('Price')}: <PricePrinter price={price} translator={translator}/>
     </small>;

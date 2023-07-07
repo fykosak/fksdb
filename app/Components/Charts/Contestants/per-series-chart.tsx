@@ -12,9 +12,8 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function PerSeriesChart(props: OwnProps) {
+export default function PerSeriesChart({data, translator}: OwnProps) {
 
-    const {data, translator} = props;
     const {maxValue, maxSeries} = parseData(data);
     const [minYear, maxYear] = getMinMaxYear(data);
     const yScale = scaleLinear<number, number>().domain([0, maxValue]);

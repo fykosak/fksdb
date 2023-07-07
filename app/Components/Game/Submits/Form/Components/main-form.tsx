@@ -2,19 +2,17 @@ import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Game/Submits/Fo
 import Buttons from './buttons';
 import Code from './code';
 import ValueDisplay from './preview';
-import { Store as SubmitStore } from 'FKSDB/Components/Game/Submits/Form/reducer';
-import { DataResponse, Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import { validate } from '../middleware';
 import AutoButton from 'FKSDB/Components/Game/Submits/Form/Components/auto-button';
 import { TranslatorContext } from '@translator/context';
+import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
 
 export interface OwnProps {
     tasks: TaskModel[];
@@ -23,18 +21,21 @@ export interface OwnProps {
     availablePoints: number[] | null;
 }
 
-interface DispatchProps {
-    onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
-}
-
-interface StateProps {
-    code: string;
-    messages: Message[];
-}
-
-function MainForm(props: StateProps & OwnProps & DispatchProps & InjectedFormProps<{ code: string }, OwnProps>) {
+function MainForm({
+                      valid,
+                      submitting,
+                      handleSubmit,
+                      tasks,
+                      teams,
+                      availablePoints,
+                      actions,
+                  }: OwnProps & InjectedFormProps<{ code: string }, OwnProps>) {
     const translator = useContext(TranslatorContext);
-    const {valid, submitting, handleSubmit, onSubmit, tasks, teams, availablePoints, messages, code} = props;
+    const dispatch = useDispatch();
+    const onSubmit = (values: SubmitFormRequest) => submitStart(dispatch, values, actions.getAction('save'))
+    const code = useSelector((state: Store) => formValueSelector(FORM_NAME)(state, 'code'));
+    const messages = useSelector((state: Store) => state.fetch.messages);
+
     const hasButtons = availablePoints.length;
     return <Form
         onSubmit={handleSubmit(onSubmit)}
@@ -77,23 +78,7 @@ function MainForm(props: StateProps & OwnProps & DispatchProps & InjectedFormPro
 
 export const FORM_NAME = 'codeForm';
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: OwnProps): DispatchProps => {
-    return {
-        onSubmit: (values: SubmitFormRequest) => submitStart(dispatch, values, ownProps.actions.getAction('save')),
-    };
-};
-
-const mapStateToProps = (state: SubmitStore): StateProps => {
-    const selector = formValueSelector(FORM_NAME);
-    return {
-        code: selector(state, 'code'),
-        messages: state.fetch.messages,
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm<{ code: string }, OwnProps, string>({
-        form: FORM_NAME,
-        validate,
-    })(MainForm),
-);
+export default reduxForm<{ code: string }, OwnProps, string>({
+    form: FORM_NAME,
+    validate,
+})(MainForm);

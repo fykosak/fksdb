@@ -14,12 +14,12 @@ interface OwnProps {
     translator: Translator<availableLanguage>;
 }
 
-export default function Main(props: OwnProps) {
+export default function Main({actions, data, translator}: OwnProps) {
     return <MainComponent
-        actions={props.actions}
-        data={props.data}
+        actions={actions}
+        data={data}
         app={app}
-        translator={props.translator}>
+        translator={translator}>
         <SingleSelect/>
         <App/>
     </MainComponent>;

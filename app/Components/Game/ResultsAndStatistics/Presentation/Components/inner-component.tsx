@@ -1,28 +1,21 @@
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { calculate, Item } from '../../Helpers/calculate-data';
 import Headline from './headline';
 import TeamRow from './team-row';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
-interface StateProps {
-    availablePoints: number[];
-    category: string;
-    submits: Submits;
-    teams: TeamModel[];
-    tasks: TaskModel[];
-    cols: number;
-    rows: number;
-    position: number;
-}
+export default function InnerComponent() {
 
-function InnerComponent(props: StateProps) {
+    const availablePoints = useSelector((state: Store) => state.data.availablePoints);
+    const category = useSelector((state: Store) => state.presentation.category);
+    const cols = useSelector((state: Store) => state.presentation.cols);
+    const statePosition = useSelector((state: Store) => state.presentation.position);
+    const rows = useSelector((state: Store) => state.presentation.rows);
+    const submits = useSelector((state: Store) => state.data.submits);
+    const teams = useSelector((state: Store) => state.data.teams);
 
-    const {submits, teams, rows, cols, category, position: statePosition, availablePoints} = props;
-    let {position} = props;
+    let position = statePosition;
     const submitsForTeams = calculate(submits, teams);
 
     const submitsForTeamsArray: Item[] = [];
@@ -87,18 +80,3 @@ function InnerComponent(props: StateProps) {
         <div className="row justify-content-around">{resultsItems}</div>
     </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        availablePoints: state.data.availablePoints,
-        category: state.presentation.category,
-        cols: state.presentation.cols,
-        position: state.presentation.position,
-        rows: state.presentation.rows,
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(InnerComponent);

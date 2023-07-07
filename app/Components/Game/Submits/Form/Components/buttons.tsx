@@ -12,9 +12,7 @@ interface OwnProps {
     onSubmit?(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
-export default function Buttons(props: OwnProps) {
-    const {valid, submitting, handleSubmit, onSubmit, availablePoints} = props;
-
+export default function Buttons({valid, submitting, handleSubmit, onSubmit, availablePoints}: OwnProps) {
     const buttons = availablePoints.map((value, index) => {
         return <button
             className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}

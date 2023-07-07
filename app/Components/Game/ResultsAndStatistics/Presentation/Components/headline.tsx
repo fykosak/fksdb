@@ -9,9 +9,8 @@ interface OwnProps {
     category: string;
 }
 
-export default function Headline(props: OwnProps) {
+export default function Headline({category, startPosition, endPosition}: OwnProps) {
     const translator = useContext(TranslatorContext);
-    const {category, startPosition, endPosition} = props;
     return <div className="row justify-content-md-center">
         <div className="col-3">
             <span className="subheader">

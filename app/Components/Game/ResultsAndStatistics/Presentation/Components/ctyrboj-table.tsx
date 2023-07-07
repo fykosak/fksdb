@@ -1,23 +1,18 @@
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Row from './ctyrboj-row';
 import { Store } from '../../reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    submits: Submits;
-    teams: TeamModel[];
-    tasks: TaskModel[];
-}
-
-function Index(props: StateProps) {
+export default function Index() {
 
     const translator = useContext(TranslatorContext);
-    const {submits, teams, tasks} = props;
+    const submits = useSelector((state: Store) => state.data.submits);
+    const tasks = useSelector((state: Store) => state.data.tasks);
+    const teams = useSelector((state: Store) => state.data.teams);
+
     const submitsForTeams = {};
     for (const index in submits) {
         if (Object.hasOwn(submits, index)) {
@@ -57,13 +52,3 @@ function Index(props: StateProps) {
         </div>
     </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(Index);

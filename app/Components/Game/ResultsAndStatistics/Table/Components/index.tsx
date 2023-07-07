@@ -1,25 +1,18 @@
-import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
 import { useContext } from 'react';
-import { connect } from 'react-redux';
-import { Filter } from '../filter';
+import { useSelector } from 'react-redux';
 import Row from './row';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    filter: Filter | null;
-    submits: Submits;
-    teams: TeamModel[];
-    tasks: TaskModel[];
-}
-
-function Index(props: StateProps) {
-
+export default function Index() {
     const translator = useContext(TranslatorContext);
-    const {submits, teams, tasks, filter} = props;
+    const filter = useSelector((state: Store) => state.tableFilter.filter);
+    const submits = useSelector((state: Store) => state.data.submits);
+    const tasks = useSelector((state: Store) => state.data.tasks);
+    const teams = useSelector((state: Store) => state.data.teams);
     const submitsForTeams = {};
     for (const index in submits) {
         if (Object.hasOwn(submits, index)) {
@@ -57,14 +50,3 @@ function Index(props: StateProps) {
         </table>
     </div>;
 }
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        filter: state.tableFilter.filter,
-        submits: state.data.submits,
-        tasks: state.data.tasks,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToProps, null)(Index);
