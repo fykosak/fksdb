@@ -57,7 +57,7 @@ class PerYearsChart extends FrontEndComponent implements Chart
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Contestants per years'),'fas fa-chart-line');
+        return new Title(null, _('Contestants per years'), 'fas fa-chart-line');
     }
 
     public function getDescription(): ?string
