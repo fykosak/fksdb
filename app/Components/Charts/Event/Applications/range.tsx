@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { availableLanguage, Translator } from '@translator/translator';
 
 interface OwnProps {
@@ -44,7 +44,10 @@ export default function Range({min, onChange, value}: OwnProps) {
             <button className={play ? 'btn btn-warning' : 'btn btn-success'} onClick={() => setPlay(!play)}>
                 <i className={play ? 'fas fa-pause' : 'fas fa-play'}/>
             </button>
-            <button className="btn btn-danger" onClick={() => onChange(min)}>
+            <button className="btn btn-danger" onClick={() => {
+                setPlay(false);
+                onChange(min);
+            }}>
                 <i className={'fas fa-stop'}/>
             </button>
         </div>

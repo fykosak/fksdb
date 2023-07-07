@@ -1,42 +1,30 @@
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
-import { ACTION_SET_PARAMS, Params } from '../../actions/presentation';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ACTION_SET_PARAMS } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
-interface StateProps {
-    categories: string[];
-    category: string;
-    cols: number;
-    teams: TeamModel[];
-    rows: number;
-    delay: number;
-    position: number;
-}
-
-interface DispatchProps {
-    onSetParams(data: Params): void;
-}
-
-class PositionSwitcher extends React.Component<StateProps & DispatchProps, never> {
-    private abortRun = false;
-
-    public componentDidMount() {
-        return this.run();
+export default function PositionSwitcher() {
+    const categories = useSelector((state: Store) => state.data.categories);
+    const category = useSelector((state: Store) => state.presentation.category);
+    const cols = useSelector((state: Store) => state.presentation.cols);
+    const delay = useSelector((state: Store) => state.presentation.delay);
+    const position = useSelector((state: Store) => state.presentation.position);
+    const rows = useSelector((state: Store) => state.presentation.rows);
+    const teams = useSelector((state: Store) => state.data.teams);
+    const dispatch = useDispatch();
+    const getCategory = (): string => {
+        const index = categories.indexOf(category);
+        if (index === -1) {
+            return categories[0];
+        }
+        if (index === categories.length) {
+            return null;
+        }
+        return categories[index + 1];
     }
 
-    public render() {
-        return null;
-    }
-
-    public componentWillUnmount() {
-        this.abortRun = true;
-    }
-
-    private async run(): Promise<void> | never {
-
-        const {cols, rows, position, delay, onSetParams, category, teams} = this.props;
+    const run = async (): Promise<void> | never => {
         let activeTeams;
         if (category) {
             activeTeams = teams.filter((team) => {
@@ -49,52 +37,29 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, never
 
         let newCategory = category;
         if (newPosition >= activeTeams.length) {
-            newCategory = this.getCategory();
+            newCategory = getCategory();
             newPosition = 0;
         }
         await new Promise<void>((resolve) => {
             setTimeout(() => {
-                onSetParams({position: newPosition, category: newCategory});
+                dispatch({
+                    data: {position: newPosition, category: newCategory},
+                    type: ACTION_SET_PARAMS,
+                });
                 resolve();
             }, delay);
         });
-        if (this.abortRun) {
+        if (abortRun) {
             return;
         }
-        await this.run();
+        await run();
     }
-
-    private getCategory(): string {
-        const {categories, category} = this.props;
-        const index = categories.indexOf(category);
-        if (index === -1) {
-            return categories[0];
+    let abortRun = false;
+    useEffect(() => {
+        run();
+        return () => {
+            abortRun = true;
         }
-        if (index === categories.length) {
-            return null;
-        }
-        return categories[index + 1];
-    }
+    });
+    return null;
 }
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onSetParams: (data) => dispatch({
-            data,
-            type: ACTION_SET_PARAMS,
-        }),
-    };
-};
-const mapStateToPros = (state: Store): StateProps => {
-    return {
-        categories: state.data.categories,
-        category: state.presentation.category,
-        cols: state.presentation.cols,
-        delay: state.presentation.delay,
-        position: state.presentation.position,
-        rows: state.presentation.rows,
-        teams: state.data.teams,
-    };
-};
-
-export default connect(mapStateToPros, mapDispatchToProps)(PositionSwitcher);

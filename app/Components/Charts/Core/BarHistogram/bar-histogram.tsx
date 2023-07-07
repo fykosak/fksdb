@@ -34,9 +34,7 @@ export default function BarHistogram<XValue extends number | Date>({data, yScale
     });
 
     const barXSize = 0.8 / (maxLength + 2);
-    const bars = [];
-
-    data.forEach((group) => {
+    const bars = data.map((group, key) => {
         const relativeX = +group.xValue - 0.4;
         const rows = [];
         group.items.forEach((item, index) => {
@@ -45,15 +43,15 @@ export default function BarHistogram<XValue extends number | Date>({data, yScale
             const y1 = yScale(item.yValue);
             const y2 = yScale(0);
             rows.push(<polygon
-                    key={index}
-                    points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
+                key={index}
+                points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                     style={{'--bar-color': item.color} as React.CSSProperties}
                 >
                     <title>{item.yValue}</title>
                 </polygon>,
             );
         });
-        bars.push(<g className="bar">{rows}</g>);
+        return <g className="bar" key={key}>{rows}</g>;
     });
     return <div className="bar-histogram">
         <svg viewBox={ChartComponent.getViewBox()} className="chart">

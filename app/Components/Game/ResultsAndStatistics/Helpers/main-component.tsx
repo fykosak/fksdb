@@ -22,7 +22,7 @@ export default function MainComponent<Store>({app, actions, data, children, tran
     };
     return <ActionsStoreCreator<Store, ResponseData> initialData={initialData} app={app}>
         <TranslatorContext.Provider value={translator}>
-            <Downloader data={data}/>
+            <Downloader/>
             {children}
         </TranslatorContext.Provider>
     </ActionsStoreCreator>;

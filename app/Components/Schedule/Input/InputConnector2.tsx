@@ -1,49 +1,26 @@
 import { setInitialData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { InputConnectorStateMap } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';
 
 export interface OwnProps {
     input: HTMLInputElement | HTMLSelectElement;
 }
 
-export interface StateProps {
-    value: number;
-}
+export default function InputConnector2(props: OwnProps) {
 
-export interface DispatchProps {
-    onSetInitialData(value: number): void;
-}
-
-class InputConnector2 extends React.Component<OwnProps & StateProps & DispatchProps, never> {
-
-    public componentDidMount() {
-        const {input, onSetInitialData} = this.props;
+    const {input} = this.props;
+    const value = useSelector((state: { inputConnector: InputConnectorStateMap }) => +state.inputConnector?.data?.data);
+    const dispatch = useDispatch();
+    useEffect(() => {
         if (input.value) {
-            onSetInitialData(+input.value);
+            dispatch(setInitialData({data: +input.value}))
         }
-    }
-
-    public UNSAFE_componentWillReceiveProps(newProps: OwnProps & StateProps & DispatchProps) {
-        this.props.input.value = newProps.value ? newProps.value.toString() : null;
-        this.props.input.dispatchEvent(new Event('change')); // netteForm compatibility
-    }
-
-    public render() {
-        return null;
-    }
+    }, []);
+    useEffect(() => {
+        input.value = value ? value.toString() : null;
+        input.dispatchEvent(new Event('change'));
+    }, [value]);
+    return null;
 }
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onSetInitialData: (value: number) => dispatch(setInitialData({data: value})),
-    };
-};
-
-const mapStateToProps = (state: { inputConnector: InputConnectorStateMap }): StateProps => {
-    return {
-        value: state.inputConnector.data && +state.inputConnector.data.data,
-    };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(InputConnector2);

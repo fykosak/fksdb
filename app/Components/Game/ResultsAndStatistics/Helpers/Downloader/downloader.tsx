@@ -4,85 +4,40 @@ import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteA
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Action, Dispatch } from 'redux';
+import { useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './downloader.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 import { TranslatorContext } from '@translator/context';
 
-interface StateProps {
-    error: Response | string | number | Error;
-    isSubmitting: boolean;
-    lastUpdated: string;
-    refreshDelay: number;
-    isRefreshing: boolean;
-    actions: NetteActions;
+export default function Downloader() {
+
+    const actions = useSelector((state: Store) => state.fetch.actions);
+    const error = useSelector((state: Store) => state.fetch.error);
+    const isRefreshing = useSelector((state: Store) => state.downloader.isRefreshing);
+    const isSubmitting = useSelector((state: Store) => state.fetch.submitting);
+    const lastUpdated = useSelector((state: Store) => state.downloader.lastUpdated);
+    const refreshDelay = useSelector((state: Store) => state.downloader.refreshDelay);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const timerId = window.setTimeout(() => {
+            return dispatchNetteFetch<ResponseData>(actions.getAction('refresh'), dispatch, null);
+        }, refreshDelay)
+        return () => clearTimeout(timerId);
+    }, [lastUpdated]);
+    const translator = useContext(TranslatorContext);
+
+    return <div className="downloader-update-info bg-white">
+        <i
+            // @ts-ignore
+            title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
+            className={isRefreshing ? 'text-success fas fa-check' : 'text-danger fas fa-exclamation-triangle'}/>
+        {isSubmitting && <i className="fas fa-spinner fa-spin"/>}
+        {!isRefreshing && <button className="btn btn-outline-primary" onClick={() => {
+            return dispatchNetteFetch<ResponseData>(actions.getAction('refresh'), dispatch, null)
+        }}>{translator.getText('Fetch')}</button>}
+    </div>;
 }
-
-interface DispatchProps {
-    onWaitForFetch(delay: number, url: string): void;
-
-    onFetch(url: string): void;
-}
-
-interface OwnProps {
-    data: ResponseData;
-}
-
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, never> {
-
-    static contextType = TranslatorContext;
-
-    public componentDidUpdate(oldProps: DispatchProps & StateProps & OwnProps) {
-        const {lastUpdated: oldLastUpdated} = oldProps;
-        if (oldLastUpdated !== this.props.lastUpdated) {
-
-            const {onWaitForFetch, refreshDelay} = this.props;
-            if (refreshDelay) {
-                const url = this.props.actions.getAction('refresh');
-                onWaitForFetch(refreshDelay, url);
-            }
-        }
-    }
-
-    public render() {
-        const translator = this.context;
-        const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
-        return <div className="downloader-update-info bg-white">
-            <i
-                // @ts-ignore
-                title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
-                className={isRefreshing ? 'text-success fas fa-check' : 'text-danger fas fa-exclamation-triangle'}/>
-            {isSubmitting && <i className="fas fa-spinner fa-spin"/>}
-            {!isRefreshing && <button className="btn btn-outline-primary" onClick={() => {
-                const url = this.props.actions.getAction('refresh');
-                return onFetch(url);
-            }}>{translator.getText('Fetch')}</button>}
-        </div>;
-    }
-}
-
-const mapStateToProps = (state: Store): StateProps => {
-    return {
-        actions: state.fetch.actions,
-        error: state.fetch.error,
-        isRefreshing: state.downloader.isRefreshing,
-        isSubmitting: state.fetch.submitting,
-        lastUpdated: state.downloader.lastUpdated,
-        refreshDelay: state.downloader.refreshDelay,
-    };
-};
-
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
-    return {
-        onFetch: (url) => dispatchNetteFetch<ResponseData>(url, dispatch, null),
-        onWaitForFetch: (delay: number, url: string): number => window.setTimeout(() => {
-            return dispatchNetteFetch<ResponseData>(url, dispatch, null);
-        }, delay),
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Downloader);
 
 export interface ResponseData {
     availablePoints: number[];

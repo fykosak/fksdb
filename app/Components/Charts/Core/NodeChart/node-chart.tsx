@@ -8,6 +8,7 @@ import {
     SimulationNodeDatum,
 } from 'd3-force';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 import './node-chart.scss';
 
@@ -29,73 +30,74 @@ interface OwnProps {
     colors: string[];
 }
 
-export default class NodeChart extends React.Component<OwnProps, Record<string, never>> {
-    private simulation = null;
+export default function NodeChart({links, nodes, colors}: OwnProps) {
+    const [alpha, setAlpha] = useState(0);
+    const simulation = forceSimulation<Node>(nodes)
+        .force('link', forceLink(links))
+        .force('charge', forceManyBody().strength(-1000))
+        .force('x', forceX())
+        .force('y', forceY())
+        .alphaMin(0.001);
 
-    public componentDidMount() {
-        this.simulation.on('tick', () => {
-            this.forceUpdate();
+    useEffect(() => {
+        simulation.restart();
+        return () => {
+            simulation.stop();
+        };
+    }, [links, nodes, colors]);
+    useEffect(() => {
+        simulation.on('tick', () => {
+            setAlpha(simulation.alpha());
         });
-    }
+    }, [links, nodes, colors]);
 
-    public render() {
+    const nodesElements = [];
 
-        const {links, nodes} = this.props;
-        this.simulation = forceSimulation<Node>(nodes)
-            .force('link', forceLink(links))
-            .force('charge', forceManyBody().strength(-1000))
-            .force('x', forceX())
-            .force('y', forceY())
-            .alphaMin(0.001);
+    nodes.forEach((node, key) => {
+        nodesElements.push(
+            <g fill="currentColor"
+               style={{'--color': node.color} as React.CSSProperties}
+               key={key}
+               onClick={() => {
+                   if (node.fx === 0) {
+                       node.fx = null;
+                       node.fy = null;
+                   } else {
+                       node.fx = 0;
+                       node.fy = 0;
+                   }
+               }}
+               transform={'translate(' + node.x + ',' + node.y + ')'}>
+                <circle
+                    r="7.5"
+                />
+                <text x="8" y="0.31rem">
+                    {node.label}
+                </text>
+            </g>,
+        );
+    });
 
-        const nodesElements = [];
-
-        for (const key in nodes) {
-            if (Object.hasOwn(nodes,key)) {
-                const node = nodes[key];
-                nodesElements.push(
-                    <g fill="currentColor"
-                       style={{'--color': node.color} as React.CSSProperties}
-                       key={key}
-                       onClick={() => {
-                           if (node.fx === 0) {
-                               node.fx = null;
-                               node.fy = null;
-                           } else {
-                               node.fx = 0;
-                               node.fy = 0;
-                           }
-                       }}
-                       transform={'translate(' + node.x + ',' + node.y + ')'}>
-                        <circle
-                            r="7.5"
-                        />
-                        <text x="8" y="0.31rem">
-                            {node.label}
-                        </text>
-                    </g>,
-                );
-            }
-        }
-        return <div className="node-chart">
-            <svg
-                className="chart"
-                viewBox={`-${ChartComponent.size.width / 2} -${ChartComponent.size.height / 2} ${ChartComponent.size.width} ${ChartComponent.size.height}`}>
-                <defs>
-                    {this.props.colors.map((color) => {
-                        return <marker
-                            style={{'--marker-color': color} as React.CSSProperties}
-                            key={color}
-                            viewBox="-5 0 10 10"
-                            id={'arrow-end'}
-                            refX="10"
-                            refY="5"
-                            markerWidth="10"
-                            markerHeight="10"
-                            orient="auto"
-                        >
-                            <path d="M 5 5 L -2 2 L -2 8 z"/>
-                        </marker>;
+    return <div className="node-chart">
+        <span>Alpha: {alpha}</span>
+        <svg
+            className="chart"
+            viewBox={`-${ChartComponent.size.width / 2} -${ChartComponent.size.height / 2} ${ChartComponent.size.width} ${ChartComponent.size.height}`}>
+            <defs>
+                {colors.map((color) => {
+                    return <marker
+                        style={{'--marker-color': color} as React.CSSProperties}
+                        key={color}
+                        viewBox="-5 0 10 10"
+                        id={'arrow-end'}
+                        refX="10"
+                        refY="5"
+                        markerWidth="10"
+                        markerHeight="10"
+                        orient="auto"
+                    >
+                        <path d="M 5 5 L -2 2 L -2 8 z"/>
+                    </marker>;
                 })}
             </defs>
             <g className="links">{links.map((item, index) => {
@@ -122,10 +124,9 @@ export default class NodeChart extends React.Component<OwnProps, Record<string, 
                 </g>;
 
             })}</g>
-                <g className="nodes">
-                    {nodesElements}
-                </g>
-            </svg>
-        </div>;
-    }
+            <g className="nodes">
+                {nodesElements}
+            </g>
+        </svg>
+    </div>;
 }
