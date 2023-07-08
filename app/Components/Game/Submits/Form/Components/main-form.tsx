@@ -2,7 +2,7 @@ import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Game/Submits/Fo
 import Buttons from './buttons';
 import Code from './code';
 import ValueDisplay from './preview';
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';

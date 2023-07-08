@@ -36,7 +36,7 @@ export default function Timeline({teamId}: OwnProps) {
 
     const bars = activeTasks.map((task, index: number) => {
         const {taskId, from} = task;
-        const submit = teamSubmits.filter(fSubmit => fSubmit.taskId === taskId)[0];
+        const [submit] = teamSubmits.filter(fSubmit => fSubmit.taskId === taskId);
         const to = submit ? new Date(submit.modified) : gameEnd;
         let fromCoordinates;
         let toCoordinates;

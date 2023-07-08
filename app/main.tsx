@@ -1,16 +1,15 @@
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import PerSeriesChart from './Components/Charts/Contestants/per-series-chart';
 import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
 import TimeGeoChart from './Components/Charts/Event/Applications/time-geo-chart';
-import AcquaintanceChart
-    from './Components/Charts/Event/ParticipantAcquaintance/acquaintance-chart';
+import AcquaintanceChart from './Components/Charts/Event/ParticipantAcquaintance/acquaintance-chart';
 import TotalPersonsChart from './Components/Charts/total-persons-chart';
 import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/component';
 import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/main';
 import ResultsTable from './Components/Game/ResultsAndStatistics/Table/main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/component';
 import MainComponent from './Components/Game/Submits/Form/main-component';
-import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
+import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/renderer';
 import * as React from 'react';
 import 'vendor/nette/forms/src/assets/netteForms.js';
 import './Components/Forms/Controls/sqlConsole';
@@ -33,10 +32,11 @@ renderer.hashMapLoader.register('schedule.group-container', (element, reactId, r
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
     if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-        ReactDOM.render(<ScheduleField
+        const root = createRoot(container);
+        root.render(<ScheduleField
             scheduleDef={JSON.parse(rawData)}
             input={element}
-            translator={translator}/>, container);
+            translator={translator}/>);
         return true;
     }
     return false;
@@ -72,7 +72,7 @@ renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Tim
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart, {translator});
-renderer.hashMapLoader.registerDataComponent('chart.contestants.geo', ParticipantGeo, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.contestants.geo', ParticipantGeo);
 
 renderer.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', AcquaintanceChart, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', TimeGeoChart, {translator});
@@ -222,7 +222,8 @@ window.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </fieldset>;
                 }
-                ReactDOM.render(<ReEl/>, compactGroup);
+                const root = createRoot(compactGroup);
+                root.render(<ReEl/>, compactGroup);
                 return $(compactGroup);
             }
 

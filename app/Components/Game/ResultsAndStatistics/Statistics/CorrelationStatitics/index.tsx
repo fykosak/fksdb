@@ -42,13 +42,13 @@ export default function CorrelationStats() {
             </div>
         </div>
     );
-    const firstSelectedTeam = teams.filter((team) => {
+    const [firstSelectedTeam] = teams.filter((team) => {
         return team.teamId === firstTeamId;
-    })[0];
+    });
 
-    const secondSelectedTeam = teams.filter((team) => {
+    const [secondSelectedTeam] = teams.filter((team) => {
         return team.teamId === secondTeamId;
-    })[0];
+    });
 
     const headline = (
         <h2>{translator.getText('Correlation ') +

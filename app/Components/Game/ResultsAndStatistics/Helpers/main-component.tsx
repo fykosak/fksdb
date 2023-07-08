@@ -1,6 +1,6 @@
 import Downloader, { ResponseData } from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Downloader/downloader';
-import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/actions-store-creator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
 import * as React from 'react';
 import { Action, Reducer } from 'redux';
 import { availableLanguage, Translator } from '@translator/translator';

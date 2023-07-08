@@ -46,16 +46,6 @@ $fyziklaniPoints1: #f45d01;
       }
     }
   }
-  .bd-callout {
-    border-left-color: $color;
-
-    h4 {
-      color: $color;
-    }
-  }
-  hr {
-    --fks-hr-color: #{$color};
-  }
 }
 
 .subtitle {

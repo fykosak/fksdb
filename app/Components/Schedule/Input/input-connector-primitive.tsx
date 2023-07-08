@@ -8,9 +8,8 @@ export interface OwnProps {
     input: HTMLInputElement | HTMLSelectElement;
 }
 
-export default function InputConnector2(props: OwnProps) {
+export default function InputConnectorPrimitive({input} : OwnProps) {
 
-    const {input} = this.props;
     const value = useSelector((state: { inputConnector: InputConnectorStateMap }) => +state.inputConnector?.data?.data);
     const dispatch = useDispatch();
     useEffect(() => {

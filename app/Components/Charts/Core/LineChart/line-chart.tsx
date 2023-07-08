@@ -49,10 +49,10 @@ export default function LineChart<XValue extends Date | number>({data, xScale, y
         if (datum.display.points) {
             datum.points.forEach((point, key) => {
                 points.push(<circle
-                    className={'point ' + (point.active ? 'active' : '')}
+                    className="point"
                     key={index + '-' + key}
                     r="7.5"
-                    style={{'--point-color': point.active ? point.color.active : point.color.inactive} as React.CSSProperties}
+                    style={{'--point-color': point.color} as React.CSSProperties}
                     cy={yScale(point.yValue)}
                     cx={xScale(point.xValue)}
                 >

@@ -1,7 +1,7 @@
 import { ResponseData } from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/Downloader/downloader';
 import MainComponent from 'FKSDB/Components/Game/ResultsAndStatistics/Helpers/main-component';
 import Toggler from './Components/toggler';
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
 import * as React from 'react';
 import App from './Components/inner-component';
 import PositionSwitcher from './Components/position-switcher';

@@ -33,27 +33,19 @@ export default function PointsInTime({teamId}: OwnProps) {
             const {teamId: submitTeamId, points} = submit;
             meanPoints += (submit.points / numberOfTeams);
             meanTeamData.push({
-                active: false,
-                color: {
-                    active: null,
-                    inactive: null,
-                },
+                color: null,
                 xValue: new Date(submit.modified),
                 yValue: meanPoints,
             });
 
             if (teamId === submitTeamId) {
-                const currentTask = tasks.filter((task) => {
+                const [currentTask] = tasks.filter((task) => {
                     return submit.taskId === task.taskId;
-                })[0];
+                });
                 if (points !== null && points !== 0) {
                     maxPoints += +points;
                     teamSubmits.push({
-                        active: false,
-                        color: {
-                            active: 'var(--color-fof-points-' + submit.points + ')',
-                            inactive: 'var(--color-fof-points-' + submit.points + ')',
-                        },
+                        color: 'var(--color-fof-points-' + submit.points + ')',
                         label: currentTask.label,
                         xValue: new Date(submit.modified),
                         yValue: maxPoints,
@@ -75,11 +67,7 @@ export default function PointsInTime({teamId}: OwnProps) {
         name: 'mean team',
         points: [
             {
-                active: false,
-                color: {
-                    active: null,
-                    inactive: null,
-                },
+                color: null,
                 xValue: gameStart,
                 yValue: 0,
             },
@@ -97,23 +85,15 @@ export default function PointsInTime({teamId}: OwnProps) {
         name: 'TeamId ' + teamId,
         points: [
             {
-                active: false,
                 xValue: gameStart,
                 yValue: 0,
-                color: {
-                    active: null,
-                    inactive: null,
-                },
+                color: null,
             },
             ...teamSubmits,
             {
-                active: false,
                 xValue: gameEnd,
                 yValue: maxPoints,
-                color: {
-                    active: null,
-                    inactive: null,
-                },
+                color: null,
             },
         ],
     });

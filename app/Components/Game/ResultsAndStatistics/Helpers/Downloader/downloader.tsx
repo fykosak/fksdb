@@ -1,6 +1,5 @@
 import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
-import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';

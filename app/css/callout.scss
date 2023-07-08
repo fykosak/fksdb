@@ -1,34 +1,18 @@
 .bd-callout {
-  padding: 1.25rem;
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-  border-radius: .25rem;
+  padding: 20px;
+  margin: 20px 0;
   border: 1px solid #eee;
-  border-left: .25rem var(--bd-color);
+  border-left-width: 5px;
+  border-radius: 3px;
+  border-left-color: var(--fks-page-theme-color);
 
   h4 {
     margin-top: 0;
     margin-bottom: .25rem;
-    color: var(--bd-color);
+    color: var(--fks-page-theme-color);
   }
 
   p:last-child {
     margin-bottom: 0
   }
-
-  & + .bd-callout {
-    margin-top: -.25rem
-  }
-}
-
-.bd-callout-info {
-  --bd-color: #5bc0de;
-}
-
-.bd-callout-warning {
-  --bd-color: #f0ad4e;
-}
-
-.bd-callout-danger {
-  --bd-color: #d9534f;
 }

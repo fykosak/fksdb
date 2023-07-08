@@ -1,4 +1,4 @@
-import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { Action, Dispatch } from 'redux';
 import { focus, reset } from 'redux-form';

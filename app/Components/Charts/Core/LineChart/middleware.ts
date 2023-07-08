@@ -19,11 +19,7 @@ export type LineChartDatum<XValue extends Date | number> = {
 };
 
 export interface ExtendedPointData<XValue extends Date | number> extends PointData<XValue> {
-    active?: boolean;
-    color?: {
-        active: string;
-        inactive: string;
-    };
+    color?:  string;
     label?: ReactNode;
 }
 

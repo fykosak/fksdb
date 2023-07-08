@@ -31,11 +31,7 @@ export default function PerYearsChart({data, translator}: OwnProps) {
                     }
                     </>;
                     points.push({
-                        active: true,
-                        color: {
-                            active: getSeriesColor(series),
-                            inactive: getSeriesColor(series),
-                        },
+                        color: getSeriesColor(series),
                         label,
                         xValue: +year,
                         yValue: +aggregatedSeries[series][year],

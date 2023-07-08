@@ -44,21 +44,13 @@ export default function TimeProgress({data, translator}: OwnProps) {
                 const delta = application.createdBefore / (3600 * 24);
                 minTime = minTime < delta ? minTime : delta;
                 return {
-                    active: false,
-                    color: {
-                        active: null,
-                        inactive: null,
-                    },
+                    color: null,
                     xValue: delta,
                     yValue: sum,
                 };
             });
             eventData.push({
-                active: false,
-                color: {
-                    active: null,
-                    inactive: null,
-                },
+                color: null,
                 xValue: 0,
                 yValue: sum,
             });
@@ -74,22 +66,22 @@ export default function TimeProgress({data, translator}: OwnProps) {
                 points: eventData,
             });
         }
-        }
+    }
 
-        const yScale = scaleLinear<number, number>().domain([0, max]);
-        const xScale = scaleLinear<number, number>().domain([minTime, 0]);
+    const yScale = scaleLinear<number, number>().domain([0, max]);
+    const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        return <>
-            <LineChart<number>
-                data={lineChartData}
-                xScale={xScale}
-                yScale={yScale}
-                display={{
-                    xGrid: true,
-                    yGrid: true,
-                }}
-            />
-            <h2>{translator.getText('Legend')}</h2>
-            <Legend data={lineChartData}/>
-        </>;
+    return <>
+        <LineChart<number>
+            data={lineChartData}
+            xScale={xScale}
+            yScale={yScale}
+            display={{
+                xGrid: true,
+                yGrid: true,
+            }}
+        />
+        <h2>{translator.getText('Legend')}</h2>
+        <Legend data={lineChartData}/>
+    </>;
 }

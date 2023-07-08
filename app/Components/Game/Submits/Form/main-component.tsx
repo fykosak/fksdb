@@ -1,5 +1,5 @@
-import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
-import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/store-creator';
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';

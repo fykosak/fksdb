@@ -1,6 +1,6 @@
 import { app } from 'FKSDB/Components/Schedule/Input/reducer';
-import InputConnector2 from './InputConnector2';
-import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
+import InputConnectorPrimitive from './input-connector-primitive';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/store-creator';
 import { ScheduleGroupModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-group-model';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -38,7 +38,7 @@ export default function ScheduleField({input, scheduleDef, translator}: OwnProps
 
     return <StoreCreator app={app}>
         <TranslatorContext.Provider value={translator}>
-            <InputConnector2 input={input}/>
+            <InputConnectorPrimitive input={input}/>
             {group
                 ? <Group group={group} params={options}/>
                 : <span className="text-muted">{translator.getText('No items found.')}</span>

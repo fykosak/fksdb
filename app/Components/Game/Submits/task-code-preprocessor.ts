@@ -12,13 +12,13 @@ export default class TaskCodePreprocessor {
 
     public getTeam(code: string): TeamModel {
         const teamId = this.extractTeamId(code);
-        const filterTeams = this.teams.filter((currentTeam) => {
+        const [filterTeams] = this.teams.filter((currentTeam) => {
             return currentTeam.teamId === +teamId;
         });
-        if (!filterTeams.length) {
+        if (!filterTeams) {
             throw new Error('Team does not exist.');
         }
-        return filterTeams[0];
+        return filterTeams;
     }
 
     public getTask(code: string): TaskModel {
@@ -26,13 +26,13 @@ export default class TaskCodePreprocessor {
         if (taskLabel === 'XX') {
             throw Error('No task left');
         }
-        const filterTask = this.tasks.filter((currentTask) => {
+        const [filterTask] = this.tasks.filter((currentTask) => {
             return currentTask.label === taskLabel;
         });
-        if (!filterTask.length) {
+        if (!filterTask) {
             throw new Error('Task does not exist.');
         }
-        return filterTask[0];
+        return filterTask;
     }
 
     private extractTeamId(code: string): number {
