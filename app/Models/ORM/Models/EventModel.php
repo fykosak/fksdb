@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Game\Submits\CtyrbojHandler;
-use FKSDB\Components\Game\Submits\FOFHandler;
-use FKSDB\Components\Game\Submits\Handler;
+use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\Handler\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -60,6 +61,16 @@ class EventModel extends Model implements Resource, NodeCreator
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getName(): string
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return 'Fyziklání' . ' ' . $this->begin->format('Y');
+            default:
+                return $this->name;
+        }
     }
 
     public function isTeamEvent(): bool
@@ -135,7 +146,7 @@ class EventModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,
-            'name' => $this->name,
+            'name' => $this->getName(),
             'eventTypeId' => $this->event_type_id,
         ];
     }
@@ -165,7 +176,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
-        throw new \InvalidArgumentException();
+        throw new GameException(_('Game handler does not exist for this event'));
     }
 
     private function getParameters(): array
@@ -183,7 +194,11 @@ class EventModel extends Model implements Resource, NodeCreator
         try {
             return $this->getParameters()[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->name . '.', 0, $exception);
+            throw new InvalidArgumentException(
+                sprintf('No parameter "%s" for event %s.', $name, $this->name),
+                0,
+                $exception
+            );
         }
     }
 }

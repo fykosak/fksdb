@@ -18,8 +18,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -96,7 +96,7 @@ class TeamListComponent extends FilterList
         );
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
         if (!isset($this->filterParams)) {
@@ -143,7 +143,7 @@ class TeamListComponent extends FilterList
         foreach (GameLang::cases() as $lang) {
             $gameLang[$lang->value] = $lang->label();
         }
-        $form->addSelect('game_lang', _('Game lang'), $gameLang)->setPrompt(_('Select language'));
+        $form->addSelect('game_lang', _('Game language'), $gameLang)->setPrompt(_('Select language'));
 
         $states = [];
         foreach (TeamState::cases() as $teamState) {

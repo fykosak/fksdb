@@ -6,8 +6,8 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleGroupField;
+use FKSDB\Components\Schedule\Input\ScheduleException;
+use FKSDB\Components\Schedule\Input\ScheduleGroupField;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;

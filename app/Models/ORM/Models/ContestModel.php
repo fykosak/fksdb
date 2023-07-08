@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\TypedGroupedSelection;
 
 /**
@@ -33,12 +33,16 @@ class ContestModel extends Model
 
     public function getContestYear(?int $year): ?ContestYearModel
     {
-        return $this->getContestYears()->where('year', $year)->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->getContestYears()->where('year', $year)->fetch();
+        return $contestYear;
     }
 
     public function getContestYearByAcYear(?int $acYear): ?ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year', $acYear)->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->getContestYears()->where('ac_year', $acYear)->fetch();
+        return $contestYear;
     }
 
     public function getFirstYear(): int
@@ -58,12 +62,20 @@ class ContestModel extends Model
 
     public function getForwardedYear(): ?ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year > ?', ContestYearService::getCurrentAcademicYear())->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->getContestYears()->where(
+            'ac_year > ?',
+            ContestYearService::getCurrentAcademicYear()
+        )->fetch();
+        return $contestYear;
     }
 
     public function getCurrentContestYear(): ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year', ContestYearService::getCurrentAcademicYear())->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->getContestYears()->where('ac_year', ContestYearService::getCurrentAcademicYear())->fetch(
+        );
+        return $contestYear;
     }
 
     public function getOrganisers(): TypedGroupedSelection

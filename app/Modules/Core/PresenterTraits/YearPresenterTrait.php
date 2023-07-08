@@ -75,7 +75,7 @@ trait YearPresenterTrait
                 }
                 return $contest->getContestYears()->where('1=0');
             default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()->value));
+                throw new InvalidStateException(sprintf(_('Role %s is not supported'), $this->getRole()->value));
         }
     }
 

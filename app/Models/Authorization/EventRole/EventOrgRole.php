@@ -22,6 +22,6 @@ class EventOrgRole extends EventRole
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-7'])
-            ->addText(_('Event org') . ($this->eventOrg->note ? (' - ' . $this->eventOrg->note) : ''));
+            ->addText(sprintf(_('Event organizer: %s'), $this->eventOrg->note));
     }
 }

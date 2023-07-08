@@ -21,10 +21,10 @@
     <g transform="translate(-10,0)">
         <rect width="150"
               height="150"
-              style="stroke:none;fill:#000;opacity:1; mask: url(#mask)"/>
+              style="stroke:none;fill:rgb(33, 37, 41);opacity:1; mask: url(#mask)"/>
     </g>
 
-    <text fill="#000" font-weight="bold" font-family="sans-serif" font-size="75" x="-100" y="75"
+    <text fill="rgb(33, 37, 41)" font-weight="bold" font-family="sans-serif" font-size="75" x="-100" y="75"
           dominant-baseline="middle" text-anchor="middle">FKS
     </text>
 </svg>

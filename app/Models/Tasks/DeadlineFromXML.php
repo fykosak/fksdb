@@ -23,9 +23,7 @@ class DeadlineFromXML extends Stage
     }
 
     /**
-     * @param MemoryLogger $logger
      * @param SeriesData $data
-     * @return SeriesData
      */
     public function __invoke(MemoryLogger $logger, $data): SeriesData
     {

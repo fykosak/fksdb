@@ -10,8 +10,8 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\OrgService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -38,8 +38,32 @@ class OrgPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Edit organizer %s'), $this->getEntity()->person->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Organizer %s'), $this->getEntity()->person->getFullName()),
+            'fas fa-user'
+        );
+    }
+
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create an organizer'), 'fas fa-user-plus');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Organizers'), 'fas fa-user-tie');
     }
 
     /**
@@ -57,25 +81,6 @@ class OrgPresenter extends BasePresenter
         return $entity;
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     */
-    public function titleDetail(): PageTitle
-    {
-        return new PageTitle(null, sprintf(_('Org %s'), $this->getEntity()->person->getFullName()), 'fa fa-user');
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create an organizer'), 'fa fa-user-plus');
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Organizers'), 'fa fa-user-tie');
-    }
 
     /**
      * @throws ForbiddenRequestException

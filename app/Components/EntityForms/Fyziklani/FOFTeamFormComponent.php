@@ -6,7 +6,7 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;

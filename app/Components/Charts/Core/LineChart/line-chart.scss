@@ -1,11 +1,18 @@
-.chart-line-chart {
-  circle {
-    &.active {
-      opacity: 1;
-    }
+.line-chart svg {
+  circle.point {
+    opacity: 1;
+    fill: var(--point-color);
+  }
 
-    &.inactive {
-      opacity: 0.1;
-    }
+  .line {
+    fill: none;
+    stroke-width: 2px;
+    stroke: var(--line-color);
+  }
+
+  .area {
+    opacity: .1;
+    stroke: var(--area-color);
+    fill: var(--area-color);
   }
 }

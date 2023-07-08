@@ -6,9 +6,9 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 class PersonRelatedGrid extends BaseGrid
@@ -25,7 +25,7 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
@@ -41,7 +41,6 @@ class PersonRelatedGrid extends BaseGrid
      */
     protected function configure(): void
     {
-
         $this->paginate = false;
         $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {

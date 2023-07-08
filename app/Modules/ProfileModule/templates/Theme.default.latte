@@ -1,0 +1,29 @@
+{varType string $theme}
+{block outerContent}
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card text-bg-light">
+                    <div class="card-body text-center">
+                        <h3 class="card-title display-1">{_'Light'}</h3>
+                        <img src="{$basePath}/images/logo/black.svg" class="w-50" alt="dark">
+                        <div>
+                            <a href="{link choose! 'light'}" class="btn btn-lg btn-outline-success">{_'Choose!'}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-bg-dark">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><span class="display-1">{_'Dark'}</span> <small>(beta)</small></h3>
+                        <img src="{$basePath}/images/logo/white.svg" class="w-50" alt="dark">
+                        <div>
+                            <a href="{link choose! 'dark'}" class="btn btn-lg btn-outline-success">{_'Choose!'}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

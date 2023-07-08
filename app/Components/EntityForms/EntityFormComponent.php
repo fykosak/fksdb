@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
@@ -26,9 +24,6 @@ abstract class EntityFormComponent extends FormComponent
         $this->model = $model;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function render(): void
     {
         $this->setDefaults($this->getForm());
@@ -52,13 +47,13 @@ abstract class EntityFormComponent extends FormComponent
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('Error in the form') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(sprintf(_('Error in the form: %s'), $exception->getMessage()), Message::LVL_ERROR);
         }
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    protected function appendSubmitButton(Form $form): void
     {
-        return $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
+        $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // uncomment this line if you must temporarily take down your site for maintenance
 // require '.maintenance.php';
 
@@ -8,23 +10,17 @@ use FKSDB\Bootstrap;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\Application;
 
-define('WWW_DIR', dirname(__FILE__));
-
-// absolute filesystem path to the application root
-define('APP_DIR', WWW_DIR . '/../app');
-
-// absolute filesystem path to the libraries
-define('LIBS_DIR', WWW_DIR . '/../libs');
-
+require __DIR__ . '/../vendor/autoload.php';
 // load bootstrap file
-require APP_DIR . '/Bootstrap.php';
+require __DIR__ . '/../app/Bootstrap.php';
+
 
 // inicializace prostředí + získání objektu Nette\Configurator
 $configurator = Bootstrap::boot();
 // vytvoření DI kontejneru
 $container = $configurator->createContainer();
 // Register addons
-Replicator::register();
+Replicator::register($container);
 // DI kontejner vytvoří objekt Nette\Application\Application
 $application = $container->getByType(Application::class);
 // spuštění Nette aplikace

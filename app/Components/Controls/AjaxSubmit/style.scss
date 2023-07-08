@@ -3,7 +3,7 @@
   padding: .5rem;
 
   &.dragged {
-    background-color: #1175da;
+    background-color: var(--fks-page-theme-color);
     color: white;
 
     .drop-input-inner {

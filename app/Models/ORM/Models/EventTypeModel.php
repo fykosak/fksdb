@@ -87,10 +87,10 @@ class EventTypeModel extends Model
                     'notifyBcc' => Expect::string('vercah@fykos.cz'),
                     'notifyFrom' => Expect::string('FYKOSí Soustředění <soustredeni@fykos.cz>'),
                     'letterWhere' => Expect::string('Hejnice'),
-                    'deadline' => Expect::type(\DateTimeInterface::class)->default(2022 - 04 - 04),
+                    'deadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
                     'letterSignature' => Expect::string('Veronika Hendrychová'),
-                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default(2022 - 04 - 04),
-                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default(2022 - 04 - 06),
+                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
+                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('2022-04-06'),
                 ])->castTo('array');
             case 10:
                 return Expect::structure([

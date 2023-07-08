@@ -4,30 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\NetteORM\TypedSelection;
-use Nette\DI\Container;
 
-class TeachersGrid extends EntityGrid
+class TeachersGrid extends BaseGrid
 {
+    private TeacherService $teacherService;
 
-    public function __construct(Container $container)
+    public function inject(TeacherService $teacherService): void
     {
-        parent::__construct($container, TeacherService::class, [
-            'person.full_name',
-            'teacher.note',
-            'teacher.state',
-            'teacher.since',
-            'teacher.until',
-            'teacher.number_brochures',
-            'school.school',
-        ]);
+        $this->teacherService = $teacherService;
     }
 
-    protected function getData(): TypedSelection
+    protected function getModels(): TypedSelection
     {
-        return $this->service->getTable();
+        return $this->teacherService->getTable();
     }
 
     /**
@@ -36,7 +29,15 @@ class TeachersGrid extends EntityGrid
      */
     protected function configure(): void
     {
-        parent::configure();
+        $this->addColumns([
+            'person.full_name',
+            'teacher.note',
+            'teacher.state',
+            'teacher.since',
+            'teacher.until',
+            'teacher.number_brochures',
+            'school.school',
+        ]);
         $this->addORMLink('teacher.edit');
         $this->addORMLink('teacher.detail');
     }

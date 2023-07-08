@@ -13,7 +13,7 @@ export const handleFileUpload = (data: FileList, setError: (error: Message) => v
     }
 
     if (data.length === 1) {
-        if (data.hasOwnProperty(0)) {
+        if (Object.hasOwn(data,0)) {
             const file: File = data[0];
             const formData = new FormData();
             if (allowedTypes.indexOf(file.type) !== -1) {

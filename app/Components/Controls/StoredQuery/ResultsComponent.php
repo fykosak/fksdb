@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\StoredQuery;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
@@ -41,9 +40,6 @@ class ResultsComponent extends BaseComponent
         return new ResultsGrid($this->storedQuery, $this->getContext());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentParametrizeForm(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -78,9 +74,6 @@ class ResultsComponent extends BaseComponent
         return $error;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
         if (isset($this->parameters)) {

@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -46,9 +45,6 @@ class PersonTestComponent extends BaseComponent
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());

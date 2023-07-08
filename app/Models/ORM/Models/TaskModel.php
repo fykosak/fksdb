@@ -86,7 +86,12 @@ class TaskModel extends Model
 
     public function getContestYear(): ContestYearModel
     {
-        return $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where('year', $this->year)->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
+            'year',
+            $this->year
+        )->fetch();
+        return $contestYear;
     }
 
     public function webalizeLabel(): string

@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\EventOrg;
 
-use FKSDB\Components\Grids\RelatedGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
-class EventOrgsGrid extends RelatedGrid
+class EventOrgsGrid extends BaseGrid
 {
+    private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container, $event, 'event_org');
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
+    protected function getModels(): TypedGroupedSelection
+    {
+        return $this->event->getEventOrgs();
     }
 
     /**
@@ -23,7 +31,6 @@ class EventOrgsGrid extends RelatedGrid
      */
     protected function configure(): void
     {
-        parent::configure();
         $this->addColumns([
             'person.full_name',
             'event_org.note',

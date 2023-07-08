@@ -15,8 +15,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Service;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -32,7 +32,7 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
-     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {
@@ -49,41 +49,41 @@ class SeatingPresenter extends BasePresenter
 
     public function titlePrint(): PageTitle
     {
-        return new PageTitle(null, _('Print'), 'fa fa-map-marked-alt');
+        return new PageTitle(null, _('Print'), 'fas fa-map-marked-alt');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedPrint(): bool
+    {
+        return $this->authorizedList();
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of rooms'), 'fa fa-print');
+        return new PageTitle(null, _('List of rooms'), 'fas fa-print');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed('game.seating', 'default');
     }
 
     public function titlePreview(): PageTitle
     {
-        return new PageTitle(null, _('Preview'), 'fa fa-search');
+        return new PageTitle(null, _('Preview'), 'fas fa-search');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedPreview(): void
+    public function authorizedPreview(): bool
     {
-        $this->authorizedList();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedPrint(): void
-    {
-        $this->authorizedList();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedList(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.seating', 'default'));
+        return $this->authorizedList();
     }
 
     final public function renderList(): void

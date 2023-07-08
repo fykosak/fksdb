@@ -1,5 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Submits\SeriesTable $seriesTable}
+{varType bool $displayAll}
 {define table-head}
     <tr class="table-dark">
         <th>{_'Person'}</th>
@@ -14,8 +15,14 @@
         <div class="mb-3 text-end">
             {var $contestantCount = count($table)}
             {var $submitsCount = count($seriesTable->getSubmits())}
-            {_'Total'} {$contestantCount} {_('active')} {($contestantCount == 1) ? _('řešitel') : (($contestantCount >= 2 && $contestantCount <= 4) ? _('řešitelé') : _('řešitelů'))},
+<<<<<<< HEAD
+            {_'Total'} {$contestantCount} {_'active'} {($contestantCount == 1) ? _('řešitel') : (($contestantCount >= 2 && $contestantCount <= 4) ? _('řešitelé') : _('řešitelů'))},
             {$submitsCount} {($submitsCount == 1) ? _('solution') : _('solutions')}
+            {* TODO ngettext*}
+=======
+            {sprintf(ngettext('Total of %d active contestant', 'Total of %d active contestants', abs($contestantCount)), $contestantCount)},
+            {sprintf(ngettext("%d solution", '%d solutions', abs($submitsCount)), $submitsCount)}
+>>>>>>> origin/dev-translations
         </div>
         <thead>
         {include table-head}
@@ -35,7 +42,7 @@
                 </tr>
             {/if}
             {if $counter>14}
-                {var $counter = 0}
+                {php $counter = 0}
                 {include table-head}
             {/if}
         {/foreach}

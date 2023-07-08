@@ -1,0 +1,10 @@
+{block content}
+    {varType FKSDB\Models\ORM\Models\PersonModel[] $persons}
+    {varType FKSDB\Models\ORM\Models\EventModel $event}
+    <h2>{_'Rests'}</h2>
+    {foreach $persons as $person}
+        <div class="my-3">
+            {control singleRestControl $person,$event}
+        </div>
+    {/foreach}
+{/block}

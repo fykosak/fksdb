@@ -15,8 +15,8 @@ abstract class SeriesTableFormComponent extends SeriesTableComponent
     protected function createComponentForm(): OptimisticForm
     {
         $form = new OptimisticForm(
-            fn(): string => $this->getSeriesTable()->getFingerprint(),
-            fn(): array => $this->getSeriesTable()->formatAsFormValues()
+            fn(): string => $this->seriesTable->getFingerprint(),
+            fn(): array => $this->seriesTable->formatAsFormValues()
         );
         $form->addSubmit('submit', _('Save'));
         $form->onError[] = function (Form $form) {
