@@ -41,7 +41,7 @@ export default function TimeProgress({data, translator}: OwnProps) {
                 return a.createdBefore - b.createdBefore;
             }).map((application): ExtendedPointData<number> => {
                 sum++;
-                const delta = application.createdBefore / 3600 * 24;
+                const delta = application.createdBefore / (3600 * 24);
                 minTime = minTime < delta ? minTime : delta;
                 return {
                     active: false,
