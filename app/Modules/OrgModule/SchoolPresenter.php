@@ -31,12 +31,12 @@ class SchoolPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Schools'), 'fa fa-school');
+        return new PageTitle(null, _('Schools'), 'fas fa-school');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create school'), 'fa fa-plus');
+        return new PageTitle(null, _('Create school'), 'fas fa-plus');
     }
 
     /**
@@ -57,7 +57,7 @@ class SchoolPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev),
-            'fa fa-university'
+            'fas fa-university'
         );
     }
 

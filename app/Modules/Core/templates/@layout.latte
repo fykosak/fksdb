@@ -1,31 +1,29 @@
-{varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
 {varType Fykosak\Utils\UI\PageTitle $pageTitle}
 {varType string[] $navRoots}
 {varType string $lang}
 {varType ?string $robots}
+{varType string $styleId}
+{varType string $theme}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="{$robots}" n:ifset="$robots">
+    <meta charset="UTF-8"/>
+    <meta name="robots" content="{$robots}" n:ifset="$robots"/>
     <title>{$pageTitle->title} | FKSDB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
     <link rel="icon" href="{$basePath}/images/favicon.png" type="image/png" sizes="16x16">
     <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
-    <link href="/assets/main.css" rel="stylesheet"/>
+    <link href="{$basePath}/assets/main.css" rel="stylesheet"/>
 </head>
 <!-- Random background generator -->
-<body data-bg="{rand(1,4)}" data-style-id="{join(' ',$pageStyleContainer->styleIds)}">
+<body data-bg="{rand(1,4)}" data-style-id="{$styleId}" data-bs-theme="{$theme}">
 {block nav}
-<nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->getNavBarClassName()" role="navigation">
+<nav class="fixed-top navbar navbar-expand-md" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{$basePath}/">
-                <img src="{$basePath}{$pageStyleContainer->getNavBrandPath()}" height="30"
-                     class="d-inline-block align-top" alt=""/>
-            </a>
+            <a class="navbar-brand" href="{$basePath}/"></a>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
             <span class="navbar-toggler-icon"></span>
@@ -69,26 +67,30 @@
 </nav>
 {/block}
 {block main}
-<main class="{$pageStyleContainer->getMainContainerClassName()}">
-        {*block breadcrumbs}
-            {control breadcrumbs}
-        {/block*}
-        {block titleBody}
-            <h1 class="page-header">{$pageTitle->toHtml(true)}</h1>
-        {/block}
+<main>
+    <div class="panel color-auto">
+        <div class="container">
+            {block titleBody}
+            <div class="page-header">
+                <h1 >{$pageTitle->toHtml(false)}</h1>
+                <span class="subtitle">{$pageTitle->subTitle}</span>
+            </div>
+            {/block}
         {block flashes}
             {foreach $flashes as $flash}
-                <div class="alert alert-{$flash->type}">{$flash->message}</div>
+            <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
-        {include content}
+        </div>
+    </div>
+    {include outerContent}
 </main>
 {/block}
 {block footer}
 <footer>
     <div class="container text-center py-3">
         <div>
-            <img src="/images/logo/black.svg" alt="logo" style="height: 2rem"/>
+            <img src="/images/logo/white.svg" alt="logo" style="height: 2rem"/>
             <span>| </span>
             <span>{_'Administrator'}: </span>
             <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
@@ -114,6 +116,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" type="text/javascript"></script>
-<script src="/assets/bundle.min.js" type="text/javascript"></script>
+<script src="{$basePath}/assets/bundle.min.js" type="text/javascript"></script>
 </body>
 </html>

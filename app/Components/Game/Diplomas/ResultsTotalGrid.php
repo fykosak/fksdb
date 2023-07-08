@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
-class ResultsTotalGrid extends Grid
+class ResultsTotalGrid extends BaseGrid
 {
     private EventModel $event;
 
@@ -20,7 +20,7 @@ class ResultsTotalGrid extends Grid
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getParticipatingTeams()->order('name');
     }

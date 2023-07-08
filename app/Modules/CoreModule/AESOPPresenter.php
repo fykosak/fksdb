@@ -8,23 +8,25 @@ use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthMethod;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
-class AESOPPresenter extends AuthenticatedPresenter
+class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
-    public function authorizedContestant(): void
+    public function authorizedContestant(): bool
     {
-        $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
-    public function authorizedEvent(): void
+    public function authorizedEvent(): bool
     {
-        $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
     /**
@@ -52,13 +54,16 @@ class AESOPPresenter extends AuthenticatedPresenter
         $this->sendResponse($model->createResponse());
     }
 
-    public function getAllowedAuthMethods(): array
+    public function isAuthAllowed(AuthMethod $authMethod): bool
     {
-        return [
-            self::AUTH_HTTP => true,
-            self::AUTH_LOGIN => true,
-            self::AUTH_TOKEN => true,
-        ];
+        switch ($authMethod->value) {
+            case AuthMethod::LOGIN:
+            case AuthMethod::HTTP:
+                return true;
+            case AuthMethod::TOKEN:
+                return false;
+        }
+        return false;
     }
 
     protected function getHttpRealm(): ?string
@@ -66,6 +71,11 @@ class AESOPPresenter extends AuthenticatedPresenter
         return 'AESOP';
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();

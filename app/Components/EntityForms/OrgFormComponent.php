@@ -56,7 +56,7 @@ class OrgFormComponent extends EntityFormComponent
         $container = $this->createOrgContainer();
         $referencedId = $this->createPersonId(
             $this->contestYear,
-            $this->isCreating(),
+            !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminOrg']
         );
@@ -72,19 +72,16 @@ class OrgFormComponent extends EntityFormComponent
         }
         $this->orgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
+            isset($this->model) ? _('Organizer has been updated.') : _('Organizer has been created.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 

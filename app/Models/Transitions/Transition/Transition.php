@@ -59,6 +59,11 @@ class Transition
         return _($this->label);
     }
 
+    public function label(): string
+    {
+        return _($this->label);
+    }
+
     public function setLabel(?string $label): void
     {
         $this->label = $label ?? '';

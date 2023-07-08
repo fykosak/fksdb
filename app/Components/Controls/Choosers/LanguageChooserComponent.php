@@ -43,7 +43,7 @@ final class LanguageChooserComponent extends ChooserComponent
             }
 
             return new NavItem(
-                new Title(null, self::$languageNames[$this->lang] ?? _('Language'), 'fa fa-language'),
+                new Title(null, self::$languageNames[$this->lang] ?? _('Language'), 'fas fa-language'),
                 '#',
                 [],
                 $items

@@ -9,12 +9,12 @@ use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int fyziklani_seat_id
- * @property-read RoomModel fyziklani_room
- * @property-read string sector
- * @property-read double layout_x
- * @property-read double layout_y
- * @property-read int fyziklani_room_id
+ * @property-read int $fyziklani_seat_id
+ * @property-read RoomModel $fyziklani_room
+ * @property-read string $sector
+ * @property-read float $layout_x
+ * @property-read float $layout_y
+ * @property-read int $fyziklani_room_id
  */
 class SeatModel extends Model
 {

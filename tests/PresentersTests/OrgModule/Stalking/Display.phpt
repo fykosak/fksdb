@@ -27,7 +27,7 @@ class Display extends StalkingTestCase
         $html = (string)$source;
 
         Assert::contains('Base info', $html); // contains headline
-        Assert::contains('class="fa fa-mars"', $html); // check gender
+        Assert::contains('class="fas fa-mars"', $html); // check gender
         Assert::contains('flag-icon-cz', $html); // phone number flag
         Assert::contains('flag-icon-sk', $html); // phone number flag
         Assert::contains('+420 123 456 789', $html); // check phone number formating

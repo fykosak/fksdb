@@ -10,25 +10,20 @@ use Fykosak\NetteORM\Model;
 use Nette\Security\Resource;
 
 /**
- * @property-read SubmitState state
- * @property-read int fyziklani_team_id
- * @property-read int|null points
- * @property-read int|null skipped
- * @property-read int fyziklani_task_id
- * @property-read int fyziklani_submit_id
- * @property-read int task_id
+ * @property-read SubmitState $state
+ * @property-read int $fyziklani_team_id
+ * @property-read int|null $points
+ * @property-read int|null $skipped
+ * @property-read int $fyziklani_task_id
+ * @property-read int $fyziklani_submit_id
+ * @property-read int $task_id
  * @property-read TeamModel2 fyziklani_team
- * @property-read TaskModel fyziklani_task
- * @property-read \DateTimeInterface modified
+ * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $modified
  */
 class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
-
-    public function isChecked(): bool
-    {
-        return $this->state->value === SubmitState::CHECKED;
-    }
 
     public function __toArray(): array
     {
@@ -36,7 +31,7 @@ class SubmitModel extends Model implements Resource
             'points' => $this->points,
             'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
-            'created' => $this->modified->format('c'),
+            'modified' => $this->modified->format('c'),
         ];
     }
 
@@ -44,20 +39,13 @@ class SubmitModel extends Model implements Resource
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */
-    public function canRevoke(bool $throws = true): bool
+    public function canRevoke(): void
     {
         if (is_null($this->points)) {
-            if ($throws) {
-                throw new AlreadyRevokedSubmitException();
-            }
-            return false;
+            throw new AlreadyRevokedSubmitException();
         } elseif (!$this->fyziklani_team->hasOpenSubmitting()) {
-            if ($throws) {
-                throw new ClosedSubmittingException($this->fyziklani_team);
-            }
-            return false;
+            throw new ClosedSubmittingException($this->fyziklani_team);
         }
-        return true;
     }
 
     /**

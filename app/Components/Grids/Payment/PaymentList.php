@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -30,7 +29,7 @@ class PaymentList extends FilterList
         $this->event = $event;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPayments();
         foreach ($this->filterParams as $key => $param) {
@@ -66,16 +65,16 @@ class PaymentList extends FilterList
     {
         $this->classNameCallback = fn(PaymentModel $payment): string => 'alert alert-' .
             $payment->state->getBehaviorType();
-        $this->setTitle(new TemplateBaseItem($this->container, '@payment.payment_id'));
+        $this->setTitle(new TemplateItem($this->container, '@payment.payment_id'));
         $row = new RowContainer($this->container);
         $this->addRow($row, 'row');
-        $row->addComponent(new TemplateBaseItem($this->container, '@payment.price'), 'price');
-        $row->addComponent(new TemplateBaseItem($this->container, 'VS: @payment.variable_symbol'), 'vs');
+        $row->addComponent(new TemplateItem($this->container, '@payment.price'), 'price');
+        $row->addComponent(new TemplateItem($this->container, 'VS: @payment.variable_symbol'), 'vs');
         $row->addComponent(
-            new TemplateBaseItem($this->container, '@person.full_name (@person_info.email)'),
+            new TemplateItem($this->container, '@person.full_name (@person_info.email)'),
             'full_name'
         );
-        $row->addComponent(new TemplateBaseItem($this->container, '@event.role'), 'role');
+        $row->addComponent(new TemplateItem($this->container, '@event.role'), 'role');
         $items = new RelatedTable(
             $this->container,
             fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(),
@@ -84,11 +83,11 @@ class PaymentList extends FilterList
         );
         $this->addRow($items, 'items');
         $items->addColumn(
-            new TemplateBaseItem($this->container, _('@schedule_group.name_en: @schedule_item.name_en'), _('Item')),
+            new TemplateItem($this->container, _('@schedule_group.name_en: @schedule_item.name_en'), _('Item')),
             'name'
         );
         $items->addColumn(
-            new TemplateBaseItem(
+            new TemplateItem(
                 $this->container,
                 '@person.full_name (@event.role)',
                 _('For'),
@@ -97,7 +96,7 @@ class PaymentList extends FilterList
             'person'
         );
         $items->addColumn(
-            new TemplateBaseItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
+            new TemplateItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
             'price'
         );
         $this->addButton(

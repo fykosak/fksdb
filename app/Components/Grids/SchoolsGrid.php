@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\FilterGrid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -28,7 +28,7 @@ class SchoolsGrid extends FilterGrid
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
         if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
@@ -47,11 +47,11 @@ class SchoolsGrid extends FilterGrid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererBaseItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
+            new RendererItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
             'name'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SchoolModel $school): string => $school->address->city,
                 new Title(null, _('City'))
@@ -59,7 +59,7 @@ class SchoolsGrid extends FilterGrid
             'city'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SchoolModel $row): Html => Html::el('span')
                     ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
@@ -29,6 +30,7 @@ class ExportWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws \DOMException
+     * @throws BadTypeException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {

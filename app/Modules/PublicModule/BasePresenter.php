@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
@@ -23,6 +25,11 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return $this->contestant;
     }
 
+    /**
+     * @throws UnsupportedLanguageException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();
@@ -34,18 +41,16 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return ['Public.Dashboard.default'];
     }
 
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest) && $contest) {
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
+        if (isset($contest)) {
+            return 'contest-' . $contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year'), $this->year);
     }

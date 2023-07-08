@@ -23,7 +23,6 @@ use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -156,25 +155,23 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function createParametersMetadata(?ControlGroup $group = null): Replicator
     {
-        $replicator = new Replicator(function (Container $replContainer) use ($group) {
+        $replicator = new Replicator(function (ContainerWithOptions $replContainer) use ($group): void {
             $this->buildParameterMetadata($replContainer, $group);
 
             $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
-            $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger btn-sm']);
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger']);
             $submit->addRemoveOnClick();
-        }, 0, true);
-        $replicator->containerClass = ModelContainer::class;
+        }, $this->container, 0, true);
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-outline-success']);
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-success']);
 
-        $submit->setValidationScope(null)
-            ->addCreateOnClick();
+        $submit->setValidationScope(null)->addCreateOnClick();
 
         return $replicator;
     }
 
-    private function buildParameterMetadata(Container $container, ControlGroup $group): void
+    private function buildParameterMetadata(ContainerWithOptions $container, ControlGroup $group): void
     {
         $container->setCurrentGroup($group);
 
@@ -220,10 +217,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
             $values = [];
@@ -236,7 +230,7 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS][] = $paramData;
             }
-            $this->getForm()->setDefaults($values);
+            $form->setDefaults($values);
         }
     }
 

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Game\Submits\CtyrbojHandler;
-use FKSDB\Components\Game\Submits\FOFHandler;
-use FKSDB\Components\Game\Submits\Handler;
+use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
+use FKSDB\Components\Game\Submits\Handler\FOFHandler;
+use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -22,18 +23,18 @@ use Nette\Schema\Processor;
 use Nette\Security\Resource;
 
 /**
- * @property-read int event_year
- * @property-read int year
- * @property-read string name
- * @property-read int event_id
- * @property-read string report
- * @property-read EventTypeModel event_type
- * @property-read int event_type_id
- * @property-read \DateTimeInterface begin
- * @property-read \DateTimeInterface end
- * @property-read \DateTimeInterface|null registration_begin
- * @property-read \DateTimeInterface|null registration_end
- * @property-read string parameters
+ * @property-read int $event_year
+ * @property-read int $year
+ * @property-read string $name
+ * @property-read int $event_id
+ * @property-read string $report
+ * @property-read EventTypeModel $event_type
+ * @property-read int $event_type_id
+ * @property-read \DateTimeInterface $begin
+ * @property-read \DateTimeInterface $end
+ * @property-read \DateTimeInterface|null $registration_begin
+ * @property-read \DateTimeInterface|null $registration_end
+ * @property-read string $parameters
  */
 class EventModel extends Model implements Resource, NodeCreator
 {
@@ -60,6 +61,16 @@ class EventModel extends Model implements Resource, NodeCreator
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getName(): string
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return 'Fyziklání' . ' ' . $this->begin->format('Y');
+            default:
+                return $this->name;
+        }
     }
 
     public function isTeamEvent(): bool
@@ -98,7 +109,6 @@ class EventModel extends Model implements Resource, NodeCreator
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
-
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         return $this->getTeams()->where('state', TeamState::PARTICIPATED);
@@ -136,7 +146,7 @@ class EventModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,
-            'name' => $this->name,
+            'name' => $this->getName(),
             'eventTypeId' => $this->event_type_id,
         ];
     }
@@ -166,14 +176,7 @@ class EventModel extends Model implements Resource, NodeCreator
             case 17:
                 return new CtyrbojHandler($this, $container);
         }
-    }
-
-    public function getPaymentFactoryName(): ?string
-    {
-        if ($this->event_type_id === 1) {
-            return sprintf('fyziklani%dpayment', $this->event_year);
-        }
-        return null;
+        throw new GameException(_('Game handler does not exist for this event'));
     }
 
     private function getParameters(): array
@@ -191,7 +194,11 @@ class EventModel extends Model implements Resource, NodeCreator
         try {
             return $this->getParameters()[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->name . '.', 0, $exception);
+            throw new InvalidArgumentException(
+                sprintf('No parameter "%s" for event %s.', $name, $this->name),
+                0,
+                $exception
+            );
         }
     }
 }

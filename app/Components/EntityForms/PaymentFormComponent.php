@@ -22,7 +22,6 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Security\User;
 
@@ -70,9 +69,9 @@ class PaymentFormComponent extends EntityFormComponent
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    protected function appendSubmitButton(Form $form): void
     {
-        return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
+        $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
     }
 
     /**
@@ -130,7 +129,8 @@ class PaymentFormComponent extends EntityFormComponent
             $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $this->machine->executeImplicitTransition($holder);
+                $transition = $this->machine->getImplicitTransition($holder);
+                $this->machine->execute($transition, $holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {
@@ -146,15 +146,12 @@ class PaymentFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults($this->model->toArray());
+            $form->setDefaults($this->model->toArray());
             /** @var PersonPaymentContainer $itemContainer */
-            $itemContainer = $this->getForm()->getComponent('items');
+            $itemContainer = $form->getComponent('items');
             $itemContainer->setPayment($this->model);
         }
     }

@@ -6,12 +6,12 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\OrgModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class OrgListComponent extends DetailComponent
 {
@@ -20,7 +20,7 @@ class OrgListComponent extends DetailComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getOrganisers();
     }
@@ -39,15 +39,15 @@ class OrgListComponent extends DetailComponent
         $this->classNameCallback = fn(OrgModel $org) => 'alert alert-' . $org->contest->getContestSymbol();
         $row0 = new RowContainer($this->container);
         $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateBaseItem($this->container, '@contest.name'), 'contest_name');
+        $row0->addComponent(new TemplateItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(
-            new TemplateBaseItem($this->container, _('@org.since - @org.until')),
+            new TemplateItem($this->container, _('@org.since - @org.until')),
             'duration'
         );
 
         $row1 = new RowContainer($this->container);
-        $row1->addComponent(new TemplateBaseItem($this->container, '@org.domain_alias'), 'domain_alias');
-        $row1->addComponent(new TemplateBaseItem($this->container, '\signature{@org.tex_signature}'), 'tex_signature');
+        $row1->addComponent(new TemplateItem($this->container, '@org.domain_alias'), 'domain_alias');
+        $row1->addComponent(new TemplateItem($this->container, '\signature{@org.tex_signature}'), 'tex_signature');
         $this->addRow($row1, 'row1');
         $this->addButton(
             new PresenterButton(

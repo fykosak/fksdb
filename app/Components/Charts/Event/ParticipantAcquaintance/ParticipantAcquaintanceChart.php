@@ -8,6 +8,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
@@ -44,9 +45,9 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Participant acquaintance');
+        return new Title(null, _('Participant acquaintance'), 'fas fa-handshake');
     }
 
     public function getDescription(): ?string

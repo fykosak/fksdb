@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
+use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
-use FKSDB\Models\Submits\TaskNotFoundException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Models\Submits\SubmitNotQuizException;
+use FKSDB\Models\Submits\TaskNotFoundException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
@@ -38,55 +35,20 @@ class SubmitPresenter extends BasePresenter
     /** @persistent */
     public ?int $id = null;
     private SubmitService $submitService;
-    private SubmitQuestionAnswerService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
     private TaskService $taskService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
         SubmitService $submitService,
-        SubmitQuestionAnswerService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
         TaskService $taskService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
-        $this->submitQuizQuestionService = $submitQuizQuestionService;
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
         $this->taskService = $taskService;
         $this->submitHandlerFactory = $submitHandlerFactory;
-    }
-
-    /* ******************* AUTH ************************/
-
-    public function authorizedAjax(): void
-    {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedQuiz(): void
-    {
-        $this->authorizedDefault();
-    }
-
-    public function authorizedQuizDetail(): void
-    {
-        $submit = $this->submitService->findByPrimary($this->id);
-        $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest())
-        );
-    }
-
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
-    }
-
-    /* ********************** TITLE **********************/
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
     public function titleAjax(): PageTitle
@@ -94,9 +56,14 @@ class SubmitPresenter extends BasePresenter
         return $this->titleDefault();
     }
 
-    public function titleDefault(): PageTitle
+    public function authorizedAjax(): bool
     {
-        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
+        return $this->authorizedDefault();
+    }
+
+    final public function renderAjax(): void
+    {
+        $this->template->availableTasks = $this->getAvailableTasks();
     }
 
     public function titleQuiz(): PageTitle
@@ -104,18 +71,47 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
+    public function authorizedQuiz(): bool
+    {
+        return $this->authorizedDefault();
+    }
+
     public function titleQuizDetail(): PageTitle
     {
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
-    /* ********************** RENDER **********************/
+    public function authorizedQuizDetail(): bool
+    {
+        $submit = $this->submitService->findByPrimary($this->id);
+        return $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest());
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
+    }
 
     final public function renderDefault(): void
     {
         $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = !$hasTasks;
         $this->template->hasForward = !$hasTasks;
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
+    }
+
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
     }
 
     private function getAvailableTasks(): TypedGroupedSelection
@@ -125,13 +121,6 @@ class SubmitPresenter extends BasePresenter
             ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
-
-    final public function renderAjax(): void
-    {
-        $this->template->availableTasks = $this->getAvailableTasks();
-    }
-
-    /* ********************** COMPONENTS **********************/
 
     /**
      * @throws TaskNotFoundException
@@ -167,9 +156,6 @@ class SubmitPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentUploadForm(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -192,46 +178,27 @@ class SubmitPresenter extends BasePresenter
             $container = new ContainerWithOptions($this->getContext());
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
-            $questions = $task->getQuestions();
-            if (!$questions->count('*')) {
-                $upload = $container->addUpload('file', $task->getFQName());
-                $conditionedUpload = $upload
-                    ->addCondition(Form::FILLED)
-                    ->addRule(
-                        Form::MIME_TYPE,
-                        _('Only PDF files are accepted.'),
-                        'application/pdf'
-                    );
-                if (!$task->isForCategory($this->getContestant()->contest_category)) {
-                    $upload->setOption('description', _('Task is not for your category.'));
-                    $upload->setDisabled();
-                }
 
-                if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                    $overwrite = $container->addCheckbox('overwrite', _('Overwrite submitted solutions.'));
-                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(
-                        Form::BLANK,
-                        _('Either tick overwrite the solution, or don\'t submit it.')
-                    );
-                }
-            } else {
-                //Implementation of quiz questions
-                $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
-                /** @var SubmitQuestionModel $question */
-                foreach ($questions as $question) {
-                    $select = $container->addRadioList(
-                        'question' . $question->submit_question_id,
-                        $task->getFQName() . ' - ' . $question->getFQName(),
-                        $options
-                    );
-                    $existingEntry = $this->getContestant()->getAnswer($question);
-                    if ($existingEntry) {
-                        $existingAnswer = $existingEntry->answer;
-                        $select->setValue($existingAnswer);
-                    } else {
-                        $select->setValue(null);
-                    }
-                }
+            $upload = $container->addUpload('file', $task->getFullLabel($this->getLang()));
+            $conditionedUpload = $upload
+                ->addCondition(Form::FILLED)
+                ->addRule(
+                    Form::MIME_TYPE,
+                    _('Only PDF files are accepted.'),
+                    'application/pdf'
+                );
+
+            if (!$task->isForCategory($this->getContestant()->contest_category)) {
+                $upload->setOption('description', _('Task is not for your category.'));
+                $upload->setDisabled();
+            }
+
+            if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
+                $overwrite = $container->addCheckbox('overwrite', _('Overwrite submitted solutions.'));
+                $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(
+                    Form::BLANK,
+                    _('Either tick overwrite the solution, or don\'t submit it.')
+                );
             }
 
             $prevDeadline = $task->submit_deadline;
@@ -272,7 +239,6 @@ class SubmitPresenter extends BasePresenter
             foreach ($taskIds as $taskId) {
                 /** @var TaskModel $task */
                 $task = $this->taskService->findByPrimary($taskId);
-                $questions = $task->getQuestions();
 
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(
@@ -283,43 +249,18 @@ class SubmitPresenter extends BasePresenter
                 }
                 /** @var FileUpload[]|string[] $taskValues */
                 $taskValues = $values['task' . $task->task_id];
-
-                if (count($questions)) {
-                    // Verification if user has event submitted any answer
-                    $anySubmit = false;
-                    /** @var SubmitQuestionModel $question */
-                    foreach ($questions as $question) {
-                        $name = 'question' . $question->submit_question_id;
-                        $answer = $taskValues[$name];
-                        if ($answer != null) {
-                            $anySubmit = true;
-                            $this->submitQuizQuestionService->saveSubmittedQuestion(
-                                $question,
-                                $this->getContestant(),
-                                $answer
-                            );
-                        }
-                    }
-
-                    // If there are no submitted quiz answers, continue
-                    if (!$anySubmit) {
-                        continue;
-                    }
-
-                    $this->submitHandlerFactory->handleQuizSubmit($task, $this->getContestant());
-                } else {
-                    if (!isset($taskValues['file'])) { // upload field was disabled
-                        continue;
-                    }
-                    if (!$taskValues['file']->isOk()) {
-                        Debugger::log(
-                            sprintf('Uploaded file error %s.', $taskValues['file']->getError()),
-                            Debugger::WARNING
-                        );
-                        continue;
-                    }
-                    $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
+                if (!isset($taskValues['file'])) { // upload field was disabled
+                    continue;
                 }
+                if (!$taskValues['file']->isOk()) {
+                    Debugger::log(
+                        sprintf('Uploaded file error %s.', $taskValues['file']->getError()),
+                        Debugger::WARNING
+                    );
+                    continue;
+                }
+                $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
+
                 $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), Message::LVL_SUCCESS);
             }
 
@@ -336,11 +277,11 @@ class SubmitPresenter extends BasePresenter
 
     protected function createComponentSubmitsGrid(): SubmitsGrid
     {
-        return new SubmitsGrid($this->getContext(), $this->getContestant());
+        return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getLang());
     }
 
     protected function createComponentSubmitContainer(): SubmitContainer
     {
-        return new SubmitContainer($this->getContext(), $this->getContestant());
+        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getLang());
     }
 }

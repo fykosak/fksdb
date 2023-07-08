@@ -8,10 +8,9 @@ use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 class ProductPresenter extends BasePresenter
@@ -32,7 +31,7 @@ class ProductPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create product'), 'fa fa-plus');
+        return new PageTitle(null, _('Create product'), 'fas fa-plus');
     }
 
     public function injectService(ProductService $productService): void
@@ -40,17 +39,16 @@ class ProductPresenter extends BasePresenter
         $this->productService = $productService;
     }
 
-    protected function createComponentCreateForm(): Control
+    protected function createComponentCreateForm(): ProductFormComponent
     {
         return new ProductFormComponent($this->getContext(), null);
     }
 
     /**
-     * @return Control
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ProductFormComponent
     {
         return new ProductFormComponent($this->getContext(), $this->getEntity());
     }

@@ -6,12 +6,12 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Referenced\TemplateBaseItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class ContestantListComponent extends DetailComponent
 {
@@ -20,7 +20,7 @@ class ContestantListComponent extends DetailComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getContestants();
     }
@@ -33,11 +33,11 @@ class ContestantListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
             $contestant->contest->getContestSymbol();
-        $this->setTitle(new TemplateBaseItem($this->container, '@contest.name'));
+        $this->setTitle(new TemplateItem($this->container, '@contest.name'));
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
         $row1->addComponent(
-            new TemplateBaseItem($this->container, _('Contest year @contestant.year')),
+            new TemplateItem($this->container, _('Contest year @contestant.year')),
             'contestant__year'
         );
         if ($this->isOrg) {

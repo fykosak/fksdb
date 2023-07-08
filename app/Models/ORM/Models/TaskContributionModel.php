@@ -8,12 +8,12 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int contribution_id
- * @property-read int task_id
- * @property-read TaskModel task
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read TaskContributionType type
+ * @property-read int $contribution_id
+ * @property-read int $task_id
+ * @property-read TaskModel $task
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read TaskContributionType $type
  */
 class TaskContributionModel extends Model
 {

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Schedule\PersonsGrid;
+use FKSDB\Components\Schedule\Attendance\ItemAttendanceFormComponent;
+use FKSDB\Components\Schedule\PersonsGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -71,9 +72,25 @@ class ItemPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleAttendance(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            'fas fa-user-check'
+        );
+    }
+
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create schedule item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create schedule item'), 'fas fa-plus');
     }
 
     /**
@@ -123,6 +140,18 @@ class ItemPresenter extends BasePresenter
         return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentAttendance(): ItemAttendanceFormComponent
+    {
+        return new ItemAttendanceFormComponent($this->getContext(), $this->getEntity());
+    }
+
     protected function getORMService(): ScheduleItemService
     {
         return $this->scheduleItemService;
@@ -137,7 +166,7 @@ class ItemPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }

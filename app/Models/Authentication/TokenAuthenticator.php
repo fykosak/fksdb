@@ -65,10 +65,6 @@ class TokenAuthenticator extends AbstractAuthenticator
         }
     }
 
-    /**
-     * @param AuthTokenType|null $tokenType require specific token type
-     * @return bool true iff user has been authenticated by the authentication token
-     */
     public function isAuthenticatedByToken(?AuthTokenType $tokenType = null): bool
     {
         $section = $this->session->getSection(self::SESSION_NS);
@@ -81,7 +77,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function getTokenData(): ?string
     {
         if (!$this->isAuthenticatedByToken()) {
-            throw new InvalidStateException('Not authenticated by token.');
+            throw new InvalidStateException(_('Not authenticated by token.'));
         }
         $section = $this->session->getSection(self::SESSION_NS);
         return $section->data;
@@ -90,7 +86,7 @@ class TokenAuthenticator extends AbstractAuthenticator
     public function disposeTokenData(): void
     {
         if (!$this->isAuthenticatedByToken()) {
-            throw new InvalidStateException('Not authenticated by token.');
+            throw new InvalidStateException(_('Not authenticated by token.'));
         }
         $section = $this->session->getSection(self::SESSION_NS);
         unset($section->data);

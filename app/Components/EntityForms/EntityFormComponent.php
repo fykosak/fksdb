@@ -11,13 +11,11 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
 abstract class EntityFormComponent extends FormComponent
 {
-
     protected ?Model $model;
 
     public function __construct(Container $container, ?Model $model)
@@ -28,19 +26,14 @@ abstract class EntityFormComponent extends FormComponent
 
     public function render(): void
     {
-        $this->setDefaults();
+        $this->setDefaults($this->getForm());
         parent::render();
     }
 
-    final protected function isCreating(): bool
-    {
-        return !isset($this->model);
-    }
-
-    final protected function handleSuccess(SubmitButton $button): void
+    final protected function handleSuccess(Form $form): void
     {
         try {
-            $this->handleFormSuccess($button->getForm());
+            $this->handleFormSuccess($form);
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $previous = $exception->getPrevious();
@@ -54,13 +47,13 @@ abstract class EntityFormComponent extends FormComponent
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('Error in the form') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(sprintf(_('Error in the form: %s'), $exception->getMessage()), Message::LVL_ERROR);
         }
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    protected function appendSubmitButton(Form $form): void
     {
-        return $form->addSubmit('send', $this->isCreating() ? _('Create') : _('Save'));
+        $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void
@@ -72,5 +65,5 @@ abstract class EntityFormComponent extends FormComponent
      */
     abstract protected function handleFormSuccess(Form $form): void;
 
-    abstract protected function setDefaults(): void;
+    abstract protected function setDefaults(Form $form): void;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\Model;
@@ -11,25 +12,54 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
 
 /**
- * @property-read int task_id
- * @property-read string label
- * @property-read string name_cs
- * @property-read string name_en
- * @property-read int contest_id
- * @property-read ContestModel contest
- * @property-read int year
- * @property-read int series
- * @property-read int tasknr
- * @property-read int points
- * @property-read \DateTimeInterface submit_start
- * @property-read \DateTimeInterface submit_deadline
+ * @property-read int $task_id
+ * @property-read string $label
+ * @property-read string $name_cs
+ * @property-read string $name_en
+ * @property-read int $contest_id
+ * @property-read ContestModel $contest
+ * @property-read int $year
+ * @property-read int $series
+ * @property-read int $tasknr
+ * @property-read int $points
+ * @property-read \DateTimeInterface $submit_start
+ * @property-read \DateTimeInterface $submit_deadline
  */
 class TaskModel extends Model
 {
-
-    public function getFQName(): string
+    public function getName(): LocalizedString
     {
-        return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);
+        return new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
+    }
+
+    public function getFullLabel(
+        string $lang,
+        bool $includeContest = false,
+        bool $includeYear = false,
+        bool $includeSeries = true
+    ): string {
+        $label = '';
+        if ($includeContest) {
+            $label .= $this->contest->name . ' ';
+        }
+        switch ($lang) {
+            case 'cs':
+                if ($includeYear) {
+                    $label .= $this->year . '. ročník ';
+                }
+                if ($includeSeries) {
+                    $label .= $this->series . '. série ';
+                }
+                return $label . $this->label . ' - ' . $this->name_cs;
+            default:
+                if ($includeYear) {
+                    $label .= $this->year . Utils::ordinal($this->year) . ' year ';
+                }
+                if ($includeSeries) {
+                    $label .= $this->series . Utils::ordinal($this->series) . ' series ';
+                }
+                return $label . $this->label . ' - ' . $this->name_en;
+        }
     }
 
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
@@ -56,7 +86,12 @@ class TaskModel extends Model
 
     public function getContestYear(): ContestYearModel
     {
-        return $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where('year', $this->year)->fetch();
+        /** @var ContestYearModel $contestYear */
+        $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
+            'year',
+            $this->year
+        )->fetch();
+        return $contestYear;
     }
 
     public function webalizeLabel(): string

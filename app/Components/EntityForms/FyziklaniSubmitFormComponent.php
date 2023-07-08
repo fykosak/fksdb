@@ -6,10 +6,8 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
@@ -27,13 +25,10 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 'team_id' => $this->model->fyziklani_team_id,
                 'points' => $this->model->points,
             ]);
@@ -44,10 +39,9 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         $values = $form->getValues();
         try {
-            $logger = new MemoryLogger();
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
-            $handler->edit($logger, $this->model, $values['points']);
-            FlashMessageDump::dump($logger, $this->getPresenter());
+            $handler->edit($this->model, +$values['points']);
+            FlashMessageDump::dump($handler->logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);

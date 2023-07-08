@@ -55,9 +55,6 @@ class TransitionsExtension extends CompilerExtension
         $factory = $extension->getContainerBuilder()
             ->addDefinition($extension->prefix($name . '.machine'))
             ->setFactory($config['machine']);
-        if (isset($machineConfig['decorator'])) {
-            $factory->addSetup('decorateTransitions', [$machineConfig['decorator']]);
-        }
         foreach ($config['transitions'] as $mask => $transitionConfig) {
             [$sources, $target] = self::parseMask($mask, $config['stateEnum']);
             foreach ($sources as $source) {
@@ -89,6 +86,9 @@ class TransitionsExtension extends CompilerExtension
                 }
                 $factory->addSetup('addTransition', [$transition]);
             }
+        }
+        if (isset($config['decorator'])) {
+            $factory->addSetup('decorateTransitions', [$config['decorator']]);
         }
         return $factory;
     }

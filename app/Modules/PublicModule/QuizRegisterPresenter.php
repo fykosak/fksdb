@@ -19,9 +19,8 @@ class QuizRegisterPresenter extends BasePresenter
 
     private TaskService $taskService;
 
-    final public function injectTernary(
-        TaskService $taskService
-    ): void {
+    final public function injectTernary(TaskService $taskService): void
+    {
         $this->taskService = $taskService;
     }
 
@@ -30,16 +29,19 @@ class QuizRegisterPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
-    protected function beforeRender(): void
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
+    protected function getStyleId(): string
     {
         /** @var TaskModel $task */
         $task = $this->taskService->findByPrimary($this->id);
-        if ($task) {
-            $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleIds[] = $task->contest->getContestSymbol();
+        if (isset($task)) {
+            return 'contest-' . $task->contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
     /**

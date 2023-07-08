@@ -98,13 +98,10 @@ class PersonFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('this');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
             ]);

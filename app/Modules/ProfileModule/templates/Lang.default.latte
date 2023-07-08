@@ -1,10 +1,12 @@
 {varType FKSDB\Modules\Core\Language $lang}
-{block content}
-    <p class="alert alert-info">
-        {switch $lang->value}
-        {case 'cs'}Nastavení preferovaného jazyka ovlivňuje vaši jazykovou verzi FKSDB a také jazyk použitý v e-mailech, které vám budou odeslány.
-        {default}The preferred language settings affects your FKSDB language version and also the language of the emails that are sent to you.
-        {/switch}
-    </p>
-    {control preferredLangForm}
+{block outerContent}
+    <div class="container">
+        <p class="alert alert-info">
+            {switch $lang->value}
+                {case 'cs'}Nastavení preferovaného jazyka ovlivňuje vaši jazykovou verzi FKSDB a také jazyk použitý v e-mailech, které vám budou odeslány.
+                {default}The preferred language settings affects your FKSDB language version and also the language of the emails that are sent to you.
+            {/switch}
+        </p>
+        {control preferredLangForm}
+    </div>
 {/block}

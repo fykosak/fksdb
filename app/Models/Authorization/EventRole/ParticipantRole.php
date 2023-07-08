@@ -22,8 +22,6 @@ class ParticipantRole extends EventRole
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-10'])
-            ->addText(
-                _('Participant') . ' - ' . _($this->eventParticipant->status->value)
-            );
+            ->addText(sprintf(_('Participant (%s)'), $this->eventParticipant->status->label()));
     }
 }

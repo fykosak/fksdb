@@ -5,20 +5,20 @@ import {
 } from './dragNDrop';
 import {
     State as UploadDataStore,
-    uploadData,
-} from './uploadData';
+    upload,
+} from './upload';
 
 import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import {
-    errorLogger,
+    errors,
     State as ErrorLoggerState,
-} from './errorLogger';
+} from './errors';
 
 export const app = combineReducers<Store>({
     dragNDrop,
-    errorLogger,
+    errorLogger: errors,
     fetch: fetchReducer,
-    uploadData,
+    uploadData: upload,
 });
 
 export interface Store {

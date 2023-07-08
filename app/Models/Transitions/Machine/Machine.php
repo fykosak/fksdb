@@ -10,8 +10,8 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
+use Tracy\Debugger;
 
 abstract class Machine
 {
@@ -88,7 +88,7 @@ abstract class Machine
         );
     }
 
-    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
+    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): Transition
     {
         $transitions = \array_filter(
             $this->transitions,
@@ -98,27 +98,9 @@ abstract class Machine
         return $this->selectTransition($transitions);
     }
 
-    /* ********** execution ******** */
-
-    /**
-     * @throws UnavailableTransitionsException
-     * @throws \Throwable
-     */
-    final public function executeTransitionById(string $id, ModelHolder $holder): void
+    final public function getImplicitTransition(ModelHolder $holder): Transition
     {
-        $transition = $this->getTransitionById($id);
-        $this->execute($transition, $holder);
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionsException
-     * @throws \Throwable
-     */
-    final public function executeImplicitTransition(ModelHolder $holder): void
-    {
-        $transition = $this->selectTransition($this->getAvailableTransitions($holder));
-        $this->execute($transition, $holder);
+        return $this->selectTransition($this->getAvailableTransitions($holder));
     }
 
     protected function isAvailable(Transition $transition, ModelHolder $holder): bool

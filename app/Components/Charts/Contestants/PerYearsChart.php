@@ -8,6 +8,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class PerYearsChart extends FrontEndComponent implements Chart
@@ -54,9 +55,9 @@ class PerYearsChart extends FrontEndComponent implements Chart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Contestants per years');
+        return new Title(null, _('Contestants per years'), 'fas fa-chart-line');
     }
 
     public function getDescription(): ?string

@@ -9,104 +9,116 @@
 {define personSchedule}
     {varType FKSDB\Models\ORM\Models\PersonModel $person}
     {if $hasSchedule}
-        <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
+        <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
         {control personScheduleGrid $person,$event}
     {/if}
 {/define}
 
-{block content}
-    {control teamRestsControl $model}
-    <hr/>
-    <h2>{_'Info'}</h2>
-    {var $fiels = []}
-    {switch $event->event_type_id}
-        {case 1}
-        {php $fiels = [
-        'fyziklani_team.fyziklani_team_id',
-        'fyziklani_team.name',
-        'fyziklani_team.state',
-        'fyziklani_team.phone',
-        'fyziklani_team.note',
-        'fyziklani_team.password',
-        'fyziklani_team.category',
-        'fyziklani_team.created',
-        'fyziklani_team.game_lang',
-        'fyziklani_team.force_a',
-        ]}
-        {case 9}
-        {php $fiels = [
-        'fyziklani_team.fyziklani_team_id',
-        'fyziklani_team.name',
-        'fyziklani_team.state',
-        'fyziklani_team.category',
-        'fyziklani_team.created',
-        ]}
-        {case 17}
-        {php $fiels = [
-        'fyziklani_team.fyziklani_team_id',
-        'fyziklani_team.name',
-        'fyziklani_team.state',
-        ]}
-    {/switch}
-    {foreach $fiels as $field}
-        <div class="row">
-            <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
-            <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control teamRestsControl $model}
         </div>
-    {/foreach}
-    <hr/>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {var $fields = []}
+    {switch $event->event_type_id}
+                {case 1}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.state',
+                'fyziklani_team.phone',
+                'fyziklani_team.note',
+                'fyziklani_team.password',
+                'fyziklani_team.category',
+                'fyziklani_team.created',
+                'fyziklani_team.game_lang',
+                'fyziklani_team.force_a',
+                ]}
+                {case 9}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.state',
+                'fyziklani_team.category',
+                'fyziklani_team.created',
+                ]}
+                {case 17}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.state',
+                ]}
+            {/switch}
+            {control columnTable $fields,$model,1024}
+        </div>
+    </div>
+
 
     {if $rankVisible}
-        <h2>{_'Rank & points'}</h2>
-        {foreach ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'] as $field}
-            <div class="row">
-                <b class="col-2">{control valuePrinter:templateString '@' . $field . ':title',$model,1024}</b>
-                <span class="col-10">{control valuePrinter:templateString '@' . $field,$model,1024}</span>
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rank & points'}</h2>
+                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
             </div>
-        {/foreach}
-        <hr/>
+        </div>
     {/if}
     {if $isOrg}
-        {control schoolCheck $model}
-        <hr/>
+        <div class="panel color-auto">
+            <div class="container">
+                {control schoolCheck $model}
+            </div>
+        </div>
     {/if}
     {if $event->event_type_id === 1}
         {var $teacherCounter = 0;}
-        <h2>{_'Teachers'}</h2>
         {foreach $model->getTeachers() as $teacher}
-            {php $teacherCounter++}
-            <h3>{_'Teacher'} #{$teacherCounter}</h3>
-            {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
-            {control valuePrinter:row 'person.person_link', $teacher}
-            {include personSchedule, person => $teacher->person,event=> $model->event}
+            <div class="panel color-auto">
+                <div class="container">
+                    {php $teacherCounter++}
+                    <h2>{_'Teacher'} #{$teacherCounter}</h2>
+                    {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+                    {control columnTable ['person.person_link'], $teacher,1024}
+                    {include personSchedule, person => $teacher->person,event=> $model->event}
+                </div>
+            </div>
         {/foreach}
-        <hr/>
     {/if}
-
-    <h2>{_'Participants'}</h2>
-
     {var $counter = 0;}
     {foreach $model->getMembers() as $member}
-        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
-        {php $counter++}
-        {var $history = $member->getPersonHistory()}
-        <h3>{_'Parcipant'} #{$counter}</h3>
-        {control valuePrinter:row 'person.person_link', $member}
-        {control valuePrinter:row 'person_history.study_year', $history}
-        {control valuePrinter:row 'school.school', $history}
-        {include personSchedule, person => $member->person,event=>$model->event}
-        <hr/>
+        <div class="panel color-auto">
+            <div class="container">
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+                {php $counter++}
+                <h2>{_'Parcipant'} #{$counter}</h2>
+                {control columnTable ['person.person_link','person_history.study_year','school.school'],$member,1024}
+                {include personSchedule, person => $member->person,event=>$model->event}
+            </div>
+        </div>
     {/foreach}
 
-    <h2>{_'Actions'}</h2>
-    <a href="{plink edit id => $model->getPrimary()}"
-       class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
-    <hr/>
-    <h2>{_'Transitions'}</h2>
-    {control applicationTransitions}
-    <hr/>
-        {if $event->event_type_id === 1 && $isOrg}
-            <h2>{_'Seating'}</h2>
-            {control seating:preview}
-        {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Actions'}</h2>
+            <a href="{plink edit id => $model->getPrimary()}"
+               class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Transitions'}</h2>
+            {control applicationTransitions}
+        </div>
+    </div>
+    {if $event->event_type_id === 1 && $isOrg}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Seating'}</h2>
+                {control seating:preview}
+            </div>
+        </div>
+    {/if}
 {/block}

@@ -1,10 +1,18 @@
-{block content}
-    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
-    <div class="mb-3">
-        {include '../Item/group.detail.latte' group=>$model}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
+            <div class="mb-3">
+                {include '../Item/group.detail.latte' group=>$model}
+            </div>
+            <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Group:list}">{_'List of groups'}</a>
+            <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
+        </div>
     </div>
-    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Group:list}">{_'List of groups'}</a>
-    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
-    <hr/>
-    {control itemsGrid}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Items'}</h2>
+            {control itemsGrid}
+        </div>
+    </div>
 {/block}

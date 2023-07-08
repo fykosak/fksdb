@@ -17,14 +17,14 @@ class SubmitContainer extends BaseComponent
 
     private ContestantModel $contestant;
 
-    public function __construct(Container $container, ContestantModel $contestant)
+    public function __construct(Container $container, ContestantModel $contestant, string $lang)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
         /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
             $this->addComponent(
-                new AjaxSubmitComponent($this->getContext(), $task, $contestant),
+                new AjaxSubmitComponent($this->getContext(), $task, $contestant, $lang),
                 'task_' . $task->task_id
             );
         }

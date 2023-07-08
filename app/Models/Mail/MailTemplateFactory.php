@@ -122,7 +122,7 @@ class MailTemplateFactory
         if (file_exists($filename)) {
             return $filename;
         }
-        throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
+        throw new InvalidArgumentException(sprintf(_('Cannot find template "%s.%s".'), $filename, $lang));
     }
 
     /**

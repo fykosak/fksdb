@@ -117,7 +117,8 @@ abstract class TeamFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
-                $this->machine->executeImplicitTransition($holder);
+                $transition = $this->machine->getImplicitTransition($holder);
+                $this->machine->execute($transition, $holder);
             }
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
@@ -143,18 +144,15 @@ abstract class TeamFormComponent extends EntityFormComponent
         $this->saveMembers($team, $form);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults(['team' => $this->model->toArray()]);
+            $form->setDefaults(['team' => $this->model->toArray()]);
             /** @var TeamMemberModel $member */
             $index = 0;
             foreach ($this->model->getMembers() as $member) {
                 /** @var ReferencedId $referencedId */
-                $referencedId = $this->getForm()->getComponent('member_' . $index);
+                $referencedId = $form->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
                 $index++;
             }

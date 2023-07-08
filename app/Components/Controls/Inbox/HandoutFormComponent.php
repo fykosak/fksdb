@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\Inbox;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -44,9 +43,6 @@ class HandoutFormComponent extends BaseComponent
         $this->taskContributionService = $taskContributionService;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $formControl = new FormControl($this->getContext());
@@ -55,7 +51,11 @@ class HandoutFormComponent extends BaseComponent
         $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
+            $control = $this->personFactory->createPersonSelect(
+                false,
+                $task->label . ' ' . $task->name_cs,
+                $orgProvider
+            );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
@@ -105,9 +105,6 @@ class HandoutFormComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function setDefaults(): void
     {
         $contributions = [];

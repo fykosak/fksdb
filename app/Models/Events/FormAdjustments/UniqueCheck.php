@@ -24,38 +24,33 @@ class UniqueCheck extends AbstractAdjustment
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
     protected function innerAdjust(Form $form, ModelHolder $holder): void
     {
-        $controls = $this->getControl($this->field);
-        if (!$controls) {
+        $control = $this->getControl($this->field);
+        if (!$control) {
             return;
         }
+        $control->addRule(function (Control $control) use ($holder): bool {
+            $query = $this->eventParticipantService->getTable();
+            $column = BaseHolder::getBareColumn($this->field);
+            if ($control instanceof ReferencedId) {
+                /* We don't want to fulfill potential promise
+                 * as it would be out of transaction here.
+                 */
+                $value = $control->getValue(false);
+            } else {
+                $value = $control->getValue();
+            }
 
-        foreach ($controls as $control) {
-            $control->addRule(function (Control $control) use ($holder): bool {
-                $table = $this->eventParticipantService->getTable();
-                $column = BaseHolder::getBareColumn($this->field);
-                if ($control instanceof ReferencedId) {
-                    /* We don't want to fulfill potential promise
-                     * as it would be out of transaction here.
-                     */
-                    $value = $control->getValue(false);
-                } else {
-                    $value = $control->getValue();
-                }
-                $model = $holder->getModel();
-                $pk = $table->getName() . '.' . $table->getPrimary();
-
-                $table->where($column, $value);
-                $table->where(
-                    'event_participant.event_id',
-                    $holder->event->getPrimary()
-                );
-                if ($model) {
-                    $table->where("NOT $pk = ?", $model->getPrimary());
-                }
-                return count($table) == 0;
-            }, $this->message);
-        }
+            $query->where($column, $value);
+            $query->where('event_participant.event_id', $holder->event->event_id);
+            if ($holder->getModel()) {
+                $query->where("NOT event_participant_id = ?", $holder->getModel()->getPrimary());
+            }
+            return $query->count('*') === 0;
+        }, $this->message);
     }
 }

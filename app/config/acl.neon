@@ -150,6 +150,7 @@ acl:
     - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
     - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))# +org-edit org-create
 ## EVENT MODULE
+    - allow(event.org, event.participant, [list, detail])
     - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))

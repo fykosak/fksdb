@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\NetteORM\Model;
 
 /**
- * @property-read PersonModel person
- * @property-read ScheduleItemModel schedule_item
- * @property-read int person_id
- * @property-read int schedule_item_id
- * @property-read int person_schedule_id
+ * @property-read PersonModel $person
+ * @property-read ScheduleItemModel $schedule_item
+ * @property-read int $person_id
+ * @property-read int $schedule_item_id
+ * @property-read int $person_schedule_id
+ * @property-read PersonScheduleState|null $state
  */
 class PersonScheduleModel extends Model
 {
@@ -30,5 +31,20 @@ class PersonScheduleModel extends Model
         return $this->person->getFullName() . ': '
             . $this->schedule_item->schedule_group->getName()[$lang] . ' - '
             . $this->schedule_item->getName()[$lang];
+    }
+
+    /**
+     * @return PersonScheduleState|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key) // phpcs:ignore
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = PersonScheduleState::tryFrom($value);
+                break;
+        }
+        return $value;
     }
 }

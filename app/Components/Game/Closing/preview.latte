@@ -1,0 +1,19 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TaskModel|null $task}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $canClose}
+{block content}
+    <h2>{_'Submits'}</h2>
+    {control teamSubmitsGrid}
+
+    {if $event->event_type_id === 1}
+        <h2>{_'Top problem on distributors table'}</h2>
+        <span>{$task?$task->label:'XX'}</span>
+    {/if}
+    {if $canClose}
+        <h2>{_'Close'}</h2>
+        <a class="btn btn-outline-success" href="{link close!}">{_'Close submitting!'}</a>
+    {else}
+        <h2 class="text-danger">{_'Close without check'}</h2>
+        <a class="btn btn-outline-danger" href="{link close!}">{_'Confirm and close submitting!'}</a>
+    {/if}
+{/block}

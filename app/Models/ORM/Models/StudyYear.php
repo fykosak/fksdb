@@ -86,6 +86,9 @@ class StudyYear extends FakeStringEnum implements EnumColumn
         }
     }
 
+    /**
+     * @return static[]
+     */
     public static function getPrimarySchoolCases(): array
     {
         return [
