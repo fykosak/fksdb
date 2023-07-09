@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking\Components;
+namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Fykosak\Utils\Logging\MemoryLogger;
 
-class ValidationComponent extends BaseStalkingComponent
+class ValidationComponent extends BaseComponent
 {
     private DataTestingFactory $validationFactory;
 
@@ -27,7 +26,7 @@ class ValidationComponent extends BaseStalkingComponent
             }
 
             $this->template->logs = $logger->getMessages();
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'validation.latte');
         }
     }
 

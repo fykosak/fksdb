@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking\Components;
+namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
 
-class RoleComponent extends BaseStalkingComponent
+class RoleComponent extends BaseComponent
 {
 
     final public function render(): void
@@ -15,7 +14,7 @@ class RoleComponent extends BaseStalkingComponent
         if ($this->beforeRender()) {
             $login = $this->person->getLogin();
             $this->template->roles = $login ? $login->createGrantModels() : [];
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'role.latte');
         }
     }
 

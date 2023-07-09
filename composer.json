@@ -89,7 +89,7 @@
       "vendor/bin/phpstan analyse app tests libs"
     ],
     "testPHPStanDev": [
-      "vendor/bin/phpstan analyse -l7 app/Models/ORM/Models"
+      "vendor/bin/phpstan analyse -l9 app/"
     ]
   }
 }

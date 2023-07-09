@@ -1,12 +1,13 @@
 {varType bool $isSelf}
+{block titleBody}
+    {include parent}
+    {if $isSelf}
+        <p class="alert alert-info">
+            <a href="https://9gag.com/gag/agVYA4g/this-is-you-liking-your-own-fb-status">
+                {_'This is how you look, when you stalk yourself'}</a>
+        </p>
+    {/if}
+{/block}
 {block outerContent}
-    <div class="container">
-        {if $isSelf}
-            <p class="alert alert-info">
-                <a href="https://9gag.com/gag/agVYA4g/this-is-you-liking-your-own-fb-status">
-                    {_'This is how you look, when you stalk yourself'}</a>
-            </p>
-        {/if}
     {control stalkingContainer}
-    </div>
 {/block}
