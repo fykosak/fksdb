@@ -15,14 +15,8 @@
         <div class="mb-3 text-end">
             {var $contestantCount = count($table)}
             {var $submitsCount = count($seriesTable->getSubmits())}
-<<<<<<< HEAD
-            {_'Total'} {$contestantCount} {_'active'} {($contestantCount == 1) ? _('řešitel') : (($contestantCount >= 2 && $contestantCount <= 4) ? _('řešitelé') : _('řešitelů'))},
-            {$submitsCount} {($submitsCount == 1) ? _('solution') : _('solutions')}
-            {* TODO ngettext*}
-=======
             {sprintf(ngettext('Total of %d active contestant', 'Total of %d active contestants', abs($contestantCount)), $contestantCount)},
             {sprintf(ngettext("%d solution", '%d solutions', abs($submitsCount)), $submitsCount)}
->>>>>>> origin/dev-translations
         </div>
         <thead>
         {include table-head}
