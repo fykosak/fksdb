@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class PSCSubdivisionService extends Service
+final class PSCSubdivisionService extends Service
 {
 }

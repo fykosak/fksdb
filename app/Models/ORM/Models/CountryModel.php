@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * @property-read int|null $phone_nsn
  * @property-read string|null $phone_prefix
  */
-class CountryModel extends Model
+final class CountryModel extends Model
 {
     public function matchPhone(string $number): bool
     {

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class PaymentState extends FakeStringEnum implements EnumColumn
+final class PaymentState extends FakeStringEnum implements EnumColumn
 {
     public const WAITING = 'waiting'; // waiting for confirm payment
     public const RECEIVED = 'received'; // payment received

@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use Fykosak\NetteORM\Service;
 
-class UnsubscribedEmailService extends Service
+final class UnsubscribedEmailService extends Service
 {
     /**
      * @throws UnsubscribedEmailException

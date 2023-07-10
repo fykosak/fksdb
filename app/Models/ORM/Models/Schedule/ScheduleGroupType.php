@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class ScheduleGroupType extends FakeStringEnum implements EnumColumn
+final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 {
     public const ACCOMMODATION = 'accommodation';
     public const ACCOMMODATION_GENDER = 'accommodation_gender';

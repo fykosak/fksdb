@@ -21,7 +21,7 @@ use Nette\Security\Resource;
  * @property-read TaskModel $fyziklani_task
  * @property-read \DateTimeInterface $modified
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
 

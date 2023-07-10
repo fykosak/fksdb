@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TeamState extends FakeStringEnum implements EnumColumn
+final class TeamState extends FakeStringEnum implements EnumColumn
 {
     public const APPLIED = 'applied';
     public const PENDING = 'pending';

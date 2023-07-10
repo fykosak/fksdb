@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Service;
 /**
  * @method PersonModel|null findByPrimary($key)
  */
-class PersonService extends Service
+final class PersonService extends Service
 {
 
     public function findByEmail(?string $email): ?PersonModel

@@ -34,7 +34,7 @@ use Nette\Security\Resource;
  * @property-read int $force_a
  * @property-read GameLang $game_lang
  */
-class TeamModel2 extends Model implements Resource
+final class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 

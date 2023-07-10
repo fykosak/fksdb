@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services\Warehouse;
 
 use Fykosak\NetteORM\Service;
 
-class ProducerService extends Service
+final class ProducerService extends Service
 {
 }

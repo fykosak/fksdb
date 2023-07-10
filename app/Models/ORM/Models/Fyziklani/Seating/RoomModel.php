@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  * @property-read string $name
  * @property-read string $layout
  */
-class RoomModel extends Model
+final class RoomModel extends Model
 {
 
     public function getSeats(): TypedGroupedSelection

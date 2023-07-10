@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $e_org_id
@@ -15,7 +15,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $person_id
  * @property-read PersonModel $person
  */
-class EventOrgModel extends Model implements Resource
+final class EventOrgModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'event.org';

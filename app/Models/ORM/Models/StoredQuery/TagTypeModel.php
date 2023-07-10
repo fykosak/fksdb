@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $description
  * @property-read int $color
  */
-class TagTypeModel extends Model
+final class TagTypeModel extends Model
 {
     public function getColor(): string
     {

@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class AuthTokenType extends FakeStringEnum implements EnumColumn
+final class AuthTokenType extends FakeStringEnum implements EnumColumn
 {
     public const INITIAL_LOGIN = 'initial_login';
     public const RECOVERY = 'recovery';

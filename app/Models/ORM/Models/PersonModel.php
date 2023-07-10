@@ -32,7 +32,7 @@ use Nette\Security\Resource;
  * @property-read PersonGender $gender
  * @property-read \DateTimeInterface $created
  */
-class PersonModel extends Model implements Resource
+final class PersonModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'person';

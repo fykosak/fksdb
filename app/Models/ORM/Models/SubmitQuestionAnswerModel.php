@@ -15,6 +15,6 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface $submitted_on
  * @property-read string $answer
  */
-class SubmitQuestionAnswerModel extends Model
+final class SubmitQuestionAnswerModel extends Model
 {
 }

@@ -14,7 +14,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  * @property-read int $year
  * @property-read ContestModel $contest
  */
-class ContestYearModel extends Model
+final class ContestYearModel extends Model
 {
     public function getContestants(): TypedGroupedSelection
     {

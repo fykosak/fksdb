@@ -8,11 +8,11 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int $person_id
@@ -34,7 +34,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $iban
  * @property-read string $swift
  */
-class PaymentModel extends Model implements Resource
+final class PaymentModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'event.payment';
 

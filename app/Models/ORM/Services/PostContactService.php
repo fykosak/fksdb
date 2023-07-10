@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class PostContactService extends Service
+final class PostContactService extends Service
 {
 }
