@@ -85,7 +85,7 @@ class WebServiceModel
             $login = $this->authenticator->authenticate($args->username, $args->password);
             $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
-            if (!$this->contestAuthorizator->isAllowed('webService', 'default')) {
+            if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
                 $this->log('Unauthorized.');
                 throw new \SoapFault('Sender', 'Unauthorized.');
             }
@@ -123,7 +123,7 @@ class WebServiceModel
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
-        if (!$this->contestAuthorizator->isAllowed('webService', 'default')) {
+        if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
             $this->log(sprintf('Unauthorized %s ', $nameService));
             throw new \SoapFault('Sender', 'Unauthorized');
         }

@@ -56,6 +56,7 @@ acl:
     - addResource(chart)         # list, chart
     - addResource(webService)    # default - stahovanie cez webService
     - addResource(aesop)    # default - stahovanie cez webService
+    - addResource(soap)    # default - stahovanie cez webService
 
     #applications
     - addResource(event.participant)  # list, detail
@@ -142,6 +143,7 @@ acl:
     - allow(web, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['web-safe']))
     - allow(web, webService, ::constant(Nette\Security\Permission::ALL)) # new REST-API
     - allow(wiki, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe']))
+    - allow([wiki,web,org], soap, default) # new REST-API
 
     - allow(org, webService, ::constant(Nette\Security\Permission::ALL))
 ## NEW APPLICATIONS
