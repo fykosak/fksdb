@@ -46,7 +46,7 @@ abstract class WebModel
             $message = $this->authenticatedLogin->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**
