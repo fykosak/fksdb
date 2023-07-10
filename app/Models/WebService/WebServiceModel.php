@@ -8,7 +8,6 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
     EventWebModel,
@@ -36,7 +35,6 @@ class WebServiceModel
 {
     use SmartObject;
 
-    private LoginModel $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
     private ContestAuthorizator $contestAuthorizator;
@@ -84,8 +82,8 @@ class WebServiceModel
             throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
-            $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
-            $this->user->login($this->authenticatedLogin);
+            $login = $this->authenticator->authenticate($args->username, $args->password);
+            $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
             if (!$this->contestAuthorizator->isAllowed('webService', 'default')) {
                 $this->log('Unauthorized.');
@@ -118,7 +116,7 @@ class WebServiceModel
      */
     private function checkAuthentication(string $nameService): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
@@ -133,10 +131,10 @@ class WebServiceModel
 
     private function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message, 'soap');
@@ -155,7 +153,7 @@ class WebServiceModel
             }
             /** @var WebModel $model */
             $model = $reflection->newInstance($this->container);
-            $model->setLogin($this->authenticatedLogin ?? null);
+            $model->setUser($this->user);
             return $model;
         }
         return null;
