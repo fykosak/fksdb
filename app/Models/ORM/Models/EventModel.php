@@ -36,7 +36,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read string $parameters
  */
-class EventModel extends Model implements Resource, NodeCreator
+final class EventModel extends Model implements Resource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13, 17];

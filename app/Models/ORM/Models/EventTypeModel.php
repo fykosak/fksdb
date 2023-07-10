@@ -16,7 +16,7 @@ use Nette\Schema\Schema;
  * @property-read ContestModel $contest
  * @property-read string $name
  */
-class EventTypeModel extends Model
+final class EventTypeModel extends Model
 {
     public function getEvents(): TypedGroupedSelection
     {

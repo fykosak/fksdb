@@ -26,7 +26,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read \DateTimeInterface|null $modification_end
  */
-class ScheduleGroupModel extends Model implements Resource, NodeCreator
+final class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.scheduleGroup';

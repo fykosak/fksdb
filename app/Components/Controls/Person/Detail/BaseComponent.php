@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking;
+namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
-abstract class BaseStalkingComponent extends BaseComponent
+abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
     protected ORMFactory $tableReflectionFactory;
     protected PersonModel $person;

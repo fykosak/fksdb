@@ -16,7 +16,7 @@ use Fykosak\NetteORM\Model;
  * @property-read float $layout_y
  * @property-read int $fyziklani_room_id
  */
-class SeatModel extends Model
+final class SeatModel extends Model
 {
 
     public function getTeamSeat(EventModel $event): ?TeamSeatModel

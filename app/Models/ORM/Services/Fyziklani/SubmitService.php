@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Service;
 /**
  * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
-class SubmitService extends Service
+final class SubmitService extends Service
 {
     public function serialiseSubmits(EventModel $event, ?string $lastUpdated): array
     {

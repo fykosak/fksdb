@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class RoleService extends Service
+final class RoleService extends Service
 {
 }

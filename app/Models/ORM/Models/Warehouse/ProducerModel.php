@@ -11,7 +11,7 @@ use Nette\Security\Resource;
  * @property-read int $producer_id
  * @property-read string $name
  */
-class ProducerModel extends Model implements Resource
+final class ProducerModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.producer';
 

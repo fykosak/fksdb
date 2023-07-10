@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Service;
  * @method SchoolModel storeModel(array $data, ?SchoolModel $model = null)
  * @method SchoolModel findByPrimary($key)
  */
-class SchoolService extends Service
+final class SchoolService extends Service
 {
 
     public function isCzSkSchool(?int $schoolId): bool

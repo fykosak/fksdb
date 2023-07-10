@@ -16,7 +16,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $class
  * @property-read int|null $study_year
  */
-class PersonHistoryModel extends Model
+final class PersonHistoryModel extends Model
 {
     /*
      * @return StudyYear|mixed|null

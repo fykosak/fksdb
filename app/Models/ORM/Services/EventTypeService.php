@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class EventTypeService extends Service
+final class EventTypeService extends Service
 {
 }

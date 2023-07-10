@@ -31,7 +31,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null $begin
  * @property-read \DateTimeInterface|null $end
  */
-class ScheduleItemModel extends Model implements Resource, NodeCreator
+final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
 

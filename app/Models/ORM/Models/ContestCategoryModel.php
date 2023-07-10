@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $name_cs
  * @property-read string $name_en
  */
-class ContestCategoryModel extends Model
+final class ContestCategoryModel extends Model
 {
     public const FYKOS_4 = 'FYKOS_4';
     public const FYKOS_3 = 'FYKOS_3';

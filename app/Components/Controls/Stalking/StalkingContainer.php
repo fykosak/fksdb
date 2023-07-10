@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\Controls\Person\Detail\AddressComponent;
 use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\FlagComponent;
 use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
-use FKSDB\Components\Controls\Stalking\Components;
-use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\Controls\Person\Detail\RoleComponent;
+use FKSDB\Components\Controls\Person\Detail\Component;
+use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -31,7 +34,7 @@ class StalkingContainer extends BaseComponent
     final public function render(): void
     {
         $this->template->userPermission = $this->userPermission;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte');
     }
 
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid
@@ -99,14 +102,18 @@ class StalkingContainer extends BaseComponent
         return new PersonRelatedGrid('email_message', $this->person, $this->userPermission, $this->getContext());
     }
 
-    protected function createComponentStalkingComponent(): StalkingComponent
+    protected function createComponentStalkingComponent(): Component
     {
-        return new StalkingComponent($this->getContext(), $this->person, $this->userPermission);
+        return new Component(
+            $this->getContext(),
+            $this->person,
+            $this->userPermission
+        );
     }
 
-    protected function createComponentPermanentAddress(): Components\AddressComponent
+    protected function createComponentPermanentAddress(): AddressComponent
     {
-        return new Components\AddressComponent(
+        return new AddressComponent(
             $this->getContext(),
             $this->person,
             $this->userPermission,
@@ -114,9 +121,9 @@ class StalkingContainer extends BaseComponent
         );
     }
 
-    protected function createComponentDeliveryAddress(): Components\AddressComponent
+    protected function createComponentDeliveryAddress(): AddressComponent
     {
-        return new Components\AddressComponent(
+        return new AddressComponent(
             $this->getContext(),
             $this->person,
             $this->userPermission,
@@ -124,19 +131,19 @@ class StalkingContainer extends BaseComponent
         );
     }
 
-    protected function createComponentRole(): Components\RoleComponent
+    protected function createComponentRole(): RoleComponent
     {
-        return new Components\RoleComponent($this->getContext(), $this->person, $this->userPermission);
+        return new RoleComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
-    protected function createComponentFlag(): Components\FlagComponent
+    protected function createComponentFlag(): FlagComponent
     {
-        return new Components\FlagComponent($this->getContext(), $this->person, $this->userPermission);
+        return new FlagComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
-    protected function createComponentValidation(): Components\ValidationComponent
+    protected function createComponentValidation(): ValidationComponent
     {
-        return new Components\ValidationComponent($this->getContext(), $this->person, $this->userPermission);
+        return new ValidationComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
     protected function createComponentTimeline(): TimelineComponent

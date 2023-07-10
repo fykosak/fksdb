@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TaskContributionType extends FakeStringEnum implements EnumColumn
+final class TaskContributionType extends FakeStringEnum implements EnumColumn
 {
     public const AUTHOR = 'author';
     public const SOLUTION = 'solution';

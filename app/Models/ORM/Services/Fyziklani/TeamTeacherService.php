@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use Fykosak\NetteORM\Service;
 
-class TeamTeacherService extends Service
+final class TeamTeacherService extends Service
 {
 }

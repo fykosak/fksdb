@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class CountrySubdivisionService extends Service
+final class CountrySubdivisionService extends Service
 {
 }

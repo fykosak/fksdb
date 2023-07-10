@@ -17,7 +17,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $person_schedule_id
  * @property-read PersonScheduleState|null $state
  */
-class PersonScheduleModel extends Model
+final class PersonScheduleModel extends Model
 {
     public function getPayment(): ?PaymentModel
     {

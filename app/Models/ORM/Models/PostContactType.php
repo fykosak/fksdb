@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class PostContactType extends FakeStringEnum implements EnumColumn
+final class PostContactType extends FakeStringEnum implements EnumColumn
 {
     public const DELIVERY = 'D';
     public const PERMANENT = 'P';
@@ -32,8 +32,8 @@ class PostContactType extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::PERMANENT),
-            new static(self::DELIVERY),
+            new self(self::PERMANENT),
+            new self(self::DELIVERY),
         ];
     }
 }

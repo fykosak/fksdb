@@ -39,7 +39,7 @@ use Nette\Security\Resource;
  * @property-read string $schedule
  * @property-read int $lunch_count
  */
-class EventParticipantModel extends Model implements Resource, NodeCreator
+final class EventParticipantModel extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.participant';

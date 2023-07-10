@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
+namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use Nette\InvalidStateException;
 
-class StalkingComponent extends BaseStalkingComponent
+class Component extends BaseComponent
 {
     private int $minimalPermissions = FieldLevelPermission::ALLOW_FULL;
 
@@ -23,13 +21,7 @@ class StalkingComponent extends BaseStalkingComponent
         if ($this->beforeRender()) {
             $this->template->headline = $definition['label'];
             $this->template->userPermission = $this->userPermissions;
-            switch ($definition['layout']) {
-                case 'single':
-                    $this->renderSingle($definition);
-                    return;
-                default:
-                    throw new InvalidStateException();
-            }
+            $this->renderSingle($definition);
         }
     }
 
@@ -54,7 +46,7 @@ class StalkingComponent extends BaseStalkingComponent
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'single.latte');
     }
 
     protected function getMinimalPermissions(): int

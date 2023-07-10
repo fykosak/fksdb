@@ -14,6 +14,6 @@ use Fykosak\NetteORM\Model;
  * @property-read string $type
  * TODO
  */
-class FlagModel extends Model
+final class FlagModel extends Model
 {
 }

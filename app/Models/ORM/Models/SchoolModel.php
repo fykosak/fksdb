@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $school_id
@@ -20,7 +20,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $active
  * @property-read string $note
  */
-class SchoolModel extends Model implements Resource
+final class SchoolModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'school';

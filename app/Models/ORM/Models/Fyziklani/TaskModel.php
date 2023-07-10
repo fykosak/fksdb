@@ -15,7 +15,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $event_id
  * @property-read EventModel $event
  */
-class TaskModel extends Model
+final class TaskModel extends Model
 {
     public function __toArray(bool $hideName = false): array
     {

@@ -15,6 +15,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  */
-class GrantModel extends Model
+final class GrantModel extends Model
 {
 }

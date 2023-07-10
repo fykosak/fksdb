@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking\Components;
+namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use Nette\DI\Container;
 
-class AddressComponent extends BaseStalkingComponent
+class AddressComponent extends BaseComponent
 {
     private PostContactType $type;
 
@@ -25,7 +24,7 @@ class AddressComponent extends BaseStalkingComponent
         if ($this->beforeRender()) {
             $this->template->address = $this->person->getAddress($this->type);
             $this->template->type = $this->type;
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'address.latte');
         }
     }
 

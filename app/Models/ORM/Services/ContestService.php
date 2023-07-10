@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method ContestModel findByPrimary($key)
  */
-class ContestService extends Service
+final class ContestService extends Service
 {
 }
