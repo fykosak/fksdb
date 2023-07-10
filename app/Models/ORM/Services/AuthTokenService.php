@@ -14,7 +14,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
-class AuthTokenService extends Service
+final class AuthTokenService extends Service
 {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit

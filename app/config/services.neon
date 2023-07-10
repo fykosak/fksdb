@@ -11,7 +11,7 @@ services:
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
-        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8})
+        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
 

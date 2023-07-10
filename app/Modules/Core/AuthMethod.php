@@ -6,7 +6,7 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 
-class AuthMethod extends FakeStringEnum
+final class AuthMethod extends FakeStringEnum
 {
     public const LOGIN = 'login';
     public const HTTP = 'http';

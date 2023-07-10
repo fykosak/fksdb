@@ -28,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read float|null $price price in FYKOS Coins
  * @property-read string|null $note neverejná poznámka
  */
-class ItemModel extends Model implements Resource
+final class ItemModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.item';
 

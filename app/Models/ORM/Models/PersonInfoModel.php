@@ -40,6 +40,6 @@ use Fykosak\NetteORM\Model;
  * @property-read string $pizza
  * @property-read string|null $theme
  */
-class PersonInfoModel extends Model
+final class PersonInfoModel extends Model
 {
 }

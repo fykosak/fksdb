@@ -20,7 +20,7 @@ use Nette\Security\Resource;
  * @property-read int $contest_category_id
  * @property-read ContestCategoryModel $contest_category
  */
-class ContestantModel extends Model implements Resource
+final class ContestantModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'contestant';
 

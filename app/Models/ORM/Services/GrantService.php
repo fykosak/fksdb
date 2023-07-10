@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method GrantModel storeModel(array $data, ?GrantModel $model = null)
  */
-class GrantService extends Service
+final class GrantService extends Service
 {
 }

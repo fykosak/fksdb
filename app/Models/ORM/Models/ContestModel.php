@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  * @property-read int $contest_id
  * @property-read string $name
  */
-class ContestModel extends Model
+final class ContestModel extends Model
 {
     public const ID_FYKOS = 1;
     public const ID_VYFUK = 2;

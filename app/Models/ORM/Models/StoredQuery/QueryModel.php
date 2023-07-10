@@ -17,7 +17,7 @@ use Nette\Security\Resource;
  * @property-read string $name
  * @property-read string $description
  */
-class QueryModel extends Model implements Resource
+final class QueryModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'storedQuery';

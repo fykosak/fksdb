@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class SubmitQuestionAnswerService extends Service
+final class SubmitQuestionAnswerService extends Service
 {
 }

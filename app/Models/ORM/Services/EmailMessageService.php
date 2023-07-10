@@ -12,7 +12,7 @@ use Fykosak\NetteORM\TypedSelection;
 /**
  * @method EmailMessageModel storeModel(array $data, EmailMessageModel|null $model = null)
  */
-class EmailMessageService extends Service
+final class EmailMessageService extends Service
 {
 
     public function getMessagesToSend(int $limit): TypedSelection

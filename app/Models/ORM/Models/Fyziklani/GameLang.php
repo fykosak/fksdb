@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class GameLang extends FakeStringEnum implements EnumColumn
+final class GameLang extends FakeStringEnum implements EnumColumn
 {
     public const CS = 'cs';
     public const EN = 'en';
@@ -35,8 +35,8 @@ class GameLang extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::EN),
-            new static(self::CS),
+            new self(self::EN),
+            new self(self::CS),
         ];
     }
 }

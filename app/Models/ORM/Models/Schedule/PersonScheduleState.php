@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 
-class PersonScheduleState extends FakeStringEnum
+final class PersonScheduleState extends FakeStringEnum
 {
     public const PARTICIPATED = 'participated';
     public const MISSED = 'missed';

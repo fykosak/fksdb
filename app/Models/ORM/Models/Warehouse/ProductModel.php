@@ -19,7 +19,7 @@ use Nette\Security\Resource;
  * @property-read string $note neverejná poznámka
  * @property-read string $url URL k objednaniu produktu
  */
-class ProductModel extends Model implements Resource
+final class ProductModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.product';
 

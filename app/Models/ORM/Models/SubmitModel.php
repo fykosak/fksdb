@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $submit_id
@@ -20,7 +20,7 @@ use Fykosak\NetteORM\Model;
  * @property-read float|null $calc_points
  * @property-read int $corrected FUCK MARIADB
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'submit';

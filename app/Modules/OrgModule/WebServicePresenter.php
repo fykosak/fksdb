@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Models\WebService\SoapResponse;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\AbortException;
 
 class WebServicePresenter extends BasePresenter
@@ -17,9 +18,14 @@ class WebServicePresenter extends BasePresenter
         $this->server = $server;
     }
 
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('SOAP'));
+    }
+
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed('webService', 'default');
+        return true;
     }
 
     final public function renderDefault(): void
@@ -32,5 +38,10 @@ class WebServicePresenter extends BasePresenter
         } catch (\Throwable $exception) {
             $this->redirect('Dashboard:');
         }
+    }
+
+    public function requiresLogin(): bool
+    {
+        return false;
     }
 }

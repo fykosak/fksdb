@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services\StoredQuery;
 
 use Fykosak\NetteORM\Service;
 
-class TagService extends Service
+final class TagService extends Service
 {
 }

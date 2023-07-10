@@ -13,6 +13,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int $fyziklani_team_id
  * @property-read TeamModel2 fyziklani_team
  */
-class TeamTeacherModel extends Model
+final class TeamTeacherModel extends Model
 {
 }

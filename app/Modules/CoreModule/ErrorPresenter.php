@@ -18,6 +18,11 @@ class ErrorPresenter extends BasePresenter
         return new PageTitle(null, _('Error'), 'fas fa-triangle-exclamation');
     }
 
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
     final public function renderDefault(?\Throwable $exception): void
     {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
@@ -52,10 +57,5 @@ class ErrorPresenter extends BasePresenter
     protected function getStyleId(): string
     {
         return 'error';
-    }
-
-    protected function putIntoBreadcrumbs(): void
-    {
-        /* empty */
     }
 }

@@ -15,7 +15,7 @@ use Nette\InvalidStateException;
  * @property-read string $name
  * @property-read string $description
  */
-class ParameterModel extends Model
+final class ParameterModel extends Model
 {
     /**
      * @return int|string

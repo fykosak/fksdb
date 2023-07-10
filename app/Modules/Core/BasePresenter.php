@@ -18,6 +18,7 @@ use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
@@ -107,6 +108,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         }
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function formatAuthorizedMethod(): \ReflectionMethod
     {
         $method = 'authorized' . $this->getAction();
@@ -127,7 +131,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
                 );
             }
         } catch (\ReflectionException $exception) {
-            throw new InvalidStateException(
+            throw new NotFoundException(
                 sprintf('Presenter %s has not implemented method %s.', get_class($this), $method)
             );
         }

@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Service;
  * @method SubmitModel findByPrimary($key)
  * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
-class SubmitService extends Service
+final class SubmitService extends Service
 {
 
     private array $submitCache = [];

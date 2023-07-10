@@ -27,7 +27,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface $created
  * @property-read \DateTimeInterface $sent
  */
-class EmailMessageModel extends Model implements Resource
+final class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
 

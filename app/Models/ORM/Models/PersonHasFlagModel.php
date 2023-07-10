@@ -19,7 +19,7 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface $modified
  * @property-read \DateTimeInterface $created
  */
-class PersonHasFlagModel extends Model
+final class PersonHasFlagModel extends Model
 {
     public function getContestYear(): ?ContestYearModel
     {

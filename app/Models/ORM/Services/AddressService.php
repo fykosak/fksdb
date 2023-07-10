@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method AddressModel findByPrimary($key)
  */
-class AddressService extends Service
+final class AddressService extends Service
 {
 }

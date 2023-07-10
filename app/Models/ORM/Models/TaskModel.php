@@ -25,7 +25,7 @@ use Nette\Utils\Strings;
  * @property-read \DateTimeInterface $submit_start
  * @property-read \DateTimeInterface $submit_deadline
  */
-class TaskModel extends Model
+final class TaskModel extends Model
 {
     public function getName(): LocalizedString
     {
