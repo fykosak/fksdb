@@ -96,6 +96,7 @@ acl:
     - allow(contestant, submit, download.uploaded, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, download.corrected, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
+    - allow(contestant, submit, list)
 #ORG MODULE
     - allow(org, points, entry)      # zadávání bodů
     - allow(org, contestant, list)
