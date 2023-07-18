@@ -23,6 +23,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Security\User;
@@ -58,9 +59,9 @@ class QuizComponent extends FormComponent
         $this->accountManager = $accountManager;
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('save', _('Save'));
+        return $form->addSubmit('save', _('Save'));
     }
 
     protected function configureForm(Form $form): void

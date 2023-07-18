@@ -17,6 +17,7 @@ use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
@@ -74,9 +75,9 @@ class ChangeEmailComponent extends EntityFormComponent
         $form->addComponent($newEmailControl, 'new_email');
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Change email'));
+        return $form->addSubmit('submit', _('Change email'));
     }
 
     /**
