@@ -11,6 +11,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
@@ -51,9 +52,9 @@ abstract class EntityFormComponent extends FormComponent
         }
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
+        return $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void
