@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class CorrectedFormComponent extends FormComponent
@@ -49,9 +50,9 @@ class CorrectedFormComponent extends FormComponent
         $this->getPresenter()->redirect('this');
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('Save'));
     }
 
     protected function configureForm(Form $form): void
