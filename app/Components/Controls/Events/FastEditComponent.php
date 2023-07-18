@@ -27,6 +27,6 @@ class FastEditComponent extends CodeFormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-       return $form->addSubmit('edit', _('Edit'));
+        return $form->addSubmit('edit', _('Edit'));
     }
 }
