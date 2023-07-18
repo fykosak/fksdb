@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 abstract class AttendanceFormComponent extends CodeFormComponent
@@ -75,9 +76,9 @@ abstract class AttendanceFormComponent extends CodeFormComponent
         }
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Submit!'));
+        return $form->addSubmit('submit', _('Submit!'));
     }
 
     abstract protected function getPersonSchedule(PersonModel $person): ?PersonScheduleModel;

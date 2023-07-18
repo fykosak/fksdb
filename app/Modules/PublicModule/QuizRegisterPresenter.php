@@ -29,6 +29,11 @@ class QuizRegisterPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
+    public function requiresLogin(): bool
+    {
+        return false;
+    }
+
     public function authorizedDefault(): bool
     {
         return true;

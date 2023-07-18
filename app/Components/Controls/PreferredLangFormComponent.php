@@ -12,6 +12,7 @@ use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class PreferredLangFormComponent extends FormComponent
@@ -30,9 +31,9 @@ class PreferredLangFormComponent extends FormComponent
         $this->personInfoService = $personInfoService;
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('Save'));
     }
 
     protected function handleSuccess(Form $form): void
