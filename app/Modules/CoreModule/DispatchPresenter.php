@@ -37,8 +37,8 @@ class DispatchPresenter extends BasePresenter
         $result = [];
         /** @var ContestantModel $contestant */
         $result[] = new NavItem(
-            new Title(null, _('Register into competition'), 'fas fa-user-plus'),
-            ':Public:Register:contest'
+            new Title(null, _('Register'), 'fas fa-user-plus'),
+            ':Public:Register:default'
         );
         $result[] = new NavItem(
             new Title(null, _('My applications'), 'fas fa-calendar-days'),
@@ -63,8 +63,6 @@ class DispatchPresenter extends BasePresenter
                 ]
             );
         }
-
-        // <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
         return $result;
     }
 

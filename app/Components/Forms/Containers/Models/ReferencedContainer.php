@@ -85,7 +85,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(
-                __CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class(
+                self::class . ' can contain only components with get/set option funcionality, ' . get_class(
                     $child
                 ) . ' given.'
             );

@@ -16,6 +16,7 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class AttendanceComponent extends CodeFormComponent
@@ -104,8 +105,8 @@ class AttendanceComponent extends CodeFormComponent
     /**
      * @throws BadTypeException
      */
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', $this->getTransition()->label());
+        return $form->addSubmit('submit', $this->getTransition()->label());
     }
 }

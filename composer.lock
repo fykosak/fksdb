@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5aea0ae8956ddfd43308603fb9873fd7",
+    "content-hash": "177134eb9cb3da69470342f46d6bd84f",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-fks-utils.git",
-                "reference": "a4a8bbb"
+                "reference": "6c299c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/a4a8bbb",
-                "reference": "a4a8bbb",
+                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/6c299c7",
+                "reference": "6c299c7",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "issues": "https://github.com/fykosak/nette-fks-utils/issues",
                 "source": "https://github.com/fykosak/nette-fks-utils/tree/dev-context-translator"
             },
-            "time": "2023-01-24T17:33:58+00:00"
+            "time": "2023-07-17T17:35:18+00:00"
         },
         {
             "name": "fykosak/nette-frontend-component",

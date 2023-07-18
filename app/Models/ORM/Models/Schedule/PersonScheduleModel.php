@@ -29,8 +29,8 @@ final class PersonScheduleModel extends Model
     public function getLabel(string $lang): string
     {
         return $this->person->getFullName() . ': '
-            . $this->schedule_item->schedule_group->getName()[$lang] . ' - '
-            . $this->schedule_item->getName()[$lang];
+            . $this->schedule_item->schedule_group->getName()->getText($lang) . ' - '
+            . $this->schedule_item->getName()->getText($lang);
     }
 
     /**

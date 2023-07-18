@@ -30,6 +30,18 @@ final class ContestYearModel extends Model
         return $query;
     }
 
+    public function isActive(): bool
+    {
+        return (bool)$this->getAvailableTasks()->fetch();
+    }
+
+    public function getAvailableTasks(): TypedGroupedSelection
+    {
+        return $this->getTasks()
+            ->where('submit_start IS NULL OR submit_start < NOW()')
+            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
+    }
+
     public function getLastSeries(): int
     {
         return $this->getTasks()->max('series') ?? 1;

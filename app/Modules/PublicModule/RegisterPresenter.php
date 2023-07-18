@@ -6,9 +6,10 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\EntityForms\RegisterContestantFormComponent;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\Utils\Logging\Message;
@@ -37,9 +38,8 @@ use Nette\Application\UI\Form;
  *
  * Just proof of concept (obsoleted due to ReferencedPerson).
  */
-class RegisterPresenter extends CoreBasePresenter
+final class RegisterPresenter extends CoreBasePresenter
 {
-
     /**
      * @persistent
      */
@@ -53,25 +53,35 @@ class RegisterPresenter extends CoreBasePresenter
      */
     public ?int $personId = null;
     private PersonService $personService;
+    private EventService $eventService;
+
+    final public function inject(PersonService $personService, EventService $eventService): void
+    {
+        $this->personService = $personService;
+        $this->eventService = $eventService;
+    }
 
     public function requiresLogin(): bool
     {
         return false;
     }
 
-    final public function injectTernary(PersonService $personService): void
-    {
-        $this->personService = $personService;
-    }
-
-    public function authorizedContest(): bool
+    public function authorizedDefault(): bool
     {
         return true;
     }
 
-    public function titleContest(): PageTitle
+    public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select contest'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit');
+    }
+
+    public function renderDefault(): void
+    {
+        $this->template->events = $this->eventService->getEventsWithOpenRegistration()
+            ->order('registration_end')
+            ->where('event_type_id', [1, 9, 2, 14]);
+        $this->template->contests = $this->contestService->getTable();
     }
 
     public function authorizedYear(): bool
@@ -81,7 +91,26 @@ class RegisterPresenter extends CoreBasePresenter
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Select year'));
+        return new PageTitle(
+            null,
+            sprintf(_('Register to %s'), $this->getSelectedContest()->name),
+            'fas fa-edit',
+            _('Select year')
+        );
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    final public function renderYear(): void
+    {
+        $years = $this->getSelectedContest()->getActiveYears();
+        if (count($years) === 1) {
+            $this->redirect('email', ['year' => reset($years)->year]);
+        } elseif (count($years) === 0) {
+            $this->flashMessage(_('No year available'), Message::LVL_INFO);
+        }
+        $this->template->years = $years;
     }
 
     public function authorizedEmail(): bool
@@ -94,11 +123,21 @@ class RegisterPresenter extends CoreBasePresenter
         return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type e-mail'));
     }
 
+    public function actionEmail(): void
+    {
+        if ($this->getUser()->isLoggedIn()) {
+            $this->redirect('contestant');
+        }
+    }
+
     public function authorizedContestant(): bool
     {
         return true;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function titleContestant(): PageTitle
     {
         return new PageTitle(
@@ -108,47 +147,17 @@ class RegisterPresenter extends CoreBasePresenter
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,
-                $this->getSelectedYear()
+                $this->getSelectedContestYear()->year
             )
         );
     }
 
-    public function getSelectedContest(): ?ContestModel
-    {
-        return $this->contestId ? $this->contestService->findByPrimary($this->contestId) : null;
-    }
-
-    public function getSelectedYear(): ?int
-    {
-        return $this->year;
-    }
-
-    public function actionDefault(): void
-    {
-        $this->redirect('contest');
-    }
-
-    public function actionEmail(): void
-    {
-        if ($this->getUser()->isLoggedIn()) {
-            $this->redirect('contestant');
-        }
-    }
-
+    /**
+     * @throws NotFoundException
+     */
     public function actionContestant(): void
     {
-        $loggedPerson = $this->getPerson();
-        if (!$loggedPerson) {
-            $email = $this->getHttpRequest()->getQuery('email');
-            $loggedPerson = $this->personService->findByEmail($email);
-            if ($loggedPerson && $loggedPerson->getLogin()) {
-                $this->flashMessage(_('An existing account found. To continue, please sign in.'));
-                $this->redirect(
-                    ':Core:Authentication:login',
-                    ['login' => $email, 'backlink' => $this->storeRequest()]
-                );
-            }
-        }
+        $loggedPerson = $this->getLoggedPerson();
         if ($loggedPerson) {
             $contestant = $loggedPerson->getContestantByContestYear($this->getSelectedContestYear());
             if ($contestant) {
@@ -162,30 +171,37 @@ class RegisterPresenter extends CoreBasePresenter
                 );
                 $this->redirect(':Core:Authentication:login');
             }
-        }
-    }
-
-    private function getPerson(): ?PersonModel
-    {
-        if (!$this->getUser()->isLoggedIn()) {
-            return null;
-        }
-        return $this->getLoggedPerson();
-    }
-
-    final public function renderYear(): void
-    {
-        $contest = $this->getSelectedContest();
-        $forwardedYear = $contest->getForwardedYear();
-        if ($forwardedYear) {
-            $years = [
-                $contest->getCurrentContestYear(),
-                $forwardedYear,
-            ];
-            $this->template->years = $years;
         } else {
-            $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year]);
+            $email = $this->getHttpRequest()->getQuery('email');
+            $emailPerson = $this->personService->findByEmail($email);
+            if ($emailPerson && $emailPerson->getLogin()) {
+                $this->flashMessage(_('An existing account found. To continue, please sign in.'));
+                $this->redirect(
+                    ':Core:Authentication:login',
+                    ['login' => $email, 'backlink' => $this->storeRequest()]
+                );
+            }
         }
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getSelectedContest(): ContestModel
+    {
+        $contest = $this->contestService->findByPrimary($this->contestId);
+        if (!$contest) {
+            throw new NotFoundException(_('Contest not found!'));
+        }
+        return $contest;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function getSelectedContestYear(): ContestYearModel
+    {
+        return $this->getSelectedContest()->getContestYear($this->year);
     }
 
     protected function createComponentEmailForm(): FormControl
@@ -198,30 +214,25 @@ class RegisterPresenter extends CoreBasePresenter
         return $control;
     }
 
+    /**
+     * @return RegisterContestantFormComponent
+     * @throws NotFoundException
+     */
     protected function createComponentContestantForm(): RegisterContestantFormComponent
     {
         return new RegisterContestantFormComponent(
             $this->getContext(),
             $this->getLang(),
             $this->getSelectedContestYear(),
-            $this->getPerson()
+            $this->getLoggedPerson()
         );
-    }
-
-    public function getSelectedContestYear(): ?ContestYearModel
-    {
-        $contest = $this->getSelectedContest();
-        if (is_null($contest)) {
-            return null;
-        }
-        return $contest->getContestYear($this->year);
     }
 
     protected function getStyleId(): string
     {
-        $contest = $this->getSelectedContest();
-        if (isset($contest)) {
-            return 'contest-' . $contest->getContestSymbol();
+        try {
+            return 'contest-' . $this->getSelectedContest()->getContestSymbol();
+        } catch (NotFoundException $exception) {
         }
         return parent::getStyleId();
     }

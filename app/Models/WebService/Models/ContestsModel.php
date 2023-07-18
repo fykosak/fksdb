@@ -21,12 +21,12 @@ class ContestsModel extends WebModel
     private function createContestArray(ContestModel $contest): array
     {
         return [
-            "contestId" => $contest->contest_id,
-            "contest" => $contest->getContestSymbol(),
-            "name" => $contest->name,
-            "currentYear" => $contest->getCurrentContestYear()->year,
-            "firstYear" => $contest->getFirstYear(),
-            "lastYear" => $contest->getLastYear(),
+            'contestId' => $contest->contest_id,
+            'contest' => $contest->getContestSymbol(),
+            'name' => $contest->name,
+            'currentYear' => $contest->getCurrentContestYear()->year,
+            'firstYear' => $contest->getFirstYear(),
+            'lastYear' => $contest->getLastYear(),
         ];
     }
 

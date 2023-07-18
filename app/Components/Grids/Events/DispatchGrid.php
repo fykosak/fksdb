@@ -42,6 +42,7 @@ class DispatchGrid extends EntityGrid
     protected function configure(): void
     {
         parent::configure();
+
         $this->paginate = true;
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }

@@ -15,6 +15,12 @@ use Fykosak\NetteORM\TypedSelection;
  */
 final class EventService extends Service
 {
+    public function getEventsWithOpenRegistration(): TypedSelection
+    {
+        return $this->getTable()
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
+    }
 
     public function getEvents(ContestYearModel $contestYear): TypedSelection
     {

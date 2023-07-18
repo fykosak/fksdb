@@ -67,7 +67,7 @@ export default function BarProgress({data, translator}: OwnProps) {
             <text
                 x="10"
                 y={yScale.bandwidth() / 2}
-            >{data.events[eventId].name}: {sum}</text>
+            >{translator.get(data.events[eventId].name)}: {sum}</text>
         </g>;
     });
 

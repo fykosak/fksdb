@@ -62,7 +62,7 @@ export default function TimeProgress({data, translator}: OwnProps) {
                     lines: true,
                     points: false,
                 },
-                name: event.name,
+                name: translator.get(event.name),
                 points: eventData,
             });
         }

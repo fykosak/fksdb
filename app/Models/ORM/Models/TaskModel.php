@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Utils\Strings;
 
 /**
@@ -119,10 +119,7 @@ final class TaskModel extends Model
             'taskId' => $this->task_id,
             'series' => $this->series,
             'label' => $this->label,
-            'name' => [
-                'cs' => $this->name_cs,
-                'en' => $this->name_en,
-            ],
+            'name' => $this->getName()->__serialize(),
             'taskNumber' => $this->tasknr,
             'points' => $this->points,
         ];

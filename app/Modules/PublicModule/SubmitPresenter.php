@@ -29,7 +29,7 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-class SubmitPresenter extends BasePresenter
+final class SubmitPresenter extends BasePresenter
 {
 
     /** @persistent */
@@ -51,29 +51,44 @@ class SubmitPresenter extends BasePresenter
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    public function titleAjax(): PageTitle
-    {
-        return $this->titleDefault();
-    }
-
-    public function authorizedAjax(): bool
+    public function authorizedLegacy(): bool
     {
         return $this->authorizedDefault();
     }
 
-    final public function renderAjax(): void
+    public function titleLegacy(): PageTitle
     {
-        $this->template->availableTasks = $this->getAvailableTasks();
+        return new PageTitle(null, _('Legacy upload system'), 'fas fa-cloud-upload-alt');
     }
 
-    public function titleQuiz(): PageTitle
+    public function renderLegacy(): void
     {
-        return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
+        $this->renderDefault();
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
+    }
+
+    public function renderDefault(): void
+    {
+        $this->template->hasTasks = $this->getSelectedContestYear()->isActive();
     }
 
     public function authorizedQuiz(): bool
     {
         return $this->authorizedDefault();
+    }
+
+    public function titleQuiz(): PageTitle
+    {
+        return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
     public function titleQuizDetail(): PageTitle
@@ -87,21 +102,9 @@ class SubmitPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest());
     }
 
-    public function titleDefault(): PageTitle
+    public function authorizedList(): bool
     {
-        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
-    }
-
-    public function authorizedDefault(): bool
-    {
-        return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
-    }
-
-    final public function renderDefault(): void
-    {
-        $this->template->hasTasks = $hasTasks = count($this->getAvailableTasks()) > 0;
-        $this->template->canRegister = !$hasTasks;
-        $this->template->hasForward = !$hasTasks;
+        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
@@ -109,16 +112,10 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
-    public function authorizedList(): bool
-    {
-        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
-    }
-
     private function getAvailableTasks(): TypedGroupedSelection
     {
-        return $this->getSelectedContestYear()->getTasks()
-            ->where('submit_start IS NULL OR submit_start < NOW()')
-            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
+        return $this->getSelectedContestYear()
+            ->getAvailableTasks()
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 

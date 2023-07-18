@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class CodeCloseForm extends FormComponent
@@ -65,9 +66,9 @@ class CodeCloseForm extends FormComponent
         }
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Close submitting!'));
+        return $form->addSubmit('submit', _('Close submitting!'));
     }
 
     protected function configureForm(Form $form): void

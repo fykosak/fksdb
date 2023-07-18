@@ -50,13 +50,16 @@ CREATE TABLE IF NOT EXISTS `event`
     `event_type_id`      INT          NOT NULL,
     `year`               TINYINT(4)   NOT NULL COMMENT 'ročník semináře',
     `event_year`         TINYINT(4)   NOT NULL COMMENT 'ročník akce',
-    `begin`              DATE         NOT NULL COMMENT 'první den akce',
-    `end`                DATE         NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
+    `begin`              DATETIME     NOT NULL COMMENT 'první den akce',
+    `end`                DATETIME     NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
     `registration_begin` DATETIME     NULL DEFAULT NULL COMMENT 'případný počátek webové registrace',
     `registration_end`   DATETIME     NULL DEFAULT NULL COMMENT 'případný konec webové registrace',
     `name`               VARCHAR(255) NOT NULL COMMENT 'název akce',
-    `fb_album_id`        BIGINT(20)   NULL DEFAULT NULL COMMENT 'id galerie na Facebooku',
-    `report`             TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_cs`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_en`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `description_cs`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `description_en`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `place`              VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kde sa akcia uskutočnila (sústredka + tabory + setkani)',
     `parameters`         TEXT         NULL DEFAULT NULL COMMENT 'optional parameters in Neon syntax, scheme is define with action',
     INDEX `idx_event__event_type1` (`event_type_id` ASC),
     UNIQUE INDEX `uq_event__event_year__event_type` (`event_year` ASC, `event_type_id` ASC),
@@ -1144,14 +1147,15 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id`       INT(11)                                           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`        INT(11)                                           NOT NULL,
-    `school_id`        INT(11)                                           NOT NULL,
-    `since`            DATE,
-    `until`            DATE,
-    `note`             TEXT,
-    `state`            ENUM ('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
-    `number_brochures` INT(11)                                           NOT NULL DEFAULT 0,
+    `teacher_id` INT(11)                                           NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT(11)                                           NOT NULL,
+    `school_id`  INT(11)                                           NULL     DEFAULT NULL,
+    `since`      DATE                                              NOT NULL, # TODO default value
+    `until`      DATE                                              NULL     DEFAULT NULL,
+    `note`       TEXT                                              NULL     DEFAULT NULL,
+    `state`      ENUM ('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
+    `lang`       ENUM ('cs','en')                                  NOT NULL DEFAULT 'cs',
+    `role`       VARCHAR(256)                                      NULL     DEFAULT NULL,
     CONSTRAINT `fk_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
