@@ -16,6 +16,7 @@ use Nette\Utils\Strings;
  * @property-read string $label
  * @property-read string $name_cs
  * @property-read string $name_en
+ * @property-read LocalizedString $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
@@ -27,11 +28,6 @@ use Nette\Utils\Strings;
  */
 final class TaskModel extends Model
 {
-    public function getName(): LocalizedString
-    {
-        return new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
-    }
-
     public function getFullLabel(
         string $lang,
         bool $includeContest = false,
@@ -94,6 +90,22 @@ final class TaskModel extends Model
         return $contestYear;
     }
 
+    /**
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        switch ($key) {
+            case 'name':
+                $value = new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
+                break;
+            default:
+                $value = parent::__get($key);
+        }
+        return $value;
+    }
+
     public function webalizeLabel(): string
     {
         return Strings::webalize($this->label, null, false);
@@ -119,7 +131,7 @@ final class TaskModel extends Model
             'taskId' => $this->task_id,
             'series' => $this->series,
             'label' => $this->label,
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
             'taskNumber' => $this->tasknr,
             'points' => $this->points,
         ];

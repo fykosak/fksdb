@@ -35,11 +35,13 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read string $name
- * @property-read string report_cs
- * @property-read string report_en
- * @property-read string description_cs
- * @property-read string description_en
- * @property-read string place
+ * @property-read string $report_cs
+ * @property-read string $report_en
+ * @property-read LocalizedString $report
+ * @property-read string $description_cs
+ * @property-read string $description_en
+ * @property-read LocalizedString $description
+ * @property-read string $place
  * @property-read string $parameters
  */
 final class EventModel extends Model implements Resource, NodeCreator
@@ -98,22 +100,6 @@ final class EventModel extends Model implements Resource, NodeCreator
                     'en' => $this->name,
                 ]);
         }
-    }
-
-    public function getReport(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->report_cs,
-            'en' => $this->report_en,
-        ]);
-    }
-
-    public function getDescription(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->description_cs,
-            'en' => $this->description_en,
-        ]);
     }
 
     public function getSymbol(): string
@@ -183,6 +169,33 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
     }
 
+    /**
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+
+
+        switch ($key) {
+            case 'report':
+                $value = new LocalizedString([
+                    'cs' => $this->report_cs,
+                    'en' => $this->report_en,
+                ]);
+                break;
+            case 'description':
+                $value = new LocalizedString([
+                    'cs' => $this->description_cs,
+                    'en' => $this->description_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
+        }
+        return $value;
+    }
+
     public function __toArray(): array
     {
         return [
@@ -193,8 +206,8 @@ final class EventModel extends Model implements Resource, NodeCreator
             'end' => $this->end ? $this->end->format('c') : null,
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
-            'report' => $this->getReport()->__serialize(),
-            'description' => $this->getDescription()->__serialize(),
+            'report' => $this->report->__serialize(),
+            'description' => $this->description->__serialize(),
             'name' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
         ];

@@ -33,7 +33,7 @@ class RegisterPresenterTest extends DatabaseTestCase
     public function testDispatch(): void
     {
         $request = new Request('Public:Register', 'GET', [
-            'action' => 'contest',
+            'action' => 'default',
             'lang' => 'en',
         ]);
 
@@ -47,7 +47,7 @@ class RegisterPresenterTest extends DatabaseTestCase
         Assert::contains('Select contest', $html);
     }
 
-    public function testForm()
+    public function testForm(): void
     {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contestant',

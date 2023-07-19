@@ -23,7 +23,6 @@ use Nette\InvalidStateException;
 
 abstract class ReferencedContainer extends ContainerWithOptions
 {
-
     public const ID_MASK = 'frm%s-%s';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
@@ -46,6 +45,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
         }, fn() => $this->attachedJS = false);
         $this->monitor(IContainer::class, function (): void {
             if (!$this->configured) {
+                $this->configured = true;
                 $this->configure();
             }
         });

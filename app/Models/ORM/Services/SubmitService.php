@@ -44,7 +44,7 @@ final class SubmitService extends Service
     ): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
-            'name' => $task->getName()->__serialize(),
+            'name' => $task->name->__serialize(),
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,

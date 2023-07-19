@@ -39,14 +39,14 @@ class ReferencedPersonHandler extends ReferencedHandler
     private PostContactService $postContactService;
 
     private PersonHasFlagService $personHasFlagService;
-    private ContestYearModel $contestYear;
+    private ?ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
     private FlagService $flagService;
     private Container $container;
 
     private EventModel $event;
 
-    public function __construct(ContestYearModel $contestYear, ResolutionMode $resolution)
+    public function __construct(?ContestYearModel $contestYear, ResolutionMode $resolution)
     {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
@@ -173,6 +173,9 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     private function storePersonHistory(PersonModel $person, array $historyData): void
     {
+        if (!isset($this->contestYear)) {
+            throw new \InvalidArgumentException('Cannot store person_history without ContestYear');
+        }
         $history = $person->getHistoryByContestYear($this->contestYear);
         $this->personHistoryService->storeModel(
             array_merge(
@@ -253,7 +256,7 @@ class ReferencedPersonHandler extends ReferencedHandler
         ?PersonModel $person,
         string $sub,
         string $field,
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear = null,
         ?EventModel $event = null
     ) {
         if (!$person) {
@@ -272,6 +275,9 @@ class ReferencedPersonHandler extends ReferencedHandler
                 }
                 return $result;
             case 'person_history':
+                if (!isset($contestYear)) {
+                    throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
+                }
                 return ($history = $person->getHistoryByContestYear($contestYear))
                     ? $history->{$field}
                     : null;

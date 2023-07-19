@@ -11,38 +11,32 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
-use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class RegisterContestantFormComponent extends EntityFormComponent
+class RegisterTeacherFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
 
-    public const CONT_CONTESTANT = 'contestant';
+    public const CONT_TEACHER = 'teacher';
 
-    private ContestYearModel $contestYear;
-    private ?PersonModel $person;
+    private ?PersonModel $loggedPerson;
     private string $lang;
-
     private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
 
     public function __construct(
         Container $container,
         string $lang,
-        ContestYearModel $contestYear,
         ?PersonModel $person
     ) {
         parent::__construct($container, null);
-        $this->person = $person;
+        $this->loggedPerson = $person;
         $this->lang = $lang;
-        $this->contestYear = $contestYear;
     }
 
     final public function injectTernary(
@@ -58,16 +52,15 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
-            $this->getContext()->getParameters()['forms']['registerContestant' .
-            ucfirst($this->contestYear->contest->getContestSymbol())],
-            $this->contestYear,
-            PersonSearchContainer::SEARCH_NONE,
+            $this->getContext()->getParameters()['forms']['registerTeacher'],
+            null,
+            PersonSearchContainer::SEARCH_EMAIL,
             false,
-            new SelfPersonResolver($this->person)
+            new SelfPersonResolver($this->loggedPerson)
         );
         $container->addComponent($referencedId, 'person_id');
-        $form->addComponent($container, self::CONT_CONTESTANT);
-        if (!$this->person) {
+        $form->addComponent($container, self::CONT_TEACHER);
+        if (!$this->loggedPerson) {
             $captcha = new CaptchaBox();
             $form->addComponent($captcha, 'captcha');
         }
@@ -81,13 +74,12 @@ class RegisterContestantFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $form->getValues('array');//trigger RPC
+        $values = $form->getValues('array');//trigger RPC
         /** @var ReferencedId $referencedId */
-        $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+        $referencedId = $form[self::CONT_TEACHER]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
-        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
-        $strategy->createContestant($person);
+
 
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
@@ -104,9 +96,10 @@ class RegisterContestantFormComponent extends EntityFormComponent
     protected function setDefaults(Form $form): void
     {
         $form->setDefaults([
-            self::CONT_CONTESTANT => [
-                'person_id' => isset($this->person) ? $this->person->person_id
-                    : ReferencedId::VALUE_PROMISE,
+            self::CONT_TEACHER => [
+                'person_id' => isset($this->loggedPerson)
+                    ? $this->loggedPerson->person_id
+                    : null,
             ],
         ]);
     }

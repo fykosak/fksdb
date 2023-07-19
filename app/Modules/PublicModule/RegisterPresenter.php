@@ -6,6 +6,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\EntityForms\RegisterContestantFormComponent;
+use FKSDB\Components\EntityForms\RegisterTeacherFormComponent;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -184,6 +185,16 @@ final class RegisterPresenter extends CoreBasePresenter
         }
     }
 
+    public function authorizedTeacher(): bool
+    {
+        return true;
+    }
+
+    public function titleTeacher(): PageTitle
+    {
+        return new PageTitle(null, _('Register teacher'), 'fas fa-edit');
+    }
+
     /**
      * @throws NotFoundException
      */
@@ -215,7 +226,6 @@ final class RegisterPresenter extends CoreBasePresenter
     }
 
     /**
-     * @return RegisterContestantFormComponent
      * @throws NotFoundException
      */
     protected function createComponentContestantForm(): RegisterContestantFormComponent
@@ -224,6 +234,15 @@ final class RegisterPresenter extends CoreBasePresenter
             $this->getContext(),
             $this->getLang(),
             $this->getSelectedContestYear(),
+            $this->getLoggedPerson()
+        );
+    }
+
+    protected function createComponentTeacherForm(): RegisterTeacherFormComponent
+    {
+        return new RegisterTeacherFormComponent(
+            $this->getContext(),
+            $this->getLang(),
             $this->getLoggedPerson()
         );
     }

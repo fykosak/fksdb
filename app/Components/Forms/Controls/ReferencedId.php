@@ -14,6 +14,7 @@ use FKSDB\Models\Utils\Promise;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Nette\ComponentModel\IContainer;
+use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
 
 /**
@@ -51,7 +52,7 @@ class ReferencedId extends HiddenField
 
         parent::__construct();
 
-        $this->monitor(IContainer::class, function (IContainer $container): void {
+        $this->monitor(Container::class, function (Container $container): void {
             if (!$this->attachedOnValidate) {
                 $container->onValidate[] = function () {
                     $this->createPromise();

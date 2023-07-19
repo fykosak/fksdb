@@ -9,10 +9,10 @@
             <img src="{$basePath}/images/contests/{$event->getSymbol()}.svg" class="card-img-top m-3"
                  alt="{$event->getName()->getText($lang)}"
                  style="max-height: 7rem">
-            <div class="card-body">
+            <div class="card-body text-center">
                 <h3 class="card-title text-{$event->getSymbol()}">{$event->getName()->getText($lang)}</h3>
                 <p>{_'Registration end '}{$event->registration_end->format(_('__date_time'))}</p>
-                <p class="card-text">{$event->getDescription()->getText($lang)}</p>
+                <p class="card-text">{$event->description->getText($lang)}</p>
                 {if $event->isTeamEvent()}
                     <a class="btn btn-{$event->getSymbol()}"
                        href="{plink ':Event:TeamApplication:create' ,'eventId'=>$event->event_id}">{_'Register team!'}</a>
@@ -34,7 +34,7 @@
                     <div class="card h-100 border-fykos">
                         <img src="{$basePath}/images/contests/fykos.svg" class="card-img-top m-3" alt="fykos"
                              style="max-height: 7rem">
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <h3 class="card-title text-fykos">{_'FYKOS'}</h3>
                             <p class="card-text">{_'Physics correspondence competition of CUNI FMP for high-school students.'}</p>
                             <a class="btn btn-fykos"
@@ -46,7 +46,7 @@
                     <div class="card h-100 border-vyfuk">
                         <img src="{$basePath}/images/contests/vyfuk.svg" class="card-img-top m-3" alt="vyfuk"
                              style="max-height: 7rem">
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <h3 class="card-title text-vyfuk">{_'Výfuk'}</h3>
                             <p class="card-text">{_'Physics correspondence seminar of CUNI FMP for the students of elementary schools.'}</p>
                             <a class="btn btn-vyfuk"

@@ -33,7 +33,7 @@ class ReferencedPersonFactory
 
     public function createReferencedPerson(
         array $fieldsDefinition,
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear,
         string $searchType,
         bool $allowClear,
         Resolver $resolver,
@@ -56,7 +56,7 @@ class ReferencedPersonFactory
     }
 
     protected function createHandler(
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear,
         ?ResolutionMode $resolution,
         ?EventModel $event = null
     ): ReferencedPersonHandler {

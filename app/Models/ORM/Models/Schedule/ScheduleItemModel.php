@@ -23,41 +23,20 @@ use Nette\Security\Resource;
  * @property-read float|null $price_eur
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
+ * @property-read LocalizedString $name
  * @property-read int|null $capacity
  * @property-read string|null $description_cs
  * @property-read string|null $description_en
+ * @property-read LocalizedString $description
  * @property-read string|null $long_description_cs
  * @property-read string|null $long_description_en
+ * @property-read LocalizedString $long_description
  * @property-read \DateTimeInterface|null $begin
  * @property-read \DateTimeInterface|null $end
  */
 final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
-
-    public function getName(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->name_cs,
-            'en' => $this->name_en,
-        ]);
-    }
-
-    public function getDescription(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->description_cs,
-            'en' => $this->description_en,
-        ]);
-    }
-
-    public function getLongDescription(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->long_description_cs,
-            'en' => $this->long_description_en,
-        ]);
-    }
 
     public function getBegin(): \DateTimeInterface
     {
@@ -132,13 +111,45 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getName()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
             'begin' => $this->getBegin(),
             'end' => $this->getEnd(),
-            'description' => $this->getDescription()->__serialize(),
-            'longDescription' => $this->getLongDescription()->__serialize(),
+            'description' => $this->description->__serialize(),
+            'longDescription' => $this->long_description->__serialize(),
         ];
+    }
+
+    /**
+     * @param string $key
+     * @return LocalizedString|mixed|Model
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+
+        switch ($key) {
+            case 'name':
+                $value = new LocalizedString([
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ]);
+                break;
+            case 'description':
+                $value = new LocalizedString([
+                    'cs' => $this->description_cs,
+                    'en' => $this->description_en,
+                ]);
+                break;
+            case 'long_description':
+                $value = new LocalizedString([
+                    'cs' => $this->long_description_cs,
+                    'en' => $this->long_description_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
+        }
+        return $value;
     }
 
     /**
@@ -156,8 +167,8 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
             'scheduleItemId' => $this->schedule_item_id,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => $this->getDescription()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'description' => $this->description->__serialize(),
+            'name' => $this->name->__serialize(),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => $this->getPrice()->__serialize(),
