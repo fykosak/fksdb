@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
 use FKSDB\Models\ORM\Services\SubmitQuestionService;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
+use Nette\Utils\DateTime;
 
 // phpcs:disable
 $container = require '../../Bootstrap.php';
@@ -36,7 +37,9 @@ class PublicModule extends AbstractPageDisplayTestCase
         );
         $this->submit = $this->container->getByType(SubmitService::class)->storeModel([
             'contestant_id' => $contestant->contestant_id,
-            'task_id' => $this->task->task_id, 'source' => SubmitSource::QUIZ
+            'task_id' => $this->task->task_id,
+            'source' => SubmitSource::QUIZ,
+            'submitted_on' => new DateTime()
         ]);
         /** @var SubmitQuestionModel $question */
         $question = $this->container->getByType(SubmitQuestionService::class)->storeModel(
@@ -71,6 +74,7 @@ class PublicModule extends AbstractPageDisplayTestCase
         return [
             ['Public:Dashboard', 'default'],
             ['Public:Submit', 'default'],
+            ['Public:Submit', 'list'],
             ['Public:Submit', 'ajax'],
             ['Public:Submit', 'quiz'],
             ['Public:Submit', 'quizDetail'],
