@@ -74,6 +74,7 @@ class PublicModule extends AbstractPageDisplayTestCase
             ['Public:Dashboard', 'default'],
             ['Public:Submit', 'default'],
             ['Public:Submit', 'legacy'],
+            ['Public:Submit', 'list'],
             ['Public:Submit', 'quiz'],
             ['Public:Submit', 'quizDetail'],
             ['Public:QuizRegister', 'default'],
