@@ -15,7 +15,6 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 class EventDispatchFactory
 {
