@@ -12,10 +12,12 @@ use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Localization\LocalizedString;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
@@ -23,17 +25,23 @@ use Nette\Schema\Processor;
 use Nette\Security\Resource;
 
 /**
- * @property-read int $event_year
- * @property-read int $year
- * @property-read string $name
  * @property-read int $event_id
- * @property-read string $report
- * @property-read EventTypeModel $event_type
  * @property-read int $event_type_id
+ * @property-read EventTypeModel $event_type
+ * @property-read int $year
+ * @property-read int $event_year
  * @property-read \DateTimeInterface $begin
  * @property-read \DateTimeInterface $end
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
+ * @property-read string $name
+ * @property-read string $report_cs
+ * @property-read string $report_en
+ * @property-read LocalizedString $report
+ * @property-read string $description_cs
+ * @property-read string $description_en
+ * @property-read LocalizedString $description
+ * @property-read string $place
  * @property-read string $parameters
  */
 final class EventModel extends Model implements Resource, NodeCreator
@@ -63,14 +71,40 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->name;
     }
 
-    public function getName(): string
+    public function getName(): LocalizedString
     {
         switch ($this->event_type_id) {
             case 1:
-                return 'Fyziklání' . ' ' . $this->begin->format('Y');
+                return new LocalizedString([
+                    'cs' => 'Fyziklání ' . $this->begin->format('Y'),
+                    'en' => 'Fyziklani ' . $this->begin->format('Y'),
+                ]);
+            case 2:
+            case 14:
+                return new LocalizedString([
+                    'cs' => 'DSEF ' .
+                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'jaro' : 'podzim') . ' ' .
+                        $this->begin->format('Y'),
+                    'en' => 'DSEF ' .
+                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'spring' : 'autumn') . ' ' .
+                        $this->begin->format('Y'),
+                ]);
+            case 9:
+                return new LocalizedString([
+                    'cs' => 'Fyziklání Online ' . $this->begin->format('Y'),
+                    'en' => 'Physics Brawl Online ' . $this->begin->format('Y'),
+                ]);
             default:
-                return $this->name;
+                return new LocalizedString([
+                    'cs' => $this->name,
+                    'en' => $this->name,
+                ]);
         }
+    }
+
+    public function getSymbol(): string
+    {
+        return $this->event_type->getSymbol();
     }
 
     public function isTeamEvent(): bool
@@ -135,6 +169,33 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
     }
 
+    /**
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+
+
+        switch ($key) {
+            case 'report':
+                $value = new LocalizedString([
+                    'cs' => $this->report_cs,
+                    'en' => $this->report_en,
+                ]);
+                break;
+            case 'description':
+                $value = new LocalizedString([
+                    'cs' => $this->description_cs,
+                    'en' => $this->description_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
+        }
+        return $value;
+    }
+
     public function __toArray(): array
     {
         return [
@@ -145,8 +206,11 @@ final class EventModel extends Model implements Resource, NodeCreator
             'end' => $this->end ? $this->end->format('c') : null,
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
-            'report' => $this->report,
-            'name' => $this->getName(),
+            'report' => $this->report_cs,
+            'reportNew' => $this->report->__serialize(),
+            'description' => $this->description->__serialize(),
+            'name' => $this->name,
+            'nameNew' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
         ];
     }

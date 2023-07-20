@@ -6,7 +6,6 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
 use Nette\Security\User;

@@ -4,7 +4,7 @@ import { select } from 'd3-selection';
 import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
 import * as React from 'react';
 import './timeline.scss';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface Event {
     begin: string;
@@ -58,7 +58,7 @@ interface Props {
             orgs: Org[];
         };
     };
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function Timeline(props: Props) {

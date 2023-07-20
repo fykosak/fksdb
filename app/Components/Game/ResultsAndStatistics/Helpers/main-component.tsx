@@ -3,7 +3,7 @@ import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Com
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
 import * as React from 'react';
 import { Action, Reducer } from 'redux';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import { TranslatorContext } from '@translator/context';
 
 interface OwnProps<Store> {
@@ -11,7 +11,7 @@ interface OwnProps<Store> {
     data: ResponseData;
     children: React.ReactNode;
     app: Reducer<Store, Action<string>>;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function MainComponent<Store>({app, actions, data, children, translator}: OwnProps<Store>) {

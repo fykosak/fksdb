@@ -33,9 +33,9 @@ class PaymentListWebModel extends WebModel
             foreach ($payment->getRelatedPersonSchedule() as $personSchedule) {
                 $paymentData['items'] [] = [
                     'price' => $personSchedule->schedule_item->getPrice()->__serialize(),
-                    'itemName' => $personSchedule->schedule_item->getName()->__serialize(),
-                    'description' => $personSchedule->schedule_item->getDescription()->__serialize(),
-                    'groupName' => $personSchedule->schedule_item->schedule_group->getName()->__serialize(),
+                    'itemName' => $personSchedule->schedule_item->name->__serialize(),
+                    'description' => $personSchedule->schedule_item->description->__serialize(),
+                    'groupName' => $personSchedule->schedule_item->schedule_group->name->__serialize(),
                 ];
             }
             $data[] = $paymentData;

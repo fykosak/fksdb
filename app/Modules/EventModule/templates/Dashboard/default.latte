@@ -1,9 +1,10 @@
+{varType string $lang}
 {block outerContent}
     {varType FKSDB\Models\ORM\Models\EventModel $event}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
-            <p>{$event->report}</p>
+            <p>{$event->report->getText($lang)}</p>
             {control columnTable [
             'event.event_type',
             'event.year',

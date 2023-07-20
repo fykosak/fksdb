@@ -9,13 +9,13 @@ import Setting from './Components/setting';
 import { app } from '../reducers/store';
 import './style.scss';
 import CtyrbojTable from 'FKSDB/Components/Game/ResultsAndStatistics/Presentation/Components/ctyrboj-table';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     actions: NetteActions;
     data: ResponseData;
     event: 'fof' | 'ctyrboj';
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function Main({actions, data, event, translator}: OwnProps) {

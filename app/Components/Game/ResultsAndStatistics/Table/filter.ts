@@ -26,7 +26,7 @@ export class Filter {
     }
 }
 
-export const createFilters = (categories: string[] = [], translator: Translator<string>): Filter[] => {
+export const createFilters = (categories: string[] = [], translator: Translator): Filter[] => {
     return categories.map((category: string) => {
         return new Filter({roomId: null, category, name: translator.getText('Category') + ' ' + category});
     });
