@@ -118,6 +118,7 @@
             },
             "require-dev": {
                 "nette/tester": "^2.4.0",
+                "phpstan/phpstan": "1.10.21",
                 "squizlabs/php_codesniffer": "3.6.0"
             },
             "type": "library",
@@ -149,7 +150,7 @@
                 "issues": "https://github.com/fykosak/nette-orm/issues",
                 "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
             },
-            "time": "2022-08-27T20:15:11+00:00"
+            "time": "2023-07-19T15:55:38+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

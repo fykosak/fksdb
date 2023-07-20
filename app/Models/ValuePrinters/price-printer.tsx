@@ -1,10 +1,10 @@
 import { Price } from 'FKSDB/Models/Payment/price';
 import * as React from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     price: Price;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function PricePrinter( {price: {EUR, CZK}, translator} : OwnProps) {

@@ -5,7 +5,7 @@ import { Translator } from '@translator/translator';
 interface OwnProps {
     date: string;
     options?: DateTimeFormatOptions;
-    translator: Translator<string>;
+    translator: Translator;
 }
 
 export default function TimeDisplay({options, translator, date}: OwnProps) {

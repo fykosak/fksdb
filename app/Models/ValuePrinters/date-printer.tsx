@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 interface OwnProps {
     date: string;
     options?: DateTimeFormatOptions;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function DateDisplay({date, options, translator}: OwnProps) {

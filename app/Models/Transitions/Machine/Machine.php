@@ -11,7 +11,6 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
-use Tracy\Debugger;
 
 abstract class Machine
 {

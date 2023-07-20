@@ -2,7 +2,7 @@ import * as React from 'react';
 import NodeChart, { Link as SimLink, Node as SimNode } from '../../Core/NodeChart/node-chart';
 import { scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 export interface Link {
     from: string;
@@ -22,7 +22,7 @@ interface OwnProps {
             [key: number]: Node;
         };
     };
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function ModelChart({data: {links, nodes}}: OwnProps) {

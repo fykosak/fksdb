@@ -8,9 +8,7 @@ type LanguageData<Lang extends string> = LangMap<{
     [msqId: string]: string;
 }, Lang>;
 
-export type availableLanguage = 'cs' | 'en';
-
-export class Translator<Lang extends string> {
+export class Translator<Lang extends string = 'cs' | 'en'> {
 
     private readonly data: LanguageData<Lang>;
     private readonly currentLocale: Lang = 'cs' as Lang;

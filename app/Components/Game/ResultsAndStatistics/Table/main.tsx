@@ -6,12 +6,12 @@ import App from './Components/index';
 import { app } from '../reducers/store';
 import SingleSelect from 'FKSDB/Components/Game/ResultsAndStatistics/Table/Components/filter-select';
 import './results-table.scss';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     actions: NetteActions;
     data: ResponseData;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function Main({actions, data, translator}: OwnProps) {

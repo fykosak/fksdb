@@ -8,8 +8,8 @@ export interface EventModel {
     end: string;
     registrationBegin: string;
     registrationEnd: string;
-    name: LangMap<'cs' | 'en', string>;
-    report: LangMap<'cs' | 'en', string>;
-    description: LangMap<'cs' | 'en', string>;
+    nameNew: LangMap<string, 'cs' | 'en'>;
+    reportNew: LangMap<string, 'cs' | 'en'>;
+    description: LangMap<string, 'cs' | 'en'>;
     eventTypeId: number;
 }

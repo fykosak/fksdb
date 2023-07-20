@@ -1,4 +1,4 @@
 import * as React from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
-export const TranslatorContext = React.createContext<Translator<availableLanguage>>(null);
+export const TranslatorContext = React.createContext<Translator>(null);
