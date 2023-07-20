@@ -18,8 +18,7 @@ parameters:
                 class:
                   required: false
             post_contact_p:
-                address:
-                  required: true
+                required: true
             person_info:
                 email:
                   required: true
@@ -44,8 +43,7 @@ parameters:
                 class:
                   required: false
             post_contact_p:
-                address:
-                  required: true
+                required: true
             person_info:
                 email:
                   required: true
@@ -62,8 +60,6 @@ parameters:
                     required: true
                 family_name:
                     required: true
-            post_contact_p:
-                required: true
             person_info:
                 email:
                     required: true
@@ -111,11 +107,9 @@ parameters:
                 study_year:
                   required: true
             post_contact_d:
-                address:
-                  required: false
+                required: false
             post_contact_p:
-                address:
-                  required: false
+                required: false
             person_has_flag:
                 spam_mff:
                   required: false

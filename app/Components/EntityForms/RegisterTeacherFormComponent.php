@@ -12,6 +12,7 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -28,6 +29,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     private string $lang;
     private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
+    private TeacherService $teacherService;
 
     public function __construct(
         Container $container,
@@ -41,10 +43,12 @@ class RegisterTeacherFormComponent extends EntityFormComponent
 
     final public function injectTernary(
         ContestAuthorizator $contestAuthorizator,
-        AccountManager $accountManager
+        AccountManager $accountManager,
+        TeacherService $teacherService
     ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->accountManager = $accountManager;
+        $this->teacherService = $teacherService;
     }
 
     protected function configureForm(Form $form): void
@@ -79,7 +83,6 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $referencedId = $form[self::CONT_TEACHER]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
-
 
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
