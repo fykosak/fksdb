@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { useState } from 'react';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     min: number;
     onChange: (value: number) => void;
     value: number;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function Range({min, onChange, value}: OwnProps) {

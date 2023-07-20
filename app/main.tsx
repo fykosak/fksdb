@@ -17,14 +17,14 @@ import './css/index.scss';
 import ModelChart from 'FKSDB/Components/Charts/Event/Model/model-chart';
 import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
 import ScheduleField from 'FKSDB/Components/Schedule/Input/schedule-field';
 import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 
-const translator = new Translator<availableLanguage>();
+const translator = new Translator();
 
 const renderer = new Renderer();
 

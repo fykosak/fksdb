@@ -8,7 +8,7 @@ import File from './States/file-state';
 import Form from './States/form-state';
 import LoadingState from './States/loading-state';
 import { TranslatorContext } from '@translator/context';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 
 export default function UploadContainer() {
@@ -17,7 +17,7 @@ export default function UploadContainer() {
     const submit = useSelector((state: Store) => state.uploadData.submit);
     const submitting = useSelector((state: Store) => state.fetch.submitting);
     const actions = useSelector((state: Store) => state.fetch.actions);
-    const getInnerContainer = (translator: Translator<availableLanguage>) => {
+    const getInnerContainer = (translator: Translator) => {
         if (submit.disabled) {
             return <p className="alert alert-info">{translator.getText('Task is not available for your category.')}</p>;
         }

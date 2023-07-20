@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\ItemAttendanceFormComponent;
 use FKSDB\Components\Schedule\PersonsGrid;
-use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -50,7 +50,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Schedule item "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-clipboard'
         );
     }
@@ -67,7 +67,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-pen'
         );
     }
@@ -83,7 +83,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-user-check'
         );
     }

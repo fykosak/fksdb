@@ -19,8 +19,13 @@ export default function Group({group, params}: OwnProps) {
             {translator.get(group.name)}
             {params.groupTime && (
                 <small className="ms-3 text-muted">
-                    <TimeDisplay date={group.start} translator={translator}/> - <TimeDisplay date={group.end}
-                                                                                             translator={translator}/>
+                    <TimeDisplay
+                        date={group.start}
+                        translator={translator}
+                    /> - <TimeDisplay
+                    date={group.end}
+                    translator={translator}
+                />
                 </small>)}
         </h5>
         {(group.registrationEnd || group.modificationEnd) &&
