@@ -1,3 +1,5 @@
+import { LangMap } from '@translator/translator';
+
 export interface EventModel {
     eventId: number;
     year: number;
@@ -6,6 +8,8 @@ export interface EventModel {
     end: string;
     registrationBegin: string;
     registrationEnd: string;
-    name: string;
+    nameNew: LangMap<string, 'cs' | 'en'>;
+    reportNew: LangMap<string, 'cs' | 'en'>;
+    description: LangMap<string, 'cs' | 'en'>;
     eventTypeId: number;
 }

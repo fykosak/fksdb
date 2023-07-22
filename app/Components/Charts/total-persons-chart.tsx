@@ -3,7 +3,7 @@ import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
 interface Data {
@@ -14,7 +14,7 @@ interface Data {
 
 interface OwnProps {
     data: Data[];
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function TotalPersonsChart({data, translator}: OwnProps) {

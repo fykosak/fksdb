@@ -4,12 +4,12 @@ import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestatns-data';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
 interface OwnProps {
     data: YearsData;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function PerSeriesChart({data, translator}: OwnProps) {

@@ -57,7 +57,7 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-pen'
         );
     }
@@ -73,7 +73,7 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-user-check'
         );
     }

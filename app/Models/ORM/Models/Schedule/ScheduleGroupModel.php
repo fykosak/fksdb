@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
 
 /**
@@ -22,6 +22,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface $end
  * @property-read string $name_cs
  * @property-read string $name_en
+ * @property-read LocalizedString $name
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read \DateTimeInterface|null $modification_end
@@ -36,14 +37,6 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }
 
-    public function getName(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->name_cs,
-            'en' => $this->name_en,
-        ]);
-    }
-
     public function __toArray(): array
     {
         return [
@@ -52,8 +45,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'registrationBegin' => $this->getRegistrationBegin(),
             'registrationEnd' => $this->getRegistrationEnd(),
             'modificationEnd' => $this->getModificationEnd(),
-            'label' => $this->getName()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
@@ -125,11 +117,18 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
      */
     public function &__get(string $key) // phpcs:ignore
     {
-        $value = parent::__get($key);
         switch ($key) {
             case 'schedule_group_type':
-                $value = ScheduleGroupType::tryFrom($value);
+                $value = ScheduleGroupType::tryFrom(parent::__get($key));
                 break;
+            case 'name':
+                $value = new LocalizedString([
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
         }
         return $value;
     }
@@ -149,7 +148,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'end' => $this->end->format('c'),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
         ], $document, $node);
         return $node;
     }

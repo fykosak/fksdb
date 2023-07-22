@@ -6,12 +6,12 @@ import UploadContainer from './Components/container';
 import { app, Store } from './Reducers';
 import './style.scss';
 import { TranslatorContext } from '@translator/context';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface Props {
     data: SubmitModel;
     actions: NetteActions;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function AjaxSubmitComponent({actions, data, translator}: Props) {

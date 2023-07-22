@@ -3,7 +3,7 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { EventModel } from 'FKSDB/Models/ORM/Models/event-model';
 import * as React from 'react';
 import { useState } from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import Range from 'FKSDB/Components/Charts/Event/Applications/range';
 import './bar-progress.scss';
 import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
@@ -22,7 +22,7 @@ export interface Data {
 
 interface OwnProps {
     data: Data;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function BarProgress({data, translator}: OwnProps) {
@@ -67,7 +67,7 @@ export default function BarProgress({data, translator}: OwnProps) {
             <text
                 x="10"
                 y={yScale.bandwidth() / 2}
-            >{data.events[eventId].name}: {sum}</text>
+            >{translator.get(data.events[eventId].nameNew)}: {sum}</text>
         </g>;
     });
 

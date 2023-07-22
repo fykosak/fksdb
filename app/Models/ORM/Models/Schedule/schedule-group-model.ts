@@ -1,11 +1,11 @@
-import { availableLanguage, LangMap } from '@translator/translator';
+import { LangMap } from '@translator/translator';
 import { ScheduleItemModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
 
 export interface ScheduleGroupModel {
     items: ScheduleItemModel[];
     scheduleGroupId: number;
     scheduleGroupType: ScheduleGroupType;
-    name: LangMap<availableLanguage, string>;
+    name: LangMap<string, 'cs' | 'en'>;
     eventId: number;
     start: string;
     end: string;

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import Group from 'FKSDB/Components/Schedule/Input/Components/group';
 import { TranslatorContext } from '@translator/context';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     scheduleDef: {
@@ -14,7 +14,7 @@ interface OwnProps {
         options: Params;
     };
     input: HTMLInputElement | HTMLSelectElement;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export interface Params {
