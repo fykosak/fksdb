@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
-    entry: './app/Bootstrap.tsx',
+    entry: './app/main.tsx',
     output: {
         path: path.resolve(__dirname, './www/assets'),
         assetModuleFilename: 'media/[path][name][ext]',
@@ -36,7 +36,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.tsx', '.ts', '.js', '.scss'],
         plugins: [new TsconfigPathsPlugin()],
     },
     externals: {

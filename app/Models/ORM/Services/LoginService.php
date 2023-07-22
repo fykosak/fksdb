@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method LoginModel storeModel(array $data, ?LoginModel $model = null)
  */
-class LoginService extends Service
+final class LoginService extends Service
 {
 }

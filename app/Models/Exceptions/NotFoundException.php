@@ -12,6 +12,6 @@ class NotFoundException extends BadRequestException
 
     public function __construct(?string $message = '', ?\Throwable $previous = null)
     {
-        parent::__construct($message ?? 'Resource no found', IResponse::S404_NOT_FOUND, $previous);
+        parent::__construct($message ?? _('Resource not found'), IResponse::S404_NOT_FOUND, $previous);
     }
 }

@@ -9,7 +9,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-class StudyYear extends FakeStringEnum implements EnumColumn
+final class StudyYear extends FakeStringEnum implements EnumColumn
 {
     public const P_5 = 'P_5';
     public const P_6 = 'P_6';
@@ -86,6 +86,9 @@ class StudyYear extends FakeStringEnum implements EnumColumn
         }
     }
 
+    /**
+     * @return static[]
+     */
     public static function getPrimarySchoolCases(): array
     {
         return [

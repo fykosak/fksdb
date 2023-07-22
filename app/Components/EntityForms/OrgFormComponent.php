@@ -72,7 +72,7 @@ class OrgFormComponent extends EntityFormComponent
         }
         $this->orgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
+            isset($this->model) ? _('Organizer has been updated.') : _('Organizer has been created.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');

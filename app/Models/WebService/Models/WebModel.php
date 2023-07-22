@@ -6,9 +6,9 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
+use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
@@ -17,7 +17,7 @@ abstract class WebModel
     use SmartObject;
 
     protected Container $container;
-    protected ?LoginModel $authenticatedLogin;
+    protected User $user;
 
     final public function __construct(Container $container)
     {
@@ -25,9 +25,9 @@ abstract class WebModel
         $container->callInjects($this);
     }
 
-    final public function setLogin(?LoginModel $authenticatedLogin): void
+    final public function setUser(User $user): void
     {
-        $this->authenticatedLogin = $authenticatedLogin;
+        $this->user = $user;
     }
 
     /**
@@ -40,13 +40,13 @@ abstract class WebModel
 
     protected function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**

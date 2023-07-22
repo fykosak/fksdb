@@ -1,0 +1,28 @@
+.node-chart {
+  marker {
+    path {
+      fill: var(--marker-color);
+      stroke: none;
+    }
+  }
+
+  circle {
+    stroke: none;
+    fill: var(--color);
+  }
+
+  .links {
+    path {
+      fill: none;
+      stroke-width: 1.5;
+      stroke: var(--color);
+      stroke-dasharray: var(--line);
+    }
+  }
+
+  text {
+    fill: var(--color);
+    font-size: .5rem;
+    font-weight: bold;
+  }
+}

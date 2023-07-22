@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $teacher_id
@@ -19,7 +19,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $state TODO ENUM('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
  * @property-read int $number_brochures
  */
-class TeacherModel extends Model implements Resource
+final class TeacherModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'teacher';

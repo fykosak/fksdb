@@ -13,7 +13,7 @@ use FKSDB\Models\Submits\StorageException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Service;
 
-class SchedulePaymentService extends Service
+final class SchedulePaymentService extends Service
 {
 
     /**

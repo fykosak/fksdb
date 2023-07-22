@@ -63,10 +63,7 @@ class RankingStrategy
             }
             $log->addHtml(
                 Html::el('li')
-                    ->addText(
-                        _('Team') . " " . $team->name . ' (' . $team->fyziklani_team_id . ')'
-                        . " - " . _('Rank') . ': ' . ($rank)
-                    )
+                    ->addText(sprintf(_('Team %s (%d) - rank: %d'), $team->name, $team->fyziklani_team_id, $rank))
             );
         }
         return $log;

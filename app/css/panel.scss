@@ -1,0 +1,33 @@
+.panel {
+  padding: 4.3rem 0;
+  background-color: var(--panel-bg);
+
+  &:first-of-type {
+    padding: .5rem 0;
+  }
+
+  &.panel-dark, &.color-auto:nth-of-type(2n) {
+    --panel-bg: var(--bs-secondary-bg);
+  }
+
+  &.panel-light, &.color-auto:nth-of-type(2n+1) {
+    background-color: var(--bs-body-bg);
+  }
+
+  .page-header {
+    margin-bottom: 2.1rem;
+  }
+
+  .subtitle {
+    font-weight: bold;
+    font-size: 1.6rem;
+  }
+
+  h1, h2 {
+    font-weight: 600;
+  }
+
+  h2 {
+    margin-bottom: 2.1rem;
+  }
+}

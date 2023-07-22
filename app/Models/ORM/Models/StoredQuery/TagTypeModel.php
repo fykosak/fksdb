@@ -13,6 +13,23 @@ use Fykosak\NetteORM\Model;
  * @property-read string $description
  * @property-read int $color
  */
-class TagTypeModel extends Model
+final class TagTypeModel extends Model
 {
+    public function getColor(): string
+    {
+        switch ($this->tag_type_id) {
+            case 6:
+                return 'dsef';
+            case 4:
+                return 'fol';
+            case 1:
+                return 'fof';
+            case 15:
+                return 'vyfuk';
+            case 16:
+                return 'fykos';
+            default:
+                return 'color-' . $this->color;
+        }
+    }
 }

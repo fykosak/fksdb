@@ -42,7 +42,7 @@ class LocalizedString implements \ArrayAccess
      */
     public function offsetSet($offset, $value): void
     {
-        throw new InvalidStateException('Can not set variant');
+        throw new InvalidStateException(_('Cannot set variant'));
     }
 
     /**
@@ -50,7 +50,7 @@ class LocalizedString implements \ArrayAccess
      */
     public function offsetUnset($offset): void
     {
-        throw new InvalidStateException('Can not delete variant');
+        throw new InvalidStateException(_('Cannot delete variant'));
     }
 
     public function __serialize(): array

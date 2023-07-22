@@ -12,10 +12,10 @@ use Nette\DI\Container;
 
 final class YearChooserComponent extends ChooserComponent
 {
-    private ?ContestYearModel $contestYear;
+    private ContestYearModel $contestYear;
     private TypedGroupedSelection $availableYears;
 
-    public function __construct(Container $container, ?ContestYearModel $urlYear, TypedGroupedSelection $availableYears)
+    public function __construct(Container $container, ContestYearModel $urlYear, TypedGroupedSelection $availableYears)
     {
         parent::__construct($container);
         $this->contestYear = $urlYear;

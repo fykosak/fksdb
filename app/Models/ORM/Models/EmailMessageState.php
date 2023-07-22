@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class EmailMessageState extends FakeStringEnum implements EnumColumn
+final class EmailMessageState extends FakeStringEnum implements EnumColumn
 {
     public const SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const WAITING = 'waiting'; //čaká na poslanie

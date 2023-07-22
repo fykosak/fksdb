@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\Schedule;
 
-use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Components\Schedule\Input\Handler;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;

@@ -75,9 +75,12 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\EmailMessageState
-
-         #created:
-         #send:
+            created:
+                type: dateTime
+                title: _('Created')
+            sent:
+                type: dateTime
+                title: _('Sent')
     event:
         service: FKSDB\Models\ORM\Services\EventService
         model: FKSDB\Models\ORM\Models\EventModel
@@ -117,10 +120,25 @@ orm:
             registration_end:
                 type: dateTime
                 title: _('Registration end')
-            report:
+            report_cs:
                 type: text
-                description: _('Summary of the event.')
-                title: _('Report')
+                description: _('Summary of the event in czech.')
+                title: _('Report in czech')
+            report_en:
+                type: text
+                description: _('Summary of the event in english.')
+                title: _('Report in english')
+            description_cs:
+                type: text
+                description: _('Description of the event in czech.')
+                title: _('Description in czech')
+            description_en:
+                type: text
+                description: _('Description of the event in english.')
+                title: _('Description in english')
+            place:
+                type: text
+                title: _('Place')
             event_year:
                 type: int
                 title: _('Event year')
@@ -506,7 +524,7 @@ orm:
             birthplace:
                 type: string
                 title: _('Place of birth')
-                description: _('City and region (for diplomas).')
+                description: _('City and region')
                 permission: FULL
             career:
                 title: _('Current role')

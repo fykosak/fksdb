@@ -130,7 +130,8 @@ class PaymentFormComponent extends EntityFormComponent
             $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $this->machine->executeImplicitTransition($holder);
+                $transition = $this->machine->getImplicitTransition($holder);
+                $this->machine->execute($transition, $holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {

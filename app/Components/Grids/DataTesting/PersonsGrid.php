@@ -10,11 +10,11 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 
 class PersonsGrid extends BaseGrid
@@ -29,7 +29,7 @@ class PersonsGrid extends BaseGrid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->personService->getTable();
     }

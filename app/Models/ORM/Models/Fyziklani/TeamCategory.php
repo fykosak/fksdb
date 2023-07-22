@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TeamCategory extends FakeStringEnum implements EnumColumn
+final class TeamCategory extends FakeStringEnum implements EnumColumn
 {
     public const A = 'A';
     public const B = 'B';

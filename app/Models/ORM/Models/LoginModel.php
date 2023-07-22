@@ -20,7 +20,7 @@ use Nette\Security\IIdentity;
  * @property-read \DateTimeInterface $last_login
  * @property-read int $active
  */
-class LoginModel extends Model implements IIdentity
+final class LoginModel extends Model implements IIdentity
 {
     public function __toString(): string
     {

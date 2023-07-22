@@ -15,7 +15,7 @@ use Fykosak\NetteORM\Model;
  * @property-read PersonModel $person
  * @property-read TaskContributionType $type
  */
-class TaskContributionModel extends Model
+final class TaskContributionModel extends Model
 {
 
     /**

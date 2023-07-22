@@ -11,6 +11,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int $address_id
  * @property-read string $type
  */
-class PostContactModel extends Model
+final class PostContactModel extends Model
 {
 }

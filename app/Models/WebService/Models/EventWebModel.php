@@ -47,46 +47,9 @@ class EventWebModel extends WebModel
         }
         $doc = new \DOMDocument();
         $root = $this->createEventDetailNode($doc, $event);
-
-        $root->appendChild($this->createTeamListNode($doc, $event));
-        $root->appendChild($this->createScheduleListNode($doc, $event));
-        $root->appendChild($this->createPersonScheduleNode($doc, $event));
         $root->appendChild($this->createParticipantListNode($doc, $event));
         $doc->formatOutput = true;
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
-    }
-
-    /**
-     * @throws \DOMException
-     */
-    private function createPersonScheduleNode(\DOMDocument $doc, EventModel $event): \DOMElement
-    {
-        $rootNode = $doc->createElement('personSchedule');
-
-        $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $event->event_id)
-            ->order('person_id');
-        $lastPersonId = null;
-        $currentNode = null;
-        /** @var PersonScheduleModel $model */
-        foreach ($query as $model) {
-            if ($lastPersonId !== $model->person_id) {
-                $lastPersonId = $model->person_id;
-                $currentNode = $doc->createElement('personSchedule');
-                $personNode = $doc->createElement('person');
-                XMLHelper::fillArrayToNode([
-                    'name' => $model->person->getFullName(),
-                    'personId' => $model->person_id,
-                    'email' => $model->person->getInfo()->email,
-                ], $doc, $personNode);
-                $currentNode->appendChild($personNode);
-                $rootNode->appendChild($currentNode);
-            }
-            $scheduleItemNode = $doc->createElement('scheduleItemId');
-            $scheduleItemNode->nodeValue = $model->schedule_item_id;
-            $currentNode->appendChild($scheduleItemNode);
-        }
-        return $rootNode;
     }
 
     private function createPersonScheduleArray(EventModel $event): array
@@ -106,24 +69,6 @@ class EventWebModel extends WebModel
             ];
         }
         return $data;
-    }
-
-    /**
-     * @throws \DOMException
-     */
-    private function createScheduleListNode(\DOMDocument $doc, EventModel $event): \DOMElement
-    {
-        $rootNode = $doc->createElement('schedule');
-        /** @var ScheduleGroupModel $group */
-        foreach ($event->getScheduleGroups() as $group) {
-            $groupNode = $group->createXMLNode($doc);
-            /** @var ScheduleItemModel $item */
-            foreach ($group->getItems() as $item) {
-                $groupNode->appendChild($item->createXMLNode($doc));
-            }
-            $rootNode->appendChild($groupNode);
-        }
-        return $rootNode;
     }
 
     /**
@@ -154,36 +99,6 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('eventDetail');
         $rootNode->appendChild($event->createXMLNode($doc));
-        return $rootNode;
-    }
-
-    /**
-     * @throws \DOMException
-     */
-    private function createTeamListNode(\DOMDocument $doc, EventModel $event): \DOMElement
-    {
-        $rootNode = $doc->createElement('teams');
-        /** @var TeamModel2 $team */
-        foreach ($event->getTeams() as $team) {
-            $teamNode = $team->createXMLNode($doc);
-            /** @var TeamTeacherModel $teacher */
-            foreach ($team->getTeachers() as $teacher) {
-                $teacherNode = $doc->createElement('teacher');
-                $teacherNode->setAttribute('personId', (string)$teacher->person_id);
-                XMLHelper::fillArrayToNode([
-                    'name' => $teacher->person->getFullName(),
-                    'email' => $teacher->person->getInfo()->email,
-                ], $doc, $teacherNode);
-                $teamNode->appendChild($teacherNode);
-            }
-            /** @var TeamMemberModel $member */
-            foreach ($team->getMembers() as $member) {
-                $pNode = $this->createTeamMemberNode($member, $doc);
-                $teamNode->appendChild($pNode);
-            }
-
-            $rootNode->appendChild($teamNode);
-        }
         return $rootNode;
     }
 
@@ -277,11 +192,11 @@ class EventWebModel extends WebModel
         $history = $member->getPersonHistory();
         return [
             'name' => $member->person->getFullName(),
-            'personId' => $member->person->person_id,
+            'personId' => (string)$member->person->person_id,
             'email' => $member->person->getInfo()->email,
-            'schoolId' => $history ? $history->school_id : null,
+            'schoolId' => $history ? (string)$history->school_id : null,
             'schoolName' => $history ? $history->school->name_abbrev : null,
-            'studyYear' => $history ? $history->study_year : null,
+            'studyYear' => $history ? (string)$history->study_year : null,
             'countryIso' => $history ? (
             ($school = $history->school) ? $school->address->country->alpha_2 : null
             ) : null,

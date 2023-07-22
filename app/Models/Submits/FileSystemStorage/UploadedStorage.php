@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\Submits\StorageProcessing;
-use FKSDB\Models\Submits\SubmitStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
-use Tracy\Debugger;
+use FKSDB\Models\Submits\StorageProcessing;
+use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
 
 class UploadedStorage implements SubmitStorage
 {
@@ -68,7 +68,7 @@ class UploadedStorage implements SubmitStorage
     public function commit(): void
     {
         if ($this->todo === null) {
-            throw new InvalidStateException('Cannot commit out of transaction.');
+            throw new InvalidStateException(_('Cannot commit out of transaction.'));
         }
 
         try {
@@ -111,7 +111,7 @@ class UploadedStorage implements SubmitStorage
                 }
             }
         } catch (InvalidStateException $exception) {
-            throw new StorageException('Error while storing files.', 0, $exception);
+            throw new StorageException(_('Error while storing files.'), 0, $exception);
         }
 
         $this->todo = null;
@@ -120,7 +120,7 @@ class UploadedStorage implements SubmitStorage
     public function rollback(): void
     {
         if ($this->todo === null) {
-            throw new InvalidStateException('Cannot rollback out of transaction.');
+            throw new InvalidStateException(_('Cannot rollback out of transaction.'));
         }
 
         $this->todo = null;
@@ -129,7 +129,7 @@ class UploadedStorage implements SubmitStorage
     public function storeFile(string $filename, SubmitModel $submit): void
     {
         if ($this->todo === null) {
-            throw new InvalidStateException('Cannot store file out of transaction.');
+            throw new InvalidStateException(_('Cannot store file out of transaction.'));
         }
 
         $this->todo[] = [
@@ -157,7 +157,9 @@ class UploadedStorage implements SubmitStorage
         if (count($files) == 0) {
             return null;
         } elseif (count($files) > 1) {
-            throw new InvalidStateException("Ambiguity in file database for submit #$submit->submit_id.");
+            throw new InvalidStateException(
+                sprintf(_('Ambiguity in file database for submit #%d.'), $submit->submit_id)
+            );
         } else {
             $file = array_pop($files);
             return $file->getRealPath();
@@ -183,7 +185,7 @@ class UploadedStorage implements SubmitStorage
         }
 
         if (count($fails)) {
-            throw new StorageException("Error when deleting '" . implode("', '", $fails) . "'");
+            throw new StorageException(sprintf(_('Error when deleting %s.'), implode('; ', $fails)));
         }
     }
 

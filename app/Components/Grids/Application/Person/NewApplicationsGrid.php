@@ -12,8 +12,8 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
 class NewApplicationsGrid extends BaseGrid
 {
@@ -27,7 +27,7 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->eventService->getTable()
             ->where('registration_begin <= NOW()')
@@ -55,7 +55,7 @@ class NewApplicationsGrid extends BaseGrid
             function (EventModel $modelEvent): bool {
                 try {
                     return (bool)count(
-                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
+                        $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
                             $this->eventDispatchFactory->getDummyHolder($modelEvent),
                             EventParticipantStatus::tryFrom(Machine::STATE_INIT)
                         )

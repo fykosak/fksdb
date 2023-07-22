@@ -22,7 +22,6 @@ class ContestantModel extends AESOPModel
     private ?ContestCategoryModel $category;
 
     /**
-     * ContestantModel constructor.
      * @throws BadRequestException
      */
     public function __construct(Container $container, ContestYearModel $contestYear, ?string $category)

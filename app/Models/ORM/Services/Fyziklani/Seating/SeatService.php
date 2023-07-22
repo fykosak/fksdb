@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services\Fyziklani\Seating;
 
 use Fykosak\NetteORM\Service;
 
-class SeatService extends Service
+final class SeatService extends Service
 {
 }

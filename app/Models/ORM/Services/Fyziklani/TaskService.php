@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
  * @method TaskModel storeModel(array $data, ?TaskModel $model = null)
  */
-class TaskService extends Service
+final class TaskService extends Service
 {
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel

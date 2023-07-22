@@ -8,10 +8,10 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -38,9 +38,10 @@ class TagsColumnFactory extends ColumnFactory
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([
-                        'class' => 'badge bg-color-' . $tag->color,
+                        'class' => 'me-2 badge bg-' . $tag->getColor(),
                         'title' => $tag->description,
                     ])
+                    ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-tag me-1']))
                     ->addText($tag->name)
             );
         }

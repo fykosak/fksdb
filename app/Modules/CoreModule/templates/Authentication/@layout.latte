@@ -1,22 +1,26 @@
 {layout '../@layout.latte'}
 {block nav}{/block}{*nav is emepty*}
-{varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
 {block main}
-    <main class="{$pageStyleContainer->getMainContainerClassName()}">
+    <main>
         <div class="login-form-container card">
             <div class="row mx-3" style="height:7rem">
-                <img class="col-6" src="{$basePath}/images/contests/fykos-gray.svg" alt="fykos"/>
-                <img class="col-6" src="{$basePath}/images/contests/vyfuk-gray.svg" alt="vyfuk"/>
+                <img class="col-6" src="{$basePath}/images/contests/fykos.svg" alt="fykos"/>
+                <img class="col-6" src="{$basePath}/images/contests/vyfuk.svg" alt="vyfuk"/>
             </div>
             <div class="card-body pt-0">
                 <div class="text-center">
-                    <img src="{$basePath}/images/logo/gray.svg" width="75%" alt="FKSDB"/>
+                    <img src="{$basePath}/images/logo/black.svg" width="75%" alt="FKSDB"/>
                 </div>
                 {block flashes}
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
                 {include form}
-                <div class="text-center" style="list-style: none;">{control languageChooser}</div>
+                <hr/>
+                <div class="d-grid gap-2 mt-2">
+                    <div class="text-center btn btn-outline-dark" style="list-style: none;">
+                        {control languageChooser}
+                    </div>
+                </div>
             </div>
         </div>
     </main>

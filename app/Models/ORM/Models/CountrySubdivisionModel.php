@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $country_id
  * @property-read CountryModel $country
  */
-class CountrySubdivisionModel extends Model
+final class CountrySubdivisionModel extends Model
 {
 
 }

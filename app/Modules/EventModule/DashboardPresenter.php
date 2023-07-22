@@ -15,15 +15,15 @@ class DashboardPresenter extends BasePresenter
      */
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, \sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
+        return new PageTitle(null, \sprintf(_('Event %s'), $this->getEvent()->name), 'fas fa-calendar-alt');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('event.dashboard', 'default'));
+        return $this->isAllowed('event.dashboard', 'default');
     }
 
     /**

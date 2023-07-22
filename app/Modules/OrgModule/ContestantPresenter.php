@@ -14,7 +14,6 @@ use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
@@ -41,18 +40,18 @@ class ContestantPresenter extends BasePresenter
         return new PageTitle(
             'contestant-edit',
             sprintf(_('Edit the contestant %s'), $this->getEntity()->person->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle('contestant-create', _('Create contestant'), 'fa fa-user-plus');
+        return new PageTitle('contestant-create', _('Create contestant'), 'fas fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle('contestant-list', _('Contestants'), 'fa fa-user-graduate');
+        return new PageTitle('contestant-list', _('Contestants'), 'fas fa-user-graduate');
     }
 
     protected function createComponentGrid(): ContestantsGrid
@@ -98,7 +97,7 @@ class ContestantPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    protected function createComponentCreateForm(): Control
+    protected function createComponentCreateForm(): ContestantFormComponent
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
@@ -107,7 +106,7 @@ class ContestantPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ContestantFormComponent
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }

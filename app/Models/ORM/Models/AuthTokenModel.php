@@ -15,6 +15,6 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface $until
  * TODO
  */
-class AuthTokenModel extends Model
+final class AuthTokenModel extends Model
 {
 }

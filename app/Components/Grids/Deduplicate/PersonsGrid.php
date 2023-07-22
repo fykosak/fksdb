@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
 class PersonsGrid extends BaseGrid
@@ -27,7 +26,7 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->data;
     }

@@ -16,7 +16,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $fyziklani_team_id
  * @property-read TeamModel2 fyziklani_team
  */
-class TeamMemberModel extends Model
+final class TeamMemberModel extends Model
 {
 
     public function getPersonHistory(): ?PersonHistoryModel
