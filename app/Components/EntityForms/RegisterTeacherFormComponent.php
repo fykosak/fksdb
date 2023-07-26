@@ -14,11 +14,15 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @property GettextTranslator $translator
+ */
 class RegisterTeacherFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
@@ -26,19 +30,16 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     public const CONT_TEACHER = 'teacher';
 
     private ?PersonModel $loggedPerson;
-    private string $lang;
     private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
     private TeacherService $teacherService;
 
     public function __construct(
         Container $container,
-        string $lang,
         ?PersonModel $person
     ) {
         parent::__construct($container, null);
         $this->loggedPerson = $person;
-        $this->lang = $lang;
     }
 
     final public function injectTernary(
@@ -87,7 +88,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
+                $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);

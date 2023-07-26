@@ -1,5 +1,5 @@
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
-import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
+import { ACTION_DRAG_END, ACTION_DRAG_START, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,16 +12,16 @@ export default function FormState() {
     const translator = useContext(TranslatorContext);
     const dispatch = useDispatch();
     const actions = useSelector((state: Store) => state.fetch.actions);
-    const dragged = useSelector((state: Store) => state.dragNDrop.dragged);
+    const dragged = useSelector((state: Store) => state.dragNDrop);
 
     const handleDragEnd = (event: React.DragEvent<HTMLDivElement>): void => {
         event.preventDefault();
-        dispatch(dragEnd());
+        dispatch({type: ACTION_DRAG_END});
     }
 
     const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
         event.preventDefault();
-        dispatch(dragStart());
+        dispatch({type: ACTION_DRAG_START});
     }
 
     const onUploadFile = (event: React.DragEvent<HTMLDivElement>): void => {

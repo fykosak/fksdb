@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method SubmitModel findByPrimary($key)
+ * @method SubmitModel|null findByPrimary($key)
  * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
 final class SubmitService extends Service

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\AjaxSubmit;
+namespace FKSDB\Components\Controls\Upload\AjaxSubmit;
 
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -13,6 +13,7 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -22,6 +23,9 @@ use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
+/**
+ * @property GettextTranslator $translator
+ */
 class AjaxSubmitComponent extends AjaxComponent
 {
 
@@ -29,14 +33,12 @@ class AjaxSubmitComponent extends AjaxComponent
     private TaskModel $task;
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private string $lang;
 
-    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant, string $lang)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant)
     {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
-        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitService $submitService, SubmitHandlerFactory $submitHandlerFactory): void
@@ -109,7 +111,7 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(
                 new Message(
-                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFullLabel($this->lang)),
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFullLabel($this->translator->lang)),
                     Message::LVL_ERROR
                 )
             );

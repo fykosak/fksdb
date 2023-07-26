@@ -232,7 +232,6 @@ final class RegisterPresenter extends CoreBasePresenter
     {
         return new RegisterContestantFormComponent(
             $this->getContext(),
-            $this->getLang(),
             $this->getSelectedContestYear(),
             $this->getLoggedPerson()
         );
@@ -242,7 +241,6 @@ final class RegisterPresenter extends CoreBasePresenter
     {
         return new RegisterTeacherFormComponent(
             $this->getContext(),
-            $this->getLang(),
             $this->getLoggedPerson()
         );
     }

@@ -25,11 +25,9 @@ final class DispatchPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
         $person = $this->getLoggedPerson();
         $this->template->contestants = $this->getAllContestants($person);
-        $this->template->orgs = $this->getAllOrganisers($login);
+        $this->template->orgs = $this->getAllOrganisers($person->getLogin());
     }
 
     /**

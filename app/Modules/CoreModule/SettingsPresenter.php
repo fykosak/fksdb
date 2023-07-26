@@ -41,11 +41,8 @@ final class SettingsPresenter extends BasePresenter
 
     public function actionDefault(): void
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-
         $defaults = [
-            self::CONT_LOGIN => $login->toArray(),
+            self::CONT_LOGIN => $this->getLoggedPerson()->getLogin()->toArray(),
         ];
         /** @var FormControl $control */
         $control = $this->getComponent('settingsForm');
@@ -71,8 +68,7 @@ final class SettingsPresenter extends BasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
+        $login = $this->getLoggedPerson()->getLogin();
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
                 AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
@@ -154,8 +150,7 @@ final class SettingsPresenter extends BasePresenter
                 AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
             ) ||
             $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
+        $login = $this->getLoggedPerson()->getLogin();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
         if ($loginData['password']) {

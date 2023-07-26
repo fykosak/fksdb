@@ -234,6 +234,7 @@ final class PaymentPresenter extends BasePresenter
         return new PaymentFormComponent(
             $this->getContext(),
             $this->getEvent(),
+            $this->getLoggedPerson(),
             $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
             $this->getMachine(),
             null
@@ -253,6 +254,7 @@ final class PaymentPresenter extends BasePresenter
         return new PaymentFormComponent(
             $this->getContext(),
             $this->getEvent(),
+            $this->getLoggedPerson(),
             $this->isAllowed($this->getEntity(), 'org-edit'),
             $this->getMachine(),
             $this->getEntity()

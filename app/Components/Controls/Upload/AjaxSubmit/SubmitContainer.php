@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\AjaxSubmit;
+namespace FKSDB\Components\Controls\Upload\AjaxSubmit;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -17,14 +18,14 @@ class SubmitContainer extends BaseComponent
 
     private ContestantModel $contestant;
 
-    public function __construct(Container $container, ContestantModel $contestant, string $lang)
+    public function __construct(Container $container, ContestantModel $contestant)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
         /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
             $this->addComponent(
-                new AjaxSubmitComponent($this->getContext(), $task, $contestant, $lang),
+                new AjaxSubmitComponent($this->getContext(), $task, $contestant),
                 'task_' . $task->task_id
             );
         }
@@ -52,6 +53,6 @@ class SubmitContainer extends BaseComponent
     {
         $this->template->availableTasks = $this->getAvailableTasks();
         /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte');
     }
 }

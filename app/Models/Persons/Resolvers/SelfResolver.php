@@ -46,7 +46,7 @@ class SelfResolver implements Resolver
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;

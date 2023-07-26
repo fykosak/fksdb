@@ -15,11 +15,15 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @property GettextTranslator $translator
+ */
 class RegisterContestantFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
@@ -28,20 +32,17 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     private ContestYearModel $contestYear;
     private ?PersonModel $person;
-    private string $lang;
 
     private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
 
     public function __construct(
         Container $container,
-        string $lang,
         ContestYearModel $contestYear,
         ?PersonModel $person
     ) {
         parent::__construct($container, null);
         $this->person = $person;
-        $this->lang = $lang;
         $this->contestYear = $contestYear;
     }
 
@@ -92,7 +93,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
+                $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);

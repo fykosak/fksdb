@@ -34,7 +34,7 @@
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
             {label $field/}
-            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class, 'required'=>null}
+            {input $field class: 'form-control ' . $field->getControlPrototype()->class, 'required'=>null}
             {include metadata field => $field}
         </div>
     {/switch}

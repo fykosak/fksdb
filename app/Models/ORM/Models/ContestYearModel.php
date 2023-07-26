@@ -32,7 +32,7 @@ final class ContestYearModel extends Model
 
     public function isActive(): bool
     {
-        return (bool)$this->getAvailableTasks()->fetch();
+        return $this->getAvailableTasks()->count('*') > 0;
     }
 
     public function getAvailableTasks(): TypedGroupedSelection

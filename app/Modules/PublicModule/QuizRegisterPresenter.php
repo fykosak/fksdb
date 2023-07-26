@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
+use FKSDB\Components\Controls\Upload\Quiz\QuizComponent;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\TaskNotFoundException;
@@ -66,6 +66,6 @@ final class QuizRegisterPresenter extends BasePresenter
             throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
         }
 
-        return new QuizComponent($this->getContext(), $this->getLang(), $task, null);
+        return new QuizComponent($this->getContext(), $task, null);
     }
 }

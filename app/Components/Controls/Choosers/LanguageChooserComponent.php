@@ -6,46 +6,37 @@ namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @property GettextTranslator $translator
+ */
 final class LanguageChooserComponent extends ChooserComponent
 {
-    private Language $lang;
-    private bool $modifiable;
-
-    public function __construct(Container $container, string $lang, bool $modifiable)
-    {
-        parent::__construct($container);
-        $this->lang = Language::tryFrom($lang);
-        $this->modifiable = $modifiable;
-    }
-
     /**
      * @throws NotImplementedException
      */
     protected function getItem(): NavItem
     {
-        if ($this->modifiable) {
-            $items = [];
-            foreach (Language::cases() as $language) {
-                $items[] = new NavItem(
-                    new Title(null, $language->label()),
-                    'this',
-                    ['lang' => $language->value],
-                    [],
-                    $language->value === $this->lang->value
-                );
-            }
-
-            return new NavItem(
-                new Title(null, $this->lang->label(), 'fas fa-language'),
-                '#',
+        $items = [];
+        foreach (Language::cases() as $language) {
+            $items[] = new NavItem(
+                new Title(null, $language->label()),
+                'this',
+                ['lang' => $language->value],
                 [],
-                $items
+                $language->value === $this->translator->lang
             );
         }
-        return new NavItem(new Title(null, $this->lang->label()));
+
+        return new NavItem(
+            new Title(null, Language::tryFrom($this->translator->lang)->label(), 'fas fa-language'),
+            '#',
+            [],
+            $items
+        );
     }
 }

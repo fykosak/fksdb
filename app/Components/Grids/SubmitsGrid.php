@@ -15,6 +15,7 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
@@ -22,17 +23,18 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * @property GettextTranslator $translator
+ */
 class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private string $lang;
 
-    public function __construct(Container $container, ContestantModel $contestant, string $lang)
+    public function __construct(Container $container, ContestantModel $contestant)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
-        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
@@ -50,7 +52,7 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->lang),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator->lang),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -130,7 +132,7 @@ class SubmitsGrid extends BaseGrid
             $this->flashMessage(
                 sprintf(
                     _('Submitting of task %s cancelled.'),
-                    $submit->task->getFullLabel($this->lang)
+                    $submit->task->getFullLabel($this->translator->lang)
                 ),
                 Message::LVL_WARNING
             );

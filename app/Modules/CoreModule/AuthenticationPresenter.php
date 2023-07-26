@@ -265,7 +265,10 @@ final class AuthenticationPresenter extends BasePresenter
                 $login = $this->accountManager->createLogin($person);
             }
 
-            $this->accountManager->sendRecovery($login, $login->person->getPreferredLang() ?? $this->getLang());
+            $this->accountManager->sendRecovery(
+                $login,
+                $login->person->getPreferredLang() ?? $this->translator->lang
+            );
             $email = Utils::cryptEmail($login->person->getInfo()->email);
             $this->flashMessage(
                 sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),

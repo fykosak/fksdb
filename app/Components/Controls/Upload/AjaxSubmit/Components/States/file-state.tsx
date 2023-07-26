@@ -1,4 +1,4 @@
-import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
+import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
 import { SubmitModel } from 'FKSDB/Models/ORM/Models/submit-model';
 import * as React from 'react';

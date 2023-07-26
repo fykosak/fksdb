@@ -23,6 +23,10 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function startup(): void
     {
         parent::startup();
+        if (!$this->getLoggedPerson() || !count($this->getLoggedPerson()->getActiveOrgs())) {
+            throw new ForbiddenRequestException();
+        }
+
         $this->seriesTraitStartup();
     }
 

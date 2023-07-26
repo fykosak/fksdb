@@ -4,7 +4,7 @@ import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
 import TimeGeoChart from './Components/Charts/Event/Applications/time-geo-chart';
 import AcquaintanceChart from './Components/Charts/Event/ParticipantAcquaintance/acquaintance-chart';
 import TotalPersonsChart from './Components/Charts/total-persons-chart';
-import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/component';
+import AjaxSubmitComponent from './Components/Controls/Upload/AjaxSubmit/component';
 import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/main';
 import ResultsTable from './Components/Game/ResultsAndStatistics/Table/main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/component';

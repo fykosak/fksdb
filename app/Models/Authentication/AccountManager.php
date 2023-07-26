@@ -82,7 +82,8 @@ class AccountManager
                 'email' => $email,
                 'until' => $until,
                 'lang' => $person->getPreferredLang() ?? $lang,
-            ]
+            ],
+            $person->getPreferredLang() ?? $lang
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
@@ -112,7 +113,7 @@ class AccountManager
             'token' => $token,
             'person' => $login->person,
             'lang' => $lang,
-        ]);
+        ], $lang);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $login->person_id;
@@ -143,7 +144,8 @@ class AccountManager
         );
         $oldData = [
             'text' => $this->mailTemplateFactory->renderChangeEmailOld(
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,]
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
+                $lang
             ),
             'sender' => $this->emailFrom,
             'subject' => _('Change of email'),
@@ -151,7 +153,8 @@ class AccountManager
         ];
         $newData = [
             'text' => $this->mailTemplateFactory->renderChangeEmailNew(
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,]
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
+                $lang
             ),
             'sender' => $this->emailFrom,
             'subject' => _('Confirm your email'),

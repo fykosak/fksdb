@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\AjaxSubmit\Quiz;
+namespace FKSDB\Components\Controls\Upload\Quiz;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
@@ -20,6 +20,7 @@ use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -28,6 +29,9 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Security\User;
 
+/**
+ * @property GettextTranslator $translator
+ */
 class QuizComponent extends FormComponent
 {
     use ReferencedPersonTrait;
@@ -39,12 +43,10 @@ class QuizComponent extends FormComponent
     private User $user;
     private QuizHandler $handler;
     private AccountManager $accountManager;
-    private string $lang;
 
-    public function __construct(Container $container, string $lang, TaskModel $task, ContestantModel $contestant = null)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant = null)
     {
         parent::__construct($container);
-        $this->lang = $lang;
         $this->task = $task;
         $this->contestant = $contestant;
     }
@@ -67,7 +69,7 @@ class QuizComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $quizQuestions = new QuizContainer($this->container, $this->task, $this->contestant);
-        $quizQuestions->setOption('label', $this->task->getFullLabel($this->lang));
+        $quizQuestions->setOption('label', $this->task->getFullLabel($this->translator->lang));
         $form->addComponent($quizQuestions, 'quiz_questions');
 
         // show contestant registration form if contestant is null
@@ -119,7 +121,7 @@ class QuizComponent extends FormComponent
                 // send invite mail if the person does not have a login
                 $email = $person->getInfo()->email;
                 if ($email && !$person->getLogin()) {
-                    $this->accountManager->sendLoginWithInvitation($person, $email, $this->lang);
+                    $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
                 }
             }
 

@@ -1,4 +1,4 @@
-import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
+import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
 import Card from 'FKSDB/Models/UI/card';
 import * as React from 'react';
 import { useContext } from 'react';

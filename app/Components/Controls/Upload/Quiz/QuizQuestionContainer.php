@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\AjaxSubmit\Quiz;
+namespace FKSDB\Components\Controls\Upload\Quiz;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;

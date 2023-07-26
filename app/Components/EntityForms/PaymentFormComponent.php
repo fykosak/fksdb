@@ -13,6 +13,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
@@ -25,7 +26,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Security\User;
 
 /**
  * @property PaymentModel|null $model
@@ -40,12 +40,13 @@ class PaymentFormComponent extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
-    private User $user;
     private EventModel $event;
+    private PersonModel $loggedPerson;
 
     public function __construct(
         Container $container,
         EventModel $event,
+        PersonModel $loggedPerson,
         bool $isOrg,
         PaymentMachine $machine,
         ?PaymentModel $model
@@ -54,17 +55,16 @@ class PaymentFormComponent extends EntityFormComponent
         $this->machine = $machine;
         $this->isOrg = $isOrg;
         $this->event = $event;
+        $this->loggedPerson = $loggedPerson;
     }
 
     final public function injectPrimary(
-        User $user,
         PaymentService $paymentService,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         SchedulePaymentService $schedulePaymentService,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
-        $this->user = $user;
         $this->paymentService = $paymentService;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
@@ -116,8 +116,6 @@ class PaymentFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        /** @var LoginModel $login */
-        $login = $this->user->getIdentity();
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
@@ -125,7 +123,7 @@ class PaymentFormComponent extends EntityFormComponent
                 [
                     'event_id' => $this->event->event_id,
                     'currency' => $values['currency'],
-                    'person_id' => $this->isOrg ? $values['person_id'] : $login->person->person_id,
+                    'person_id' => $this->isOrg ? $values['person_id'] : $this->loggedPerson->person_id,
                 ],
                 $this->model
             );

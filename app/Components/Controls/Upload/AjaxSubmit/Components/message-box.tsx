@@ -6,7 +6,7 @@ import { State as ErrorLoggerState } from '../Reducers/errors';
 export default function MessageBox() {
     const messages = useSelector((state: Store) => [
         ...state.fetch.messages,
-        ...state.errorLogger.errors,
+        ...state.errorLogger,
     ]);
     return <>
         {messages.map((message, index) =>

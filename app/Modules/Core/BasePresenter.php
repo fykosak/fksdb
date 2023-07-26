@@ -242,7 +242,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      */
     private function selectLang(): string
     {
-        $candidate = $this->getUserPreferredLang() ?? $this->lang;
+        $candidate = $this->lang ?? $this->getUserPreferredLang();
         $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
             $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
@@ -269,7 +269,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     protected function getLoggedPerson(): ?PersonModel
     {
-        /**@var LoginModel $login */
+        /**@var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
         return $this->getUser()->isLoggedIn() ? $login->person : null;
     }
@@ -299,10 +299,11 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         parent::beforeRender();
 
         $this->template->pageTitle = $this->getTitle();
-        $this->template->lang = $this->getLang();
+        $this->template->lang = $this->translator->lang;
         $this->template->navRoots = $this->getNavRoots();
         $this->template->styleId = $this->getStyleId();
         $this->template->theme = $this->getTheme();
+        $this->template->loggedPerson = $this->getLoggedPerson();
     }
 
     public function getTitle(): PageTitle
@@ -337,11 +338,6 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected function getStyleId(): string
     {
         return 'default';
-    }
-
-    public function getLang(): string
-    {
-        return $this->language;
     }
 
     /**
@@ -379,7 +375,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
-        return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
+        return new LanguageChooserComponent($this->getContext());
     }
 
     /**

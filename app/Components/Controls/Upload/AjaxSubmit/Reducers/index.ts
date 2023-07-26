@@ -1,21 +1,11 @@
 import { combineReducers } from 'redux';
-import {
-    dragNDrop,
-    State as DragNDropState,
-} from './dragNDrop';
-import {
-    State as UploadDataStore,
-    upload,
-} from './upload';
-
+import { dragDrop } from './drag-drop';
+import { State as UploadDataStore, upload } from './upload';
 import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
-import {
-    errors,
-    State as ErrorLoggerState,
-} from './errors';
+import { errors, State as ErrorLoggerState } from './errors';
 
 export const app = combineReducers<Store>({
-    dragNDrop,
+    dragNDrop: dragDrop,
     errorLogger: errors,
     fetch: fetchReducer,
     uploadData: upload,
@@ -24,6 +14,6 @@ export const app = combineReducers<Store>({
 export interface Store {
     uploadData: UploadDataStore;
     fetch: FetchStateMap;
-    dragNDrop: DragNDropState;
+    dragNDrop: boolean;
     errorLogger: ErrorLoggerState;
 }
