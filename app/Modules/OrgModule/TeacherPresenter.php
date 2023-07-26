@@ -17,7 +17,7 @@ use Nette\Security\Resource;
 /**
  * @method TeacherModel getEntity()
  */
-class TeacherPresenter extends BasePresenter
+final class TeacherPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

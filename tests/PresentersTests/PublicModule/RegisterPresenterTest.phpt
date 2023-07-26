@@ -26,13 +26,13 @@ class RegisterPresenterTest extends DatabaseTestCase
         parent::setUp();
 
         $presenterFactory = $this->container->getByType(IPresenterFactory::class);
-        $this->fixture = $presenterFactory->createPresenter('Public:Register');
+        $this->fixture = $presenterFactory->createPresenter('Core:Register');
         $this->fixture->autoCanonicalize = false;
     }
 
     public function testDispatch(): void
     {
-        $request = new Request('Public:Register', 'GET', [
+        $request = new Request('Core:Register', 'GET', [
             'action' => 'default',
             'lang' => 'en',
         ]);
@@ -49,7 +49,7 @@ class RegisterPresenterTest extends DatabaseTestCase
 
     public function testForm(): void
     {
-        $request = new Request('Public:Register', 'GET', [
+        $request = new Request('Core:Register', 'GET', [
             'action' => 'contestant',
             'contestId' => 1,
             'year' => 1,

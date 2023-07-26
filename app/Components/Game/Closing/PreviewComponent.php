@@ -53,6 +53,7 @@ class PreviewComponent extends BaseComponent
             $this->template->canClose = false;
         }
         $this->template->task = $this->handler->getNextTask($this->team);
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'preview.latte');
     }
 }

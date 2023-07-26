@@ -26,7 +26,7 @@ use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
 
-class TasksPresenter extends BasePresenter
+final class TasksPresenter extends BasePresenter
 {
 
     public const SOURCE_ASTRID = 'astrid';

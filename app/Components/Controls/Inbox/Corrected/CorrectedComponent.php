@@ -19,6 +19,7 @@ class CorrectedComponent extends SeriesTableComponent
     final public function render(): void
     {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

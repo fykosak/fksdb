@@ -26,6 +26,9 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->seriesTraitStartup();
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array
     {
         return ['Org.Dashboard.default'];

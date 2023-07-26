@@ -23,8 +23,8 @@ use Nette\Utils\Strings;
  * @property-read int $series
  * @property-read int $tasknr
  * @property-read int $points
- * @property-read \DateTimeInterface $submit_start
- * @property-read \DateTimeInterface $submit_deadline
+ * @property-read \DateTimeInterface|null $submit_start
+ * @property-read \DateTimeInterface|null $submit_deadline
  */
 final class TaskModel extends Model
 {

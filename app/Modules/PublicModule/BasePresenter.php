@@ -36,6 +36,9 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->yearTraitStartup();
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array
     {
         return ['Public.Dashboard.default'];

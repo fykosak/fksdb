@@ -1147,15 +1147,12 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id` INT(11)                                           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`  INT(11)                                           NOT NULL,
-    `school_id`  INT(11)                                           NULL     DEFAULT NULL,
-    `since`      DATE                                              NOT NULL, # TODO default value
-    `until`      DATE                                              NULL     DEFAULT NULL,
-    `note`       TEXT                                              NULL     DEFAULT NULL,
-    `state`      ENUM ('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
-    `lang`       ENUM ('cs','en')                                  NOT NULL DEFAULT 'cs',
-    `role`       VARCHAR(256)                                      NULL     DEFAULT NULL,
+    `teacher_id` INT(11)          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT(11)          NOT NULL,
+    `school_id`  INT(11)          NULL     DEFAULT NULL,
+    `note`       TEXT             NULL     DEFAULT NULL,
+    `active`     BOOL             NOT NULL DEFAULT FALSE,
+    `role`       VARCHAR(256)     NULL     DEFAULT NULL,
     CONSTRAINT `fk_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)

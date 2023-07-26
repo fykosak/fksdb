@@ -19,7 +19,7 @@ use Nette\Security\Resource;
 /**
  * @method QueryModel getEntity()
  */
-class StoredQueryPresenter extends BasePresenter
+final class StoredQueryPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
     use EntityPresenterTrait;

@@ -17,7 +17,7 @@ use Nette\Security\Resource;
  * @property-read int $fyziklani_task_id
  * @property-read int $fyziklani_submit_id
  * @property-read int $task_id
- * @property-read TeamModel2 fyziklani_team
+ * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
  * @property-read \DateTimeInterface $modified
  */

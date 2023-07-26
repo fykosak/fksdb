@@ -17,6 +17,9 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array
     {
         $roots = parent::getNavRoots();

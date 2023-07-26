@@ -17,7 +17,7 @@ use Nette\Security\Resource;
 /**
  * @method ItemModel getEntity(bool $throw = true)
  */
-class ItemPresenter extends BasePresenter
+final class ItemPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

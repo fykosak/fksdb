@@ -37,12 +37,14 @@ final class ProviderComponent extends BaseComponent
     public function renderPrint(array $params = []): void
     {
         $this->innerRender($params);
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'pages.print.latte');
     }
 
     public function renderPreview(array $params = []): void
     {
         $this->innerRender($params);
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'pages.preview.latte');
     }
 }

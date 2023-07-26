@@ -17,7 +17,7 @@ use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-class ChartPresenter extends BasePresenter
+final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 

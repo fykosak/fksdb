@@ -15,7 +15,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-class OrgPresenter extends BasePresenter
+final class OrgPresenter extends BasePresenter
 {
     use EntityPresenterTrait {
         getEntity as traitGetEntity;

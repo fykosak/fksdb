@@ -8,6 +8,7 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\Schema\Elements\Structure;
@@ -95,7 +96,7 @@ class TransitionsExtension extends CompilerExtension
 
     /**
      * @param EnumColumn|string $enumClassName
-     * @return EnumColumn[][]|EnumColumn[]
+     * @return (EnumColumn&FakeStringEnum)[][]|(EnumColumn&FakeStringEnum)[]
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {

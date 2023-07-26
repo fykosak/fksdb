@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\LinkPrinter;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\InvalidLinkException;
 
 class LinkPrinterComponent extends BaseComponent
@@ -32,6 +32,7 @@ class LinkPrinterComponent extends BaseComponent
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\PublicModule;
+namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\EntityForms\RegisterContestantFormComponent;
@@ -49,10 +49,7 @@ final class RegisterPresenter extends CoreBasePresenter
      * @persistent
      */
     public ?int $year = null;
-    /**
-     * @persistent
-     */
-    public ?int $personId = null;
+
     private PersonService $personService;
     private EventService $eventService;
 
@@ -90,6 +87,9 @@ final class RegisterPresenter extends CoreBasePresenter
         return true;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function titleYear(): PageTitle
     {
         return new PageTitle(

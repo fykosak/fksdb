@@ -32,7 +32,7 @@ use Nette\InvalidStateException;
 /**
  * @method TeamModel2 getEntity()
  */
-class TeamApplicationPresenter extends AbstractApplicationPresenter
+final class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
 
     private TeamService2 $teamService;

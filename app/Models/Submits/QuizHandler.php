@@ -6,8 +6,8 @@ namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitQuestionAnswerService;
@@ -32,7 +32,6 @@ class QuizHandler
         ContestantModel $contestant
     ): SubmitModel {
 
-        /** @var SubmitModel $submitModel */
         $submitModel = $contestant->getSubmitForTask($task);
 
         if (isset($submitModel)) {

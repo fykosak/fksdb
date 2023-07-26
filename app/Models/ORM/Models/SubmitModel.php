@@ -65,7 +65,6 @@ final class SubmitModel extends Model implements Resource
         // TODO rewrite to do sum directly in sql
         /** @var SubmitQuestionModel $question */
         foreach ($this->task->getQuestions() as $question) {
-            /** @var SubmitQuestionAnswerModel $answer */
             $answer = $this->contestant->getAnswer($question);
             if (!isset($answer)) {
                 continue;

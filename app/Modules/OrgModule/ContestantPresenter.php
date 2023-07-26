@@ -20,7 +20,7 @@ use Nette\Security\Resource;
 /**
  * @method ContestantModel getEntity(bool $throw = true)
  */
-class ContestantPresenter extends BasePresenter
+final class ContestantPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

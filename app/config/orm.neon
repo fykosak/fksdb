@@ -683,24 +683,12 @@ orm:
         service: FKSDB\Models\ORM\Services\TeacherService
         model: FKSDB\Models\ORM\Models\TeacherModel
         columns:
-            state:
-                type: state
-                states:
-                    proposal: [badge: 'badge bg-info', label: 'Proposal']
-                    cooperate: [badge: 'badge bg-success', label: 'Cooperate']
-                    ended: [badge: 'badge bg-dark',  label: 'Ended']
-                    undefined: [badge: 'badge bg-secondary',  label: 'Undefined']
-                title: _('Cooperation status')
-            since:
-                type: date
-                title: _('Teaches since')
-            until:
-                type: date
-                title: _('Teaches until')
-            number_brochures:
-                type: int
-                title: _('Number of brochures')
-                description: _('Number of brochures/propagation items, that he wants to send.')
+            active:
+                type: bool
+                title: _('Active cooperation')
+            role:
+                type: text
+                title: _('Role in institution/school')
             note:
                 type: text
                 title: _('Note')

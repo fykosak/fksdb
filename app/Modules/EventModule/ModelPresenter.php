@@ -10,7 +10,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\UI\PageTitle;
 
-class ModelPresenter extends BasePresenter
+final class ModelPresenter extends BasePresenter
 {
 
     /**

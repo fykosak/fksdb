@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Container;
 
-use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use FKSDB\Components\Grids\Components\BaseItem;
+use FKSDB\Components\Grids\Components\Button\ButtonGroup;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
@@ -32,6 +32,7 @@ class TableRow extends BaseItem
 
     public function renderHead(): void
     {
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'tableRow.head.latte');
     }
 }

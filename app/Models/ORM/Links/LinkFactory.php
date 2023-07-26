@@ -63,4 +63,6 @@ abstract class LinkFactory
     abstract protected function getDestination(Model $model): string;
 
     abstract protected function prepareParams(Model $model): array;
+
+    abstract public function getText(): string;
 }

@@ -40,4 +40,6 @@ abstract class DetailComponent extends BaseList
     }
 
     abstract protected function getHeadline(): Title;
+
+    abstract protected function getMinimalPermissions(): int;
 }

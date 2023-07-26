@@ -10,7 +10,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\UI\PageTitle;
 
-class EmailPresenter extends BasePresenter
+final class EmailPresenter extends BasePresenter
 {
     private AccountManager $accountManager;
 

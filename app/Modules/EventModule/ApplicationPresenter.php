@@ -20,7 +20,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
-class ApplicationPresenter extends AbstractApplicationPresenter
+final class ApplicationPresenter extends AbstractApplicationPresenter
 {
 
     public function titleImport(): PageTitle

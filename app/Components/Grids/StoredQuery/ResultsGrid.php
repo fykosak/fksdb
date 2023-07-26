@@ -25,6 +25,7 @@ class ResultsGrid extends BaseComponent
     public function render(): void
     {
         $this->template->storedQuery = $this->storedQuery;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'results.latte');
     }
 }

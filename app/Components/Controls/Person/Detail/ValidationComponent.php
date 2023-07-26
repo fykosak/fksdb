@@ -26,6 +26,7 @@ class ValidationComponent extends BaseComponent
             }
 
             $this->template->logs = $logger->getMessages();
+            /** @phpstan-ignore-next-line */
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'validation.latte');
         }
     }

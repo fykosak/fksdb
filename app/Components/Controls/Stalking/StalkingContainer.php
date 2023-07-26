@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\Person\Detail\AddressComponent;
+use FKSDB\Components\Controls\Person\Detail\Component;
 use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
 use FKSDB\Components\Controls\Person\Detail\FlagComponent;
 use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
 use FKSDB\Components\Controls\Person\Detail\RoleComponent;
-use FKSDB\Components\Controls\Person\Detail\Component;
 use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
@@ -34,6 +34,7 @@ class StalkingContainer extends BaseComponent
     final public function render(): void
     {
         $this->template->userPermission = $this->userPermission;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte');
     }
 

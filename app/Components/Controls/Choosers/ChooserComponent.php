@@ -13,6 +13,7 @@ abstract class ChooserComponent extends BaseComponent
     public function render(): void
     {
         $this->template->navItem = $this->getItem();
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'chooser.latte');
     }
 

@@ -16,6 +16,9 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @implements Statement<void>
+ */
 abstract class MailCallback implements Statement
 {
     use SmartObject;

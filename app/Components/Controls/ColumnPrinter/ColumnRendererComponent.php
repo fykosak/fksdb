@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 
 class ColumnRendererComponent extends BaseComponent
 {
@@ -27,6 +27,7 @@ class ColumnRendererComponent extends BaseComponent
     final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
     {
         $this->template->html = $this->renderToString($templateString, $model, $userPermission);
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
     }
 
@@ -67,6 +68,7 @@ class ColumnRendererComponent extends BaseComponent
         $this->template->model = $model;
         $this->template->userPermission = $userPermission;
         $this->template->name = $field;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
     }
 }

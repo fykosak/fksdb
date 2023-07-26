@@ -25,11 +25,9 @@ use Nette\Security\Resource;
 /**
  * @method ScheduleItemModel getEntity()
  */
-class ItemPresenter extends BasePresenter
+final class ItemPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
-
-    private ScheduleGroupModel $group;
 
     private ScheduleItemService $scheduleItemService;
 

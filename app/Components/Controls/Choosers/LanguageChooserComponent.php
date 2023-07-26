@@ -12,12 +12,8 @@ use Nette\DI\Container;
 
 final class LanguageChooserComponent extends ChooserComponent
 {
-
-    public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
-
     private Language $lang;
     private bool $modifiable;
-
 
     public function __construct(Container $container, string $lang, bool $modifiable)
     {
@@ -39,7 +35,7 @@ final class LanguageChooserComponent extends ChooserComponent
                     'this',
                     ['lang' => $language->value],
                     [],
-                    $language->value === $this->lang
+                    $language->value === $this->lang->value
                 );
             }
 

@@ -20,6 +20,7 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
@@ -28,6 +29,7 @@ use Nette\Security\User;
 
 /**
  * @property PaymentModel|null $model
+ * @property GettextTranslator $translator
  */
 class PaymentFormComponent extends EntityFormComponent
 {

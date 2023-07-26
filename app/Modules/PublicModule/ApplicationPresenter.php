@@ -21,18 +21,16 @@ use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
-class ApplicationPresenter extends BasePresenter
+final class ApplicationPresenter extends BasePresenter
 {
 
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
-    private ?Model $eventApplication = null;
     private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
@@ -86,8 +84,8 @@ class ApplicationPresenter extends BasePresenter
             return true;
         }
         if (
-            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
-            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
+            (isset($event->registration_begin) && $event->registration_begin->getTimestamp() > time())
+            || (isset($event->registration_end) && $event->registration_end->getTimestamp() < time())
         ) {
             throw new GoneException();
         }
@@ -96,12 +94,10 @@ class ApplicationPresenter extends BasePresenter
 
     private function getEventApplication(): ?EventParticipantModel
     {
-        if (!isset($this->eventApplication)) {
-            $id = $this->getParameter('id');
-            $this->eventApplication = $this->eventParticipantService->findByPrimary($id);
-        }
-
-        return $this->eventApplication;
+        $id = $this->getParameter('id');
+        /** @var EventParticipantModel|null $eventApplication */
+        $eventApplication = $this->eventParticipantService->findByPrimary($id);
+        return $eventApplication;
     }
 
     /**
@@ -267,6 +263,9 @@ class ApplicationPresenter extends BasePresenter
         return $this->event;
     }
 
+    /**
+     * @return int[]
+     */
     public static function decodeParameters(string $data): array
     {
         $parts = explode(':', $data);
@@ -274,8 +273,8 @@ class ApplicationPresenter extends BasePresenter
             throw new InvalidArgumentException("Cannot decode '$data'.");
         }
         return [
-            'eventId' => $parts[0],
-            'id' => $parts[1],
+            'eventId' => (int)$parts[0],
+            'id' => (int)$parts[1],
         ];
     }
 

@@ -12,6 +12,7 @@ class FlagComponent extends BaseComponent
     {
         if ($this->beforeRender()) {
             $this->template->flags = $this->person->getFlags();
+            /** @phpstan-ignore-next-line */
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'flag.latte');
         }
     }

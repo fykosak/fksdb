@@ -23,11 +23,10 @@ use Nette\Utils\Strings;
 /**
  * @method QueryModel getEntity()
  */
-class ExportPresenter extends BasePresenter
+final class ExportPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private const PARAM_HTTP_AUTH = 'ha';
     private QueryService $queryService;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;

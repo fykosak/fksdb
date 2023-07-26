@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @implements Statement<int>
+ */
 class Count implements Statement
 {
     use SmartObject;

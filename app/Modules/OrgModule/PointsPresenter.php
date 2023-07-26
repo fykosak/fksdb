@@ -16,7 +16,7 @@ use Nette\Application\BadRequestException;
 use Nette\InvalidArgumentException;
 use Tracy\Debugger;
 
-class PointsPresenter extends BasePresenter
+final class PointsPresenter extends BasePresenter
 {
     /**
      * Show all tasks?

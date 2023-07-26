@@ -25,7 +25,7 @@ use Nette\Security\Resource;
 /**
  * @method ScheduleGroupModel getEntity()
  */
-class GroupPresenter extends BasePresenter
+final class GroupPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 

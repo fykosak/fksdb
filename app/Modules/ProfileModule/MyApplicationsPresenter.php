@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Fykosak\Utils\UI\PageTitle;
 
-class MyApplicationsPresenter extends BasePresenter
+final class MyApplicationsPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

@@ -51,6 +51,7 @@ class SubmitContainer extends BaseComponent
     final public function render(): void
     {
         $this->template->availableTasks = $this->getAvailableTasks();
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 }

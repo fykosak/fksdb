@@ -16,8 +16,8 @@ class ColumnTableComponent extends BaseComponent
         return new ColumnRendererComponent($this->getContext());
     }
     /**
+     * @param string[] $fields
      * @throws CannotAccessModelException
-     * @deprecated
      */
     final public function render(
         array $fields,
@@ -27,6 +27,7 @@ class ColumnTableComponent extends BaseComponent
         $this->template->model = $model;
         $this->template->userPermission = $userPermission;
         $this->template->fields = $fields;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte');
     }
 }

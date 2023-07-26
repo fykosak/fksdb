@@ -10,6 +10,9 @@ use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
+/**
+ * @implements Statement<void>
+ */
 class PriceCalculator implements Statement
 {
 

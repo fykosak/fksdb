@@ -18,7 +18,7 @@ use Nette\Security\Resource;
 /**
  * @method EventModel getEntity()
  */
-class EventPresenter extends BasePresenter
+final class EventPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

@@ -70,6 +70,7 @@ class StoredQueryFormComponent extends EntityFormComponent
             $model = $this->model;
             $this->storedQueryService->storeModel($data, $model);
         } else {
+            /** @var QueryModel $model */
             $model = $this->storedQueryService->storeModel($data);
         }
 

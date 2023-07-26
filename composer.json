@@ -86,7 +86,7 @@
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --extensions=php,phpt --standard=PSR12 --parallel=8 app/ tests/"
     ],
     "testPHPStan": [
-      "vendor/bin/phpstan analyse app tests libs"
+      "vendor/bin/phpstan analyse -c phpstan.neon"
     ],
     "testPHPStanDev": [
       "vendor/bin/phpstan analyse -l9 app/"

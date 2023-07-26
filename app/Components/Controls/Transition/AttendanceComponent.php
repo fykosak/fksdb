@@ -28,6 +28,10 @@ class AttendanceComponent extends CodeFormComponent
     /** @var EnumColumn&FakeStringEnum */
     private FakeStringEnum $toState;
 
+    /**
+     * @param EnumColumn&FakeStringEnum $fromState
+     * @param EnumColumn&FakeStringEnum $toState
+     */
     public function __construct(
         Container $container,
         EventModel $event,

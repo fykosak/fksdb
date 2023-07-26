@@ -53,7 +53,7 @@ class QuizComponent extends FormComponent
         User $user,
         QuizHandler $handler,
         AccountManager $accountManager
-    ) {
+    ): void {
         $this->user = $user;
         $this->handler = $handler;
         $this->accountManager = $accountManager;

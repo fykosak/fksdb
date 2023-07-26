@@ -27,6 +27,7 @@ class MassTransitionsComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->transitions = $this->getMachine()->getTransitions();
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'mass.latte');
     }
 

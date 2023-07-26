@@ -32,11 +32,9 @@ class TeachersGrid extends BaseGrid
         $this->addColumns([
             'person.full_name',
             'teacher.note',
-            'teacher.state',
-            'teacher.since',
-            'teacher.until',
-            'teacher.number_brochures',
             'school.school',
+            'teacher.role',
+            'teacher.active',
         ]);
         $this->addORMLink('teacher.edit');
         $this->addORMLink('teacher.detail');

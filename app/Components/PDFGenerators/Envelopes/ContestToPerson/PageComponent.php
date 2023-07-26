@@ -32,6 +32,7 @@ class PageComponent extends AbstractPageComponent
             $this->template->address = $postContact->address;
         }
         $this->template->contest = $this->contest;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');
     }
 

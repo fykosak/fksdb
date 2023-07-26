@@ -31,5 +31,5 @@ abstract class SeriesTableFormComponent extends SeriesTableComponent
     /**
      * @throws ForbiddenRequestException
      */
-    abstract protected function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form): void;
 }

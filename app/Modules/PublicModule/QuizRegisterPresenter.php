@@ -12,7 +12,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
-class QuizRegisterPresenter extends BasePresenter
+final class QuizRegisterPresenter extends BasePresenter
 {
     /** @persistent */
     public ?int $id = null;
@@ -41,7 +41,7 @@ class QuizRegisterPresenter extends BasePresenter
 
     protected function getStyleId(): string
     {
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $this->taskService->findByPrimary($this->id);
         if (isset($task)) {
             return 'contest-' . $task->contest->getContestSymbol();
@@ -55,7 +55,7 @@ class QuizRegisterPresenter extends BasePresenter
      */
     protected function createComponentQuizComponent(): QuizComponent
     {
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $this->taskService->findByPrimary($this->id);
         if (!isset($task)) {
             throw new TaskNotFoundException();

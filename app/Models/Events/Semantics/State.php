@@ -6,6 +6,9 @@ namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Transitions\Statement;
 
+/**
+ * @implements Statement<bool>
+ */
 class State implements Statement
 {
     private string $state;

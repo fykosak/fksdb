@@ -46,6 +46,7 @@ class Component extends BaseComponent
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'single.latte');
     }
 

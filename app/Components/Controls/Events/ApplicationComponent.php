@@ -77,6 +77,7 @@ class ApplicationComponent extends BaseComponent
     final public function renderForm(): void
     {
         $this->template->holder = $this->holder;
+        /** @phpstan-ignore-next-line */
         $this->template->render($this->getTemplateFile());
     }
 

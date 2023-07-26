@@ -38,7 +38,7 @@ class InboxFormComponent extends SeriesTableFormComponent
     {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
-                /** @var ContestantModel $contestant */
+                /** @var ContestantModel|null $contestant */
                 $contestant = $this->seriesTable->getContestants()->where('contestant_id', $ctId)->fetch();
                 if (!$contestant) {
                     // secure check for rewrite contestant_id.
@@ -77,6 +77,7 @@ class InboxFormComponent extends SeriesTableFormComponent
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

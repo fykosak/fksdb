@@ -344,6 +344,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return $this->language;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array
     {
         return [];

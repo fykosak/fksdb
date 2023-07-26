@@ -12,12 +12,14 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
  * @property ScheduleItemModel|null $model
+ * @property GettextTranslator $translator
  */
 class ScheduleItemFormContainer extends EntityFormComponent
 {

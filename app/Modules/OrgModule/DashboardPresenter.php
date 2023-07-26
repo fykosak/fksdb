@@ -7,11 +7,11 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
     public function authorizedDefault(): bool
     {
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
         return $login && count($login->person->getActiveOrgs());
     }

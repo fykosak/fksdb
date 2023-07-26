@@ -23,7 +23,7 @@ use Nette\Security\Resource;
 /**
  * @method RoomModel getEntity(bool $throw = true)
  */
-class SeatingPresenter extends BasePresenter
+final class SeatingPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

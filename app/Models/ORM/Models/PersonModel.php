@@ -323,22 +323,22 @@ final class PersonModel extends Model implements Resource
             }
             $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
-        /** @var EventOrgModel $eventOrg */
+        /** @var EventOrgModel|null $eventOrg */
         $eventOrg = $this->getEventOrgs()->where('event_id', $event->event_id)->fetch();
         if (isset($eventOrg)) {
             $roles[] = new EventOrgRole($event, $eventOrg);
         }
-        /** @var EventParticipantModel $eventParticipant */
+        /** @var EventParticipantModel|null $eventParticipant */
         $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
         if (isset($eventParticipant)) {
             $roles[] = new ParticipantRole($event, $eventParticipant);
         }
-        /** @var TeamMemberModel $teamMember */
+        /** @var TeamMemberModel|null $teamMember */
         $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
         if ($teamMember) {
             $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
         }
-        /** @var OrgModel $org */
+        /** @var OrgModel|null $org */
         $org = $this->getActiveOrgsAsQuery($event->event_type->contest)->fetch();
         if (isset($org)) {
             $roles[] = new ContestOrgRole($event, $org);

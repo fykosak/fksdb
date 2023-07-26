@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
 
     /**

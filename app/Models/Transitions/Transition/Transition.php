@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\SmartObject;
 
 class Transition
@@ -19,14 +20,21 @@ class Transition
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
-    /** @var Statement[] */
+    /**
+     * @var Statement[]
+     * @phpstan-var Statement<void>[]
+     */
     public array $beforeExecute = [];
-    /** @var Statement[] */
+    /**
+     * @var Statement[]
+     * @phpstan-var Statement<void>[]
+     */
     public array $afterExecute = [];
 
     protected bool $validation;
-
+    /** @var EnumColumn&FakeStringEnum */
     public EnumColumn $source;
+    /** @var EnumColumn&FakeStringEnum */
     public EnumColumn $target;
 
     public function setSourceStateEnum(EnumColumn $sourceState): void

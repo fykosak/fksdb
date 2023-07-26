@@ -14,6 +14,7 @@ abstract class FormComponent extends BaseComponent
 
     public function render(): void
     {
+        /** @phpstan-ignore-next-line */
         $this->template->render($this->getTemplatePath());
     }
 

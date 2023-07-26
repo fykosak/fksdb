@@ -28,8 +28,8 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
         /** @var EventParticipantModel $participant */
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $participant) {
             $participants = [];
-            /** @var EventParticipantModel $personParticipation */
             $query = $participant->person->getEventParticipants()->where('status', ['participated']);
+            /** @var EventParticipantModel $personParticipation */
             foreach ($query as $personParticipation) {
                 $participants[] = $personParticipation->event->event_id;
             }

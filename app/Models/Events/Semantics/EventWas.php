@@ -6,6 +6,9 @@ namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Transitions\Statement;
 
+/**
+ * @implements Statement<bool>
+ */
 class EventWas implements Statement
 {
     public function __invoke(...$args): bool

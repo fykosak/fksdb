@@ -170,23 +170,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createComponentApplicationComponent(): ApplicationComponent
-    {
-        return new ApplicationComponent(
-            $this->getContext(),
-            $this->getHolder()
-        );
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
     protected function createComponentApplicationTransitions(): BaseComponent
     {
         return new TransitionButtonsComponent(

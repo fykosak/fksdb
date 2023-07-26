@@ -125,7 +125,7 @@ final class SubmitPresenter extends BasePresenter
      */
     protected function createComponentQuizComponent(): QuizComponent
     {
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $this->taskService->findByPrimary($this->id);
         if (!isset($task)) {
             throw new TaskNotFoundException();
@@ -166,7 +166,7 @@ final class SubmitPresenter extends BasePresenter
         /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline !== $prevDeadline) {
-                $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
+                $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline->format(_('__date_time'))));
             }
             $submit = $this->submitService->findByContestant($this->getContestant(), $task);
             if ($submit && $submit->source->value == SubmitSource::POST) {

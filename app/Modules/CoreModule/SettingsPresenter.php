@@ -18,7 +18,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-class SettingsPresenter extends BasePresenter
+final class SettingsPresenter extends BasePresenter
 {
     public const CONT_LOGIN = 'login';
 

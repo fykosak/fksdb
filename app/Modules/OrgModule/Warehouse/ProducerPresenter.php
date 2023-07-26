@@ -19,7 +19,7 @@ use Nette\Security\Resource;
 /**
  * @method ProducerModel getEntity(bool $throw = true)
  */
-class ProducerPresenter extends BasePresenter
+final class ProducerPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

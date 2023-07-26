@@ -8,6 +8,9 @@ use Nette\Utils\Html;
 
 class NoTransitionBadge extends Badge
 {
+    /**
+     * @phpstan-param never $args
+     */
     public static function getHtml(...$args): Html
     {
         return Html::el('span')

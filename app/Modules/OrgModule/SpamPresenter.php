@@ -15,7 +15,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class SpamPresenter extends BasePresenter
+final class SpamPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

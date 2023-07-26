@@ -12,6 +12,7 @@ class ContestCategoryBadge extends Badge
 {
     /**
      * @throws BadTypeException
+     * @phpstan-param ContestCategoryModel $args
      */
     public static function getHtml(...$args): Html
     {

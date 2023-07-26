@@ -7,7 +7,7 @@ namespace FKSDB\Modules\PublicModule;
 use FKSDB\Models\News;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
     private News $news;
 

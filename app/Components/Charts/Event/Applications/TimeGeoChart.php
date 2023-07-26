@@ -26,7 +26,7 @@ class TimeGeoChart extends FrontEndComponent implements Chart
         $this->event = $event;
     }
 
-    public function inject(Storage $storage)
+    public function inject(Storage $storage): void
     {
         $this->cache = new Cache($storage, self::class);
     }

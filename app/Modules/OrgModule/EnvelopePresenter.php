@@ -13,7 +13,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 
-class EnvelopePresenter extends BasePresenter
+final class EnvelopePresenter extends BasePresenter
 {
 
     private Explorer $readOnlyExplorer;

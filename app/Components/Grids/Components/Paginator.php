@@ -50,6 +50,7 @@ class Paginator extends BaseComponent
             $steps = array_values(array_unique($arr));
         }
         $this->template->steps = $steps;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'paginator.latte');
     }
 

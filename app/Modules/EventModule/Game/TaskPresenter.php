@@ -13,7 +13,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class TaskPresenter extends BasePresenter
+final class TaskPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 

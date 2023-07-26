@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Fykosak\Utils\UI\PageTitle;
 
-class MyPaymentsPresenter extends BasePresenter
+final class MyPaymentsPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

@@ -93,6 +93,7 @@ class ResultsComponent extends BaseComponent
         $this->template->hasStoredQuery = isset($this->storedQuery);
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 

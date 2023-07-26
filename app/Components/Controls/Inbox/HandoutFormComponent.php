@@ -76,6 +76,7 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
+            /** @var TaskContributionModel $contribution */
             foreach (
                 $task->getContributions(
                     TaskContributionType::tryFrom(TaskContributionType::GRADE)
@@ -102,6 +103,7 @@ class HandoutFormComponent extends BaseComponent
 
     final public function render(): void
     {
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 

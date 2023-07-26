@@ -32,7 +32,7 @@ use Tracy\Debugger;
  * TODO fix referenced person
  * @method PersonModel getEntity()
  */
-class PersonPresenter extends BasePresenter
+final class PersonPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

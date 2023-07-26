@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\ComponentReflection;
@@ -116,6 +116,7 @@ class BreadcrumbsComponent extends BaseComponent
             ];
         }
         $this->template->path = $path;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
     }
 

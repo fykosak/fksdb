@@ -27,7 +27,7 @@ class PageComponent extends SeatingPageComponent
         $this->template->event = $row->event;
         $this->template->sector = $teamSeat ? $teamSeat->fyziklani_seat->sector : null;
         $this->template->showBigNav = true;
-
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 }

@@ -22,7 +22,7 @@ use Nette\Security\Resource;
 /**
  * @method EventOrgModel getEntity()
  */
-class EventOrgPresenter extends BasePresenter
+final class EventOrgPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 

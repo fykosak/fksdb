@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent
@@ -27,12 +28,13 @@ class PersonTestComponent extends BaseComponent
      */
     public ?int $endId = 0;
     /**
-     * @var PersonTest[]
+     * @var PersonTest[]|null
      * @persistent
      */
     public ?array $tests = [];
     /**
      * @persistent
+     * @var string[]|null
      */
     public ?array $levels = [];
 
@@ -99,7 +101,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @return array[]
+     * @return array<int,array{'model':PersonModel,'log':Message}>
      */
     private function calculateProblems(): array
     {
@@ -113,7 +115,7 @@ class PersonTestComponent extends BaseComponent
             }
             $personLog = \array_filter(
                 $logger->getMessages(),
-                fn(TestLog $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
+                fn(Message $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
             );
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
@@ -126,6 +128,7 @@ class PersonTestComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->logs = $this->calculateProblems();
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

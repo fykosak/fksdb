@@ -15,6 +15,7 @@ class PersonRestComponent extends BaseComponent
     {
         $this->template->rests = $person->getScheduleRests($event);
         $this->template->person = $person;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');
     }
 }

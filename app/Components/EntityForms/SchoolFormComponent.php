@@ -38,6 +38,11 @@ class SchoolFormComponent extends EntityFormComponent
         $form->addComponent($this->schoolFactory->createContainer(), self::CONT_SCHOOL);
     }
 
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . '/school.latte';
+    }
+
     /**
      * @throws ModelException
      */

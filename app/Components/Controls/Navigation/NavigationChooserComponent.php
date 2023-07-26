@@ -49,13 +49,18 @@ final class NavigationChooserComponent extends NavigationItemComponent
         $structure = $this->navigationFactory->getStructure($root);
         $this->template->items = $this->getItems($structure);
         $this->template->subTitle = $subTitle;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
+    /**
+     * @param NavItem[] $items
+     */
     final public function renderBoardInline(array $items, bool $subTitle = false): void
     {
         $this->template->items = $items;
         $this->template->subTitle = $subTitle;
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 

@@ -60,7 +60,7 @@ class ContainerWithOptions extends Container
 
     public function setDisabled(bool $value = true): void
     {
-        /** @var BaseControl $component */
+        /** @var self|BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
         }
@@ -71,6 +71,7 @@ class ContainerWithOptions extends Container
      */
     public function setHtmlAttribute(string $name, $value = true): self
     {
+        /** @var self|BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setHtmlAttribute($name, $value);
         }

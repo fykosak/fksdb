@@ -12,6 +12,7 @@ class ContestBadge extends Badge
 {
     /**
      * @throws ContestNotFoundException
+     * @phpstan-param ContestModel|int $args
      */
     public static function getHtml(...$args): Html
     {

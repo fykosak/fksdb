@@ -34,6 +34,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     {
         $this->template->models = $this->getModels();
         $this->template->userPermission = $this->userPermission;
+        /** @phpstan-ignore-next-line */
         $this->template->render($this->getTemplatePath());
     }
 

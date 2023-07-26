@@ -13,7 +13,7 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
-class DiplomasPresenter extends BasePresenter
+final class DiplomasPresenter extends BasePresenter
 {
 
     public function titleResults(): PageTitle

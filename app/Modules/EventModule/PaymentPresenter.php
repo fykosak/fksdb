@@ -14,31 +14,25 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
- * @method PaymentModel getEntity
+ * @method PaymentModel getEntity()
  */
-class PaymentPresenter extends BasePresenter
+final class PaymentPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
     private PaymentService $paymentService;
-    private PriceCalculator $priceCalculator;
 
-    final public function injectServicePayment(
-        PaymentService $paymentService,
-        PriceCalculator $priceCalculator
-    ): void {
+    public function inject(PaymentService $paymentService): void
+    {
         $this->paymentService = $paymentService;
-        $this->priceCalculator = $priceCalculator;
     }
 
     public function titleCreate(): PageTitle

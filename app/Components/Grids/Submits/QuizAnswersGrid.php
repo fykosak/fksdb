@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Submits;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -41,9 +40,6 @@ class QuizAnswersGrid extends BaseGrid
 
     protected function configure(): void
     {
-        /**
-         * @var SubmitQuestionAnswerModel $answer
-         */
         $this->addColumn(
             new RendererItem(
                 $this->container,

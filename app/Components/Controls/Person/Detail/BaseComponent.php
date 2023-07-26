@@ -33,7 +33,8 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     {
         $this->template->person = $this->person;
         if ($this->userPermissions < $this->getMinimalPermissions()) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+            /** @phpstan-ignore-next-line */
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte');
             return false;
         }
         return true;

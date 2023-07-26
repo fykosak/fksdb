@@ -21,7 +21,7 @@ use Nette\Security\Resource;
 /**
  * @method SubmitModel getEntity()
  */
-class SubmitPresenter extends BasePresenter
+final class SubmitPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 

@@ -56,6 +56,7 @@ class ImportComponent extends BaseComponent
 
     final public function render(): void
     {
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'import.latte');
     }
 

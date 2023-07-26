@@ -14,7 +14,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 
-class ChartPresenter extends BasePresenter
+final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 

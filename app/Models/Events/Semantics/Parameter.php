@@ -8,6 +8,9 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @implements Statement<mixed>
+ */
 class Parameter implements Statement
 {
     use SmartObject;

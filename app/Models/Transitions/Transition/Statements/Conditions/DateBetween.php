@@ -6,6 +6,9 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Transitions\Statement;
 
+/**
+ * @implements Statement<bool>
+ */
 class DateBetween implements Statement
 {
     private \DateTimeInterface $to;

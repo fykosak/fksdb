@@ -22,7 +22,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class DeduplicatePresenter extends BasePresenter
+final class DeduplicatePresenter extends BasePresenter
 {
 
     private PersonService $personService;

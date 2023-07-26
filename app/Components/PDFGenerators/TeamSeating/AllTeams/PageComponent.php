@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\PDFGenerators\TeamSeating\AllTeams;
 
 use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use Nette\DI\Container;
 
 class PageComponent extends SeatingPageComponent
@@ -39,6 +39,7 @@ class PageComponent extends SeatingPageComponent
                 $this->template->showTeamId = true;
                 break;
         }
+        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
     }
 }

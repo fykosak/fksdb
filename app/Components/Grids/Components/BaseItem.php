@@ -26,6 +26,7 @@ abstract class BaseItem extends BaseComponent
         $this->template->model = $model;
         $this->template->title = $this->title;
         $this->template->userPermission = $userPermission;
+        /** @phpstan-ignore-next-line */
         $this->template->render($this->getTemplatePath());
     }
 }

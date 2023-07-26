@@ -13,7 +13,7 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-class ProductPresenter extends BasePresenter
+final class ProductPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 

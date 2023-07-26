@@ -14,6 +14,7 @@ class RoleComponent extends BaseComponent
         if ($this->beforeRender()) {
             $login = $this->person->getLogin();
             $this->template->roles = $login ? $login->createGrantModels() : [];
+            /** @phpstan-ignore-next-line */
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'role.latte');
         }
     }
