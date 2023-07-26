@@ -1,8 +1,7 @@
-import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
-import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
+import GeoChart, { GeoData, SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/geo-chart';
 import * as React from 'react';
 import { useState } from 'react';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 import Range from 'FKSDB/Components/Charts/Event/Applications/range';
 
 interface OwnProps {
@@ -11,7 +10,7 @@ interface OwnProps {
         created: string;
         createdBefore: number;
     }>;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function TimeGeoChart({data, translator}: OwnProps) {

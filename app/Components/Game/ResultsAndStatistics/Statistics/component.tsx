@@ -6,13 +6,13 @@ import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteA
 import TeamStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/index';
 import TasksStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/TaskStatistics/index';
 import CorrelationStats from 'FKSDB/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/index';
-import { availableLanguage, Translator } from '@translator/translator';
+import { Translator } from '@translator/translator';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
     actions: NetteActions;
     data: ResponseData;
-    translator: Translator<availableLanguage>;
+    translator: Translator;
 }
 
 export default function StatisticsComponent({mode,actions,data,translator}: OwnProps) {

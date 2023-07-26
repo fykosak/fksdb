@@ -7,7 +7,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Models\Astrid\Downloader;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\Submits\UploadException;

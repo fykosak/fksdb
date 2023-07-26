@@ -206,9 +206,11 @@ final class EventModel extends Model implements Resource, NodeCreator
             'end' => $this->end ? $this->end->format('c') : null,
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
-            'report' => $this->report->__serialize(),
+            'report' => $this->report_cs,
+            'reportNew' => $this->report->__serialize(),
             'description' => $this->description->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name,
+            'nameNew' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
         ];
     }
