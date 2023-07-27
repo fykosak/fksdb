@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PersonInfoModel findByPrimary($key)
+ * @method PersonInfoModel|null findByPrimary($key)
  */
 final class PersonInfoService extends Service
 {

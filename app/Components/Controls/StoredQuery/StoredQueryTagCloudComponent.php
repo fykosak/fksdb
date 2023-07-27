@@ -14,6 +14,7 @@ class StoredQueryTagCloudComponent extends BaseComponent
     /**
      * @persistent
      * @internal
+     * @phpstan-var array<int,bool>
      */
     public array $activeTagIds = [];
 
@@ -33,19 +34,15 @@ class StoredQueryTagCloudComponent extends BaseComponent
 
     final public function renderList(): void
     {
-        $this->template->tags = $this->storedQueryTagTypeService->getTable();
-        $this->template->activeTagIds = $this->activeTagIds;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte', [
+            'tags' => $this->storedQueryTagTypeService->getTable(),
+            'activeTagIds' => $this->activeTagIds,
+        ]);
     }
 
-    final public function renderDetail(QueryModel $query): void
-    {
-        $this->template->tags = $query->getStoredQueryTagTypes();
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.detail.latte');
-    }
-
+    /**
+     * @return int[]
+     */
     public function getActiveTagIds(): array
     {
         return array_keys($this->activeTagIds);

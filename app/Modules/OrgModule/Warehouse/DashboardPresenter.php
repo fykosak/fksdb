@@ -12,4 +12,9 @@ final class DashboardPresenter extends BasePresenter
     {
         return new PageTitle(null, _('Warehouse'), 'fas fa-warehouse');
     }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
 }

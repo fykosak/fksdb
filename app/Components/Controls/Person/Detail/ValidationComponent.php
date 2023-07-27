@@ -24,10 +24,10 @@ class ValidationComponent extends BaseComponent
             foreach ($this->validationFactory->getTests('person') as $test) {
                 $test->run($logger, $this->person);
             }
-
-            $this->template->logs = $logger->getMessages();
-            /** @phpstan-ignore-next-line */
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'validation.latte');
+            $this->template->render(
+                __DIR__ . DIRECTORY_SEPARATOR . 'validation.latte',
+                ['logs' => $logger->getMessages()]
+            );
         }
     }
 

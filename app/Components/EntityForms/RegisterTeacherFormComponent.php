@@ -73,10 +73,6 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $form->addProtection(_('The form has expired. Please send it again.'));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws BadRequestException
-     */
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');//trigger RPC

@@ -114,11 +114,15 @@ class AddressFormComponent extends EntityFormComponent
         $this->flashMessage(_('Address has been deleted'), Message::LVL_INFO);
     }
 
-    public function render(): void
+    /**
+     * @phpstan-param array<string,mixed> $params
+     */
+    public function render(array $params = []): void
     {
-        $this->template->type = $this->postContactType;
-        $this->template->hasAddress = isset($this->model);
-        parent::render();
+        parent::render([
+            'type' => $this->postContactType,
+            'hasAddress' => isset($this->model),
+        ]);
     }
 
     protected function getTemplatePath(): string

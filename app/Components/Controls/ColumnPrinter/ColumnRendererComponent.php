@@ -26,9 +26,10 @@ class ColumnRendererComponent extends BaseComponent
      */
     final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
     {
-        $this->template->html = $this->renderToString($templateString, $model, $userPermission);
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'string.latte',
+            ['html' => $this->renderToString($templateString, $model, $userPermission)]
+        );
     }
 
     /**
@@ -65,10 +66,10 @@ class ColumnRendererComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
-        $this->template->name = $field;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'name' => $field,
+        ]);
     }
 }

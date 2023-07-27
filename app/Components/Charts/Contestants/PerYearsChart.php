@@ -27,7 +27,9 @@ class PerYearsChart extends FrontEndComponent implements Chart
     {
         $this->submitService = $submitService;
     }
-
+    /**
+     * @phpstan-return array<int,array<int|'year',int>>
+     */
     protected function getData(): array
     {
         $seriesQuery = $this->submitService->getTable()

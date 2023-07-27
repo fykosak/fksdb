@@ -43,11 +43,13 @@ class Component extends BaseComponent
             default:
                 throw new NotImplementedException();
         }
-
-        $this->template->model = $model;
-        $this->template->rows = $definition['rows'];
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'single.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'single.latte',
+            [
+                'model' => $model,
+                'rows' => $definition['rows'],
+            ]
+        );
     }
 
     protected function getMinimalPermissions(): int

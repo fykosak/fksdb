@@ -115,9 +115,7 @@ class BreadcrumbsComponent extends BaseComponent
                 'title' => $naviRequest->title,
             ];
         }
-        $this->template->path = $path;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte', ['path' => $path]);
     }
 
     public function getBackLinkUrl(): ?string

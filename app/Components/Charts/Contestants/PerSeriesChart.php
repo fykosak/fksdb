@@ -17,6 +17,9 @@ class PerSeriesChart extends AbstractPerSeriesChart
         $this->submitService = $submitService;
     }
 
+    /**
+     * @phpstan-return array<int,array<int,int>>
+     */
     protected function getData(): array
     {
         $query = $this->submitService->getTable()

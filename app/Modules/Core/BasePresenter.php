@@ -10,7 +10,6 @@ use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
@@ -42,7 +41,7 @@ use Tracy\Debugger;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
+abstract class BasePresenter extends Presenter
 {
     /**
      * @persistent

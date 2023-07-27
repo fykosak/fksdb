@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @method EventOrgModel storeModel(array $data, ?EventOrgModel $model = null)
- * @method EventOrgModel findByPrimary($key)
+ * @method EventOrgModel|null findByPrimary($key)
  */
 final class EventOrgService extends Service
 {

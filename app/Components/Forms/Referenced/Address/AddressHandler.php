@@ -34,6 +34,9 @@ class AddressHandler extends ReferencedHandler
         $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
+    /**
+     * @param AddressModel|null $model
+     */
     public function store(array $values, ?Model $model = null): ?AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
@@ -67,7 +70,7 @@ class AddressHandler extends ReferencedHandler
         if (!preg_match(self::PATTERN, $postalCode)) {
             return null;
         }
-        /** @var PSCSubdivisionModel $pscSubdivision */
+        /** @var PSCSubdivisionModel|null $pscSubdivision */
         $pscSubdivision = $this->PSCSubdivisionService->findByPrimary($postalCode);
         if ($pscSubdivision) {
             return [

@@ -1,5 +1,5 @@
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
-import { ACTION_DRAG_END, ACTION_DRAG_START, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
+import { ACTION_DRAG_END, ACTION_DRAG_START, dropItem } from '../../actions';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';

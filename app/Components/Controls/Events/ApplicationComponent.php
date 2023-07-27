@@ -76,9 +76,7 @@ class ApplicationComponent extends BaseComponent
 
     final public function renderForm(): void
     {
-        $this->template->holder = $this->holder;
-        /** @phpstan-ignore-next-line */
-        $this->template->render($this->getTemplateFile());
+        $this->template->render($this->getTemplateFile(), ['holder' => $this->holder]);
     }
 
     protected function createComponentForm(): FormControl

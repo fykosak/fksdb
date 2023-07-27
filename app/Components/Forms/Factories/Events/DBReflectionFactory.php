@@ -91,7 +91,7 @@ class DBReflectionFactory extends AbstractFactory
         $control->setDefaultValue($default);
     }
 
-    private function resolveColumn(Field $field): ?array
+    private function resolveColumn(Field $field): array
     {
         $tableName = $this->eventParticipantService->getTable()->getName();
         $column = $this->getColumnMetadata($tableName, $field->name);

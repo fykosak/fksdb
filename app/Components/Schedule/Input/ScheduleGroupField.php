@@ -23,9 +23,11 @@ class ScheduleGroupField extends SelectBox
     {
         $regEnd = $group->getRegistrationEnd();
         parent::__construct(
-            $lang === 'cs'
-                ? $group->name_cs . ' - konec registrace: ' . $regEnd
-                : $group->name_en . ' - end of registration: ' . $regEnd
+            sprintf(
+                _('%s - - end of registration: %s'),
+                $group->name->getText($lang),
+                $regEnd->format(_('__date_time'))
+            )
         );
         $this->group = $group;
         $this->registerFrontend('schedule.group-container');
@@ -33,11 +35,13 @@ class ScheduleGroupField extends SelectBox
         $items = [];
         /** @var ScheduleItemModel $item */
         foreach ($this->group->getItems() as $item) {
-            $items[$item->getPrimary()] = $lang === 'cs'
-                ? ($item->name_cs . ' - ' . $item->description_cs)
-                : ($item->name_en . ' - ' . $item->description_en);
+            $items[$item->getPrimary()] = sprintf(
+                _('%s - %s'),
+                $item->name->getText($lang),
+                $item->description->getText($lang)
+            );
         }
-        $this->setItems($items)->setPrompt($lang === 'cs' ? '-- nevybráno --' : '-- not selected --');
+        $this->setItems($items)->setPrompt(_('-- not selected --'));
     }
 
     /**

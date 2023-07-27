@@ -25,11 +25,9 @@ class RelatedTable extends BaseItem
         $this->addComponent($this->tableRow, 'row');
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
-        $this->template->models = ($this->modelToIterator)($model);
-        $this->template->head = $this->head;
-        parent::render($model, $userPermission);
+        parent::render($model, $userPermission, ['models' => ($this->modelToIterator)($model), 'head' => $this->head]);
     }
 
     protected function getTemplatePath(): string

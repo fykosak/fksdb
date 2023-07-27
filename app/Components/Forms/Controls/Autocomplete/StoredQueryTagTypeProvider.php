@@ -35,14 +35,11 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var TagTypeModel $tagType */
+        /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
         return $tagType->name;
     }
 
-    /**
-     * @return TagTypeModel[]
-     */
     public function getItems(): array
     {
         $tagTypes = $this->searchTable

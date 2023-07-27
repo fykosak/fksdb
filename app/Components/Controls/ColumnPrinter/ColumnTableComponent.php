@@ -24,10 +24,10 @@ class ColumnTableComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
-        $this->template->fields = $fields;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'fields' => $fields,
+        ]);
     }
 }

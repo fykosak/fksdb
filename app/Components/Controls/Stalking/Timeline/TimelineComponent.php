@@ -38,7 +38,7 @@ class TimelineComponent extends FrontEndComponent
     }
 
     /**
-     * @return \array[][]
+     * @return array[][]
      * @throws \Exception
      */
     private function calculateData(): array

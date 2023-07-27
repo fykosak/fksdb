@@ -27,7 +27,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property TeamModel2 $model
+ * @property TeamModel2|null $model
  */
 abstract class TeamFormComponent extends EntityFormComponent
 {
@@ -242,9 +242,8 @@ abstract class TeamFormComponent extends EntityFormComponent
     {
         $persons = [];
         for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId $referencedId */
+            /** @var ReferencedId<PersonModel> $referencedId */
             $referencedId = $form->getComponent('member_' . $member);
-            /** @var PersonModel $person */
             $person = $referencedId->getModel();
             if ($person) {
                 $persons[$person->person_id] = $person;

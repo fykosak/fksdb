@@ -6,8 +6,9 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 
 class FOLTeamFormComponent extends TeamFormComponent
 {
-
-
+    /**
+     * @return FormProcessing[]
+     */
     protected function getProcessing(): array
     {
         return [
@@ -15,10 +16,12 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
-    public function render(): void
+    /**
+     * @phpstan-param array<string,mixed> $params
+     */
+    public function render(array $params = []): void
     {
-        $this->template->event = $this->event;
-        parent::render();
+        parent::render(['event' => $this->event]);
     }
 
     protected function getTemplatePath(): string

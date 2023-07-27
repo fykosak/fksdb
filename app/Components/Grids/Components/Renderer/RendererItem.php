@@ -20,10 +20,9 @@ class RendererItem extends BaseItem
         $this->renderer = $renderer;
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
-        $this->template->renderer = $this->renderer;
-        parent::render($model, $userPermission);
+        parent::render($model, $userPermission, ['renderer' => $this->renderer]);
     }
 
     protected function getTemplatePath(): string

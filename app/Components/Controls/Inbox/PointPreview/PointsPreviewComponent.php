@@ -10,7 +10,6 @@ class PointsPreviewComponent extends SeriesTableComponent
 {
     final public function render(): void
     {
-        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

@@ -22,10 +22,10 @@ class AddressComponent extends BaseComponent
     final public function render(): void
     {
         if ($this->beforeRender()) {
-            $this->template->address = $this->person->getAddress($this->type);
-            $this->template->type = $this->type;
-            /** @phpstan-ignore-next-line */
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'address.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'address.latte', [
+                'address' => $this->person->getAddress($this->type),
+                'type' => $this->type,
+            ]);
         }
     }
 

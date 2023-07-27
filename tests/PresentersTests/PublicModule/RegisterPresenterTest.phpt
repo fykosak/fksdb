@@ -8,8 +8,8 @@ namespace FKSDB\Tests\PresentersTests\PublicModule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Modules\CoreModule\RegisterPresenter;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -18,15 +18,16 @@ use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase
 {
-
-    private IPresenter $fixture;
+    private RegisterPresenter $fixture;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $presenterFactory = $this->container->getByType(IPresenterFactory::class);
-        $this->fixture = $presenterFactory->createPresenter('Core:Register');
+        /** @var RegisterPresenter $presenter */
+        $presenter = $presenterFactory->createPresenter('Core:Register');
+        $this->fixture = $presenter;
         $this->fixture->autoCanonicalize = false;
     }
 
@@ -44,7 +45,7 @@ class RegisterPresenterTest extends DatabaseTestCase
         Assert::type(Template::class, $source);
 
         $html = (string)$source;
-        Assert::contains('Select contest', $html);
+        Assert::contains('Register', $html);
     }
 
     public function testForm(): void

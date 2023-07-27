@@ -17,6 +17,9 @@ class AggregatedSeriesChart extends AbstractPerSeriesChart
         $this->explorer = $explorer;
     }
 
+    /**
+     * @phpstan-return array<int,array<int,int>>
+     */
     protected function getData(): array
     {
         $query = $this->explorer->query(

@@ -11,9 +11,9 @@ class FlagComponent extends BaseComponent
     final public function render(): void
     {
         if ($this->beforeRender()) {
-            $this->template->flags = $this->person->getFlags();
-            /** @phpstan-ignore-next-line */
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'flag.latte');
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'flag.latte', [
+                'flags' => $this->person->getFlags(),
+            ]);
         }
     }
 

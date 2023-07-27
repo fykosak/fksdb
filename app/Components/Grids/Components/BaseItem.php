@@ -21,12 +21,15 @@ abstract class BaseItem extends BaseComponent
 
     abstract protected function getTemplatePath(): string;
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
-        $this->template->model = $model;
-        $this->template->title = $this->title;
-        $this->template->userPermission = $userPermission;
-        /** @phpstan-ignore-next-line */
-        $this->template->render($this->getTemplatePath());
+        $this->template->render(
+            $this->getTemplatePath(),
+            array_merge([
+                'model' => $model,
+                'title' => $this->title,
+                'userPermission' => $userPermission,
+            ], $params)
+        );
     }
 }

@@ -8,7 +8,8 @@ use FKSDB\Models\ORM\Models\AddressModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method AddressModel findByPrimary($key)
+ * @method AddressModel|null findByPrimary($key)
+ * @method AddressModel storeModel(array $data, ?AddressModel $model = null)
  */
 final class AddressService extends Service
 {

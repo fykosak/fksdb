@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -43,10 +44,10 @@ class AutocompleteSelectBox extends TextBase
     {
         parent::__construct($label);
 
-        $this->monitor(AutocompleteJSONProvider::class, function (AutocompleteJSONProvider $provider) {
+        $this->monitor(BasePresenter::class, function (BasePresenter $provider) {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
-                $name = $this->lookupPath(AutocompleteJSONProvider::class);
+                $name = $this->lookupPath(BasePresenter::class);
                 $this->ajaxUrl = $provider->link('autocomplete!', [
                     self::PARAM_NAME => $name,
                 ]);

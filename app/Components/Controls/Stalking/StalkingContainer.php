@@ -33,9 +33,12 @@ class StalkingContainer extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->userPermission = $this->userPermission;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'container.latte',
+            [
+                'userPermission' => $this->userPermission,
+            ]
+        );
     }
 
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid

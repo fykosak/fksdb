@@ -33,7 +33,6 @@ class RegisterContestantFormComponent extends EntityFormComponent
     private ContestYearModel $contestYear;
     private ?PersonModel $person;
 
-    private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
 
     public function __construct(
@@ -46,11 +45,8 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $this->contestYear = $contestYear;
     }
 
-    final public function injectTernary(
-        ContestAuthorizator $contestAuthorizator,
-        AccountManager $accountManager
-    ): void {
-        $this->contestAuthorizator = $contestAuthorizator;
+    final public function inject(AccountManager $accountManager): void
+    {
         $this->accountManager = $accountManager;
     }
 

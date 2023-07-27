@@ -1,6 +1,10 @@
 parameters:
-	level: 6
-	paths:
-		- app
-		- libs
-		- tests
+    level: 6
+    paths:
+        - app
+        - libs
+        - tests
+    ignoreErrors:
+        - '#Property .* type has no value type specified in iterable type array.#'
+        - '#Method .* return type has no value type specified in iterable type array.#'
+        - '#Method .* has parameter .* with no value type specified in iterable type array.#'

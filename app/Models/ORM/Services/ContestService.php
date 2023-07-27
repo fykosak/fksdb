@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ContestModel findByPrimary($key)
+ * @method ContestModel|null findByPrimary($key)
  */
 final class ContestService extends Service
 {

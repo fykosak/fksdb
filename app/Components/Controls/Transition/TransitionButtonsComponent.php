@@ -32,10 +32,10 @@ class TransitionButtonsComponent extends BaseComponent
      */
     final public function render(): void
     {
-        $this->template->transitions = $this->getMachine()->getAvailableTransitions($this->holder);
-        $this->template->holder = $this->holder;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte', [
+            'transitions' => $this->getMachine()->getAvailableTransitions($this->holder),
+            'holder' => $this->holder,
+        ]);
     }
 
     /**

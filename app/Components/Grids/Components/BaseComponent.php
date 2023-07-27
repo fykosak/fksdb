@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
+/**
+ * @method BasePresenter getPresenter()
+ */
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
     protected int $userPermission;
@@ -32,10 +36,10 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     public function render(): void
     {
-        $this->template->models = $this->getModels();
-        $this->template->userPermission = $this->userPermission;
-        /** @phpstan-ignore-next-line */
-        $this->template->render($this->getTemplatePath());
+        $this->template->render($this->getTemplatePath(), [
+            'models' => $this->getModels(),
+            'userPermission' => $this->userPermission,
+        ]);
     }
 
     protected function addPresenterButton(

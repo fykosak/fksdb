@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @method SchoolModel storeModel(array $data, ?SchoolModel $model = null)
- * @method SchoolModel findByPrimary($key)
+ * @method SchoolModel|null findByPrimary($key)
  */
 final class SchoolService extends Service
 {

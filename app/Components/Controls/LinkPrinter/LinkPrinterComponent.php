@@ -30,9 +30,12 @@ class LinkPrinterComponent extends BaseComponent
     final public function render(string $linkId, Model $model): void
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-        $this->template->title = $factory->getText();
-        $this->template->link = $factory->create($this->getPresenter(), $model);
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte',
+            [
+                'title' => $factory->getText(),
+                'link' => $factory->create($this->getPresenter(), $model),
+            ]
+        );
     }
 }

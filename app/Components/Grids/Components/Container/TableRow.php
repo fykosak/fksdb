@@ -32,7 +32,6 @@ class TableRow extends BaseItem
 
     public function renderHead(): void
     {
-        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'tableRow.head.latte');
     }
 }

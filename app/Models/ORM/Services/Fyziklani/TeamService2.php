@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method TeamModel2 findByPrimary(int $key)
+ * @method TeamModel2|null findByPrimary(int $key)
  * @method TeamModel2 storeModel(array $data, ?TeamModel2 $model = null)
  */
 final class TeamService2 extends Service

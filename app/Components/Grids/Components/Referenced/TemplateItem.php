@@ -40,12 +40,14 @@ class TemplateItem extends BaseItem
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->template->templateString = $this->templateString;
-        $this->template->titleString = $this->titleString;
-        parent::render($model, $userPermission);
+        parent::render(
+            $model,
+            $userPermission,
+            ['templateString' => $this->templateString, 'titleString' => $this->titleString]
+        );
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent

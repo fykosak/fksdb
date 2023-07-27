@@ -129,7 +129,7 @@ class AllSubmitsGrid extends FilterGrid
 
     public function handleRevoke(int $id): void
     {
-        /** @var SubmitModel $submit */
+        /** @var SubmitModel|null $submit */
         $submit = $this->submitService->findByPrimary($id);
         if (!$submit) {
             $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);

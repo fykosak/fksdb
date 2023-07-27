@@ -44,16 +44,16 @@ class PreviewComponent extends BaseComponent
      */
     public function render(): void
     {
-        $this->template->event = $this->team->event;
-        $this->template->canClose = false;
         try {
             $this->team->canClose();
-            $this->template->canClose = true;
+            $canClose = true;
         } catch (GameException $exception) {
-            $this->template->canClose = false;
+            $canClose = false;
         }
-        $this->template->task = $this->handler->getNextTask($this->team);
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'preview.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'preview.latte', [
+            'event' => $this->team->event,
+            'canClose' => $canClose,
+            'task' => $this->handler->getNextTask($this->team),
+        ]);
     }
 }

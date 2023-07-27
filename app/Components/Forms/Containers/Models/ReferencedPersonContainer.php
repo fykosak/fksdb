@@ -94,10 +94,10 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $control = new AddressDataContainer(
                         $this->container,
                         true,
-                        (bool)$fields['address']['required'] ?? false
+                        (bool)($fields['address']['required'] ?? false)
                     );
                 } else {
-                    $control = new AddressDataContainer($this->container, true, (bool)$fields['required'] ?? false);
+                    $control = new AddressDataContainer($this->container, true, (bool)($fields['required'] ?? false));
                 }
                 $subContainer->setOption('showGroup', true);
                 $subContainer->addComponent($control, 'address');
@@ -199,7 +199,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->container,
                     $this->event,
                     ScheduleGroupType::tryFrom($fieldName),
-                    (bool)$metadata['required'] ?? false
+                    (bool)($metadata['required'] ?? false)
                 );
             case 'person':
             case 'person_info':

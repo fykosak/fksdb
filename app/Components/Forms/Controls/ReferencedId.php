@@ -20,6 +20,7 @@ use Nette\Forms\Controls\HiddenField;
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
  * it should always be run inside a transaction.
+ * @template M of Model
  */
 class ReferencedId extends HiddenField
 {
@@ -32,6 +33,7 @@ class ReferencedId extends HiddenField
 
     private ?Promise $promise = null;
     private bool $modelCreated = false;
+    /** @phpstan-var M|null */
     private ?Model $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
@@ -69,13 +71,16 @@ class ReferencedId extends HiddenField
         });
     }
 
+    /**
+     * @phpstan-return M|null
+     */
     public function getModel(): ?Model
     {
         return $this->model;
     }
 
     /**
-     * @param string|int|Model $value
+     * @param string|int|Model|null $value
      * @return static
      */
     public function setValue($value, bool $force = false): self

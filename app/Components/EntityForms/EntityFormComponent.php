@@ -25,10 +25,13 @@ abstract class EntityFormComponent extends FormComponent
         $this->model = $model;
     }
 
-    public function render(): void
+    /**
+     * @phpstan-param array<string,mixed> $params
+     */
+    public function render(array $params = []): void
     {
         $this->setDefaults($this->getForm());
-        parent::render();
+        parent::render($params);
     }
 
     final protected function handleSuccess(Form $form): void

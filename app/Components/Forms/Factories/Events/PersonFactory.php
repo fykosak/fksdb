@@ -20,7 +20,7 @@ class PersonFactory extends AbstractFactory
     private $fieldsDefinition;
     /** @var callable */
     private $searchType;
-    /** @var callable */
+    /** @var callable|bool */
     private $allowClear;
     /** @var callable */
     private $modifiable;

@@ -35,7 +35,7 @@ class OptimisticForm extends Form
     }
 
     /**
-     * @param null $data Must be always null! Defaults callback is used to produce the values.
+     * @param mixed $data Must be always null! Defaults callback is used to produce the values.
      * @return static
      * @throws \LogicException
      */

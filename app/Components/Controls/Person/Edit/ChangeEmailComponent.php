@@ -46,13 +46,17 @@ class ChangeEmailComponent extends EntityFormComponent
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
-    public function render(): void
+    /**
+     * @phpstan-param array<string,mixed> $params
+     */
+    public function render(array $params = []): void
     {
         $login = $this->model->getLogin();
-        $this->template->lang = Language::tryFrom($this->lang);
-        $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch();
-        parent::render();
+        parent::render([
+            'lang' => Language::tryFrom($this->lang),
+            'changeActive' => $login &&
+                $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch(),
+        ]);
     }
 
     protected function getTemplatePath(): string

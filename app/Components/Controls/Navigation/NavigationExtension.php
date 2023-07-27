@@ -45,6 +45,10 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
+    /**
+     * @phpstan-param array<string,string|int> $params
+     * @phpstan-return array{'presenter':string,'action':string,'params':array<string,string|int>,'fragment':string}
+     */
     private function createNode(string $nodeId, array $params): array
     {
         [$link, $fragment] = explode('#', $nodeId);

@@ -101,7 +101,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @return array<int,array{'model':PersonModel,'log':Message}>
+     * @return array<int,array{'model':PersonModel,'log':Message[]}>
      */
     private function calculateProblems(): array
     {
@@ -121,14 +121,11 @@ class PersonTestComponent extends BaseComponent
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
         }
-
         return $logs;
     }
 
     final public function render(): void
     {
-        $this->template->logs = $this->calculateProblems();
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', ['logs' => $this->calculateProblems()]);
     }
 }

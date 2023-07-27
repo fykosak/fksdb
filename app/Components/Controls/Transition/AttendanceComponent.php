@@ -45,12 +45,12 @@ class AttendanceComponent extends CodeFormComponent
     }
 
     /**
+     * @phpstan-param array<string,mixed> $params
      * @throws BadTypeException
      */
-    final public function render(): void
+    final public function render(array $params = []): void
     {
-        $this->template->transition = $this->getTransition();
-        parent::render();
+        parent::render(['transition' => $this->getTransition()]);
     }
 
     protected function getTemplatePath(): string

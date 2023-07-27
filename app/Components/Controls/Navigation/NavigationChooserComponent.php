@@ -47,10 +47,10 @@ final class NavigationChooserComponent extends NavigationItemComponent
     final public function renderBoard(string $root, bool $subTitle = false): void
     {
         $structure = $this->navigationFactory->getStructure($root);
-        $this->template->items = $this->getItems($structure);
-        $this->template->subTitle = $subTitle;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte', [
+            'items' => $this->getItems($structure),
+            'subTitle' => $subTitle,
+        ]);
     }
 
     /**
@@ -58,10 +58,10 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     final public function renderBoardInline(array $items, bool $subTitle = false): void
     {
-        $this->template->items = $items;
-        $this->template->subTitle = $subTitle;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte', [
+            'items' => $items,
+            'subTitle' => $subTitle,
+        ]);
     }
 
     /**

@@ -34,7 +34,7 @@ abstract class AttendanceFormComponent extends CodeFormComponent
     protected function innerHandleSuccess(string $id, Form $form): void
     {
         try {
-            $person = $this->personService->findByPrimary(+$id);
+            $person = $this->personService->findByPrimary((int)$id);
             if (!$person) {
                 throw new BadRequestException(_('Person not found'));
             }

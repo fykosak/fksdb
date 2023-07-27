@@ -13,9 +13,9 @@ class PersonRestComponent extends BaseComponent
 
     final public function render(PersonModel $person, EventModel $event): void
     {
-        $this->template->rests = $person->getScheduleRests($event);
-        $this->template->person = $person;
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'person.latte',
+            ['rests' => $person->getScheduleRests($event), 'person' => $person]
+        );
     }
 }

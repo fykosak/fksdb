@@ -36,13 +36,16 @@ abstract class Button extends BaseItem
         return __DIR__ . DIRECTORY_SEPARATOR . 'button.latte';
     }
 
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
-        $this->template->linkControl = $this->getLinkControl();
-        $this->template->show = isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true;
-        [$this->template->destination, $this->template->params] = ($this->linkCallback)($model);
-        $this->template->buttonClassName = $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary';
-        parent::render($model, $userPermission);
+        [$destination, $params] = ($this->linkCallback)($model);
+        parent::render($model, $userPermission, [
+            'linkControl' => $this->getLinkControl(),
+            'show' => isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true,
+            'destination' => $destination,
+            'params' => $params,
+            'buttonClassName' => $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary',
+        ]);
     }
 
     abstract protected function getLinkControl(): Control;

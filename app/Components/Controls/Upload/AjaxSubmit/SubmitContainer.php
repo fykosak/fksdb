@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -51,8 +50,8 @@ class SubmitContainer extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->availableTasks = $this->getAvailableTasks();
-        /** @phpstan-ignore-next-line */
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'container.latte', [
+            'availableTasks' => $this->getAvailableTasks(),
+        ]);
     }
 }
