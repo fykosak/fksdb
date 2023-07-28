@@ -62,6 +62,11 @@ class GroupPresenter extends BasePresenter
         );
     }
 
+    public function authorizedAttendance(): bool
+    {
+        return $this->authorizedEdit();
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

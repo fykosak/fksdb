@@ -877,6 +877,11 @@ orm:
     person_schedule:
         service: FKSDB\Models\ORM\Services\Schedule\PersonScheduleService
         model: FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel
+        columns:
+            state:
+                type: enum
+                title: _('State')
+                class: FKSDB\Models\Schedule\PersonScheduleState
     schedule_group:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService
         model: FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel
