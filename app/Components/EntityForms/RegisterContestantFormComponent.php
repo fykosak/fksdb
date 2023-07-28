@@ -9,20 +9,19 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property GettextTranslator $translator
+ * @phpstan-extends EntityFormComponent<ContestantModel>
  */
 class RegisterContestantFormComponent extends EntityFormComponent
 {
@@ -79,7 +78,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $form->getValues('array');//trigger RPC
-        /** @var ReferencedId $referencedId */
+        /** @var ReferencedId<PersonModel> $referencedId */
         $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();

@@ -11,7 +11,9 @@ use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -30,8 +32,8 @@ use Nette\Security\Resource;
  * @property-read EventTypeModel $event_type
  * @property-read int $year
  * @property-read int $event_year
- * @property-read \DateTimeInterface $begin
- * @property-read \DateTimeInterface $end
+ * @property-read \DateTimeInterface|null $begin
+ * @property-read \DateTimeInterface|null $end
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read string $name
@@ -124,46 +126,74 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $gameSetupRow;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ScheduleGroupModel>
+     */
     public function getScheduleGroups(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     public function getParticipants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     public function getPossiblyAttendingParticipants(): TypedGroupedSelection
     {
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getTeams(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         return $this->getTeams()->where('state', TeamState::PARTICIPATED);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
         // TODO
         return $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     */
     public function getEventOrgs(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
     public function getPayments(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<\FKSDB\Models\ORM\Models\Fyziklani\TaskModel>
+     */
     public function getTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');

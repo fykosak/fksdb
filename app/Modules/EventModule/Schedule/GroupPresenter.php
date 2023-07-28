@@ -22,11 +22,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleGroupModel getEntity()
- */
 final class GroupPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
     use EventEntityPresenterTrait;
 
     private ScheduleGroupService $scheduleGroupService;

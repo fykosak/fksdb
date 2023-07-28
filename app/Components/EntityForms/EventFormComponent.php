@@ -23,7 +23,7 @@ use Nette\Forms\Form;
 use Nette\Neon\Neon;
 
 /**
- * @property EventModel|null $model
+ * @phpstan-extends EntityFormComponent<EventModel>
  */
 class EventFormComponent extends EntityFormComponent
 {

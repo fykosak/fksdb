@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -21,15 +20,13 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property PaymentModel|null $model
- * @property GettextTranslator $translator
+ * @phpstan-extends EntityFormComponent<PaymentModel>
  */
 class PaymentFormComponent extends EntityFormComponent
 {

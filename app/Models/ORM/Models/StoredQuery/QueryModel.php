@@ -28,12 +28,16 @@ final class QueryModel extends Model implements Resource
     public function getParameters(): array
     {
         $result = [];
+        /** @var ParameterModel $row */
         foreach ($this->getParameters2() as $row) {
             $result[] = $row;
         }
         return $result;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ParameterModel>
+     */
     public function getParameters2(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
@@ -47,6 +51,9 @@ final class QueryModel extends Model implements Resource
         return array_map(fn(ParameterModel $model) => StoredQueryParameter::fromModel($model), $this->getParameters());
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TagModel>
+     */
     public function getTags(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');

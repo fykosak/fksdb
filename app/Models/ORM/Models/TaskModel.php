@@ -58,6 +58,9 @@ final class TaskModel extends Model
         }
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
+     */
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
@@ -67,6 +70,9 @@ final class TaskModel extends Model
         return $contributions;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskCategoryModel>
+     */
     public function getCategories(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
@@ -137,11 +143,17 @@ final class TaskModel extends Model
         ];
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT, 'task_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitQuestionModel>
+     */
     public function getQuestions(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');

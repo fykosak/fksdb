@@ -21,7 +21,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @property PostContactModel $model
+ * @phpstan-extends EntityFormComponent<PostContactModel>
  */
 class AddressFormComponent extends EntityFormComponent
 {

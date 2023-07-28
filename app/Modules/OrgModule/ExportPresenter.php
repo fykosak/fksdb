@@ -20,11 +20,9 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
-/**
- * @method QueryModel getEntity()
- */
 final class ExportPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
     private QueryService $queryService;

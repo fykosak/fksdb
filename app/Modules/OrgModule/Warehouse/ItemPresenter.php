@@ -14,11 +14,9 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method ItemModel getEntity(bool $throw = true)
- */
 final class ItemPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<ItemModel> */
     use EntityPresenterTrait;
 
     private ItemService $itemService;

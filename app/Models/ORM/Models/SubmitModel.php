@@ -35,7 +35,7 @@ final class SubmitModel extends Model implements Resource
         return md5(
             implode(':', [
                 $this->submit_id,
-                $this->submitted_on,
+                $this->submitted_on->format('c'),
                 $this->source,
                 $this->note,
                 $this->raw_points,

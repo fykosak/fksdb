@@ -8,7 +8,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
@@ -16,6 +15,9 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
+/**
+ * @template M of (Model&Resource)
+ */
 trait EntityPresenterTrait
 {
     /** @persistent */
@@ -69,13 +71,14 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @phpstan-return M|null
      */
-    public function getEntity(bool $throw = true): ?Model
+    public function getEntity(): ?Model
     {
         static $model;
         // protection for tests ev . change URL during app is running
         if (!isset($model) || $this->id !== $model->getPrimary()) {
-            $model = $this->loadModel($throw);
+            $model = $this->loadModel();
         }
         return $model;
     }
@@ -83,16 +86,16 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @phpstan-return M|null
      */
-    private function loadModel(bool $throw = true): ?Model
+    private function loadModel(): ?Model
     {
+        /** @var M|null $candidate */
         $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;
-        } elseif ($throw) {
-            throw new ModelNotFoundException(_('Model does not exists'));
         } else {
-            return null;
+            throw new ModelNotFoundException(_('Model does not exists'));
         }
     }
 
@@ -154,10 +157,7 @@ trait EntityPresenterTrait
      */
     public function traitHandleDelete(): void
     {
-        $success = $this->getEntity()->delete();
-        if (!$success) {
-            throw new ModelException(_('Error during deleting'));
-        }
+        $this->getORMService()->disposeModel($this->getEntity());
     }
 
     /**

@@ -8,6 +8,7 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
@@ -16,6 +17,9 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends EntityFormComponent<ProductModel>
+ */
 class ProductFormComponent extends EntityFormComponent
 {
 
@@ -37,7 +41,6 @@ class ProductFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array $values */
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 

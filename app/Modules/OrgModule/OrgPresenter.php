@@ -15,11 +15,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method OrgModel getEntity()
- */
 final class OrgPresenter extends BasePresenter
 {
+    /** @phpstan-use ContestEntityTrait<OrgModel> */
     use ContestEntityTrait;
 
     private OrgService $orgService;
@@ -96,6 +94,7 @@ final class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): OrgFormComponent
     {

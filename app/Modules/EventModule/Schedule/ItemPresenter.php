@@ -12,7 +12,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -22,11 +21,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleItemModel getEntity()
- */
 final class ItemPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleItemModel> */
     use EventEntityPresenterTrait;
 
     private ScheduleItemService $scheduleItemService;

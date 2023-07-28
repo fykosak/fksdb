@@ -20,6 +20,9 @@ class ContestantListComponent extends DetailComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getContestants();

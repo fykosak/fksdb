@@ -159,7 +159,7 @@ final class DeduplicatePresenter extends BasePresenter
 
                     $trunk = Html::el('div');
                     $trunk->addAttributes(['class' => 'mergeSource']);
-                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $trunk->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($value);
                     $trunk->addText(_('Trunk') . ': ');
@@ -170,7 +170,7 @@ final class DeduplicatePresenter extends BasePresenter
 
                     $merged = Html::el('div');
                     $merged->addAttributes(['class' => 'mergeSource']);
-                    $merged->data['field'] = $textElement->getHtmlId();
+                    $merged->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
                     $elVal->addAttributes(['class' => 'value']);

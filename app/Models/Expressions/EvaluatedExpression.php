@@ -8,8 +8,8 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @phpstan-template T
- * @implements Statement<T>
+ * @template T,R,P
+ * @phpstan-implements Statement<T,P>
  */
 abstract class EvaluatedExpression implements Statement
 {
@@ -18,7 +18,7 @@ abstract class EvaluatedExpression implements Statement
     /**
      * @param mixed $evaluated
      * @return mixed
-     * @phpstan-return T
+     * @phpstan-return R
      */
     final protected function evaluateArgument($evaluated, ...$args)
     {

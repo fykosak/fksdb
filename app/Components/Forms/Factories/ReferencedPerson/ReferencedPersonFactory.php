@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -31,6 +32,9 @@ class ReferencedPersonFactory
         $this->context = $context;
     }
 
+    /**
+     * @phpstan-return ReferencedId<PersonModel>
+     */
     public function createReferencedPerson(
         array $fieldsDefinition,
         ?ContestYearModel $contestYear,

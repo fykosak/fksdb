@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\CountryModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method CountryModel|null findByPrimary(int $key)
+ * @phpstan-extends Service<CountryModel>
  */
 final class CountryService extends Service
 {

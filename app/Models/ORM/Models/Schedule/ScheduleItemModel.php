@@ -71,6 +71,9 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         return (bool)count($this->getPrice()->getPrices());
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     public function getInterested(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\CodeProcessing;
+namespace FKSDB\Components\MachineCode;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
-abstract class CodeFormComponent extends FormComponent
+abstract class MachineCodeFormComponent extends FormComponent
 {
     final protected function handleSuccess(Form $form): void
     {

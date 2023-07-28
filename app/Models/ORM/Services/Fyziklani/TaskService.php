@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method TaskModel storeModel(array $data, ?TaskModel $model = null)
+ * @phpstan-extends Service<TaskModel>
  */
 final class TaskService extends Service
 {
@@ -22,7 +22,7 @@ final class TaskService extends Service
     }
 
     /**
-     * @return TaskModel[]
+     * @return array[]
      */
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {

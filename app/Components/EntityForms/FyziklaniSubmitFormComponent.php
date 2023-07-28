@@ -13,7 +13,7 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * @property SubmitModel $model
+ * @phpstan-extends EntityFormComponent<SubmitModel>
  */
 class FyziklaniSubmitFormComponent extends EntityFormComponent
 {

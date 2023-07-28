@@ -13,6 +13,7 @@ use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -203,7 +204,7 @@ class ApplicationComponent extends BaseComponent
                     ExistingPaymentException $exception
                 ) {
                     $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-                    /** @var ReferencedId $referencedId */
+                    /** @var ReferencedId<PersonModel> $referencedId */
                     foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
                         $referencedId->rollback();
                     }

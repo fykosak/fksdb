@@ -96,7 +96,7 @@ trait ContestPresenterTrait
      */
     private function selectContest(): ContestModel
     {
-        /** @var ContestModel $candidate */
+        /** @var ContestModel|null $candidate */
         $candidate = $this->getAvailableContests()->fetch();
         if (!$candidate) {
             throw new BadRequestException(_('No contest available'));

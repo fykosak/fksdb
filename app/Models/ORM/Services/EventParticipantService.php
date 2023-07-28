@@ -10,6 +10,9 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 
+/**
+ * @phpstan-extends Service<EventParticipantModel>
+ */
 final class EventParticipantService extends Service
 {
     /**
@@ -33,9 +36,7 @@ final class EventParticipantService extends Service
     public function disposeModel(Model $model): void
     {
         $person = $model->person;
-        if ($person) {
-            $person->removeScheduleForEvent($model->event);
-        }
+        $person->removeScheduleForEvent($model->event);
         parent::disposeModel($model);
     }
 }

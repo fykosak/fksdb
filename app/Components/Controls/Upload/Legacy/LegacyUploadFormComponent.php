@@ -160,6 +160,9 @@ class LegacyUploadFormComponent extends FormComponent
         }
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     private function getAvailableTasks(): TypedGroupedSelection
     {
         return $this->contestant->getContestYear()

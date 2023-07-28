@@ -20,7 +20,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * @property PersonModel|null $model
+ * @phpstan-extends EntityFormComponent<PersonModel>
  */
 class PersonFormComponent extends EntityFormComponent
 {

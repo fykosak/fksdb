@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -93,7 +92,7 @@ class FOFTeamFormComponent extends TeamFormComponent
         if (count($persons)) {
             $oldMemberQuery->where('person_id NOT IN', array_keys($persons));
         }
-        /** @var TeamMemberModel $oldTeacher */
+        /** @var TeamTeacherModel $oldTeacher */
         foreach ($oldMemberQuery as $oldTeacher) {
             $this->teacherService->disposeModel($oldTeacher);
         }
@@ -159,12 +158,11 @@ class FOFTeamFormComponent extends TeamFormComponent
         $persons = [];
         $teacherIndex = 0;
         while (true) {
-            /** @var ReferencedId $referencedId */
+            /** @var ReferencedId<PersonModel>|null $referencedId */
             $referencedId = $form->getComponent('teacher_' . $teacherIndex, false);
             if (!$referencedId) {
                 break;
             }
-            /** @var PersonModel $person */
             $person = $referencedId->getModel();
             if ($person) {
                 $persons[$person->person_id] = $person;
@@ -181,7 +179,7 @@ class FOFTeamFormComponent extends TeamFormComponent
             $index = 0;
             /** @var TeamTeacherModel $teacher */
             foreach ($this->model->getTeachers() as $teacher) {
-                /** @var ReferencedId $referencedId */
+                /** @var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
                 $index++;

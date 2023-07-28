@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
@@ -30,6 +31,9 @@ class StoredQueriesGrid extends BaseGrid
         $this->storedQueryService = $storedQueryService;
     }
 
+    /**
+     * @phpstan-return TypedSelection<QueryModel>
+     */
     protected function getModels(): TypedSelection
     {
         if (count($this->activeTagIds)) {

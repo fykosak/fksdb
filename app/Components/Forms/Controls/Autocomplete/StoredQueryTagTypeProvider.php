@@ -10,9 +10,9 @@ use Fykosak\NetteORM\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
-
     private const DESCRIPTION = 'description';
     private TagTypeService $storedQueryTagTypeService;
+    /** @phpstan-var TypedSelection<TagTypeModel> */
     private TypedSelection $searchTable;
 
     public function __construct(TagTypeService $storedQueryTagTypeService)

@@ -23,6 +23,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\PageTitle;
@@ -31,10 +32,10 @@ use Nette\InvalidStateException;
 
 /**
  * @method TeamModel2 getEntity()
+ * @method TeamMachine getMachine()
  */
 final class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
-
     private TeamService2 $teamService;
 
     final public function injectServiceFyziklaniTeam(TeamService2 $teamService): void

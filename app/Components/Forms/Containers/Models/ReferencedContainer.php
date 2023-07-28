@@ -21,12 +21,17 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
+/**
+ * @template M of Model
+ */
 abstract class ReferencedContainer extends ContainerWithOptions
 {
     public const ID_MASK = 'frm%s-%s';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
-
+    /**
+     * @phpstan-var ReferencedId<M>|null
+     */
     private ?ReferencedId $referencedId = null;
 
     protected bool $allowClear = true;
@@ -55,11 +60,17 @@ abstract class ReferencedContainer extends ContainerWithOptions
         $this->setAllowClear($allowClear);
     }
 
+    /**
+     * @phpstan-return ReferencedId<M>|null
+     */
     public function getReferencedId(): ?ReferencedId
     {
         return $this->referencedId;
     }
 
+    /**
+     * @phpstan-param ReferencedId<M> $referencedId
+     */
     public function setReferencedId(ReferencedId $referencedId): void
     {
         $this->referencedId = $referencedId;

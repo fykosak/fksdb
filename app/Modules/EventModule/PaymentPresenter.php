@@ -21,11 +21,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method PaymentModel getEntity()
- */
 final class PaymentPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<PaymentModel> */
     use EventEntityPresenterTrait;
 
     private PaymentService $paymentService;

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ContestModel|null findByPrimary($key)
+ * @phpstan-extends Service<ContestModel>
  */
 final class ContestService extends Service
 {

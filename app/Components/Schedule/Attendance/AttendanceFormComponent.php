@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Attendance;
 
-use FKSDB\Components\CodeProcessing\CodeFormComponent;
-use FKSDB\Components\CodeProcessing\MachineCode;
+use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Components\MachineCode\MachineCodeFormComponent;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -18,7 +18,7 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-abstract class AttendanceFormComponent extends CodeFormComponent
+abstract class AttendanceFormComponent extends MachineCodeFormComponent
 {
     private PersonService $personService;
     private PersonScheduleService $personScheduleService;

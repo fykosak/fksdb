@@ -11,8 +11,12 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
+/**
+ * @template M of (Model&Resource)
+ */
 trait ContestEntityTrait
 {
+    /** @phpstan-use EntityPresenterTrait<M> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -23,6 +27,7 @@ trait ContestEntityTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
+     * @phpstan-return M
      */
     protected function getEntity(): Model
     {

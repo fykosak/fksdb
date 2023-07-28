@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transition;
 
-use FKSDB\Components\CodeProcessing\CodeFormComponent;
-use FKSDB\Components\CodeProcessing\MachineCode;
+use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Components\MachineCode\MachineCodeFormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
@@ -21,7 +21,7 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-class AttendanceComponent extends CodeFormComponent
+class AttendanceComponent extends MachineCodeFormComponent
 {
     use TransitionComponent;
 

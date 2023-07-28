@@ -19,6 +19,9 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends EntityFormComponent<ItemModel>
+ */
 class ItemFormComponent extends EntityFormComponent
 {
 
@@ -47,8 +50,7 @@ class ItemFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array $values */
-        $values = $form->getValues();
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
         if (!isset($data['contest_id'])) {

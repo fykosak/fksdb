@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
 
 class PersonProvider implements FilteredDataProvider
@@ -15,6 +16,9 @@ class PersonProvider implements FilteredDataProvider
 
     private const PLACE = 'place';
     private PersonService $personService;
+    /**
+     * @phpstan-var TypedSelection<PersonModel>
+     */
     private TypedSelection $searchTable;
 
     public function __construct(PersonService $personService)

@@ -9,21 +9,19 @@ use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Services\EventOrgService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method EventOrgModel getEntity()
- */
 final class EventOrgPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<EventOrgModel> */
     use EventEntityPresenterTrait;
 
     private EventOrgService $eventOrgService;

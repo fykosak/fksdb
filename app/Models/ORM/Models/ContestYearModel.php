@@ -16,11 +16,17 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 final class ContestYearModel extends Model
 {
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     public function getContestants(): TypedGroupedSelection
     {
         return $this->contest->related(DbNames::TAB_CONTESTANT, 'contest_id')->where('year', $this->year);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     public function getTasks(?int $series = null): TypedGroupedSelection
     {
         $query = $this->contest->getTasks()->where('year', $this->year);
@@ -35,6 +41,9 @@ final class ContestYearModel extends Model
         return $this->getAvailableTasks()->count('*') > 0;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     public function getAvailableTasks(): TypedGroupedSelection
     {
         return $this->getTasks()

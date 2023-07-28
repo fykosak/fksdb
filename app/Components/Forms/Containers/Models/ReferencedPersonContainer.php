@@ -30,9 +30,11 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-extends ReferencedContainer<PersonModel>
+ */
 class ReferencedPersonContainer extends ReferencedContainer
 {
-
     public Resolver $resolver;
     public ?ContestYearModel $contestYear;
     private array $fieldsDefinition;

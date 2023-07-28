@@ -14,17 +14,16 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Service;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * @method RoomModel getEntity(bool $throw = true)
- */
 final class SeatingPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<RoomModel> */
     use EntityPresenterTrait;
 
     private RoomService $roomService;

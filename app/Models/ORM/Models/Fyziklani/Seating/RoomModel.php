@@ -15,7 +15,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 final class RoomModel extends Model
 {
-
+    /**
+     * @phpstan-return TypedGroupedSelection<SeatModel>
+     */
     public function getSeats(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SEAT);

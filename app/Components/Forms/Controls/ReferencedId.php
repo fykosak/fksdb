@@ -25,10 +25,13 @@ use Nette\Forms\Controls\HiddenField;
 class ReferencedId extends HiddenField
 {
     public const VALUE_PROMISE = '__promise';
-
+    /** @phpstan-var ReferencedContainer<M> */
     public ReferencedContainer $referencedContainer;
+    /** @phpstan-var  SearchContainer<M> */
     public SearchContainer $searchContainer;
+    /** @phpstan-var Service<M> */
     public Service $service;
+    /** @phpstan-var ReferencedHandler<M> */
     public ReferencedHandler $handler;
 
     private ?Promise $promise = null;
@@ -38,6 +41,12 @@ class ReferencedId extends HiddenField
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
+    /**
+     * @phpstan-param SearchContainer<M> $searchContainer
+     * @phpstan-param ReferencedContainer<M> $referencedContainer
+     * @phpstan-param Service<M> $service
+     * @phpstan-param ReferencedHandler<M> $handler
+     */
     public function __construct(
         SearchContainer $searchContainer,
         ReferencedContainer $referencedContainer,
@@ -185,6 +194,9 @@ class ReferencedId extends HiddenField
         $this->promise = $promise;
     }
 
+    /**
+     * @phpstan-param M|null $model
+     */
     protected function setModel(?Model $model, ReferencedIdMode $mode): void
     {
         $this->referencedContainer->setModel($model, $mode);

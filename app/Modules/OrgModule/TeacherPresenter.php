@@ -10,15 +10,13 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method TeacherModel getEntity()
- */
 final class TeacherPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<TeacherModel> */
     use EntityPresenterTrait;
 
     private TeacherService $teacherService;

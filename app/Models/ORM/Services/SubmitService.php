@@ -11,8 +11,7 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method SubmitModel|null findByPrimary($key)
- * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
+ * @phpstan-extends Service<SubmitModel>
  */
 final class SubmitService extends Service
 {
@@ -45,7 +44,7 @@ final class SubmitService extends Service
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->name->__serialize(),
-            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline->format(_('__date_time'))),
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,
             'disabled' => !$task->isForCategory($category),

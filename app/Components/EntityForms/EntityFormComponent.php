@@ -15,10 +15,19 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * @template M of Model
+ */
 abstract class EntityFormComponent extends FormComponent
 {
+    /**
+     * @phpstan-var M|null
+     */
     protected ?Model $model;
 
+    /**
+     * @phpstan-param M|null $model
+     */
     public function __construct(Container $container, ?Model $model)
     {
         parent::__construct($container);

@@ -21,7 +21,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property TeacherModel|null $model
+ * @phpstan-extends EntityFormComponent<TeacherModel>
  */
 class TeacherFormComponent extends EntityFormComponent
 {

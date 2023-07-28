@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
@@ -55,6 +56,7 @@ class PersonFactory extends AbstractFactory
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return ReferencedId<PersonModel>
      */
     public function createComponent(Field $field): ReferencedId
     {

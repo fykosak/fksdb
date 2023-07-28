@@ -20,6 +20,9 @@ class OrgListComponent extends DetailComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrgModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getOrganisers();

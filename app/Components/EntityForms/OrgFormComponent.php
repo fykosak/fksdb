@@ -19,7 +19,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property OrgModel|null $model
+ * @phpstan-extends EntityFormComponent<OrgModel>
  */
 class OrgFormComponent extends EntityFormComponent
 {

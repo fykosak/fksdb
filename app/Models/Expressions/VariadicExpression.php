@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Expressions;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,bool,mixed>
+ */
 abstract class VariadicExpression extends EvaluatedExpression
 {
     protected array $arguments;

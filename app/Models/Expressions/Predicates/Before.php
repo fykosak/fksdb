@@ -7,6 +7,9 @@ namespace FKSDB\Models\Expressions\Predicates;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,mixed>
+ */
 class Before extends EvaluatedExpression
 {
 

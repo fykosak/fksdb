@@ -28,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read string $phone
  * @property-read string $note
  * @property-read string $password
- * @property-read int $points
+ * @property-read int|null $points
  * @property-read int $rank_total
  * @property-read int $rank_category
  * @property-read int $force_a
@@ -38,11 +38,17 @@ final class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
+     */
     public function getTeachers(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamMemberModel>
+     */
     public function getMembers(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
@@ -53,16 +59,25 @@ final class TeamModel2 extends Model implements Resource
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonRevokedSubmits(): TypedGroupedSelection
     {
         return $this->getSubmits()->where('points IS NOT NULL');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);

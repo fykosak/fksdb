@@ -16,7 +16,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ScheduleGroupModel|null $model
+ * @phpstan-extends EntityFormComponent<ScheduleGroupModel>
  */
 class ScheduleGroupFormComponent extends EntityFormComponent
 {

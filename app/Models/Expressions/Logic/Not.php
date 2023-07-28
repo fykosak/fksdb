@@ -6,6 +6,9 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,bool,mixed>
+ */
 class Not extends EvaluatedExpression
 {
 

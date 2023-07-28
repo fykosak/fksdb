@@ -16,11 +16,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method EventModel getEntity()
- */
 final class EventPresenter extends BasePresenter
 {
+    /** @phpstan-use ContestYearEntityTrait<EventModel> */
     use ContestYearEntityTrait;
 
     private EventService $eventService;

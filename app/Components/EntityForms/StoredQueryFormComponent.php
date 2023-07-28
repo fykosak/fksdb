@@ -28,7 +28,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property QueryModel|null $model
+ * @phpstan-extends EntityFormComponent<QueryModel>
  */
 class StoredQueryFormComponent extends EntityFormComponent
 {
@@ -244,7 +244,7 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function handleComposeExecute(Form $form): void
     {
-        $data = $form->getValues(true);
+        $data = $form->getValues('array');
         $parameters = [];
         foreach ($data[self::CONT_PARAMS] as $paramMetaData) {
             $parameters[] = new StoredQueryParameter(

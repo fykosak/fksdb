@@ -40,6 +40,9 @@ class SubmitContainer extends BaseComponent
         return $component;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     private function getAvailableTasks(): TypedGroupedSelection
     {
         return $this->contestant->getContestYear()->getTasks()

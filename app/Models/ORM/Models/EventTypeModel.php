@@ -18,6 +18,9 @@ use Nette\Schema\Schema;
  */
 final class EventTypeModel extends Model
 {
+    /**
+     * @phpstan-return TypedGroupedSelection<EventModel>
+     */
     public function getEvents(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT, 'event_type_id');

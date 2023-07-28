@@ -16,7 +16,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property EventOrgModel|null $model
+ * @phpstan-extends EntityFormComponent<EventOrgModel>
  */
 class EventOrgFormComponent extends EntityFormComponent
 {

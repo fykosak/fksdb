@@ -14,11 +14,10 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 /**
- * @property SchoolModel|null $model
+ * @phpstan-extends EntityFormComponent<SchoolModel>
  */
 class SchoolFormComponent extends EntityFormComponent
 {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 

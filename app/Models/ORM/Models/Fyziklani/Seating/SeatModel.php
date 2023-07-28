@@ -21,8 +21,10 @@ final class SeatModel extends Model
 
     public function getTeamSeat(EventModel $event): ?TeamSeatModel
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)
+        /** @var TeamSeatModel|null $teamSeat */
+        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)
             ->where('fyziklani_team.event_id', $event->event_id)
             ->fetch();
+        return $teamSeat;
     }
 }

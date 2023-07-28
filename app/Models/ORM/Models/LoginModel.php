@@ -77,6 +77,9 @@ final class LoginModel extends Model implements IIdentity
         return $this->roles;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<GrantModel>
+     */
     public function getGrants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_GRANT, 'login_id');
@@ -95,6 +98,9 @@ final class LoginModel extends Model implements IIdentity
         return $grants;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
@@ -104,6 +110,9 @@ final class LoginModel extends Model implements IIdentity
         return $query;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');

@@ -16,11 +16,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * @method ProducerModel getEntity(bool $throw = true)
- */
 final class ProducerPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<ProducerModel> */
     use EntityPresenterTrait;
 
     private ProducerService $producerService;

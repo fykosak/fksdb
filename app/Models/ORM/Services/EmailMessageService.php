@@ -10,11 +10,13 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @method EmailMessageModel storeModel(array $data, EmailMessageModel|null $model = null)
+ * @phpstan-extends Service<EmailMessageModel>
  */
 final class EmailMessageService extends Service
 {
-
+    /**
+     * @phpstan-return TypedSelection<EmailMessageModel>
+     */
     public function getMessagesToSend(int $limit): TypedSelection
     {
         return $this->getTable()->where('state', EmailMessageState::WAITING)->limit($limit);

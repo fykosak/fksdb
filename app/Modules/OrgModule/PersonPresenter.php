@@ -30,10 +30,10 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @method PersonModel getEntity()
  */
 final class PersonPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<PersonModel> */
     use EntityPresenterTrait;
 
     private PersonService $personService;

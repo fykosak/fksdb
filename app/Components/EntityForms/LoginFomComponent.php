@@ -16,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
- * @property-read LoginModel $model
+ * @phpstan-extends EntityFormComponent<LoginModel>
  */
 class LoginFomComponent extends EntityFormComponent
 {

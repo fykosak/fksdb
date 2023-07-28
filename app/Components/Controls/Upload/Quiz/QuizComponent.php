@@ -104,9 +104,8 @@ class QuizComponent extends FormComponent
             // create and save contestant
             // TODO separate contestant creation into handler and reuse it in contestant register form
             if (!isset($this->contestant)) {
-                /** @var ReferencedId $referencedId */
+                /** @var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
-                /** @var PersonModel $person */
                 $person = $referencedId->getModel();
                 $contestant = $person->getContestantByContestYear($this->task->getContestYear());
                 // if person is not a contestant in the contest year, create him

@@ -21,7 +21,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property-read PersonModel $model
+ * @phpstan-extends EntityFormComponent<PersonModel>
  */
 class ChangeEmailComponent extends EntityFormComponent
 {

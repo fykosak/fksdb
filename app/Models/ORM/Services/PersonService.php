@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PersonModel|null findByPrimary($key)
+ * @phpstan-extends Service<PersonModel>
  */
 final class PersonService extends Service
 {

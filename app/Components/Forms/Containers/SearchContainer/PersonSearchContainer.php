@@ -14,6 +14,9 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-extends SearchContainer<PersonModel>
+ */
 class PersonSearchContainer extends SearchContainer
 {
     public const SEARCH_EMAIL = 'email';

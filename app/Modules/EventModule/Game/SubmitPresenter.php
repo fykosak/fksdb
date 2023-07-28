@@ -18,11 +18,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method SubmitModel getEntity()
- */
 final class SubmitPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<SubmitModel> */
     use EventEntityPresenterTrait;
 
     public function titleCreate(): PageTitle

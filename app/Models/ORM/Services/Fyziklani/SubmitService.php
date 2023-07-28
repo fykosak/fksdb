@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
+ * @phpstan-extends Service<SubmitModel>
  */
 final class SubmitService extends Service
 {

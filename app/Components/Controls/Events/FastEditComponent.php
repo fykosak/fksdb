@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Components\CodeProcessing\CodeFormComponent;
-use FKSDB\Components\CodeProcessing\MachineCode;
+use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Components\MachineCode\MachineCodeFormComponent;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-class FastEditComponent extends CodeFormComponent
+class FastEditComponent extends MachineCodeFormComponent
 {
     final public function getTemplatePath(): string
     {

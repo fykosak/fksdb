@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\CodeProcessing;
+namespace FKSDB\Components\MachineCode;
 
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;

@@ -39,11 +39,17 @@ final class ContestantModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT, 'contestant_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmitsForSeries(int $series): TypedGroupedSelection
     {
         return $this->getSubmits()->where('task.series', $series);

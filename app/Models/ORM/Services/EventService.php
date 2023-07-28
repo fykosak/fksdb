@@ -10,11 +10,13 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @method EventModel storeModel(array $data, ?EventModel $model = null)
- * @method EventModel|null findByPrimary($key)
+ * @phpstan-extends Service<EventModel>
  */
 final class EventService extends Service
 {
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     public function getEventsWithOpenRegistration(): TypedSelection
     {
         return $this->getTable()
@@ -22,6 +24,9 @@ final class EventService extends Service
             ->where('registration_end >= NOW()');
     }
 
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     public function getEvents(ContestYearModel $contestYear): TypedSelection
     {
         // TODO to related
@@ -32,6 +37,8 @@ final class EventService extends Service
 
     public function getByEventTypeId(ContestYearModel $contestYear, int $eventTypeId): ?EventModel
     {
-        return $this->getEvents($contestYear)->where('event_type_id', $eventTypeId)->fetch();
+        /** @var EventModel|null $event */
+        $event = $this->getEvents($contestYear)->where('event_type_id', $eventTypeId)->fetch();
+        return $event;
     }
 }

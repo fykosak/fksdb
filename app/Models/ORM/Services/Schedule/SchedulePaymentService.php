@@ -13,6 +13,9 @@ use FKSDB\Models\Submits\StorageException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Service;
 
+/**
+ * @phpstan-extends Service<SchedulePaymentModel>
+ */
 final class SchedulePaymentService extends Service
 {
 
@@ -34,7 +37,7 @@ final class SchedulePaymentService extends Service
         }
         $payment->getSchedulePayment()->delete();
         foreach ($newScheduleIds as $id) {
-            /** @var SchedulePaymentModel $model */
+            /** @var SchedulePaymentModel|null $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
                 ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
                 ->fetch();

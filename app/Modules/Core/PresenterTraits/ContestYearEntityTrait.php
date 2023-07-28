@@ -12,8 +12,12 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 use Tracy\Debugger;
 
+/**
+ * @template M of (Model&Resource)
+ */
 trait ContestYearEntityTrait
 {
+    /** @phpstan-use ContestEntityTrait<M> */
     use ContestEntityTrait {
         getEntity as getContestEntity;
     }
@@ -24,6 +28,7 @@ trait ContestYearEntityTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
+     * @phpstan-return M
      */
     protected function getEntity(): Model
     {

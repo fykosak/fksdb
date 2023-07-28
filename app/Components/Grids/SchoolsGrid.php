@@ -28,6 +28,9 @@ class SchoolsGrid extends FilterGrid
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
+    /**
+     * @phpstan-return TypedSelection<SchoolModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();

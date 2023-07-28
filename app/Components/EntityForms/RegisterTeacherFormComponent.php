@@ -10,18 +10,16 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property GettextTranslator $translator
+ * @phpstan-extends EntityFormComponent<TeacherModel>
  */
 class RegisterTeacherFormComponent extends EntityFormComponent
 {

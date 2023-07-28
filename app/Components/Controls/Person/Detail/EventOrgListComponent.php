@@ -25,6 +25,9 @@ class EventOrgListComponent extends DetailComponent
         return new Title(null, _('Event organizers'));
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getEventOrgs();

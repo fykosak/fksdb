@@ -18,11 +18,9 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
-/**
- * @method ContestantModel getEntity(bool $throw = true)
- */
 final class ContestantPresenter extends BasePresenter
 {
+    /** @phpstan-use ContestYearEntityTrait<ContestantModel> */
     use ContestYearEntityTrait;
 
     private ContestantService $contestantService;

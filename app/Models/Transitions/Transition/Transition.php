@@ -22,12 +22,12 @@ class Transition
     private string $label;
     /**
      * @var Statement[]
-     * @phpstan-var Statement<void>[]
+     * @phpstan-var Statement<void,ModelHolder>[]
      */
     public array $beforeExecute = [];
     /**
      * @var Statement[]
-     * @phpstan-var Statement<void>[]
+     * @phpstan-var Statement<void,ModelHolder>[]
      */
     public array $afterExecute = [];
 

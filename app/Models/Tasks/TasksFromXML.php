@@ -91,9 +91,9 @@ class TasksFromXML extends Stage
             }
             $data[$column] = $value;
         }
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $datum->getContestYear()->getTasks($series)->where('tasknr', $tasknr)->fetch();
-
+        /** @var TaskModel $task */
         $task = $this->taskService->storeModel(
             array_merge($data, [
                 'contest_id' => $datum->getContestYear()->contest_id,
