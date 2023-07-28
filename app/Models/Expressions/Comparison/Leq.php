@@ -15,7 +15,6 @@ class Leq extends EvaluatedExpression
     private $bValue;
 
     /**
-     * Leq constructor.
      * @param mixed $aValue
      * @param mixed $bValue
      */

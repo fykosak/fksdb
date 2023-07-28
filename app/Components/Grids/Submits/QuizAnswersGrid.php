@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -34,7 +34,7 @@ class QuizAnswersGrid extends BaseGrid
         parent::__construct($container);
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->submit->task->getQuestions()->order('label');
     }
@@ -44,9 +44,6 @@ class QuizAnswersGrid extends BaseGrid
         /**
          * @var SubmitQuestionAnswerModel $answer
          */
-
-        $submit = $this->submit;
-
         $this->addColumn(
             new RendererItem(
                 $this->container,
@@ -68,8 +65,8 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                function (SubmitQuestionModel $question) use ($submit): Html {
-                    $answer = $submit->contestant->getAnswer($question);
+                function (SubmitQuestionModel $question): Html {
+                    $answer = $this->submit->contestant->getAnswer($question);
                     if (isset($answer)) {
                         return Html::el('span')->setText($answer->answer);
                     }
@@ -96,14 +93,14 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                function (SubmitQuestionModel $question) use ($submit): Html {
-                    $answer = $submit->contestant->getAnswer($question);
+                function (SubmitQuestionModel $question): Html {
+                    $answer = $this->submit->contestant->getAnswer($question);
                     if (!isset($answer)) {
                         return Html::el('i')->setAttribute('class', 'text-warning fas fa-slash fa-flip-horizontal');
                     }
 
                     if ($answer->answer === $question->answer) {
-                        return Html::el('i')->setAttribute('class', 'text-success fa fa-check');
+                        return Html::el('i')->setAttribute('class', 'text-success fas fa-check');
                     }
 
                     return Html::el('i')->setAttribute('class', 'text-danger fas fa-times');

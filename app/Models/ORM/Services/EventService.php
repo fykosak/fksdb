@@ -6,14 +6,14 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\TypedSelection;
 use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedSelection;
 
 /**
  * @method EventModel storeModel(array $data, ?EventModel $model = null)
  * @method EventModel|null findByPrimary($key)
  */
-class EventService extends Service
+final class EventService extends Service
 {
 
     public function getEvents(ContestYearModel $contestYear): TypedSelection

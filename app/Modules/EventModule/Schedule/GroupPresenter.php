@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Grids\Schedule\GroupListComponent;
-use FKSDB\Components\Grids\Schedule\ItemsGrid;
+use FKSDB\Components\Schedule\Attendance\GroupAttendanceFormComponent;
+use FKSDB\Components\Schedule\GroupListComponent;
+use FKSDB\Components\Schedule\ItemsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -56,8 +57,29 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->getName()[$this->getLang()]),
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->getLang())),
             'fas fa-pen'
+        );
+    }
+
+    public function authorizedAttendance(): bool
+    {
+        return $this->authorizedEdit();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleAttendance(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            'fas fa-user-check'
         );
     }
 
@@ -77,8 +99,8 @@ class GroupPresenter extends BasePresenter
     public function renderList(): void
     {
         $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fa fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fa fa-users'), ':Schedule:PersonSchedule:list'),
+            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),
+            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:PersonSchedule:list'),
         ];
     }
 
@@ -122,6 +144,18 @@ class GroupPresenter extends BasePresenter
     protected function createComponentItemsGrid(): ItemsGrid
     {
         return new ItemsGrid($this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentAttendance(): GroupAttendanceFormComponent
+    {
+        return new GroupAttendanceFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ScheduleGroupService

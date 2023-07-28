@@ -48,14 +48,9 @@ class BreadcrumbsComponent extends BaseComponent
     private IPresenterFactory $presenterFactory;
     /**
      * Prevents multiple storing the current request.
-     *
-     * @var bool
      */
     private bool $storedRequest = false;
 
-    /**
-     * Breadcrumbs constructor.
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);
@@ -78,12 +73,7 @@ class BreadcrumbsComponent extends BaseComponent
         $this->presenterFactory = $presenterFactory;
     }
 
-    /*     * **********************
-     * Public API
-     * ********************** */
-
     /**
-     * @throws \ReflectionException
      * @throws BadTypeException
      */
     public function setBackLink(AppRequest $request): void
@@ -95,8 +85,8 @@ class BreadcrumbsComponent extends BaseComponent
 
         $requestKey = $this->getRequestKey($request);
         $backLinkId = $this->getBackLinkId($requestKey);
-        $originalBackLink = $presenter->setBackLink($backLinkId);
-        $this->storeRequest($originalBackLink);
+       // $originalBackLink = $presenter->setBackLink($backLinkId);
+       // $this->storeRequest($originalBackLink);
     }
 
     public function reset(): void
@@ -113,10 +103,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /* ***********************
-     * Rendering
-     * ********************** */
-
     final public function render(): void
     {
         $request = $this->getPresenter()->getRequest();
@@ -132,10 +118,6 @@ class BreadcrumbsComponent extends BaseComponent
         $this->template->path = $path;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
     }
-
-    /*     * **********************
-     * Path traversal
-     * ********************** */
 
     public function getBackLinkUrl(): ?string
     {
@@ -211,24 +193,24 @@ class BreadcrumbsComponent extends BaseComponent
             /** @var Presenter $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
-            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
+           // $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
             $rc = ($presenterClassName)::getReflection();
-            if ($rc->hasMethod($methodName)) {
+          /*  if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {
                     $identifyingParameters[] = $param->name;
                 }
-            }
+            }*/
             $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];
-            $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
+        //    $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
             foreach ($identifyingParameters as $param) {
-                if ($param == $backLinkParameter) {
+           /*     if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
-                }
+                }*/
                 $filteredParameters[$param] = $parameters[$param] ?? null;
             }
 
@@ -250,10 +232,6 @@ class BreadcrumbsComponent extends BaseComponent
             throw new InvalidArgumentException("Expected Request, NaviRequest class or string, got $class.");
         }
     }
-
-    /* ***********************
-     * Storing requests and their IDs
-     * ********************** */
 
     /**
      * @throws \ReflectionException
@@ -330,10 +308,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
         return $result;
     }
-
-    /* ***********************
-     * Cache stored in session  *
-     * ********************** */
 
     protected function getRequestsSection(): SessionSection
     {

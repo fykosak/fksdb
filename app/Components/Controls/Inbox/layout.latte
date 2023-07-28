@@ -1,5 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Submits\SeriesTable $seriesTable}
+{varType bool $displayAll}
 {define table-head}
     <tr class="table-dark">
         <th>{_'Person'}</th>
@@ -35,7 +36,7 @@
                 </tr>
             {/if}
             {if $counter>14}
-                {var $counter = 0}
+                {php $counter = 0}
                 {include table-head}
             {/if}
         {/foreach}

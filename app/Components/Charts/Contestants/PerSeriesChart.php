@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Models\ORM\Services\SubmitService;
+use Fykosak\Utils\UI\Title;
 
 class PerSeriesChart extends AbstractPerSeriesChart
 {
@@ -32,9 +33,9 @@ class PerSeriesChart extends AbstractPerSeriesChart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Contestants per series');
+        return new Title(null, _('Contestants per series'), 'fas fa-chart-column');
     }
 
     public function getDescription(): ?string

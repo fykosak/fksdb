@@ -27,6 +27,6 @@ class BornColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new DatePrinter('d.m.Y'))($model->born);
+        return (new DatePrinter(_('__date')))($model->born);
     }
 }

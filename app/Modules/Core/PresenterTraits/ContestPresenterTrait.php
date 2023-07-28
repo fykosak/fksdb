@@ -56,9 +56,6 @@ trait ContestPresenterTrait
         return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
     }
 
-    /**
-     * @return TypedSelection|ContestModel[]
-     */
     private function getAvailableContests(): TypedSelection
     {
         $person = $this->getLoggedPerson();
@@ -88,7 +85,7 @@ trait ContestPresenterTrait
                 }
                 return $this->contestService->getTable()->where('contest_id', array_keys($contestsIds));
             default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
+                throw new InvalidStateException(sprintf(_('Role %s is not supported'), $this->getRole()));
         }
     }
 

@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
 
-class TaskContributionService extends Service
+final class TaskContributionService extends Service
 {
 }

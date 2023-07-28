@@ -9,15 +9,12 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     /** @persistent */
     public ?int $eventId = null;
@@ -30,12 +27,17 @@ abstract class BasePresenter extends AuthenticatedPresenter
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    public function isAuthorized(): bool
+    /**
+     * @param mixed $element
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     */
+    public function checkRequirements($element): void
     {
         if (!$this->isEnabled()) {
-            return false;
+            throw new ForbiddenRequestException();
         }
-        return parent::isAuthorized();
+        parent::checkRequirements($element);
     }
 
     /**
@@ -46,18 +48,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     public function isAllowed($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
-    /**
-     * @throws NotImplementedException
-     * @throws ForbiddenRequestException
-     */
-    protected function startup(): void
-    {
-        if (!$this->isEnabled()) {
-            throw new NotImplementedException();
-        }
-        parent::startup();
     }
 
     protected function isEnabled(): bool
@@ -96,34 +86,17 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
-        return $this->getEvent()->name;
+        return $this->getEvent()->getName()->getText('cs');//TODO!
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws BadRequestException
      */
-    protected function beforeRender(): void
+    protected function getStyleId(): string
     {
-        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fof navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-                break;
-            case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-dark');
-                break;
-            case 17:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-ctyrboj navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-                break;
-            default:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');
-        }
-        parent::beforeRender();
+        return 'event-type-' . $this->getEvent()->event_type_id;
     }
 
     /**
@@ -139,6 +112,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function getNavRoots(): array
     {
-        return ['Event.Dashboard.default'];
+        return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
     }
 }

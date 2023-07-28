@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Service;
  * @method SubmitModel findByPrimary($key)
  * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
-class SubmitService extends Service
+final class SubmitService extends Service
 {
 
     private array $submitCache = [];
@@ -44,10 +44,7 @@ class SubmitService extends Service
     ): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
-            'name' => [
-                'cs' => $task->name_cs,
-                'en' => $task->name_en,
-            ],
+            'name' => $task->name->__serialize(),
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,

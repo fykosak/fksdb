@@ -8,9 +8,7 @@ type LanguageData<Lang extends string> = LangMap<{
     [msqId: string]: string;
 }, Lang>;
 
-export type availableLanguage = 'cs' | 'en';
-
-export class Translator<Lang extends string> {
+export class Translator<Lang extends string = 'cs' | 'en'> {
 
     private readonly data: LanguageData<Lang>;
     private readonly currentLocale: Lang = 'cs' as Lang;
@@ -18,7 +16,7 @@ export class Translator<Lang extends string> {
     public constructor() {
         // @ts-ignore
         this.data = data;
-        const el = document.getElementsByClassName('html').item(0);
+        const el = document.getElementsByTagName('html').item(0);
         if (el) {
             const lang = el.getAttribute('lang');
             this.currentLocale = lang as Lang;
@@ -26,7 +24,7 @@ export class Translator<Lang extends string> {
     }
 
     public getText(msgId: string): string {
-        if (this.data[this.currentLocale].hasOwnProperty(msgId) && this.data[this.currentLocale][msgId]) {
+        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId]) {
             return this.data[this.currentLocale][msgId];
         }
         return msgId;
@@ -50,7 +48,7 @@ export class Translator<Lang extends string> {
     }
 
     public getLocalizedText(msgId: string, locale: Lang): string {
-        if (this.data[locale].hasOwnProperty(msgId) && this.data[locale][msgId]) {
+        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId]) {
             return this.data[locale][msgId];
         }
         return msgId;

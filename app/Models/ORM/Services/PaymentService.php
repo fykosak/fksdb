@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method PaymentModel storeModel(array $data, ?PaymentModel $model = null)
  */
-class PaymentService extends Service
+final class PaymentService extends Service
 {
 }

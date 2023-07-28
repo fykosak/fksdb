@@ -29,15 +29,17 @@ class TeamEvent extends EventModuleTestCase
     {
         return [
             ['Event:Chart', 'list'],
-            ['Event:Chart', 'teamApplicationProgress'],
-            ['Event:Chart', 'model'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
+
+            ['Event:TeamApplication', 'attendance'],
+            ['Event:TeamApplication', 'create'],
+            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'fastEdit'],
             ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'detailedList'],
-            ['Event:TeamApplication', 'detailedList'],
+            ['Event:TeamApplication', 'mass'],
         ];
     }
 }

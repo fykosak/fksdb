@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\WebService\Models\{EventListWebModel,
+use FKSDB\Models\WebService\Models\{ContestsModel,
+    EventListWebModel,
     EventWebModel,
     ExportWebModel,
-    FyziklaniResultsWebModel,
+    Game,
     OrganizersWebModel,
     PaymentListWebModel,
     ResultsWebModel,
     SeriesResultsWebModel,
     SignaturesWebModel,
     StatsWebModel,
-    WebModel,
-    ContestsModel
+    WebModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -27,6 +27,7 @@ use Nette\DI\Container;
 use Nette\Http\IResponse;
 use Nette\Schema\Processor;
 use Nette\Security\AuthenticationException;
+use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
@@ -34,12 +35,15 @@ class WebServiceModel
 {
     use SmartObject;
 
-    private LoginModel $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
+    private ContestAuthorizator $contestAuthorizator;
+    private User $user;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
@@ -53,10 +57,16 @@ class WebServiceModel
         'GetContests' => ContestsModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator)
-    {
+    public function __construct(
+        Container $container,
+        PasswordAuthenticator $authenticator,
+        ContestAuthorizator $contestAuthorizator,
+        User $user
+    ) {
         $this->authenticator = $authenticator;
         $this->container = $container;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->user = $user;
     }
 
     /**
@@ -72,8 +82,13 @@ class WebServiceModel
             throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
-            $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
+            $login = $this->authenticator->authenticate($args->username, $args->password);
+            $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
+            if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+                $this->log('Unauthorized.');
+                throw new \SoapFault('Sender', 'Unauthorized.');
+            }
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new \SoapFault('Sender', 'Invalid credentials.');
@@ -87,8 +102,9 @@ class WebServiceModel
      */
     public function __call(string $name, array $args): \SoapVar
     {
-        $this->checkAuthentication(__FUNCTION__);
+        $this->checkAuthentication($name . ': ' . json_encode($args));
         $webModel = $this->getWebModel($name);
+
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
@@ -100,24 +116,28 @@ class WebServiceModel
      */
     private function checkAuthentication(string $nameService): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
+        if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+            $this->log(sprintf('Unauthorized %s ', $nameService));
+            throw new \SoapFault('Sender', 'Unauthorized');
+        }
     }
 
     private function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**
@@ -133,7 +153,7 @@ class WebServiceModel
             }
             /** @var WebModel $model */
             $model = $reflection->newInstance($this->container);
-            $model->setLogin($this->authenticatedLogin ?? null);
+            $model->setUser($this->user);
             return $model;
         }
         return null;

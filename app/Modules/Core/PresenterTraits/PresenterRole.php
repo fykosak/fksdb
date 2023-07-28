@@ -6,7 +6,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 
-class PresenterRole extends FakeStringEnum
+final class PresenterRole extends FakeStringEnum
 {
     public const ORG = 'org';
     public const CONTESTANT = 'contestant';

@@ -11,6 +11,6 @@ use Fykosak\NetteORM\Service;
  * @method EventOrgModel storeModel(array $data, ?EventOrgModel $model = null)
  * @method EventOrgModel findByPrimary($key)
  */
-class EventOrgService extends Service
+final class EventOrgService extends Service
 {
 }

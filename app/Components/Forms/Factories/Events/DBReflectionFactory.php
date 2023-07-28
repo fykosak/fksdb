@@ -95,7 +95,6 @@ class DBReflectionFactory extends AbstractFactory
     {
         $tableName = $this->eventParticipantService->getTable()->getName();
         $column = $this->getColumnMetadata($tableName, $field->name);
-
         if ($column === null) {
             throw new InvalidArgumentException("Cannot find reflection for field '$field->name'.");
         }

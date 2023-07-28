@@ -18,6 +18,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int|null $country_subdivision_id
  * @property-read CountrySubdivisionModel $country_subdivision
  */
-class AddressModel extends Model
+final class AddressModel extends Model
 {
 }

@@ -29,20 +29,13 @@ class SingleEvent extends EventModuleTestCase
         return [
             ['Event:Application', 'list'],
             ['Event:Application', 'import'],
-            ['Event:Application', 'transitions'],
+            ['Event:Application', 'mass'],
+           // ['Event:Application', 'attendance'],
             ['Event:Chart', 'list'],
-            ['Event:Chart', 'participantAcquaintance'],
-            ['Event:Chart', 'singleApplicationProgress'],
-            // ['Event:Chart', 'teamApplicationProgress'],
-            ['Event:Chart', 'model'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
-
-            // ['Event:Seating', 'default'],
-            // ['Event:Seating', 'preview'],
-            // ['Event:Seating', 'list'],
         ];
     }
 }

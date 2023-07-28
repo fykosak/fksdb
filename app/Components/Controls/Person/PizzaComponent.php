@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\Form;
 
 class PizzaComponent extends BaseComponent
@@ -26,9 +25,6 @@ class PizzaComponent extends BaseComponent
         $this->personFactory = $personFactory;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());

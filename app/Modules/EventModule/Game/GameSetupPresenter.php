@@ -7,7 +7,6 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class GameSetupPresenter extends BasePresenter
@@ -15,7 +14,15 @@ class GameSetupPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Fyziklani game setup'), 'fa fa-cogs');
+        return new PageTitle(null, _('Fyziklani game setup'), 'fas fa-cogs');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->isAllowed('game.gameSetup', 'default');
     }
 
     /**
@@ -25,28 +32,6 @@ class GameSetupPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        $this->template->gameSetup = $this->getGameSetup();
-    }
-
-    /**
-     * @throws NotFoundException
-     * @throws NotSetGameParametersException
-     * @throws EventNotFoundException
-     */
-    protected function getGameSetup(): GameSetupModel
-    {
-        static $gameSetup;
-        if (!isset($gameSetup) || $this->getEvent()->event_id !== $gameSetup->event_id) {
-            $gameSetup = $this->getEvent()->getGameSetup();
-        }
-        return $gameSetup;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.gameSetup', 'default'));
+        $this->template->gameSetup = $this->getEvent()->getGameSetup();
     }
 }

@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method OrgModel storeModel(array $data, ?OrgModel $model = null)
  */
-class OrgService extends Service
+final class OrgService extends Service
 {
 }

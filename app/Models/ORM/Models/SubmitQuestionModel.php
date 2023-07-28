@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $points
  * @property-read string $answer
  */
-class SubmitQuestionModel extends Model
+final class SubmitQuestionModel extends Model
 {
     public function getFQName(): string
     {

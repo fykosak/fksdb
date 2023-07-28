@@ -25,6 +25,7 @@ use Nette\Utils\Paginator as NettePaginator;
 abstract class BaseGrid extends BaseComponent
 {
     public bool $paginate = true;
+    public bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
     public TableRow $tableRow;
 
@@ -60,6 +61,7 @@ abstract class BaseGrid extends BaseComponent
     public function render(): void
     {
         $this->template->paginate = $this->paginate;
+        $this->template->counter = $this->counter;
         parent::render();
     }
 

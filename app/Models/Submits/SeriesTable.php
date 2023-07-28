@@ -72,11 +72,11 @@ class SeriesTable
         /** @var ContestantModel $contestant */
         foreach ($contestants as $contestant) {
             $result[$contestant->contestant_id] = [
-                self::FORM_SUBMIT => $submitsTable[$contestant->contestant_id] ?? null,
+                'submit' => $submitsTable[$contestant->contestant_id] ?? null,
             ];
         }
         return [
-            self::FORM_CONTESTANT => $result,
+            'contestant' => $result,
         ];
     }
 

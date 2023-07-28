@@ -13,7 +13,7 @@ class TooManySchoolsException extends InvalidStateException
     {
         parent::__construct(
             sprintf(
-                _('Only 2 different schools can be represented in the team (got %d: %s).'),
+                _('Only 2 different schools can be represented by the team (got %d: %s).'),
                 count($schools),
                 join(', ', array_map(fn(SchoolModel $school) => '"' . $school->name_abbrev . '"', $schools))
             )

@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
-use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
-use Tester\Assert;
 
 abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
 {

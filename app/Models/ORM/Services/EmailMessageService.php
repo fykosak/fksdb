@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
-use Fykosak\NetteORM\TypedSelection;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @method EmailMessageModel storeModel(array $data)
+ * @method EmailMessageModel storeModel(array $data, EmailMessageModel|null $model = null)
  */
-class EmailMessageService extends Service
+final class EmailMessageService extends Service
 {
 
     public function getMessagesToSend(int $limit): TypedSelection

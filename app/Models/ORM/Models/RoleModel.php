@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 /**
  * @property-read string $name
  */
-class RoleModel extends Model
+final class RoleModel extends Model
 {
     public const CONTESTANT = 'contestant';
     public const ORG = 'org';

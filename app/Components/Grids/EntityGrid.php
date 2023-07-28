@@ -7,9 +7,12 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Service;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @deprecated
+ */
 abstract class EntityGrid extends BaseGrid
 {
     protected Service $service;
@@ -28,7 +31,7 @@ abstract class EntityGrid extends BaseGrid
         $this->columns = $columns;
     }
 
-    protected function getModels(): Selection
+    protected function getModels(): TypedSelection
     {
         return $this->service->getTable()->where($this->queryParams);
     }

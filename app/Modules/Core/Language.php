@@ -8,7 +8,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class Language extends FakeStringEnum
+final class Language extends FakeStringEnum
 {
     public const CS = 'cs';
     public const EN = 'en';
@@ -55,8 +55,8 @@ class Language extends FakeStringEnum
     public static function cases(): array
     {
         return [
-            new static(self::EN),
-            new static(self::CS),
+            new self(self::EN),
+            new self(self::CS),
         ];
     }
 }

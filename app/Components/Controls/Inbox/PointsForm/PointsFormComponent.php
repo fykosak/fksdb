@@ -45,7 +45,7 @@ class PointsFormComponent extends SeriesTableFormComponent
     {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             /** @var SubmitModel $submit */
-            $submit = $this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch();
+            $submit = $this->seriesTable->getSubmits()->where('submit_id', $submitId)->fetch();
             if (!$submit) {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();

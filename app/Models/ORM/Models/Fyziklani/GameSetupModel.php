@@ -17,7 +17,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $tasks_on_board
  * @property-read string $available_points
  */
-class GameSetupModel extends Model
+final class GameSetupModel extends Model
 {
     /**
      * @return int[]

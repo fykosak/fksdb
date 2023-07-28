@@ -11,6 +11,6 @@ use Fykosak\NetteORM\Service;
  * @method ScheduleItemModel|null findByPrimary($key)
  * @method ScheduleItemModel storeModel(array $data, ?ScheduleItemModel $model = null)
  */
-class ScheduleItemService extends Service
+final class ScheduleItemService extends Service
 {
 }

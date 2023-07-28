@@ -31,12 +31,12 @@ class EventPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Events'), 'fa fa-calendar-alt');
+        return new PageTitle(null, _('Events'), 'fas fa-calendar-alt');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Add event'), 'fa fa-calendar-plus');
+        return new PageTitle(null, _('Add event'), 'fas fa-calendar-plus');
     }
 
     /**
@@ -45,7 +45,7 @@ class EventPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day');
+        return new PageTitle(null, sprintf(_('Edit event %s'), $this->getEntity()->name), 'fas fa-calendar-day');
     }
 
     /**

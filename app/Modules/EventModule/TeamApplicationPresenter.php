@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Controls\Events\FastEditComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
+use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -15,16 +15,16 @@ use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamListComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
+use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -44,7 +44,17 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create team'), 'fa fa-calendar-plus');
+        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
+    }
+
+    public function authorizedCreate(): bool
+    {
+        $event = $this->getEvent();
+        return
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+            );
     }
 
     public function titleDetailedList(): PageTitle
@@ -54,6 +64,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
+     */
+    public function authorizedDetailedList(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+    }
+    /**
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
@@ -61,7 +78,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fa fa-edit');
+        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
     }
 
     /**
@@ -71,34 +88,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    public function authorizedEdit(): void
+    public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
                 $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
-            )
-        );
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDetailedList(): void
-    {
-        $this->setAuthorized($this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent()));
-    }
-
-    public function authorizedCreate(): void
-    {
-        $event = $this->getEvent();
-        $this->setAuthorized(
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
-            )
-        );
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
 
     public function requiresLogin(): bool
@@ -238,34 +233,20 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return TeamMachine
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function getMachine(): TeamMachine
+    protected function createComponentFastTransition(): AttendanceComponent
     {
-        static $machine;
-        if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getTeamMachine($this->getEvent());
-        }
-        return $machine;
+        return new AttendanceComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            TeamState::tryFrom(TeamState::APPROVED),
+            TeamState::tryFrom(TeamState::PARTICIPATED),
+        );
     }
 
-    /**
-     * @return BaseComponent
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    protected function createComponentApplicationTransitions(): BaseComponent
+    protected function createComponentFastEdit(): FastEditComponent
     {
-        return new TransitionButtonsComponent(
-            $this->getMachine(),
-            $this->getContext(),
-            $this->getMachine()->createHolder($this->getEntity())
-        );
+        return new FastEditComponent($this->getContext());
     }
 }

@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Service;
 
-class ContestYearService extends Service
+final class ContestYearService extends Service
 {
 
     /**

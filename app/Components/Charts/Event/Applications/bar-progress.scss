@@ -1,0 +1,10 @@
+.bar-progress {
+  .bar {
+    &, * {
+      transition-duration: 1000ms;
+    }
+    text {
+      alignment-baseline: central;
+    }
+  }
+}

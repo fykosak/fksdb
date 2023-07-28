@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class ItemState extends FakeStringEnum implements EnumColumn
+final class ItemState extends FakeStringEnum implements EnumColumn
 {
     public const NEW = 'new';
     public const USED = 'used';
@@ -17,7 +17,7 @@ class ItemState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = 'badge bg-color-2';
+        $badge = 'badge bg-color-5';
         switch ($this->value) {
             case self::NEW:
                 $badge = 'badge bg-color-3';

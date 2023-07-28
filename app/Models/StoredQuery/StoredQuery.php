@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
@@ -64,7 +64,7 @@ class StoredQuery implements Resource
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
                 throw new InvalidArgumentException(
-                    "Implicit parameter name '$key' collides with an explicit parameter."
+                    sprintf(_('Implicit parameter name "%s" collides with an explicit parameter.'), $key)
                 );
             }
             if (isset($this->implicitParameterValues[$key]) || $this->implicitParameterValues[$key] != $value) {
@@ -78,7 +78,7 @@ class StoredQuery implements Resource
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
-                throw new InvalidArgumentException("Unknown parameter name '$key'.");
+                throw new InvalidArgumentException(sprintf(_('Unknown parameter name "%s".'), $key));
             }
             if (!array_key_exists($key, $this->parameterValues) || $this->parameterValues[$key] != $value) {
                 $this->parameterValues[$key] = $value;

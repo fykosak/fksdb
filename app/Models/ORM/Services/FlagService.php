@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Models\FlagModel;
 use Fykosak\NetteORM\Service;
 
-class FlagService extends Service
+final class FlagService extends Service
 {
 
     public function findByFid(?string $fid): ?FlagModel

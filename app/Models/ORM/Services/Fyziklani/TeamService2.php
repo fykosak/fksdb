@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Service;
 
 /**
  * @method TeamModel2 findByPrimary(int $key)
  * @method TeamModel2 storeModel(array $data, ?TeamModel2 $model = null)
  */
-class TeamService2 extends Service
+final class TeamService2 extends Service
 {
 
     public function isReadyForClosing(EventModel $event, ?TeamCategory $category = null): bool

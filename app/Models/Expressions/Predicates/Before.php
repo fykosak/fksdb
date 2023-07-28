@@ -14,7 +14,6 @@ class Before extends EvaluatedExpression
     private $datetime;
 
     /**
-     * Before constructor.
      * @param \DateTimeInterface|callable $datetime
      */
     public function __construct($datetime)

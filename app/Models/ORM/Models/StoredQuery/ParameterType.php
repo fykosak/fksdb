@@ -9,7 +9,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-class ParameterType extends FakeStringEnum implements EnumColumn
+final class ParameterType extends FakeStringEnum implements EnumColumn
 {
     public const INT = 'integer';
     public const STRING = 'string';
@@ -31,9 +31,9 @@ class ParameterType extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::BOOL),
-            new static(self::STRING),
-            new static(self::INT),
+            new self(self::BOOL),
+            new self(self::STRING),
+            new self(self::INT),
         ];
     }
 

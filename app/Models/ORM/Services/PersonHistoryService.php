@@ -10,6 +10,6 @@ use Fykosak\NetteORM\Service;
 /**
  * @method PersonHistoryModel storeModel(array $data, ?PersonHistoryModel $model = null)
  */
-class PersonHistoryService extends Service
+final class PersonHistoryService extends Service
 {
 }

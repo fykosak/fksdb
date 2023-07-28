@@ -14,6 +14,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int $color
  * @property-read TagTypeModel $tag_type
  */
-class TagModel extends Model
+final class TagModel extends Model
 {
 }

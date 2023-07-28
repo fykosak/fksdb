@@ -114,7 +114,11 @@ class EventFormComponent extends EntityFormComponent
             'end' => ['required' => true],
             'registration_begin' => ['required' => false],
             'registration_end' => ['required' => false],
-            'report' => ['required' => false],
+            'report_cs' => ['required' => false],
+            'report_en' => ['required' => false],
+            'description_cs' => ['required' => false],
+            'description_en' => ['required' => false],
+            'place' => ['required' => false],
             'parameters' => ['required' => false],
         ], null, $this->contestYear->contest);
     }
