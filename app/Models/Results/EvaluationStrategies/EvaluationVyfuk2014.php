@@ -58,10 +58,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
             switch ($submit->contestant->contest_category->label) {
                 case ContestCategoryModel::VYFUK_6:
                 case ContestCategoryModel::VYFUK_7:
-                        return $submit->raw_points;
-                        break;
+                    return $submit->raw_points;
+                    break;
                 default:
-                        return null;
+                    return null;
             }
         }
         return $submit->raw_points;
