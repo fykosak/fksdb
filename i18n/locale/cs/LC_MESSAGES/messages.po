@@ -4250,7 +4250,7 @@ msgstr "Upravit dotaz %s"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:45
 msgid "Create query"
-msgstr "Vytvořit export"
+msgstr "Vytvořit dotaz"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:50
 msgid "Exports"
@@ -4315,7 +4315,7 @@ msgstr "Upravit učitele %s"
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:46
 msgid "Create new teacher"
-msgstr "Vytvoř nového učitele"
+msgstr "Vytvořit nového učitele"
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:56
 msgid "Teacher detail"
@@ -4459,7 +4459,7 @@ msgstr "Akce s otevřenou registrací"
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:68
 #, php-format
 msgid "Application for %s: %s"
-msgstr "Přihlášky pro %s: %s"
+msgstr "Přihláška pro %s: %s"
 
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:146
 msgid "Unknown application."
