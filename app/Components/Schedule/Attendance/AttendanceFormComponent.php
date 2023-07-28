@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\CodeProcessing\CodeFormComponent;
+use FKSDB\Components\CodeProcessing\MachineCode;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -31,10 +32,13 @@ abstract class AttendanceFormComponent extends CodeFormComponent
     /**
      * @throws \Exception
      */
-    protected function innerHandleSuccess(string $id, Form $form): void
+    protected function innerHandleSuccess(MachineCode $code, Form $form): void
     {
         try {
-            $person = $this->personService->findByPrimary((int)$id);
+            if ($code->type !== 'PE') {
+                throw new BadRequestException(_('Bod code type'));
+            }
+            $person = $this->personService->findByPrimary($code->id);
             if (!$person) {
                 throw new BadRequestException(_('Person not found'));
             }

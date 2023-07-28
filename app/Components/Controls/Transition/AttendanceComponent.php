@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Components\CodeProcessing\CodeFormComponent;
+use FKSDB\Components\CodeProcessing\MachineCode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
@@ -15,6 +16,7 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -66,14 +68,17 @@ class AttendanceComponent extends CodeFormComponent
         return $this->getMachine()->getTransitionByStates($this->fromState, $this->toState);
     }
 
-    protected function innerHandleSuccess(string $id, Form $form): void
+    protected function innerHandleSuccess(MachineCode $code, Form $form): void
     {
         try {
             $machine = $this->getMachine();
-            if ($this->event->isTeamEvent()) {
-                $model = $this->event->getTeams()->where('fyziklani_team_id', $id)->fetch();
+
+            if ($this->event->isTeamEvent() && $code->type === 'TE') {
+                $model = $this->event->getTeams()->where('fyziklani_team_id', $code->id)->fetch();
+            } elseif ($code->type === 'EP') {
+                $model = $this->event->getParticipants()->where('event_participant_id', $code->id)->fetch();
             } else {
-                $model = $this->event->getParticipants()->where('event_participant_id', $id)->fetch();
+                throw new BadRequestException(_('Wrong type of code.'));
             }
             /** @var TeamModel2|EventParticipantModel|null $model */
             if (!$model) {

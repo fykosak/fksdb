@@ -11,23 +11,21 @@ use Nette\Forms\Form;
 
 abstract class CodeFormComponent extends FormComponent
 {
-
     final protected function handleSuccess(Form $form): void
     {
         try {
             $values = $form->getValues('array');
-            if ($values['bypass']) {
-                $id = CodeValidator::bypassCode($values['code']);
-            } else {
-                $id = CodeValidator::checkCode($this->container, $values['code']);
+            $code = MachineCode::createFromCode($this->container, $values['code']);
+            if (!$values['bypass']) {
+                $code->check();
             }
-            $this->innerHandleSuccess($id, $form);
+            $this->innerHandleSuccess($code, $form);
         } catch (ForbiddenRequestException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
-    abstract protected function innerHandleSuccess(string $id, Form $form): void;
+    abstract protected function innerHandleSuccess(MachineCode $code, Form $form): void;
 
     abstract protected function innerConfigureForm(Form $form): void;
 
