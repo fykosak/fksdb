@@ -24,10 +24,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
 
     public function getSumColumn(): string
     {
-        return "IF (t.series < 7, 
-        IF (t.label IN ('1'), 
-        IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), 
-        s.raw_points), 
+        return "IF (t.series < 7,
+        IF (t.label IN ('1'),
+        IF ( ct.study_year NOT IN (6, 7), null, s.raw_points),
+        s.raw_points),
         s.raw_points)";
     }
 
@@ -54,14 +54,15 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         if ($submit->task->series > 6) {
             return $submit->raw_points;
         }
-        switch ($submit->contestant->contest_category->label) {
-            case ContestCategoryModel::VYFUK_6:
-            case ContestCategoryModel::VYFUK_7:
-                if ($submit->task->label == '1') {
+        if ($submit->task->label == '1') {
+            switch ($submit->contestant->contest_category->label) {
+                case ContestCategoryModel::VYFUK_6:
+                case ContestCategoryModel::VYFUK_7:
                     return $submit->raw_points;
-                } else {
+                    break;
+                default:
                     return null;
-                }
+            }
         }
         return $submit->raw_points;
     }

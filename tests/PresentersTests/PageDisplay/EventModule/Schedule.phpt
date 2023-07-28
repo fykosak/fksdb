@@ -77,10 +77,13 @@ class Schedule extends EventModuleTestCase
             //['Schedule:PersonSchedule', 'default'],
             ['Schedule:Item', 'create'],
             ['Schedule:Item', 'edit'],
+            ['Schedule:Item', 'detail'],
+            ['Schedule:Item', 'attendance'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
-            ['Schedule:Group', 'detail'],
             ['Schedule:Group', 'edit'],
+            ['Schedule:Group', 'detail'],
+            ['Schedule:Group', 'attendance'],
         ];
     }
 }
