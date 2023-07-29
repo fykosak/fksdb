@@ -13,8 +13,17 @@ use FKSDB\Components\Controls\Person\Detail\RoleComponent;
 use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Models\TaskContributionModel;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
@@ -41,16 +50,25 @@ class StalkingContainer extends BaseComponent
         );
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<PersonHistoryModel>
+     */
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('person_history', $this->person, $this->userPermission, $this->getContext());
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<EventOrgModel>
+     */
     protected function createComponentEventOrgsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('event_org', $this->person, $this->userPermission, $this->getContext());
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<PaymentModel>
+     */
     protected function createComponentPaymentsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('payment', $this->person, $this->userPermission, $this->getContext());
@@ -61,6 +79,9 @@ class StalkingContainer extends BaseComponent
         return new ContestantListComponent($this->container, $this->person, $this->userPermission, true);
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<TaskContributionModel>
+     */
     protected function createComponentTaskContributionsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('task_contribution', $this->person, $this->userPermission, $this->getContext());
@@ -71,6 +92,9 @@ class StalkingContainer extends BaseComponent
         return new OrgListComponent($this->container, $this->person, $this->userPermission, true);
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<TeamTeacherModel>
+     */
     protected function createComponentEventTeachersGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
@@ -81,11 +105,17 @@ class StalkingContainer extends BaseComponent
         );
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<EventParticipantModel>
+     */
     protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<TeamMemberModel>
+     */
     protected function createComponentTeamMembersGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid(
@@ -96,11 +126,17 @@ class StalkingContainer extends BaseComponent
         );
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<ScheduleItemModel>
+     */
     protected function createComponentEventScheduleGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<EmailMessageModel>
+     */
     protected function createComponentEmailMessageGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('email_message', $this->person, $this->userPermission, $this->getContext());

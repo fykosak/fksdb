@@ -96,6 +96,9 @@ class TeamListComponent extends FilterList
         );
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();

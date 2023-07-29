@@ -17,8 +17,12 @@ class PersonsGrid extends BaseGrid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
+    /** @phpstan-var TypedSelection<PersonModel> $data */
     private TypedSelection $data;
 
+    /**
+     * @phpstan-param TypedSelection<PersonModel> $trunkPersons
+     */
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
         parent::__construct($container);
@@ -26,6 +30,9 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->data;

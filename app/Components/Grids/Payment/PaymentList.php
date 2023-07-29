@@ -29,6 +29,9 @@ class PaymentList extends FilterList
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPayments();

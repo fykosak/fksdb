@@ -20,15 +20,18 @@ use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use Nette\Application\UI\Presenter;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
  * @phpstan-extends EntityFormComponent<QueryModel>
+ * @method BasePresenter getPresenter()
  */
 class StoredQueryFormComponent extends EntityFormComponent
 {

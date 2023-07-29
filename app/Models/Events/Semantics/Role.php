@@ -10,7 +10,7 @@ use FKSDB\Models\Transitions\Statement;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
- * @implements Statement<bool>
+ * @implements Statement<bool,BaseHolder>
  */
 class Role implements Statement
 {

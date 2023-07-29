@@ -6,5 +6,10 @@ parameters:
         - tests
     ignoreErrors:
         - '#Property .* type has no value type specified in iterable type array.#'
+        - '#Property .* type has no value type specified in iterable type iterable.#'
         - '#Method .* return type has no value type specified in iterable type array.#'
+        - '#Method .* return type has no value type specified in iterable type iterable.#'
         - '#Method .* has parameter .* with no value type specified in iterable type array.#'
+        - '#Method .* has parameter .* with no value type specified in iterable type iterable.#'
+        - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'
+        - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'

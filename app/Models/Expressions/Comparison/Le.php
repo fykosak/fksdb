@@ -6,6 +6,9 @@ namespace FKSDB\Models\Expressions\Comparison;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,bool|string|int,mixed>
+ */
 class Le extends EvaluatedExpression
 {
 

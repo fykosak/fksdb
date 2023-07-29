@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
 
@@ -161,6 +162,9 @@ class BaseHolder implements ModelHolder
         }
     }
 
+    /**
+     * @phpstan-param FakeStringEnum&EnumColumn $newState
+     */
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);

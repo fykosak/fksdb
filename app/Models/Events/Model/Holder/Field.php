@@ -135,9 +135,4 @@ class Field
         }
         return null;
     }
-
-    public function __toString(): string
-    {
-        return "$this->holder.$this->name";
-    }
 }

@@ -6,10 +6,14 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends EntityGrid<EventModel>
+ */
 class DispatchGrid extends EntityGrid
 {
 
@@ -28,6 +32,9 @@ class DispatchGrid extends EntityGrid
         );
     }
 
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     protected function getModels(): TypedSelection
     {
         $value = parent::getModels();

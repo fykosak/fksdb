@@ -16,6 +16,9 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-extends ReferencedHandler<AddressModel>
+ */
 class AddressHandler extends ReferencedHandler
 {
     private const PATTERN = '/[0-9]{5}/';

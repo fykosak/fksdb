@@ -13,7 +13,7 @@ use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Statement;
 
 /**
- * @implements Statement<void>
+ * @implements Statement<void,PaymentHolder>
  */
 abstract class AbstractSymbolGenerator implements Statement
 {

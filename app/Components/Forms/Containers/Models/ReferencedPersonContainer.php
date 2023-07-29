@@ -132,7 +132,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             if (!$subContainer instanceof ContainerWithOptions) {
                 continue;
             }
-            /** @var BaseControl|ModelContainer|AddressDataContainer $component */
+            /** @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $realValue = ReferencedPersonHandler::getPersonValue(
                     $model,

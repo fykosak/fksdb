@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
@@ -34,7 +33,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
     public const RESOURCE_ID = 'event.scheduleGroup';
 
     /**
-     * @phpstan-return TypedGroupedSelection<ItemModel>
+     * @phpstan-return TypedGroupedSelection<ScheduleItemModel>
      */
     public function getItems(): TypedGroupedSelection
     {

@@ -28,6 +28,9 @@ class TeamListComponent extends FilterList
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPossiblyAttendingTeams()->order('points');

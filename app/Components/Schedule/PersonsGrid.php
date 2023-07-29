@@ -23,6 +23,9 @@ class PersonsGrid extends BaseGrid
         $this->item = $item;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->item->getInterested();

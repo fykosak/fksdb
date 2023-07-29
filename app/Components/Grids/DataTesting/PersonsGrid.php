@@ -10,6 +10,7 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -29,6 +30,9 @@ class PersonsGrid extends BaseGrid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->personService->getTable();

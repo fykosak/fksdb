@@ -33,6 +33,9 @@ class QuizAnswersGrid extends BaseGrid
         parent::__construct($container);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitQuestionModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->submit->task->getQuestions()->order('label');

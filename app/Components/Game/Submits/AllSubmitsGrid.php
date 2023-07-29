@@ -81,6 +81,9 @@ class AllSubmitsGrid extends FilterGrid
         );
     }
 
+    /**
+     * @phpstan-return TypedSelection<SubmitModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->submitService->getTable()->where('fyziklani_team.event_id', $this->event->event_id);

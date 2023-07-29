@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\OrgModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -21,6 +22,9 @@ class OrgsGrid extends FilterGrid
         $this->contest = $contest;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrgModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->contest->getOrganisers()->order('since DESC');

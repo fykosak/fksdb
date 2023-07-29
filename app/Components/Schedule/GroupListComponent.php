@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
+use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -29,6 +29,9 @@ class GroupListComponent extends BaseList
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ScheduleGroupModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getScheduleGroups()->order('start');

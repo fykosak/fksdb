@@ -9,7 +9,7 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @implements Statement<mixed>
+ * @implements Statement<mixed,BaseHolder>
  */
 class Parameter implements Statement
 {

@@ -71,9 +71,9 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
-     * @phpstan-return M|null
+     * @phpstan-return M
      */
-    public function getEntity(): ?Model
+    public function getEntity(): Model
     {
         static $model;
         // protection for tests ev . change URL during app is running
@@ -86,9 +86,9 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
-     * @phpstan-return M|null
+     * @phpstan-return M
      */
-    private function loadModel(): ?Model
+    private function loadModel(): Model
     {
         /** @var M|null $candidate */
         $candidate = $this->getORMService()->findByPrimary($this->id);

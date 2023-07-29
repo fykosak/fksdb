@@ -172,7 +172,9 @@ class RankingStrategy
         return $invalidTeams;
     }
 
-
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
     {
         $query = $this->event->getParticipatingTeams();
@@ -185,6 +187,7 @@ class RankingStrategy
     /**
      * @return array[]
      * @throws NotClosedTeamException
+     * @phpstan-param TypedGroupedSelection<TeamModel2> $teams
      */
     private function getTeamsStats(TypedGroupedSelection $teams): array
     {

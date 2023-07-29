@@ -42,6 +42,9 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');

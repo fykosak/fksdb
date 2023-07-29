@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
@@ -20,6 +21,9 @@ class EventPaymentGrid extends BaseGrid
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getPayments();

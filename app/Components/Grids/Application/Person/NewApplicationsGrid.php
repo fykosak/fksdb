@@ -27,11 +27,12 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     protected function getModels(): TypedSelection
     {
-        return $this->eventService->getTable()
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
+        return $this->eventService->getEventsWithOpenRegistration();
     }
 
     /**

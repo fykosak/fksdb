@@ -45,10 +45,7 @@ class InboxFormComponent extends SeriesTableFormComponent
                     throw new ForbiddenRequestException();
                 }
                 $submit = $this->submitService->findByContestantId($contestant, $taskNo);
-                if ($submittedOn && $submit) {
-                    //   $submitService->updateModel($submit, ['submitted_on' => $submittedOn]);
-// $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), I\Fykosak\Utils\Logging\Message::LVL_INFO);
-                } elseif (!$submittedOn && $submit) {
+                if (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
                     $this->submitService->disposeModel($submit);
                 } elseif ($submittedOn && !$submit) {
@@ -62,8 +59,6 @@ class InboxFormComponent extends SeriesTableFormComponent
                         \sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo),
                         Message::LVL_SUCCESS
                     );
-                } else {
-                    // do nothing
                 }
             }
         }

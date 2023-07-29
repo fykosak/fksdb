@@ -28,6 +28,9 @@ class PersonGrid extends BaseGrid
         parent::render();
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getScheduleForEvent($this->event);

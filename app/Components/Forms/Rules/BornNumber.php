@@ -78,7 +78,7 @@ class BornNumber
         }
 
         [, $year, $month, $day, $ext, $control] = $matches;
-        return [$year, $month, $day, $ext, ($control === '') ? null : $control];
+        return [(int)$year, (int)$month, (int)$day, (int)$ext, ($control === '') ? null : (int)$control];
     }
 
     /**

@@ -8,7 +8,9 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @template T,R,P
+ * @phpstan-template T
+ * @phpstan-template R
+ * @phpstan-template P
  * @phpstan-implements Statement<T,P>
  */
 abstract class EvaluatedExpression implements Statement

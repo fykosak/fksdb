@@ -36,6 +36,7 @@ final class SingleReflectionFormFactory
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param mixed $args
      */
     public function createField(string $tableName, string $fieldName, ...$args): BaseControl
     {
@@ -45,6 +46,7 @@ final class SingleReflectionFormFactory
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param mixed $args
      */
     public function createContainerWithMetadata(
         string $table,

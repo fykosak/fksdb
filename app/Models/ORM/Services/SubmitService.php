@@ -44,7 +44,10 @@ final class SubmitService extends Service
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->name->__serialize(),
-            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline->format(_('__date_time'))),
+            'deadline' => $task->submit_deadline ? sprintf(
+                _('Deadline %s'),
+                $task->submit_deadline->format(_('__date_time'))
+            ) : null,
             'taskId' => $task->task_id,
             'isQuiz' => count($task->getQuestions()) > 0,
             'disabled' => !$task->isForCategory($category),

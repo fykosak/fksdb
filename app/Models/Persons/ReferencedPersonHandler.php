@@ -26,6 +26,9 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-extends ReferencedHandler<PersonModel>
+ */
 class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;

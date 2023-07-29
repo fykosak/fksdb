@@ -18,7 +18,7 @@ use Nette\Security\Resource;
  * @property-read PersonModel $person
  * @property-read \DateTimeInterface $created
  * @property-read int $contest_category_id
- * @property-read ContestCategoryModel $contest_category
+ * @property-read ContestCategoryModel|null $contest_category
  */
 final class ContestantModel extends Model implements Resource
 {

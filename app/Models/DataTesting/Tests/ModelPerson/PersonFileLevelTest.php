@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 
 abstract class PersonFileLevelTest extends PersonTest
 {
@@ -25,6 +26,7 @@ abstract class PersonFileLevelTest extends PersonTest
 
     /**
      * @throws BadTypeException
+     * @phpstan-return ColumnFactory&TestedColumnFactory
      */
     final protected function getRowFactory(): TestedColumnFactory
     {

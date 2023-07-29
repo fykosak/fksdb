@@ -9,9 +9,12 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
+/**
+ * @template M of Model
+ */
 abstract class LinkFactory
 {
-
+    /** @phpstan-var class-string<M>  */
     protected string $modelClassName;
 
     public function __construct(?string $modelClassName = null)
@@ -34,6 +37,7 @@ abstract class LinkFactory
     /**
      * @throws CannotAccessModelException
      * @throws \ReflectionException
+     * @phpstan-return M
      */
     protected function getModel(Model $modelSingle): ?Model
     {

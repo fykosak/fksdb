@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -16,15 +17,15 @@ class PersonContainerResolver implements Resolver
     use SmartObject;
 
     private Field $field;
-    /** @var callable */
+    /** @phpstan-var callable(BaseHolder):bool|bool */
     private $modifiableCondition;
-    /** @var callable */
+    /** @phpstan-var callable(BaseHolder):bool|bool */
     private $visibleCondition;
     private SelfResolver $selfResolver;
 
     /**
-     * @param callable|bool $modifiableCondition
-     * @param callable|bool $visibleCondition
+     * @param callable(BaseHolder):bool|bool $modifiableCondition
+     * @param callable(BaseHolder):bool|bool $visibleCondition
      */
     public function __construct(
         Field $field,

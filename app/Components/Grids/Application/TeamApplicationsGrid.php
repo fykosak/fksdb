@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
@@ -22,6 +23,9 @@ class TeamApplicationsGrid extends FilterGrid
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();

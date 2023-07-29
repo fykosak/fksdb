@@ -39,7 +39,6 @@ class PageComponent extends SeatingPageComponent
                 $this->template->showTeamId = true;
                 break;
         }
-        /** @phpstan-ignore-next-line */
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
     }
 }

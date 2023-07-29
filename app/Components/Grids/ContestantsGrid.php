@@ -23,6 +23,9 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->contestYear->getContestants()->order('person.other_name ASC');

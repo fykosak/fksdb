@@ -10,7 +10,7 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @implements Statement<int>
+ * @implements Statement<int,BaseHolder>
  */
 class Count implements Statement
 {
