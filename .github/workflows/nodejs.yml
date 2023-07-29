@@ -35,9 +35,10 @@ jobs:
     - uses: actions/setup-python@v4
       name: Setup Python
     - run: composer install # netteForms.js
-    - run: python i18n/compile-js.py # netteForms.js
-      name: Compile i18n-data.ts
     - run: npm ci
+      name: NPM clean install
+    - run: npm run build
+      name: Compile i18n-data.ts
     - run: npm run build
       env:
         CI: true
