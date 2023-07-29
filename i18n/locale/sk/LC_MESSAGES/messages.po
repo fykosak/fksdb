@@ -4703,7 +4703,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:12
 msgid ""
-"Physics correspondence competition of CUNI FMP for high-school students."
+"Physics correspondence competition of CUNI MFF for high-school students."
 msgstr ""
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:14
@@ -4713,7 +4713,7 @@ msgstr "Registrácia"
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:24
 msgid ""
-"Physics correspondence seminar of CUNI FMP for the students of elementary "
+"Physics correspondence seminar of CUNI MFF for the students of elementary "
 "schools."
 msgstr ""
 

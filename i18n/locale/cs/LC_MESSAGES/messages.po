@@ -4546,7 +4546,7 @@ msgstr "Můj profil"
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:12
 msgid ""
-"Physics correspondence competition of CUNI FMP for high-school students."
+"Physics correspondence competition of CUNI MFF for high-school students."
 msgstr ""
 "Fyzikální korespondenční seminář MFF UK určený pro žáky středních škol."
 
@@ -4556,7 +4556,7 @@ msgstr "Zaregistrovat se do FYKOSu"
 
 #: ../app/Modules/PublicModule/templates/Register/contest.latte.latte2php:24
 msgid ""
-"Physics correspondence seminar of CUNI FMP for the students of elementary "
+"Physics correspondence seminar of CUNI MFF for the students of elementary "
 "schools."
 msgstr ""
 "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií."
