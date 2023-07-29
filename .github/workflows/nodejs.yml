@@ -37,8 +37,8 @@ jobs:
     - run: composer install # netteForms.js
     - run: npm ci
       name: NPM clean install
-    - run: npm run build
-      name: Compile i18n-data.ts
+    - run: npm run translations
+      name: Compile translations
     - run: npm run build
       env:
         CI: true
