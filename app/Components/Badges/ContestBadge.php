@@ -17,9 +17,10 @@ class ContestBadge extends Badge
     public static function getHtml(...$args): Html
     {
         [$contest] = $args;
-        $contestId = $contest;
         if ($contest instanceof ContestModel) {
             $contestId = $contest->contest_id;
+        } else {
+            $contestId = (int)$contest;
         }
         $component = Html::el('span');
         switch ($contestId) {

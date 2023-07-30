@@ -6,7 +6,6 @@ namespace FKSDB\Models\Transitions\Machine;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
@@ -27,7 +26,7 @@ final class TeamMachine extends Machine
     /**
      * @param TeamModel2 $model
      */
-    public function createHolder(Model $model): ModelHolder
+    public function createHolder(Model $model): TeamHolder
     {
         return new TeamHolder($model, $this->teamService);
     }

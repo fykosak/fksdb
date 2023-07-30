@@ -97,7 +97,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         $form->addComponent($this->createConsole($group), self::CONT_SQL);
 
         $group = $form->addGroup(_('Parameters'));
-        $form->addComponent($this->createParametersMetadata($group), self::CONT_PARAMS); // @phpstan-ignore-line
+        $form->addComponent($this->createParametersMetadata($group), self::CONT_PARAMS);
 
         $group = $form->addGroup(_('Metadata'));
         $form->addComponent($this->createMetadata($group), self::CONT_MAIN);

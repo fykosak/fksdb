@@ -22,5 +22,4 @@ parameters:
         - app/Components/EntityForms/RegisterTeacherFormComponent.php
         - app/Models/ORM/Columns/Tables/Contestant/ContestCategoryColumnFactory.php
         - app/Models/ORM/Columns/Tables/Event/EventRole.php
-        - libs/Forms/KdybyReplicator/KdybyReplicator.php
 

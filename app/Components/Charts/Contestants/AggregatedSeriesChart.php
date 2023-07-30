@@ -42,9 +42,9 @@ group by year, series',
         foreach ($query as $row) {
             /** @var int $year */
             $year = $row->year;
-            $series = $row->series;
+            $series = (int)$row->series;
             $data[$year] = $data[$year] ?? [];
-            $data[$year][$series] = $row->count;
+            $data[$year][$series] = (int)$row->count;
         }
         return $data;
     }
