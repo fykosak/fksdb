@@ -17,6 +17,7 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
+ * @template H of ModelHolder
  * @implements Statement<void,ModelHolder>
  */
 abstract class MailCallback implements Statement
@@ -42,7 +43,7 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @param ModelHolder ...$args
+     * @param H ...$args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -59,6 +60,7 @@ abstract class MailCallback implements Statement
 
     /**
      * @throws BadTypeException
+     * @phpstan-param H $holder
      */
     protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
@@ -78,6 +80,9 @@ abstract class MailCallback implements Statement
         return $person->getLogin() ?? $this->accountManager->createLogin($person);
     }
 
+    /**
+     * @phpstan-param H $holder
+     */
     protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
     {
         return null;
@@ -88,6 +93,7 @@ abstract class MailCallback implements Statement
      * @return PersonModel[]
      * @throws \ReflectionException
      * @throws BadTypeException
+     * @phpstan-param H $holder
      */
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {
@@ -98,7 +104,13 @@ abstract class MailCallback implements Statement
         return [$person];
     }
 
+    /**
+     * @phpstan-param H $holder
+     */
     abstract protected function getTemplatePath(ModelHolder $holder): string;
 
+    /**
+     * @phpstan-param H $holder
+     */
     abstract protected function getData(ModelHolder $holder): array;
 }

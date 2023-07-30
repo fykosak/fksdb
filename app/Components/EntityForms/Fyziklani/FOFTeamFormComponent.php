@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Neon\Exception;
@@ -59,6 +60,7 @@ class FOFTeamFormComponent extends TeamFormComponent
             $accommodationField = $component['person_schedule']['accommodation'];
             /** @var BaseControl $bornField */
             $bornField = $component['person_info']['born'];
+            /** @var Control $baseComponent */
             foreach ($accommodationField->getComponents() as $baseComponent) {
                 $genderField->addConditionOn($baseComponent, Form::FILLED)
                     ->addRule(Form::FILLED, _('Field %label is required.'));

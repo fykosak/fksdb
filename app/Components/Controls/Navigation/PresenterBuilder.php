@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 
 class PresenterBuilder
@@ -37,6 +38,9 @@ class PresenterBuilder
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
             $presenter = $this->getCachePresenter($presenterName);
+        }
+        if (!$presenter instanceof BasePresenter) {
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
 
         unset($baseParams[Presenter::ACTION_KEY]);

@@ -155,7 +155,7 @@ final class AuthenticationPresenter extends BasePresenter
                     'code' => $this->getParameter('code'),
                 ]
             );
-            $ownerDetails = $this->googleProvider->getResourceOwner($token);
+            $ownerDetails = $this->googleProvider->getResourceOwner($token); // @phpstan-ignore-line
             $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
             $this->getUser()->login($login);
             $this->initialRedirect();

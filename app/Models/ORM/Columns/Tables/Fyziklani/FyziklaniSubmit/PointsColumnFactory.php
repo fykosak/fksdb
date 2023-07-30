@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<SubmitModel>
+ */
 class PointsColumnFactory extends ColumnFactory
 {
     /**

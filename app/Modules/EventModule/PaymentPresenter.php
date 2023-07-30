@@ -14,6 +14,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -197,12 +198,13 @@ final class PaymentPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @phpstan-return TransitionButtonsComponent<PaymentHolder>
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getEvent(),
+            $this->getMachine(),
             $this->getMachine()->createHolder($this->getEntity())
         );
     }

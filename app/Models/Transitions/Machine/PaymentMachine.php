@@ -24,7 +24,7 @@ final class PaymentMachine extends Machine
     }
 
     /**
-     * @param PaymentModel|null $model
+     * @param PaymentModel $model
      */
     public function createHolder(Model $model): PaymentHolder
     {

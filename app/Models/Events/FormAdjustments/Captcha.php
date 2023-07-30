@@ -16,6 +16,7 @@ use Nette\SmartObject;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editations).
+ * @phpstan-implements FormAdjustment<BaseHolder>
  */
 class Captcha implements FormAdjustment
 {

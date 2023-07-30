@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel>
+ */
 class HealthInsuranceColumnFactory extends ColumnFactory
 {
     protected const ID_MAPPING = [

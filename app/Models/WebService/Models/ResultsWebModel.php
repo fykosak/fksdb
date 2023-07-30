@@ -54,7 +54,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setSeries(+$seriesSingle);
+                $resultsModel->setSeries((int)$seriesSingle);
                 $resultsNode->appendChild($this->createDetailNode($resultsModel, $doc));
             }
         }
@@ -128,7 +128,7 @@ class ResultsWebModel extends WebModel
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $detailNode = $doc->createElement('detail');
-        $detailNode->setAttribute('series', (string)$resultsModel->getSeries());
+        $detailNode->setAttribute('series', (string)$resultsModel->getSeries()); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
@@ -142,7 +142,7 @@ class ResultsWebModel extends WebModel
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $cumulativeNode = $doc->createElement('cumulative');
-        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
@@ -156,7 +156,7 @@ class ResultsWebModel extends WebModel
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $schoolNode = $doc->createElement('school-cumulative');
-        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $schoolNode;

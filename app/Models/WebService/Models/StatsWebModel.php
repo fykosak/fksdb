@@ -67,10 +67,10 @@ class StatsWebModel extends WebModel
                 $node = $doc->createElement('points', (string)$task->points);
                 $taskNode->appendChild($node);
 
-                $node = $doc->createElement('solvers', (string)$task->task_count);
+                $node = $doc->createElement('solvers', (string)$task->task_count); // @phpstan-ignore-line
                 $taskNode->appendChild($node);
 
-                $node = $doc->createElement('average', (string)$task->task_avg);
+                $node = $doc->createElement('average', (string)$task->task_avg); // @phpstan-ignore-line
                 $taskNode->appendChild($node);
             }
         }

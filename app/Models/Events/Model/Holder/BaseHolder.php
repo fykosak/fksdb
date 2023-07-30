@@ -19,9 +19,12 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ */
 class BaseHolder implements ModelHolder
 {
-    /** @var bool|callable */
+    /** @var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
     private Container $container;
     public EventModel $event;
@@ -31,7 +34,7 @@ class BaseHolder implements ModelHolder
 
     /** @var Field[] */
     private array $fields = [];
-    /** @var FormAdjustment[] */
+    /** @var FormAdjustment<BaseHolder>[] */
     public array $formAdjustments = [];
     /** @var Processing[] */
     public array $processings = [];
@@ -42,6 +45,9 @@ class BaseHolder implements ModelHolder
         $this->service = $service;
     }
 
+    /**
+     * @param FormAdjustment<BaseHolder> $formAdjustment
+     */
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
         $this->formAdjustments[] = $formAdjustment;

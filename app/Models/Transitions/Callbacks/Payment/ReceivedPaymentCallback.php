@@ -8,6 +8,9 @@ use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 
+/**
+ * @phpstan-extends MailCallback<PaymentHolder>
+ */
 class ReceivedPaymentCallback extends MailCallback
 {
     /**

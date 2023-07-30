@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
@@ -13,6 +14,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonHistoryModel>
+ */
 class StudyYearColumnFactory extends ColumnFactory
 {
 

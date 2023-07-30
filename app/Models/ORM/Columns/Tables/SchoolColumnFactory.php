@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<SchoolModel>
+ */
 class SchoolColumnFactory extends ColumnFactory
 {
     /**

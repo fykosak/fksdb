@@ -116,13 +116,13 @@ final class ExportPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'compose':
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
                 $this->forward(':Org:StoredQuery:list', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }

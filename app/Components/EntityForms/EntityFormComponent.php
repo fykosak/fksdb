@@ -56,7 +56,7 @@ abstract class EntityFormComponent extends FormComponent
             } else {
                 $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
-        } catch (AbortException $exception) {
+        } catch (AbortException $exception) {// @phpstan-ignore-line
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);

@@ -13,6 +13,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\ComponentModel\IComponent;
 
 final class ChartPresenter extends BasePresenter
 {
@@ -38,7 +39,7 @@ final class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return Chart[]
+     * @return (Chart&IComponent)[]
      * @throws EventNotFoundException
      * @throws BadTypeException
      */

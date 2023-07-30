@@ -7,6 +7,9 @@ namespace FKSDB\Models\Utils;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-implements \Iterator<array>
+ */
 class CSVParser implements \Iterator
 {
     use SmartObject;

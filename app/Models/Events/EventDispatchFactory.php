@@ -97,6 +97,7 @@ class EventDispatchFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine|TeamMachine
      */
     public function getEventMachine(EventModel $event): Machine
     {

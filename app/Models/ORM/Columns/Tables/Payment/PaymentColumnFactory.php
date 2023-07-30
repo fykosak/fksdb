@@ -11,12 +11,16 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel>
+ */
 class PaymentColumnFactory extends ColumnFactory
 {
     private ORMFactory $reflectionFactory;

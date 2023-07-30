@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\EmailPrinter;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ValuePrinters\EmailPrinter;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<OrgModel>
+ */
 class DomainAliasColumnFactory extends ColumnFactory
 {
-
     /**
      * @param OrgModel $model
      * @throws ContestNotFoundException

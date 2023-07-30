@@ -24,6 +24,7 @@ use Nette\Utils\Strings;
  * Sends email with given template name (in standard template directory)
  * to the person that is found as the primary of the application that is
  * experienced the transition.
+ * @phpstan-extends MailCallback<BaseHolder>
  */
 class MailSender extends MailCallback
 {
@@ -56,6 +57,7 @@ class MailSender extends MailCallback
     }
 
     /**
+     * @param BaseHolder $holder
      * @throws \ReflectionException
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
@@ -84,8 +86,9 @@ class MailSender extends MailCallback
     }
 
     /**
-     * @throws BadTypeException
+     * @param BaseHolder $holder
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
@@ -103,6 +106,7 @@ class MailSender extends MailCallback
     }
 
     /**
+     * @param BaseHolder $holder
      * @throws \ReflectionException
      */
     public function createLinkArgs(ModelHolder $holder, AuthTokenModel $token): array
@@ -127,6 +131,9 @@ class MailSender extends MailCallback
         return $event->name . ': ' . $application;
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return $this->templateFile;

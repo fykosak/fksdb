@@ -6,12 +6,15 @@ namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonModel>
+ */
 class FullNameColumnFactory extends ColumnFactory
 {
 

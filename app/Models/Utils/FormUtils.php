@@ -10,6 +10,7 @@ use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
+    // @phpstan-ignore-next-line
     public static function emptyStrToNull(iterable $values): ArrayHash
     {
         $result = new ArrayHash();

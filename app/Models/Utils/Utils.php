@@ -120,7 +120,7 @@ class Utils
         } else {
             try {
                 return (string)$object;
-            } catch (\Error$error) {
+            } catch (\Error$error) { // @phpstan-ignore-line
                 return $error->__toString();
             }
         }
@@ -144,7 +144,7 @@ class Utils
         } else {
             try {
                 return (string)$object;
-            } catch (\Error$error) {
+            } catch (\Error$error) { // @phpstan-ignore-line
                 return $error->__toString();
             }
         }

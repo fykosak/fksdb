@@ -140,7 +140,7 @@ class AutocompleteSelectBox extends TextBase
         } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) { // @phpstan-ignore-line
             $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->label));
             $this->setValue(null);
         } else {

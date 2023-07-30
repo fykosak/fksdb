@@ -134,7 +134,7 @@ class WebServiceModel
         if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->user->getIdentity()->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message, 'soap');

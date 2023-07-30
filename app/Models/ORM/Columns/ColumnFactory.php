@@ -17,7 +17,7 @@ use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
- * @template M of Model
+ * @template M of Model = Model
  */
 abstract class ColumnFactory
 {

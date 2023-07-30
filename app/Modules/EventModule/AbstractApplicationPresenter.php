@@ -11,21 +11,24 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
  * @template M of TeamModel2|\FKSDB\Models\ORM\Models\EventParticipantModel
+ * @template H of TeamHolder|BaseHolder
+ * @template MA of \FKSDB\Models\Transitions\Machine\TeamMachine|\FKSDB\Models\Transitions\Machine\EventParticipantMachine
  */
 abstract class AbstractApplicationPresenter extends BasePresenter
 {
@@ -138,7 +141,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelHolder<M>
+     * @return BaseHolder|TeamHolder
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
@@ -152,9 +155,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
+     * @return MA
      * @throws EventNotFoundException
-     * @return Machine<M>
+     * @throws BadTypeException
      */
     protected function getMachine(): Machine
     {
@@ -167,31 +170,37 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
+     * @return TransitionButtonsComponent<H>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
-    protected function createComponentApplicationTransitions(): BaseComponent
+    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
     {
-        return new TransitionButtonsComponent(
+        return new TransitionButtonsComponent(  //@phpstan-ignore-line
             $this->getContext(),
-            $this->getEvent(),
+            $this->getMachine(), //@phpstan-ignore-line
             $this->getHolder()
         );
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @phpstan-return MassTransitionsComponent<MA>
      */
     final protected function createComponentMassTransitions(): MassTransitionsComponent
     {
-        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
+        return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
 
+    /**
+     * @return AttendanceComponent<H>
+     */
     abstract protected function createComponentFastTransition(): AttendanceComponent;
 
     abstract protected function createComponentGrid(): BaseGrid;

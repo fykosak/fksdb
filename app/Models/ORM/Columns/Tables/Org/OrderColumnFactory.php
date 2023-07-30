@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<OrgModel>
+ */
 class OrderColumnFactory extends ColumnFactory
 {
 

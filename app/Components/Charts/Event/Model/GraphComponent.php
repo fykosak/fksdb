@@ -10,10 +10,17 @@ use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of Machine
+ */
 class GraphComponent extends FrontEndComponent implements Chart
 {
+    /** @var M */
     private Machine $machine;
 
+    /**
+     * @phpstan-param M $machine
+     */
     public function __construct(Container $container, Machine $machine)
     {
         parent::__construct($container, 'event.model.graph');

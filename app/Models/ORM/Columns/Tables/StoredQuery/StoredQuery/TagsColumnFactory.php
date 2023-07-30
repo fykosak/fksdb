@@ -15,6 +15,9 @@ use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<QueryModel>
+ */
 class TagsColumnFactory extends ColumnFactory
 {
     private TagTypeService $storedQueryTagTypeService;

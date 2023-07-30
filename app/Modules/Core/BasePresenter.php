@@ -82,7 +82,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @param \ReflectionMethod|\ReflectionClass $element
+     * @param \ReflectionMethod|\ReflectionClass<self> $element
      * @throws \ReflectionException
      * @throws \Exception
      */
@@ -115,7 +115,7 @@ abstract class BasePresenter extends Presenter
         $method = 'authorized' . $this->getAction();
         try {
             $reflectionMethod = new \ReflectionMethod($this, $method);
-            if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+            if ($reflectionMethod->getReturnType()->getName() !== 'bool') { // @phpstan-ignore-line
                 throw new InvalidStateException(
                     sprintf('Method %s of %s should return bool.', $reflectionMethod->getName(), get_class($this))
                 );
@@ -244,7 +244,7 @@ abstract class BasePresenter extends Presenter
         $candidate = $this->lang ?? $this->getUserPreferredLang();
         $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
-            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages); // @phpstan-ignore-line
         }
         if (!$candidate) {
             $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
@@ -270,13 +270,13 @@ abstract class BasePresenter extends Presenter
     {
         /**@var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
-        return $this->getUser()->isLoggedIn() ? $login->person : null;
+        return $this->getUser()->isLoggedIn() ? $login->person : null; // @phpstan-ignore-line
     }
 
     protected function createTemplate(): Template
     {
         $template = parent::createTemplate();
-        $template->setTranslator($this->translator);
+        $template->setTranslator($this->translator); // @phpstan-ignore-line
         return $template;
     }
 

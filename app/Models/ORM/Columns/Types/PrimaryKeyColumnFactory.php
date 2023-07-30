@@ -11,6 +11,9 @@ use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model>
+ */
 class PrimaryKeyColumnFactory extends ColumnFactory
 {
     protected function createHtmlValue(Model $model): Html

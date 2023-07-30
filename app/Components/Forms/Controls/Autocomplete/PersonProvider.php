@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
 
 class PersonProvider implements FilteredDataProvider

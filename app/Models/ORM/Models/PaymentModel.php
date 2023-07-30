@@ -21,7 +21,7 @@ use Nette\Security\Resource;
  * @property-read EventModel $event
  * @property-read int $event_id
  * @property-read PaymentState $state
- * @property-read float $price
+ * @property-read float|null $price
  * @property-read string $currency
  * @property-read \DateTimeInterface $created
  * @property-read \DateTimeInterface $received

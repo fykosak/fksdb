@@ -84,7 +84,7 @@ class EventFormComponent extends EntityFormComponent
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters'); // @phpstan-ignore-line
             $paramControl->addRule(function (BaseControl $control): bool {
                 $parameters = $control->getValue();
                 try {

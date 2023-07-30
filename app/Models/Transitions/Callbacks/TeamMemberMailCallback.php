@@ -12,6 +12,9 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 
+/**
+ * @phpstan-extends MailCallback<TeamHolder>
+ */
 abstract class TeamMemberMailCallback extends MailCallback
 {
     /**

@@ -7,7 +7,7 @@ namespace FKSDB\Models\Transitions;
 use FKSDB\Models\Transitions\Machine\Machine;
 
 /**
- * @template H of FKSDB\Models\Transitions\Holder\ModelHolder
+ * @template H of \FKSDB\Models\Transitions\Holder\ModelHolder
  */
 interface TransitionsDecorator
 {

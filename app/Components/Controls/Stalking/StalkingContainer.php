@@ -55,6 +55,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('person_history', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -63,6 +64,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentEventOrgsGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('event_org', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -71,6 +73,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentPaymentsGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('payment', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -84,6 +87,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentTaskContributionsGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('task_contribution', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -97,6 +101,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentEventTeachersGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid(
             'fyziklani_team_teacher',
             $this->person,
@@ -110,6 +115,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -118,6 +124,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentTeamMembersGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid(
             'fyziklani_team_member',
             $this->person,
@@ -131,6 +138,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentEventScheduleGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());
     }
 
@@ -139,6 +147,7 @@ class StalkingContainer extends BaseComponent
      */
     protected function createComponentEmailMessageGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('email_message', $this->person, $this->userPermission, $this->getContext());
     }
 

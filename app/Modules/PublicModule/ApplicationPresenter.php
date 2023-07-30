@@ -212,10 +212,10 @@ final class ApplicationPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
                 $this->forward(':Profile:MyApplications:default', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'default':
                 if (!isset($this->contestId)) {
                     // hack if contestId is not present, but there ale a eventId param

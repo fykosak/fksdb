@@ -301,12 +301,19 @@ final class PersonModel extends Model implements Resource
 
     public function getScheduleByGroup(ScheduleGroupModel $group): ?PersonScheduleModel
     {
-        return $this->getSchedule()->where('schedule_item.schedule_group_id', $group->schedule_group_id)->fetch();
+        /** @var PersonScheduleModel|null $personSchedule */
+        $personSchedule = $this->getSchedule()->where(
+            'schedule_item.schedule_group_id',
+            $group->schedule_group_id
+        )->fetch();
+        return $personSchedule;
     }
 
     public function getScheduleByItem(ScheduleItemModel $item): ?PersonScheduleModel
     {
-        return $this->getSchedule()->where('schedule_item_id', $item->schedule_item_id)->fetch();
+        /** @var PersonScheduleModel|null $personSchedule */
+        $personSchedule = $this->getSchedule()->where('schedule_item_id', $item->schedule_item_id)->fetch();
+        return $personSchedule;
     }
 
     /**

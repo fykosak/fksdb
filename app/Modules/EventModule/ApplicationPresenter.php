@@ -10,18 +10,21 @@ use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
 /**
- * @phpstan-extends AbstractApplicationPresenter<EventParticipantModel>
+ * @phpstan-extends AbstractApplicationPresenter<EventParticipantModel,BaseHolder,EventParticipantMachine>
  */
 final class ApplicationPresenter extends AbstractApplicationPresenter
 {
@@ -100,6 +103,8 @@ final class ApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @phpstan-return AttendanceComponent<BaseHolder>
      */
     protected function createComponentFastTransition(): AttendanceComponent
     {
@@ -108,6 +113,7 @@ final class ApplicationPresenter extends AbstractApplicationPresenter
             $this->getEvent(),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(),
         );
     }
 

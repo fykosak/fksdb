@@ -6,7 +6,6 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\NotSupportedException;
 
@@ -103,9 +102,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         throw new NotSupportedException();
     }
 
-    /**
-     * @return array[]
-     */
     public function getData(ContestCategoryModel $category): array
     {
         $categories = [];

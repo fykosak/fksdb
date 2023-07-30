@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
@@ -27,6 +28,7 @@ final class SingleReflectionFormFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-return ColumnFactory<Model>
      */
     protected function loadFactory(string $tableName, string $fieldName): ColumnFactory
     {

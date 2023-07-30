@@ -13,6 +13,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model>
+ */
 class EnumColumnFactory extends ColumnFactory
 {
     /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */

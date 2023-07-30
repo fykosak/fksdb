@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Nette\Forms\Form;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends ColumnFactory<QueryModel>
+ */
 class NameColumnFactory extends ColumnFactory
 {
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 

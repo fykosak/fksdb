@@ -9,7 +9,6 @@ use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
 
 /**
  * @property GettextTranslator $translator

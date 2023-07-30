@@ -13,6 +13,9 @@ use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 
+/**
+ * @phpstan-extends MailCallback<TeamHolder>
+ */
 class TeamTeacherMailCallback extends MailCallback
 {
     /**

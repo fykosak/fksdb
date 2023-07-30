@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends ColumnFactory<OrgModel>
+ */
 class TexSignatureColumnFactory extends ColumnFactory
 {
 

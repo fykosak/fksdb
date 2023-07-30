@@ -16,6 +16,7 @@ class UnavailableTransitionException extends InvalidStateException
 {
     /**
      * @param M|ModelHolder<FakeStringEnum&EnumColumn,M>|null $holder
+     * @param Transition<ModelHolder<FakeStringEnum&EnumColumn,M>> $transition
      */
     public function __construct(Transition $transition, $holder)
     {

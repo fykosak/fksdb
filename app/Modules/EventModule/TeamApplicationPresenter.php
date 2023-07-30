@@ -23,15 +23,15 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 
 /**
- * @method TeamMachine getMachine()
+ * @phpstan-extends AbstractApplicationPresenter<TeamModel2,TeamHolder,TeamMachine>
  */
 final class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
@@ -185,7 +185,7 @@ final class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function createTeamForm(?Model $model): TeamFormComponent
+    private function createTeamForm(?TeamModel2 $model): TeamFormComponent
     {
         switch ($this->getEvent()->event_type_id) {
             case 1:
@@ -233,7 +233,7 @@ final class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws EventNotFoundException|BadTypeException
      */
     protected function createComponentFastTransition(): AttendanceComponent
     {
@@ -242,6 +242,7 @@ final class TeamApplicationPresenter extends AbstractApplicationPresenter
             $this->getEvent(),
             TeamState::tryFrom(TeamState::APPROVED),
             TeamState::tryFrom(TeamState::PARTICIPATED),
+            $this->getMachine()
         );
     }
 

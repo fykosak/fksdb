@@ -12,28 +12,28 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template M of (Model&Resource)
+ * @template CM of (Model&\Nette\Security\Resource)
  */
 trait ContestEntityTrait
 {
-    /** @phpstan-use EntityPresenterTrait<M> */
+    /** @phpstan-use EntityPresenterTrait<CM> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
 
     /**
-     * @throws CannotAccessModelException
+     * @return CM
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return M
+     * @throws CannotAccessModelException
      */
     protected function getEntity(): Model
     {
+        /** @var CM $model */
         $model = $this->getBaseEntity();
         try {
-            /** @var ContestModel $contest */
             $contest = $model->getReferencedModel(ContestModel::class);
             if ($contest->contest_id !== $this->getSelectedContest()->contest_id) {
                 throw new ForbiddenRequestException(_('Editing entity outside chosen contest.'));

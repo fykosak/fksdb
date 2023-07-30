@@ -7,10 +7,14 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\CountryModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel>
+ */
 class CitizenshipColumnFactory extends ColumnFactory
 {
     private CountryService $countryService;

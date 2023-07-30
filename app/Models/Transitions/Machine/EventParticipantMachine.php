@@ -18,7 +18,7 @@ use Nette\Database\Explorer;
 /**
  * @phpstan-extends Machine<BaseHolder>
  */
-class EventParticipantMachine extends Machine
+final class EventParticipantMachine extends Machine
 {
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -42,14 +42,14 @@ class EventParticipantMachine extends Machine
     }
 
     /**
+     * @phpstan-param FakeStringEnum&EnumColumn $sourceState
      * @return Transition<BaseHolder>[]
      */
     private function getMatchingTransitions(EnumColumn $sourceState): array
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $sourceState->value ===
-                $transition->source->value
+            fn(Transition $transition): bool => $sourceState->value === $transition->source->value
         );
     }
 
@@ -71,6 +71,6 @@ class EventParticipantMachine extends Machine
         if (!$transition->canExecute($holder)) {
             throw new UnavailableTransitionsException();
         }
-        $holder->setModelState($transition->target);
+        $holder->setModelState($transition->target); // @phpstan-ignore-line
     }
 }

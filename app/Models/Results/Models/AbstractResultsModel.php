@@ -13,7 +13,6 @@ use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\DI\Container;
 
 /**
@@ -63,7 +62,6 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return Row[]
      * @throws \PDOException
      */
     public function getData(ContestCategoryModel $category): array

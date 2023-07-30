@@ -10,33 +10,32 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
-use Tracy\Debugger;
 
 /**
- * @template M of (Model&Resource)
+ * @template CYM of (Model&\Nette\Security\Resource)
  */
 trait ContestYearEntityTrait
 {
-    /** @phpstan-use ContestEntityTrait<M> */
+    /** @phpstan-use ContestEntityTrait<CYM> */
     use ContestEntityTrait {
         getEntity as getContestEntity;
     }
 
     /**
-     * @throws CannotAccessModelException
+     * @return CYM
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return M
+     * @throws CannotAccessModelException
      */
     protected function getEntity(): Model
     {
+        /** @var CYM $model */
         $model = $this->getContestEntity();
         try {
             /** @var ContestYearModel $contestYear */
             $contestYear = $model->getReferencedModel(ContestYearModel::class);
-            Debugger::barDump($contestYear);
             if ($contestYear->year !== $this->getSelectedContestYear()->year) {
                 throw new ForbiddenRequestException(_('Editing entity outside chosen year.'));
             }

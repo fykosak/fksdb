@@ -13,6 +13,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel>
+ */
 class CurrencyColumnFactory extends ColumnFactory
 {
     protected function createFormControl(...$args): BaseControl

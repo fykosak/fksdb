@@ -135,10 +135,13 @@ class ApplicationComponent extends BaseComponent
         foreach ($this->holder->formAdjustments as $adjustment) {
             $adjustment->adjust($form, $this->holder);
         }
+        /** @phpstan-ignore-next-line */
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
+            /** @phpstan-ignore-next-line */
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
         } elseif ($transitionSubmit) {
+            /** @phpstan-ignore-next-line */
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
 
@@ -147,6 +150,7 @@ class ApplicationComponent extends BaseComponent
 
     /**
      * @throws \Throwable
+     * @phpstan-param Transition<BaseHolder>|null $transition
      */
     public function handleSubmit(Form $form, ?Transition $transition = null): void
     {

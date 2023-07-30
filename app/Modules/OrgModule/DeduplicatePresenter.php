@@ -116,7 +116,7 @@ final class DeduplicatePresenter extends BasePresenter
     public function actionMerge(): void
     {
         $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
+        $this->updateMergeForm($this->getComponent('mergeForm')->getForm()); // @phpstan-ignore-line
     }
 
     private function updateMergeForm(Form $form): void

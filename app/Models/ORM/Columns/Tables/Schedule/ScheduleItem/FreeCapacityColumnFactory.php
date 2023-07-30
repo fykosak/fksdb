@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<ScheduleItemModel>
+ */
 class FreeCapacityColumnFactory extends ColumnFactory
 {
 

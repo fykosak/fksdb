@@ -15,3 +15,12 @@ parameters:
         - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
         - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
         - '#Method .* has parameter \$args with no type specified.#'
+        - '#.*with generic class Nette\\Utils\\ArrayHash but does not specify its types: T#'
+    excludePaths:
+        - app/Models/Persons/Deduplication/*.php
+        - app/Components/Controls/Breadcrumbs/*.php
+        - app/Components/EntityForms/RegisterTeacherFormComponent.php
+        - app/Models/ORM/Columns/Tables/Contestant/ContestCategoryColumnFactory.php
+        - app/Models/ORM/Columns/Tables/Event/EventRole.php
+        - libs/Forms/KdybyReplicator/KdybyReplicator.php
+

@@ -29,10 +29,11 @@ trait EventEntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return EM
+     * @return EM
      */
     protected function getEntity(): Model
     {
+        /** @var EM $model */
         $model = $this->getBaseEntity();
         /** @var EventModel $event */
         $event = $model->getReferencedModel(EventModel::class);

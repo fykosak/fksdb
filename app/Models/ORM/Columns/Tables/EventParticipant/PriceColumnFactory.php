@@ -6,11 +6,14 @@ namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ValuePrinters\PricePrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<EventParticipantModel>
+ */
 class PriceColumnFactory extends ColumnFactory
 {
     /**

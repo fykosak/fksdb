@@ -126,6 +126,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         }
         $this->getReferencedId()->handler->setResolution($resolution);
 
+        /** @phpstan-ignore-next-line */
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
 
         foreach ($this->getComponents() as $sub => $subContainer) {
@@ -144,7 +145,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $controlModifiable = isset($realValue) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
+                    /** @phpstan-ignore-next-line */
                     $this[$sub]->removeComponent($component);
+                    /** @phpstan-ignore-next-line */
                 } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);

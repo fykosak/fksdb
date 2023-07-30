@@ -13,13 +13,15 @@ use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-implements TransitionsDecorator<PaymentHolder>
+ */
 class PaymentTransitions implements TransitionsDecorator
 {
     protected PersonScheduleService $personScheduleService;
 
-    public function __construct(
-        PersonScheduleService $personScheduleService
-    ) {
+    public function __construct(PersonScheduleService $personScheduleService)
+    {
         $this->personScheduleService = $personScheduleService;
     }
 

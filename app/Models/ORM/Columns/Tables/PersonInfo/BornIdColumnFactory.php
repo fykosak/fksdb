@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel>
+ */
 class BornIdColumnFactory extends ColumnFactory
 {
     protected function createFormControl(...$args): BaseControl

@@ -45,6 +45,9 @@ trait EntityPresenterTrait
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }
 
+    /**
+     * @return Service<M>
+     */
     abstract protected function getORMService(): Service;
 
     /**
@@ -69,9 +72,9 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @return M
      * @throws GoneException
-     * @phpstan-return M
+     * @throws ModelNotFoundException
      */
     public function getEntity(): Model
     {

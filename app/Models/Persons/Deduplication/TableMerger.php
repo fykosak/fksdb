@@ -133,7 +133,7 @@ class TableMerger
             } else {
                 /* Redirect dependant to the new parent. */
                 foreach ($mergedDependants as $dependant) {
-                    $this->logUpdate($dependant, $newParent);
+                    $this->logUpdate($dependant, $newParent); // @phpstan-ignore-line
                     $dependant->update($newParent);
                 }
             }

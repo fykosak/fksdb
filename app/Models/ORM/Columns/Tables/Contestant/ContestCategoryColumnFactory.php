@@ -7,8 +7,6 @@ namespace FKSDB\Models\ORM\Columns\Tables\Contestant;
 use FKSDB\Components\Badges\ContestCategoryBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
