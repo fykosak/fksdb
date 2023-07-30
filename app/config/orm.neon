@@ -867,8 +867,9 @@ orm:
         model: FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel
         columns:
             state:
-                type: string
+                type: enum
                 title: _('State')
+                class: FKSDB\Models\Schedule\PersonScheduleState
                 omitInputField: true
     schedule_group:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService

@@ -127,7 +127,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
      * @return LocalizedString|mixed|Model
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
 
         switch ($key) {

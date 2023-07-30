@@ -100,7 +100,7 @@ final class TaskModel extends Model
      * @return mixed
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         switch ($key) {
             case 'name':
