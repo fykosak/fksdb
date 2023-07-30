@@ -59,7 +59,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
                 case ContestCategoryModel::VYFUK_6:
                 case ContestCategoryModel::VYFUK_7:
                     return $submit->raw_points;
-                    break;
                 default:
                     return null;
             }
