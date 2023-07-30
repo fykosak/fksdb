@@ -9,6 +9,9 @@ use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'member.latte';

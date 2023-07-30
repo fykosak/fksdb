@@ -42,7 +42,9 @@ final class PersonModel extends Model implements Resource
      */
     public function getLogin(): ?LoginModel
     {
-        return $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        /** @var LoginModel|null $login */
+        $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        return $login;
     }
 
     public function getPreferredLang(): ?string
@@ -52,7 +54,9 @@ final class PersonModel extends Model implements Resource
 
     public function getInfo(): ?PersonInfoModel
     {
-        return $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        /** @var PersonInfoModel|null $info */
+        $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        return $info;
     }
 
     public function getHistoryByContestYear(ContestYearModel $contestYear): ?PersonHistoryModel
@@ -95,7 +99,9 @@ final class PersonModel extends Model implements Resource
 
     public function getContestantByContestYear(ContestYearModel $contestYear): ?ContestantModel
     {
-        return $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+        /** @var ContestantModel|null $contestant */
+        $contestant = $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+        return $contestant;
     }
 
     /**
@@ -121,7 +127,9 @@ final class PersonModel extends Model implements Resource
 
     public function hasPersonFlag(string $flagType): ?PersonHasFlagModel
     {
-        return $this->getFlags()->where('flag.fid', $flagType)->fetch();
+        /** @var PersonHasFlagModel|null $personFlag */
+        $personFlag = $this->getFlags()->where('flag.fid', $flagType)->fetch();
+        return $personFlag;
     }
 
     /**
@@ -140,7 +148,9 @@ final class PersonModel extends Model implements Resource
 
     public function getPostContact(PostContactType $type): ?PostContactModel
     {
-        return $this->getPostContacts()->where(['type' => $type->value])->fetch();
+        /** @var PostContactModel|null $postContact */
+        $postContact = $this->getPostContacts()->where(['type' => $type->value])->fetch();
+        return $postContact;
     }
 
     public function getActivePostContact(): ?PostContactModel

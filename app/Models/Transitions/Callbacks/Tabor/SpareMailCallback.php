@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class SpareMailCallback extends EventParticipantCallback
 {
+    /**
+     * @param BaseHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'spare.latte';
     }
 
+    /**
+     * @param BaseHolder $holder
+     */
     protected function getData(ModelHolder $holder): array
     {
         return [

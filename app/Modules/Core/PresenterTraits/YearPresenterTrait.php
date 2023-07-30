@@ -51,6 +51,9 @@ trait YearPresenterTrait
         return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
     }
 
+    /**
+     * @return TypedGroupedSelection<ContestYearModel>
+     */
     protected function getAvailableYears(): TypedGroupedSelection
     {
         $contest = $this->getSelectedContest();

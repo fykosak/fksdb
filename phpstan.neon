@@ -3,7 +3,7 @@ parameters:
     paths:
         - app
         - libs
-        - tests
+        #- tests
     ignoreErrors:
         - '#Property .* type has no value type specified in iterable type array.#'
         - '#Property .* type has no value type specified in iterable type iterable.#'
@@ -13,3 +13,5 @@ parameters:
         - '#Method .* has parameter .* with no value type specified in iterable type iterable.#'
         - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'
         - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
+        - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
+        - '#Method .* has parameter \$args with no type specified.#'

@@ -21,7 +21,7 @@ use Nette\Security\Resource;
 
 final class EventOrgPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<EventOrgModel> */
+    /** @use EventEntityPresenterTrait<EventOrgModel> */
     use EventEntityPresenterTrait;
 
     private EventOrgService $eventOrgService;

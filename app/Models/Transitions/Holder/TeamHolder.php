@@ -10,6 +10,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Utils\FakeStringEnum;
 
+/**
+ * @phpstan-extends ModelHolder<TeamState,TeamModel2>
+ */
 class TeamHolder implements ModelHolder
 {
     private TeamModel2 $team;

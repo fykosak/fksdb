@@ -17,7 +17,7 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @implements Statement<void>
+ * @implements Statement<void,ModelHolder>
  */
 abstract class MailCallback implements Statement
 {
@@ -42,7 +42,7 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @param ...$args
+     * @param ModelHolder ...$args
      * @throws \ReflectionException
      * @throws BadTypeException
      */

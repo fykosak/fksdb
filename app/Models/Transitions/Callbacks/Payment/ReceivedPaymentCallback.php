@@ -29,6 +29,9 @@ class ReceivedPaymentCallback extends MailCallback
         ];
     }
 
+    /**
+     * @param PaymentHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'receive';

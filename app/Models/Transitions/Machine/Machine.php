@@ -9,15 +9,19 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
+/**
+ * @template H of ModelHolder
+ */
 abstract class Machine
 {
     public const STATE_INIT = '__init';
     public const STATE_ANY = '*';
 
-    /** @var Transition[] */
+    /** @var Transition<H>[] */
     protected array $transitions = [];
     protected Explorer $explorer;
 
@@ -26,13 +30,16 @@ abstract class Machine
         $this->explorer = $explorer;
     }
 
+    /**
+     * @param Transition<H> $transition
+     */
     public function addTransition(Transition $transition): void
     {
         $this->transitions[] = $transition;
     }
 
     /**
-     * @return Transition[]
+     * @return Transition<H>[]
      */
     public function getTransitions(): array
     {
@@ -41,6 +48,7 @@ abstract class Machine
 
     /**
      * @throws UnavailableTransitionsException
+     * @phpstan-return Transition<H>
      */
     public function getTransitionById(string $id): Transition
     {
@@ -52,10 +60,11 @@ abstract class Machine
     }
 
     /**
-     * @param Transition[] $transitions
-     * @throws \LogicException
-     * @throws UnavailableTransitionsException
+     * @param Transition<H>[] $transitions
+     * @return Transition<H>
      * Protect more that one transition between nodes
+     * @throws UnavailableTransitionsException
+     * @throws \LogicException
      */
     protected function selectTransition(array $transitions): Transition
     {
@@ -69,6 +78,9 @@ abstract class Machine
         return \array_values($transitions)[0];
     }
 
+    /**
+     * @param TransitionsDecorator<H>|null $decorator
+     */
     final public function decorateTransitions(?TransitionsDecorator $decorator): void
     {
         if ($decorator) {
@@ -77,7 +89,8 @@ abstract class Machine
     }
 
     /**
-     * @return Transition[]
+     * @param H $holder
+     * @return Transition<H>[]
      */
     public function getAvailableTransitions(ModelHolder $holder): array
     {
@@ -87,6 +100,11 @@ abstract class Machine
         );
     }
 
+    /**
+     * @param EnumColumn&FakeStringEnum $source
+     * @param EnumColumn&FakeStringEnum $target
+     * @return Transition<H>
+     */
     public function getTransitionByStates(EnumColumn $source, EnumColumn $target): Transition
     {
         $transitions = \array_filter(
@@ -97,11 +115,19 @@ abstract class Machine
         return $this->selectTransition($transitions);
     }
 
+    /**
+     * @phpstan-param H $holder
+     * @phpstan-return Transition<H>
+     */
     final public function getImplicitTransition(ModelHolder $holder): Transition
     {
         return $this->selectTransition($this->getAvailableTransitions($holder));
     }
 
+    /**
+     * @phpstan-param H $holder
+     * @phpstan-param Transition<H> $transition
+     */
     protected function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
         if ($transition->source->value !== $holder->getState()->value) {
@@ -113,6 +139,8 @@ abstract class Machine
     /**
      * @throws UnavailableTransitionsException
      * @throws \Throwable
+     * @phpstan-param H $holder
+     * @phpstan-param Transition<H> $transition
      */
     public function execute(Transition $transition, ModelHolder $holder): void
     {
@@ -139,5 +167,8 @@ abstract class Machine
         }
     }
 
+    /**
+     * @return H
+     */
     abstract public function createHolder(Model $model): ModelHolder;
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\{ContestantModel, ContestYearModel, SubmitModel,};
+use FKSDB\Models\ORM\Models\{ContestantModel, ContestYearModel, SubmitModel, TaskModel};
 use FKSDB\Models\ORM\Services\SubmitService;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\NetteORM\TypedSelection;
@@ -31,11 +31,17 @@ class SeriesTable
         $this->submitService = $submitService;
     }
 
+    /**
+     * @return TypedGroupedSelection<ContestantModel>
+     */
     public function getContestants(): TypedGroupedSelection
     {
         return $this->contestYear->getContestants()->order('person.family_name, person.other_name, person.person_id');
     }
 
+    /**
+     * @return TypedGroupedSelection<TaskModel>
+     */
     public function getTasks(): TypedGroupedSelection
     {
         $tasks = $this->contestYear->getTasks($this->series);
@@ -45,6 +51,9 @@ class SeriesTable
         return $tasks->order('tasknr');
     }
 
+    /**
+     * @return TypedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedSelection
     {
         return $this->submitService->getTable()

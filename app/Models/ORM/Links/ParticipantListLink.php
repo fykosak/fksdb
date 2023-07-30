@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Links;
 
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\NetteORM\Model;
 
+/**
+ * @phpstan-extends LinkFactory<EventModel>
+ */
 class ParticipantListLink extends LinkFactory
 {
 

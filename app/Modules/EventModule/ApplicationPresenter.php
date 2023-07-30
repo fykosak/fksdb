@@ -20,6 +20,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
+/**
+ * @phpstan-extends AbstractApplicationPresenter<EventParticipantModel>
+ */
 final class ApplicationPresenter extends AbstractApplicationPresenter
 {
 

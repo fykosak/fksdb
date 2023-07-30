@@ -14,6 +14,10 @@ use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 abstract class TeamMemberMailCallback extends MailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     * @throws BadTypeException
+     */
     final protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
@@ -28,6 +32,7 @@ abstract class TeamMemberMailCallback extends MailCallback
     }
 
     /**
+     * @param TeamHolder $holder
      * @throws BadTypeException
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel

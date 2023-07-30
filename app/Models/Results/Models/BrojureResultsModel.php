@@ -48,6 +48,7 @@ class BrojureResultsModel extends AbstractResultsModel
 
             foreach ($this->getSeries() as $series) {
                 $points = null;
+                /** @var TaskModel $task */
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }

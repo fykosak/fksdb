@@ -5,14 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Callbacks\Fol;
 
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'member';
     }
 
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getData(ModelHolder $holder): array
     {
         return [

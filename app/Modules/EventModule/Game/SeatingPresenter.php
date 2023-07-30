@@ -14,8 +14,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use Fykosak\NetteORM\Service;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
@@ -23,7 +21,7 @@ use Nette\Security\Resource;
 
 final class SeatingPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<RoomModel> */
+    /** @use EntityPresenterTrait<RoomModel> */
     use EntityPresenterTrait;
 
     private RoomService $roomService;
@@ -131,7 +129,7 @@ final class SeatingPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): Service
+    protected function getORMService(): RoomService
     {
         return $this->roomService;
     }

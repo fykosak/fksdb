@@ -56,7 +56,9 @@ final class TeamModel2 extends Model implements Resource
 
     public function getTeamSeat(): ?TeamSeatModel
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        /** @var TeamSeatModel|null $teamSeat */
+        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        return $teamSeat;
     }
 
     /**
@@ -109,11 +111,13 @@ final class TeamModel2 extends Model implements Resource
 
     public function getSubmit(TaskModel $task): ?SubmitModel
     {
-        return $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        /** @var SubmitModel|null $submit */
+        $submit = $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        return $submit;
     }
 
     /**
-     * @return PersonScheduleModel[]
+     * @return PersonScheduleModel[][]
      */
     public function getScheduleRest(
         array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]

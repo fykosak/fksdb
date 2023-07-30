@@ -18,8 +18,9 @@ abstract class EvaluatedExpression implements Statement
     use SmartObject;
 
     /**
-     * @param mixed $evaluated
+     * @phpstan-param callable(P):R|R $evaluated
      * @return mixed
+     * @phpstan-param P $args
      * @phpstan-return R
      */
     final protected function evaluateArgument($evaluated, ...$args)

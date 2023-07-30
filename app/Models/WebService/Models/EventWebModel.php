@@ -175,16 +175,6 @@ class EventWebModel extends WebModel
     }
 
     /**
-     * @throws \DOMException
-     */
-    private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
-    {
-        $pNode = $member->createXMLNode($doc);
-        XMLHelper::fillArrayToNode($this->createParticipantArray($member), $doc, $pNode);
-        return $pNode;
-    }
-
-    /**
      * @param TeamMemberModel|EventParticipantModel $member
      */
     private function createParticipantArray($member): array

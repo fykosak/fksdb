@@ -16,6 +16,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @template M of Model
+ */
 abstract class ColumnFactory
 {
     use SmartObject;
@@ -34,6 +37,7 @@ abstract class ColumnFactory
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
+    /** @var class-string<M> */
     protected string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory)
@@ -122,6 +126,9 @@ abstract class ColumnFactory
         throw new OmittedControlException();
     }
 
+    /**
+     * @param M $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->modelAccessKey});
@@ -153,8 +160,9 @@ abstract class ColumnFactory
     }
 
     /**
-     * @throws CannotAccessModelException
+     * @return M|null
      * @throws \ReflectionException
+     * @throws CannotAccessModelException
      */
     protected function resolveModel(Model $modelSingle): ?Model
     {

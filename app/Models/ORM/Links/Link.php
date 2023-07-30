@@ -6,9 +6,12 @@ namespace FKSDB\Models\ORM\Links;
 
 use Fykosak\NetteORM\Model;
 
+/**
+ * @template M of Model
+ * @phpstan-extends LinkFactory<M>
+ */
 class Link extends LinkFactory
 {
-
     private string $destination;
     private array $params;
     private string $title;
@@ -26,11 +29,17 @@ class Link extends LinkFactory
         return _($this->title);
     }
 
+    /**
+     * @phpstan-param M $model
+     */
     protected function getDestination(Model $model): string
     {
         return $this->destination;
     }
 
+    /**
+     * @phpstan-param M $model
+     */
     protected function prepareParams(Model $model): array
     {
         $urlParams = [];

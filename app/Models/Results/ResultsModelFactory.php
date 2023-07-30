@@ -7,8 +7,6 @@ namespace FKSDB\Models\Results;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ContestCategoryService;
-use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2023;
@@ -34,17 +32,10 @@ class ResultsModelFactory implements XMLNodeSerializer
 {
     use SmartObject;
 
-    private TaskService $taskService;
-    private ContestCategoryService $contestCategoryService;
     private Container $container;
 
-    public function __construct(
-        TaskService $taskService,
-        ContestCategoryService $contestCategoryService,
-        Container $container
-    ) {
-        $this->taskService = $taskService;
-        $this->contestCategoryService = $contestCategoryService;
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 

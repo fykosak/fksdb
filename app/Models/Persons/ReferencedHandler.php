@@ -29,9 +29,6 @@ abstract class ReferencedHandler
      */
     abstract public function store(array $values, ?Model $model = null): ?Model;
 
-    /**
-     * @phpstan-param M $model
-     */
     protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
     {
         foreach ($values as $key => $value) {

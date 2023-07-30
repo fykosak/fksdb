@@ -10,6 +10,9 @@ use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
+/**
+ * @phpstan-extends Machine<PaymentHolder>
+ */
 final class PaymentMachine extends Machine
 {
     private PaymentService $paymentService;

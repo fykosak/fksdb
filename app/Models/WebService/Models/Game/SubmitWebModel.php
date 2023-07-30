@@ -36,7 +36,7 @@ class SubmitWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         try {
-            /** @var EventModel $event */
+            /** @var EventModel|null $event */
             $event = $this->eventService->findByPrimary($params['event_id']);
             if (!$event) {
                 throw new BadRequestException();

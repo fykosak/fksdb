@@ -16,9 +16,11 @@ final class TaskService extends Service
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
-        return $event->getTasks()->where([
+        /** @var TaskModel|null $task */
+        $task = $event->getTasks()->where([
             'label' => $label,
         ])->fetch();
+        return $task;
     }
 
     /**

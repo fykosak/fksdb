@@ -104,7 +104,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return Row[]
+     * @return array[]
      */
     public function getData(ContestCategoryModel $category): array
     {

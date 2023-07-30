@@ -15,6 +15,10 @@ use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class TeamTeacherMailCallback extends MailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     * @throws BadTypeException
+     */
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
@@ -29,6 +33,7 @@ class TeamTeacherMailCallback extends MailCallback
     }
 
     /**
+     * @param TeamHolder $holder
      * @throws BadTypeException
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
@@ -45,6 +50,9 @@ class TeamTeacherMailCallback extends MailCallback
         );
     }
 
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';

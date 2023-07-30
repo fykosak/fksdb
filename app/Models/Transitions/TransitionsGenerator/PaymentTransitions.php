@@ -24,8 +24,9 @@ class PaymentTransitions implements TransitionsDecorator
     }
 
     /**
-     * @throws BadTypeException
+     * @param PaymentMachine $machine
      * @throws \Exception
+     * @throws BadTypeException
      */
     public function decorate(Machine $machine): void
     {

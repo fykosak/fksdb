@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 class PricePrinter extends ValuePrinter
 {
     /**
-     * @param Price|MultiCurrencyPrice $value
+     * @param mixed $value
      * @throws UnsupportedCurrencyException
      * @throws NotImplementedException
      */

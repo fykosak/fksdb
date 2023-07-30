@@ -76,8 +76,8 @@ abstract class AESOPModel
             $text .= $key . "\t" . $value . "\n";
         }
         $text .= "\n";
-        /** @var Row $datum */
         $text .= join("\t", $cools) . "\n";
+        /** @var Row $datum */
         foreach ($data as $datum) {
             $text .= join("\t", iterator_to_array($datum->getIterator())) . "\n";
         }

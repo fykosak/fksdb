@@ -31,7 +31,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 
 /**
- * @method TeamModel2 getEntity()
  * @method TeamMachine getMachine()
  */
 final class TeamApplicationPresenter extends AbstractApplicationPresenter

@@ -15,7 +15,9 @@ final class QueryService extends Service
 {
     public function findByQid(string $qid): ?QueryModel
     {
-        return $this->getTable()->where('qid', $qid)->fetch();
+        /** @var QueryModel|null $query */
+        $query = $this->getTable()->where('qid', $qid)->fetch();
+        return $query;
     }
 
     /**

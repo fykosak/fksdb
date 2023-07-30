@@ -39,9 +39,6 @@ class EvaluationFykos2011 extends EvaluationStrategy
             $submit->raw_points;
     }
 
-    /**
-     * @return float|int
-     */
     public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): float
     {
         return $this->getMultiplyCoefficient($task, $category) * $task->points;

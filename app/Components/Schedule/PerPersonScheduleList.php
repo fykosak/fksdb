@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule;
 
+use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -35,6 +35,9 @@ class PerPersonScheduleList extends BaseList
         $this->personService = $personService;
     }
 
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->personService->getTable()->where(

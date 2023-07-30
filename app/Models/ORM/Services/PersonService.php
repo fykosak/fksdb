@@ -16,7 +16,9 @@ final class PersonService extends Service
 
     public function findByEmail(?string $email): ?PersonModel
     {
-        return $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        /** @var PersonModel|null $person */
+        $person = $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        return $person;
     }
 
     public function storeModel(array $data, ?Model $model = null): PersonModel

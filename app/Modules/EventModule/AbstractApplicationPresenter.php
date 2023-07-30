@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
@@ -25,8 +24,12 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
+/**
+ * @template M of TeamModel2|\FKSDB\Models\ORM\Models\EventParticipantModel
+ */
 abstract class AbstractApplicationPresenter extends BasePresenter
 {
+    /** @use EventEntityPresenterTrait<M> */
     use EventEntityPresenterTrait;
 
     protected EventParticipantService $eventParticipantService;
@@ -135,12 +138,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
+     * @return ModelHolder<M>
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     public function getHolder(): ModelHolder
     {
@@ -150,6 +154,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @return Machine<M>
      */
     protected function getMachine(): Machine
     {

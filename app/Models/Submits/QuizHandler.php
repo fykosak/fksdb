@@ -17,7 +17,6 @@ use Nette\Utils\DateTime;
 
 class QuizHandler
 {
-
     private SubmitQuestionAnswerService $submitQuestionAnswerService;
     private SubmitService $submitService;
 
@@ -72,7 +71,6 @@ class QuizHandler
         }
 
         // create task submit
-        /** @var SubmitQuestionAnswerModel $answer */
         $answerModel = $contestant->getAnswer($question);
 
         // answer exists and the answer is the same -> everything is ok so dont update

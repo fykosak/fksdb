@@ -119,6 +119,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getGameSetup(): GameSetupModel
     {
+        /** @var GameSetupModel|null $gameSetupRow */
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();

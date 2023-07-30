@@ -6,6 +6,7 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
@@ -120,6 +121,9 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     protected function getTasks(int $series): TypedGroupedSelection
     {
         return $this->contestYear->getTasks($series)->order('tasknr');

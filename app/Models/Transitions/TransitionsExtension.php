@@ -95,8 +95,8 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @param EnumColumn|string $enumClassName
-     * @return (EnumColumn&FakeStringEnum)[][]|(EnumColumn&FakeStringEnum)[]
+     * @param class-string<EnumColumn&FakeStringEnum> $enumClassName
+     * @return array{0:(EnumColumn&FakeStringEnum)[],1:(EnumColumn&FakeStringEnum)|null}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {

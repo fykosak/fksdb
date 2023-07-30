@@ -20,11 +20,10 @@ use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\OrgModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use Nette\Application\UI\Presenter;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -164,13 +163,13 @@ class StoredQueryFormComponent extends EntityFormComponent
 
             $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
             $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger']);
-            $submit->addRemoveOnClick();
+            $submit->addRemoveOnClick();// @phpstan-ignore-line
         }, $this->container, 0, true);
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-success']);
 
-        $submit->setValidationScope(null)->addCreateOnClick();
+        $submit->setValidationScope(null)->addCreateOnClick(); // @phpstan-ignore-line
 
         return $replicator;
     }

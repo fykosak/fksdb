@@ -15,6 +15,9 @@ use Fykosak\NetteORM\Model;
 use Nette\Security\User;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<EventModel>
+ */
 class EventRole extends ColumnFactory
 {
     private User $user;

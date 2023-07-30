@@ -9,6 +9,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
@@ -17,6 +18,7 @@ use Nette\Security\Resource;
 
 final class SpamPresenter extends BasePresenter
 {
+    /** @use EntityPresenterTrait<EmailMessageModel> */
     use EntityPresenterTrait;
 
     private EmailMessageService $emailMessageService;

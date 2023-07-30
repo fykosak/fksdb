@@ -7,6 +7,9 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Transitions\Statement;
 
+/**
+ * @phpstan-extends Statement<bool,mixed>
+ */
 abstract class EventRole implements Statement
 {
     protected EventAuthorizator $eventAuthorizator;

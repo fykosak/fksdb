@@ -12,22 +12,25 @@ use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\SmartObject;
 
+/**
+ * @template H of ModelHolder
+ */
 class Transition
 {
     use SmartObject;
 
-    /** @var callable */
+    /** @var (callable(H):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
     /**
      * @var Statement[]
-     * @phpstan-var Statement<void,ModelHolder>[]
+     * @phpstan-var Statement<void,H>[]
      */
     public array $beforeExecute = [];
     /**
      * @var Statement[]
-     * @phpstan-var Statement<void,ModelHolder>[]
+     * @phpstan-var Statement<void,H>[]
      */
     public array $afterExecute = [];
 
@@ -37,11 +40,17 @@ class Transition
     /** @var EnumColumn&FakeStringEnum */
     public EnumColumn $target;
 
+    /**
+     * @param EnumColumn&FakeStringEnum $sourceState
+     */
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
         $this->source = $sourceState;
     }
 
+    /**
+     * @param EnumColumn&FakeStringEnum $targetState
+     */
     public function setTargetStateEnum(EnumColumn $targetState): void
     {
         $this->target = $targetState;
@@ -85,6 +94,9 @@ class Transition
         $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
+    /**
+     * @phpstan-param H $holder
+     */
     public function canExecute(ModelHolder $holder): bool
     {
         if (!isset($this->condition)) {
@@ -113,6 +125,9 @@ class Transition
         $this->afterExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param H $holder
+     */
     final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
@@ -120,6 +135,9 @@ class Transition
         }
     }
 
+    /**
+     * @phpstan-param H $holder
+     */
     final public function callAfterExecute(ModelHolder $holder): void
     {
         try {

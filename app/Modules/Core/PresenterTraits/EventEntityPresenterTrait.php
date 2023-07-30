@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template EM of (Model&Resource)
+ * @template EM of (Model&\Nette\Security\Resource)
  */
 trait EventEntityPresenterTrait
 {

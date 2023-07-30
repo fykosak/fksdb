@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<EventModel>
+ */
 class EventTypeColumnFactory extends ColumnFactory
 {
 

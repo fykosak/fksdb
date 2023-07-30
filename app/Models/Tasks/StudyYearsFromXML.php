@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskCategoryModel;
 use FKSDB\Models\ORM\Services\StudyYearService;
 use FKSDB\Models\ORM\Services\TaskCategoryService;
 use FKSDB\Models\Pipeline\Stage;
@@ -94,7 +95,7 @@ class StudyYearsFromXML extends Stage
         } else {
             $categories = $studyYears;
         }
-
+        /** @var TaskCategoryModel $category */
         foreach ($task->getCategories() as $category) {
             $this->taskCategoryService->disposeModel($category);
         }
