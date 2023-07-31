@@ -1147,12 +1147,13 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id` INT(11)          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`  INT(11)          NOT NULL,
-    `school_id`  INT(11)          NULL     DEFAULT NULL,
-    `note`       TEXT             NULL     DEFAULT NULL,
-    `active`     BOOL             NOT NULL DEFAULT FALSE,
-    `role`       VARCHAR(256)     NULL     DEFAULT NULL,
+    `teacher_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT(11)      NOT NULL,
+    `school_id`  INT(11)      NULL     DEFAULT NULL,
+    `note`       TEXT         NULL     DEFAULT NULL,
+    `active`     BOOL         NOT NULL DEFAULT FALSE,
+    `role`       VARCHAR(256) NULL     DEFAULT NULL,
+    UNIQUE INDEX `uq_teacher__person_id` (`person_id` ASC),
     CONSTRAINT `fk_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)

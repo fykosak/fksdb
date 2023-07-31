@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Components\MachineCode\MachineCodeFormComponent;
+use FKSDB\Components\MachineCode\FormComponent;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -24,7 +24,7 @@ use Nette\Forms\Form;
 /**
  * @template H of \FKSDB\Models\Transitions\Holder\ModelHolder
  */
-class AttendanceComponent extends MachineCodeFormComponent
+class AttendanceComponent extends FormComponent
 {
     /** @var Machine<H> */
     protected Machine $machine;

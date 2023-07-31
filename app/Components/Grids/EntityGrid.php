@@ -13,6 +13,7 @@ use Nette\DI\Container;
 /**
  * @deprecated
  * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseGrid<M>
  */
 abstract class EntityGrid extends BaseGrid
 {

@@ -37,7 +37,7 @@ abstract class ColumnFactory
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
-    /** @var class-string<M> */
+    /** @phpstan-var class-string<M> */
     protected string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory)

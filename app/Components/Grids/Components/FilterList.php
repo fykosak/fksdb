@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseList<M>
+ */
 abstract class FilterList extends BaseList
 {
     use FilterTrait;

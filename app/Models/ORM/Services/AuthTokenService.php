@@ -46,7 +46,7 @@ final class AuthTokenService extends Service
         }
 
         if ($refresh) {
-            /** @var AuthTokenModel $token */
+            /** @var AuthTokenModel|null $token */
             $token = $login->getTokens($type)
                 ->where('data', $data)
                 ->where('since <= NOW()')

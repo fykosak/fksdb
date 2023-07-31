@@ -24,7 +24,7 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
+    final public function renderTemplateString(string $templateString, Model $model, ?int $userPermission): void
     {
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'string.latte',
@@ -46,6 +46,9 @@ class ColumnRendererComponent extends BaseComponent
                 switch ($render) {
                     default:
                     case 'value':
+                        if (!$model) {
+                            throw new \InvalidArgumentException(_('"value" is available only with model'));
+                        }
                         return $factory->render($model, $userPermission);
                     case 'title':
                         return $factory->getTitle();

@@ -21,6 +21,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<SubmitModel>
+ */
 class AllSubmitsGrid extends FilterGrid
 {
     protected SubmitService $submitService;

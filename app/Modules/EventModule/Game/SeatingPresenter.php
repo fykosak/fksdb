@@ -151,6 +151,7 @@ final class SeatingPresenter extends BasePresenter
     }
 
     /**
+     * @return never
      * @throws GoneException
      */
     protected function createComponentGrid(): BaseGrid

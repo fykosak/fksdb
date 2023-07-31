@@ -11,6 +11,9 @@ use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<QueryModel>
+ */
 class StoredQueriesGrid extends BaseGrid
 {
     /** @const No. of characters that are showed from query description. */

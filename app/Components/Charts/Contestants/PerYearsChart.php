@@ -44,15 +44,15 @@ class PerYearsChart extends FrontEndComponent implements Chart
 
         $data = [];
         foreach ($seriesQuery as $row) {
-            $year = $row->year; // @phpstan-ignore-line
-            $series = $row->series; // @phpstan-ignore-line
+            $year = (int)$row->year; // @phpstan-ignore-line
+            $series = (int)$row->series; // @phpstan-ignore-line
             $data[$year] = $data[$year] ?? [];
-            $data[$year][$series] = $row->count; // @phpstan-ignore-line
+            $data[$year][$series] = (int)$row->count; // @phpstan-ignore-line
         }
         foreach ($yearsQuery as $row) {
-            $year = $row->year; // @phpstan-ignore-line
+            $year = (int)$row->year; // @phpstan-ignore-line
             $data[$year] = $data[$year] ?? [];
-            $data[$year]['year'] = $row->count; // @phpstan-ignore-line
+            $data[$year]['year'] = (int)$row->count; // @phpstan-ignore-line
         }
         return $data;
     }

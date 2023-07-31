@@ -11,6 +11,9 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<PaymentModel>
+ */
 class EventPaymentGrid extends BaseGrid
 {
     private EventModel $event;

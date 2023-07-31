@@ -10,12 +10,18 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseComponent<M>
+ */
 abstract class BaseList extends BaseComponent
 {
     protected ORMFactory $reflectionFactory;
+    /** @var ButtonGroup<M> */
     public ButtonGroup $buttons;
+    /** @var ListRows<M> */
     public ListRows $rows;
-    /** @var callable */
+    /** @var callable(M):string */
     protected $classNameCallback = null;
 
     public function __construct(Container $container, int $userPermission)
@@ -41,16 +47,25 @@ abstract class BaseList extends BaseComponent
 
     abstract protected function configure(): void;
 
+    /**
+     * @phpstan-param BaseItem<M> $title
+     */
     protected function setTitle(BaseItem $title): void
     {
         $this->addComponent($title, 'title');
     }
 
+    /**
+     * @phpstan-param BaseItem<M> $component
+     */
     public function addRow(BaseItem $component, string $name): void
     {
         $this->rows->addComponent($component, $name);
     }
 
+    /**
+     * @phpstan-param BaseItem<M> $component
+     */
     public function addButton(BaseItem $component, string $name): void
     {
         $this->buttons->addComponent($component, $name);

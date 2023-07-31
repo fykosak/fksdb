@@ -11,6 +11,9 @@ use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<EventOrgModel>
+ */
 class EventOrgsGrid extends BaseGrid
 {
     private EventModel $event;

@@ -23,6 +23,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterList<TeamModel2>
+ */
 class TeamListComponent extends FilterList
 {
     private EventModel $event;
@@ -47,8 +50,12 @@ class TeamListComponent extends FilterList
     {
         $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
         $this->setTitle(
-            new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
+            new TemplateItem(// @phpstan-ignore-line
+                $this->container,
+                '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>'
+            )
         );
+        /** @phpstan-var RowContainer<TeamModel2> $row */
         $row = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row, 'row0');
         $row->addComponent(
@@ -81,13 +88,13 @@ class TeamListComponent extends FilterList
 
         $teacherList = new RelatedTable(
             $this->container,
-            fn(TeamModel2 $team): iterable => $team->getTeachers(),
+            fn(TeamModel2 $team): iterable => $team->getTeachers(),  //@phpstan-ignore-line
             new Title(null, _('Teachers'))
         );
         $this->addRow($teacherList, 'teachers');
         $teacherList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Detail')),
                 fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]

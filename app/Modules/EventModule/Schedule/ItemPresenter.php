@@ -166,6 +166,10 @@ final class ItemPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
     protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();

@@ -14,6 +14,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends BaseGrid<SubmitQuestionModel>
+ */
 class QuizAnswersGrid extends BaseGrid
 {
 
@@ -55,7 +58,7 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): int => $question->points ?? 0,
+                fn(SubmitQuestionModel $question): string => (string)($question->points ?? 0),
                 new Title(null, _('Points'))
             ),
             'points'

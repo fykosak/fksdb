@@ -19,6 +19,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseList<ScheduleGroupModel>
+ */
 class GroupListComponent extends BaseList
 {
     private EventModel $event;
@@ -45,11 +48,12 @@ class GroupListComponent extends BaseList
     {
         $this->classNameCallback = fn(ScheduleGroupModel $model) => 'alert alert-secondary';
         $this->setTitle(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 _('@schedule_group.name_en (@schedule_group.schedule_group_id)')
             )
         );
+        /** @phpstan-var RowContainer<ScheduleGroupModel> $row0 */
         $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row0, 'row0');
         $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
@@ -65,7 +69,7 @@ class GroupListComponent extends BaseList
         );
         $itemsRow = new RelatedTable(
             $this->container,
-            fn(ScheduleGroupModel $model) => $model->getItems(),
+            fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
             new Title(null, _('Items'))
         );
         $this->addRow($itemsRow, 'items');
@@ -116,7 +120,7 @@ class GroupListComponent extends BaseList
             'attendance'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Detail')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:detail', ['id' => $model->getPrimary()]]
@@ -124,7 +128,7 @@ class GroupListComponent extends BaseList
             'detail'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Edit')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:edit', ['id' => $model->getPrimary()]]
@@ -132,7 +136,7 @@ class GroupListComponent extends BaseList
             'edit'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Attendance')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:attendance', ['id' => $model->getPrimary()]]

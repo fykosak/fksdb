@@ -86,9 +86,9 @@ final class TaskModel extends Model
         return (bool)$this->getCategories()->where('contest_category_id', $category->contest_category_id)->fetch();
     }
 
-    public function getContestYear(): ContestYearModel
+    public function getContestYear(): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
             'year',
             $this->year

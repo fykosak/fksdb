@@ -9,6 +9,9 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ */
 abstract class BaseItem extends BaseComponent
 {
     public ?Title $title;
@@ -21,6 +24,9 @@ abstract class BaseItem extends BaseComponent
 
     abstract protected function getTemplatePath(): string;
 
+    /**
+     * @param M|null $model
+     */
     public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
         $this->template->render(

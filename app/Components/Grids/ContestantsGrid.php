@@ -13,6 +13,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<ContestantModel>
+ */
 class ContestantsGrid extends BaseGrid
 {
     private ContestYearModel $contestYear;

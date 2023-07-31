@@ -13,6 +13,7 @@ use Nette\DI\Container;
 
 /**
  * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseGrid<M>
  */
 class PersonRelatedGrid extends BaseGrid
 {

@@ -56,7 +56,7 @@ class MailTemplateFactory
      */
     public function renderLoginInvitation(array $data, string $lang): string
     {
-        return $this->create($lang)->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'loginInvitation.latte', $data);
+        return $this->create($lang)->renderToString(__DIR__ . '/loginInvitation.latte', $data);
     }
 
     /**
@@ -64,7 +64,7 @@ class MailTemplateFactory
      */
     public function renderPasswordRecovery(array $data, string $lang): string
     {
-        return $this->create($lang)->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'recovery.latte', $data);
+        return $this->create($lang)->renderToString(__DIR__ . '/recovery.latte', $data);
     }
 
     /**
@@ -73,7 +73,7 @@ class MailTemplateFactory
     public function renderChangeEmailOld(array $data, Language $lang): string
     {
         return $this->create($lang->value)
-            ->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.old.latte', $data);
+            ->renderToString(__DIR__ . '/changeEmail.old.latte', $data);
     }
 
     /**
@@ -82,7 +82,7 @@ class MailTemplateFactory
     public function renderChangeEmailNew(array $data, Language $lang): string
     {
         return $this->create($lang->value)
-            ->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'changeEmail.new.latte', $data);
+            ->renderToString(__DIR__ . '/changeEmail.new.latte', $data);
     }
 
     /**

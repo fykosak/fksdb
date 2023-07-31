@@ -11,6 +11,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<TaskModel>
+ */
 class TaskGrid extends BaseGrid
 {
     private EventModel $event;

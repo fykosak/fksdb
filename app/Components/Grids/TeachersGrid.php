@@ -10,6 +10,9 @@ use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\NetteORM\TypedSelection;
 
+/**
+ * @phpstan-extends BaseGrid<TeacherModel>
+ */
 class TeachersGrid extends BaseGrid
 {
     private TeacherService $teacherService;

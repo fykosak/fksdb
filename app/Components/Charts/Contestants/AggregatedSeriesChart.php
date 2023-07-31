@@ -6,6 +6,7 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Explorer;
+use Nette\Database\Row;
 
 class AggregatedSeriesChart extends AbstractPerSeriesChart
 {
@@ -39,9 +40,9 @@ group by year, series',
             $this->contest->contest_id
         );
         $data = [];
+        /** @var Row $row */
         foreach ($query as $row) {
-            /** @var int $year */
-            $year = $row->year;
+            $year = (int)$row->year;
             $series = (int)$row->series;
             $data[$year] = $data[$year] ?? [];
             $data[$year][$series] = (int)$row->count;

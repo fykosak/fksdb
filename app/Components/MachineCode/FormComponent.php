@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\MachineCode;
 
-use FKSDB\Components\Controls\FormComponent\FormComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
-abstract class MachineCodeFormComponent extends FormComponent
+abstract class FormComponent extends \FKSDB\Components\Controls\FormComponent\FormComponent
 {
     final protected function handleSuccess(Form $form): void
     {

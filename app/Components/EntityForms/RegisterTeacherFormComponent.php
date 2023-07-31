@@ -8,10 +8,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use Fykosak\Utils\Logging\Message;
@@ -28,9 +30,9 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     public const CONT_TEACHER = 'teacher';
 
     private ?PersonModel $loggedPerson;
-    private ContestAuthorizator $contestAuthorizator;
     private AccountManager $accountManager;
     private TeacherService $teacherService;
+    private SingleReflectionFormFactory $reflectionFactory;
 
     public function __construct(
         Container $container,
@@ -40,16 +42,20 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $this->loggedPerson = $person;
     }
 
-    final public function injectTernary(
-        ContestAuthorizator $contestAuthorizator,
+    final public function inject(
         AccountManager $accountManager,
-        TeacherService $teacherService
+        TeacherService $teacherService,
+        SingleReflectionFormFactory $reflectionFactory
     ): void {
-        $this->contestAuthorizator = $contestAuthorizator;
         $this->accountManager = $accountManager;
         $this->teacherService = $teacherService;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void
     {
         $container = new ContainerWithOptions($this->container);
@@ -62,6 +68,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
             new SelfPersonResolver($this->loggedPerson)
         );
         $container->addComponent($referencedId, 'person_id');
+        $this->reflectionFactory->addToContainer($container, 'teacher', 'active');
         $form->addComponent($container, self::CONT_TEACHER);
         if (!$this->loggedPerson) {
             $captcha = new CaptchaBox();
@@ -73,16 +80,20 @@ class RegisterTeacherFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues('array');//trigger RPC
-        /** @var ReferencedId $referencedId */
+        $values = $form->getValues('array');
+        /** @var ReferencedId<PersonModel> $referencedId */
         $referencedId = $form[self::CONT_TEACHER]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
 
-        $email = $person->getInfo()->email;
-        if ($email && !$person->getLogin()) {
+        $this->teacherService->storeModel($values, $person->getTeacher());
+        if (!$person->getLogin()) {
             try {
-                $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
+                $this->accountManager->sendLoginWithInvitation(
+                    $person,
+                    $person->getInfo()->email,
+                    $this->translator->lang
+                );
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);

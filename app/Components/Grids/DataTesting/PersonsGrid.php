@@ -18,6 +18,9 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends BaseGrid<PersonModel>
+ */
 class PersonsGrid extends BaseGrid
 {
     private PersonService $personService;
@@ -50,7 +53,7 @@ class PersonsGrid extends BaseGrid
             $this->addColumn(
                 new RendererItem(
                     $this->container,
-                    function ($person) use ($test): Html {
+                    function (PersonModel $person) use ($test): Html {
                         $logger = new MemoryLogger();
                         $test->run($logger, $person);
                         return self::createHtmlLog($logger->getMessages());

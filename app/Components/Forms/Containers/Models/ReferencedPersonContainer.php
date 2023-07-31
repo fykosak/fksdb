@@ -135,14 +135,14 @@ class ReferencedPersonContainer extends ReferencedContainer
             }
             /** @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                $realValue = ReferencedPersonHandler::getPersonValue(
+                $value = ReferencedPersonHandler::getPersonValue(
                     $model,
                     $sub,
                     $fieldName,
                     $this->contestYear,
                     $this->event
                 );
-                $controlModifiable = isset($realValue) ? $modifiable : true;
+                $controlModifiable = isset($value) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
                     /** @phpstan-ignore-next-line */
@@ -154,9 +154,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setHtmlAttribute('readonly', 'readonly');
                     if ($component instanceof ContainerWithOptions) {
-                        $component->setValues($realValue);
+                        $component->setValues($value);
                     } else {
-                        $component->setValue($realValue);
+                        $component->setValue($value);
                     }
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
@@ -167,18 +167,18 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, false);
                 } else {
                     if ($component instanceof AddressDataContainer) {
-                        $component->setModel($realValue ? $realValue->address : null, $mode);
+                        $component->setModel($value ? $value->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
-                        $component->setValues($realValue);
+                        $component->setValues($value);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
-                        $component->setValue($realValue);
+                        $component->setValue($value);
                     } else {
-                        $component->setDefaultValue($realValue);
+                        $component->setDefaultValue($value);
                     }
-                    if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
+                    if ($value && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
                         // $component->setDisabled(); // could not store different value anyway
                     }

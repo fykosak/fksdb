@@ -47,6 +47,13 @@ final class PersonModel extends Model implements Resource
         return $login;
     }
 
+    public function getTeacher(): ?TeacherModel
+    {
+        /** @var TeacherModel|null $teacher */
+        $teacher = $this->related(DbNames::TAB_TEACHER, 'person_id')->fetch();
+        return $teacher;
+    }
+
     public function getPreferredLang(): ?string
     {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;

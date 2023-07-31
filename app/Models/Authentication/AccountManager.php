@@ -9,6 +9,7 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -101,6 +102,7 @@ class AccountManager
         if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
         }
+        /** @var AuthTokenModel|null $token */
         $token = $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::RECOVERY))->fetch();
         if ($token) {
             throw new RecoveryExistsException();

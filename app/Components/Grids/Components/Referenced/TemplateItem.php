@@ -11,11 +11,15 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<M>
+ */
 class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
-    /** @var callable|null */
+    /** @var (callable(Model):Model)|null */
     protected $modelAccessorHelper = null;
 
     /**
@@ -40,6 +44,9 @@ class TemplateItem extends BaseItem
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
 
+    /**
+     * @param M|null $model
+     */
     public function render(?Model $model, ?int $userPermission, array $params = []): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;

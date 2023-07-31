@@ -18,6 +18,9 @@ use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterList<TeamModel2>
+ */
 class TeamListComponent extends FilterList
 {
     private EventModel $event;
@@ -84,6 +87,7 @@ class TeamListComponent extends FilterList
                 return 'alert alert-danger';
             }
         };
+        /** @phpstan-var RowContainer<TeamModel2> $row1 */
         $row1 = new RowContainer($this->container);
         $row1->addComponent(
             new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
@@ -92,6 +96,7 @@ class TeamListComponent extends FilterList
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
         $this->addRow($row1, 'row1');
+        /** @phpstan-var RowContainer<TeamModel2> $row2 */
         $row2 = new RowContainer($this->container);
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
         $this->addRow($row2, 'row2');

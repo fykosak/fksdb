@@ -9,6 +9,10 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseList<M>
+ */
 abstract class DetailComponent extends BaseList
 {
     protected PersonModel $person;

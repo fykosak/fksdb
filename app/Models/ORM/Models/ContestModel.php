@@ -65,7 +65,7 @@ final class ContestModel extends Model
 
     public function getContestYear(?int $year): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->getContestYears()->where('year', $year)->fetch();
         return $contestYear;
     }
@@ -87,7 +87,7 @@ final class ContestModel extends Model
 
     public function getContestYearByAcYear(?int $acYear): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->getContestYears()->where('ac_year', $acYear)->fetch();
         return $contestYear;
     }
@@ -102,9 +102,9 @@ final class ContestModel extends Model
         return $this->getContestYears()->max('year');
     }
 
-    public function getCurrentContestYear(): ContestYearModel
+    public function getCurrentContestYear(): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->getContestYears()
             ->where('ac_year', ContestYearService::getCurrentAcademicYear())
             ->fetch();

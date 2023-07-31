@@ -173,6 +173,10 @@ final class ExportPresenter extends BasePresenter
         return false;
     }
 
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
     protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();

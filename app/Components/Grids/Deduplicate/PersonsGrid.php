@@ -13,6 +13,9 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<PersonModel>
+ */
 class PersonsGrid extends BaseGrid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
@@ -70,7 +73,7 @@ class PersonsGrid extends BaseGrid
             'score'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
@@ -85,7 +88,7 @@ class PersonsGrid extends BaseGrid
             'mergeAB'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
@@ -99,7 +102,7 @@ class PersonsGrid extends BaseGrid
             'mergeBA'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton(// @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [

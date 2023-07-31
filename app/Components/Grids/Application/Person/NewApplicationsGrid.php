@@ -15,6 +15,9 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
+/**
+ * @phpstan-extends BaseGrid<EventModel>
+ */
 class NewApplicationsGrid extends BaseGrid
 {
     protected EventService $eventService;
@@ -66,6 +69,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->addButton($button, 'create');
+        $this->addButton($button, 'create'); // @phpstan-ignore-line
     }
 }

@@ -13,6 +13,9 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
+/**
+ * @phpstan-extends BaseGrid<PersonScheduleModel>
+ */
 class PersonGrid extends BaseGrid
 {
     private EventModel $event;
@@ -48,7 +51,7 @@ class PersonGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(PersonScheduleModel $model) => $model->person_schedule_id,
+                fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
                 new Title(null, _('#'))
             ),
             'person_schedule_id'

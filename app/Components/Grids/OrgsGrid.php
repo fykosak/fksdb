@@ -12,6 +12,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<OrgModel>
+ */
 class OrgsGrid extends FilterGrid
 {
     private ContestModel $contest;

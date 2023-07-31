@@ -12,6 +12,9 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<SubmitModel>
+ */
 class TeamSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;

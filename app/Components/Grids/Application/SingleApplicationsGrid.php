@@ -15,6 +15,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<EventParticipantModel>
+ */
 class SingleApplicationsGrid extends FilterGrid
 {
     protected EventModel $event;

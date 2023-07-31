@@ -11,6 +11,9 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<ScheduleItemModel>
+ */
 class ItemsGrid extends BaseGrid
 {
     private ScheduleGroupModel $group;

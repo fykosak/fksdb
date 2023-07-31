@@ -14,6 +14,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends FilterGrid<SchoolModel>
+ */
 class SchoolsGrid extends FilterGrid
 {
     private SchoolService $service;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -58,24 +59,38 @@ final class SingleReflectionFormFactory
     ): ModelContainer {
         $container = new ModelContainer($this->container);
         foreach ($fields as $field => $metadata) {
-            $factory = $this->loadFactory($table, $field);
-            $control = $factory->createField(...$args);
-            if ($userPermissions) {
-                $canWrite = $factory->hasWritePermissions($userPermissions->write);
-                $canRead = $factory->hasReadPermissions($userPermissions->read);
-                if ($control instanceof WriteOnly) {
-                    $control->setWriteOnly(!$canRead);
-                } elseif ($canRead) {
-// do nothing
-                } else {
-                    continue;
-                }
-                $control->setDisabled(!$canWrite);
-            }
-            $this->appendMetadata($control, $metadata);
-            $container->addComponent($control, $field);
+            $this->addToContainer($container, $table, $field, $metadata, $userPermissions, ...$args);
         }
         return $container;
+    }
+
+    /**
+     * @param mixed ...$args
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    public function addToContainer(
+        ContainerWithOptions $container,
+        string $table,
+        string $field,
+        array $metaData = [],
+        ?FieldLevelPermission $userPermissions = null,
+        ...$args
+    ): void {
+        $factory = $this->loadFactory($table, $field);
+        $control = $factory->createField(...$args);
+        if ($userPermissions) {
+            $canWrite = $factory->hasWritePermissions($userPermissions->write);
+            $canRead = $factory->hasReadPermissions($userPermissions->read);
+            if ($control instanceof WriteOnly) {
+                $control->setWriteOnly(!$canRead);
+            } elseif (!$canRead) {
+                return;
+            }
+            $control->setDisabled(!$canWrite);
+        }
+        $this->appendMetadata($control, $metaData);
+        $container->addComponent($control, $field);
     }
 
     protected function appendMetadata(BaseControl $control, array $metadata): void

@@ -73,6 +73,9 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->name;
     }
 
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
     public function getName(): LocalizedString
     {
         switch ($this->event_type_id) {

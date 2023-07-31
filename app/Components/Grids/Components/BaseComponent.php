@@ -7,6 +7,8 @@ namespace FKSDB\Components\Grids\Components;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -14,6 +16,7 @@ use Nette\DI\Container;
 
 /**
  * @method BasePresenter getPresenter()
+ * @template M of Model
  */
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
@@ -30,8 +33,14 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     abstract protected function configure(): void;
 
+    /**
+     * @return TypedSelection<M>|TypedGroupedSelection<M>
+     */
     abstract protected function getModels(): Selection;
 
+    /**
+     * @param BaseItem<M> $component
+     */
     abstract protected function addButton(BaseItem $component, string $name): void;
 
     public function render(): void
@@ -42,6 +51,9 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         ]);
     }
 
+    /**
+     * @phpstan-return PresenterButton<M>
+     */
     protected function addPresenterButton(
         string $destination,
         string $name,
@@ -57,6 +69,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             }
             return $hrefParams;
         };
+        /** @phpstan-var PresenterButton<M> $button */
         $button = new PresenterButton(
             $this->container,
             new Title(null, _($label)),

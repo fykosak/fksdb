@@ -13,6 +13,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<TeamModel2>
+ */
 class TeamApplicationsGrid extends FilterGrid
 {
     protected EventModel $event;

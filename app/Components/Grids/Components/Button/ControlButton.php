@@ -8,6 +8,10 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @phpstan-extends Button<M>
+ */
 class ControlButton extends Button
 {
     private Control $control;

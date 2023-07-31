@@ -19,6 +19,9 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseList<PersonModel>
+ */
 class PerPersonScheduleList extends BaseList
 {
     private PersonService $personService;
@@ -52,8 +55,9 @@ class PerPersonScheduleList extends BaseList
      */
     protected function configure(): void
     {
-        $this->setTitle(new TemplateItem($this->getContext(), '@person.full_name'));
+        $this->setTitle(new TemplateItem($this->getContext(), '@person.full_name'));// @phpstan-ignore-line
         $this->classNameCallback = fn() => 'alert alert-secondary';
+        /** @phpstan-var RowContainer<PersonModel> $row0 */
         $row0 = new RowContainer($this->container);
         $this->addRow($row0, 'row0');
         $row0->addComponent(
@@ -64,11 +68,12 @@ class PerPersonScheduleList extends BaseList
             ),
             'role'
         );
+        /** @phpstan-var RowContainer<PersonModel> $row1 */
         $row1 = new RowContainer($this->container);
         $this->addRow($row1, 'row1');
         $relatedTable = new RelatedTable(
             $this->container,
-            fn(PersonModel $person) => $person->getScheduleForEvent($this->event),
+            fn(PersonModel $person) => $person->getScheduleForEvent($this->event),  //@phpstan-ignore-line
             new Title(null, '')
         );
         $row1->addComponent($relatedTable, 'schedule');

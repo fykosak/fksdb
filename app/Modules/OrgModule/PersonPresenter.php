@@ -251,6 +251,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @return never
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid

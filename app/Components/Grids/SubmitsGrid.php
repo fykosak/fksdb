@@ -15,7 +15,6 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
@@ -24,7 +23,7 @@ use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
- * @property GettextTranslator $translator
+ * @phpstan-extends BaseGrid<SubmitModel>
  */
 class SubmitsGrid extends BaseGrid
 {
@@ -114,7 +113,7 @@ class SubmitsGrid extends BaseGrid
         );
 
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],

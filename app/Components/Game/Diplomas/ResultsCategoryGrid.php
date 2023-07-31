@@ -12,6 +12,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<TeamModel2>
+ */
 class ResultsCategoryGrid extends BaseGrid
 {
     private EventModel $event;
