@@ -1,5 +1,5 @@
 parameters:
-    level: 6
+    level: 7
     paths:
         - app
         - libs
@@ -16,6 +16,8 @@ parameters:
         - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
         - '#Method .* has parameter \$args with no type specified.#'
         - '#.*with generic class Nette\\Utils\\ArrayHash but does not specify its types: T#'
+        - '#Cannot access offset .* on array\|object.#'
+        - '#Access to an undefined property Nette\\Application\\UI\\Template|stdClass::.*.#'
     excludePaths:
         - app/Models/Persons/Deduplication/*.php
         - app/Components/Controls/Breadcrumbs/*.php

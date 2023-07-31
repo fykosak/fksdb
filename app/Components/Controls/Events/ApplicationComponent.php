@@ -158,7 +158,7 @@ class ApplicationComponent extends BaseComponent
             if (!$transition || $transition->getValidation()) {
                 try {
                     $this->connection->beginTransaction();
-                    $values = FormUtils::emptyStrToNull($form->getValues());
+                    $values = FormUtils::emptyStrToNull($form->getValues()); //@phpstan-ignore-line
                     Debugger::log(json_encode((array)$values), 'app-form');
                     foreach ($this->holder->processings as $processing) {
                         $processing->process($values);

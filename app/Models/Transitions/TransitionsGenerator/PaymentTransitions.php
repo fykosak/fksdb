@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PaymentState;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -44,13 +45,16 @@ class PaymentTransitions implements TransitionsDecorator
             $transition = $machine->getTransitionByStates($state, PaymentState::tryFrom(PaymentState::CANCELED));
             $transition->beforeExecute[] = function (PaymentHolder $holder): void {
                 Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
+                /** @var SchedulePaymentModel $row */
                 foreach ($holder->getModel()->getSchedulePayment() as $row) {
                     Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                     $row->delete();
                 }
             };
             $transition->beforeExecute[] =
-                fn(PaymentHolder $holder) => $holder->getModel()->update(['price' => null]);
+                function (PaymentHolder $holder) {
+                    $holder->getModel()->update(['price' => null]);
+                };
         }
     }
 }

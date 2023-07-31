@@ -14,14 +14,15 @@ use Nette\Application\UI\Presenter;
  */
 abstract class LinkFactory
 {
-    /** @phpstan-var class-string<M>  */
+    /** @phpstan-var class-string<M> */
     protected string $modelClassName;
 
-    public function __construct(?string $modelClassName = null)
+    /**
+     * @param class-string<M>|null $modelClassName
+     */
+    public function __construct(string $modelClassName = null)
     {
-        if ($modelClassName) {
-            $this->modelClassName = $modelClassName;
-        }
+        $this->modelClassName = $modelClassName;
     }
 
     /**
@@ -41,9 +42,6 @@ abstract class LinkFactory
      */
     protected function getModel(Model $modelSingle): ?Model
     {
-        if (!isset($this->modelClassName)) {
-            return $modelSingle;
-        }
         return $modelSingle->getReferencedModel($this->modelClassName);
     }
 
@@ -51,6 +49,7 @@ abstract class LinkFactory
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-return array{string,array<string,mixed>}
      */
     public function createLinkParameters(Model $model): array
     {

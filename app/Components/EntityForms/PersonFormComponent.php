@@ -78,6 +78,7 @@ class PersonFormComponent extends EntityFormComponent
     {
         $connection = $this->personService->explorer->getConnection();
         $values = $form->getValues();
+        /** @phpstan-ignore-next-line */
         $data = FormUtils::emptyStrToNull2($values);
         $connection->beginTransaction();
         $this->logger->clear();

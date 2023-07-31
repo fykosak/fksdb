@@ -21,6 +21,9 @@ class EnumColumnFactory extends ColumnFactory
     /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */
     private string $className;
 
+    /**
+     * @param class-string<EnumColumn&FakeStringEnum> $className
+     */
     public function setEnumClassName(string $className): void
     {
         $this->className = $className;

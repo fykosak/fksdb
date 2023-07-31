@@ -37,9 +37,9 @@ class RelatedTable extends BaseItem
     /**
      * @param M|null $model
      */
-    public function render(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(?Model $model, ?int $userPermission): void
     {
-        parent::render($model, $userPermission, ['models' => ($this->modelToIterator)($model), 'head' => $this->head]);
+        $this->doRender($model, $userPermission, ['models' => ($this->modelToIterator)($model), 'head' => $this->head]);
     }
 
     protected function getTemplatePath(): string

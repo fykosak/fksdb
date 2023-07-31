@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
@@ -306,11 +307,12 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function getStyleId(): string
     {
-        $contest = $this->getSelectedContest();
-        if (isset($contest)) {
+        try {
+            $contest = $this->getSelectedContest();
             return 'contest-' . $contest->getContestSymbol() . ' event-type-' . $this->getEvent()->event_type_id;
+        } catch (NoContestAvailable$exception) {
+            return parent::getStyleId();
         }
-        return parent::getStyleId();
     }
 
     protected function getRole(): PresenterRole

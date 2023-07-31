@@ -97,6 +97,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         ];
     }
 
+    /**
+     * @return literal-string
+     */
     protected function composeQuery(ContestCategoryModel $category): string
     {
         throw new NotSupportedException();

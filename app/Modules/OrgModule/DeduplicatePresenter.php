@@ -219,7 +219,7 @@ final class DeduplicatePresenter extends BasePresenter
     {
 
         $values = $form->getValues();
-        $values = FormUtils::emptyStrToNull2($values);
+        $values = FormUtils::emptyStrToNull2($values);//@phpstan-ignore-line
 
         $merger = $this->merger;
         $merger->setConflictResolution($values);

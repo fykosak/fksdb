@@ -29,7 +29,7 @@ class CSVParser implements \Iterator
     {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
-        $this->file = fopen($filename, 'r');
+        $this->file = fopen($filename, 'r');//@phpstan-ignore-line
         if (!$this->file) {
             throw new InvalidStateException(sprintf(_('The file %s cannot be read.'), $filename));
         }
@@ -67,11 +67,11 @@ class CSVParser implements \Iterator
         rewind($this->file);
         $this->rowNumber = 0;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
-            $this->header = fgetcsv($this->file, 0, $this->delimiter);
-            $first = reset($this->header);
+            $this->header = fgetcsv($this->file, 0, $this->delimiter);//@phpstan-ignore-line
+            $first = reset($this->header);//@phpstan-ignore-line
             if ($first !== false) {
                 $first = preg_replace('/' . self::BOM . '/', '', $first);
-                $this->header[0] = $first;
+                $this->header[0] = $first;//@phpstan-ignore-line
             }
         }
         if ($this->valid()) {

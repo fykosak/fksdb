@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -44,13 +45,13 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         return ['Public.Dashboard.default'];
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest)) {
-            return 'contest-' . $contest->getContestSymbol();
-        }
-        return parent::getStyleId();
+        return 'contest-' . $contest->getContestSymbol();
     }
 
     protected function getSubTitle(): ?string

@@ -13,18 +13,20 @@ use Nette\DI\Container;
 
 /**
  * @template M of \Fykosak\NetteORM\Model
+ * @template MH of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<M>
  */
 class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
-    /** @var (callable(Model):Model)|null */
+    /** @var (callable(M):M)|null */
     protected $modelAccessorHelper = null;
 
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
+     * @phpstan-param (callable(M):M)|null $modelAccessorHelper
      */
     public function __construct(
         Container $container,
@@ -47,14 +49,13 @@ class TemplateItem extends BaseItem
     /**
      * @param M|null $model
      */
-    public function render(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        parent::render(
-            $model,
-            $userPermission,
-            ['templateString' => $this->templateString, 'titleString' => $this->titleString]
-        );
+        $this->doRender($model, $userPermission, [
+            'templateString' => $this->templateString,
+            'titleString' => $this->titleString,
+        ]);
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent

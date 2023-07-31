@@ -132,7 +132,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         /** @var SchedulePaymentModel $row */
         foreach ($payment->getSchedulePayment() as $row) {
             /** @var Checkbox $component */
-            $component = $this['person' . $row->person_schedule->person_id][$row->person_schedule_id];
+            $component = $this['person' . $row->person_schedule->person_id][$row->person_schedule_id];//@phpstan-ignore-line
             $component->setDefaultValue(true);
         }
     }

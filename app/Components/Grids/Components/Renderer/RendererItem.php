@@ -33,9 +33,9 @@ class RendererItem extends BaseItem
     /**
      * @param M|null $model
      */
-    public function render(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(?Model $model, ?int $userPermission): void
     {
-        parent::render($model, $userPermission, ['renderer' => $this->renderer]);
+        $this->doRender($model, $userPermission, ['renderer' => $this->renderer]);
     }
 
     protected function getTemplatePath(): string

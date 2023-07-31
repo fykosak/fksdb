@@ -16,8 +16,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class HandoutFormComponent extends BaseComponent
 {

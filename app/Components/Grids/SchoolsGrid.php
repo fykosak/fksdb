@@ -41,7 +41,7 @@ class SchoolsGrid extends FilterGrid
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
         }
         return $query;

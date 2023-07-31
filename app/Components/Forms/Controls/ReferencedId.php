@@ -89,7 +89,7 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @param string|int|Model|null $value
+     * @param string|int|M|null $value
      * @return static
      */
     public function setValue($value, bool $force = false): self

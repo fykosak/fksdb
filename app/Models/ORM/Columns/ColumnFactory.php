@@ -45,6 +45,9 @@ abstract class ColumnFactory
         $this->metaDataFactory = $metaDataFactory;
     }
 
+    /**
+     * @param class-string<M> $modelClassName
+     */
     final public function setUp(
         string $tableName,
         string $modelClassName,

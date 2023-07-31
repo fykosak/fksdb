@@ -70,12 +70,12 @@ class EventsExtension extends CompilerExtension
             'setTemplateDir',
             [$this->getContainerBuilder()->parameters['events']['templateDir']]
         );
-        foreach ($this->getConfig() as $definitionName => $definition) {
+        foreach ($this->getConfig() as $definitionName => $definition) {//@phpstan-ignore-line
             $keys = $this->createAccessKeys($definition);
             $machine = TransitionsExtension::createMachine(
                 $this,
                 $definitionName,
-                $this->getConfig()[$definitionName]['machine']
+                $this->getConfig()[$definitionName]['machine']//@phpstan-ignore-line
             );
             $holder = $this->createHolderFactory($definitionName);
             $eventDispatchFactory->addSetup(

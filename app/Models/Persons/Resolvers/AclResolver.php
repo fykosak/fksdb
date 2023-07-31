@@ -44,10 +44,7 @@ class AclResolver implements Resolver
         return !$person || $this->isAllowed($person, 'edit');
     }
 
-    /**
-     * @param string|Resource|null $privilege
-     */
-    private function isAllowed(PersonModel $person, $privilege): bool
+    private function isAllowed(PersonModel $person, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }

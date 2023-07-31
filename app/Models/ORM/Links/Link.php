@@ -16,6 +16,9 @@ class Link extends LinkFactory
     private array $params;
     private string $title;
 
+    /**
+     * @param class-string<M> $modelClassName
+     */
     public function __construct(string $destination, array $params, string $title, string $modelClassName)
     {
         parent::__construct($modelClassName);

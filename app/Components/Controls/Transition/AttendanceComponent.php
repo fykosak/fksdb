@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transition;
 
-use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\MachineCode\FormComponent;
+use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -93,11 +93,13 @@ class AttendanceComponent extends FormComponent
             $this->machine->execute($this->getTransition(), $holder);
             if ($this->event->isTeamEvent()) {
                 $this->getPresenter()->flashMessage(
+                /** @phpstan-ignore-next-line */
                     sprintf(_('Transition successful for team: (%d) %s'), $model->fyziklani_team_id, $model->name),
                     Message::LVL_SUCCESS
                 );
             } else {
                 $this->getPresenter()->flashMessage(
+                /** @phpstan-ignore-next-line */
                     sprintf(_('Transition successful for application: %s'), $model->person->getFullName()),
                     Message::LVL_SUCCESS
                 );

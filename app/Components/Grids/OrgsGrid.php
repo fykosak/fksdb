@@ -35,7 +35,7 @@ class OrgsGrid extends FilterGrid
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $query->where(
                 'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
                             LIKE CONCAT(\'%\', ? , \'%\')',

@@ -12,6 +12,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\FlashMessageDump;
@@ -19,8 +21,8 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
@@ -113,7 +115,9 @@ final class TasksPresenter extends BasePresenter
             ->setItems($seriesItems, false);
 
         $upload = $form->addUpload('file', _('XML file'));
-        $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
+        $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle(
+            $upload->getHtmlId() . '-pair'
+        );
 
         $form->addSubmit('submit', _('Import'));
 
@@ -128,11 +132,12 @@ final class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @throws UploadException
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
      */
     private function validSubmitSeriesForm(Form $seriesForm): void
     {
-        /** @var FileUpload[]|int[] $values */
+        /** @var array{'file':FileUpload,'series':int,'source':string} $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
         switch ($values['source']) {
@@ -150,6 +155,7 @@ final class TasksPresenter extends BasePresenter
         }
 
         try {
+            /** @var \SimpleXMLElement $xml */
             $xml = simplexml_load_file($file);
 
             if ($xml->getName() === 'problems') {

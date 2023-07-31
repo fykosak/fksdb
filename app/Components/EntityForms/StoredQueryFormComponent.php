@@ -62,7 +62,7 @@ class StoredQueryFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = FormUtils::emptyStrToNull2($form->getValues());
+        $values = FormUtils::emptyStrToNull2($form->getValues()); //@phpstan-ignore-line
         $connection = $this->storedQueryService->explorer->getConnection();
         $connection->beginTransaction();
 

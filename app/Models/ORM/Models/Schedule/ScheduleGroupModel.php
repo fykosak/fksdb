@@ -37,7 +37,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
      */
     public function getItems(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_ITEM);
+        return $this->related(DbNames::TAB_SCHEDULE_ITEM); //@phpstan-ignore-line
     }
 
     public function __toArray(): array

@@ -32,7 +32,7 @@ class StoredQueryFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param ParameterModel[]|StoredQueryParameter[] $parameters
+     * @param (ParameterModel|StoredQueryParameter)[] $parameters
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
     {

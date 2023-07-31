@@ -63,6 +63,6 @@ class XSLFormat implements ExportFormat
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
-        return new PlainTextResponse($proc->transformToXml($doc));
+        return new PlainTextResponse($proc->transformToXml($doc)); // @phpstan-ignore-line
     }
 }

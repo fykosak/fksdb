@@ -13,8 +13,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class InboxFormComponent extends SeriesTableFormComponent
 {

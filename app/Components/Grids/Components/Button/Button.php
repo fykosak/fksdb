@@ -47,10 +47,10 @@ abstract class Button extends BaseItem
     /**
      * @param M|null $model
      */
-    public function render(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(?Model $model, ?int $userPermission): void
     {
         [$destination, $params] = ($this->linkCallback)($model);
-        parent::render($model, $userPermission, [
+        $this->doRender($model, $userPermission, [
             'linkControl' => $this->getLinkControl(),
             'show' => isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true,
             'destination' => $destination,

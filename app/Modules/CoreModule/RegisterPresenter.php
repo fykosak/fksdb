@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 
 /**
  * INPUT:
@@ -221,7 +221,10 @@ final class RegisterPresenter extends CoreBasePresenter
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
-        $form->onSuccess[] = fn(Form $form) => $this->redirect('contestant', ['email' => $form->getValues()['email']]);
+        $form->onSuccess[] = fn(Form $form) => $this->redirect(
+            'contestant',
+            ['email' => $form->getValues()['email']]
+        );
         return $control;
     }
 

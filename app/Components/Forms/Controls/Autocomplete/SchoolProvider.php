@@ -38,7 +38,7 @@ class SchoolProvider implements FilteredDataProvider
         $tokens = preg_split('/[ ,\.]+/', $search);
 
         $schools = $this->schoolService->getTable();
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $schools->where(
                 'name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')',
                 $token,

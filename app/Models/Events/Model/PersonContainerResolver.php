@@ -51,16 +51,16 @@ class PersonContainerResolver implements Resolver
     public function isModifiable(?PersonModel $person): bool
     {
         return $this->selfResolver->isModifiable($person) ||
-        is_callable($this->modifiableCondition)
-            ? ($this->modifiableCondition)($this->field->holder)
-            : $this->modifiableCondition;
+            (is_callable($this->modifiableCondition)
+                ? ($this->modifiableCondition)($this->field->holder)
+                : $this->modifiableCondition);
     }
 
     public function isVisible(?PersonModel $person): bool
     {
         return $this->selfResolver->isVisible($person) ||
-        is_callable($this->visibleCondition)
-            ? ($this->visibleCondition)($this->field->holder)
-            : $this->visibleCondition;
+            (is_callable($this->visibleCondition)
+                ? ($this->visibleCondition)($this->field->holder)
+                : $this->visibleCondition);
     }
 }

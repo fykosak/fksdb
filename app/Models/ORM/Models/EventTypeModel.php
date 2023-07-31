@@ -23,7 +23,7 @@ final class EventTypeModel extends Model
      */
     public function getEvents(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT, 'event_type_id');
+        return $this->related(DbNames::TAB_EVENT, 'event_type_id');//@phpstan-ignore-line
     }
 
     public function getSymbol(): string

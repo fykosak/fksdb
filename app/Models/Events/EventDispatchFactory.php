@@ -49,7 +49,7 @@ class EventDispatchFactory
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
         $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName']);
+        return $this->container->getService($definition['machineName']); //@phpstan-ignore-line
     }
 
     /**

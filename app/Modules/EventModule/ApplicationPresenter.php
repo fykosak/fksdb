@@ -214,7 +214,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function getMachine(): EventParticipantMachine
     {
-        return $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent());//@phpstan-ignore-line
     }
 
     /**

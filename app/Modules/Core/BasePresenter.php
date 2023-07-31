@@ -215,7 +215,7 @@ abstract class BasePresenter extends Presenter
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {
-                $testedPresenter->checkRequirements($testedPresenter->getReflection());
+                $testedPresenter->checkRequirements($testedPresenter->getReflection()); // @phpstan-ignore-line
                 $this->authorizedCache[$key] = $testedPresenter->authorized;
             } catch (BadRequestException $exception) {
                 $this->authorizedCache[$key] = false;

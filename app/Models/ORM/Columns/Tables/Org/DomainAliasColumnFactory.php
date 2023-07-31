@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
-use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrgModel;
@@ -13,6 +12,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
 /**
@@ -22,7 +22,6 @@ class DomainAliasColumnFactory extends ColumnFactory
 {
     /**
      * @param OrgModel $model
-     * @throws ContestNotFoundException
      */
     protected function createHtmlValue(Model $model): Html
     {
@@ -32,7 +31,10 @@ class DomainAliasColumnFactory extends ColumnFactory
             case ContestModel::ID_VYFUK:
                 return (new EmailPrinter())($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
-                throw new ContestNotFoundException($model->contest_id);
+                throw new \InvalidArgumentException(
+                    sprintf(_('Contest %d not found'), $model->contest_id),
+                    IResponse::S404_NOT_FOUND
+                );
         }
     }
 

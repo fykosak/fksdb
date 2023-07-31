@@ -53,13 +53,13 @@ class FOFTeamFormComponent extends TeamFormComponent
         $this->appendMemberFields($form);
         foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
             /** @var BaseControl $genderField */
-            $genderField = $component['person']['gender'];
+            $genderField = $component['person']['gender'];//@phpstan-ignore-line
             /** @var BaseControl $idNumberField */
-            $idNumberField = $component['person_info']['id_number'];
+            $idNumberField = $component['person_info']['id_number'];//@phpstan-ignore-line
             /** @var ScheduleContainer $accommodationField */
-            $accommodationField = $component['person_schedule']['accommodation'];
+            $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
-            $bornField = $component['person_info']['born'];
+            $bornField = $component['person_info']['born'];//@phpstan-ignore-line
             /** @var Control $baseComponent */
             foreach ($accommodationField->getComponents() as $baseComponent) {
                 $genderField->addConditionOn($baseComponent, Form::FILLED)

@@ -56,6 +56,9 @@ class TasksFromXML extends Stage
 
         // update fields
         $data = [];
+        /**
+         * @var string $column
+         */
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
             $value = null;
 

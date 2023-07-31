@@ -47,7 +47,7 @@ class TransitionsExtension extends CompilerExtension
     {
         parent::loadConfiguration();
         $config = $this->getConfig();
-        foreach ($config as $machineName => $machine) {
+        foreach ($config as $machineName => $machine) { // @phpstan-ignore-line
             self::createMachine($this, $machineName, $machine);
         }
     }
@@ -96,7 +96,7 @@ class TransitionsExtension extends CompilerExtension
 
     /**
      * @param class-string<EnumColumn&FakeStringEnum> $enumClassName
-     * @return array{(EnumColumn&FakeStringEnum)[],(EnumColumn&FakeStringEnum)|null}
+     * @return array{((EnumColumn&FakeStringEnum)|null)[],((EnumColumn&FakeStringEnum)|null)|null}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {

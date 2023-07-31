@@ -197,7 +197,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     protected function getMachine(): TeamMachine
     {
-        return $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent()); //@phpstan-ignore-line
     }
 
     /**

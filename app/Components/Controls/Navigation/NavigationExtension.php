@@ -24,12 +24,11 @@ class NavigationExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-
         $config = $this->getConfig();
         $navbar = $this->getContainerBuilder()->addDefinition('navbar')
             ->setType(NavigationFactory::class);
 
-        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);
+        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);//@phpstan-ignore-line
     }
 
     private function createFromStructure(array $structure): array

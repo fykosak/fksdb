@@ -97,7 +97,7 @@ final class SettingsPresenter extends BasePresenter
 
         $form->setCurrentGroup();
         $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = fn(\Nette\Application\UI\Form $form) => $this->handleSettingsFormSuccess($form);
+        $form->onSuccess[] = fn(Form $form) => $this->handleSettingsFormSuccess($form);
         return $control;
     }
 
@@ -141,7 +141,7 @@ final class SettingsPresenter extends BasePresenter
     /**
      * @throws ModelException
      */
-    private function handleSettingsFormSuccess(\Nette\Application\UI\Form $form): void
+    private function handleSettingsFormSuccess(Form $form): void
     {
         $values = $form->getValues();
         $tokenAuthentication =

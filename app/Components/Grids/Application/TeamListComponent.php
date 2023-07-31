@@ -74,6 +74,7 @@ class TeamListComponent extends FilterList
             new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
             'phone'
         );
+        /** @phpstan-ignore-next-line */
         $memberList = new RelatedTable($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */

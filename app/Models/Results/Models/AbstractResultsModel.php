@@ -85,6 +85,9 @@ abstract class AbstractResultsModel
         return $result;
     }
 
+    /**
+     * @return literal-string
+     */
     abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**

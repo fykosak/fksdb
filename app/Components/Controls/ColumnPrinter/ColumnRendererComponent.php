@@ -49,11 +49,11 @@ class ColumnRendererComponent extends BaseComponent
                         if (!$model) {
                             throw new \InvalidArgumentException(_('"value" is available only with model'));
                         }
-                        return $factory->render($model, $userPermission);
+                        return (string)$factory->render($model, $userPermission);
                     case 'title':
                         return $factory->getTitle();
                     case 'description':
-                        return $factory->getDescription();
+                        return (string)$factory->getDescription();
                 }
             },
             $templateString

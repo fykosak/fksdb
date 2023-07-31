@@ -50,8 +50,8 @@ class Helpers
         }
         $class = $statement->entity;
         if (!is_array($statement->entity)) {
-            $class = self::SEMANTIC_MAP[$statement->entity] ?? $class;
-            if (function_exists($class)) { // workaround for Nette interpretation of entities
+            $class = self::SEMANTIC_MAP[$statement->entity] ?? $class;//@phpstan-ignore-line
+            if (function_exists($class)) { //@phpstan-ignore-line // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
         }

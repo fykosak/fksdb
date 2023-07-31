@@ -94,11 +94,12 @@ class PaymentList extends FilterList
             'name'
         );
         $items->addColumn(
+        /** @phpstan-ignore-next-line */
             new TemplateItem(
                 $this->container,
                 '@person.full_name (@event.role)',
                 _('For'),
-                fn(SchedulePaymentModel $model) => $model->person_schedule
+                fn(SchedulePaymentModel $model) => $model->person_schedule // @phpstan-ignore-line
             ),
             'person'
         );

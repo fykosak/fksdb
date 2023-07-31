@@ -37,7 +37,7 @@ class ORMExtension extends Extension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-        foreach ($this->config as $tableName => $fieldDefinitions) {
+        foreach ($this->config as $tableName => $fieldDefinitions) {//@phpstan-ignore-line
             foreach ($fieldDefinitions['columns'] as $fieldName => $field) {
                 $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
@@ -345,7 +345,7 @@ class ORMExtension extends Extension
     private function translate($value): string
     {
         if ($value instanceof Statement) {
-            return ($value->entity)(...$value->arguments);
+            return ($value->entity)(...$value->arguments);// @phpstan-ignore-line
         }
         return $value;
     }

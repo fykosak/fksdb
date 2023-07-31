@@ -170,7 +170,7 @@ final class AuthenticationPresenter extends BasePresenter
 
     public function getGoogleSection(): SessionSection
     {
-        return $this->getSession()->getSection('google-oauth2state');
+        return $this->getSession()->getSection('google-oauth2state');// @phpstan-ignore-line
     }
 
     /**
@@ -200,7 +200,7 @@ final class AuthenticationPresenter extends BasePresenter
                 ]
             );
         $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
+            ->addRule(\Nette\Forms\Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
                 [
                     'class' => 'bottom mb-3 form-control',
                     'placeholder' => _('Password'),
@@ -209,7 +209,7 @@ final class AuthenticationPresenter extends BasePresenter
             );
         $form->addSubmit('send', _('Log in'));
         $form->addProtection(_('The form has expired. Please send it again.'));
-        $form->onSuccess[] = fn(Form $form) => $this->loginFormSubmitted($form);
+        $form->onSuccess[] = fn(\Nette\Forms\Form $form) => $this->loginFormSubmitted($form);
 
         return $form;
     }
@@ -217,7 +217,7 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * @throws \Exception
      */
-    private function loginFormSubmitted(Form $form): void
+    private function loginFormSubmitted(\Nette\Forms\Form $form): void
     {
         $values = $form->getValues();
         try {
@@ -235,13 +235,13 @@ final class AuthenticationPresenter extends BasePresenter
     {
         $form = new Form();
         $form->addText('id', _('Login or e-mail address'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'));
+            ->addRule(\Nette\Forms\Form::FILLED, _('Insert login or email address.'));
 
         $form->addSubmit('send', _('Continue'));
 
         $form->addProtection(_('The form has expired. Please send it again.'));
 
-        $form->onSuccess[] = fn(Form $form) => $this->recoverFormSubmitted($form);
+        $form->onSuccess[] = fn(\Nette\Forms\Form $form) => $this->recoverFormSubmitted($form);
 
         return $form;
     }
@@ -249,7 +249,7 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * @throws BadTypeException
      */
-    private function recoverFormSubmitted(Form $form): void
+    private function recoverFormSubmitted(\Nette\Forms\Form $form): void
     {
         $connection = $this->authTokenService->explorer->getConnection();
         try {

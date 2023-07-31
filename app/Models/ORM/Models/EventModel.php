@@ -135,7 +135,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getScheduleGroups(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
+        return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');//@phpstan-ignore-line
     }
 
     /**
@@ -143,7 +143,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getParticipants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
+        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');//@phpstan-ignore-line
     }
 
     /**
@@ -159,7 +159,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getTeams(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');//@phpstan-ignore-line
     }
 
     /**
@@ -184,7 +184,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getEventOrgs(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+        return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');//@phpstan-ignore-line
     }
 
     /**
@@ -192,7 +192,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getPayments(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PAYMENT, 'event_id');
+        return $this->related(DbNames::TAB_PAYMENT, 'event_id');//@phpstan-ignore-line
     }
 
     /**
@@ -200,7 +200,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getTasks(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');//@phpstan-ignore-line
     }
 
     /**

@@ -24,13 +24,11 @@ class Transition
     public BehaviorType $behaviorType;
     private string $label;
     /**
-     * @var Statement[]
-     * @phpstan-var Statement<void,H>[]
+     * @phpstan-var (Statement<void,H>|callable(H):void)[]
      */
     public array $beforeExecute = [];
     /**
-     * @var Statement[]
-     * @phpstan-var Statement<void,H>[]
+     * @phpstan-var (Statement<void,H>|callable(H):void)[]
      */
     public array $afterExecute = [];
 
@@ -102,7 +100,10 @@ class Transition
         if (!isset($this->condition)) {
             return true;
         }
-        return (bool)($this->condition)($holder);
+        if (is_callable($this->condition)) {
+            return (bool)($this->condition)($holder);
+        }
+        return (bool)$this->condition;
     }
 
     public function getValidation(): bool
@@ -115,11 +116,17 @@ class Transition
         $this->validation = $validation ?? true;
     }
 
+    /**
+     * @phpstan-param (Statement<void,H>|callable(H):void) $callBack
+     */
     public function addBeforeExecute(callable $callBack): void
     {
         $this->beforeExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param (Statement<void,H>|callable(H):void) $callBack
+     */
     public function addAfterExecute(callable $callBack): void
     {
         $this->afterExecute[] = $callBack;

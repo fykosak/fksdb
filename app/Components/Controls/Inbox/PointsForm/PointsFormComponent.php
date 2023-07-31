@@ -11,8 +11,8 @@ use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class PointsFormComponent extends SeriesTableFormComponent
 {

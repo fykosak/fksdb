@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
@@ -17,27 +18,24 @@ use Nette\Security\User;
 class PersonFactory extends AbstractFactory
 {
     private const VALUE_LOGIN = 'fromLogin';
-    /** @var callable */
-    private $fieldsDefinition;
-    /** @var callable */
-    private $searchType;
-    /** @var callable|bool */
+    private array $fieldsDefinition;
+    private string $searchType;
+    /** @var (callable(BaseHolder):bool)|bool */
     private $allowClear;
-    /** @var callable */
+    /** @var (callable(BaseHolder):bool)|bool */
     private $modifiable;
-    /** @var callable */
+    /** @var (callable(BaseHolder):bool)|bool */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
     private User $user;
 
     /**
-     * @param callable|array $fieldsDefinition
-     * @param callable|bool $allowClear
-     * @param callable|bool $modifiable
-     * @param callable|bool $visible
+     * @param (callable(BaseHolder):bool)|bool $allowClear
+     * @param (callable(BaseHolder):bool)|bool $modifiable
+     * @param (callable(BaseHolder):bool)|bool $visible
      */
     public function __construct(
-        $fieldsDefinition,
+        array $fieldsDefinition,
         string $searchType,
         $allowClear,
         $modifiable,

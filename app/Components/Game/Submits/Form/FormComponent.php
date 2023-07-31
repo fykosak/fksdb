@@ -49,7 +49,7 @@ class FormComponent extends AjaxComponent
             $task = $codeProcessor->getTask($data['code']);
             $team = $codeProcessor->getTeam($data['code']);
             $handler = $this->event->createGameHandler($this->getContext());
-            $handler->handle($team, $task, $data['points'] ? +$data['points'] : null);
+            $handler->handle($team, $task, $data['points'] ? (int)$data['points'] : null);
             foreach ($handler->logger->getMessages() as $message) {
                 $this->getLogger()->log($message);
             }

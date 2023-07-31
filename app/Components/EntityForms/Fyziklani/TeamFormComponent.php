@@ -99,6 +99,7 @@ abstract class TeamFormComponent extends EntityFormComponent
         try {
             $values = array_reduce(
                 $this->getProcessing(),
+                /** @phpstan-ignore-next-line */
                 fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event),
                 $values
             );

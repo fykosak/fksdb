@@ -75,7 +75,7 @@ class LegacyUploadFormComponent extends FormComponent
                     );
                     continue;
                 }
-                /** @var FileUpload[]|string[] $taskValues */
+                /** @var array{'file':FileUpload|null} $taskValues */
                 $taskValues = $values['task' . $task->task_id];
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;

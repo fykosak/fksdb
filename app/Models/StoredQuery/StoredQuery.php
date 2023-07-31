@@ -43,7 +43,7 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @param StoredQueryParameter[] $parameters
+     * @param (StoredQueryParameter|ParameterModel)[] $parameters
      */
     public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self
     {
@@ -111,6 +111,10 @@ class StoredQuery implements Resource
         return $this->queryParameters;
     }
 
+    /**
+     * @param (StoredQueryParameter|ParameterModel)[] $queryParameters
+     * @return void
+     */
     private function setQueryParameters(array $queryParameters): void
     {
         $this->parameterDefaultValues = [];
@@ -138,7 +142,7 @@ class StoredQuery implements Resource
 
             for ($col = 0; $col < $count; $col++) {
                 $meta = $statement->getColumnMeta($col);
-                $columnNames[] = $meta['name'];
+                $columnNames[] = $meta['name']; //@phpstan-ignore-line
             }
         }
         return $columnNames;

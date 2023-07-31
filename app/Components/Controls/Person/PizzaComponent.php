@@ -11,7 +11,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 
 class PizzaComponent extends BaseComponent
 {

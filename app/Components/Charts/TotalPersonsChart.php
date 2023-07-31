@@ -41,7 +41,7 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
                 'personId' => $person->person_id,
             ];
         }
-        return $data;
+        return $data; //@phpstan-ignore-line
     }
 
     public function getTitle(): Title

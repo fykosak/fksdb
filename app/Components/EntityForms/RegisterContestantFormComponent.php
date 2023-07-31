@@ -79,7 +79,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
     {
         $form->getValues('array');//trigger RPC
         /** @var ReferencedId<PersonModel> $referencedId */
-        $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+        $referencedId = $form[self::CONT_CONTESTANT]['person_id']; //@phpstan-ignore-line
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
         $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);

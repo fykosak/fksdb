@@ -64,7 +64,7 @@ class ContestantFormComponent extends EntityFormComponent
             $strategy->updateCategory($this->model);
         } else {
             /** @var ReferencedId<PersonModel> $referencedId */
-            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
             $person = $referencedId->getModel();
             $strategy->createContestant($person);
         }

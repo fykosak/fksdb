@@ -15,6 +15,9 @@ final class MachineCode
     public string $control;
     private Container $container;
 
+    /**
+     * @phpstan-param 'PE'|'TE'|'EP' $type
+     */
     public function __construct(Container $container, string $type, int $id, string $control)
     {
         $this->control = $control;
@@ -33,7 +36,7 @@ final class MachineCode
             throw new ForbiddenRequestException(_('Wrong format'));
         }
         [, $type, $id, $control] = $matches;
-        return new self($container, $type, (int)$id, $control);
+        return new self($container, $type, (int)$id, $control);// @phpstan-ignore-line
     }
 
     public function isValid(string $saltOffset = 'default'): bool

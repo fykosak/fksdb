@@ -128,12 +128,17 @@ class ReferencedPersonContainer extends ReferencedContainer
 
         /** @phpstan-ignore-next-line */
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
-
+        /**
+         * @var string $sub
+         */
         foreach ($this->getComponents() as $sub => $subContainer) {
             if (!$subContainer instanceof ContainerWithOptions) {
                 continue;
             }
-            /** @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component */
+            /**
+             * @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component
+             * @var string $fieldName
+             */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 $value = ReferencedPersonHandler::getPersonValue(
                     $model,
@@ -174,9 +179,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
-                        $component->setValue($value);
+                        $component->setValue($value); //@phpstan-ignore-line
                     } else {
-                        $component->setDefaultValue($value);
+                        $component->setDefaultValue($value); //@phpstan-ignore-line
                     }
                     if ($value && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');

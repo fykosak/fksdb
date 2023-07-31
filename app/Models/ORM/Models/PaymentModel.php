@@ -56,7 +56,7 @@ final class PaymentModel extends Model implements Resource
      */
     public function getSchedulePayment(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
+        return $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');//@phpstan-ignore-line
     }
 
     public function getResourceId(): string

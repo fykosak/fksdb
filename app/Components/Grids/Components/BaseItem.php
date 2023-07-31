@@ -26,8 +26,18 @@ abstract class BaseItem extends BaseComponent
 
     /**
      * @param M|null $model
+     * @note do not call from parent
      */
-    public function render(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(?Model $model, ?int $userPermission): void
+    {
+        $this->doRender($model, $userPermission, [
+            'model' => $model,
+            'title' => $this->title,
+            'userPermission' => $userPermission,
+        ]);
+    }
+
+    final public function doRender(?Model $model, ?int $userPermission, array $params = []): void
     {
         $this->template->render(
             $this->getTemplatePath(),
