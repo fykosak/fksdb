@@ -71,7 +71,8 @@ class HandoutFormComponent extends BaseComponent
      */
     public function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @var array<string,int[]> $values */
+        $values = $form->getValues('array');
         $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();
         /** @var TaskModel $task */

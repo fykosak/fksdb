@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends SeatingPageComponent<null>
+ */
 class PageComponent extends SeatingPageComponent
 {
     private RoomModel $room;

@@ -113,6 +113,9 @@ final class NavigationChooserComponent extends NavigationItemComponent
         return $items;
     }
 
+    /**
+     * @phpstan-param Item $item
+     */
     public function isItemActive(array $item): bool
     {
         try {

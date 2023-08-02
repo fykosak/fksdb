@@ -18,5 +18,6 @@ abstract class FormProcessing
         $container->callInjects($this);
     }
 
+    /** @phpstan-ignore-next-line */
     abstract public function __invoke(array $values, Form $form, EventModel $event): array;
 }

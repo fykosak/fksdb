@@ -8,6 +8,9 @@ use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 
+/**
+ * @phpstan-extends SeatingPageComponent<TeamModel2>
+ */
 class PageComponent extends SeatingPageComponent
 {
     /**

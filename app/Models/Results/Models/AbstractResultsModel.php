@@ -92,8 +92,9 @@ abstract class AbstractResultsModel
 
     /**
      * @note Work only with numeric types.
+     * @phpstan-param array<string,int|null>|array<string,array<int,int|null>> $conditions
      */
-    protected function conditionsToWhere(iterable $conditions): string
+    protected function conditionsToWhere(array $conditions): string
     {
         $where = [];
         foreach ($conditions as $col => $value) {

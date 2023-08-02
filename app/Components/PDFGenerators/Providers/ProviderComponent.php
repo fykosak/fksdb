@@ -7,11 +7,22 @@ namespace FKSDB\Components\PDFGenerators\Providers;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
+/**
+ * @template TRow
+ */
 final class ProviderComponent extends BaseComponent
 {
+    /** @phpstan-var AbstractPageComponent<TRow> AbstractPageComponent */
     private AbstractPageComponent $pageComponent;
+    /**
+     * @var iterable<TRow>
+     */
     private iterable $items;
 
+    /**
+     * @phpstan-param AbstractPageComponent<TRow> $pageComponent
+     * @phpstan-param iterable<TRow> $items
+     */
     public function __construct(
         AbstractPageComponent $pageComponent,
         iterable $items,
@@ -22,6 +33,9 @@ final class ProviderComponent extends BaseComponent
         $this->items = $items;
     }
 
+    /**
+     * @return AbstractPageComponent<TRow>
+     */
     protected function createComponentPage(): AbstractPageComponent
     {
         return $this->pageComponent;

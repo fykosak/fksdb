@@ -12,6 +12,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -90,14 +91,17 @@ final class SeatingPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @phpstan-return ProviderComponent<TeamModel2>
      */
     protected function createComponentSeatingList(): ProviderComponent
     {
         $limit = $this->getParameter('limit', 1000);
         $offset = $this->getParameter('offset', 0);
+        /** @phpstan-var \Iterator<TeamModel2> $teams */ // TODO!!!!
+        $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
+            $teams,
             $this->getContext()
         );
     }
@@ -106,6 +110,7 @@ final class SeatingPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @phpstan-return ProviderComponent<null>
      */
     protected function createComponentSeatingPreview(): ProviderComponent
     {

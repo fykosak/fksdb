@@ -25,7 +25,7 @@ class FormUtils
         }
         return $result;
     }
-
+    // @phpstan-ignore-next-line
     public static function emptyStrToNull2(iterable $values): array
     {
         $result = [];
@@ -40,7 +40,7 @@ class FormUtils
         }
         return $result;
     }
-
+    // @phpstan-ignore-next-line
     public static function removeEmptyValues(iterable $values, bool $ignoreNulls = false): array
     {
         $result = [];

@@ -29,6 +29,9 @@ class NavigationFactory
      */
     private array $structure;
 
+    /**
+     * @phpstan-param array<string,RootItem> $structure
+     */
     public function setStructure(array $structure): void
     {
         $this->structure = $structure;

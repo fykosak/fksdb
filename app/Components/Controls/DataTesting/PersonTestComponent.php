@@ -80,7 +80,14 @@ class PersonTestComponent extends BaseComponent
 
         $form->addSubmit('submit');
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
+            /** @phpstan-var array{
+             *     'levels':array<string,bool>,
+             *     'tests':array<string,bool>,
+             *     'start_id':int,
+             *     'end_id':int
+             * } $values
+             */
+            $values = $form->getValues('array');
             $this->levels = [];
             foreach ($values['levels'] as $level => $value) {
                 if ($value) {

@@ -6,6 +6,10 @@ namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 
+/**
+ * @template TRow
+ * @phpstan-extends AbstractPageComponent<TRow>
+ */
 abstract class SeatingPageComponent extends AbstractPageComponent
 {
     public function getPageFormat(): string

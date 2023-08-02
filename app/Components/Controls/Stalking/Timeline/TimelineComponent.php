@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
@@ -136,6 +136,7 @@ class TimelineComponent extends FrontEndComponent
     /**
      * @param EventModel[] $events
      * @return \DateTimeInterface[]
+     * @phpstan-param array<string,\DateTimeInterface[]> $dates
      */
     private function calculateFirstAndLast(array $events, array $dates): array
     {

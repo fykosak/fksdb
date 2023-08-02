@@ -33,6 +33,9 @@ class CSVFormat implements ExportFormat
         $this->header = $header;
     }
 
+    /**
+     * @return CSVResponse<mixed>
+     */
     public function getResponse(): CSVResponse
     {
         $data = $this->storedQuery->getData();

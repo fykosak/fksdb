@@ -73,7 +73,7 @@ class StoredQuery implements Resource
         }
     }
 
-    public function setParameters(iterable $parameters): void
+    public function setParameters(array $parameters): void
     {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {

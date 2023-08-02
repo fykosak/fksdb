@@ -68,6 +68,7 @@ abstract class AESOPModel
         return 'ufo';
     }
 
+    /** @phpstan-ignore-next-line */
     public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
     {
         $text = '';

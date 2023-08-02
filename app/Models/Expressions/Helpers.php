@@ -58,6 +58,10 @@ class Helpers
         return new Statement($class, $arguments);
     }
 
+    /**
+     * @param iterable<string|int,mixed> $expressionArray
+     * @return array<string|int,mixed>
+     */
     public static function resolveArrayExpression(iterable $expressionArray): array
     {
         $result = [];

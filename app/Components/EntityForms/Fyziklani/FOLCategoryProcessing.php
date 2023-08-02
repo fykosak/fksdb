@@ -12,7 +12,10 @@ use Nette\Forms\Form;
 
 class FOLCategoryProcessing extends FormProcessing
 {
-
+    /**
+     * @param array{'team':array{'category':string}} $values
+     * @phpstan-return array{'team':array{'category':string}}
+     */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
         $members = TeamFormComponent::getMembersFromForm($form);

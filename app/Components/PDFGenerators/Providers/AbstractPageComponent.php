@@ -6,6 +6,9 @@ namespace FKSDB\Components\PDFGenerators\Providers;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 
+/**
+ * @template TRow
+ */
 abstract class AbstractPageComponent extends BaseComponent
 {
     public const FORMAT_A5_PORTRAIT = 'a5-portrait';
@@ -18,7 +21,7 @@ abstract class AbstractPageComponent extends BaseComponent
     public const FORMAT_B5_PORTRAIT = 'b5-portrait';
 
     /**
-     * @param mixed $row
+     * @param TRow $row
      */
     abstract public function render($row, array $params = []): void;
 

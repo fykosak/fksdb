@@ -9,6 +9,9 @@ use Nette\InvalidStateException;
 
 class TooManySchoolsException extends InvalidStateException
 {
+    /**
+     * @param SchoolModel[] $schools
+     */
     public function __construct(array $schools)
     {
         parent::__construct(

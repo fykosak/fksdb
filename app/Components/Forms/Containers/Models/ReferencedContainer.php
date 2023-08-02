@@ -103,12 +103,16 @@ abstract class ReferencedContainer extends ContainerWithOptions
         }
     }
 
-    public function setConflicts(iterable $conflicts, ?ContainerWithOptions $container = null): void
+    /**
+     * @phpstan-param array<string,scalar|null>|array<string,array<string,scalar|null>> $conflicts
+     */
+    public function setConflicts(array $conflicts, ?ContainerWithOptions $container = null): void
     {
         $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof ContainerWithOptions) {
+                /** @phpstan-var array<string,scalar|null> $value */
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
                 $component->addError(_('Field does not match an existing record.'));

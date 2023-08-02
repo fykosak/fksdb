@@ -11,7 +11,10 @@ use Nette\Forms\Form;
 
 class FOFCategoryProcessing extends FormProcessing
 {
-
+    /**
+     * @param array{'team':array{'category':string,'force_a':bool}} $values
+     * @phpstan-return array{'team':array{'category':string}}
+     */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
         $members = TeamFormComponent::getMembersFromForm($form);
@@ -19,6 +22,10 @@ class FOFCategoryProcessing extends FormProcessing
         return $values;
     }
 
+    /**
+     * @param PersonModel[] $members
+     * @return int[]
+     */
     protected static function getTeamMembersYears(array $members, EventModel $event): array
     {
         $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
@@ -48,6 +55,7 @@ class FOFCategoryProcessing extends FormProcessing
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @param PersonModel[] $members
      * @throws NoMemberException
+     * @phpstan-param array{'team':array{'force_a':bool}} $values
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {
@@ -70,6 +78,7 @@ class FOFCategoryProcessing extends FormProcessing
     }
 
     /**
+     * @param PersonModel[] $members
      * @throws NoMemberException
      */
     public static function getCoefficientAvg(array $members, EventModel $event): float
