@@ -11,6 +11,7 @@ class ArrayOptions implements OptionsProvider
 {
     use SmartObject;
 
+    /** @phpstan-var array<string,string> */
     private array $options;
 
     public function __construct(array $options, bool $useKeys = true)

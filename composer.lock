@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2fce3c831614c0daf7da609f06c987bc",
+    "content-hash": "4ce40b9cc66861828e7ab372cc5fbcd8",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -98,16 +98,16 @@
         },
         {
             "name": "fykosak/nette-orm",
-            "version": "dev-dev-mapper",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "01964fe"
+                "reference": "dfbfc99c8aff6bab6010809317fe35867ddc7dc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/01964fe",
-                "reference": "01964fe",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/dfbfc99c8aff6bab6010809317fe35867ddc7dc1",
+                "reference": "dfbfc99c8aff6bab6010809317fe35867ddc7dc1",
                 "shasum": ""
             },
             "require": {
@@ -115,7 +115,7 @@
                 "ext-pdo": "*",
                 "nette/database": "^3.1",
                 "nette/di": "^3.0",
-                "php": ">=8.1"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "nette/tester": "^2.4.0",
@@ -149,9 +149,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-orm/issues",
-                "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
+                "source": "https://github.com/fykosak/nette-orm/tree/v0.4.1"
             },
-            "time": "2023-07-31T15:20:13+00:00"
+            "time": "2023-08-02T15:58:17+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2540,25 +2540,25 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.3.0",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
+                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1"
+                "php": ">=7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.4-dev"
+                    "dev-main": "2.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2587,7 +2587,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.3.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.2"
             },
             "funding": [
                 {
@@ -2603,7 +2603,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T14:45:45+00:00"
+            "time": "2022-01-02T09:53:40+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -2803,7 +2803,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fykosak/nette-orm": 20,
         "fykosak/nette-fks-utils": 20,
         "fykosak/nette-frontend-component": 20
     },

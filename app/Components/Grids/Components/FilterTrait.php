@@ -12,7 +12,10 @@ use Nette\Forms\Form;
 
 trait FilterTrait
 {
-    /** @persistent */
+    /**
+     * @persistent
+     * @phpstan-var array<string,mixed>
+     */
     public array $filterParams = [];
 
     public function traitRender(): void

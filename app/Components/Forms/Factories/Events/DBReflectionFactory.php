@@ -21,7 +21,7 @@ class DBReflectionFactory extends AbstractFactory
 {
 
     private Connection $connection;
-    /** @var array tableName => columnName[] */
+    /** @phpstan-var array<string,array<string|int,mixed>> */
     private array $columns = [];
     private ORMFactory $tableReflectionFactory;
     private EventParticipantService $eventParticipantService;

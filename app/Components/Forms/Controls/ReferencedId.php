@@ -33,7 +33,7 @@ class ReferencedId extends HiddenField
     public Service $service;
     /** @phpstan-var ReferencedHandler<M> */
     public ReferencedHandler $handler;
-
+    /** @phpstan-var Promise<int>|null */
     private ?Promise $promise = null;
     private bool $modelCreated = false;
     /** @phpstan-var M|null */

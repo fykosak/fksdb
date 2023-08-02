@@ -16,6 +16,10 @@ class ControlButton extends Button
 {
     private Control $control;
 
+    /**
+     * @phpstan-param callable(M):array{string,array<string,mixed>} $linkCallback
+     * @phpstan-param (callable(M,int|null):bool)|null $showCallback
+     */
     public function __construct(
         Container $container,
         Control $control,

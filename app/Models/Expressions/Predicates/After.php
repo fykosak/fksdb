@@ -8,16 +8,17 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,mixed>
+ * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
+ * @template ArgType
  */
 class After extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
     /**
-     * @param \DateTimeInterface|callable $datetime
+     * @param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime
      */
     public function __construct($datetime)
     {

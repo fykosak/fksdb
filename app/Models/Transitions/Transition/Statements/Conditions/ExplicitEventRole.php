@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Expressions\EvaluatedExpression;
 use FKSDB\Models\ORM\Models\EventModel;
-
+/**
+ * @phpstan-extends EventRole<never>
+ */
 class ExplicitEventRole extends EventRole
 {
 

@@ -23,6 +23,7 @@ class ResultsComponent extends BaseComponent
     public const PARAMETER_URL_PREFIX = 'p_';
     /**
      * @persistent
+     * @phpstan-var array<string,scalar>|null
      */
     public ?array $parameters;
     public ?StoredQuery $storedQuery = null;
@@ -52,6 +53,9 @@ class ResultsComponent extends BaseComponent
         $form->onSuccess[] = function (Form $form) {
             $this->parameters = [];
             $values = $form->getValues();
+            /**
+             * @var string $key
+             */
             foreach ($values[self::CONT_PARAMS] as $key => $values) {
                 $this->parameters[$key] = $values['value'];
             }

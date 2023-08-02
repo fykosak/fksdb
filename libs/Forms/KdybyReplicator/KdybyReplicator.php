@@ -311,7 +311,7 @@ class Replicator extends Container
 
     private static ?string $registered = null;
 
-    public static function register(\Nette\DI\Container $container, string $methodName = 'addDynamic'): void
+    public static function register(\Nette\DI\Container $diContainer, string $methodName = 'addDynamic'): void
     {
         if (self::$registered) {
             Container::extensionMethod(self::$registered, function () {
@@ -321,8 +321,8 @@ class Replicator extends Container
 
         Container::extensionMethod(
             $methodName,
-            function (\Nette\DI\Container $container, $name, $factory, $createDefault = 0) {
-                return $container[$name] = new Replicator($factory, $container, $createDefault);
+            function (Container $container, $name, $factory, $createDefault = 0) use ($diContainer) {
+                return $container[$name] = new Replicator($factory, $diContainer, $createDefault);
             }
         );
 

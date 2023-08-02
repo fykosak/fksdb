@@ -250,7 +250,7 @@ final class ApplicationPresenter extends BasePresenter
             ) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
-                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
+                    $data = self::decodeParameters($data);
                     $eventId = $data['eventId'];
                 }
             }

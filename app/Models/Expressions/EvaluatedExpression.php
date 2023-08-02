@@ -8,20 +8,19 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @phpstan-template T
- * @phpstan-template R
- * @phpstan-template P
- * @phpstan-implements Statement<T,P>
+ * @phpstan-template GlobalReturn
+ * @phpstan-template SubReturn
+ * @phpstan-template ArgType
+ * @phpstan-implements Statement<GlobalReturn,ArgType>
  */
 abstract class EvaluatedExpression implements Statement
 {
     use SmartObject;
 
     /**
-     * @phpstan-param callable(P):R|R $evaluated
-     * @return mixed
-     * @phpstan-param P $args
-     * @phpstan-return R
+     * @phpstan-param (callable(ArgType):SubReturn)|SubReturn $evaluated
+     * @phpstan-param ArgType $args
+     * @phpstan-return SubReturn
      */
     final protected function evaluateArgument($evaluated, ...$args)
     {

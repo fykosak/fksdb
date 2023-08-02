@@ -9,11 +9,14 @@ use FKSDB\Components\Controls\Upload\Legacy\LegacyUploadFormComponent;
 use FKSDB\Components\Controls\Upload\Quiz\QuizComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\SubmitNotQuizException;
 use FKSDB\Models\Submits\TaskNotFoundException;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
@@ -125,16 +128,31 @@ final class SubmitPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentUploadForm(): LegacyUploadFormComponent
     {
         return new LegacyUploadFormComponent($this->getContext(), $this->getContestant());
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentSubmitsGrid(): SubmitsGrid
     {
         return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentSubmitContainer(): SubmitContainer
     {
         return new SubmitContainer($this->getContext(), $this->getContestant());

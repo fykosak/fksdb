@@ -13,7 +13,6 @@ use Fykosak\NetteORM\TypedSelection;
 class PersonProvider implements FilteredDataProvider
 {
 
-    private const PLACE = 'place';
     private PersonService $personService;
     /**
      * @phpstan-var TypedSelection<PersonModel>
@@ -84,9 +83,9 @@ class PersonProvider implements FilteredDataProvider
             $place = $address->city;
         }
         return [
-            self::LABEL => $person->getFullName(),
-            self::VALUE => $person->person_id,
-            self::PLACE => $place,
+            'label' => $person->getFullName(),
+            'value' => $person->person_id,
+            'place' => $place,
         ];
     }
 

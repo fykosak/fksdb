@@ -8,6 +8,20 @@ use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
+/**
+ * @phpstan-type Item array{
+ *      'presenter':string,
+ *      'action':string,
+ *      'params':array<string,int|string|bool|null>,
+ *      'fragment':string
+ * }
+ * @phpstan-type RootItem array{
+ *      'presenter':string,
+ *      'action':string,
+ *      'params':array<string,int|string|bool|null>,
+ *      'fragment':string,'parents':Item[]
+ * }
+ */
 class NavigationExtension extends CompilerExtension
 {
     public function getConfigSchema(): Schema
@@ -31,6 +45,10 @@ class NavigationExtension extends CompilerExtension
         $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);//@phpstan-ignore-line
     }
 
+    /**
+     * @phpstan-param array<string,array<string,array<string,int|string|bool|null>>> $structure
+     * @return array<string,RootItem>
+     */
     private function createFromStructure(array $structure): array
     {
         $structureData = [];
@@ -45,8 +63,8 @@ class NavigationExtension extends CompilerExtension
     }
 
     /**
-     * @phpstan-param array<string,string|int> $params
-     * @phpstan-return array{'presenter':string,'action':string,'params':array<string,string|int>,'fragment':string}
+     * @phpstan-param array<string,int|string|bool|null|null> $params
+     * @phpstan-return Item
      */
     private function createNode(string $nodeId, array $params): array
     {

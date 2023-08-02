@@ -18,6 +18,9 @@ use Nette\Security\User;
 class PersonFactory extends AbstractFactory
 {
     private const VALUE_LOGIN = 'fromLogin';
+    /**
+     * @var array<string,array<string,mixed>>
+     */
     private array $fieldsDefinition;
     private string $searchType;
     /** @var (callable(BaseHolder):bool)|bool */

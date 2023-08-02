@@ -67,7 +67,13 @@ abstract class SearchContainer extends ContainerWithOptions
 
     abstract protected function createSearchControl(): ?BaseControl;
 
+    /**
+     * @phpstan-return callable(string|null):(M|null)
+     */
     abstract protected function getSearchCallback(): callable;
 
+    /**
+     * @phpstan-return callable(string|null):array<string,mixed>)
+     */
     abstract protected function getTermToValuesCallback(): callable;
 }

@@ -7,6 +7,7 @@ namespace FKSDB\Components\Controls\Navigation;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 
@@ -14,6 +15,9 @@ class PresenterBuilder
 {
 
     private IPresenterFactory $presenterFactory;
+    /**
+     * @phpstan-var array<string,IPresenter>
+     */
     private array $presenterCache = [];
 
     public function __construct(IPresenterFactory $presenterFactory)
@@ -53,7 +57,7 @@ class PresenterBuilder
         return $presenter;
     }
 
-    private function getCachePresenter(string $presenterName): Presenter
+    private function getCachePresenter(string $presenterName): IPresenter
     {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);

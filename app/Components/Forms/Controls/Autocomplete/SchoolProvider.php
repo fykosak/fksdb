@@ -85,8 +85,8 @@ class SchoolProvider implements FilteredDataProvider
     private function getItem(SchoolModel $school): array
     {
         return [
-            self::LABEL => $school->name_abbrev,
-            self::VALUE => $school->school_id,
+            'label' => $school->name_abbrev,
+            'value' => $school->school_id,
         ];
     }
 

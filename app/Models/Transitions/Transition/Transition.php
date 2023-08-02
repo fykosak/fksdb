@@ -8,7 +8,6 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\SmartObject;
 
@@ -23,13 +22,9 @@ class Transition
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
-    /**
-     * @phpstan-var (Statement<void,H>|callable(H):void)[]
-     */
+    /** @phpstan-var (callable(H):void)[] */
     public array $beforeExecute = [];
-    /**
-     * @phpstan-var (Statement<void,H>|callable(H):void)[]
-     */
+    /** @phpstan-var (callable(H):void)[] */
     public array $afterExecute = [];
 
     protected bool $validation;
@@ -85,7 +80,7 @@ class Transition
     }
 
     /**
-     * @param callable|bool $condition
+     * @param (callable(H):bool)|bool $condition
      */
     public function setCondition($condition): void
     {
@@ -117,7 +112,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (Statement<void,H>|callable(H):void) $callBack
+     * @phpstan-param (callable(H):void) $callBack
      */
     public function addBeforeExecute(callable $callBack): void
     {
@@ -125,7 +120,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (Statement<void,H>|callable(H):void) $callBack
+     * @phpstan-param (callable(H):void) $callBack
      */
     public function addAfterExecute(callable $callBack): void
     {

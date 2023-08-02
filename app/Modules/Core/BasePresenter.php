@@ -53,6 +53,7 @@ abstract class BasePresenter extends Presenter
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     protected bool $authorized = true;
+    /** @phpstan-var array<string,bool> */
     private array $authorizedCache = [];
     private Container $diContainer;
 
@@ -212,6 +213,7 @@ abstract class BasePresenter extends Presenter
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
+            /** @phpstan-ignore-next-line*/
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {

@@ -14,6 +14,18 @@ use Nette\Application\UI\InvalidLinkException;
 
 /**
  * @method BasePresenter getPresenter()
+ * @phpstan-type Item array{
+ *      'presenter':string,
+ *      'action':string,
+ *      'params':array<string,int|string|bool|null>,
+ *      'fragment':string
+ * }
+ * @phpstan-type RootItem array{
+ *      'presenter':string,
+ *      'action':string,
+ *      'params':array<string,int|string|bool|null>,
+ *      'fragment':string,'parents':Item[]
+ * }
  */
 final class NavigationChooserComponent extends NavigationItemComponent
 {
@@ -69,6 +81,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-param RootItem $structure
      */
     private function getItem(array $structure): NavItem
     {
@@ -81,6 +94,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws InvalidLinkException
      * @throws BadRequestException
      * @throws \ReflectionException
+     * @phpstan-param RootItem $structure
      */
     private function getItems(array $structure): array
     {
@@ -101,19 +115,17 @@ final class NavigationChooserComponent extends NavigationItemComponent
 
     public function isItemActive(array $item): bool
     {
-        if (isset($item['presenter'])) {
-            try {
-                $this->getPresenter()->link(
-                    ':' . $item['presenter'] . ':' . $item['action'],
-                    array_merge($this->getPresenter()->getParameters(), $item['params'])
-                );
-            } catch (\Throwable $exception) {
-                /* empty */
-            }
-            $result = $this->getPresenter()->getLastCreatedRequestFlag('current');
-            if ($result) {
-                return true;
-            }
+        try {
+            $this->getPresenter()->link(
+                ':' . $item['presenter'] . ':' . $item['action'],
+                array_merge($this->getPresenter()->getParameters(), $item['params'])
+            );
+        } catch (\Throwable $exception) {
+            /* empty */
+        }
+        $result = $this->getPresenter()->getLastCreatedRequestFlag('current');
+        if ($result) {
+            return true;
         }
         return false;
     }
@@ -121,50 +133,44 @@ final class NavigationChooserComponent extends NavigationItemComponent
     /**
      * @throws BadRequestException
      * @throws BadTypeException
+     * @phpstan-param Item $item
      */
     public function getItemTitle(array $item): Title
     {
-        if (isset($item['presenter'])) {
-            $presenter = $this->presenterBuilder->preparePresenter(
-                $item['presenter'],
-                $item['action'],
-                $item['params'],
-                $this->getPresenter()->getParameters()
-            );
-            $presenter->setView($presenter->getView()); // to force update the title
+        $presenter = $this->presenterBuilder->preparePresenter(
+            $item['presenter'],
+            $item['action'],
+            $item['params'],
+            $this->getPresenter()->getParameters()
+        );
+        $presenter->setView($presenter->getView()); // to force update the title
 
-            return $presenter->getTitle();
-        }
-        return new Title(null, '');
+        return $presenter->getTitle();
     }
 
     /**
      * @throws InvalidLinkException
+     * @phpstan-param Item $item
      */
     public function getItemLink(array $item): string
     {
-        if (isset($item['presenter'])) {
-            return $this->getPresenter()->link(
-                ':' . $item['presenter'] . ':' . $item['action'],
-                array_merge($this->getPresenter()->getParameters(), $item['params'])
-            );
-        }
-        return '';
+        return $this->getPresenter()->link(
+            ':' . $item['presenter'] . ':' . $item['action'],
+            array_merge($this->getPresenter()->getParameters(), $item['params'])
+        );
     }
 
     /**
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-param Item $item
      */
     public function isItemVisible(array $item): bool
     {
-        if (isset($item['presenter'])) {
-            return $this->getPresenter()->authorized(
-                ':' . $item['presenter'] . ':' . $item['action'],
-                array_merge($this->getPresenter()->getParameters(), $item['params'])
-            );
-        }
-        return true;
+        return $this->getPresenter()->authorized(
+            ':' . $item['presenter'] . ':' . $item['action'],
+            array_merge($this->getPresenter()->getParameters(), $item['params'])
+        );
     }
 }

@@ -13,6 +13,9 @@ use Nette\Forms\Controls\BaseControl;
  */
 class ContainerWithOptions extends Container
 {
+    /**
+     * @phpstan-var array<string,mixed>
+     */
     private array $options = [];
     protected DIContainer $container;
 

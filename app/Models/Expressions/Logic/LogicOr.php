@@ -6,6 +6,10 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
 
+/**
+ * @template ArgType
+ * @phpstan-extends VariadicExpression<ArgType>
+ */
 class LogicOr extends VariadicExpression
 {
     public function __invoke(...$args): bool

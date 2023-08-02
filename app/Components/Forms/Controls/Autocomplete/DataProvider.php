@@ -6,11 +6,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 interface DataProvider
 {
-    public const LABEL = 'label';
-    public const VALUE = 'value';
-
     /**
-     * @return array array of associative arrays with at least LABEL and VALUE keys
+     * @return array<int,array<string,scalar>> array of associative arrays with at least LABEL and VALUE keys
      */
     public function getItems(): array;
 

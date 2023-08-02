@@ -37,12 +37,12 @@ class ReferencedPersonContainer extends ReferencedContainer
 {
     public Resolver $resolver;
     public ?ContestYearModel $contestYear;
+    /** @phpstan-var array<string,array<string,mixed>> */
     private array $fieldsDefinition;
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
     protected ?EventModel $event;
-
 
     public function __construct(
         Container $container,

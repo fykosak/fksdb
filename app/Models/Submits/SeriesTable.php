@@ -22,7 +22,7 @@ class SeriesTable
 
     /**
      *
-     * @var null|callable
+     * @var (callable(TypedGroupedSelection<TaskModel>):void)|null
      */
     public $taskFilter = null;
 

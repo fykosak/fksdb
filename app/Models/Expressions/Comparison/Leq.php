@@ -7,19 +7,20 @@ namespace FKSDB\Models\Expressions\Comparison;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 
 /**
- * @phpstan-extends EvaluatedExpression<bool,bool|string|int,mixed>
+ * @template ArgType
+ * @phpstan-extends EvaluatedExpression<bool,scalar,ArgType>
  */
 class Leq extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @var (callable(ArgType):scalar)|scalar */
     private $aValue;
-    /** @var mixed */
+    /** @var (callable(ArgType):scalar)|scalar */
     private $bValue;
 
     /**
-     * @param mixed $aValue
-     * @param mixed $bValue
+     * @param (callable(ArgType):scalar)|scalar $aValue
+     * @param (callable(ArgType):scalar)|scalar $bValue
      */
     public function __construct($aValue, $bValue)
     {
@@ -29,8 +30,7 @@ class Leq extends EvaluatedExpression
 
     public function __invoke(...$args): bool
     {
-        [$holder] = $args;
-        return $this->evaluateArgument($this->aValue, $holder) <=
-            $this->evaluateArgument($this->bValue, $holder);
+        return $this->evaluateArgument($this->aValue, ...$args) <=
+            $this->evaluateArgument($this->bValue, ...$args);
     }
 }

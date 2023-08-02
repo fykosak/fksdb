@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Fykosak\NetteORM\Model;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
@@ -51,8 +50,12 @@ class TagsColumnFactory extends ColumnFactory
         return $baseEl;
     }
 
-    protected function createFormControl(...$args): BaseControl
+    /**
+     * @phpstan-return AutocompleteSelectBox<StoredQueryTagTypeProvider>
+     */
+    protected function createFormControl(...$args): AutocompleteSelectBox
     {
+        /** @phpstan-var AutocompleteSelectBox<StoredQueryTagTypeProvider> $select */
         $select = new AutocompleteSelectBox(true, $this->getTitle(), 'tags');
         $select->setDataProvider(new StoredQueryTagTypeProvider($this->storedQueryTagTypeService));
         $select->setMultiSelect(true);

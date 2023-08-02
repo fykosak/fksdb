@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions;
 
 /**
- * @phpstan-template R
- * @phpstan-template P
+ * @phpstan-template GlobalReturn
+ * @phpstan-template ArgType
  */
 interface Statement
 {
     /**
-     * @phpstan-return R
-     * @phpstan-param P ...$args
+     * @phpstan-return GlobalReturn
+     * @phpstan-param ArgType ...$args
      */
     public function __invoke(...$args);
 }
