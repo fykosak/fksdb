@@ -7,9 +7,9 @@ namespace FKSDB\Components\Controls\Upload\Legacy;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
@@ -29,7 +29,6 @@ use Tracy\Debugger;
 class LegacyUploadFormComponent extends FormComponent
 {
     private ContestantModel $contestant;
-    private SubmitService $submitService;
     private TaskService $taskService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
@@ -40,11 +39,9 @@ class LegacyUploadFormComponent extends FormComponent
     }
 
     final public function injectTernary(
-        SubmitService $submitService,
         TaskService $taskService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
-        $this->submitService = $submitService;
         $this->taskService = $taskService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
@@ -61,7 +58,7 @@ class LegacyUploadFormComponent extends FormComponent
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
         try {
-            $this->submitService->explorer->getConnection()->beginTransaction();
+            $this->taskService->explorer->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
@@ -93,11 +90,11 @@ class LegacyUploadFormComponent extends FormComponent
             }
 
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->submitService->explorer->getConnection()->commit();
+            $this->taskService->explorer->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException | ProcessingException $exception) {
             $this->submitHandlerFactory->uploadedStorage->rollback();
-            $this->submitService->explorer->getConnection()->rollBack();
+            $this->taskService->explorer->getConnection()->rollBack();
             Debugger::log($exception);
             $this->flashMessage(_('Task storing error.'), Message::LVL_ERROR);
         }
@@ -120,7 +117,8 @@ class LegacyUploadFormComponent extends FormComponent
             if ($task->submit_deadline !== $prevDeadline) {
                 $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline->format(_('__date_time'))));
             }
-            $submit = $this->submitService->findByContestant($this->contestant, $task);
+            /** @var SubmitModel|null $submit */
+            $submit = $this->contestant->getSubmits()->where('task_id', $task)->fetch();
             if ($submit && $submit->source->value == SubmitSource::POST) {
                 continue; // prevDeadline will work though
             }

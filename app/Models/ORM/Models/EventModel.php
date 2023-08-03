@@ -244,6 +244,7 @@ final class EventModel extends Model implements Resource, NodeCreator
             'name' => $this->name,
             'nameNew' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
+            'contestId' =>  $this->event_type->contest_id,
         ];
     }
 

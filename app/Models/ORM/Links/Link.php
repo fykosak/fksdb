@@ -13,11 +13,13 @@ use Fykosak\NetteORM\Model;
 class Link extends LinkFactory
 {
     private string $destination;
+    /** @phpstan-var array<string,string> */
     private array $params;
     private string $title;
 
     /**
      * @param class-string<M> $modelClassName
+     * @phpstan-param array<string,string> $params
      */
     public function __construct(string $destination, array $params, string $title, string $modelClassName)
     {

@@ -16,8 +16,19 @@ use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-type TDefinition array{
+ *      'keys':string[],
+ *      'holderMethod':string,
+ *      'machineName':string,
+ *      'formLayout':string
+ * }
+ */
 class EventDispatchFactory
 {
+    /**
+     * @phpstan-var array<int,TDefinition>
+     */
     private array $definitions = [];
     private Container $container;
     private string $templateDir;
@@ -119,6 +130,7 @@ class EventDispatchFactory
 
     /**
      * @throws ConfigurationNotFoundException
+     * @phpstan-return TDefinition
      */
     private function findDefinition(EventModel $event): array
     {

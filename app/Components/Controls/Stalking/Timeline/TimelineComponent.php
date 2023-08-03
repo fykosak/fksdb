@@ -26,17 +26,6 @@ class TimelineComponent extends FrontEndComponent
         $this->person = $person;
     }
 
-    private function eventToArray(EventModel $event): array
-    {
-        return [
-            'eventId' => $event->event_id,
-            'name' => $event->name,
-            'contestId' => $event->event_type->contest_id,
-            'begin' => $event->begin->format('c'),
-            'eventTypeId' => $event->event_type_id,
-        ];
-    }
-
     /**
      * @return array[][]
      * @throws \Exception
@@ -106,19 +95,19 @@ class TimelineComponent extends FrontEndComponent
         /** @var EventParticipantModel $participant */
         foreach ($this->person->getEventParticipants() as $participant) {
             $events[] = $participant->event;
-            $eventParticipants[] = ['event' => $this->eventToArray($participant->event), 'model' => null];
+            $eventParticipants[] = ['event' => $participant->event->__toArray(), 'model' => null];
         }
         $eventOrganisers = [];
         /** @var EventOrgModel $eventOrg */
         foreach ($this->person->getEventOrgs() as $eventOrg) {
             $events[] = $eventOrg->event;
-            $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->event), 'model' => null];
+            $eventOrganisers[] = ['event' => $eventOrg->event->__toArray(), 'model' => null];
         }
         $eventTeachers = [];
         /** @var TeamTeacherModel $teacher */
         foreach ($this->person->getFyziklaniTeachers() as $teacher) {
             $eventTeachers[] = [
-                'event' => $this->eventToArray($teacher->fyziklani_team->event),
+                'event' => $teacher->fyziklani_team->event->__toArray(),
                 'model' => null,
             ];
             $events[] = $teacher->fyziklani_team->event;

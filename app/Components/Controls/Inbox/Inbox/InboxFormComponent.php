@@ -7,6 +7,7 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
@@ -44,7 +45,8 @@ class InboxFormComponent extends SeriesTableFormComponent
                     // secure check for rewrite contestant_id.
                     throw new ForbiddenRequestException();
                 }
-                $submit = $this->submitService->findByContestantId($contestant, $taskNo);
+                /** @var SubmitModel|null $submit */
+                $submit = $contestant->getSubmits()->where('task_id', $taskNo)->fetch();
                 if (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
                     $this->submitService->disposeModel($submit);

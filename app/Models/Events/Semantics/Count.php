@@ -16,6 +16,7 @@ class Count implements Statement
 {
     use SmartObject;
 
+    /** @var string[] */
     private array $states;
     private EventParticipantService $eventParticipantService;
 
@@ -25,9 +26,11 @@ class Count implements Statement
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @param BaseHolder ...$args
+     */
     public function __invoke(...$args): int
     {
-        /** @var BaseHolder $holder */
         [$holder] = $args;
         $table = $this->eventParticipantService->getTable();
         $table->where('event_participant.event_id', $holder->event->getPrimary());

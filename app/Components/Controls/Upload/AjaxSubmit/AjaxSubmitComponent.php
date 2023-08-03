@@ -28,8 +28,6 @@ use Tracy\Debugger;
  */
 class AjaxSubmitComponent extends AjaxComponent
 {
-
-    private SubmitService $submitService;
     private TaskModel $task;
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -41,9 +39,8 @@ class AjaxSubmitComponent extends AjaxComponent
         $this->contestant = $contestant;
     }
 
-    final public function injectPrimary(SubmitService $submitService, SubmitHandlerFactory $submitHandlerFactory): void
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
     {
-        $this->submitService = $submitService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -52,7 +49,8 @@ class AjaxSubmitComponent extends AjaxComponent
      */
     private function getSubmit(bool $throw = false): ?SubmitModel
     {
-        $submit = $this->submitService->findByContestant($this->contestant, $this->task, false);
+        /** @var SubmitModel|null $submit */
+        $submit = $this->contestant->getSubmits()->where('task_id', $this->task)->fetch();
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
         }
@@ -85,7 +83,7 @@ class AjaxSubmitComponent extends AjaxComponent
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
-            $this->submitService->explorer->getConnection()->beginTransaction();
+            $this->submitHandlerFactory->submitService->explorer->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
@@ -98,7 +96,7 @@ class AjaxSubmitComponent extends AjaxComponent
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->submitService->explorer->getConnection()->commit();
+            $this->submitHandlerFactory->submitService->explorer->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), Message::LVL_SUCCESS));
             $this->sendAjaxResponse();
         }

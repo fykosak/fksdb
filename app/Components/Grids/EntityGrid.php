@@ -19,11 +19,15 @@ abstract class EntityGrid extends BaseGrid
 {
     /** @phpstan-var Service<M> */
     protected Service $service;
+    /** @phpstan-var array<string,scalar|null> */
     private array $queryParams;
+    /** @var string[] */
     private array $columns;
 
     /**
      * @phpstan-param class-string<Service<M>> $classNameService
+     * @phpstan-param string[] $columns
+     * @phpstan-param array<string,scalar|null> $queryParams
      */
     public function __construct(
         Container $container,

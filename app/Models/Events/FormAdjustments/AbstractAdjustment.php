@@ -20,7 +20,7 @@ abstract class AbstractAdjustment implements FormAdjustment
     use SmartObject;
 
     public const DELIMITER = '.';
-
+    /** @phpstan-var array<string,Control&Component> */
     private array $pathCache;
 
     final public function adjust(Form $form, ModelHolder $holder): void

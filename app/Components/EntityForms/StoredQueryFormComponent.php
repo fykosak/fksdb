@@ -142,6 +142,9 @@ class StoredQueryFormComponent extends EntityFormComponent
         return $container;
     }
 
+    /**
+     * @param int[] $tags
+     */
     private function saveTags(array $tags, QueryModel $query): void
     {
         /** @var TagModel $tag */

@@ -15,27 +15,6 @@ use Fykosak\NetteORM\Service;
  */
 final class SubmitService extends Service
 {
-
-    private array $submitCache = [];
-
-    public function findByContestantId(ContestantModel $contestant, int $taskId, bool $useCache = true): ?SubmitModel
-    {
-        $key = $contestant->contestant_id . ':' . $taskId;
-        if (!isset($this->submitCache[$key]) || !$useCache) {
-            $this->submitCache[$key] = $contestant->getSubmits()->where('task_id', $taskId)->fetch();
-        }
-        return $this->submitCache[$key];
-    }
-
-    public function findByContestant(ContestantModel $contestant, TaskModel $task, bool $useCache = true): ?SubmitModel
-    {
-        $key = $contestant->contestant_id . ':' . $task->task_id;
-        if (!isset($this->submitCache[$key]) || !$useCache) {
-            $this->submitCache[$key] = $contestant->getSubmits()->where('task_id', $task->task_id)->fetch();
-        }
-        return $this->submitCache[$key];
-    }
-
     public static function serializeSubmit(
         ?SubmitModel $submit,
         TaskModel $task,
