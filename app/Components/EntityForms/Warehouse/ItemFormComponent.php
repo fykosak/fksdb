@@ -50,6 +50,18 @@ class ItemFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
+        /**
+         * @phpstan-var array{container:array{
+         *      state:string,
+         *      description_cs:string,
+         *      description_en:string,
+         *      data:string,
+         *      purchase_price:float,
+         *      purchase_currency:string,
+         *      placement:string,
+         *      note:string,
+         * }} $values
+         */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 

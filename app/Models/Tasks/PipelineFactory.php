@@ -15,11 +15,15 @@ class PipelineFactory
 {
     /**
      * @see StudyYearsFromXML
+     * @phpstan-var array<int,int[]>
      */
     private array $defaultCategories;
 
     private Container $container;
 
+    /**
+     * @phpstan-param array<int,int[]> $defaultCategories
+     */
     public function __construct(
         array $defaultCategories,
         Container $container

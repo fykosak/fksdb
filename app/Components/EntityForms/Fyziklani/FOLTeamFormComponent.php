@@ -29,6 +29,9 @@ class FOLTeamFormComponent extends TeamFormComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
     }
 
+    /**
+     * @return array<string,array<string,array{required:bool,description?:string}>>
+     */
     protected function getMemberFieldsDefinition(): array
     {
         return [
@@ -80,11 +83,17 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
+    /**
+     * @return array<string,array{required:bool,description?:string}>
+     */
     protected function getTeamFieldsDefinition(): array
     {
         return ['name' => ['required' => true]];
     }
 
+    /**
+     * @phpstan-return array{}
+     */
     protected function getTeacherFieldsDefinition(): array
     {
         return [];

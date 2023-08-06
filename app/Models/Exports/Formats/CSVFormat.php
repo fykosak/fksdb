@@ -34,13 +34,14 @@ class CSVFormat implements ExportFormat
     }
 
     /**
-     * @return CSVResponse<mixed>
+     * @return CSVResponse<\PDOStatement>
      */
     public function getResponse(): CSVResponse
     {
         $data = $this->storedQuery->getData();
         $name = $this->storedQuery->getName();
         $name .= '.csv';
+        /** @phpstan-var CSVResponse<\PDOStatement> $response */
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($this->header);
         $response->setQuotes($this->quote);

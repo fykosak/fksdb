@@ -13,7 +13,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonModel>
+ * @phpstan-extends ColumnFactory<PersonModel,never>
  */
 class FullNameColumnFactory extends ColumnFactory
 {

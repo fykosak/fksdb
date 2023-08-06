@@ -43,15 +43,15 @@ class OrganizersWebModel extends WebModel
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
                 'name' => $org->person->getFullName(),
-                'personId' => $org->person_id,
+                'personId' => (string)$org->person_id,
                 'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
                 'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
                 'career' => $org->person->getInfo()->career,
                 'contribution' => $org->contribution,
-                'order' => $org->order,
+                'order' => (string)$org->order,
                 'role' => $org->role,
-                'since' => $org->since,
-                'until' => $org->until,
+                'since' => (string)$org->since,
+                'until' => (string)$org->until,
                 'texSignature' => $org->tex_signature,
                 'domainAlias' => $org->domain_alias,
             ], $doc, $orgNode);
@@ -62,6 +62,12 @@ class OrganizersWebModel extends WebModel
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
+    /**
+     * @phpstan-param array{
+     *     contest_id:int,
+     *     year?:int|null,
+     * } $params
+     */
     public function getJsonResponse(array $params): array
     {
         $contest = $this->contestService->findByPrimary($params['contest_id']);

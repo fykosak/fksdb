@@ -154,13 +154,15 @@ final class PersonPresenter extends BasePresenter
         $form->addSubmit('stalk', _('Let\'s stalk'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('detail', ['id' => $values['person_id']]);
             };
         $form->addSubmit('edit', _('Edit'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('edit', ['id' => $values['person_id']]);
             };
 

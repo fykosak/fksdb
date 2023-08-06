@@ -143,7 +143,14 @@ final class SettingsPresenter extends BasePresenter
      */
     private function handleSettingsFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{login:array{
+         *     old_password?:string,
+         *     password:string,
+         *     password_verify:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
                 AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)

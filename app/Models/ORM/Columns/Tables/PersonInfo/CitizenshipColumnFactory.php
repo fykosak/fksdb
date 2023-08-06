@@ -13,7 +13,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 /**
- * @phpstan-extends ColumnFactory<PersonInfoModel>
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
  */
 class CitizenshipColumnFactory extends ColumnFactory
 {
@@ -33,6 +33,9 @@ class CitizenshipColumnFactory extends ColumnFactory
         return $control;
     }
 
+    /**
+     * @return array<string,string>
+     */
     private function getCountries(): array
     {
         $results = [];

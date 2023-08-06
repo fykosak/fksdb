@@ -27,7 +27,7 @@ abstract class PersonFileLevelTest extends PersonTest
 
     /**
      * @throws BadTypeException
-     * @phpstan-return ColumnFactory<PersonModel>&TestedColumnFactory
+     * @phpstan-return ColumnFactory<PersonModel,never>&TestedColumnFactory
      */
     final protected function getRowFactory(): TestedColumnFactory
     {

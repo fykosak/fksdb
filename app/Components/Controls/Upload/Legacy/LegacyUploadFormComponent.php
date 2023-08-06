@@ -48,6 +48,9 @@ class LegacyUploadFormComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
+        /**
+         * @phpstan-var array{tasks:string,} $values
+         */
         $values = $form->getValues();
         Debugger::log(
             \sprintf('Contestant %d upload %s', $this->contestant->contestant_id, $values['tasks']),

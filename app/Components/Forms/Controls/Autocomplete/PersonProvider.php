@@ -75,6 +75,13 @@ class PersonProvider implements FilteredDataProvider
         return $result;
     }
 
+    /**
+     * @phpstan-return array{
+     *     label:string,
+     *     value:int,
+     *     place:string|null,
+     * }
+     */
     private function getItem(PersonModel $person): array
     {
         $place = null;

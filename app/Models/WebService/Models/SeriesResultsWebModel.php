@@ -33,6 +33,11 @@ class SeriesResultsWebModel extends WebModel
 
     /**
      * @throws BadRequestException
+     * @phpstan-param array{
+     *     contest_id:int,
+     *     year:int,
+     *     series:int,
+     * } $params
      */
     public function getJsonResponse(array $params): array
     {

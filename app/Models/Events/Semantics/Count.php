@@ -20,6 +20,9 @@ class Count implements Statement
     private array $states;
     private EventParticipantService $eventParticipantService;
 
+    /**
+     * @param string[] $states
+     */
     public function __construct(array $states, EventParticipantService $eventParticipantService)
     {
         $this->states = $states;

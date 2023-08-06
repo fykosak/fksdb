@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PaymentModel|ItemModel>
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel,never>
  */
 class PriceColumnFactory extends ColumnFactory
 {

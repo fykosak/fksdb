@@ -99,6 +99,7 @@ class WebServiceModel
      * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
+     * @phpstan-ignore-next-line
      */
     public function __call(string $name, array $args): \SoapVar
     {

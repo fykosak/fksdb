@@ -8,5 +8,8 @@ use Nette\Utils\ArrayHash;
 
 interface Processing
 {
-    public function process(ArrayHash $values): void; // @phpstan-ignore-line
+    /**
+     * @param ArrayHash<ArrayHash<mixed>> $values
+     */
+    public function process(ArrayHash $values): void;
 }

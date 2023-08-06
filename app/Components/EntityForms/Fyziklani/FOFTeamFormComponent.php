@@ -30,6 +30,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
+     * @phpstan-return array<string,mixed>
      */
     protected function getMemberFieldsDefinition(): array
     {
@@ -38,6 +39,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
+     * @phpstan-return array<string,mixed>
      */
     protected function getTeacherFieldsDefinition(): array
     {
@@ -78,6 +80,9 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
+    /**
+     * @return FormProcessing[]
+     */
     protected function getProcessing(): array
     {
         return [
@@ -142,6 +147,14 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
+    /**
+     * @phpstan-return array{
+     *     name:array{required:bool},
+     *     game_lang:array{required:bool},
+     *     phone:array{required:bool},
+     *     force_a:array{required:bool},
+     * }
+     */
     protected function getTeamFieldsDefinition(): array
     {
         return [

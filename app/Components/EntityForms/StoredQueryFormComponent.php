@@ -20,6 +20,8 @@ use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
@@ -62,7 +64,7 @@ class StoredQueryFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = FormUtils::emptyStrToNull2($form->getValues()); //@phpstan-ignore-line
+        $values = FormUtils::emptyStrToNull2($form->getValues('array')); //@phpstan-ignore-line
         $connection = $this->storedQueryService->explorer->getConnection();
         $connection->beginTransaction();
 
@@ -97,6 +99,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         $form->addComponent($this->createConsole($group), self::CONT_SQL);
 
         $group = $form->addGroup(_('Parameters'));
+        /** @phpstan-ignore-next-line */
         $form->addComponent($this->createParametersMetadata($group), self::CONT_PARAMS);
 
         $group = $form->addGroup(_('Metadata'));
@@ -158,9 +161,10 @@ class StoredQueryFormComponent extends EntityFormComponent
             ]);
         }
     }
-
+    /** @phpstan-ignore-next-line */
     private function createParametersMetadata(?ControlGroup $group = null): Replicator
     {
+        /** @phpstan-ignore-next-line */
         $replicator = new Replicator(function (ContainerWithOptions $replContainer) use ($group): void {
             $this->buildParameterMetadata($replContainer, $group);
 
@@ -168,11 +172,12 @@ class StoredQueryFormComponent extends EntityFormComponent
             $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger']);
             $submit->addRemoveOnClick();// @phpstan-ignore-line
         }, $this->container, 0, true);
+        /** @phpstan-ignore-next-line */
         $replicator->setCurrentGroup($group);
+        /** @phpstan-ignore-next-line */
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-success']);
-
-        $submit->setValidationScope(null)->addCreateOnClick(); // @phpstan-ignore-line
+        $submit->setValidationScope(null)->addCreateOnClick();
 
         return $replicator;
     }
@@ -205,6 +210,9 @@ class StoredQueryFormComponent extends EntityFormComponent
         $container->addText('default', _('Default value'));
     }
 
+    /**
+     * @phpstan-param array<array<string,mixed>> $parameters
+     */
     private function saveParameters(array $parameters, QueryModel $query): void
     {
         /** @var ParameterModel $parameter */
@@ -247,8 +255,13 @@ class StoredQueryFormComponent extends EntityFormComponent
         return $grid;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     private function handleComposeExecute(Form $form): void
     {
+        /** @var array{params:array{name:string,default:mixed,type:string},sql:array{sql:string}} $data */
         $data = $form->getValues('array');
         $parameters = [];
         foreach ($data[self::CONT_PARAMS] as $paramMetaData) {

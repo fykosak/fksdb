@@ -144,9 +144,9 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupId' => (string)$this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
-            'eventId' => $this->event_id,
+            'eventId' => (string)$this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
         ], $document, $node);

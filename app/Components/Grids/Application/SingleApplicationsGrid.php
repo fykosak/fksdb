@@ -30,6 +30,9 @@ class SingleApplicationsGrid extends FilterGrid
         $this->holder = $holder;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getHoldersColumns(): array
     {
         return [

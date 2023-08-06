@@ -15,7 +15,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<QueryModel>
+ * @phpstan-extends ColumnFactory<QueryModel,never>
  */
 class TagsColumnFactory extends ColumnFactory
 {

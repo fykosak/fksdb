@@ -29,7 +29,7 @@ final class SingleReflectionFormFactory
 
     /**
      * @throws BadTypeException
-     * @phpstan-return ColumnFactory<Model>
+     * @phpstan-return ColumnFactory<Model,mixed>
      */
     protected function loadFactory(string $tableName, string $fieldName): ColumnFactory
     {
@@ -50,6 +50,7 @@ final class SingleReflectionFormFactory
      * @throws BadTypeException
      * @throws OmittedControlException
      * @phpstan-param mixed $args
+     * @phpstan-param array<string,array{required?:bool,caption?:string|null,description?:string|null}> $fields
      */
     public function createContainerWithMetadata(
         string $table,
@@ -68,6 +69,11 @@ final class SingleReflectionFormFactory
      * @param mixed ...$args
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param array{
+     *     required?:bool,
+     *     caption?:string|null,
+     *     description?:string|null
+     * } $metaData
      */
     public function addToContainer(
         ContainerWithOptions $container,
@@ -93,6 +99,13 @@ final class SingleReflectionFormFactory
         $container->addComponent($control, $field);
     }
 
+    /**
+     * @phpstan-param array{
+     *      required?:bool,
+     *      caption?:string|null,
+     *      description?:string|null,
+     * } $metadata
+     */
     protected function appendMetadata(BaseControl $control, array $metadata): void
     {
         foreach ($metadata as $key => $value) {

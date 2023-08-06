@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
+    EventRole,
     FyziklaniTeamMemberRole,
     FyziklaniTeamTeacherRole,
     ParticipantRole
@@ -248,6 +249,13 @@ final class PersonModel extends Model implements Resource
             ->where('until IS NULL OR until >=?', $year);
     }
 
+    /**
+     * @return array{
+     *     other_name:string,
+     *     family_name:string,
+     *     gender:string,
+     * }
+     */
     public static function parseFullName(string $fullName): array
     {
         $names = explode(' ', $fullName);
@@ -260,6 +268,9 @@ final class PersonModel extends Model implements Resource
         ];
     }
 
+    /**
+     * @phpstan-param array{family_name:string} $data
+     */
     public static function inferGender(array $data): string
     {
         if (mb_substr($data['family_name'], -1) == 'á') {
@@ -274,6 +285,9 @@ final class PersonModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @return array<int,int>
+     */
     public function getSerializedSchedule(EventModel $event, string $type): array
     {
         $query = $this->getSchedule()
@@ -371,6 +385,9 @@ final class PersonModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @return EventRole[]
+     */
     public function getEventRoles(EventModel $event): array
     {
         $roles = [];

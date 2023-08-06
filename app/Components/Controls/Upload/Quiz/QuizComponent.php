@@ -99,7 +99,10 @@ class QuizComponent extends FormComponent
      */
     protected function handleSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{quiz_questions:array<string,array{option:string|null}>} $values
+         */
+        $values = $form->getValues('array');
         try {
             // create and save contestant
             // TODO separate contestant creation into handler and reuse it in contestant register form

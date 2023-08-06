@@ -18,6 +18,11 @@ trait ReferencedPersonTrait
 
     /**
      * @phpstan-return ReferencedId<PersonModel>
+     * @phpstan-param array<string,array<string,array{
+     *     required?:bool,
+     *     caption?:string|null,
+     *     description?:string|null,
+     *     }>> $fieldDefinition
      */
     protected function createPersonId(
         ContestYearModel $contestYear,

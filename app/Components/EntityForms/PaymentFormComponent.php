@@ -113,6 +113,7 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
         $values = $form->getValues('array');
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();

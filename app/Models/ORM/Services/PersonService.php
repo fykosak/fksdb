@@ -21,9 +21,12 @@ final class PersonService extends Service
         return $person;
     }
 
+    /**
+     * @param array{gender?:string|null,family_name:string} $data
+     */
     public function storeModel(array $data, ?Model $model = null): PersonModel
     {
-        if (is_null($data['gender']) && !isset($model)) {
+        if (!isset($data['gender']) && !isset($model)) {
             $data['gender'] = PersonModel::inferGender($data);
         }
         return parent::storeModel($data, $model);

@@ -87,6 +87,19 @@ class StatsWebModel extends WebModel
         ]);
     }
 
+    /**
+     * @param array{contest_id:int,year:int} $params
+     * @return array<int,array{
+     *     taskId:int,
+     *     series:int,
+     *     label:string,
+     *     name:array<string,string>,
+     *     taskNumber:int,
+     *     points:int,
+     *     solversCount:int,
+     *     averagePoints:float|null
+     * }>
+     */
     public function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);

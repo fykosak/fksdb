@@ -11,7 +11,9 @@ use Nette\Forms\Form;
 
 class FlagFactory
 {
-
+    /**
+     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     */
     public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl
     {
         $control = $this->createSpamMff();

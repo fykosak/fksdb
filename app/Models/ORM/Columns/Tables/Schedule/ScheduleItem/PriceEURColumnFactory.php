@@ -14,7 +14,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<ScheduleItemModel>
+ * @phpstan-extends ColumnFactory<ScheduleItemModel,never>
  */
 class PriceEURColumnFactory extends ColumnFactory
 {

@@ -39,6 +39,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
+     * @phpstan-param array{email:string|null} $user
      */
     public function authenticate(array $user): LoginModel
     {
@@ -61,6 +62,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
 
     /**
      * @throws AuthenticationException
+     * @phpstan-param array{email:string|null} $user
      */
     private function findPerson(array $user): ?PersonModel
     {
@@ -70,6 +72,9 @@ class GoogleAuthenticator extends AbstractAuthenticator
         return $this->findOrg($user) ?? $this->personService->findByEmail($user['email']);
     }
 
+    /**
+     * @phpstan-param array{email:string|null} $user
+     */
     private function findOrg(array $user): ?PersonModel
     {
         [$domainAlias, $domain] = explode('@', $user['email']);

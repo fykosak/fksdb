@@ -23,13 +23,13 @@ class BrojureResultsModel extends AbstractResultsModel
      */
     protected int $listedSeries;
     /**
-     * Cache
-     * @var array
+     * @phpstan-var array<string,array<int,array{'label':string,'limit':float|int|null,'alias':string}>>
      */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
@@ -78,6 +78,9 @@ class BrojureResultsModel extends AbstractResultsModel
         return $this->dataColumns[$category->label];
     }
 
+    /**
+     * @return int[]
+     */
     public function getSeries(): array
     {
         return $this->series;

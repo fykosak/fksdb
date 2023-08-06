@@ -14,7 +14,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonInfoModel>
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
  */
 class IdNumberColumnFactory extends ColumnFactory
 {

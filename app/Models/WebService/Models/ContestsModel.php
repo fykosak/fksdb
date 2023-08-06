@@ -18,24 +18,23 @@ class ContestsModel extends WebModel
         $this->contestService = $contestService;
     }
 
-    private function createContestArray(ContestModel $contest): array
-    {
-        return [
-            'contestId' => $contest->contest_id,
-            'contest' => $contest->getContestSymbol(),
-            'name' => $contest->name,
-            'currentYear' => $contest->getCurrentContestYear()->year,
-            'firstYear' => $contest->getFirstYear(),
-            'lastYear' => $contest->getLastYear(),
-        ];
-    }
-
+    /**
+     * @phpstan-param array<never> $params
+     * @return array<int,array{
+     *      contestId:int,
+     *      contest:string,
+     *      name:string,
+     *      currentYear:int,
+     *      firstYear:int,
+     *      lastYear:int,
+     * }>
+     */
     public function getJsonResponse(array $params): array
     {
         $data = [];
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
-            $data[] = $this->createContestArray($contest);
+            $data[] = $contest->__toArray();
         }
         return $data;
     }

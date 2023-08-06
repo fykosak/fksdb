@@ -13,7 +13,7 @@ use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonModel>
+ * @phpstan-extends ColumnFactory<PersonModel,never>
  */
 class PersonLinkColumnFactory extends ColumnFactory
 {

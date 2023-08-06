@@ -111,6 +111,12 @@ abstract class MailCallback implements Statement
 
     /**
      * @phpstan-param H $holder
+     * @phpstan-return array{
+     *     blind_carbon_copy?:string,
+     *     subject:string,
+     *     sender:string,
+     *     reply_to?:string,
+     * }
      */
     abstract protected function getData(ModelHolder $holder): array;
 }

@@ -25,6 +25,7 @@ class PersonsGrid extends BaseGrid
 
     /**
      * @phpstan-param TypedSelection<PersonModel> $trunkPersons
+     * @param PersonModel[] $pairs
      */
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {

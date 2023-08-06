@@ -37,6 +37,9 @@ abstract class BaseItem extends BaseComponent
         ]);
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $params
+     */
     final public function doRender(?Model $model, ?int $userPermission, array $params = []): void
     {
         $this->template->render(

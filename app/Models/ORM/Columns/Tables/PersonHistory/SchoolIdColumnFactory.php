@@ -14,7 +14,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonHistoryModel>
+ * @phpstan-extends ColumnFactory<PersonHistoryModel,never>
  */
 class SchoolIdColumnFactory extends ColumnFactory
 {

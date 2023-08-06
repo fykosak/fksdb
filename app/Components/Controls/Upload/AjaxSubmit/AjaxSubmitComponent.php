@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
@@ -67,12 +66,32 @@ class AjaxSubmitComponent extends AjaxComponent
         $this->addAction('upload', 'upload!');
         $this->addPresenterLink('quiz', ':Quiz', ['id' => $this->task->task_id]);
     }
+
     /**
+     * @phpstan-return array{
+     *     submitId:int|null,
+     *     name:array<string,string>,
+     *     deadline:string|null,
+     *     taskId:int,
+     *     isQuiz:bool,
+     *     disabled:bool,
+     * }
      * @throws NotFoundException
      */
     protected function getData(): array
     {
-        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $this->contestant->contest_category);
+        $submit = $this->getSubmit();
+        return [
+            'submitId' => $submit ? $submit->submit_id : null,
+            'name' => $this->task->name->__serialize(),
+            'deadline' => $this->task->submit_deadline ? sprintf(
+                _('Deadline %s'),
+                $this->task->submit_deadline->format(_('__date_time'))
+            ) : null,
+            'taskId' => $this->task->task_id,
+            'isQuiz' => count($this->task->getQuestions()) > 0,
+            'disabled' => !$this->task->isForCategory($this->contestant->contest_category),
+        ];
     }
 
     /**

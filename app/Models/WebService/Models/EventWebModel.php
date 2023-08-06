@@ -196,6 +196,13 @@ class EventWebModel extends WebModel
     /**
      * @throws BadRequestException
      * @throws \Exception
+     * @phpstan-return array{
+     *     teams?: mixed,
+     *     participants?:mixed,
+     *     schedule?:mixed,
+     *     personSchedule?:mixed,
+     * }
+     * @phpstan-param array{event_id:int} $params
      */
     public function getJsonResponse(array $params): array
     {

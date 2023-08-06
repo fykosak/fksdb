@@ -55,11 +55,18 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $firstSubmit = FormUtils::findFirstSubmit($form);
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
+
+    /**
+     * @param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
     public function process(ArrayHash $values): void
     {
         $this->trySetAgreed($values);
     }
 
+    /**
+     * @param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
     private function trySetAgreed(ArrayHash $values): void
     {
         foreach ($values as $key => $value) {

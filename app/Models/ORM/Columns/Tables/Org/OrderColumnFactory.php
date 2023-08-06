@@ -14,11 +14,13 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<OrgModel>
+ * @phpstan-extends ColumnFactory<OrgModel,never>
  */
 class OrderColumnFactory extends ColumnFactory
 {
-
+    /**
+     * @return string[]
+     */
     public function getOrderMapping(): array
     {
         return [

@@ -27,11 +27,12 @@ abstract class AbstractSymbolGenerator implements Statement
     /**
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @phpstan-ignore-next-line
      */
     abstract protected function create(PaymentModel $modelPayment): array;
 
     /**
-     * @param ...$args
+     * @param PaymentHolder $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws BadTypeException

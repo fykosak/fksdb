@@ -15,9 +15,27 @@ use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-type EventContribution array{
+ *     eventOrgs:array<int,array{event:array<string,scalar>,model:null}>,
+ *     eventParticipants:array<int,array{event:array<string,scalar>,model:null}>,
+ *     eventTeachers:array<int,array{event:array<string,scalar>,model:null}>,
+ * }
+ * @phpstan-type StateContribution array{
+ *     orgs:array<int,array{
+ *          since:string,
+ *          until:string,
+ *          model:array{orgId:int,contestId:int}
+ * }>,
+ *     contestants:array<int,array{
+ *          since:string,
+ *          until:string,
+ *          model:array{contestantId:int,contestId:int}
+ * }>,
+ * }
+ */
 class TimelineComponent extends FrontEndComponent
 {
-
     private PersonModel $person;
 
     public function __construct(Container $container, PersonModel $person)
@@ -29,6 +47,13 @@ class TimelineComponent extends FrontEndComponent
     /**
      * @return array[][]
      * @throws \Exception
+     * @phpstan-return array{
+     *  array{
+     *      since:\DateTimeInterface[],
+     *      until:\DateTimeInterface[],
+     *  },
+     *  StateContribution,
+     * }
      */
     private function calculateData(): array
     {
@@ -88,6 +113,9 @@ class TimelineComponent extends FrontEndComponent
         ];
     }
 
+    /**
+     * @phpstan-return array{EventModel[],EventContribution}
+     */
     private function calculateEvents(): array
     {
         $events = [];
@@ -162,6 +190,11 @@ class TimelineComponent extends FrontEndComponent
 
     /**
      * @throws \Exception
+     * @phpstan-return array{
+     *     scale:array{max:string,min:string},
+     *     events:EventContribution,
+     *     states:StateContribution,
+     * }
      */
     public function getData(): array
     {

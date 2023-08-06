@@ -19,7 +19,11 @@ class PersonFactory extends AbstractFactory
 {
     private const VALUE_LOGIN = 'fromLogin';
     /**
-     * @var array<string,array<string,mixed>>
+     * @phpstan-var array<string,array<string,array{
+     *     required?:bool,
+     *     caption?:string,
+     *     description?:string,
+     * }>>
      */
     private array $fieldsDefinition;
     private string $searchType;
@@ -36,6 +40,7 @@ class PersonFactory extends AbstractFactory
      * @param (callable(BaseHolder):bool)|bool $allowClear
      * @param (callable(BaseHolder):bool)|bool $modifiable
      * @param (callable(BaseHolder):bool)|bool $visible
+     * @phpstan-param array<string,array<string,mixed>> $fieldsDefinition
      */
     public function __construct(
         array $fieldsDefinition,
@@ -98,6 +103,11 @@ class PersonFactory extends AbstractFactory
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return array<string,array<string,array{
+     *     required?:bool,
+     *     caption?:string,
+     *     description?:string,
+     * }>>
      */
     private function evaluateFieldsDefinition(Field $field): array
     {

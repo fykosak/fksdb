@@ -175,6 +175,7 @@ abstract class BasePresenter extends Presenter
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-param array<string,mixed> $args
      */
     public function authorized(string $destination, ?array $args = null): bool
     {

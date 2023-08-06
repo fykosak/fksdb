@@ -77,6 +77,10 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
+     * @phpstan-param array{
+     *     person_info:array{email?:string},
+     *     person:array<string,mixed>,
+     * }|array<string,array<string,mixed>> $values
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws ScheduleException
@@ -90,6 +94,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             return $model;
         } else {
             $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            /** @phpstan-ignore-next-line */
             $person = $this->storePerson($person, (array)$values['person']);
             $this->innerStore($person, $values);
             return $person;
@@ -107,6 +112,7 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
+     * @phpstan-param array<string,array<string,mixed>> $data
      */
     private function innerStore(PersonModel $person, array $data): void
     {
@@ -122,6 +128,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
 
             if (isset($data['person'])) {
+                /** @phpstan-ignore-next-line */
                 $this->storePerson($person, (array)$data['person']);
             }
 
@@ -162,6 +169,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         }
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $infoData
+     */
     private function storePersonInfo(PersonModel $person, array $infoData): void
     {
         $info = $person->getInfo();
@@ -174,6 +184,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $historyData
+     */
     private function storePersonHistory(PersonModel $person, array $historyData): void
     {
         if (!isset($this->contestYear)) {
@@ -192,6 +205,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $flagData
+     */
     private function storeFlags(PersonModel $person, array $flagData): void
     {
         foreach ($flagData as $flagId => $flagValue) {
@@ -206,7 +222,9 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
         }
     }
-
+    /**
+     * @phpstan-param array<string,mixed> $data
+     */
     private function storePostContact(
         PersonModel $person,
         array $data,
@@ -244,6 +262,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         }
     }
 
+    /**
+     * @phpstan-param array{gender?:string,family_name:string} $personData
+     */
     private function storePerson(?PersonModel $person, array $personData): PersonModel
     {
         return $this->personService->storeModel(

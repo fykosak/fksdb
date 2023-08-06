@@ -17,13 +17,22 @@ class StoredQuery implements Resource
 {
     public ?QueryModel $queryPattern = null;
     private string $sql;
+    /** @phpstan-var StoredQueryParameter[] */
     private array $queryParameters = [];
     private Connection $connection;
-    /** from Presenter     */
+    /**
+     * from Presenter
+     * @phpstan-var array<string,scalar>
+     */
     public array $implicitParameterValues = [];
-    /** User set parameters     */
+    /**
+     * User set parameters
+     * @phpstan-var array<string,scalar>
+     */
     private array $parameterValues = [];
-    /** default parameter of ModelStoredQueryParameter     */
+    /** default parameter of ModelStoredQueryParameter
+     * @phpstan-var array<string,scalar>
+     */
     private array $parameterDefaultValues = [];
 
     private function __construct(Connection $connection)
@@ -58,6 +67,9 @@ class StoredQuery implements Resource
         $this->sql = $sql;
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
     public function setContextParameters(array $parameters, bool $strict = true): void
     {
         $parameterNames = $this->getParameterNames();
@@ -73,6 +85,9 @@ class StoredQuery implements Resource
         }
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
     public function setParameters(array $parameters): void
     {
         $parameterNames = $this->getParameterNames();
@@ -86,6 +101,7 @@ class StoredQuery implements Resource
         }
     }
 
+    /** @phpstan-ignore-next-line */
     public function getParameters(bool $all = false): array
     {
         if ($all) {
@@ -113,7 +129,6 @@ class StoredQuery implements Resource
 
     /**
      * @param (StoredQueryParameter|ParameterModel)[] $queryParameters
-     * @return void
      */
     private function setQueryParameters(array $queryParameters): void
     {
@@ -130,6 +145,7 @@ class StoredQuery implements Resource
         }
     }
 
+    /** @phpstan-ignore-next-line */
     public function getColumnNames(): array
     {
         static $columnNames;
@@ -148,6 +164,7 @@ class StoredQuery implements Resource
         return $columnNames;
     }
 
+    /** @phpstan-ignore-next-line */
     public function getParameterNames(): array
     {
         return array_keys($this->parameterDefaultValues);

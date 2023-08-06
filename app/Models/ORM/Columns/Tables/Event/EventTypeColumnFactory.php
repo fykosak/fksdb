@@ -13,7 +13,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventModel>
+ * @phpstan-extends ColumnFactory<EventModel,ContestModel>
  */
 class EventTypeColumnFactory extends ColumnFactory
 {

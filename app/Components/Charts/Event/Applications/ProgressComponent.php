@@ -23,6 +23,12 @@ class ProgressComponent extends FrontEndComponent implements Chart
         $this->eventType = $event->event_type;
     }
 
+    /**
+     * @phpstan-return array{
+     *     applications:array<int,array<int,array{created:string,createdBefore:int}>>,
+     *     events:array<int,array<string,mixed>>,
+     * }
+     */
     protected function getData(): array
     {
         $data = [

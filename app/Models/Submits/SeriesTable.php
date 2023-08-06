@@ -61,6 +61,9 @@ class SeriesTable
             ->where('task_id', $this->getTasks()->fetchPairs('task_id', 'task_id'));
     }
 
+    /**
+     * @return array<int,array<int,SubmitModel>>
+     */
     public function getSubmitsTable(): array
     {
         // store submits in 2D hash for better access
@@ -73,6 +76,9 @@ class SeriesTable
         return $submitsTable;
     }
 
+    /**
+     * @return array{contestant:array<int,array{submit:array<int,SubmitModel>|null}>}
+     */
     public function formatAsFormValues(): array
     {
         $submitsTable = $this->getSubmitsTable();

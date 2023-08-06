@@ -10,12 +10,16 @@ use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
-    // @phpstan-ignore-next-line
-    public static function emptyStrToNull(iterable $values): ArrayHash
+    /**
+     * @template TValue
+     * @phpstan-param ArrayHash<TValue> $values
+     * @phpstan-return ArrayHash<TValue>
+     */
+    public static function emptyStrToNull(ArrayHash $values): ArrayHash
     {
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
-            if (is_iterable($value)) {
+            if ($value instanceof ArrayHash) {
                 $result[$key] = self::emptyStrToNull($value);
             } elseif ($value === '') {
                 $result[$key] = null;
@@ -25,28 +29,38 @@ class FormUtils
         }
         return $result;
     }
-    // @phpstan-ignore-next-line
-    public static function emptyStrToNull2(iterable $values): array
+
+    /**
+     * @template TValue
+     * @phpstan-param array<TValue> $values
+     * @phpstan-return array<TValue|null>
+     */
+    public static function emptyStrToNull2(array $values): array
     {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $result[$key] = self::emptyStrToNull2($value);
+                $result[$key] = self::emptyStrToNull2((array)$value);
             } elseif ($value === '') {
                 $result[$key] = null;
             } else {
                 $result[$key] = $value;
             }
         }
-        return $result;
+        return $result; //@phpstan-ignore-line
     }
-    // @phpstan-ignore-next-line
-    public static function removeEmptyValues(iterable $values, bool $ignoreNulls = false): array
+
+    /**
+     * @template TValue
+     * @phpstan-param array<TValue> $values
+     * @phpstan-return array<TValue>
+     */
+    public static function removeEmptyValues(array $values, bool $ignoreNulls = false): array
     {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $clear = self::removeEmptyValues($value, $ignoreNulls);
+                $clear = self::removeEmptyValues((array)$value, $ignoreNulls);
                 if (count($clear)) {
                     $result[$key] = $clear;
                 }
@@ -54,7 +68,7 @@ class FormUtils
                 $result[$key] = $value;
             }
         }
-        return $result;
+        return $result; //@phpstan-ignore-line
     }
 
     public static function findFirstSubmit(Form $form): ?SubmitButton

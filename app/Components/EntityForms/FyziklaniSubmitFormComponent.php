@@ -37,7 +37,10 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{points:int} $values
+         */
+        $values = $form->getValues('array');
         try {
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
             $handler->edit($this->model, (int)$values['points']);

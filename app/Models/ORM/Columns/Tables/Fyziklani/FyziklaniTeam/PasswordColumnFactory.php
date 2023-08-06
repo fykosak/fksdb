@@ -13,7 +13,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<TeamModel2>
+ * @phpstan-extends ColumnFactory<TeamModel2,never>
  */
 class PasswordColumnFactory extends ColumnFactory
 {

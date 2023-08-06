@@ -24,6 +24,13 @@ class FormComponent extends AjaxComponent
         $this->event = $event;
     }
 
+    /**
+     * @return array{
+     *     tasks:array<int,mixed>,
+     *     teams:array<int,mixed>,
+     *     availablePoints:int[],
+     * }
+     */
     protected function getData(): array
     {
         return [

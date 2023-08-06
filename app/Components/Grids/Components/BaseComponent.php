@@ -53,6 +53,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     /**
      * @phpstan-return PresenterButton<M>
+     * @phpstan-param array<string,string> $params
      */
     protected function addPresenterButton(
         string $destination,

@@ -24,6 +24,7 @@ class ParticipantMailCallback extends EventParticipantCallback
     /**
      * @param BaseHolder $holder
      * @throws NotImplementedException
+     * @phpstan-return never
      */
     protected function getData(ModelHolder $holder): array
     {

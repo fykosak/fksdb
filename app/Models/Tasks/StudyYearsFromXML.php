@@ -20,11 +20,14 @@ class StudyYearsFromXML extends Stage
 
     public const XML_ELEMENT_PARENT = 'study-years';
     public const XML_ELEMENT_CHILD = 'study-year';
-
+    /** @phpstan-var array<int,int[]> */
     private array $defaultCategories;
     private TaskCategoryService $taskCategoryService;
     private StudyYearService $studyYearService;
 
+    /**
+     * @phpstan-param array<int,int[]> $defaultCategories
+     */
     public function __construct(
         array $defaultCategories,
         Container $container

@@ -55,7 +55,7 @@ class Paginator extends BaseComponent
     /**
      * @throws BadRequestException
      */
-    public function loadState(array $params): void
+    public function loadState(array $params): void //@phpstan-ignore-line
     {
         parent::loadState($params);
         $this->paginator->page = $this->page;

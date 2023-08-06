@@ -117,6 +117,7 @@ final class TeamModel2 extends Model implements Resource
     }
 
     /**
+     * @param string[] $types
      * @return PersonScheduleModel[][]
      */
     public function getScheduleRest(

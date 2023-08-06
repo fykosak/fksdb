@@ -197,9 +197,7 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     protected function checkUniqueTeamName(string $name): void
     {
-        $query = $this->teamService->getTable()
-            ->where('event_id', $this->event->event_id)
-            ->where('name', $name);
+        $query = $this->event->getTeams()->where('name', $name);
         if (isset($this->model)) {
             $query->where('fyziklani_team_id != ?', $this->model->fyziklani_team_id);
         }
@@ -230,10 +228,19 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @return array<string,array<string,array{required:bool,description?:string}>>
+     */
     abstract protected function getMemberFieldsDefinition(): array;
 
+    /**
+     * @return array<string,array{required:bool,description?:string}>
+     */
     abstract protected function getTeamFieldsDefinition(): array;
 
+    /**
+     * @return FormProcessing[]
+     */
     abstract protected function getProcessing(): array;
 
     /**

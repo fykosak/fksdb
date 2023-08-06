@@ -21,6 +21,9 @@ class PaymentListWebModel extends WebModel
 
     /**
      * @throws \Exception
+     * @phpstan-param array{
+     *     event_id:int,
+     * } $params
      */
     public function getJsonResponse(array $params): array
     {

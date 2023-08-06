@@ -37,13 +37,20 @@ class ReferencedPersonContainer extends ReferencedContainer
 {
     public Resolver $resolver;
     public ?ContestYearModel $contestYear;
-    /** @phpstan-var array<string,array<string,mixed>> */
+    /** @phpstan-var array<string,array<string,array{required?:bool,caption?:string|null,description?:string|null}>> */
     private array $fieldsDefinition;
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
     protected ?EventModel $event;
 
+    /**
+     * @phpstan-param array<string,array<string,array{
+     *     required?:bool,
+     *     caption?:string|null,
+     *     description?:string|null,
+     *     }>> $fieldsDefinition
+     */
     public function __construct(
         Container $container,
         Resolver $resolver,
@@ -198,6 +205,7 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
+     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {
@@ -228,6 +236,9 @@ class ReferencedPersonContainer extends ReferencedContainer
         return $control;
     }
 
+    /**
+     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     */
     protected function appendMetadataField(BaseControl $control, string $fieldName, array $metadata): void
     {
         foreach ($metadata as $key => $value) {

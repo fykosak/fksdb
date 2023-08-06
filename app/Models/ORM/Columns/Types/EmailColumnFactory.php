@@ -13,10 +13,14 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model>
+ * @template ArgType
+ * @phpstan-extends ColumnFactory<Model,never>
  */
 class EmailColumnFactory extends ColumnFactory
 {
+    /**
+     * @param never $args
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());

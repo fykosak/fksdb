@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<LoginModel>
+ * @phpstan-extends ColumnFactory<LoginModel,never>
  */
 class HashColumnFactory extends ColumnFactory
 {

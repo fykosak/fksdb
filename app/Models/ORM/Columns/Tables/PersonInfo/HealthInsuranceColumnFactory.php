@@ -12,7 +12,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonInfoModel>
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
  */
 class HealthInsuranceColumnFactory extends ColumnFactory
 {

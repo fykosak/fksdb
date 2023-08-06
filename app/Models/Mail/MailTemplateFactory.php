@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -53,6 +55,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{token:AuthTokenModel} $data
      */
     public function renderLoginInvitation(array $data, string $lang): string
     {
@@ -61,6 +64,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{token:AuthTokenModel,person:PersonModel,lang:string} $data
      */
     public function renderPasswordRecovery(array $data, string $lang): string
     {
@@ -69,6 +73,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string} $data
      */
     public function renderChangeEmailOld(array $data, Language $lang): string
     {
@@ -78,6 +83,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string,token:AuthTokenModel} $data
      */
     public function renderChangeEmailNew(array $data, Language $lang): string
     {
@@ -87,6 +93,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array<string,mixed> $data
      */
     public function renderWithParameters(string $templateFile, ?string $lang, array $data = []): string
     {

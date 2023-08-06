@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<SubmitModel>
+ * @phpstan-extends ColumnFactory<SubmitModel,never>
  */
 class PointsColumnFactory extends ColumnFactory
 {

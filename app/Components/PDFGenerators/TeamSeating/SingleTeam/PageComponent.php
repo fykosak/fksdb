@@ -15,6 +15,7 @@ class PageComponent extends SeatingPageComponent
 {
     /**
      * @param TeamModel2 $row
+     * @phpstan-param array<string,never> $params
      * @throws BadTypeException
      */
     final public function render($row, array $params = []): void

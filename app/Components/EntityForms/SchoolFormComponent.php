@@ -47,9 +47,22 @@ class SchoolFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{school:array{
+         *     name_full:string,
+         *     name:string,
+         *     name_abbrev:string,
+         *     description:string,
+         *     email:string,
+         *     ic:string,
+         *     izo:string,
+         *     active:bool,
+         *     note:string,
+         *     address_id:int,
+         * }} $values
+         */
         $values = $form->getValues('array');
         $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
-        $this->schoolService->storeModel($schoolData, $this->model ?? null);
+        $this->schoolService->storeModel($schoolData, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS

@@ -63,6 +63,7 @@ abstract class AbstractResultsModel
 
     /**
      * @throws \PDOException
+     * @phpstan-ignore-next-line
      */
     public function getData(ContestCategoryModel $category): array
     {
@@ -139,5 +140,9 @@ abstract class AbstractResultsModel
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * Definition of header.
+     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
+     */
     abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

@@ -14,7 +14,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<TeamModel2>
+ * @phpstan-extends ColumnFactory<TeamModel2,never>
  */
 class NameColumnFactory extends ColumnFactory
 {

@@ -82,6 +82,9 @@ class SchoolProvider implements FilteredDataProvider
         throw new NotImplementedException();
     }
 
+    /**
+     * @return array{label:string,value:int}
+     */
     private function getItem(SchoolModel $school): array
     {
         return [

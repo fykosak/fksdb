@@ -14,7 +14,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PaymentModel|ItemModel>
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel,never>
  */
 class CurrencyColumnFactory extends ColumnFactory
 {

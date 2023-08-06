@@ -56,6 +56,7 @@ abstract class AttendanceFormComponent extends FormComponent
             if ($personSchedule->state->value === PersonScheduleState::PARTICIPATED) { // TODO
                 throw new BadRequestException(_('Already participated'));
             }
+            /** @var array{only_check:bool} $values */
             $values = $form->getValues('array');
             if ($values['only_check']) {
                 $this->getPresenter()->flashMessage(

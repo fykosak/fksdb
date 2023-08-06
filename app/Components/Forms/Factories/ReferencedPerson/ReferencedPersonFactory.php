@@ -34,6 +34,11 @@ class ReferencedPersonFactory
 
     /**
      * @phpstan-return ReferencedId<PersonModel>
+     * @phpstan-param array<string,array<string,array{
+     *     required?:bool,
+     *     caption?:string|null,
+     *     description?:string|null,
+     * }>> $fieldsDefinition
      */
     public function createReferencedPerson(
         array $fieldsDefinition,

@@ -38,6 +38,7 @@ class TimeGeoChart extends FrontEndComponent implements Chart
 
     /**
      * @throws \Throwable
+     * @phpstan-return array<int,array{country:string,created:string,createdBefore:int}>
      */
     protected function getData(): array
     {

@@ -28,6 +28,7 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
 /**
@@ -158,7 +159,9 @@ class ApplicationComponent extends BaseComponent
             if (!$transition || $transition->getValidation()) {
                 try {
                     $this->connection->beginTransaction();
-                    $values = FormUtils::emptyStrToNull($form->getValues()); //@phpstan-ignore-line
+                    /** @var ArrayHash<mixed> $values */
+                    $values = $form->getValues();
+                    $values = FormUtils::emptyStrToNull($values);
                     Debugger::log(json_encode((array)$values), 'app-form');
                     foreach ($this->holder->processings as $processing) {
                         $processing->process($values);

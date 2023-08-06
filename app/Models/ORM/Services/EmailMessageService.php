@@ -22,6 +22,18 @@ final class EmailMessageService extends Service
         return $this->getTable()->where('state', EmailMessageState::WAITING)->limit($limit);
     }
 
+    /**
+     * @phpstan-param array{
+     *     recipient_person_id?:int,
+     *     recipient?:string,
+     *     sender:string,
+     *     reply_to?:string|null,
+     *     subject:string,
+     *     carbon_copy?:string,
+     *     blind_carbon_copy?:string,
+     *     text:string,
+     * } $data
+     */
     public function addMessageToSend(array $data): EmailMessageModel
     {
         $data['state'] = EmailMessageState::WAITING;

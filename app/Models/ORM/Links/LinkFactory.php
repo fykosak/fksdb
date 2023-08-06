@@ -49,7 +49,7 @@ abstract class LinkFactory
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      * @throws \ReflectionException
-     * @phpstan-return array{string,array<string,mixed>}
+     * @phpstan-return array{string,array<string,scalar>}
      */
     public function createLinkParameters(Model $model): array
     {
@@ -65,6 +65,10 @@ abstract class LinkFactory
 
     abstract protected function getDestination(Model $model): string;
 
+    /**
+     * @phpstan-param M $model
+     * @phpstan-return array<string,scalar>
+     */
     abstract protected function prepareParams(Model $model): array;
 
     abstract public function getText(): string;

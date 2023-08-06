@@ -27,6 +27,12 @@ class UploadedStorage implements SubmitStorage
      *         It's a bit dangerous that only supported filetype is hard-coded in this class
      */
     public const FINAL_EXT = '.pdf';
+    /**
+     * @phpstan-var array<int,array{
+     *     'file':string,
+     *     'submit':SubmitModel
+     * }>
+     */
     private ?array $todo = null;
     /** @var string  Absolute path to (existing) directory of the storage. */
     private string $root;

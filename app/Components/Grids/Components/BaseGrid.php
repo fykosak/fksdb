@@ -70,6 +70,7 @@ abstract class BaseGrid extends BaseComponent
 
     /**
      * @throws BadTypeException|\ReflectionException
+     * @param string[] $fields
      */
     protected function addColumns(array $fields): void
     {

@@ -156,7 +156,7 @@ final class AuthenticationPresenter extends BasePresenter
                 ]
             );
             $ownerDetails = $this->googleProvider->getResourceOwner($token); // @phpstan-ignore-line
-            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
+            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray()); // @phpstan-ignore-line
             $this->getUser()->login($login);
             $this->initialRedirect();
         } catch (UnknownLoginException $exception) {
@@ -219,7 +219,10 @@ final class AuthenticationPresenter extends BasePresenter
      */
     private function loginFormSubmitted(\Nette\Forms\Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{id:string,password:string} $values
+         */
+        $values = $form->getValues('array');
         try {
             $this->getUser()->login($values['id'], $values['password']);
             $this->initialRedirect();
@@ -253,8 +256,10 @@ final class AuthenticationPresenter extends BasePresenter
     {
         $connection = $this->authTokenService->explorer->getConnection();
         try {
-            $values = $form->getValues();
-
+            /**
+             * @phpstan-var array{id:string} $values
+             */
+            $values = $form->getValues('array');
             $connection->beginTransaction();
             try {
                 $login = $this->passwordAuthenticator->findLogin($values['id']);

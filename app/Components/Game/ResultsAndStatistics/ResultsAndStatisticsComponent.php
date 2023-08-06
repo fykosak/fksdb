@@ -48,6 +48,25 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     /**
      * @throws NotSetGameParametersException
      * @throws BadTypeException
+     * @phpstan-return array{
+     *  availablePoints:int[],
+     *  basePath:string,
+     *  gameStart:string,
+     *  gameEnd:string,
+     *  times:array{
+     *      toStart:int,
+     *      toEnd:int,
+     *      visible:bool,
+     *  },
+     *  lastUpdated:string,
+     *  isOrg:bool,
+     *  refreshDelay:int,
+     *  tasksOnBoard:int,
+     *  teams:mixed,
+     *  tasks:mixed,
+     *  submits:mixed,
+     *  categories:string[],
+     * }
      */
     protected function getData(): array
     {

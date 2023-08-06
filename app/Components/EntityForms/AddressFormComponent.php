@@ -57,8 +57,12 @@ class AddressFormComponent extends EntityFormComponent
     {
         try {
             $this->postContactService->explorer->getConnection()->beginTransaction();
+            /**
+             * @phpstan-var array{address:array<string,mixed>} $values
+             */
             $values = $form->getValues('array');
             $address = (new AddressHandler($this->container))->store(
+            /** @phpstan-ignore-next-line */
                 $values[self::CONTAINER],
                 isset($this->model) ? $this->model->address : null
             );

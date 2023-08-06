@@ -14,7 +14,7 @@ class TasksFromXML extends Stage
 {
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
-    /** @var array   xml element => task column */
+    /** @phpstan-var array<string,string> */
     private static array $xmlToColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',

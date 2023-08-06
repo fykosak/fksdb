@@ -14,6 +14,9 @@ class ArrayOptions implements OptionsProvider
     /** @phpstan-var array<string,string> */
     private array $options;
 
+    /**
+     * @phpstan-param array<string,string> $options
+     */
     public function __construct(array $options, bool $useKeys = true)
     {
         if (!$useKeys) {
@@ -23,6 +26,9 @@ class ArrayOptions implements OptionsProvider
         }
     }
 
+    /**
+     * @phpstan-return array<string,string>
+     */
     public function getOptions(Field $field): array
     {
         return $this->options;

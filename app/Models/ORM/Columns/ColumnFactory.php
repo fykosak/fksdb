@@ -18,6 +18,7 @@ use Nette\Utils\Html;
 
 /**
  * @template M of Model = Model
+ * @phpstan-template ArgType
  */
 abstract class ColumnFactory
 {
@@ -31,6 +32,9 @@ abstract class ColumnFactory
     protected string $tableName;
     protected string $modelAccessKey;
     protected ?string $description;
+    /**
+     * @phpstan-var array{'size':int|null}
+     */
     protected array $metaData;
     protected bool $required = false;
     protected bool $omitInputField = false;
@@ -64,6 +68,7 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     final public function createField(...$args): BaseControl
     {
@@ -113,6 +118,9 @@ abstract class ColumnFactory
         return $this->description ? _($this->description) : null;
     }
 
+    /**
+     * @phpstan-return array{'size':int|null}
+     */
     final protected function getMetaData(): array
     {
         if (!isset($this->metaData)) {
@@ -123,6 +131,7 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     protected function createFormControl(...$args): BaseControl
     {

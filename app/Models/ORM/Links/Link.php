@@ -44,6 +44,7 @@ class Link extends LinkFactory
 
     /**
      * @phpstan-param M $model
+     * @phpstan-return array<string,scalar>
      */
     protected function prepareParams(Model $model): array
     {

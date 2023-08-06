@@ -16,7 +16,7 @@ use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<OrgModel>
+ * @phpstan-extends ColumnFactory<OrgModel,never>
  */
 class DomainAliasColumnFactory extends ColumnFactory
 {

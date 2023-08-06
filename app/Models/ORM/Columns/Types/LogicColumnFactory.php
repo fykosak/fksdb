@@ -12,7 +12,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model>
+ * @phpstan-extends ColumnFactory<Model,never>
  */
 class LogicColumnFactory extends ColumnFactory
 {

@@ -19,7 +19,11 @@ class InterestedMailCallback extends EventParticipantCallback
     }
 
     /**
-     * @param BaseHolder $holder
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
      */
     protected function getData(ModelHolder $holder): array
     {

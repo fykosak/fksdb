@@ -26,9 +26,15 @@ abstract class ReferencedHandler
     /**
      * @phpstan-param M|null $model
      * @phpstan-return M|null
+     * @phpstan-ignore-next-line
      */
     abstract public function store(array $values, ?Model $model = null): ?Model;
 
+    /**
+     * @template TArray of array<string,mixed>|array<string,array<string,mixed>>
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
     protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
     {
         foreach ($values as $key => $value) {

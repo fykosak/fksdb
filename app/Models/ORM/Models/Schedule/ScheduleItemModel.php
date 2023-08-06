@@ -164,10 +164,10 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', (string)$this->schedule_item_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'totalCapacity' => $this->capacity,
-            'usedCapacity' => $this->getUsedCapacity(),
-            'scheduleItemId' => $this->schedule_item_id,
+            'scheduleGroupId' => (string)$this->schedule_group_id,
+            'totalCapacity' => (string)$this->capacity,
+            'usedCapacity' => (string)$this->getUsedCapacity(),
+            'scheduleItemId' => (string)$this->schedule_item_id,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'description' => $this->description->__serialize(),

@@ -77,11 +77,16 @@ class PersonFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $connection = $this->personService->explorer->getConnection();
-        $values = $form->getValues();
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-var array{
+         *     person_info: array<string,mixed>,
+         *     person: array{gender?:string|null,family_name:string}
+         * } $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values);
         $connection->beginTransaction();
         $this->logger->clear();
+        /** @phpstan-ignore-next-line */
         $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->personInfoService->storeModel(
             array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),

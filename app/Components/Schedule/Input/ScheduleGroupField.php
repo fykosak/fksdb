@@ -46,6 +46,10 @@ class ScheduleGroupField extends SelectBox
 
     /**
      * @throws \Exception
+     * @phpstan-return array{
+     *     group:array<string,mixed>,
+     *     options:array<string,bool>,
+     * }
      */
     protected function getData(): array
     {

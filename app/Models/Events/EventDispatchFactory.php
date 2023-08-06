@@ -43,6 +43,9 @@ class EventDispatchFactory
         $this->templateDir = $templateDir;
     }
 
+    /**
+     * @param string[] $key
+     */
     public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
     {
         $this->definitions[] = [

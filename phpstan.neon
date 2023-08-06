@@ -5,20 +5,20 @@ parameters:
         - libs
         #- tests
     ignoreErrors:
-        - '#Property .* type has no value type specified in iterable type array.#'
-        - '#Method .* return type has no value type specified in iterable type array.#'
-        - '#Method .* has parameter .* with no value type specified in iterable type array.#'
         - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'
         - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
         - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
-        - '#Method .* has parameter \$args with no type specified.#'
-        - '#.*with generic class Nette\\Utils\\ArrayHash but does not specify its types: T#'
-        - '#Cannot access offset .* on array\|object.#'
         - '#Access to an undefined property Nette\\Application\\UI\\Template|stdClass::.*.#'
+        - '#Method .*::__toArray\(\) return type has no value type specified in iterable type array.#'
     excludePaths:
         - app/Models/Persons/Deduplication/*.php
         - app/Components/Controls/Breadcrumbs/*.php
         - app/Components/EntityForms/RegisterTeacherFormComponent.php
         - app/Models/ORM/Columns/Tables/Contestant/ContestCategoryColumnFactory.php
         - app/Models/ORM/Columns/Tables/Event/EventRole.php
+        - app/Models/Results/Models/SchoolCumulativeResultsModel.php
+        - app/Components/PDFGenerators/*
+        - app/Models/News.php
+        - libs/Forms/KdybyReplicator/KdybyReplicator.php
+        - app/Models/WebService/*
 

@@ -24,7 +24,7 @@ final class ORMFactory
     }
 
     /**
-     * @phpstan-return ColumnFactory<Model>
+     * @phpstan-return ColumnFactory<Model,mixed>
      * @throws MissingServiceException
      * @throws BadTypeException
      */

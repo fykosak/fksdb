@@ -16,7 +16,7 @@ class ExportFormatFactory
     public const CSV_HEADLESS = 'csv';
     public const CSV_HEAD = 'csvh';
     public const CSV_QUOTE_HEAD = 'csvqh';
-
+    /** @phpstan-var array{'csv':string,'csvh':string,'csvqh':string} */
     public array $defaultFormats;
 
     public function __construct()

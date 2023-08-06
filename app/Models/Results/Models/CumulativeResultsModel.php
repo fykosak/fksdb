@@ -17,13 +17,13 @@ class CumulativeResultsModel extends AbstractResultsModel
     protected array $series;
 
     /**
-     * Cache
-     * @var array
+     * @phpstan-var array<string,array<int,array{'label':string,'limit':float|int|null,'alias':string}>>
      */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
@@ -40,7 +40,7 @@ class CumulativeResultsModel extends AbstractResultsModel
                 }
 
                 $dataColumns[] = [
-                    self::COL_DEF_LABEL => $series,
+                    self::COL_DEF_LABEL => (string)$series,
                     self::COL_DEF_LIMIT => $points,
                     self::COL_ALIAS => self::DATA_PREFIX . count($dataColumns),
                 ];
@@ -65,6 +65,9 @@ class CumulativeResultsModel extends AbstractResultsModel
         return $this->dataColumns[$category->label];
     }
 
+    /**
+     * @return int[]
+     */
     public function getSeries(): array
     {
         return $this->series;

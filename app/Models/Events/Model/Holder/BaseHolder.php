@@ -30,6 +30,7 @@ class BaseHolder implements ModelHolder
     public EventModel $event;
     private EventParticipantService $service;
     private ?EventParticipantModel $model;
+    /** @phpstan-var array<string,mixed> */
     public array $data = [];
 
     /** @var Field[] */

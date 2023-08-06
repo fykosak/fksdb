@@ -13,7 +13,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventModel>
+ * @phpstan-extends ColumnFactory<EventModel,never>
  */
 class EventLink extends ColumnFactory
 {

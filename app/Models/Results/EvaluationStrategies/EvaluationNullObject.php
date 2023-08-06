@@ -56,6 +56,7 @@ class EvaluationNullObject extends EvaluationStrategy
 
     /**
      * @throws NotImplementedException
+     * @phpstan-return never
      */
     protected function getCategoryMap(): array
     {

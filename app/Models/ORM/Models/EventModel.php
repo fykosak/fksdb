@@ -276,6 +276,9 @@ final class EventModel extends Model implements Resource, NodeCreator
         throw new GameException(_('Game handler does not exist for this event'));
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getParameters(): array
     {
         $parameters = $this->parameters ? Neon::decode($this->parameters) : [];

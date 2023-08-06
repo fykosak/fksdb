@@ -26,6 +26,7 @@ class PageComponent extends SeatingPageComponent
 
     /**
      * @param mixed $row
+     * @phpstan-param ('dev'|'all')[] $params
      */
     final public function render($row, array $params = []): void
     {

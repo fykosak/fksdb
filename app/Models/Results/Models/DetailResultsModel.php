@@ -15,11 +15,14 @@ class DetailResultsModel extends AbstractResultsModel
 {
 
     protected int $series;
-    /** Cache */
+    /**
+     * @phpstan-var array<string,array<int,array{'label':string,'limit':float|int|null,'alias':string}>>
+     */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {

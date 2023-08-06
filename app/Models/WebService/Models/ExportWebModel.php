@@ -93,6 +93,7 @@ class ExportWebModel extends WebModel
         return $this->contestAuthorizator->isAllowed(
             $query,
             'execute',
+            /** @phpstan-ignore-next-line */
             $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }

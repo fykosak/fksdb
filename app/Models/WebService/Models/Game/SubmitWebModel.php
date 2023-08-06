@@ -33,6 +33,15 @@ class SubmitWebModel extends WebModel
         ]);
     }
 
+    /**
+     * @param array{
+     *     method:string,
+     *     event_id:int,
+     *     code:string,
+     *     points:int,
+     * } $params
+     * @return Message[]
+     */
     public function getJsonResponse(array $params): array
     {
         try {

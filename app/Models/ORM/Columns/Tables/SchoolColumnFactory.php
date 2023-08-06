@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<SchoolModel>
+ * @phpstan-extends ColumnFactory<SchoolModel,never>
  */
 class SchoolColumnFactory extends ColumnFactory
 {

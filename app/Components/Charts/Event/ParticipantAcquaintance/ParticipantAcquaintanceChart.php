@@ -22,6 +22,9 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
         $this->event = $event;
     }
 
+    /**
+     * @return array<int,array{person:array{name:string,gender:string},participation:array<int,int>}>
+     */
     public function getData(): array
     {
         $data = [];

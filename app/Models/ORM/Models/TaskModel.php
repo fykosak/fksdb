@@ -117,6 +117,9 @@ final class TaskModel extends Model
         return Strings::webalize($this->label, null, false);
     }
 
+    /**
+     * @phpstan-return array{solversCount:int,averagePoints:float|null}
+     */
     public function getTaskStats(): array
     {
         $count = 0;
@@ -131,6 +134,16 @@ final class TaskModel extends Model
         return ['solversCount' => $count, 'averagePoints' => $count ? ($sum / $count) : null];
     }
 
+    /**
+     * @phpstan-return array{
+     *     taskId:int,
+     *     series:int,
+     *     label:string,
+     *     name:array<string,string>,
+     *     taskNumber:int,
+     *     points:int,
+     * }
+     */
     public function __toArray(): array
     {
         return [

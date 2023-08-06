@@ -11,7 +11,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ColumnFactory<OrgModel>
+ * @phpstan-extends ColumnFactory<OrgModel,never>
  */
 class TexSignatureColumnFactory extends ColumnFactory
 {

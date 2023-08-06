@@ -39,6 +39,10 @@ class AddressHandler extends ReferencedHandler
 
     /**
      * @param AddressModel|null $model
+     * @phpstan-param array{
+     *     target:string,
+     *     city:string,
+     * }$values
      */
     public function store(array $values, ?Model $model = null): ?AddressModel
     {
@@ -65,6 +69,12 @@ class AddressHandler extends ReferencedHandler
         return $this->addressService->storeModel($data, $model);
     }
 
+    /**
+     * @return array{
+     *     country_subdivision_id?:int,
+     *     country_id:int,
+     * }|null
+     */
     public function inferCountry(?string $postalCode): ?array
     {
         if (!$postalCode) {

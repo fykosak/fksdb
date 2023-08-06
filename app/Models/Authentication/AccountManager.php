@@ -20,6 +20,7 @@ use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
@@ -111,9 +112,13 @@ class AccountManager
         $until = DateTime::from($this->recoveryExpiration);
         $token = $this->authTokenService->createToken($login, AuthTokenType::tryFrom(AuthTokenType::RECOVERY), $until);
         $data = [];
+        $person = $login->person;
+        if (!$person) {
+            throw new BadRequestException();
+        }
         $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
-            'person' => $login->person,
+            'person' => $person,
             'lang' => $lang,
         ], $lang);
         $data['subject'] = _('Password recovery');

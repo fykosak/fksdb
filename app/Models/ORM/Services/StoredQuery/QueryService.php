@@ -22,6 +22,7 @@ final class QueryService extends Service
 
     /**
      * @phpstan-return TypedSelection<QueryModel>
+     * @param int[] $tagTypeIds
      */
     public function findByTagType(array $tagTypeIds): TypedSelection
     {

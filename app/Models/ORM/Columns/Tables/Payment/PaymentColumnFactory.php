@@ -19,7 +19,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PaymentModel|ItemModel>
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel,never>
  */
 class PaymentColumnFactory extends ColumnFactory
 {

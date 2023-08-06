@@ -11,7 +11,7 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ColumnFactory<PersonInfoModel>
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
  */
 class HomepageColumnFactory extends ColumnFactory
 {

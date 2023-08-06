@@ -218,7 +218,7 @@ final class DeduplicatePresenter extends BasePresenter
     private function handleMergeFormSuccess(Form $form): void
     {
 
-        $values = $form->getValues();
+        $values = $form->getValues('array');
         $values = FormUtils::emptyStrToNull2($values);//@phpstan-ignore-line
 
         $merger = $this->merger;

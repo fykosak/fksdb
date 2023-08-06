@@ -110,4 +110,26 @@ final class ContestModel extends Model
             ->fetch();
         return $contestYear;
     }
+
+    /**
+     * @phpstan-return array{
+     *      contestId:int,
+     *      contest:string,
+     *      name:string,
+     *      currentYear:int,
+     *      firstYear:int,
+     *      lastYear:int,
+     * }
+     */
+    public function __toArray(): array
+    {
+        return [
+            'contestId' => $this->contest_id,
+            'contest' => $this->getContestSymbol(),
+            'name' => $this->name,
+            'currentYear' => $this->getCurrentContestYear()->year,
+            'firstYear' => $this->getFirstYear(),
+            'lastYear' => $this->getLastYear(),
+        ];
+    }
 }

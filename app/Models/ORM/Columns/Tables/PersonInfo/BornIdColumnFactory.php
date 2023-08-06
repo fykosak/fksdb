@@ -12,7 +12,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ColumnFactory<PersonInfoModel>
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
  */
 class BornIdColumnFactory extends ColumnFactory
 {

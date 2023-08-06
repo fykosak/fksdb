@@ -22,11 +22,15 @@ abstract class AbstractPageComponent extends BaseComponent
 
     /**
      * @param TRow $row
+     * @phpstan-param array<string,mixed> $params
      */
     abstract public function render($row, array $params = []): void;
 
     abstract public function getPageFormat(): string;
 
+    /**
+     * @return array<string,string>
+     */
     public static function getAvailableFormats(): array
     {
         return [

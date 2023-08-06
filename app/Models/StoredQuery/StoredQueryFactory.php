@@ -10,6 +10,8 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\XMLNodeSerializer;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -32,7 +34,9 @@ class StoredQueryFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param (ParameterModel|StoredQueryParameter)[] $parameters
+     * @phpstan-param (ParameterModel|StoredQueryParameter)[] $parameters
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
     {
@@ -48,6 +52,9 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
     public function createQueryFromQid(string $qid, array $parameters): StoredQuery
     {
         $patternQuery = $this->storedQueryService->findByQid($qid);
@@ -62,6 +69,11 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @phpstan-ignore-next-line
+     */
     private function presenterContextParameters(BasePresenter $presenter): array
     {
         return [

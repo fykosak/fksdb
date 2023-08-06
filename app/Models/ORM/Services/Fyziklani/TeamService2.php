@@ -25,9 +25,7 @@ final class TeamService2 extends Service
         return $query->count() == 0;
     }
 
-    /**
-     * @return array[]
-     */
+    /** @phpstan-ignore-next-line */
     public static function serialiseTeams(EventModel $event): array
     {
         $teams = [];

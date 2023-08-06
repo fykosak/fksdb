@@ -55,6 +55,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific options.
+     * @return array<string,mixed>
      */
     final public function getOptions(): array
     {

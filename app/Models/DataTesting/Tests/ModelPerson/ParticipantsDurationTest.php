@@ -52,6 +52,9 @@ class ParticipantsDurationTest extends PersonTest
         }
     }
 
+    /**
+     * @phpstan-param array{int,int} $thresholds
+     */
     private function evaluateThresholds(int $delta, array $thresholds): string
     {
         if ($delta < $thresholds[0]) {

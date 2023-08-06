@@ -20,10 +20,11 @@ final class SchedulePaymentService extends Service
 {
 
     /**
-     * @throws DuplicatePaymentException
+     * @phpstan-param array<array<int,bool>> $data
      * @throws EmptyDataException
      * @throws StorageException
      * @throws ModelException
+     * @throws DuplicatePaymentException
      */
     public function storeItems(array $data, PaymentModel $payment, string $lang): void
     {
@@ -53,6 +54,10 @@ final class SchedulePaymentService extends Service
         }
     }
 
+    /**
+     * @param array<array<int,bool>> $data
+     * @return array<int,int>
+     */
     private function filerData(array $data): array
     {
         $results = [];

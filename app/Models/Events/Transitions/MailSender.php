@@ -74,6 +74,12 @@ class MailSender extends MailCallback
 
     /**
      * @param BaseHolder $holder
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     *     reply_to:string,
+     * }
      */
     protected function getData(ModelHolder $holder): array
     {
@@ -108,6 +114,7 @@ class MailSender extends MailCallback
     /**
      * @param BaseHolder $holder
      * @throws \ReflectionException
+     * @phpstan-return array{string,array<string,scalar>}
      */
     public function createLinkArgs(ModelHolder $holder, AuthTokenModel $token): array
     {

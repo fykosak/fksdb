@@ -30,6 +30,8 @@ class PresenterBuilder
      * @param bool $newInstance when false all instances of the same class
      * will be the same and only initilization methods are called
      * @throws BadRequestException
+     * @phpstan-param array<string,mixed> $params
+     * @phpstan-param array<string,mixed> $baseParams
      */
     public function preparePresenter(
         string $presenterName,

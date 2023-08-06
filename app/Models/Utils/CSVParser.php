@@ -22,7 +22,9 @@ class CSVParser implements \Iterator
     private string $delimiter;
     private int $indexType;
     private ?int $rowNumber = null;
+    /** @phpstan-var array<string,string>|null */
     private ?array $currentRow = null;
+    /** @phpstan-var array<string,string> */
     private ?array $header;
 
     public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';')
@@ -35,6 +37,9 @@ class CSVParser implements \Iterator
         }
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function current(): array
     {
         return $this->currentRow;
@@ -51,13 +56,13 @@ class CSVParser implements \Iterator
         if (!$newRow) {
             return;
         }
-        $this->currentRow = $newRow;
+        $this->currentRow = $newRow; //@phpstan-ignore-line
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $result = [];
             foreach ($this->header as $i => $name) {
                 $result[$name] = $this->currentRow[$i];
             }
-            $this->currentRow = $result;
+            $this->currentRow = $result; //@phpstan-ignore-line
         }
         $this->rowNumber++;
     }

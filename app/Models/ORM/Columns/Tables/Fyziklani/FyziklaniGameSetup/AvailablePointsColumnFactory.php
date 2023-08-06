@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<GameSetupModel>
+ * @phpstan-extends ColumnFactory<GameSetupModel,never>
  */
 class AvailablePointsColumnFactory extends ColumnFactory
 {

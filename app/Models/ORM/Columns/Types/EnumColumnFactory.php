@@ -14,7 +14,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model>
+ * @phpstan-extends ColumnFactory<Model,never>
  */
 class EnumColumnFactory extends ColumnFactory
 {
@@ -29,6 +29,9 @@ class EnumColumnFactory extends ColumnFactory
         $this->className = $className;
     }
 
+    /**
+     * @param never $args
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $items = [];

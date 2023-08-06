@@ -41,7 +41,17 @@ class ProductFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{container:array{
+         *       name_cs:string,
+         *       name_en:string,
+         *       description_cs:string,
+         *       description_en:string,
+         *       category:string,
+         *       note:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
         $this->productService->storeModel($data, $this->model);

@@ -32,6 +32,7 @@ class ParticipantListLink extends LinkFactory
 
     /**
      * @param EventModel $model
+     * @phpstan-return array{eventId:int}
      */
     protected function prepareParams(Model $model): array
     {
