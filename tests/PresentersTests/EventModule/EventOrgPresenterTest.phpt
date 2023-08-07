@@ -42,6 +42,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
             'name' => 'Dummy Event',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
         $this->eventOrg = $this->container->getByType(EventOrgService::class)->storeModel([
