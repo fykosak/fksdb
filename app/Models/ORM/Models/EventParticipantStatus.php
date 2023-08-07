@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
-public const INIT = '__init';
+    public const INIT = '__init';
     public const APPLIED = 'applied';
     public const APPLIED_NODSEF = 'applied.nodsef';
     public const APPLIED_NOTSAF = 'applied.notsaf';
