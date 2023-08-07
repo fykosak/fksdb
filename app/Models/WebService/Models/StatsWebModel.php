@@ -10,6 +10,11 @@ use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{contest_id:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
+ * @phpstan-import-type SerializedTaskModel from TaskModel
+ * @phpstan-import-type TaskStatsType from TaskModel
+ */
 class StatsWebModel extends WebModel
 {
     private ContestYearService $contestYearService;
@@ -87,19 +92,6 @@ class StatsWebModel extends WebModel
         ]);
     }
 
-    /**
-     * @param array{contest_id:int,year:int} $params
-     * @return array<int,array{
-     *     taskId:int,
-     *     series:int,
-     *     label:string,
-     *     name:array<string,string>,
-     *     taskNumber:int,
-     *     points:int,
-     *     solversCount:int,
-     *     averagePoints:float|null
-     * }>
-     */
     public function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);

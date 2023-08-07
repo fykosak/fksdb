@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\PersonFlag;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ */
 class FlagFactory
 {
     /**
-     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl
     {

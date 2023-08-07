@@ -7,7 +7,9 @@ namespace FKSDB\Models\ORM\Models;
 use Fykosak\NetteORM\Model;
 
 /**
+ * @property-read int $role_id
  * @property-read string $name
+ * @property-read string|null $description
  */
 final class RoleModel extends Model
 {

@@ -84,10 +84,7 @@ final class ApplicationPresenter extends BasePresenter
         if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
             return true;
         }
-        if (
-            (isset($event->registration_begin) && $event->registration_begin->getTimestamp() > time())
-            || (isset($event->registration_end) && $event->registration_end->getTimestamp() < time())
-        ) {
+        if (!$event->isRegistrationOpened()) {
             throw new GoneException();
         }
         return true;
@@ -153,7 +150,7 @@ final class ApplicationPresenter extends BasePresenter
 
         if (
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
             )
         ) {
             $data = $this->tokenAuthenticator->getTokenData();
@@ -245,7 +242,7 @@ final class ApplicationPresenter extends BasePresenter
             $eventId = null;
             if (
                 $this->tokenAuthenticator->isAuthenticatedByToken(
-                    AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                    AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
                 )
             ) {
                 $data = $this->tokenAuthenticator->getTokenData();
@@ -318,7 +315,7 @@ final class ApplicationPresenter extends BasePresenter
     protected function getRole(): PresenterRole
     {
         if ($this->getAction() === 'default') {
-            return PresenterRole::tryFrom(PresenterRole::SELECTED);
+            return PresenterRole::from(PresenterRole::SELECTED);
         }
         return parent::getRole();
     }

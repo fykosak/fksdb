@@ -59,15 +59,15 @@ class SelfACLResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
             $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
             || $this->isSelf($person)
         ) {
-            return ResolutionMode::tryFrom(ResolutionMode::OVERWRITE);
+            return ResolutionMode::from(ResolutionMode::OVERWRITE);
         }
-        return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+        return ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

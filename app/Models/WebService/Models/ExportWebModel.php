@@ -11,6 +11,9 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class ExportWebModel extends WebModel
 {
     private StoredQueryFactory $storedQueryFactory;

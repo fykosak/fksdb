@@ -7,15 +7,18 @@ namespace FKSDB\Components\Badges;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Utils\Html;
 
+/**
+ * @template ArgType
+ */
 abstract class Badge extends BaseComponent
 {
     /**
-     * @phpstan-param mixed $args
+     * @phpstan-param ArgType $args
      */
     abstract public static function getHtml(...$args): Html;
 
     /**
-     * @phpstan-param mixed $args
+     * @phpstan-param ArgType $args
      */
     final public function render(...$args): void
     {

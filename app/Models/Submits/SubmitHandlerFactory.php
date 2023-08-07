@@ -96,7 +96,7 @@ class SubmitHandlerFactory
 
     public function handleSave(FileUpload $file, TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        $submit = $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::UPLOAD));
+        $submit = $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::UPLOAD));
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
@@ -104,7 +104,7 @@ class SubmitHandlerFactory
 
     public function handleQuizSubmit(TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        return $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::QUIZ));
+        return $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::QUIZ));
     }
 
     private function storeSubmit(TaskModel $task, ContestantModel $contestant, SubmitSource $source): SubmitModel

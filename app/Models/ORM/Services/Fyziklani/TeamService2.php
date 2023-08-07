@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @phpstan-extends Service<TeamModel2>
+ * @phpstan-import-type SerializedTeamModel from TeamModel2
  */
 final class TeamService2 extends Service
 {
@@ -25,7 +26,9 @@ final class TeamService2 extends Service
         return $query->count() == 0;
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @return SerializedTeamModel[]
+     */
     public static function serialiseTeams(EventModel $event): array
     {
         $teams = [];

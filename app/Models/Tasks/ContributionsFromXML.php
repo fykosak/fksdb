@@ -14,6 +14,7 @@ use Fykosak\Utils\Logging\Message;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class ContributionsFromXML extends Stage
 {

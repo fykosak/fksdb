@@ -32,6 +32,9 @@ class PipelineFactory
         $this->defaultCategories = $defaultCategories;
     }
 
+    /**
+     * @return Pipeline<SeriesData>
+     */
     public function create(): Pipeline
     {
         $pipeline = new Pipeline();

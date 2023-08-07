@@ -24,14 +24,6 @@ final class RoomModel extends Model implements Resource
         return $this->related(DbNames::TAB_FYZIKLANI_SEAT); //@phpstan-ignore-line
     }
 
-    public function __toArray(): array
-    {
-        return [
-            'roomId' => $this->fyziklani_room_id,
-            'name' => $this->name,
-        ];
-    }
-
     public function getResourceId(): string
     {
         return 'fyziklani.room';

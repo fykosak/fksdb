@@ -116,18 +116,18 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @param class-string<EnumColumn&FakeStringEnum> $enumClassName
-     * @return array{((EnumColumn&FakeStringEnum)|null)[],((EnumColumn&FakeStringEnum)|null)|null}
+     * @phpstan-param class-string<EnumColumn&FakeStringEnum> $enumClassName
+     * @return array{(EnumColumn&FakeStringEnum)[],EnumColumn&FakeStringEnum}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {
         [$sources, $target] = explode('->', $mask);
         return [
             array_map(
-                fn(string $state): ?EnumColumn => $enumClassName::tryFrom($state),
+                fn(string $state): EnumColumn => $enumClassName::from($state),
                 explode('|', $sources)
             ),
-            $enumClassName::tryFrom($target),
+            $enumClassName::from($target),
         ];
     }
 }

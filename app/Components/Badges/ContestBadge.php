@@ -8,11 +8,11 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends Badge<ContestModel|int>
+ */
 class ContestBadge extends Badge
 {
-    /**
-     * @phpstan-param ContestModel|int $args
-     */
     public static function getHtml(...$args): Html
     {
         [$contest] = $args;

@@ -33,6 +33,18 @@ use Nette\Security\Resource;
  * @property-read LocalizedString $long_description
  * @property-read \DateTimeInterface|null $begin
  * @property-read \DateTimeInterface|null $end
+ * @phpstan-type SerializedScheduleItemModel array{
+ *      scheduleGroupId:int,
+ *      price:array<string, string>,
+ *      totalCapacity:int|null,
+ *      usedCapacity:int|null,
+ *      scheduleItemId:int,
+ *      name:array<string, string>,
+ *      begin:\DateTimeInterface,
+ *      end:\DateTimeInterface,
+ *      description:array<string, string>,
+ *      longDescription:array<string, string>,
+ * }
  */
 final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
@@ -104,6 +116,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
+     * @phpstan-return SerializedScheduleItemModel
      * @throws \Exception
      */
     public function __toArray(): array

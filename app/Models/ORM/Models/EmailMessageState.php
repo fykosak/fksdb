@@ -64,6 +64,13 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return [];// TODO
+        return [
+            new self(self::SAVED),
+            new self(self::WAITING),
+            new self(self::SENT),
+            new self(self::FAILED),
+            new self(self::CANCELED),
+            new self(self::REJECTED),
+        ];
     }
 }

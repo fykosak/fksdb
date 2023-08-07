@@ -24,6 +24,12 @@ final class TeamMemberModel extends Model
         return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
     }
 
+    /**
+     * @phpstan-return array{
+     *     participantId:int,
+     *     personId:int,
+     * }
+     */
     public function __toArray(): array
     {
         return [

@@ -10,6 +10,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @phpstan-extends Service<TaskModel>
+ * @phpstan-import-type SerializedTaskModel from TaskModel
  */
 final class TaskService extends Service
 {
@@ -23,7 +24,9 @@ final class TaskService extends Service
         return $task;
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @return SerializedTaskModel[]
+     */
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {
         $tasks = [];

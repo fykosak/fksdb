@@ -12,10 +12,10 @@ use Nette\Security\Resource;
 
 /**
  * @property-read int $query_id
- * @property-read string $qid
- * @property-read string $sql
+ * @property-read string|null $qid
  * @property-read string $name
- * @property-read string $description
+ * @property-read string|null $description
+ * @property-read string $sql
  */
 final class QueryModel extends Model implements Resource
 {

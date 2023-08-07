@@ -112,6 +112,7 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             new self(self::MISSED),
             new self(self::DISQUALIFIED),
             new self(self::CANCELLED),
+            new self(self::INIT),
         ];
     }
 }

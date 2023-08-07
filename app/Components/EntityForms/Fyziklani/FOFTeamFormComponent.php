@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -18,6 +19,10 @@ use Nette\Forms\Form;
 use Nette\Neon\Exception;
 use Nette\Neon\Neon;
 
+/**
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class FOFTeamFormComponent extends TeamFormComponent
 {
 
@@ -30,7 +35,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
-     * @phpstan-return array<string,mixed>
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getMemberFieldsDefinition(): array
     {
@@ -39,7 +44,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
-     * @phpstan-return array<string,mixed>
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getTeacherFieldsDefinition(): array
     {
@@ -149,10 +154,10 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @phpstan-return array{
-     *     name:array{required:bool},
-     *     game_lang:array{required:bool},
-     *     phone:array{required:bool},
-     *     force_a:array{required:bool},
+     *     name:EvaluatedFieldMetaData,
+     *     game_lang:EvaluatedFieldMetaData,
+     *     phone:EvaluatedFieldMetaData,
+     *     force_a:EvaluatedFieldMetaData,
      * }
      */
     protected function getTeamFieldsDefinition(): array

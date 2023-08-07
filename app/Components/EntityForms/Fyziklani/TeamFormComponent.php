@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -28,6 +29,8 @@ use Nette\Forms\Form;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 abstract class TeamFormComponent extends EntityFormComponent
 {
@@ -229,12 +232,12 @@ abstract class TeamFormComponent extends EntityFormComponent
     }
 
     /**
-     * @return array<string,array<string,array{required:bool,description?:string}>>
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     abstract protected function getMemberFieldsDefinition(): array;
 
     /**
-     * @return array<string,array{required:bool,description?:string}>
+     * @return array<string,EvaluatedFieldMetaData>
      */
     abstract protected function getTeamFieldsDefinition(): array;
 

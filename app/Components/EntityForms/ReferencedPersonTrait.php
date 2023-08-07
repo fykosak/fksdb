@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -12,17 +13,16 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\Resolver;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 trait ReferencedPersonTrait
 {
     private ReferencedPersonFactory $referencedPersonFactory;
 
     /**
      * @phpstan-return ReferencedId<PersonModel>
-     * @phpstan-param array<string,array<string,array{
-     *     required?:bool,
-     *     caption?:string|null,
-     *     description?:string|null,
-     *     }>> $fieldDefinition
+     * @phpstan-param EvaluatedFieldsDefinition $fieldDefinition
      */
     protected function createPersonId(
         ContestYearModel $contestYear,

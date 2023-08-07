@@ -227,8 +227,8 @@ final class ApplicationPresenter extends BasePresenter
         return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+            EventParticipantStatus::from(EventParticipantStatus::PAID),
+            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
             $this->getMachine(),
         );
     }

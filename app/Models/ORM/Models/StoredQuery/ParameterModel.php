@@ -8,12 +8,14 @@ use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 /**
- * @property-read ParameterType $type
- * @property-read int $default_integer
- * @property-read string $default_string
+ * @property-read int $parameter_id
  * @property-read int $query_id
+ * @property-read QueryModel $query
  * @property-read string $name
- * @property-read string $description
+ * @property-read string|null $description
+ * @property-read ParameterType $type
+ * @property-read int|null $default_integer
+ * @property-read string|null $default_string
  */
 final class ParameterModel extends Model
 {

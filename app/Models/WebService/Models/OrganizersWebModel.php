@@ -10,6 +10,9 @@ use FKSDB\Models\WebService\XMLHelper;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class OrganizersWebModel extends WebModel
 {
     private ContestService $contestService;

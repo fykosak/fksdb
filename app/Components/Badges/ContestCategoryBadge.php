@@ -8,11 +8,13 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends Badge<ContestCategoryModel>
+ */
 class ContestCategoryBadge extends Badge
 {
     /**
      * @throws BadTypeException
-     * @phpstan-param ContestCategoryModel $args
      */
     public static function getHtml(...$args): Html
     {

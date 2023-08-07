@@ -70,7 +70,7 @@ final class DiplomasPresenter extends BasePresenter
     public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy($category ? TeamCategory::tryFrom($category) : null);
+        $log = $closeStrategy(TeamCategory::tryFrom($category));
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)

@@ -45,7 +45,7 @@ class OrderColumnFactory extends ColumnFactory
         if (\array_key_exists($model->order, $this->getOrderMapping())) {
             return (new StringPrinter())($this->getOrderMapping()[$model->order]);
         }
-        return (new StringPrinter())($model->order);
+        return (new StringPrinter())((string)$model->order);
     }
 
     protected function createFormControl(...$args): BaseControl

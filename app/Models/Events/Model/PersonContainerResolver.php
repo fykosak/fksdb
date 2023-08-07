@@ -44,8 +44,8 @@ class PersonContainerResolver implements Resolver
         if (!$person) {
             return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
         }
-        return ($this->isModifiable($person)) ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
-            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+        return ($this->isModifiable($person)) ? ResolutionMode::from(ResolutionMode::OVERWRITE)
+            : ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

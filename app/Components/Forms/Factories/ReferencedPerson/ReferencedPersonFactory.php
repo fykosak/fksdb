@@ -17,6 +17,9 @@ use FKSDB\Models\Persons\Resolvers\Resolver;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class ReferencedPersonFactory
 {
     use SmartObject;
@@ -34,11 +37,7 @@ class ReferencedPersonFactory
 
     /**
      * @phpstan-return ReferencedId<PersonModel>
-     * @phpstan-param array<string,array<string,array{
-     *     required?:bool,
-     *     caption?:string|null,
-     *     description?:string|null,
-     * }>> $fieldsDefinition
+     * @phpstan-param EvaluatedFieldsDefinition $fieldsDefinition
      */
     public function createReferencedPerson(
         array $fieldsDefinition,
@@ -71,7 +70,7 @@ class ReferencedPersonFactory
     ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $contestYear,
-            $resolution ?? ResolutionMode::tryFrom(ResolutionMode::EXCEPTION)
+            $resolution ?? ResolutionMode::from(ResolutionMode::EXCEPTION)
         );
         if ($event) {
             $handler->setEvent($event);

@@ -27,7 +27,7 @@ class UntilColumnFactory extends ColumnFactory
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Still organizes'));
         } else {
-            return (new StringPrinter())($model->until);
+            return (new StringPrinter())((string)$model->until);
         }
     }
 

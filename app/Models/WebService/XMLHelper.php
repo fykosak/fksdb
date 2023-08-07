@@ -18,7 +18,7 @@ class XMLHelper
 
     /**
      * @throws \DOMException
-     * @phpstan-param array<string,string> $data
+     * @phpstan-param array<string,mixed> $data
      */
     public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void
     {

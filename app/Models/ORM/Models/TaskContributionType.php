@@ -47,9 +47,9 @@ final class TaskContributionType extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::AUTHOR),
-            new static(self::SOLUTION),
-            new static(self::GRADE),
+            new self(self::AUTHOR),
+            new self(self::SOLUTION),
+            new self(self::GRADE),
         ];
     }
 }

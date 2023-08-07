@@ -7,7 +7,7 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 use FKSDB\Models\Transitions\Statement;
 
 /**
- * @implements Statement<false,mixed>
+ * @implements Statement<false,never>
  */
 class Falsable implements Statement
 {

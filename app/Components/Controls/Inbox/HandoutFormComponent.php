@@ -80,7 +80,7 @@ class HandoutFormComponent extends BaseComponent
             /** @var TaskContributionModel $contribution */
             foreach (
                 $task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 ) as $contribution
             ) {
                 $this->taskContributionService->disposeModel($contribution);
@@ -115,7 +115,7 @@ class HandoutFormComponent extends BaseComponent
             $contributions = [
                 ...$contributions,
                 ...$task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 )->fetchAll(),
             ];
         }

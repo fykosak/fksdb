@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+
+/**
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class FOLTeamFormComponent extends TeamFormComponent
 {
     /**
@@ -30,7 +36,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return array<string,array<string,array{required:bool,description?:string}>>
+     * @return EvaluatedFieldsDefinition
      */
     protected function getMemberFieldsDefinition(): array
     {
@@ -84,7 +90,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return array<string,array{required:bool,description?:string}>
+     * @return array<string,EvaluatedFieldMetaData>
      */
     protected function getTeamFieldsDefinition(): array
     {

@@ -105,8 +105,8 @@ class ReferencedId extends HiddenField
         $this->setModel(
             $this->model,
             $force
-                ? ReferencedIdMode::tryFrom(ReferencedIdMode::FORCE)
-                : ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
+                ? ReferencedIdMode::from(ReferencedIdMode::FORCE)
+                : ReferencedIdMode::from(ReferencedIdMode::NORMAL)
         );
 
         if (isset($this->model)) {
@@ -135,7 +135,7 @@ class ReferencedId extends HiddenField
     public function rollback(): void
     {
         if ($this->modelCreated) {
-            $this->setModel(null, ReferencedIdMode::tryFrom(ReferencedIdMode::ROLLBACK));
+            $this->setModel(null, ReferencedIdMode::from(ReferencedIdMode::ROLLBACK));
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }

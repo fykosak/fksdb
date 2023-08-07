@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -15,15 +16,14 @@ use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class PersonFactory extends AbstractFactory
 {
     private const VALUE_LOGIN = 'fromLogin';
     /**
-     * @phpstan-var array<string,array<string,array{
-     *     required?:bool,
-     *     caption?:string,
-     *     description?:string,
-     * }>>
+     * @phpstan-var EvaluatedFieldsDefinition
      */
     private array $fieldsDefinition;
     private string $searchType;
@@ -103,11 +103,7 @@ class PersonFactory extends AbstractFactory
 
     /**
      * @throws \ReflectionException
-     * @phpstan-return array<string,array<string,array{
-     *     required?:bool,
-     *     caption?:string,
-     *     description?:string,
-     * }>>
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     private function evaluateFieldsDefinition(Field $field): array
     {

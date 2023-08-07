@@ -26,10 +26,20 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
  * @property-read \DateTimeInterface|null $modification_end
+ * @phpstan-type SerializedScheduleGroupModel array{
+ *      scheduleGroupId:int,
+ *      scheduleGroupType:string,
+ *      registrationBegin:\DateTimeInterface|null,
+ *      registrationEnd:\DateTimeInterface|null,
+ *      modificationEnd:\DateTimeInterface|null,
+ *      name:array<string, string>,
+ *      eventId:int,
+ *      start:string,
+ *      end:string,
+ * }
  */
 final class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.scheduleGroup';
 
     /**
@@ -40,6 +50,9 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $this->related(DbNames::TAB_SCHEDULE_ITEM); //@phpstan-ignore-line
     }
 
+    /**
+     * @phpstan-return SerializedScheduleGroupModel
+     */
     public function __toArray(): array
     {
         return [

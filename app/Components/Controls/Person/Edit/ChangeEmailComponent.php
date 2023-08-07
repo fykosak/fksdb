@@ -55,7 +55,7 @@ class ChangeEmailComponent extends EntityFormComponent
         parent::render([
             'lang' => Language::tryFrom($this->lang),
             'changeActive' => $login &&
-                $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch(),
+                $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch(),
         ]);
     }
 

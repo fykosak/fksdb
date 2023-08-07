@@ -23,12 +23,12 @@ final class PostContactPresenter extends BasePresenter
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     private function createComponentPostContactForm(PostContactType $type): AddressFormComponent

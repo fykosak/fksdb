@@ -20,6 +20,9 @@ use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class EventWebModel extends WebModel
 {
 
@@ -73,6 +76,12 @@ class EventWebModel extends WebModel
 
     /**
      * @throws \Exception
+     * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
+     * @phpstan-import-type SerializedScheduleItemModel from ScheduleItemModel
+     * @phpstan-return (SerializedScheduleGroupModel&array{
+     *     scheduleItems:SerializedScheduleItemModel[],
+     *     schedule_items:SerializedScheduleItemModel[],
+     *  })[]
      */
     private function createScheduleListArray(EventModel $event): array
     {

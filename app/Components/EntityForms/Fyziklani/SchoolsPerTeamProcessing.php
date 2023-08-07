@@ -10,8 +10,9 @@ use Nette\Forms\Form;
 class SchoolsPerTeamProcessing extends FormProcessing
 {
     /**
-     * @phpstan-param array<string,mixed> $values
-     * @phpstan-return array<string,mixed>
+     * @phpstan-template TValue of array<string,mixed>
+     * @phpstan-param TValue $values
+     * @phpstan-return TValue
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {

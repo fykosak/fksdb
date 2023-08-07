@@ -152,6 +152,18 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return [];
+        return [
+            new self(self::P_5),
+            new self(self::P_6),
+            new self(self::P_7),
+            new self(self::P_8),
+            new self(self::P_9),
+            new self(self::H_1),
+            new self(self::H_2),
+            new self(self::H_3),
+            new self(self::H_4),
+            new self(self::U_ALL),
+            new self(self::NONE),
+        ];
     }
 }

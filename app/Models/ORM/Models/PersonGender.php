@@ -39,8 +39,8 @@ final class PersonGender extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::MALE),
-            new static(self::FEMALE),
+            new self(self::MALE),
+            new self(self::FEMALE),
         ];
     }
 }

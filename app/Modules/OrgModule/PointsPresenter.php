@@ -60,7 +60,7 @@ final class PointsPresenter extends BasePresenter
                 $selection->where(
                     'task_id',
                     $this->getLoggedPerson()->getTaskContributions(
-                        TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                        TaskContributionType::from(TaskContributionType::GRADE)
                     )->fetchPairs('task_id', 'task_id')
                 );
             };

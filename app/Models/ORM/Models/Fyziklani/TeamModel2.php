@@ -25,14 +25,27 @@ use Nette\Security\Resource;
  * @property-read TeamState $state
  * @property-read TeamCategory $category
  * @property-read \DateTimeInterface $created
- * @property-read string $phone
- * @property-read string $note
- * @property-read string $password
+ * @property-read string|null $phone
+ * @property-read string|null $note
+ * @property-read string|null $password
  * @property-read int|null $points
- * @property-read int $rank_total
- * @property-read int $rank_category
- * @property-read int $force_a
- * @property-read GameLang $game_lang
+ * @property-read int|null $rank_total
+ * @property-read int|null $rank_category
+ * @property-read int|null $force_a
+ * @property-read GameLang|null $game_lang
+ * @phpstan-type SerializedTeamModel array{
+ *      teamId:int,
+ *      name:string,
+ *      status:string,
+ *      category:string,
+ *      created:string,
+ *      phone:string|null,
+ *      points:int|null,
+ *      rankCategory:int|null,
+ *      rankTotal:int|null,
+ *      forceA:int|null,
+ *      gameLang:string|null,
+ * }
  */
 final class TeamModel2 extends Model implements Resource
 {
@@ -172,6 +185,9 @@ final class TeamModel2 extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return SerializedTeamModel
+     */
     public function __toArray(): array
     {
         return [

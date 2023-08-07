@@ -38,8 +38,9 @@ class Replicator extends Container
     /** @var callable */
     protected $factoryCallback;
     private bool $submittedBy = false;
+    /** @var ContainerWithOptions[] */
     private array $created = [];
-    private array $httpPost;
+    private array $httpPost; // @phpstan-ignore-line
     private \Nette\DI\Container $container;
 
     /**

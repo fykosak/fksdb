@@ -84,6 +84,6 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::tryFrom(PresenterRole::SELECTED);
+        return PresenterRole::from(PresenterRole::SELECTED);
     }
 }

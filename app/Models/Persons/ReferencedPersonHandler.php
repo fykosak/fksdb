@@ -254,9 +254,9 @@ class ReferencedPersonHandler extends ReferencedHandler
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return PostContactType::tryFrom(PostContactType::PERMANENT);
+                return PostContactType::from(PostContactType::PERMANENT);
             case self::POST_CONTACT_DELIVERY:
-                return PostContactType::tryFrom(PostContactType::DELIVERY);
+                return PostContactType::from(PostContactType::DELIVERY);
             default:
                 throw new InvalidArgumentException();
         }
@@ -306,9 +306,9 @@ class ReferencedPersonHandler extends ReferencedHandler
                     ? $history->{$field}
                     : null;
             case 'post_contact_d':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+                return $person->getPostContact(PostContactType::from(PostContactType::DELIVERY));
             case 'post_contact_p':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
+                return $person->getPostContact(PostContactType::from(PostContactType::PERMANENT));
             case 'person_has_flag':
                 return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
             default:

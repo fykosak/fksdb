@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -27,8 +26,8 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read string $family_name
  * @property-read string $other_name
- * @property-read string $born_family_name
- * @property-read string $display_name
+ * @property-read string|null $born_family_name
+ * @property-read string|null $display_name
  * @property-read PersonGender $gender
  * @property-read \DateTimeInterface $created
  */
@@ -163,8 +162,8 @@ final class PersonModel extends Model implements Resource
 
     public function getActivePostContact(): ?PostContactModel
     {
-        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
-            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->getPostContact(PostContactType::from(PostContactType::PERMANENT)) ??
+            $this->getPostContact(PostContactType::from(PostContactType::DELIVERY));
     }
 
     /**
@@ -371,7 +370,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return PersonGender|FakeStringEnum|mixed|null
+     * @return PersonGender|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

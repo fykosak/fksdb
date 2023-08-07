@@ -14,10 +14,10 @@ use Nette\Security\IIdentity;
  * @property-read int $login_id
  * @property-read int|null $person_id
  * @property-read PersonModel|null $person
- * @property-read string $login
- * @property-read string $hash
+ * @property-read string|null $login
+ * @property-read string|null $hash
  * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface $last_login
+ * @property-read \DateTimeInterface|null $last_login
  * @property-read int $active
  */
 final class LoginModel extends Model implements IIdentity

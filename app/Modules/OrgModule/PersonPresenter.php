@@ -184,7 +184,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     /**
@@ -193,7 +193,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     /**

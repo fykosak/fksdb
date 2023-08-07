@@ -38,11 +38,11 @@ class PaymentTransitions implements TransitionsDecorator
         }
         foreach (
             [
-                PaymentState::tryFrom(PaymentState::IN_PROGRESS),
-                PaymentState::tryFrom(PaymentState::WAITING),
+                PaymentState::from(PaymentState::IN_PROGRESS),
+                PaymentState::from(PaymentState::WAITING),
             ] as $state
         ) {
-            $transition = $machine->getTransitionByStates($state, PaymentState::tryFrom(PaymentState::CANCELED));
+            $transition = $machine->getTransitionByStates($state, PaymentState::from(PaymentState::CANCELED));
             $transition->beforeExecute[] = function (PaymentHolder $holder): void {
                 Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
                 /** @var SchedulePaymentModel $row */

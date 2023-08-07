@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -16,6 +17,10 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ */
 final class SingleReflectionFormFactory
 {
     private ORMFactory $tableReflectionFactory;
@@ -50,7 +55,7 @@ final class SingleReflectionFormFactory
      * @throws BadTypeException
      * @throws OmittedControlException
      * @phpstan-param mixed $args
-     * @phpstan-param array<string,array{required?:bool,caption?:string|null,description?:string|null}> $fields
+     * @phpstan-param array<string,EvaluatedFieldMetaData> $fields
      */
     public function createContainerWithMetadata(
         string $table,
@@ -69,11 +74,7 @@ final class SingleReflectionFormFactory
      * @param mixed ...$args
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @phpstan-param array{
-     *     required?:bool,
-     *     caption?:string|null,
-     *     description?:string|null
-     * } $metaData
+     * @phpstan-param EvaluatedFieldMetaData $metaData
      */
     public function addToContainer(
         ContainerWithOptions $container,
@@ -100,11 +101,7 @@ final class SingleReflectionFormFactory
     }
 
     /**
-     * @phpstan-param array{
-     *      required?:bool,
-     *      caption?:string|null,
-     *      description?:string|null,
-     * } $metadata
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     protected function appendMetadata(BaseControl $control, array $metadata): void
     {

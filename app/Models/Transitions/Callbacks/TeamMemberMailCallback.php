@@ -45,7 +45,7 @@ abstract class TeamMemberMailCallback extends MailCallback
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY),
+            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $holder->getModel()->event->registration_end,
             null,
             true

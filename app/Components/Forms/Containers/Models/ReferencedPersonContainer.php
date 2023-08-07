@@ -32,12 +32,14 @@ use Nette\InvalidArgumentException;
 
 /**
  * @phpstan-extends ReferencedContainer<PersonModel>
+ * @phpstan-type EvaluatedFieldMetaData array{required?:bool,caption?:string|null,description?:string|null}
+ * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>>
  */
 class ReferencedPersonContainer extends ReferencedContainer
 {
     public Resolver $resolver;
     public ?ContestYearModel $contestYear;
-    /** @phpstan-var array<string,array<string,array{required?:bool,caption?:string|null,description?:string|null}>> */
+    /** @phpstan-var EvaluatedFieldsDefinition */
     private array $fieldsDefinition;
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
@@ -45,11 +47,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     protected ?EventModel $event;
 
     /**
-     * @phpstan-param array<string,array<string,array{
-     *     required?:bool,
-     *     caption?:string|null,
-     *     description?:string|null,
-     *     }>> $fieldsDefinition
+     * @phpstan-param EvaluatedFieldsDefinition $fieldsDefinition
      */
     public function __construct(
         Container $container,
@@ -205,7 +203,7 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
-     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {

@@ -10,9 +10,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 
 /**
  * @property-read int $contest_id
- * @property-read int $ac_year
- * @property-read int $year
  * @property-read ContestModel $contest
+ * @property-read int $year
+ * @property-read int $ac_year
  */
 final class ContestYearModel extends Model
 {

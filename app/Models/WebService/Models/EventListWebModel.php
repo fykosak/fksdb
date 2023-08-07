@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class EventListWebModel extends WebModel
 {
 

@@ -14,6 +14,7 @@ use Nette\DI\Container;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class StudyYearsFromXML extends Stage
 {

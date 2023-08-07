@@ -15,9 +15,18 @@ use Nette\Security\Resource;
  * @property-read int $points
  * @property-read int $event_id
  * @property-read EventModel $event
+ * @phpstan-type SerializedTaskModel array{
+ *     label:string,
+ *     points:int,
+ *     taskId:int,
+ *     name:string|null,
+ * }
  */
 final class TaskModel extends Model implements Resource
 {
+    /**
+     * @phpstan-return SerializedTaskModel
+     */
     public function __toArray(bool $hideName = false): array
     {
         return [

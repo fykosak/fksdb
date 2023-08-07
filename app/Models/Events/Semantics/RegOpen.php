@@ -16,7 +16,6 @@ class RegOpen implements Statement
     {
         /** @var BaseHolder $holder */
         [$holder] = $args;
-        return (!$holder->event->registration_begin || $holder->event->registration_begin->getTimestamp() <= time())
-            && (!$holder->event->registration_end || $holder->event->registration_end->getTimestamp() >= time());
+        return $holder->event->isRegistrationOpened();
     }
 }

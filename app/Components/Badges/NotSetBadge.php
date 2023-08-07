@@ -6,11 +6,11 @@ namespace FKSDB\Components\Badges;
 
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends Badge<never>
+ */
 class NotSetBadge extends Badge
 {
-    /**
-     * @phpstan-param never $args
-     */
     public static function getHtml(...$args): Html
     {
         return Html::el('span')->addAttributes(['class' => 'badge bg-warning'])->addText(_('Not set'));

@@ -27,9 +27,9 @@ final class SubmitSource extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::POST),
-            new static(self::QUIZ),
-            new static(self::UPLOAD),
+            new self(self::POST),
+            new self(self::QUIZ),
+            new self(self::UPLOAD),
         ];
     }
 }

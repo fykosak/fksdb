@@ -61,7 +61,7 @@ class NewApplicationsGrid extends BaseGrid
                     return (bool)count(
                         $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
                             $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
+                            EventParticipantStatus::from(Machine::STATE_INIT)
                         )
                     );
                 } catch (\Throwable $exception) {

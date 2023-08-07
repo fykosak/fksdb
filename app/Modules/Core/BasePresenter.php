@@ -91,13 +91,13 @@ abstract class BasePresenter extends Presenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::TOKEN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::HTTP))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
                 $this->tryHttpAuth();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::LOGIN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::LOGIN))) {
                 $this->optionalLoginRedirect();
             }
             $method = $this->formatAuthorizedMethod();

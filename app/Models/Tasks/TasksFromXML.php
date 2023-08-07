@@ -10,6 +10,9 @@ use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 use Fykosak\Utils\Logging\MemoryLogger;
 
+/**
+ * @phpstan-extends Stage<SeriesData>
+ */
 class TasksFromXML extends Stage
 {
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';

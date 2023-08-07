@@ -67,6 +67,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::tryFrom(PresenterRole::ORG);
+        return PresenterRole::from(PresenterRole::ORG);
     }
 }

@@ -13,6 +13,9 @@ use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-import-type SerializedEventModel from EventModel
+ */
 class ProgressComponent extends FrontEndComponent implements Chart
 {
     private EventTypeModel $eventType;
@@ -26,7 +29,7 @@ class ProgressComponent extends FrontEndComponent implements Chart
     /**
      * @phpstan-return array{
      *     applications:array<int,array<int,array{created:string,createdBefore:int}>>,
-     *     events:array<int,array<string,mixed>>,
+     *     events:array<int,SerializedEventModel>,
      * }
      */
     protected function getData(): array

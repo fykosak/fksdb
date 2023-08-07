@@ -99,7 +99,7 @@ class AddressFormComponent extends EntityFormComponent
         $container = $form->getComponent(self::CONTAINER);
         $container->setModel(
             isset($this->model) ? $this->model->address : null,
-            ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
+            ReferencedIdMode::from(ReferencedIdMode::NORMAL)
         );
     }
 

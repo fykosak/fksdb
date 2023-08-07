@@ -16,10 +16,11 @@ use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 /**
+ * @phpstan-import-type SerializedEventModel from EventModel
  * @phpstan-type EventContribution array{
- *     eventOrgs:array<int,array{event:array<string,scalar>,model:null}>,
- *     eventParticipants:array<int,array{event:array<string,scalar>,model:null}>,
- *     eventTeachers:array<int,array{event:array<string,scalar>,model:null}>,
+ *     eventOrgs:array<int,array{event:SerializedEventModel,model:null}>,
+ *     eventParticipants:array<int,array{event:SerializedEventModel,model:null}>,
+ *     eventTeachers:array<int,array{event:SerializedEventModel,model:null}>,
  * }
  * @phpstan-type StateContribution array{
  *     orgs:array<int,array{
@@ -160,13 +161,11 @@ class TimelineComponent extends FrontEndComponent
         $first = $this->person->created;
         $last = new \DateTime();
         foreach ($events as $event) {
-            $begin = $event->begin;
-            if ($begin < $first) {
-                $first = $begin;
+            if ($event->begin < $first) {
+                $first = $event->begin;
             }
-            $end = $event->end;
-            if ($end > $last) {
-                $last = $end;
+            if ($event->end > $last) {
+                $last = $event->end;
             }
         }
         foreach ($dates as $type => $dateTypes) {

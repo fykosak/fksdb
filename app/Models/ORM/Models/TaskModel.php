@@ -14,17 +14,26 @@ use Nette\Utils\Strings;
 /**
  * @property-read int $task_id
  * @property-read string $label
- * @property-read string $name_cs
- * @property-read string $name_en
+ * @property-read string|null $name_cs
+ * @property-read string|null $name_en
  * @property-read LocalizedString $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
  * @property-read int $series
- * @property-read int $tasknr
- * @property-read int $points
+ * @property-read int|null $tasknr
+ * @property-read int|null $points
  * @property-read \DateTimeInterface|null $submit_start
  * @property-read \DateTimeInterface|null $submit_deadline
+ * @phpstan-type SerializedTaskModel array{
+ *     taskId:int,
+ *     series:int,
+ *     label:string,
+ *     name:array<string,string>,
+ *     taskNumber:int|null,
+ *     points:int|null,
+ * }
+ * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
 final class TaskModel extends Model
 {
@@ -118,7 +127,7 @@ final class TaskModel extends Model
     }
 
     /**
-     * @phpstan-return array{solversCount:int,averagePoints:float|null}
+     * @phpstan-return TaskStatsType
      */
     public function getTaskStats(): array
     {
@@ -135,14 +144,7 @@ final class TaskModel extends Model
     }
 
     /**
-     * @phpstan-return array{
-     *     taskId:int,
-     *     series:int,
-     *     label:string,
-     *     name:array<string,string>,
-     *     taskNumber:int,
-     *     points:int,
-     * }
+     * @phpstan-return SerializedTaskModel
      */
     public function __toArray(): array
     {

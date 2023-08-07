@@ -14,6 +14,9 @@ use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class SubmitWebModel extends WebModel
 {
     protected EventService $eventService;

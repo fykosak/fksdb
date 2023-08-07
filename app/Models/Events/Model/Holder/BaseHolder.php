@@ -122,7 +122,7 @@ class BaseHolder implements ModelHolder
             return $model->status;
         }
 
-        return EventParticipantStatus::tryFrom(Machine::STATE_INIT);
+        return EventParticipantStatus::from(Machine::STATE_INIT);
     }
 
     public function setModelState(EventParticipantStatus $state): void
