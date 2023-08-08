@@ -22,12 +22,10 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
-    /**
-     * @phpstan-param array<string,mixed> $params
-     */
-    public function render(array $params = []): void
+    public function render(): void
     {
-        parent::render(['event' => $this->event]);
+        $this->template->event = $this->event;
+        parent::render();
     }
 
     protected function getTemplatePath(): string

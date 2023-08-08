@@ -54,12 +54,10 @@ class AttendanceComponent extends FormComponent
         $this->machine = $machine;
     }
 
-    /**
-     * @phpstan-param array<string,mixed> $params
-     */
-    final public function render(array $params = []): void
+    final public function render(): void
     {
-        parent::render(['transition' => $this->getTransition()]);
+        $this->template->transition = $this->getTransition();
+        parent::render();
     }
 
     protected function getTemplatePath(): string

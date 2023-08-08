@@ -67,10 +67,7 @@ class PreferredLangFormComponent extends FormComponent
         $form->addSelect('preferred_lang')->setItems($items);
     }
 
-    /**
-     * @phpstan-param array<string,mixed> $params
-     */
-    final public function render(array $params = []): void
+    final public function render(): void
     {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);
         parent::render();

@@ -16,6 +16,9 @@ use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-implements XMLNodeSerializer<StoredQuery>
+ */
 class StoredQueryFactory implements XMLNodeSerializer
 {
 

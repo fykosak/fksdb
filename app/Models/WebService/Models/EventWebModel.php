@@ -21,7 +21,12 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ * @phpstan-extends WebModel<array{event_id:int},array{
+ *     teams?: mixed,
+ *     participants?:mixed,
+ *     schedule?:mixed,
+ *     personSchedule?:mixed,
+ * }>
  */
 class EventWebModel extends WebModel
 {
@@ -205,13 +210,6 @@ class EventWebModel extends WebModel
     /**
      * @throws BadRequestException
      * @throws \Exception
-     * @phpstan-return array{
-     *     teams?: mixed,
-     *     participants?:mixed,
-     *     schedule?:mixed,
-     *     personSchedule?:mixed,
-     * }
-     * @phpstan-param array{event_id:int} $params
      */
     public function getJsonResponse(array $params): array
     {

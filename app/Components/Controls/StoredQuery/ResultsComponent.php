@@ -119,7 +119,6 @@ class ResultsComponent extends BaseComponent
 
     /**
      * @param ParameterModel[] $queryParameters
-     * TODO
      */
     private function createParametersValues(array $queryParameters): ContainerWithOptions
     {

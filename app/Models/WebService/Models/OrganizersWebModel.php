@@ -11,7 +11,10 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ * @phpstan-extends WebModel<array{
+ *     contest_id:int,
+ *     year?:int|null,
+ * },array<string|int,mixed>>
  */
 class OrganizersWebModel extends WebModel
 {
@@ -65,12 +68,6 @@ class OrganizersWebModel extends WebModel
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
-    /**
-     * @phpstan-param array{
-     *     contest_id:int,
-     *     year?:int|null,
-     * } $params
-     */
     public function getJsonResponse(array $params): array
     {
         $contest = $this->contestService->findByPrimary($params['contest_id']);

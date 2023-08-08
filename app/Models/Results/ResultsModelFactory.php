@@ -28,6 +28,9 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-implements XMLNodeSerializer<AbstractResultsModel>
+ */
 class ResultsModelFactory implements XMLNodeSerializer
 {
     use SmartObject;

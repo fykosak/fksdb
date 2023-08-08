@@ -13,7 +13,7 @@ use Nette\Schema\Expect;
 /**
  * @phpstan-extends WebModel<array{
  *     event_id:int,
- * },array<string,mixed>>
+ * },array<string|int,mixed>>
  */
 class PaymentListWebModel extends WebModel
 {
@@ -26,9 +26,6 @@ class PaymentListWebModel extends WebModel
 
     /**
      * @throws \Exception
-     * @phpstan-param array{
-     *     event_id:int,
-     * } $params
      */
     public function getJsonResponse(array $params): array
     {

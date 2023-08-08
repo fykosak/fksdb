@@ -162,7 +162,8 @@ class WebServiceModel
     }
 
     /**
-     * @throws \ReflectionException|BadRequestException
+     * @throws \ReflectionException
+     * @throws BadRequestException
      * @phpstan-param array<string,mixed> $arguments
      */
     public function getJsonResponse(string $name, array $arguments): JsonResponse

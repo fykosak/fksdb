@@ -28,7 +28,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
-     * @param mixed $element
+     * @param \ReflectionClass<static>|\ReflectionMethod $element
      * @throws \ReflectionException
      * @throws ForbiddenRequestException
      */

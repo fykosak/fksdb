@@ -11,12 +11,9 @@ use Nette\Forms\Form;
 
 abstract class FormComponent extends BaseComponent
 {
-    /**
-     * @phpstan-param array<string,mixed> $params
-     */
-    public function render(array $params = []): void
+    public function render(): void
     {
-        $this->template->render($this->getTemplatePath(), $params);
+        $this->template->render($this->getTemplatePath());
     }
 
     protected function getTemplatePath(): string
