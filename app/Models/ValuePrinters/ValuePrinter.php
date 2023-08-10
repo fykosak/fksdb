@@ -13,12 +13,12 @@ use Nette\Utils\Html;
 abstract class ValuePrinter
 {
     /**
-     * @param TValue $value
+     * @param TValue|mixed $value
      */
     abstract protected function getHtml($value): Html;
 
     /**
-     * @param TValue $value
+     * @param TValue|mixed $value
      */
     public function __invoke($value): Html
     {

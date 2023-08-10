@@ -12,29 +12,39 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\SmartObject;
 
 /**
- * @template H of ModelHolder
+ * @template THolder of ModelHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
+ * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
+ * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
+ *     ? \FKSDB\Models\ORM\Models\PaymentState
+ *     : (THolder is \FKSDB\Models\Transitions\Holder\TeamHolder
+ *     ? \FKSDB\Models\ORM\Models\Fyziklani\TeamState
+ *     : (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ *      )
+ *     )
+ * )
  */
 class Transition
 {
     use SmartObject;
 
-    /** @var (callable(H):bool)|bool|null */
+    /** @var (callable(THolder):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
-    /** @phpstan-var (callable(H):void)[] */
+    /** @phpstan-var (callable(THolder):void)[] */
     public array $beforeExecute = [];
-    /** @phpstan-var (callable(H):void)[] */
+    /** @phpstan-var (callable(THolder):void)[] */
     public array $afterExecute = [];
 
     protected bool $validation;
-    /** @var EnumColumn&FakeStringEnum */
+    /** @phpstan-var Enum */
     public EnumColumn $source;
-    /** @var EnumColumn&FakeStringEnum */
+    /** @phpstan-var Enum */
     public EnumColumn $target;
 
     /**
-     * @param EnumColumn&FakeStringEnum $sourceState
+     * @phpstan-param Enum $sourceState
      */
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
@@ -42,7 +52,7 @@ class Transition
     }
 
     /**
-     * @param EnumColumn&FakeStringEnum $targetState
+     * @phpstan-param Enum $targetState
      */
     public function setTargetStateEnum(EnumColumn $targetState): void
     {
@@ -80,7 +90,7 @@ class Transition
     }
 
     /**
-     * @param (callable(H):bool)|bool $condition
+     * @param (callable(THolder):bool)|bool $condition
      */
     public function setCondition($condition): void
     {
@@ -88,7 +98,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     public function canExecute(ModelHolder $holder): bool
     {
@@ -112,7 +122,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(H):void) $callBack
+     * @phpstan-param (callable(THolder):void) $callBack
      */
     public function addBeforeExecute(callable $callBack): void
     {
@@ -120,7 +130,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(H):void) $callBack
+     * @phpstan-param (callable(THolder):void) $callBack
      */
     public function addAfterExecute(callable $callBack): void
     {
@@ -128,7 +138,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     final public function callBeforeExecute(ModelHolder $holder): void
     {
@@ -138,7 +148,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     final public function callAfterExecute(ModelHolder $holder): void
     {

@@ -77,27 +77,30 @@ class AttendanceComponent extends FormComponent
     {
         try {
             if ($this->event->isTeamEvent() && $code->type === 'TE') {
+                /** @var TeamModel2|null $model */
                 $model = $this->event->getTeams()->where('fyziklani_team_id', $code->id)->fetch();
             } elseif ($code->type === 'EP') {
+                /** @var EventParticipantModel|null $model */
                 $model = $this->event->getParticipants()->where('event_participant_id', $code->id)->fetch();
             } else {
                 throw new BadRequestException(_('Wrong type of code.'));
             }
-            /** @var TeamModel2|EventParticipantModel|null $model */
+
             if (!$model) {
                 throw new NotFoundException();
             }
             $holder = $this->machine->createHolder($model);
             $this->machine->execute($this->getTransition(), $holder);
+
             if ($this->event->isTeamEvent()) {
+                /** @var TeamModel2|null $model */
                 $this->getPresenter()->flashMessage(
-                /** @phpstan-ignore-next-line */
                     sprintf(_('Transition successful for team: (%d) %s'), $model->fyziklani_team_id, $model->name),
                     Message::LVL_SUCCESS
                 );
             } else {
+                /** @var EventParticipantModel|null $model */
                 $this->getPresenter()->flashMessage(
-                /** @phpstan-ignore-next-line */
                     sprintf(_('Transition successful for application: %s'), $model->person->getFullName()),
                     Message::LVL_SUCCESS
                 );

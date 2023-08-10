@@ -71,6 +71,6 @@ final class EventParticipantMachine extends Machine
         if (!$transition->canExecute($holder)) {
             throw new UnavailableTransitionsException();
         }
-        $holder->setModelState($transition->target); // @phpstan-ignore-line
+        $holder->setModelState($transition->target);
     }
 }

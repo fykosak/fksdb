@@ -9,13 +9,11 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 
 /**
- * @phpstan-extends SeatingPageComponent<TeamModel2>
+ * @phpstan-extends SeatingPageComponent<TeamModel2,array<never>>
  */
 class PageComponent extends SeatingPageComponent
 {
     /**
-     * @param TeamModel2 $row
-     * @phpstan-param array<string,never> $params
      * @throws BadTypeException
      */
     final public function render($row, array $params = []): void

@@ -9,18 +9,8 @@ use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
 /**
- * @phpstan-type Item array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string
- * }
- * @phpstan-type RootItem array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string,'parents':Item[]
- * }
+ * @phpstan-import-type TItem from NavigationFactory
+ * @phpstan-import-type TRootItem from NavigationFactory
  */
 class NavigationExtension extends CompilerExtension
 {
@@ -46,8 +36,8 @@ class NavigationExtension extends CompilerExtension
     }
 
     /**
-     * @phpstan-param array<string,array<string,array<string,int|string|bool|null>>> $structure
-     * @return array<string,RootItem>
+     * @phpstan-param array<string,array<string,array<string,scalar|null>>> $structure
+     * @return array<string,TRootItem>
      */
     private function createFromStructure(array $structure): array
     {
@@ -63,8 +53,8 @@ class NavigationExtension extends CompilerExtension
     }
 
     /**
-     * @phpstan-param array<string,int|string|bool|null|null> $params
-     * @phpstan-return Item
+     * @phpstan-param array<string,scalar|null> $params
+     * @phpstan-return TItem
      */
     private function createNode(string $nodeId, array $params): array
     {

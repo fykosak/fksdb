@@ -29,8 +29,8 @@ class UploadedStorage implements SubmitStorage
     public const FINAL_EXT = '.pdf';
     /**
      * @phpstan-var array<int,array{
-     *     'file':string,
-     *     'submit':SubmitModel
+     *     file:string,
+     *     submit:SubmitModel
      * }>
      */
     private ?array $todo = null;

@@ -223,7 +223,7 @@ final class RegisterPresenter extends CoreBasePresenter
         $form->addSubmit('submit', _('Find'));
         $form->onSuccess[] = fn(Form $form) => $this->redirect(
             'contestant',
-            ['email' => $form->getValues()['email']] //@phpstan-ignore-line
+            ['email' => $form->getValues('array')['email']] //@phpstan-ignore-line
         );
         return $control;
     }

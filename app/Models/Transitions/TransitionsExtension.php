@@ -17,18 +17,18 @@ use Nette\Schema\Schema;
 
 /**
  * @phpstan-type Item array{
- *      'machine':string,
- *      'stateEnum':class-string<EnumColumn&FakeStringEnum>,
- *      'decorator':\Nette\DI\Definitions\Statement|null,
- *      'transitions':array<string,TransitionType>
+ *      machine:string,
+ *      stateEnum:class-string<EnumColumn&FakeStringEnum>,
+ *      decorator:\Nette\DI\Definitions\Statement|null,
+ *      transitions:array<string,TransitionType>
  * }
  * @phpstan-type TransitionType array{
- *      'condition':\Nette\DI\Definitions\Statement|bool|null,
- *      'label':\Nette\DI\Definitions\Statement|string|null,
- *      'validation':\Nette\DI\Definitions\Statement|bool|null,
- *      'afterExecute':array<\Nette\DI\Definitions\Statement|string|null>,
- *      'beforeExecute':array<\Nette\DI\Definitions\Statement|string|null>,
- *      'behaviorType':'success'|'warning'|'danger'|'primary'|'secondary'
+ *      condition:\Nette\DI\Definitions\Statement|bool|null,
+ *      label:\Nette\DI\Definitions\Statement|string|null,
+ *      validation:\Nette\DI\Definitions\Statement|bool|null,
+ *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      behaviorType:'success'|'warning'|'danger'|'primary'|'secondary'
  *  }
  */
 class TransitionsExtension extends CompilerExtension

@@ -14,8 +14,9 @@ use Nette\Forms\Form;
 class FOFCategoryProcessing extends FormProcessing
 {
     /**
-     * @param array{'team':array{'category':string,'force_a':bool,'name':string}} $values
-     * @phpstan-return array{'team':array{'category':string,'force_a':bool,'name':string}}
+     * @param array{team:array{category:string,force_a:bool,name:string}} $values
+     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
+     * @throws BadRequestException
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
@@ -72,7 +73,7 @@ class FOFCategoryProcessing extends FormProcessing
      * @param PersonModel[] $members
      * @throws NoMemberException
      * @throws BadRequestException
-     * @phpstan-param array{'team':array{'force_a':bool}} $values
+     * @phpstan-param array{team:array{force_a:bool}} $values
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {

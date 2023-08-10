@@ -18,10 +18,10 @@ use Nette\InvalidStateException;
 
 /**
  * @phpstan-type TDefinition array{
- *      'keys':string[],
- *      'holderMethod':string,
- *      'machineName':string,
- *      'formLayout':string
+ *      keys:string[],
+ *      holderMethod:string,
+ *      machineName:string,
+ *      formLayout:string
  * }
  */
 class EventDispatchFactory

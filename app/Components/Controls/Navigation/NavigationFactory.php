@@ -7,17 +7,18 @@ namespace FKSDB\Components\Controls\Navigation;
 use Nette\SmartObject;
 
 /**
- * @phpstan-type Item array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string
+ * @phpstan-type TItem array{
+ *      presenter:string,
+ *      action:string,
+ *      params:array<string,scalar|null>,
+ *      fragment:string
  * }
- * @phpstan-type RootItem array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string,'parents':Item[]
+ * @phpstan-type TRootItem array{
+ *      presenter:string,
+ *      action:string,
+ *      params:array<string,scalar|null>,
+ *      fragment:string,
+ *      parents:TItem[]
  * }
  */
 class NavigationFactory
@@ -25,12 +26,12 @@ class NavigationFactory
     use SmartObject;
 
     /**
-     * @phpstan-var array<string,RootItem>
+     * @phpstan-var array<string,TRootItem>
      */
     private array $structure;
 
     /**
-     * @phpstan-param array<string,RootItem> $structure
+     * @phpstan-param array<string,TRootItem> $structure
      */
     public function setStructure(array $structure): void
     {
@@ -38,7 +39,7 @@ class NavigationFactory
     }
 
     /**
-     * @phpstan-return RootItem|null
+     * @phpstan-return TRootItem|null
      */
     public function getStructure(string $id): ?array
     {

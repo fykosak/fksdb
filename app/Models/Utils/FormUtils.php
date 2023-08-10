@@ -11,12 +11,13 @@ use Nette\Utils\ArrayHash;
 class FormUtils
 {
     /**
-     * @template TValue
-     * @phpstan-param ArrayHash<TValue> $values
-     * @phpstan-return ArrayHash<TValue>
+     * @template TArray of ArrayHash
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
      */
     public static function emptyStrToNull(ArrayHash $values): ArrayHash
     {
+        /** @var TArray $result */
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
@@ -31,9 +32,9 @@ class FormUtils
     }
 
     /**
-     * @template TValue
-     * @phpstan-param array<TValue> $values
-     * @phpstan-return array<TValue|null>
+     * @template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
      */
     public static function emptyStrToNull2(array $values): array
     {
@@ -47,13 +48,13 @@ class FormUtils
                 $result[$key] = $value;
             }
         }
-        return $result; //@phpstan-ignore-line
+        return $result;
     }
 
     /**
-     * @template TValue
-     * @phpstan-param array<TValue> $values
-     * @phpstan-return array<TValue>
+     * @template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
      */
     public static function removeEmptyValues(array $values, bool $ignoreNulls = false): array
     {
@@ -68,7 +69,7 @@ class FormUtils
                 $result[$key] = $value;
             }
         }
-        return $result; //@phpstan-ignore-line
+        return $result;
     }
 
     public static function findFirstSubmit(Form $form): ?SubmitButton

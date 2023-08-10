@@ -28,7 +28,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @return array{'nodes':array<string,array{'label':string,'type':string}>,'links':array<int,array{'from':string,'to':string,'label':string}>}
+     * @return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string}>}
      */
     final public function getData(): array
     {

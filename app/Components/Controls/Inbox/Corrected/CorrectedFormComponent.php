@@ -31,7 +31,7 @@ class CorrectedFormComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
-        /** @phpstan-var array{'submits':string} $values */
+        /** @phpstan-var array{submits:string} $values */
         $values = $form->getValues('array');
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

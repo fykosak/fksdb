@@ -91,7 +91,7 @@ final class SeatingPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return ProviderComponent<TeamModel2>
+     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
     protected function createComponentSeatingList(): ProviderComponent
     {
@@ -110,7 +110,7 @@ final class SeatingPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws GoneException
-     * @phpstan-return ProviderComponent<null>
+     * @phpstan-return ProviderComponent<null,('dev'|'all')[]>
      */
     protected function createComponentSeatingPreview(): ProviderComponent
     {

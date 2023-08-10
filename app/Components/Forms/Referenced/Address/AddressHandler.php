@@ -40,8 +40,10 @@ class AddressHandler extends ReferencedHandler
     /**
      * @param AddressModel|null $model
      * @phpstan-param array{
-     *     target:string,
-     *     city:string,
+     *     target?:string|null,
+     *     city?:string|null,
+     *     country_id?:int|null,
+     *     postal_code:string|null,
      * }$values
      */
     public function store(array $values, ?Model $model = null): ?AddressModel

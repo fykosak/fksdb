@@ -35,7 +35,7 @@ class FormControl extends BaseComponent
     }
 
     /**
-     * @return array{'class':string,'id':string}
+     * @return array{class:string,id:string}
      */
     public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array
     {

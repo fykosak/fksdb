@@ -18,7 +18,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     /** @var int[] */
     protected array $series;
     /**
-     * @phpstan-var array<string,array<int,array{'label':string,'limit':float|int|null,'alias':string}>>
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
      */
     private array $dataColumns = [];
     private CumulativeResultsModel $cumulativeResultsModel;
@@ -34,7 +34,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
 
     /**
      * Definition of header.
-     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {

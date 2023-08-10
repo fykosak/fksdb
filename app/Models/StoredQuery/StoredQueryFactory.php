@@ -75,7 +75,13 @@ class StoredQueryFactory implements XMLNodeSerializer
     /**
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
-     * @phpstan-ignore-next-line
+     * @phpstan-return array{
+     *     contest_id:int,
+     *     contest:int,
+     *     year:int,
+     *     series:int|null,
+     *     ac_year:int,
+     * }
      */
     private function presenterContextParameters(BasePresenter $presenter): array
     {

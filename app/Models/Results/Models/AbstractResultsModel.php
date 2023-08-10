@@ -142,7 +142,7 @@ abstract class AbstractResultsModel
 
     /**
      * Definition of header.
-     * @phpstan-return array<int,array{'label':string,'limit':float|int|null,'alias':string}>
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
     abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

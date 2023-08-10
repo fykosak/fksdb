@@ -242,7 +242,7 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2>
+     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
     protected function createComponentSeating(): ProviderComponent
     {

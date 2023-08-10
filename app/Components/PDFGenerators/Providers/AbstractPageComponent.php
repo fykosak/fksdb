@@ -8,6 +8,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 
 /**
  * @template TRow
+ * @template TParam of array
  */
 abstract class AbstractPageComponent extends BaseComponent
 {
@@ -21,8 +22,8 @@ abstract class AbstractPageComponent extends BaseComponent
     public const FORMAT_B5_PORTRAIT = 'b5-portrait';
 
     /**
-     * @param TRow $row
-     * @phpstan-param array<string,mixed> $params
+     * @phpstan-param TRow $row
+     * @phpstan-param TParam $params
      */
     abstract public function render($row, array $params = []): void;
 

@@ -74,7 +74,8 @@ class OrgFormComponent extends EntityFormComponent
          *      tex_signature:string,
          *      domain_alias:string,
          *      order:int,
-         *      contribution:string
+         *      contribution:string,
+         *     contest_id?:int,
          * }} $values
          */
         $values = $form->getValues('array');

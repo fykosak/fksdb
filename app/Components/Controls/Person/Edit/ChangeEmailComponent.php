@@ -86,7 +86,7 @@ class ChangeEmailComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array{'new_email':string} $values */
+        /** @var array{new_email:string} $values */
         $values = $form->getValues('array');
         $this->accountManager->sendChangeEmail($this->model, $values['new_email'], Language::tryFrom($this->lang));
         $this->getPresenter()->flashMessage(

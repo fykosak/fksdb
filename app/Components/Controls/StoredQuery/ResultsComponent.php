@@ -52,10 +52,13 @@ class ResultsComponent extends BaseComponent
         $form->addSubmit('execute', _('Execute'));
         $form->onSuccess[] = function (Form $form) {
             $this->parameters = [];
-            /** @var array{'params':array<string,array{'value':scalar}>} $values */
+            /** @var array{params:array<string,array{value:scalar}>} $values */
             $values = $form->getValues('array');
+            /**
+             * @var string $key
+             */
             foreach ($values[self::CONT_PARAMS] as $key => $values) {
-                $this->parameters[$key] = $values['value']; //@phpstan-ignore-line
+                $this->parameters[$key] = $values['value'];
             }
         };
         return $control;

@@ -31,7 +31,6 @@ class ContainerWithOptions extends Container
      * @phpstan-template TNewValue
      * @param TNewValue $value
      * @return static
-     * @phpstan-self-out self<TValue|TNewValue>
      */
     public function setOption(string $key, $value): self
     {
@@ -45,7 +44,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific option
-     * @phpstan-template TDefaultValue.
+     * @phpstan-template TDefaultValue of mixed
      * @param TDefaultValue $default
      * @return TDefaultValue
      */

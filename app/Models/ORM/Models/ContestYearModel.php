@@ -21,7 +21,7 @@ final class ContestYearModel extends Model
      */
     public function getContestants(): TypedGroupedSelection
     {
-        return $this->contest->related(DbNames::TAB_CONTESTANT, 'contest_id')//@phpstan-ignore-line
+        return $this->contest->related(DbNames::TAB_CONTESTANT, 'contest_id')
         ->where('year', $this->year);
     }
 

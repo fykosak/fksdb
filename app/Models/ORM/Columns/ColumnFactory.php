@@ -33,7 +33,7 @@ abstract class ColumnFactory
     protected string $modelAccessKey;
     protected ?string $description;
     /**
-     * @phpstan-var array{'size':int|null}
+     * @phpstan-var array{size:int|null}
      */
     protected array $metaData;
     protected bool $required = false;
@@ -50,7 +50,7 @@ abstract class ColumnFactory
     }
 
     /**
-     * @param class-string<M> $modelClassName
+     * @phpstan-param class-string<M> $modelClassName
      */
     final public function setUp(
         string $tableName,
@@ -119,7 +119,7 @@ abstract class ColumnFactory
     }
 
     /**
-     * @phpstan-return array{'size':int|null}
+     * @phpstan-return array{size:int|null}
      */
     final protected function getMetaData(): array
     {

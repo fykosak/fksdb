@@ -31,7 +31,6 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     public function beforeRender(): bool
     {
-        /** @phpstan-ignore-next-line */
         $this->template->person = $this->person;
         if ($this->userPermissions < $this->getMinimalPermissions()) {
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte');

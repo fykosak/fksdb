@@ -16,7 +16,6 @@ use Nette\Utils\Html;
 class PricePrinter extends ValuePrinter
 {
     /**
-     * @param mixed $value
      * @throws UnsupportedCurrencyException
      * @throws NotImplementedException
      */

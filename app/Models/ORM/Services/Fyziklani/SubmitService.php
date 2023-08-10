@@ -10,10 +10,13 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @phpstan-extends Service<SubmitModel>
+ * @phpstan-import-type SerializedSubmitModel from SubmitModel
  */
 final class SubmitService extends Service
 {
-    /** @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return array<int,SerializedSubmitModel>
+     */
     public function serialiseSubmits(EventModel $event, ?string $lastUpdated): array
     {
         $query = $this->getTable()->where('fyziklani_task.event_id', $event->event_id);

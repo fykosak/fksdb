@@ -82,7 +82,7 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getGrants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_GRANT, 'login_id');//@phpstan-ignore-line
+        return $this->related(DbNames::TAB_GRANT, 'login_id');
     }
 
     /**
@@ -107,7 +107,7 @@ final class LoginModel extends Model implements IIdentity
         if (isset($type)) {
             $query->where('type', $type);
         }
-        return $query;//@phpstan-ignore-line
+        return $query;
     }
 
     /**
@@ -120,6 +120,6 @@ final class LoginModel extends Model implements IIdentity
             $query->where('type', $type->value);
         }
         $query->where('until > ?', new \DateTime());
-        return $query;//@phpstan-ignore-line
+        return $query;
     }
 }

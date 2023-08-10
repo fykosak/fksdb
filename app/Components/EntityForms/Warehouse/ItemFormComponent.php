@@ -60,6 +60,7 @@ class ItemFormComponent extends EntityFormComponent
          *      purchase_currency:string,
          *      placement:string,
          *      note:string,
+         *     contest_id?:int,
          * }} $values
          */
         $values = $form->getValues('array');

@@ -13,8 +13,8 @@ use Nette\Forms\Form;
 class FOLCategoryProcessing extends FormProcessing
 {
     /**
-     * @param array{'team':array{'category':string,'force_a':bool,'name':string}} $values
-     * @phpstan-return array{'team':array{'category':string,'force_a':bool,'name':string}}
+     * @param array{team:array{category:string,force_a:bool,name:string}} $values
+     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {

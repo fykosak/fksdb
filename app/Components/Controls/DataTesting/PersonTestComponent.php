@@ -81,10 +81,10 @@ class PersonTestComponent extends BaseComponent
         $form->addSubmit('submit');
         $form->onSuccess[] = function (Form $form) {
             /** @phpstan-var array{
-             *     'levels':array<string,bool>,
-             *     'tests':array<string,bool>,
-             *     'start_id':int,
-             *     'end_id':int
+             *     levels:array<string,bool>,
+             *     tests:array<string,bool>,
+             *     start_id:int,
+             *     end_id:int
              * } $values
              */
             $values = $form->getValues('array');
@@ -108,7 +108,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @return array<int,array{'model':PersonModel,'log':Message[]}>
+     * @return array<int,array{model:PersonModel,log:Message[]}>
      */
     private function calculateProblems(): array
     {

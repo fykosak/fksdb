@@ -27,7 +27,7 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
     }
 
     /**
-     * @phpstan-return array<int,array{'created':string,'gender':'M'|'F','personId':int}>
+     * @phpstan-return array<int,array{created:string,gender:string,personId:int}>
      */
     public function getData(): array
     {
@@ -41,7 +41,7 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
                 'personId' => $person->person_id,
             ];
         }
-        return $data; //@phpstan-ignore-line
+        return $data;
     }
 
     public function getTitle(): Title

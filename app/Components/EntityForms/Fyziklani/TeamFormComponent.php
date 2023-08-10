@@ -97,7 +97,7 @@ abstract class TeamFormComponent extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
-        /** @var array{'team':array{'category':string,'force_a':bool,'name':string}} $values */
+        /** @var array{team:array{category:string,force_a:bool,name:string}} $values */
         $values = $form->getValues('array');
         $this->teamService->explorer->beginTransaction();
         try {

@@ -9,7 +9,7 @@ use Nette\Database\Connection;
 class MetaDataFactory
 {
     /**
-     * @phpstan-var array<string,array<string,array{'size':int|null}>>
+     * @phpstan-var array<string,array<string,array{size:int|null}>>
      */
     private array $metadata = [];
     private Connection $connection;
@@ -20,7 +20,7 @@ class MetaDataFactory
     }
 
     /**
-     * @phpstan-return array{'size':int|null}
+     * @phpstan-return array{size:int|null}
      */
     public function getMetaData(string $table, string $field): array
     {

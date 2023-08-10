@@ -56,7 +56,7 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');// @phpstan-ignore-line
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
     }
 
     /**
@@ -64,7 +64,7 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getMembers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');// @phpstan-ignore-line
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
     }
 
     public function getTeamSeat(): ?TeamSeatModel
@@ -79,7 +79,7 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');// @phpstan-ignore-line
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
     }
 
     /**

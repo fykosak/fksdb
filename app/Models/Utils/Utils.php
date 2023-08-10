@@ -120,7 +120,7 @@ class Utils
         } else {
             try {
                 return (string)$object;
-            } catch (\Error$error) { // @phpstan-ignore-line
+            } catch (\Error $error) { // @phpstan-ignore-line
                 return $error->__toString();
             }
         }

@@ -24,7 +24,7 @@ class TableMerger
     private Explorer $explorer;
     private Model $trunkRow;
     private Model $mergedRow;
-    /** @var MergeStrategy[] */
+    /** @phpstan-var array<string,MergeStrategy> */
     private array $columnMergeStrategies = [];
     private MergeStrategy $globalMergeStrategy;
     private Logger $logger;

@@ -27,7 +27,7 @@ class Component extends BaseComponent
 
     /**
      * @throws NotImplementedException
-     * @phpstan-param array{'table':string,'rows':array<int,string>} $definition
+     * @phpstan-param array{table:string,rows:array<int,string>} $definition
      */
     private function renderSingle(array $definition): void
     {

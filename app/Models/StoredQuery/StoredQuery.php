@@ -145,7 +145,9 @@ class StoredQuery implements Resource
         }
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return array<int,string>
+     */
     public function getColumnNames(): array
     {
         static $columnNames;
@@ -164,7 +166,9 @@ class StoredQuery implements Resource
         return $columnNames;
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return array<int,string>
+     */
     public function getParameterNames(): array
     {
         return array_keys($this->parameterDefaultValues);

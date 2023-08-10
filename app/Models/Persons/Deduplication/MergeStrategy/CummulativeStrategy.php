@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
+/**
+ * @template TValue
+ * @phpstan-implements MergedStrategy<TValue>
+ */
 class CummulativeStrategy implements MergeStrategy
 {
     private ?string $precedence;
@@ -14,9 +18,9 @@ class CummulativeStrategy implements MergeStrategy
     }
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
-     * @return mixed
+     * @param TValue $trunk
+     * @param TValue $merged
+     * @return TValue
      */
     public function mergeValues($trunk, $merged)
     {
@@ -40,8 +44,8 @@ class CummulativeStrategy implements MergeStrategy
     }
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
+     * @param TValue $trunk
+     * @param TValue $merged
      */
     private function equals($trunk, $merged): bool
     {

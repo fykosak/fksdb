@@ -39,7 +39,7 @@ class PizzaComponent extends BaseComponent
         $form->addComponent($personsField, 'persons');
         $form->addSubmit('submit', _('Get pizza!'));
         $form->onSuccess[] = function (Form $form) {
-            /** @var array{'persons':int[]} $values */
+            /** @var array{persons:int[]} $values */
             $values = $form->getValues('array');
             foreach ($values['persons'] as $personId) {
                 $person = $this->personService->findByPrimary($personId);

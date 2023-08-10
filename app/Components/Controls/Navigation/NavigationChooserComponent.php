@@ -14,18 +14,8 @@ use Nette\Application\UI\InvalidLinkException;
 
 /**
  * @method BasePresenter getPresenter()
- * @phpstan-type Item array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string
- * }
- * @phpstan-type RootItem array{
- *      'presenter':string,
- *      'action':string,
- *      'params':array<string,int|string|bool|null>,
- *      'fragment':string,'parents':Item[]
- * }
+ * @phpstan-import-type TItem from NavigationFactory
+ * @phpstan-import-type TRootItem from NavigationFactory
  */
 final class NavigationChooserComponent extends NavigationItemComponent
 {
@@ -81,7 +71,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
-     * @phpstan-param RootItem $structure
+     * @phpstan-param TRootItem $structure
      */
     private function getItem(array $structure): NavItem
     {
@@ -94,7 +84,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws InvalidLinkException
      * @throws BadRequestException
      * @throws \ReflectionException
-     * @phpstan-param RootItem $structure
+     * @phpstan-param TRootItem $structure
      */
     private function getItems(array $structure): array
     {
@@ -104,7 +94,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
                 $items[] = new NavItem(
                     $this->getItemTitle($item),
                     ':' . $item['presenter'] . ':' . $item['action'],
-                    $item['params'],
+                    $item['params'], //@phpstan-ignore-line
                     [],
                     $this->isItemActive($item)
                 );
@@ -114,7 +104,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
     }
 
     /**
-     * @phpstan-param Item $item
+     * @phpstan-param TItem $item
      */
     public function isItemActive(array $item): bool
     {
@@ -136,7 +126,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
     /**
      * @throws BadRequestException
      * @throws BadTypeException
-     * @phpstan-param Item $item
+     * @phpstan-param TItem $item
      */
     public function getItemTitle(array $item): Title
     {
@@ -153,7 +143,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
 
     /**
      * @throws InvalidLinkException
-     * @phpstan-param Item $item
+     * @phpstan-param TItem $item
      */
     public function getItemLink(array $item): string
     {
@@ -167,7 +157,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
-     * @phpstan-param Item $item
+     * @phpstan-param TItem $item
      */
     public function isItemVisible(array $item): bool
     {

@@ -59,7 +59,7 @@ class EventOrgFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         /**
-         * @phpstan-var array{event_org:array{person_id:int,note:string}} $values
+         * @phpstan-var array{event_org:array{person_id:int,note:string,event_id?:int}} $values
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);

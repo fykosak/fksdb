@@ -40,7 +40,7 @@ final class QueryModel extends Model implements Resource
      */
     public function getParameters2(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');//@phpstan-ignore-line
+        return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
     }
 
     /**
@@ -56,7 +56,7 @@ final class QueryModel extends Model implements Resource
      */
     public function getTags(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');//@phpstan-ignore-line
+        return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
 
     /**

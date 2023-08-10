@@ -8,7 +8,8 @@ use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 
 /**
  * @template TRow
- * @phpstan-extends AbstractPageComponent<TRow>
+ * @template TParam of array
+ * @phpstan-extends AbstractPageComponent<TRow,TParam>
  */
 abstract class SeatingPageComponent extends AbstractPageComponent
 {

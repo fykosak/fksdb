@@ -18,7 +18,7 @@ use Nette\DI\Container;
 class PersonRelatedGrid extends BaseGrid
 {
     protected PersonModel $person;
-    /** @phpstan-var array{'table':string,'minimalPermission':int,'rows':string[],'links':string[]} */
+    /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
     protected array $definition;
     protected int $userPermissions;
 

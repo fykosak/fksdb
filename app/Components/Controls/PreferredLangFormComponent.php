@@ -38,7 +38,7 @@ class PreferredLangFormComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
-        /** @phpstan-var array{'preferred_lang':string} $values */
+        /** @phpstan-var array{preferred_lang:string} $values */
         $values = $form->getValues('array');
         try {
             $this->personInfoService->storeModel(

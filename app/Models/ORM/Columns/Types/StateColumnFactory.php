@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  */
 class StateColumnFactory extends ColumnFactory
 {
-    /** @phpstan-var array<string,array{'badge':string,'label':string}> */
+    /** @phpstan-var array<string,array{badge:string,label:string}> */
     protected array $states = [];
 
     protected function createHtmlValue(Model $model): Html
@@ -30,7 +30,7 @@ class StateColumnFactory extends ColumnFactory
     }
 
     /**
-     * @phpstan-param array<string,array{'badge':string,'label':string}> $states
+     * @phpstan-param array<string,array{badge:string,label:string}> $states
      */
     public function setStates(array $states): void
     {
@@ -38,7 +38,7 @@ class StateColumnFactory extends ColumnFactory
     }
 
     /**
-     * @phpstan-return array{'badge':string,'label':string}
+     * @phpstan-return array{badge:string,label:string}
      */
     public function getState(string $state): array
     {

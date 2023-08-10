@@ -76,7 +76,7 @@ final class TaskModel extends Model
         if ($type) {
             $contributions->where('type', $type->value);
         }
-        return $contributions; //@phpstan-ignore-line
+        return $contributions;
     }
 
     /**
@@ -84,7 +84,7 @@ final class TaskModel extends Model
      */
     public function getCategories(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id'); //@phpstan-ignore-line
+        return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
     }
 
     public function isForCategory(?ContestCategoryModel $category): bool
@@ -163,7 +163,7 @@ final class TaskModel extends Model
      */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT, 'task_id');//@phpstan-ignore-line
+        return $this->related(DbNames::TAB_SUBMIT, 'task_id');
     }
 
     /**
@@ -171,7 +171,7 @@ final class TaskModel extends Model
      */
     public function getQuestions(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');//@phpstan-ignore-line
+        return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
     }
 
     public function isOpened(): bool
