@@ -14,8 +14,14 @@ class StoredQueryTagAssertion implements Assertion
 {
     use SmartObject;
 
+    /**
+     * @var string[]
+     */
     private array $tagNames;
 
+    /**
+     * @param string[] $tagNames
+     */
     public function __construct(array $tagNames)
     {
         $this->tagNames = $tagNames;

@@ -14,17 +14,26 @@ use Nette\Utils\Strings;
 /**
  * @property-read int $task_id
  * @property-read string $label
- * @property-read string $name_cs
- * @property-read string $name_en
+ * @property-read string|null $name_cs
+ * @property-read string|null $name_en
  * @property-read LocalizedString $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
  * @property-read int $series
- * @property-read int $tasknr
- * @property-read int $points
- * @property-read \DateTimeInterface $submit_start
- * @property-read \DateTimeInterface $submit_deadline
+ * @property-read int|null $tasknr
+ * @property-read int|null $points
+ * @property-read \DateTimeInterface|null $submit_start
+ * @property-read \DateTimeInterface|null $submit_deadline
+ * @phpstan-type SerializedTaskModel array{
+ *     taskId:int,
+ *     series:int,
+ *     label:string,
+ *     name:array<string,string>,
+ *     taskNumber:int|null,
+ *     points:int|null,
+ * }
+ * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
 final class TaskModel extends Model
 {
@@ -58,6 +67,9 @@ final class TaskModel extends Model
         }
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
+     */
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
@@ -67,6 +79,9 @@ final class TaskModel extends Model
         return $contributions;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskCategoryModel>
+     */
     public function getCategories(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
@@ -80,9 +95,9 @@ final class TaskModel extends Model
         return (bool)$this->getCategories()->where('contest_category_id', $category->contest_category_id)->fetch();
     }
 
-    public function getContestYear(): ContestYearModel
+    public function getContestYear(): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
             'year',
             $this->year
@@ -111,6 +126,9 @@ final class TaskModel extends Model
         return Strings::webalize($this->label, null, false);
     }
 
+    /**
+     * @phpstan-return TaskStatsType
+     */
     public function getTaskStats(): array
     {
         $count = 0;
@@ -125,6 +143,9 @@ final class TaskModel extends Model
         return ['solversCount' => $count, 'averagePoints' => $count ? ($sum / $count) : null];
     }
 
+    /**
+     * @phpstan-return SerializedTaskModel
+     */
     public function __toArray(): array
     {
         return [
@@ -137,11 +158,17 @@ final class TaskModel extends Model
         ];
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT, 'task_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitQuestionModel>
+     */
     public function getQuestions(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');

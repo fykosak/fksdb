@@ -15,22 +15,27 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ */
 class BaseHolder implements ModelHolder
 {
-    /** @var bool|callable */
+    /** @var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
     private Container $container;
     public EventModel $event;
     private EventParticipantService $service;
     private ?EventParticipantModel $model;
+    /** @phpstan-var array<string,mixed> */
     public array $data = [];
 
     /** @var Field[] */
     private array $fields = [];
-    /** @var FormAdjustment[] */
+    /** @var FormAdjustment<BaseHolder>[] */
     public array $formAdjustments = [];
     /** @var Processing[] */
     public array $processings = [];
@@ -41,6 +46,9 @@ class BaseHolder implements ModelHolder
         $this->service = $service;
     }
 
+    /**
+     * @param FormAdjustment<BaseHolder> $formAdjustment
+     */
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
         $this->formAdjustments[] = $formAdjustment;
@@ -114,7 +122,7 @@ class BaseHolder implements ModelHolder
             return $model->status;
         }
 
-        return EventParticipantStatus::tryFrom(Machine::STATE_INIT);
+        return EventParticipantStatus::from(Machine::STATE_INIT);
     }
 
     public function setModelState(EventParticipantStatus $state): void
@@ -161,6 +169,9 @@ class BaseHolder implements ModelHolder
         }
     }
 
+    /**
+     * @phpstan-param FakeStringEnum&EnumColumn $newState
+     */
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);

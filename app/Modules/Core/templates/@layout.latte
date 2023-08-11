@@ -4,6 +4,7 @@
 {varType ?string $robots}
 {varType string $styleId}
 {varType string $theme}
+{varType FKSDB\Models\ORM\Models\PersonModel|null $loggedPerson}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -39,17 +40,12 @@
             <div class="navbar-nav ms-auto">
                 {block nav-right}
                     {control languageChooser}
-                    {if $user->isLoggedIn()}
-                        {var FKSDB\Models\ORM\Models\LoginModel $login = $user->getIdentity()}
+                    {if $loggedPerson}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
                                data-bs-toggle="dropdown">
                                 <span class="fas fa-user"></span>
-                                {if $login->person}
-                                    <b>{$login->person->getFullName()}</b>
-                                {else}
-                                {_'User'} <b>{$login->login}</b>
-                                {/if}
+                                <b>{$loggedPerson->getFullName()}</b>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" n:href=":Profile:Dashboard:">
@@ -71,16 +67,16 @@
     <div class="panel color-auto">
         <div class="container">
             {block titleBody}
-            <div class="page-header">
-                <h1 >{$pageTitle->toHtml(false)}</h1>
-                <span class="subtitle">{$pageTitle->subTitle}</span>
-            </div>
+                <div class="page-header">
+                    <h1>{$pageTitle->toHtml(false)}</h1>
+                    <span class="subtitle">{$pageTitle->subTitle}</span>
+                </div>
             {/block}
-        {block flashes}
-            {foreach $flashes as $flash}
-            <div class="alert alert-{$flash->type}">{$flash->message}</div>
-            {/foreach}
-        {/block}
+            {block flashes}
+                {foreach $flashes as $flash}
+                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                {/foreach}
+            {/block}
         </div>
     </div>
     {include outerContent}

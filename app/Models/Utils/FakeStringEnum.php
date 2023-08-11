@@ -21,7 +21,24 @@ abstract class FakeStringEnum
         if (is_null($value)) {
             return null;
         }
-        return new static($value);
+        try {
+            return self::from($value);
+        } catch (\InvalidArgumentException$exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @return static
+     */
+    final public static function from(string $value): self
+    {
+        foreach (static::cases() as $case) {
+            if ($value === $case->value) {
+                return $case;
+            }
+        }
+        throw new \InvalidArgumentException();
     }
 
     /**

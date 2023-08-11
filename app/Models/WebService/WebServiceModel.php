@@ -7,7 +7,6 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
     EventWebModel,
@@ -25,7 +24,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Http\IResponse;
-use Nette\Schema\Processor;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -39,7 +37,9 @@ class WebServiceModel
     private Container $container;
     private ContestAuthorizator $contestAuthorizator;
     private User $user;
-
+    /**
+     * @phpstan-var array<string,class-string<WebModel<array<string,mixed>,array<string|int,mixed>>>>
+     */
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
         'game/results' => Game\ResultsWebModel::class,
@@ -99,6 +99,7 @@ class WebServiceModel
      * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
+     * @phpstan-ignore-next-line
      */
     public function __call(string $name, array $args): \SoapVar
     {
@@ -134,7 +135,7 @@ class WebServiceModel
         if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->user->getIdentity()->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message, 'soap');
@@ -142,6 +143,7 @@ class WebServiceModel
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return WebModel<array<string,mixed>,array<string,mixed>>
      */
     private function getWebModel(string $name): ?WebModel
     {
@@ -151,7 +153,7 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @var WebModel $model */
+            /** @var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->container);
             $model->setUser($this->user);
             return $model;
@@ -160,7 +162,9 @@ class WebServiceModel
     }
 
     /**
-     * @throws \ReflectionException|BadRequestException
+     * @throws \ReflectionException
+     * @throws BadRequestException
+     * @phpstan-param array<string,mixed> $arguments
      */
     public function getJsonResponse(string $name, array $arguments): JsonResponse
     {
@@ -168,21 +172,6 @@ class WebServiceModel
         if (!$webModel) {
             throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
         }
-        $arguments = $this->processArguments($webModel, $arguments);
-        return new JsonResponse($webModel->getJsonResponse($arguments));
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    private function processArguments(WebModel $webModel, array $arguments): array
-    {
-        static $processor;
-        if (!isset($processor)) {
-            $processor = new Processor();
-        }
-        $schema = $webModel->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        return $processor->process($schema, $arguments);
+        return $webModel->getApiResponse($arguments);
     }
 }

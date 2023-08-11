@@ -15,6 +15,9 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
+/**
+ * @phpstan-extends BaseGrid<EventModel>
+ */
 class NewApplicationsGrid extends BaseGrid
 {
     protected EventService $eventService;
@@ -27,11 +30,12 @@ class NewApplicationsGrid extends BaseGrid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     protected function getModels(): TypedSelection
     {
-        return $this->eventService->getTable()
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
+        return $this->eventService->getEventsWithOpenRegistration();
     }
 
     /**
@@ -57,7 +61,7 @@ class NewApplicationsGrid extends BaseGrid
                     return (bool)count(
                         $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
                             $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
+                            EventParticipantStatus::from(Machine::STATE_INIT)
                         )
                     );
                 } catch (\Throwable $exception) {
@@ -65,6 +69,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->addButton($button, 'create');
+        $this->addButton($button, 'create'); // @phpstan-ignore-line
     }
 }

@@ -33,6 +33,7 @@ class Handler
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws \PDOException
+     * @phpstan-param array<string,array<int,int>> $data
      */
     public function handle(array $data, PersonModel $person, EventModel $event): void
     {

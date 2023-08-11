@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -12,6 +13,7 @@ use Nette\Utils\Html;
 /**
  * @todo Implement AJAX loading
  *       Should return school_id or null.
+ * @template D of DataProvider
  */
 class AutocompleteSelectBox extends TextBase
 {
@@ -20,7 +22,7 @@ class AutocompleteSelectBox extends TextBase
     private const PARAM_NAME = 'acName';
     private const INTERNAL_DELIMITER = ',';
     private const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
-
+    /** @phpstan-var D */
     private DataProvider $dataProvider;
 
     private bool $ajax;
@@ -43,10 +45,10 @@ class AutocompleteSelectBox extends TextBase
     {
         parent::__construct($label);
 
-        $this->monitor(AutocompleteJSONProvider::class, function (AutocompleteJSONProvider $provider) {
+        $this->monitor(BasePresenter::class, function (BasePresenter $provider) {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
-                $name = $this->lookupPath(AutocompleteJSONProvider::class);
+                $name = $this->lookupPath(BasePresenter::class);
                 $this->ajaxUrl = $provider->link('autocomplete!', [
                     self::PARAM_NAME => $name,
                 ]);
@@ -57,6 +59,7 @@ class AutocompleteSelectBox extends TextBase
         $this->renderMethod = $renderMethod;
     }
 
+    /** @phpstan-return D|null */
     public function getDataProvider(): ?DataProvider
     {
         return $this->dataProvider ?? null;
@@ -77,6 +80,7 @@ class AutocompleteSelectBox extends TextBase
         return $this->multiSelect;
     }
 
+    /** @phpstan-param D $dataProvider */
     public function setDataProvider(DataProvider $dataProvider): void
     {
         if ($this->ajax && !($dataProvider instanceof FilteredDataProvider)) {
@@ -139,7 +143,7 @@ class AutocompleteSelectBox extends TextBase
         } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) { // @phpstan-ignore-line
             $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->label));
             $this->setValue(null);
         } else {

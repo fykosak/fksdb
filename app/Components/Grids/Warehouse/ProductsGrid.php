@@ -6,9 +6,13 @@ namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends EntityGrid<ProductModel>
+ */
 class ProductsGrid extends EntityGrid
 {
 

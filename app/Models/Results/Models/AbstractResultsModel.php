@@ -6,13 +6,13 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\DI\Container;
 
 /**
@@ -62,8 +62,8 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return Row[]
      * @throws \PDOException
+     * @phpstan-ignore-next-line
      */
     public function getData(ContestCategoryModel $category): array
     {
@@ -86,12 +86,16 @@ abstract class AbstractResultsModel
         return $result;
     }
 
+    /**
+     * @return literal-string
+     */
     abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
+     * @phpstan-param array<string,int|null>|array<string,array<int,int|null>> $conditions
      */
-    protected function conditionsToWhere(iterable $conditions): string
+    protected function conditionsToWhere(array $conditions): string
     {
         $where = [];
         foreach ($conditions as $col => $value) {
@@ -120,6 +124,9 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     protected function getTasks(int $series): TypedGroupedSelection
     {
         return $this->contestYear->getTasks($series)->order('tasknr');
@@ -133,5 +140,9 @@ abstract class AbstractResultsModel
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
+     */
     abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

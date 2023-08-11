@@ -19,7 +19,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Authorizator;
 
-class InboxPresenter extends BasePresenter
+final class InboxPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
 

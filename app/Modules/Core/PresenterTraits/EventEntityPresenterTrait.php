@@ -8,12 +8,16 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
+/**
+ * @template EM of (Model&\Nette\Security\Resource)
+ */
 trait EventEntityPresenterTrait
 {
+    /** @phpstan-use EntityPresenterTrait<EM> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -25,9 +29,11 @@ trait EventEntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
+     * @return EM
      */
     protected function getEntity(): Model
     {
+        /** @var EM $model */
         $model = $this->getBaseEntity();
         /** @var EventModel $event */
         $event = $model->getReferencedModel(EventModel::class);

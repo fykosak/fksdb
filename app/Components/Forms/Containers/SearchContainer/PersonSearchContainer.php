@@ -14,6 +14,9 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-extends SearchContainer<PersonModel>
+ */
 class PersonSearchContainer extends SearchContainer
 {
     public const SEARCH_EMAIL = 'email';
@@ -67,23 +70,29 @@ class PersonSearchContainer extends SearchContainer
         }
     }
 
+    /**
+     * @phpstan-return callable(string|null):(PersonModel|null)
+     */
     protected function getSearchCallback(): callable
     {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return fn($term): ?PersonModel => $this->personService->findByEmail($term);
+                return fn(?string $term): ?PersonModel => $this->personService->findByEmail($term);
             case self::SEARCH_ID:
-                return fn($term): ?PersonModel => $this->personService->findByPrimary($term);
+                return fn(?string $term): ?PersonModel => $this->personService->findByPrimary($term);
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
+    /**
+     * @phpstan-return callable(string|null):array<string,array<string,string|null>>)
+     */
     protected function getTermToValuesCallback(): callable
     {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return fn($term): array => ['person_info' => ['email' => $term]];
+                return fn(?string $term): array => ['person_info' => ['email' => $term]];
             case self::SEARCH_ID:
                 return fn(): array => [];
             default:

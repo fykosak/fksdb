@@ -9,11 +9,15 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<EventParticipantModel>
+ */
 class SingleApplicationsGrid extends FilterGrid
 {
     protected EventModel $event;
@@ -26,6 +30,9 @@ class SingleApplicationsGrid extends FilterGrid
         $this->holder = $holder;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getHoldersColumns(): array
     {
         return [
@@ -64,6 +71,9 @@ class SingleApplicationsGrid extends FilterGrid
         $this->addColumns($fields);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getParticipants();

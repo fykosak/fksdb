@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
+/**
+ * @template TValue
+ * @phpstan-implements MergedStrategy<TValue>
+ */
 class TrunkStrategy implements MergeStrategy
 {
-
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
-     * @return mixed
+     * @param TValue $trunk
+     * @param TValue $merged
+     * @return TValue
      */
     public function mergeValues($trunk, $merged)
     {

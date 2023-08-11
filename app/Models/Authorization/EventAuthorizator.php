@@ -7,8 +7,8 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Nette\Security\Resource;
 use Nette\Security\Permission;
+use Nette\Security\Resource;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -48,8 +48,8 @@ class EventAuthorizator
      */
     private function getRolesForEvent(EventModel $event): array
     {
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
-        /** @var LoginModel $login */
         $person = $login ? $login->person : null;
         return $person ? $person->getEventRoles($event) : [];
     }

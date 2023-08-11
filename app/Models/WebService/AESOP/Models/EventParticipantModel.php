@@ -48,6 +48,6 @@ order by surname, name",
         ];
         return $this->contestYear->contest->getContestSymbol()
             . '.'
-            . $maskMapping[$this->eventName] ?? $this->eventName;
+            . ($maskMapping[$this->eventName] ?? $this->eventName);
     }
 }

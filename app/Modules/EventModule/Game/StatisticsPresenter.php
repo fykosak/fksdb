@@ -9,7 +9,7 @@ use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class StatisticsPresenter extends BasePresenter
+final class StatisticsPresenter extends BasePresenter
 {
     /**
      * @throws EventNotFoundException

@@ -22,14 +22,17 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
         $this->event = $event;
     }
 
+    /**
+     * @return array<int,array{person:array{name:string,gender:string},participation:array<int,int>}>
+     */
     public function getData(): array
     {
         $data = [];
         /** @var EventParticipantModel $participant */
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $participant) {
             $participants = [];
-            /** @var EventParticipantModel $personParticipation */
             $query = $participant->person->getEventParticipants()->where('status', ['participated']);
+            /** @var EventParticipantModel $personParticipation */
             foreach ($query as $personParticipation) {
                 $participants[] = $personParticipation->event->event_id;
             }

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\GrantModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method GrantModel storeModel(array $data, ?GrantModel $model = null)
+ * @phpstan-extends Service<GrantModel>
  */
 final class GrantService extends Service
 {

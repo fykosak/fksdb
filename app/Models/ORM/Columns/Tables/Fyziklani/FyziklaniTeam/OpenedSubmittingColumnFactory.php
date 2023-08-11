@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<TeamModel2,never>
+ */
 class OpenedSubmittingColumnFactory extends ColumnFactory
 {
 

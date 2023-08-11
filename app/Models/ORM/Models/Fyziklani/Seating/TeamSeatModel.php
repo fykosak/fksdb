@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $fyziklani_seat_id
  * @property-read SeatModel $fyziklani_seat
  * @property-read int $fyziklani_team_id
- * @property-read TeamModel2|null fyziklani_team
+ * @property-read TeamModel2|null $fyziklani_team
  */
 final class TeamSeatModel extends Model
 {

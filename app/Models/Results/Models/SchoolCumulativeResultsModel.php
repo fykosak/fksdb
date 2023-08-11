@@ -6,7 +6,6 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\NotSupportedException;
 
@@ -16,10 +15,10 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel
 {
-
+    /** @var int[] */
     protected array $series;
     /**
-     * Cache
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
      */
     private array $dataColumns = [];
     private CumulativeResultsModel $cumulativeResultsModel;
@@ -35,6 +34,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
@@ -72,6 +72,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         return $this->dataColumns[$category->label];
     }
 
+    /**
+     * @return int[]
+     */
     public function getSeries(): array
     {
         return $this->series;
@@ -98,14 +101,14 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         ];
     }
 
+    /**
+     * @return literal-string
+     */
     protected function composeQuery(ContestCategoryModel $category): string
     {
         throw new NotSupportedException();
     }
 
-    /**
-     * @return Row[]
-     */
     public function getData(ContestCategoryModel $category): array
     {
         $categories = [];

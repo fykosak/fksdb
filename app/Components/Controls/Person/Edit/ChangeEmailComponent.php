@@ -21,7 +21,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property-read PersonModel $model
+ * @phpstan-extends EntityFormComponent<PersonModel>
  */
 class ChangeEmailComponent extends EntityFormComponent
 {
@@ -51,7 +51,7 @@ class ChangeEmailComponent extends EntityFormComponent
         $login = $this->model->getLogin();
         $this->template->lang = Language::tryFrom($this->lang);
         $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch();
+            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         parent::render();
     }
 
@@ -86,6 +86,7 @@ class ChangeEmailComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @var array{new_email:string} $values */
         $values = $form->getValues('array');
         $this->accountManager->sendChangeEmail($this->model, $values['new_email'], Language::tryFrom($this->lang));
         $this->getPresenter()->flashMessage(

@@ -40,9 +40,6 @@ parameters:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zrušit přihlášku')
                     behaviorType: danger
-                cancelled->__terminated:
-                    condition: FKSDB\Models\Events\Semantics\Role('admin')
-                    label: _('Smazat přihlášku')
 events:
     dsef28:
         eventTypeIds: [2]

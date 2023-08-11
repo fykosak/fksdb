@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
@@ -12,6 +13,9 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<TeamModel2,never>
+ */
 class NameColumnFactory extends ColumnFactory
 {
     public function createFormControl(...$args): BaseControl

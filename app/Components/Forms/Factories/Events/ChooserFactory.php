@@ -30,6 +30,7 @@ class ChooserFactory extends AbstractFactory
         $options = $this->optionsProvider->getOptions($field);
         $opts = [];
         foreach ($options as $key => $option) {
+            /** @phpstan-ignore-next-line */
             if (is_array($option)) {
                 $opts[$option['value']] = $option['label'];
             } else {

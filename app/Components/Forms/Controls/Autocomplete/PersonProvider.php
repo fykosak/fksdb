@@ -13,8 +13,10 @@ use Fykosak\NetteORM\TypedSelection;
 class PersonProvider implements FilteredDataProvider
 {
 
-    private const PLACE = 'place';
     private PersonService $personService;
+    /**
+     * @phpstan-var TypedSelection<PersonModel>
+     */
     private TypedSelection $searchTable;
 
     public function __construct(PersonService $personService)
@@ -73,17 +75,24 @@ class PersonProvider implements FilteredDataProvider
         return $result;
     }
 
+    /**
+     * @phpstan-return array{
+     *     label:string,
+     *     value:int,
+     *     place:string|null,
+     * }
+     */
     private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY));
+        $address = $person->getAddress(PostContactType::from(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }
         return [
-            self::LABEL => $person->getFullName(),
-            self::VALUE => $person->person_id,
-            self::PLACE => $place,
+            'label' => $person->getFullName(),
+            'value' => $person->person_id,
+            'place' => $place,
         ];
     }
 

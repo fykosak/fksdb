@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\PDFGenerators\TeamSeating\AllTeams;
 
 use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends SeatingPageComponent<null,('dev'|'all')[]>
+ */
 class PageComponent extends SeatingPageComponent
 {
     private RoomModel $room;
@@ -22,7 +25,8 @@ class PageComponent extends SeatingPageComponent
     }
 
     /**
-     * @param mixed $row
+     * @phpstan-param null $row
+     * @phpstan-param ('dev'|'all')[] $params
      */
     final public function render($row, array $params = []): void
     {

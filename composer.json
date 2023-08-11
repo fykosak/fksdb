@@ -34,8 +34,8 @@
     "setasign/fpdf": "v1.8.2",
     "setasign/fpdi": "v1.5.4",
     "league/oauth2-google": "v3.0.3",
-    "fykosak/nette-orm": "dev-dev-mapper#d6b6381",
-    "fykosak/nette-fks-utils": "dev-dev-context-translator#6c299c7",
+    "fykosak/nette-orm": "^v0.4.1",
+    "fykosak/nette-fks-utils": "dev-dev-context-translator#4fcf013",
     "fykosak/nette-frontend-component": "dev-dev-74#5650c5f "
   },
   "require-dev": {
@@ -86,10 +86,10 @@
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --extensions=php,phpt --standard=PSR12 --parallel=8 app/ tests/"
     ],
     "testPHPStan": [
-      "vendor/bin/phpstan analyse app tests libs"
+      "vendor/bin/phpstan analyse -c phpstan.neon"
     ],
-    "testPHPStanDev": [
-      "vendor/bin/phpstan analyse -l9 app/"
+    "testPHPStanClaer": [
+      "vendor/bin/phpstan clear-result-cache"
     ]
   }
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\ComponentReflection;
@@ -115,8 +115,7 @@ class BreadcrumbsComponent extends BaseComponent
                 'title' => $naviRequest->title,
             ];
         }
-        $this->template->path = $path;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte', ['path' => $path]);
     }
 
     public function getBackLinkUrl(): ?string
@@ -190,7 +189,7 @@ class BreadcrumbsComponent extends BaseComponent
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
-            /** @var Presenter $presenterClassName */
+            /** @var class-string<Presenter> $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
            // $methodName = ($presenterClassName)::publicFormatActionMethod($action);

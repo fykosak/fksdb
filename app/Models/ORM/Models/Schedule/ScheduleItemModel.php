@@ -33,6 +33,18 @@ use Nette\Security\Resource;
  * @property-read LocalizedString $long_description
  * @property-read \DateTimeInterface|null $begin
  * @property-read \DateTimeInterface|null $end
+ * @phpstan-type SerializedScheduleItemModel array{
+ *      scheduleGroupId:int,
+ *      price:array<string, string>,
+ *      totalCapacity:int|null,
+ *      usedCapacity:int|null,
+ *      scheduleItemId:int,
+ *      name:array<string, string>,
+ *      begin:\DateTimeInterface,
+ *      end:\DateTimeInterface,
+ *      description:array<string, string>,
+ *      longDescription:array<string, string>,
+ * }
  */
 final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
@@ -71,6 +83,9 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         return (bool)count($this->getPrice()->getPrices());
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     public function getInterested(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
@@ -101,6 +116,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
+     * @phpstan-return SerializedScheduleItemModel
      * @throws \Exception
      */
     public function __toArray(): array
@@ -161,10 +177,10 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', (string)$this->schedule_item_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'totalCapacity' => $this->capacity,
-            'usedCapacity' => $this->getUsedCapacity(),
-            'scheduleItemId' => $this->schedule_item_id,
+            'scheduleGroupId' => (string)$this->schedule_group_id,
+            'totalCapacity' => (string)$this->capacity,
+            'usedCapacity' => (string)$this->getUsedCapacity(),
+            'scheduleItemId' => (string)$this->schedule_item_id,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'description' => $this->description->__serialize(),

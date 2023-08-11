@@ -24,7 +24,7 @@ class TableMerger
     private Explorer $explorer;
     private Model $trunkRow;
     private Model $mergedRow;
-    /** @var MergeStrategy[] */
+    /** @phpstan-var array<string,MergeStrategy> */
     private array $columnMergeStrategies = [];
     private MergeStrategy $globalMergeStrategy;
     private Logger $logger;
@@ -133,7 +133,7 @@ class TableMerger
             } else {
                 /* Redirect dependant to the new parent. */
                 foreach ($mergedDependants as $dependant) {
-                    $this->logUpdate($dependant, $newParent);
+                    $this->logUpdate($dependant, $newParent); // @phpstan-ignore-line
                     $dependant->update($newParent);
                 }
             }

@@ -10,6 +10,9 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ValuePrinter<PersonModel>
+ */
 class PersonLink extends ValuePrinter
 {
 

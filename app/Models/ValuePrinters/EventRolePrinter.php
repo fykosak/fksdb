@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Models\Authorization\EventRole\{EventRole
-};
+use FKSDB\Models\Authorization\EventRole\{EventRole};
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;

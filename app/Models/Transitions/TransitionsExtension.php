@@ -8,12 +8,29 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
+/**
+ * @phpstan-type Item array{
+ *      machine:string,
+ *      stateEnum:class-string<EnumColumn&FakeStringEnum>,
+ *      decorator:\Nette\DI\Definitions\Statement|null,
+ *      transitions:array<string,TransitionType>
+ * }
+ * @phpstan-type TransitionType array{
+ *      condition:\Nette\DI\Definitions\Statement|bool|null,
+ *      label:\Nette\DI\Definitions\Statement|string|null,
+ *      validation:\Nette\DI\Definitions\Statement|bool|null,
+ *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      behaviorType:'success'|'warning'|'danger'|'primary'|'secondary'
+ *  }
+ */
 class TransitionsExtension extends CompilerExtension
 {
     public function getConfigSchema(): Schema
@@ -45,11 +62,16 @@ class TransitionsExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
+        /** @phpstan-var array<string,Item> $config */
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
             self::createMachine($this, $machineName, $machine);
         }
     }
+
+    /**
+     * @phpstan-param Item $config
+     */
     public static function createMachine(CompilerExtension $extension, string $name, array $config): ServiceDefinition
     {
         $factory = $extension->getContainerBuilder()
@@ -94,18 +116,18 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @param EnumColumn|string $enumClassName
-     * @return EnumColumn[][]|EnumColumn[]
+     * @phpstan-param class-string<EnumColumn&FakeStringEnum> $enumClassName
+     * @return array{(EnumColumn&FakeStringEnum)[],EnumColumn&FakeStringEnum}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {
         [$sources, $target] = explode('->', $mask);
         return [
             array_map(
-                fn(string $state): ?EnumColumn => $enumClassName::tryFrom($state),
+                fn(string $state): EnumColumn => $enumClassName::from($state),
                 explode('|', $sources)
             ),
-            $enumClassName::tryFrom($target),
+            $enumClassName::from($target),
         ];
     }
 }

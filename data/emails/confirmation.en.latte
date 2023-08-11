@@ -2,7 +2,7 @@
 <p>
     We confirm receiving {$holder->getPerson()->getFullName()}'s application for event <em>{$holder->event}</em>
     that takes place
-    {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
+    {if $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
         from {$holder->event->begin|date:'M d'} to {$holder->event->end|date:'M d, Y'}.
     {else}
         on {$holder->event->begin|date:'M d, Y'}.

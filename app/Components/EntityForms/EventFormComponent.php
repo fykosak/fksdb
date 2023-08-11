@@ -23,7 +23,7 @@ use Nette\Forms\Form;
 use Nette\Neon\Neon;
 
 /**
- * @property EventModel|null $model
+ * @phpstan-extends EntityFormComponent<EventModel>
  */
 class EventFormComponent extends EntityFormComponent
 {
@@ -65,7 +65,23 @@ class EventFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array{event:array{
+         *      event_type_id:int,
+         *      event_year:int,
+         *      name:string,
+         *      begin:\DateTimeInterface,
+         *      end:\DateTimeInterface,
+         *      registration_begin:\DateTimeInterface,
+         *      registration_end:\DateTimeInterface,
+         *      report_cs:string,
+         *      report_en:string,
+         *      description_cs:string,
+         *      description_en:string,
+         *      place:string,
+         *      parameters:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
         $data['year'] = $this->contestYear->year;
         $model = $this->eventService->storeModel($data, $this->model);
@@ -84,7 +100,7 @@ class EventFormComponent extends EntityFormComponent
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters'); // @phpstan-ignore-line
             $paramControl->addRule(function (BaseControl $control): bool {
                 $parameters = $control->getValue();
                 try {

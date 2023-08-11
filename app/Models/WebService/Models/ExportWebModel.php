@@ -11,6 +11,9 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class ExportWebModel extends WebModel
 {
     private StoredQueryFactory $storedQueryFactory;
@@ -93,6 +96,7 @@ class ExportWebModel extends WebModel
         return $this->contestAuthorizator->isAllowed(
             $query,
             'execute',
+            /** @phpstan-ignore-next-line */
             $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }

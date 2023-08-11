@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -15,14 +18,21 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
-    private ?ContestantModel $contestant;
-
-    public function getContestant(): ?ContestantModel
+    /**
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws NoContestYearAvailable
+     */
+    public function getContestant(): ContestantModel
     {
-        if (!isset($this->contestant)) {
-            $this->contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
+        static $contestant;
+        if (!isset($contestant)) {
+            $contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
         }
-        return $this->contestant;
+        if (!$contestant) {
+            throw new NotFoundException(_('Contestant nof found'));
+        }
+        return $contestant;
     }
 
     /**
@@ -36,18 +46,21 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->yearTraitStartup();
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNavRoots(): array
     {
         return ['Public.Dashboard.default'];
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest)) {
-            return 'contest-' . $contest->getContestSymbol();
-        }
-        return parent::getStyleId();
+        return 'contest-' . $contest->getContestSymbol();
     }
 
     protected function getSubTitle(): ?string
@@ -57,6 +70,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::tryFrom(PresenterRole::CONTESTANT);
+        return PresenterRole::from(PresenterRole::CONTESTANT);
     }
 }

@@ -13,12 +13,20 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<PersonModel>
+ */
 class PersonsGrid extends BaseGrid
 {
     /** @var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
+    /** @phpstan-var TypedSelection<PersonModel> $data */
     private TypedSelection $data;
 
+    /**
+     * @phpstan-param TypedSelection<PersonModel> $trunkPersons
+     * @param PersonModel[] $pairs
+     */
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
         parent::__construct($container);
@@ -26,6 +34,9 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->data;
@@ -63,7 +74,7 @@ class PersonsGrid extends BaseGrid
             'score'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
@@ -78,7 +89,7 @@ class PersonsGrid extends BaseGrid
             'mergeAB'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
@@ -92,7 +103,7 @@ class PersonsGrid extends BaseGrid
             'mergeBA'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton(// @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [

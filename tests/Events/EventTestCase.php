@@ -26,6 +26,12 @@ abstract class EventTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
+        if (!isset($data['registration_begin'])) {
+            $data['registration_begin'] = '2016-01-01';
+        }
+        if (!isset($data['registration_end'])) {
+            $data['registration_end'] = '2017-01-01';
+        }
         return $this->container->getByType(EventService::class)->storeModel($data);
     }
 

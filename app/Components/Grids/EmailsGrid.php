@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends EntityGrid<EmailMessageModel>
+ */
 class EmailsGrid extends EntityGrid
 {
 

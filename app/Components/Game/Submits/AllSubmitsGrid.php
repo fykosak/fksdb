@@ -21,6 +21,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<SubmitModel>
+ */
 class AllSubmitsGrid extends FilterGrid
 {
     protected SubmitService $submitService;
@@ -81,6 +84,9 @@ class AllSubmitsGrid extends FilterGrid
         );
     }
 
+    /**
+     * @phpstan-return TypedSelection<SubmitModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->submitService->getTable()->where('fyziklani_team.event_id', $this->event->event_id);
@@ -129,7 +135,7 @@ class AllSubmitsGrid extends FilterGrid
 
     public function handleRevoke(int $id): void
     {
-        /** @var SubmitModel $submit */
+        /** @var SubmitModel|null $submit */
         $submit = $this->submitService->findByPrimary($id);
         if (!$submit) {
             $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);

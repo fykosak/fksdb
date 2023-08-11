@@ -27,7 +27,9 @@ class PerYearsChart extends FrontEndComponent implements Chart
     {
         $this->submitService = $submitService;
     }
-
+    /**
+     * @phpstan-return array<int,array<int|'year',int>>
+     */
     protected function getData(): array
     {
         $seriesQuery = $this->submitService->getTable()
@@ -41,16 +43,18 @@ class PerYearsChart extends FrontEndComponent implements Chart
             ->select('COUNT(DISTINCT contestant_id) AS count, task.year');
 
         $data = [];
+        /** @var object{year:number,series:number,count:int} $row */
         foreach ($seriesQuery as $row) {
-            $year = $row->year;
-            $series = $row->series;
+            $year = (int)$row->year;
+            $series = (int)$row->series;
             $data[$year] = $data[$year] ?? [];
-            $data[$year][$series] = $row->count;
+            $data[$year][$series] = (int)$row->count;
         }
+        /** @var object{year:number,count:int} $row */
         foreach ($yearsQuery as $row) {
-            $year = $row->year;
+            $year = (int)$row->year;
             $data[$year] = $data[$year] ?? [];
-            $data[$year]['year'] = $row->count;
+            $data[$year]['year'] = (int)$row->count;
         }
         return $data;
     }

@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model;
 class ModelContainer extends ContainerWithOptions
 {
     /**
-     * @param Model|iterable $data
+     * @param Model|iterable<string|int,mixed> $data
      * @return static
      */
     public function setValues($data, bool $erase = false): self

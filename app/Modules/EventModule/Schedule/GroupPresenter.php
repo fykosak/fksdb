@@ -22,11 +22,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleGroupModel getEntity()
- */
-class GroupPresenter extends BasePresenter
+final class GroupPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
     use EventEntityPresenterTrait;
 
     private ScheduleGroupService $scheduleGroupService;
@@ -57,7 +55,7 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
     }
@@ -78,7 +76,7 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-user-check'
         );
     }

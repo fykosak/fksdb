@@ -9,16 +9,20 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
+/**
+ * @template M of Model
+ */
 abstract class LinkFactory
 {
-
+    /** @phpstan-var class-string<M> */
     protected string $modelClassName;
 
-    public function __construct(?string $modelClassName = null)
+    /**
+     * @param class-string<M>|null $modelClassName
+     */
+    public function __construct(string $modelClassName = null)
     {
-        if ($modelClassName) {
-            $this->modelClassName = $modelClassName;
-        }
+        $this->modelClassName = $modelClassName;
     }
 
     /**
@@ -34,12 +38,10 @@ abstract class LinkFactory
     /**
      * @throws CannotAccessModelException
      * @throws \ReflectionException
+     * @phpstan-return M
      */
     protected function getModel(Model $modelSingle): ?Model
     {
-        if (!isset($this->modelClassName)) {
-            return $modelSingle;
-        }
         return $modelSingle->getReferencedModel($this->modelClassName);
     }
 
@@ -47,6 +49,7 @@ abstract class LinkFactory
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-return array{string,array<string,scalar>}
      */
     public function createLinkParameters(Model $model): array
     {
@@ -62,5 +65,11 @@ abstract class LinkFactory
 
     abstract protected function getDestination(Model $model): string;
 
+    /**
+     * @phpstan-param M $model
+     * @phpstan-return array<string,scalar>
+     */
     abstract protected function prepareParams(Model $model): array;
+
+    abstract public function getText(): string;
 }

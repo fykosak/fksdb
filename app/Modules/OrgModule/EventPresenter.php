@@ -11,16 +11,15 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method EventModel getEntity()
- */
-class EventPresenter extends BasePresenter
+final class EventPresenter extends BasePresenter
 {
-    use EntityPresenterTrait;
+    /** @phpstan-use ContestYearEntityTrait<EventModel> */
+    use ContestYearEntityTrait;
 
     private EventService $eventService;
 
@@ -40,8 +39,11 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @return PageTitle
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -67,8 +69,11 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @return EventFormComponent
+     * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): EventFormComponent
     {

@@ -11,10 +11,14 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
-class EventParticipantMachine extends Machine
+/**
+ * @phpstan-extends Machine<BaseHolder>
+ */
+final class EventParticipantMachine extends Machine
 {
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -25,7 +29,9 @@ class EventParticipantMachine extends Machine
     }
 
     /**
-     * @return Transition[]
+     * @param BaseHolder $holder
+     * @return Transition<BaseHolder>[]
+     * @phpstan-param (EnumColumn&FakeStringEnum)|null $sourceState
      */
     public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
     {
@@ -36,14 +42,14 @@ class EventParticipantMachine extends Machine
     }
 
     /**
-     * @return Transition[]
+     * @phpstan-param FakeStringEnum&EnumColumn $sourceState
+     * @return Transition<BaseHolder>[]
      */
     private function getMatchingTransitions(EnumColumn $sourceState): array
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $sourceState->value ===
-                $transition->source->value
+            fn(Transition $transition): bool => $sourceState->value === $transition->source->value
         );
     }
 
@@ -57,6 +63,9 @@ class EventParticipantMachine extends Machine
         return $holder;
     }
 
+    /**
+     * @phpstan-param Transition<BaseHolder> $transition
+     */
     final public function execute2(Transition $transition, BaseHolder $holder): void
     {
         if (!$transition->canExecute($holder)) {

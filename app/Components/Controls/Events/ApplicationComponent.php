@@ -13,6 +13,7 @@ use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -27,6 +28,7 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
 /**
@@ -76,8 +78,7 @@ class ApplicationComponent extends BaseComponent
 
     final public function renderForm(): void
     {
-        $this->template->holder = $this->holder;
-        $this->template->render($this->getTemplateFile());
+        $this->template->render($this->getTemplateFile(), ['holder' => $this->holder]);
     }
 
     protected function createComponentForm(): FormControl
@@ -135,10 +136,13 @@ class ApplicationComponent extends BaseComponent
         foreach ($this->holder->formAdjustments as $adjustment) {
             $adjustment->adjust($form, $this->holder);
         }
+        /** @phpstan-ignore-next-line */
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
+            /** @phpstan-ignore-next-line */
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
         } elseif ($transitionSubmit) {
+            /** @phpstan-ignore-next-line */
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
 
@@ -147,6 +151,7 @@ class ApplicationComponent extends BaseComponent
 
     /**
      * @throws \Throwable
+     * @phpstan-param Transition<BaseHolder>|null $transition
      */
     public function handleSubmit(Form $form, ?Transition $transition = null): void
     {
@@ -154,7 +159,9 @@ class ApplicationComponent extends BaseComponent
             if (!$transition || $transition->getValidation()) {
                 try {
                     $this->connection->beginTransaction();
-                    $values = FormUtils::emptyStrToNull($form->getValues());
+                    /** @var ArrayHash<mixed> $values */
+                    $values = $form->getValues();
+                    $values = FormUtils::emptyStrToNull($values);
                     Debugger::log(json_encode((array)$values), 'app-form');
                     foreach ($this->holder->processings as $processing) {
                         $processing->process($values);
@@ -204,7 +211,7 @@ class ApplicationComponent extends BaseComponent
                     ExistingPaymentException $exception
                 ) {
                     $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-                    /** @var ReferencedId $referencedId */
+                    /** @var ReferencedId<PersonModel> $referencedId */
                     foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
                         $referencedId->rollback();
                     }

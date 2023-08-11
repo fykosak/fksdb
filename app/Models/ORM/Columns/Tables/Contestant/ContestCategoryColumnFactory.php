@@ -7,14 +7,12 @@ namespace FKSDB\Models\ORM\Columns\Tables\Contestant;
 use FKSDB\Components\Badges\ContestCategoryBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 class ContestCategoryColumnFactory extends ColumnFactory
 {
     /**
-     * @param ContestantModel $model
      * @throws BadTypeException
      */
     protected function createHtmlValue(Model $model): Html

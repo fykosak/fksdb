@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Badges;
 
-use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends Badge<ContestModel|int>
+ */
 class ContestBadge extends Badge
 {
-    /**
-     * @throws ContestNotFoundException
-     */
     public static function getHtml(...$args): Html
     {
         [$contest] = $args;
-        $contestId = $contest;
         if ($contest instanceof ContestModel) {
             $contestId = $contest->contest_id;
+        } else {
+            $contestId = (int)$contest;
         }
         $component = Html::el('span');
         switch ($contestId) {
@@ -29,6 +30,6 @@ class ContestBadge extends Badge
             case 3:
                 return $component->addAttributes(['class' => 'badge bg-ctyrboj'])->addText(_('Vědecký čtyřboj'));
         }
-        throw new ContestNotFoundException($contestId);
+        throw new \InvalidArgumentException(sprintf(_('Contest %d not found'), $contestId), IResponse::S404_NOT_FOUND);
     }
 }

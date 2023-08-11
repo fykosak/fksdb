@@ -34,7 +34,7 @@ class BornNumber
         }
 
         // kontrolní číslice
-        $mod = +($year . $month . $day . $ext) % 11;
+        $mod = ((int)($year . $month . $day . $ext)) % 11;
         if ($mod === 10) {
             $mod = 0;
         }
@@ -78,7 +78,7 @@ class BornNumber
         }
 
         [, $year, $month, $day, $ext, $control] = $matches;
-        return [$year, $month, $day, $ext, ($control === '') ? null : $control];
+        return [(int)$year, (int)$month, (int)$day, (int)$ext, ($control === '') ? null : (int)$control];
     }
 
     /**
@@ -92,6 +92,6 @@ class BornNumber
         if (is_null($control)) {
             throw new OutOfRangeException('Born number before 1954');
         }
-        return +$month > 50 ? PersonGender::tryFrom(PersonGender::FEMALE) : PersonGender::tryFrom(PersonGender::MALE);
+        return +$month > 50 ? PersonGender::from(PersonGender::FEMALE) : PersonGender::from(PersonGender::MALE);
     }
 }

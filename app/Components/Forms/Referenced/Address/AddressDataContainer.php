@@ -15,6 +15,9 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
+/**
+ * @phpstan-extends ReferencedContainer<AddressModel>
+ */
 class AddressDataContainer extends ReferencedContainer
 {
     private bool $writeOnly;

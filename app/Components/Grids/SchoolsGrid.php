@@ -14,6 +14,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends FilterGrid<SchoolModel>
+ */
 class SchoolsGrid extends FilterGrid
 {
     private SchoolService $service;
@@ -28,6 +31,9 @@ class SchoolsGrid extends FilterGrid
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
+    /**
+     * @phpstan-return TypedSelection<SchoolModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
@@ -35,7 +41,7 @@ class SchoolsGrid extends FilterGrid
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
         }
         return $query;

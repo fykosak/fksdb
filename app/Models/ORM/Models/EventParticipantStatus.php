@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
-
+    public const INIT = '__init';
     public const APPLIED = 'applied';
     public const APPLIED_NODSEF = 'applied.nodsef';
     public const APPLIED_NOTSAF = 'applied.notsaf';
@@ -40,6 +40,7 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
+            new self(self::INIT),
             new self(self::APPLIED),
             new self(self::APPLIED_NODSEF),
             new self(self::APPLIED_NOTSAF),

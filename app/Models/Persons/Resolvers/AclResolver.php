@@ -33,10 +33,10 @@ class AclResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
-        return $this->isAllowed($person, 'edit') ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
-            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+        return $this->isAllowed($person, 'edit') ? ResolutionMode::from(ResolutionMode::OVERWRITE)
+            : ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool
@@ -44,10 +44,7 @@ class AclResolver implements Resolver
         return !$person || $this->isAllowed($person, 'edit');
     }
 
-    /**
-     * @param string|Resource|null $privilege
-     */
-    private function isAllowed(PersonModel $person, $privilege): bool
+    private function isAllowed(PersonModel $person, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }

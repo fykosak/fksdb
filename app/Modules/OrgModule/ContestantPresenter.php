@@ -11,18 +11,17 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
 
-/**
- * @method ContestantModel getEntity(bool $throw = true)
- */
-class ContestantPresenter extends BasePresenter
+final class ContestantPresenter extends BasePresenter
 {
-    use EntityPresenterTrait;
+    /** @phpstan-use ContestYearEntityTrait<ContestantModel> */
+    use ContestYearEntityTrait;
 
     private ContestantService $contestantService;
 
@@ -32,8 +31,11 @@ class ContestantPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @return PageTitle
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -103,8 +105,11 @@ class ContestantPresenter extends BasePresenter
     }
 
     /**
+     * @return ContestantFormComponent
+     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ContestantFormComponent
     {

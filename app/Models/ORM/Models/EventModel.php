@@ -11,7 +11,9 @@ use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -32,17 +34,33 @@ use Nette\Security\Resource;
  * @property-read int $event_year
  * @property-read \DateTimeInterface $begin
  * @property-read \DateTimeInterface $end
- * @property-read \DateTimeInterface|null $registration_begin
- * @property-read \DateTimeInterface|null $registration_end
+ * @property-read \DateTimeInterface $registration_begin
+ * @property-read \DateTimeInterface $registration_end
  * @property-read string $name
- * @property-read string $report_cs
- * @property-read string $report_en
+ * @property-read string|null $report_cs
+ * @property-read string|null $report_en
  * @property-read LocalizedString $report
- * @property-read string $description_cs
- * @property-read string $description_en
+ * @property-read string|null $description_cs
+ * @property-read string|null $description_en
  * @property-read LocalizedString $description
- * @property-read string $place
- * @property-read string $parameters
+ * @property-read string|null $place
+ * @property-read string|null $parameters
+ * @phpstan-type SerializedEventModel array{
+ *    eventId:int,
+ *    year:int,
+ *    eventYear:int,
+ *    begin:string,
+ *    end:string,
+ *    registrationBegin:string,
+ *    registrationEnd:string,
+ *    report:string|null,
+ *    reportNew:array<string,string>,
+ *    description:array<string,string>,
+ *    name:string,
+ *    nameNew:array<string,string>,
+ *    eventTypeId:int,
+ *    contestId:int,
+ * }
  */
 final class EventModel extends Model implements Resource, NodeCreator
 {
@@ -71,6 +89,9 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->name;
     }
 
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
     public function getName(): LocalizedString
     {
         switch ($this->event_type_id) {
@@ -117,6 +138,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getGameSetup(): GameSetupModel
     {
+        /** @var GameSetupModel|null $gameSetupRow */
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();
@@ -124,46 +146,73 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $gameSetupRow;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ScheduleGroupModel>
+     */
     public function getScheduleGroups(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     public function getParticipants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     public function getPossiblyAttendingParticipants(): TypedGroupedSelection
     {
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getTeams(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         return $this->getTeams()->where('state', TeamState::PARTICIPATED);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
-        // TODO
         return $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     */
     public function getEventOrgs(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
     public function getPayments(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<\FKSDB\Models\ORM\Models\Fyziklani\TaskModel>
+     */
     public function getTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
@@ -194,22 +243,26 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $value;
     }
 
+    /**
+     * @phpstan-return SerializedEventModel
+     */
     public function __toArray(): array
     {
         return [
             'eventId' => $this->event_id,
             'year' => $this->year,
             'eventYear' => $this->event_year,
-            'begin' => $this->begin ? $this->begin->format('c') : null,
-            'end' => $this->end ? $this->end->format('c') : null,
-            'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
-            'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
+            'begin' => $this->begin->format('c'),
+            'end' => $this->end->format('c'),
+            'registrationBegin' => $this->registration_begin->format('c'),
+            'registrationEnd' => $this->registration_end->format('c'),
             'report' => $this->report_cs,
             'reportNew' => $this->report->__serialize(),
             'description' => $this->description->__serialize(),
             'name' => $this->name,
             'nameNew' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
+            'contestId' => $this->event_type->contest_id,
         ];
     }
 
@@ -226,8 +279,8 @@ final class EventModel extends Model implements Resource, NodeCreator
 
     public function isRegistrationOpened(): bool
     {
-        return ($this->registration_begin && $this->registration_begin->getTimestamp() <= time())
-            && ($this->registration_end && $this->registration_end->getTimestamp() >= time());
+        return ($this->registration_begin->getTimestamp() <= time())
+            && ($this->registration_end->getTimestamp() >= time());
     }
 
     public function createGameHandler(Container $container): Handler
@@ -241,6 +294,9 @@ final class EventModel extends Model implements Resource, NodeCreator
         throw new GameException(_('Game handler does not exist for this event'));
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     private function getParameters(): array
     {
         $parameters = $this->parameters ? Neon::decode($this->parameters) : [];

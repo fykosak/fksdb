@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
+/**
+ * @template TValue
+ */
 interface MergeStrategy
 {
-
     /**
-     * @template T
-     * @param T $trunk
-     * @param T $merged
+     * @param TValue $trunk
+     * @param TValue $merged
+     * @return TValue
      * @throws CannotMergeException
-     * @return T
      */
     public function mergeValues($trunk, $merged);
 }

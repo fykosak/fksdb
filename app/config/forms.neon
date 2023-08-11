@@ -18,8 +18,7 @@ parameters:
                 class:
                   required: false
             post_contact_p:
-                address:
-                  required: true
+                required: true
             person_info:
                 email:
                   required: true
@@ -44,8 +43,7 @@ parameters:
                 class:
                   required: false
             post_contact_p:
-                address:
-                  required: true
+                required: true
             person_info:
                 email:
                   required: true
@@ -56,6 +54,19 @@ parameters:
             person_has_flag:
                 spam_mff:
                   required: true
+        registerTeacher:
+            person:
+                other_name:
+                    required: true
+                family_name:
+                    required: true
+            person_info:
+                email:
+                    required: true
+                phone:
+                    required: false
+                agreed:
+                    required: true
         adminOrg: %forms.adminPerson%
         adminEventOrg: %forms.adminPerson%
         adminTeacher: %forms.adminPerson%
@@ -96,11 +107,9 @@ parameters:
                 study_year:
                   required: true
             post_contact_d:
-                address:
-                  required: false
+                required: false
             post_contact_p:
-                address:
-                  required: false
+                required: false
             person_has_flag:
                 spam_mff:
                   required: false

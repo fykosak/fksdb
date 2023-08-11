@@ -7,15 +7,18 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
+/**
+ * @template TValue
+ */
 abstract class ValuePrinter
 {
     /**
-     * @param mixed $value
+     * @param TValue|mixed $value
      */
     abstract protected function getHtml($value): Html;
 
     /**
-     * @param mixed $value
+     * @param TValue|mixed $value
      */
     public function __invoke($value): Html
     {

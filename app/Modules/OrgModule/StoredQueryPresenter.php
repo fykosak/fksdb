@@ -16,12 +16,10 @@ use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method QueryModel getEntity()
- */
-class StoredQueryPresenter extends BasePresenter
+final class StoredQueryPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
     private QueryService $storedQueryService;

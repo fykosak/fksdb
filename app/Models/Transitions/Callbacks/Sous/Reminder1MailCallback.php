@@ -14,6 +14,13 @@ class Reminder1MailCallback extends EventParticipantCallback
         return __DIR__ . DIRECTORY_SEPARATOR . 'reminder1.latte';
     }
 
+    /**
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
+     */
     protected function getData(ModelHolder $holder): array
     {
         return [

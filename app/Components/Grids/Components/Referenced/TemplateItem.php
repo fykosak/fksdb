@@ -11,16 +11,22 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @template M of \Fykosak\NetteORM\Model
+ * @template MH of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<M>
+ */
 class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
-    /** @var callable|null */
+    /** @var (callable(M):M)|null */
     protected $modelAccessorHelper = null;
 
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
+     * @phpstan-param (callable(M):M)|null $modelAccessorHelper
      */
     public function __construct(
         Container $container,
@@ -40,12 +46,16 @@ class TemplateItem extends BaseItem
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
 
+    /**
+     * @param M|null $model
+     */
     public function render(?Model $model, ?int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->template->templateString = $this->templateString;
-        $this->template->titleString = $this->titleString;
-        parent::render($model, $userPermission);
+        $this->doRender($model, $userPermission, [
+            'templateString' => $this->templateString,
+            'titleString' => $this->titleString,
+        ]);
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent

@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
@@ -13,6 +14,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonHistoryModel,ContestYearModel>
+ */
 class StudyYearColumnFactory extends ColumnFactory
 {
 
@@ -22,7 +26,7 @@ class StudyYearColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         [$contestYear] = $args;
-        if (\is_null($contestYear)) {
+        if (!$contestYear instanceof ContestYearModel) {
             throw new \InvalidArgumentException();
         }
         $control = new SelectBox($this->getTitle());
@@ -32,6 +36,9 @@ class StudyYearColumnFactory extends ColumnFactory
         return $control;
     }
 
+    /**
+     * @return array<string,array<int,string>>
+     */
     private function createOptions(ContestYearModel $contestYear): array
     {
         $hsYears = [];
@@ -42,7 +49,6 @@ class StudyYearColumnFactory extends ColumnFactory
                 $contestYear->getGraduationYear($studyYear)
             );
         }
-
         $primaryYears = [];
         foreach (StudyYear::getPrimarySchoolCases() as $studyYear) {
             $primaryYears[$studyYear->numeric()] = sprintf(
@@ -51,7 +57,7 @@ class StudyYearColumnFactory extends ColumnFactory
                 $contestYear->getGraduationYear($studyYear)
             );
         }
-
+        /** @phpstan-ignore-next-line */
         return [
             _('high school') => $hsYears,
             _('primary school') => $primaryYears,

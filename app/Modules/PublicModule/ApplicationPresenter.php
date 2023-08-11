@@ -19,20 +19,19 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
-class ApplicationPresenter extends BasePresenter
+final class ApplicationPresenter extends BasePresenter
 {
 
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
-    private ?Model $eventApplication = null;
     private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
@@ -85,10 +84,7 @@ class ApplicationPresenter extends BasePresenter
         if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
             return true;
         }
-        if (
-            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
-            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
-        ) {
+        if (!$event->isRegistrationOpened()) {
             throw new GoneException();
         }
         return true;
@@ -96,12 +92,10 @@ class ApplicationPresenter extends BasePresenter
 
     private function getEventApplication(): ?EventParticipantModel
     {
-        if (!isset($this->eventApplication)) {
-            $id = $this->getParameter('id');
-            $this->eventApplication = $this->eventParticipantService->findByPrimary($id);
-        }
-
-        return $this->eventApplication;
+        $id = $this->getParameter('id');
+        /** @var EventParticipantModel|null $eventApplication */
+        $eventApplication = $this->eventParticipantService->findByPrimary($id);
+        return $eventApplication;
     }
 
     /**
@@ -156,7 +150,7 @@ class ApplicationPresenter extends BasePresenter
 
         if (
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
             )
         ) {
             $data = $this->tokenAuthenticator->getTokenData();
@@ -216,10 +210,10 @@ class ApplicationPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
                 $this->forward(':Profile:MyApplications:default', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'default':
                 if (!isset($this->contestId)) {
                     // hack if contestId is not present, but there ale a eventId param
@@ -248,12 +242,12 @@ class ApplicationPresenter extends BasePresenter
             $eventId = null;
             if (
                 $this->tokenAuthenticator->isAuthenticatedByToken(
-                    AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                    AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
                 )
             ) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
-                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
+                    $data = self::decodeParameters($data);
                     $eventId = $data['eventId'];
                 }
             }
@@ -267,6 +261,9 @@ class ApplicationPresenter extends BasePresenter
         return $this->event;
     }
 
+    /**
+     * @return int[]
+     */
     public static function decodeParameters(string $data): array
     {
         $parts = explode(':', $data);
@@ -274,8 +271,8 @@ class ApplicationPresenter extends BasePresenter
             throw new InvalidArgumentException("Cannot decode '$data'.");
         }
         return [
-            'eventId' => $parts[0],
-            'id' => $parts[1],
+            'eventId' => (int)$parts[0],
+            'id' => (int)$parts[1],
         ];
     }
 
@@ -307,17 +304,18 @@ class ApplicationPresenter extends BasePresenter
      */
     protected function getStyleId(): string
     {
-        $contest = $this->getSelectedContest();
-        if (isset($contest)) {
+        try {
+            $contest = $this->getSelectedContest();
             return 'contest-' . $contest->getContestSymbol() . ' event-type-' . $this->getEvent()->event_type_id;
+        } catch (NoContestAvailable$exception) {
+            return parent::getStyleId();
         }
-        return parent::getStyleId();
     }
 
     protected function getRole(): PresenterRole
     {
         if ($this->getAction() === 'default') {
-            return PresenterRole::tryFrom(PresenterRole::SELECTED);
+            return PresenterRole::from(PresenterRole::SELECTED);
         }
         return parent::getRole();
     }

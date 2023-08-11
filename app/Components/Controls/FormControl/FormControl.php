@@ -34,6 +34,9 @@ class FormControl extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 
+    /**
+     * @return array{class:string,id:string}
+     */
     public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array
     {
         return [

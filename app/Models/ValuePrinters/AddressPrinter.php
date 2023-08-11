@@ -8,6 +8,9 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AddressModel;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ValuePrinter<AddressModel>
+ */
 class AddressPrinter extends ValuePrinter
 {
     /**

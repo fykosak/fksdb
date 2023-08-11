@@ -15,7 +15,7 @@ use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
+final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
@@ -84,6 +84,6 @@ class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::tryFrom(PresenterRole::SELECTED);
+        return PresenterRole::from(PresenterRole::SELECTED);
     }
 }

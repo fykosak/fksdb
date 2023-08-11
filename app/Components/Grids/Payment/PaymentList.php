@@ -19,6 +19,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterList<PaymentModel>
+ */
 class PaymentList extends FilterList
 {
     private EventModel $event;
@@ -29,6 +32,9 @@ class PaymentList extends FilterList
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPayments();
@@ -65,7 +71,8 @@ class PaymentList extends FilterList
     {
         $this->classNameCallback = fn(PaymentModel $payment): string => 'alert alert-' .
             $payment->state->getBehaviorType();
-        $this->setTitle(new TemplateItem($this->container, '@payment.payment_id'));
+        $this->setTitle(new TemplateItem($this->container, '@payment.payment_id')); // @phpstan-ignore-line
+        /** @phpstan-var RowContainer<PaymentModel> $row */
         $row = new RowContainer($this->container);
         $this->addRow($row, 'row');
         $row->addComponent(new TemplateItem($this->container, '@payment.price'), 'price');
@@ -77,7 +84,7 @@ class PaymentList extends FilterList
         $row->addComponent(new TemplateItem($this->container, '@event.role'), 'role');
         $items = new RelatedTable(
             $this->container,
-            fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(),
+            fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(),  //@phpstan-ignore-line
             new Title(null, _('Items')),
             true
         );
@@ -87,11 +94,12 @@ class PaymentList extends FilterList
             'name'
         );
         $items->addColumn(
+        /** @phpstan-ignore-next-line */
             new TemplateItem(
                 $this->container,
                 '@person.full_name (@event.role)',
                 _('For'),
-                fn(SchedulePaymentModel $model) => $model->person_schedule
+                fn(SchedulePaymentModel $model) => $model->person_schedule // @phpstan-ignore-line
             ),
             'person'
         );
@@ -100,7 +108,7 @@ class PaymentList extends FilterList
             'price'
         );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Detail')),
                 fn(PaymentModel $model) => ['detail', ['id' => $model->getPrimary()]]

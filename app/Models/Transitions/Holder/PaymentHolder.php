@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\PaymentService;
 
+/**
+ * @phpstan-implements ModelHolder<PaymentState,PaymentModel>
+ */
 class PaymentHolder implements ModelHolder
 {
     private PaymentModel $model;
@@ -20,6 +23,9 @@ class PaymentHolder implements ModelHolder
         $this->service = $paymentService;
     }
 
+    /**
+     * @param PaymentState $newState
+     */
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->model);

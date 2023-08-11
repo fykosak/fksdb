@@ -9,7 +9,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\AbortException;
 
-class WebServicePresenter extends BasePresenter
+final class WebServicePresenter extends BasePresenter
 {
     private \SoapServer $server;
 

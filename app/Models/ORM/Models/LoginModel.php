@@ -14,10 +14,10 @@ use Nette\Security\IIdentity;
  * @property-read int $login_id
  * @property-read int|null $person_id
  * @property-read PersonModel|null $person
- * @property-read string $login
- * @property-read string $hash
+ * @property-read string|null $login
+ * @property-read string|null $hash
  * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface $last_login
+ * @property-read \DateTimeInterface|null $last_login
  * @property-read int $active
  */
 final class LoginModel extends Model implements IIdentity
@@ -77,6 +77,9 @@ final class LoginModel extends Model implements IIdentity
         return $this->roles;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<GrantModel>
+     */
     public function getGrants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_GRANT, 'login_id');
@@ -95,6 +98,9 @@ final class LoginModel extends Model implements IIdentity
         return $grants;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
@@ -104,6 +110,9 @@ final class LoginModel extends Model implements IIdentity
         return $query;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');

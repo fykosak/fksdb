@@ -16,8 +16,9 @@ use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\ComponentModel\IComponent;
 
-class ChartPresenter extends BasePresenter
+final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
@@ -40,7 +41,7 @@ class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return Chart[]
+     * @return (Chart&IComponent)[]
      */
     protected function getCharts(): array
     {

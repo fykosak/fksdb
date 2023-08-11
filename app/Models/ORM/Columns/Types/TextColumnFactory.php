@@ -11,6 +11,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 class TextColumnFactory extends ColumnFactory
 {
 

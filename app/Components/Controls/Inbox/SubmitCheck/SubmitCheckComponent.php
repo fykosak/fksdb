@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
-use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
@@ -38,8 +38,8 @@ class SubmitCheckComponent extends BaseComponent
 
     public function handleCheck(): void
     {
-        /** @var SubmitModel $submit */
         $errors = 0;
+        /** @var SubmitModel $submit */
         foreach ($this->seriesTable->getSubmits() as $submit) {
             if ($submit->source->value === SubmitSource::UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
                 $errors++;
@@ -65,7 +65,7 @@ class SubmitCheckComponent extends BaseComponent
             }
         }
         $this->flashMessage(
-            sprintf(ngettext("Test done, found %d error", 'Test done, found %d errors', $errors, $errors)),
+            sprintf(ngettext("Test done, found %d error", 'Test done, found %d errors', $errors)),
             $errors ? Message::LVL_WARNING : Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

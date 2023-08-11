@@ -7,7 +7,7 @@ namespace FKSDB\Modules\ProfileModule;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use Fykosak\Utils\UI\PageTitle;
 
-class ThemePresenter extends BasePresenter
+final class ThemePresenter extends BasePresenter
 {
     private PersonInfoService $personInfoService;
 
@@ -26,7 +26,7 @@ class ThemePresenter extends BasePresenter
         return new PageTitle(null, _('Choose theme'), 'fas fa-circle-half-stroke');
     }
 
-    public function handleChoose(string $theme)
+    public function handleChoose(string $theme): void
     {
         $this->personInfoService->storeModel(['theme' => $theme], $this->getLoggedPerson()->getInfo());
         $this->flashMessage(_('Theme has been chosen!'));

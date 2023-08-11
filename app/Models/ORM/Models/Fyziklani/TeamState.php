@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-// TODO to enum
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
@@ -112,6 +111,7 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             new self(self::MISSED),
             new self(self::DISQUALIFIED),
             new self(self::CANCELLED),
+            new self(self::INIT),
         ];
     }
 }

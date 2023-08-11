@@ -70,12 +70,12 @@ class EventsExtension extends CompilerExtension
             'setTemplateDir',
             [$this->getContainerBuilder()->parameters['events']['templateDir']]
         );
-        foreach ($this->getConfig() as $definitionName => $definition) {
+        foreach ($this->getConfig() as $definitionName => $definition) {//@phpstan-ignore-line
             $keys = $this->createAccessKeys($definition);
             $machine = TransitionsExtension::createMachine(
                 $this,
                 $definitionName,
-                $this->getConfig()[$definitionName]['machine']
+                $this->getConfig()[$definitionName]['machine']//@phpstan-ignore-line
             );
             $holder = $this->createHolderFactory($definitionName);
             $eventDispatchFactory->addSetup(
@@ -85,6 +85,17 @@ class EventsExtension extends CompilerExtension
         }
     }
 
+    /**
+     * @param array{
+     *  label:string,
+     *  description?:string,
+     *  required:(callable():bool)|bool,
+     *  modifiable:(callable():bool)|bool,
+     *  visible:(callable():bool)|bool,
+     *  default:mixed,
+     *  factory:string,
+     * } $fieldDefinition
+     */
     private function createFieldService(string $name, array $fieldDefinition): ServiceDefinition
     {
         $field = $this->getContainerBuilder()
@@ -130,14 +141,17 @@ class EventsExtension extends CompilerExtension
         $factory = $this->getContainerBuilder()
             ->addDefinition($this->prefix($eventName . '.holder'))
             ->setFactory(BaseHolder::class)
+            /** @phpstan-ignore-next-line */
             ->addSetup('setModifiable', [$this->getConfig()[$eventName]['holder']['modifiable']]);
+        /** @phpstan-ignore-next-line */
         foreach ($this->getConfig()[$eventName]['holder']['fields'] as $name => $fieldDef) {
             $factory->addSetup('addField', [new Statement($this->createFieldService($name, $fieldDef))]);
         }
+        /** @phpstan-ignore-next-line */
         foreach ($this->getConfig()[$eventName]['holder']['processings'] as $processing) {
             $factory->addSetup('addProcessing', [$processing]);
         }
-
+        /** @phpstan-ignore-next-line */
         foreach ($this->getConfig()[$eventName]['holder']['formAdjustments'] as $formAdjustment) {
             $factory->addSetup('addFormAdjustment', [$formAdjustment]);
         }

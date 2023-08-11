@@ -10,16 +10,15 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\OrgService;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\ContestEntityTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-class OrgPresenter extends BasePresenter
+final class OrgPresenter extends BasePresenter
 {
-    use EntityPresenterTrait {
-        getEntity as traitGetEntity;
-    }
+    /** @phpstan-use ContestEntityTrait<OrgModel> */
+    use ContestEntityTrait;
 
     private OrgService $orgService;
 
@@ -31,7 +30,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -45,7 +44,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -69,23 +68,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
-     */
-    public function getEntity(): OrgModel
-    {
-        /** @var OrgModel $entity */
-        $entity = $this->traitGetEntity();
-        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing organizer outside chosen seminar'));
-        }
-        return $entity;
-    }
-
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -111,6 +94,7 @@ class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): OrgFormComponent
     {

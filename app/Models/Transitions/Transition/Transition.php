@@ -8,32 +8,52 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\SmartObject;
 
+/**
+ * @template THolder of ModelHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
+ * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
+ * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
+ *     ? \FKSDB\Models\ORM\Models\PaymentState
+ *     : (THolder is \FKSDB\Models\Transitions\Holder\TeamHolder
+ *     ? \FKSDB\Models\ORM\Models\Fyziklani\TeamState
+ *     : (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ *      )
+ *     )
+ * )
+ */
 class Transition
 {
     use SmartObject;
 
-    /** @var callable */
+    /** @var (callable(THolder):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
-    /** @var Statement[] */
+    /** @phpstan-var (callable(THolder):void)[] */
     public array $beforeExecute = [];
-    /** @var Statement[] */
+    /** @phpstan-var (callable(THolder):void)[] */
     public array $afterExecute = [];
 
     protected bool $validation;
-
+    /** @phpstan-var Enum */
     public EnumColumn $source;
+    /** @phpstan-var Enum */
     public EnumColumn $target;
 
+    /**
+     * @phpstan-param Enum $sourceState
+     */
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
         $this->source = $sourceState;
     }
 
+    /**
+     * @phpstan-param Enum $targetState
+     */
     public function setTargetStateEnum(EnumColumn $targetState): void
     {
         $this->target = $targetState;
@@ -70,19 +90,25 @@ class Transition
     }
 
     /**
-     * @param callable|bool $condition
+     * @param (callable(THolder):bool)|bool $condition
      */
     public function setCondition($condition): void
     {
         $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
+    /**
+     * @phpstan-param THolder $holder
+     */
     public function canExecute(ModelHolder $holder): bool
     {
         if (!isset($this->condition)) {
             return true;
         }
-        return (bool)($this->condition)($holder);
+        if (is_callable($this->condition)) {
+            return (bool)($this->condition)($holder);
+        }
+        return (bool)$this->condition;
     }
 
     public function getValidation(): bool
@@ -95,16 +121,25 @@ class Transition
         $this->validation = $validation ?? true;
     }
 
+    /**
+     * @phpstan-param (callable(THolder):void) $callBack
+     */
     public function addBeforeExecute(callable $callBack): void
     {
         $this->beforeExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param (callable(THolder):void) $callBack
+     */
     public function addAfterExecute(callable $callBack): void
     {
         $this->afterExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param THolder $holder
+     */
     final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
@@ -112,6 +147,9 @@ class Transition
         }
     }
 
+    /**
+     * @phpstan-param THolder $holder
+     */
     final public function callAfterExecute(ModelHolder $holder): void
     {
         try {

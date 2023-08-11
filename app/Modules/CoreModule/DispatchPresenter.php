@@ -11,7 +11,7 @@ use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
 
-class DispatchPresenter extends BasePresenter
+final class DispatchPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -25,20 +25,21 @@ class DispatchPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
         $person = $this->getLoggedPerson();
         $this->template->contestants = $this->getAllContestants($person);
-        $this->template->orgs = $this->getAllOrganisers($login);
+        $this->template->orgs = $this->getAllOrganisers($person->getLogin());
     }
 
+    /**
+     * @return NavItem[]
+     */
     private function getAllContestants(PersonModel $person): array
     {
         $result = [];
-        /** @var ContestantModel $contestant */
+
         $result[] = new NavItem(
-            new Title(null, _('Register into competition'), 'fas fa-user-plus'),
-            ':Public:Register:contest'
+            new Title(null, _('Register'), 'fas fa-user-plus'),
+            ':Core:Register:default'
         );
         $result[] = new NavItem(
             new Title(null, _('My applications'), 'fas fa-calendar-days'),
@@ -48,6 +49,7 @@ class DispatchPresenter extends BasePresenter
             new Title(null, _('My Profile'), 'fas fa-user'),
             ':Profile:Dashboard:default'
         );
+        /** @var ContestantModel $contestant */
         foreach ($person->getContestants() as $contestant) {
             $acYear = $contestant->getContestYear()->ac_year;
             $result[] = new NavItem(
@@ -63,11 +65,12 @@ class DispatchPresenter extends BasePresenter
                 ]
             );
         }
-
-        // <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
         return $result;
     }
 
+    /**
+     * @return NavItem[]
+     */
     private function getAllOrganisers(LoginModel $login): array
     {
         $results = [];
@@ -88,7 +91,6 @@ class DispatchPresenter extends BasePresenter
             new Title(null, _('Events'), 'fas fa-calendar-days'),
             ':Event:Dispatch:default'
         );
-        //         <img src="/images/contests/event.gif" alt="" class="w-100"/>
         return $results;
     }
 }

@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends EntityGrid<ProducerModel>
+ */
 class ProducersGrid extends EntityGrid
 {
     public function __construct(Container $container)

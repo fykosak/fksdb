@@ -7,15 +7,17 @@ namespace FKSDB\Models\Expressions\Predicates;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
+ * @template ArgType
+ */
 class Before extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
-    /**
-     * @param \DateTimeInterface|callable $datetime
-     */
+    /** @phpstan-param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime */
     public function __construct($datetime)
     {
         $this->datetime = $datetime;

@@ -9,19 +9,24 @@ use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PersonModel|null findByPrimary($key)
+ * @phpstan-extends Service<PersonModel>
  */
 final class PersonService extends Service
 {
 
     public function findByEmail(?string $email): ?PersonModel
     {
-        return $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        /** @var PersonModel|null $person */
+        $person = $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        return $person;
     }
 
+    /**
+     * @param array{gender?:string|null,family_name:string} $data
+     */
     public function storeModel(array $data, ?Model $model = null): PersonModel
     {
-        if (is_null($data['gender']) && !isset($model)) {
+        if (!isset($data['gender']) && !isset($model)) {
             $data['gender'] = PersonModel::inferGender($data);
         }
         return parent::storeModel($data, $model);

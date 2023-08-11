@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends EntityGrid<ContestantModel>
+ */
 class ContestantsFromSchoolGrid extends EntityGrid
 {
     public function __construct(SchoolModel $school, Container $container)

@@ -21,7 +21,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property TeacherModel|null $model
+ * @phpstan-extends EntityFormComponent<TeacherModel>
  */
 class TeacherFormComponent extends EntityFormComponent
 {
@@ -73,7 +73,15 @@ class TeacherFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
+        /**
+         * @phpstan-var array{teacher:array{
+         *   active:bool,
+         *   role:string,
+         *   note:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
+        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->teacherService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
@@ -98,10 +106,8 @@ class TeacherFormComponent extends EntityFormComponent
         return $this->singleReflectionFormFactory->createContainerWithMetadata(
             'teacher',
             [
-                'state' => ['required' => true],
-                'since' => ['required' => true],
-                'until' => ['required' => true],
-                'number_brochures' => ['required' => true],
+                'active' => ['required' => true],
+                'role' => ['required' => true],
                 'note' => ['required' => true],
             ]
         );

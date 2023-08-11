@@ -15,11 +15,11 @@ use Nette\Security\Resource;
  * @property-read ContestModel $contest
  * @property-read int $since
  * @property-read int|null $until
- * @property-read string $role
+ * @property-read string|null $role
  * @property-read int $order
- * @property-read string $contribution
- * @property-read string $tex_signature
- * @property-read string $domain_alias
+ * @property-read string|null $contribution
+ * @property-read string|null $tex_signature
+ * @property-read string|null $domain_alias
  */
 final class OrgModel extends Model implements Resource
 {

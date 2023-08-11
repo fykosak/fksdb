@@ -13,6 +13,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<ContestantModel>
+ */
 class ContestantsGrid extends BaseGrid
 {
     private ContestYearModel $contestYear;
@@ -23,6 +26,9 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->contestYear->getContestants()->order('person.other_name ASC');

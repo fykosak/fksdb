@@ -9,6 +9,7 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -19,6 +20,7 @@ use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
@@ -71,7 +73,7 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN),
+            AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
             $until
         );
         $data = [];
@@ -82,7 +84,8 @@ class AccountManager
                 'email' => $email,
                 'until' => $until,
                 'lang' => $person->getPreferredLang() ?? $lang,
-            ]
+            ],
+            $person->getPreferredLang() ?? $lang
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
@@ -100,19 +103,24 @@ class AccountManager
         if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::RECOVERY))->fetch();
+        /** @var AuthTokenModel|null $token */
+        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::RECOVERY))->fetch();
         if ($token) {
             throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->recoveryExpiration);
-        $token = $this->authTokenService->createToken($login, AuthTokenType::tryFrom(AuthTokenType::RECOVERY), $until);
+        $token = $this->authTokenService->createToken($login, AuthTokenType::from(AuthTokenType::RECOVERY), $until);
         $data = [];
+        $person = $login->person;
+        if (!$person) {
+            throw new BadRequestException();
+        }
         $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
-            'person' => $login->person,
+            'person' => $person,
             'lang' => $lang,
-        ]);
+        ], $lang);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $login->person_id;
@@ -131,19 +139,20 @@ class AccountManager
         if (!$login) {
             $this->createLogin($person);
         }
-        $token = $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch();
+        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         if ($token) {
             throw new ChangeInProgressException();
         }
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL),
+            AuthTokenType::from(AuthTokenType::CHANGE_EMAIL),
             (new \DateTime())->modify('+20 minutes'),
             $newEmail
         );
         $oldData = [
             'text' => $this->mailTemplateFactory->renderChangeEmailOld(
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,]
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
+                $lang
             ),
             'sender' => $this->emailFrom,
             'subject' => _('Change of email'),
@@ -151,21 +160,22 @@ class AccountManager
         ];
         $newData = [
             'text' => $this->mailTemplateFactory->renderChangeEmailNew(
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,]
+                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
+                $lang
             ),
             'sender' => $this->emailFrom,
             'subject' => _('Confirm your email'),
             'recipient' => $newEmail,
         ];
-        $this->emailMessageService->addMessageToSend($oldData);
+        $this->emailMessageService->addMessageToSend($oldData);//@phpstan-ignore-line
         $this->emailMessageService->addMessageToSend($newData);
     }
 
     public function handleChangeEmail(PersonModel $person, Logger $logger): void
     {
         if (
-            !$person->getLogin()->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch()
-            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))
+            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch()
+            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))
         ) {
             $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
             // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.

@@ -6,6 +6,9 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ValuePrinter<int|bool>
+ */
 class BinaryPrinter extends ValuePrinter
 {
     /**

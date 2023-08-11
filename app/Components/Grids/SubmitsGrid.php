@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -22,17 +22,18 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-extends BaseGrid<SubmitModel>
+ */
 class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private string $lang;
 
-    public function __construct(Container $container, ContestantModel $contestant, string $lang)
+    public function __construct(Container $container, ContestantModel $contestant)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
-        $this->lang = $lang;
     }
 
     final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
@@ -40,6 +41,9 @@ class SubmitsGrid extends BaseGrid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
@@ -50,7 +54,7 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->lang),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator->lang),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -58,7 +62,7 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->submitted_on->format('c'),
+                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
                 new Title(null, _('Timestamp'))
             ),
             'submitted_on'
@@ -109,7 +113,7 @@ class SubmitsGrid extends BaseGrid
         );
 
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
                 new Title(null, _('Detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
@@ -130,7 +134,7 @@ class SubmitsGrid extends BaseGrid
             $this->flashMessage(
                 sprintf(
                     _('Submitting of task %s cancelled.'),
-                    $submit->task->getFullLabel($this->lang)
+                    $submit->task->getFullLabel($this->translator->lang)
                 ),
                 Message::LVL_WARNING
             );

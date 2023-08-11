@@ -8,6 +8,9 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends Badge<ContestCategoryModel>
+ */
 class ContestCategoryBadge extends Badge
 {
     /**

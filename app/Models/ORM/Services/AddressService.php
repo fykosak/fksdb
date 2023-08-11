@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\AddressModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method AddressModel findByPrimary($key)
+ * @phpstan-extends Service<AddressModel>
  */
 final class AddressService extends Service
 {

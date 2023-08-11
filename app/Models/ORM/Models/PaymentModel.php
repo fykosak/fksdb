@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
@@ -21,7 +20,7 @@ use Nette\Security\Resource;
  * @property-read EventModel $event
  * @property-read int $event_id
  * @property-read PaymentState $state
- * @property-read float $price
+ * @property-read float|null $price
  * @property-read string $currency
  * @property-read \DateTimeInterface $created
  * @property-read \DateTimeInterface $received
@@ -33,6 +32,21 @@ use Nette\Security\Resource;
  * @property-read string $recipient
  * @property-read string $iban
  * @property-read string $swift
+ * @phpstan-type SerializedPaymentModel array{
+ *      personId:int,
+ *      paymentId:int,
+ *      state:string,
+ *      price:float|null,
+ *      currency:string,
+ *      constantSymbol:string,
+ *      variableSymbol:string,
+ *      specificSymbol:string,
+ *      bankAccount:string,
+ *      bankName:string,
+ *      recipient:string,
+ *      iban:string,
+ *      swift:string,
+ * }
  */
 final class PaymentModel extends Model implements Resource
 {
@@ -51,6 +65,9 @@ final class PaymentModel extends Model implements Resource
         return $items;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SchedulePaymentModel>
+     */
     public function getSchedulePayment(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
@@ -84,7 +101,7 @@ final class PaymentModel extends Model implements Resource
 
     /**
      * @param string $key
-     * @return PaymentState|FakeStringEnum|mixed|null
+     * @return PaymentState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
@@ -98,6 +115,9 @@ final class PaymentModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return SerializedPaymentModel
+     */
     public function __toArray(): array
     {
         return [

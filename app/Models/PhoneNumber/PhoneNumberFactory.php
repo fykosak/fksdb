@@ -12,6 +12,7 @@ use Nette\Utils\Html;
 class PhoneNumberFactory
 {
     private CountryService $countryService;
+    /** @phpstan-var TypedSelection<CountryModel> */
     private TypedSelection $table;
 
     public function __construct(CountryService $countryService)

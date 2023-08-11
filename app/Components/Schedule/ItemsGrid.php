@@ -7,9 +7,13 @@ namespace FKSDB\Components\Schedule;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<ScheduleItemModel>
+ */
 class ItemsGrid extends BaseGrid
 {
     private ScheduleGroupModel $group;
@@ -20,6 +24,9 @@ class ItemsGrid extends BaseGrid
         $this->group = $group;
     }
 
+    /**
+     * @return TypedGroupedSelection<ScheduleItemModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->group->getItems();

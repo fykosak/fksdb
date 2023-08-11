@@ -16,7 +16,7 @@ use Nette\Application\BadRequestException;
 use Nette\InvalidArgumentException;
 use Tracy\Debugger;
 
-class PointsPresenter extends BasePresenter
+final class PointsPresenter extends BasePresenter
 {
     /**
      * Show all tasks?
@@ -60,7 +60,7 @@ class PointsPresenter extends BasePresenter
                 $selection->where(
                     'task_id',
                     $this->getLoggedPerson()->getTaskContributions(
-                        TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                        TaskContributionType::from(TaskContributionType::GRADE)
                     )->fetchPairs('task_id', 'task_id')
                 );
             };

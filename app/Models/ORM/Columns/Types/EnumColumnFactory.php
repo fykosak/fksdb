@@ -7,21 +7,31 @@ namespace FKSDB\Models\ORM\Columns\Types;
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 class EnumColumnFactory extends ColumnFactory
 {
-    /** @var EnumColumn|string */
+    /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */
     private string $className;
 
+    /**
+     * @param class-string<EnumColumn&FakeStringEnum> $className
+     */
     public function setEnumClassName(string $className): void
     {
         $this->className = $className;
     }
 
+    /**
+     * @param never $args
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $items = [];

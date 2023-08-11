@@ -7,7 +7,6 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\AuthTokenType;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -18,7 +17,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-class SettingsPresenter extends BasePresenter
+final class SettingsPresenter extends BasePresenter
 {
     public const CONT_LOGIN = 'login';
 
@@ -41,11 +40,8 @@ class SettingsPresenter extends BasePresenter
 
     public function actionDefault(): void
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-
         $defaults = [
-            self::CONT_LOGIN => $login->toArray(),
+            self::CONT_LOGIN => $this->getLoggedPerson()->getLogin()->toArray(),
         ];
         /** @var FormControl $control */
         $control = $this->getComponent('settingsForm');
@@ -62,7 +58,7 @@ class SettingsPresenter extends BasePresenter
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY))) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY))) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
@@ -71,13 +67,12 @@ class SettingsPresenter extends BasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
+        $login = $this->getLoggedPerson()->getLogin();
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
+                AuthTokenType::from(AuthTokenType::INITIAL_LOGIN)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY));
 
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
@@ -102,7 +97,7 @@ class SettingsPresenter extends BasePresenter
 
         $form->setCurrentGroup();
         $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = fn(\Nette\Application\UI\Form $form) => $this->handleSettingsFormSuccess($form);
+        $form->onSuccess[] = fn(Form $form) => $this->handleSettingsFormSuccess($form);
         return $control;
     }
 
@@ -130,8 +125,8 @@ class SettingsPresenter extends BasePresenter
         );
 
         if ($verifyOldPassword) {
-            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
-                ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
+            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED) // @phpstan-ignore-line
+            ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
         } elseif ($requirePassword) {
             $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
         }
@@ -146,16 +141,22 @@ class SettingsPresenter extends BasePresenter
     /**
      * @throws ModelException
      */
-    private function handleSettingsFormSuccess(\Nette\Application\UI\Form $form): void
+    private function handleSettingsFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{login:array{
+         *     old_password?:string,
+         *     password:string,
+         *     password_verify:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
                 AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
             ) ||
             $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
+        $login = $this->getLoggedPerson()->getLogin();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
         if ($loginData['password']) {

@@ -6,10 +6,14 @@ namespace FKSDB\Models\Payment\PriceCalculator;
 
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
+/**
+ * @implements Statement<void,PaymentHolder>
+ */
 class PriceCalculator implements Statement
 {
 
@@ -41,6 +45,7 @@ class PriceCalculator implements Statement
      */
     final public function __invoke(...$args): void
     {
+        /** @var PaymentHolder $holder */
         [$holder] = $args;
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 

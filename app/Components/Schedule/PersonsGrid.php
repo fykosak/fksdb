@@ -13,6 +13,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<PersonScheduleModel>
+ */
 class PersonsGrid extends BaseGrid
 {
     private ScheduleItemModel $item;
@@ -23,6 +26,9 @@ class PersonsGrid extends BaseGrid
         $this->item = $item;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->item->getInterested();
@@ -38,7 +44,7 @@ class PersonsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(PersonScheduleModel $model) => $model->person_schedule_id,
+                fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
                 new Title(null, _('#'))
             ),
             'person_schedule_id'

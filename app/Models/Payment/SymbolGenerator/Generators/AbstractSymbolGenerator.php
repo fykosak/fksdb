@@ -9,9 +9,12 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use FKSDB\Models\Transitions\Statement;
 
+/**
+ * @implements Statement<void,PaymentHolder>
+ */
 abstract class AbstractSymbolGenerator implements Statement
 {
     protected PaymentService $paymentService;
@@ -24,11 +27,12 @@ abstract class AbstractSymbolGenerator implements Statement
     /**
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @phpstan-ignore-next-line
      */
     abstract protected function create(PaymentModel $modelPayment): array;
 
     /**
-     * @param ...$args
+     * @param PaymentHolder $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws BadTypeException
