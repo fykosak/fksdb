@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\EventTypeService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 
 /**
@@ -61,7 +62,8 @@ class DispatchGrid extends FilterGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(EventModel $model) => $model->getName()->getText($this->translator->lang) //@phpstan-ignore-line
+                fn(EventModel $model) => $model->getName()->getText($this->translator->lang), //@phpstan-ignore-line
+                new Title(null, _('Event name'))
             ),
             'event_name'
         );

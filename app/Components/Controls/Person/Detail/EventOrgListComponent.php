@@ -48,12 +48,18 @@ class EventOrgListComponent extends DetailComponent
         /** @phpstan-var RowContainer<EventOrgModel> $row0 */
         $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateItem($this->container, '@event.name'), 'event__name');
-        $row0->addComponent(new TemplateItem($this->container, '@event.event_type'), 'event__type');
+        $row0->addComponent(new TemplateItem($this->container, '@event.name', '@event.name:title'), 'event__name');
+        $row0->addComponent(
+            new TemplateItem($this->container, '@event.event_type', '@event.event_type:title'),
+            'event__type'
+        );
         /** @phpstan-var RowContainer<EventOrgModel> $row1 */
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
-        $row1->addComponent(new TemplateItem($this->container, '@event_org.note'), 'event_org_note');
+        $row1->addComponent(
+            new TemplateItem($this->container, '@event_org.note', '@event_org.note:title'),
+            'event_org_note'
+        );
         $this->addButton(
             new PresenterButton(// @phpstan-ignore-line
                 $this->container,

@@ -39,12 +39,14 @@ class ContestantListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
             $contestant->contest->getContestSymbol();
-        $this->setTitle(new TemplateItem($this->container, '@contest.name')); // @phpstan-ignore-line
+        $this->setTitle(
+            new TemplateItem($this->container, '@contest.name', '@contest.name:title')// @phpstan-ignore-line
+        );
         /** @phpstan-var RowContainer<ContestantModel> $row1 */
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
         $row1->addComponent(
-            new TemplateItem($this->container, _('Contest year @contestant.year')),
+            new TemplateItem($this->container, _('Contest year @contestant.year'), '@contestant.year:title'),
             'contestant__year'
         );
         if ($this->isOrg) {

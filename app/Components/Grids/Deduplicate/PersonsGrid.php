@@ -47,7 +47,8 @@ class PersonsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(PersonModel $row): string => $this->renderPerson($row)
+                fn(PersonModel $row): string => $this->renderPerson($row),
+                new Title(null, _('Person A'))
             ),
             'display_name_a'
         );
@@ -56,7 +57,8 @@ class PersonsGrid extends BaseGrid
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
                     $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
-                )
+                ),
+                new Title(null, _('Person B'))
             ),
             'display_name_b'
         );
@@ -66,7 +68,8 @@ class PersonsGrid extends BaseGrid
                 fn(PersonModel $row): string => sprintf(
                     '%0.2f',
                     $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]
-                )
+                ),
+                new Title(null, _('Score'))
             ),
             'score'
         );

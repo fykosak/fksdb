@@ -63,7 +63,8 @@ class PerPersonScheduleList extends BaseList
         $row0->addComponent(
             new RendererItem(
                 $this->container,
-                fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event)
+                fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event),
+                new Title(null, _('Role'))
             ),
             'role'
         );
@@ -85,9 +86,12 @@ class PerPersonScheduleList extends BaseList
             'group'
         );
         $relatedTable->addColumn(
-            new TemplateItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur'),
+            new TemplateItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur', _('Price')),
             'price'
         );
-        $relatedTable->addColumn(new TemplateItem($this->container, '@payment.payment'), 'payment');
+        $relatedTable->addColumn(
+            new TemplateItem($this->container, '@payment.payment', '@payment.payment:title'),
+            'payment'
+        );
     }
 }

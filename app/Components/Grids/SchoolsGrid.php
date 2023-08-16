@@ -10,6 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -54,13 +55,18 @@ class SchoolsGrid extends FilterGrid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererItem($this->container, fn(SchoolModel $model) => $model->name),
+            new RendererItem(
+                $this->container,
+                fn(SchoolModel $model) => $model->name,
+                new Title(null, _('School name'))
+            ),
             'name'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $school): string => $school->address->city
+                fn(SchoolModel $school): string => $school->address->city,
+                new Title(null, _('City'))
             ),
             'city'
         );
@@ -69,7 +75,8 @@ class SchoolsGrid extends FilterGrid
                 $this->container,
                 fn(SchoolModel $row): Html => Html::el('span')
                     ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
-                    ->addText(($row->active))
+                    ->addText(($row->active)),
+                new Title(null, _('Active'))
             ),
             'active'
         );

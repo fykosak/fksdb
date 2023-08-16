@@ -62,35 +62,39 @@ class GroupListComponent extends BaseList
                 $this->container,
                 fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
                     ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
-                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i')
+                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i'),
+                new Title(null, _('Duration'))
             ),
             'duration'
         );
         $itemsRow = new RelatedTable(
             $this->container,
             fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
-            new Title(null, _('Items'))
+            new Title(null, _('Items')),
+            true
         );
         $this->addRow($itemsRow, 'items');
         $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
-                _('@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)')
+                '@schedule_item.name:value (@schedule_item.schedule_item_id:value)',
+                '@schedule_item.name:title'
             ),
             'title'
         );
         $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
-                '@schedule_item.price_czk / @schedule_item.price_eur'
+                '@schedule_item.price_czk / @schedule_item.price_eur',
+                _('Price')
             ),
             'price'
         );
         $itemsRow->addColumn(
             new TemplateItem(
                 $this->container,
-                '<span title="' . _('Used / Free / Total') .
-                '">@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity</span>'
+                '@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity',
+                _('Used / Free / Total')
             ),
             'capacity'
         );

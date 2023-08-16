@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 /**
@@ -56,7 +57,8 @@ class PersonsGrid extends BaseGrid
                         $logger = new MemoryLogger();
                         $test->run($logger, $person);
                         return self::createHtmlLog($logger->getMessages());
-                    }
+                    },
+                    new Title(null, $test->title)
                 ),
                 $test->id
             );

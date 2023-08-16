@@ -45,7 +45,6 @@ class ContestantsGrid extends BaseGrid
             'person.full_name',
             'contestant.contest_category',
             'person_history.study_year',
-            'school.school',
         ]);
         $this->addColumn(
             new RendererItem(
