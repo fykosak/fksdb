@@ -57,6 +57,7 @@ class EventOrgListComponent extends DetailComponent
         $this->addButton(
             new PresenterButton(// @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Edit')),
                 fn(EventOrgModel $eventOrg) => [
                     ':Event:EventOrg:edit',
@@ -71,6 +72,7 @@ class EventOrgListComponent extends DetailComponent
         $this->addButton(
             new PresenterButton(// @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(EventOrgModel $eventOrg) => [
                     ':Event:EventOrg:detail',

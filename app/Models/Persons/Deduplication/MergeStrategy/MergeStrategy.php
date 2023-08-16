@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 /**
- * @template TValue
+ * @phpstan-template TValue
  */
 interface MergeStrategy
 {
     /**
-     * @param TValue $trunk
-     * @param TValue $merged
+     * @phpstan-param TValue $trunk
+     * @phpstan-param TValue $merged
      * @phpstan-return TValue
      * @throws CannotMergeException
      */

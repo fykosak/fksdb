@@ -151,7 +151,7 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @var WebModel<array<string,mixed>,array<string,mixed>> $model */
+            /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->container);
             $model->setUser($this->user);
             return $model;

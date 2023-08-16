@@ -10,7 +10,7 @@ use Nette\InvalidStateException;
 class TooManySchoolsException extends InvalidStateException
 {
     /**
-     * @param SchoolModel[] $schools
+     * @phpstan-param SchoolModel[] $schools
      */
     public function __construct(array $schools)
     {

@@ -13,7 +13,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @template ArgType
+ * @phpstan-template ArgType
  * @phpstan-extends ColumnFactory<Model,never>
  */
 class EmailColumnFactory extends ColumnFactory

@@ -14,7 +14,9 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends FilterGrid<SchoolModel>
+ * @phpstan-extends FilterGrid<SchoolModel,array{
+ *     term?:string,
+ * }>
  */
 class SchoolsGrid extends FilterGrid
 {
@@ -36,7 +38,7 @@ class SchoolsGrid extends FilterGrid
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
-        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+        if (!isset($this->filterParams['term'])) {
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Components\Button;
 use Nette\Application\UI\Control;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends Button<TModel>
  */
 class PresenterButton extends Button

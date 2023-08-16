@@ -9,7 +9,6 @@ parameters:
         - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
         - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
         - '#Access to an undefined property Nette\\Application\\UI\\Template|stdClass::.*.#'
-        - '#Method FKSDB\\Models\\ORM\\Models\\.*::.* should return Fykosak\\NetteORM\\TypedGroupedSelection<.*> but returns Nette\\Database\\Table\\GroupedSelection.#'
     excludePaths:
         - app/Models/Persons/Deduplication/*.php
         - app/Components/Controls/Breadcrumbs/*.php

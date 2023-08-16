@@ -178,7 +178,7 @@ class FOFTeamFormComponent extends TeamFormComponent
         $persons = [];
         $teacherIndex = 0;
         while (true) {
-            /** @var ReferencedId<PersonModel>|null $referencedId */
+            /** @phpstan-var ReferencedId<PersonModel>|null $referencedId */
             $referencedId = $form->getComponent('teacher_' . $teacherIndex, false);
             if (!$referencedId) {
                 break;
@@ -199,7 +199,7 @@ class FOFTeamFormComponent extends TeamFormComponent
             $index = 0;
             /** @var TeamTeacherModel $teacher */
             foreach ($this->model->getTeachers() as $teacher) {
-                /** @var ReferencedId<PersonModel> $referencedId */
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
                 $index++;

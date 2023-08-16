@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Links;
 use Fykosak\NetteORM\Model;
 
 /**
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  * @phpstan-extends LinkFactory<TModel>
  */
 class Link extends LinkFactory

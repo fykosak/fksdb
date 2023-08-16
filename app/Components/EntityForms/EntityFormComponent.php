@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 abstract class EntityFormComponent extends FormComponent
 {

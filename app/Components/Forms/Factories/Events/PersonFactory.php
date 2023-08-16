@@ -27,19 +27,19 @@ class PersonFactory extends AbstractFactory
      */
     private array $fieldsDefinition;
     private string $searchType;
-    /** @var (callable(BaseHolder):bool)|bool */
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $allowClear;
-    /** @var (callable(BaseHolder):bool)|bool */
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $modifiable;
-    /** @var (callable(BaseHolder):bool)|bool */
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
     private User $user;
 
     /**
-     * @param (callable(BaseHolder):bool)|bool $allowClear
-     * @param (callable(BaseHolder):bool)|bool $modifiable
-     * @param (callable(BaseHolder):bool)|bool $visible
+     * @phpstan-param (callable(BaseHolder):bool)|bool $allowClear
+     * @phpstan-param (callable(BaseHolder):bool)|bool $modifiable
+     * @phpstan-param (callable(BaseHolder):bool)|bool $visible
      * @phpstan-param array<string,array<string,mixed>> $fieldsDefinition
      */
     public function __construct(

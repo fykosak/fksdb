@@ -8,7 +8,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Utils\Html;
 
 /**
- * @template ArgType
+ * @phpstan-template ArgType
  */
 abstract class Badge extends BaseComponent
 {

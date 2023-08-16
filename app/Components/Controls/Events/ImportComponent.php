@@ -65,7 +65,7 @@ class ImportComponent extends BaseComponent
      */
     private function handleFormImport(Form $form): void
     {
-        /** @var array{file:FileUpload,event_id:int} $values */
+        /** @phpstan-var array{file:FileUpload,event_id:int} $values */
         $values = $form->getValues();
         try {
             // process form values

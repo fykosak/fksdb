@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -43,17 +45,24 @@ class ContestantsGrid extends BaseGrid
             'person.full_name',
             'contestant.contest_category',
             'person_history.study_year',
+            'school.school',
         ]);
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
-                    'school',
-                    'school'
-                )->render(
-                    $row->getPersonHistory(),
-                    1024
-                )
+                function (ContestantModel $row) {
+                    if (!$row->getPersonHistory()) {
+                        return NotSetBadge::getHtml();
+                    }
+                    return $this->tableReflectionFactory->loadColumnFactory(
+                        'school',
+                        'school'
+                    )->render(
+                        $row->getPersonHistory(),
+                        1024
+                    );
+                },
+                new Title(null, _('School'))
             ),
             'school_name',
         );

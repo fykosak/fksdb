@@ -59,6 +59,7 @@ class OrgListComponent extends DetailComponent
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Edit')),
                 fn(OrgModel $model) => [':Org:Org:edit', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
                 null,
@@ -69,6 +70,7 @@ class OrgListComponent extends DetailComponent
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(OrgModel $model) => [':Org:Org:detail', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
                 null,

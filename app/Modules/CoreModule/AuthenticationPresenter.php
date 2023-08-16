@@ -15,6 +15,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -270,7 +271,7 @@ final class AuthenticationPresenter extends BasePresenter
 
             $this->accountManager->sendRecovery(
                 $login,
-                $login->person->getPreferredLang() ?? $this->translator->lang
+                Language::from($login->person->getPreferredLang() ?? $this->translator->lang)
             );
             $email = Utils::cryptEmail($login->person->getInfo()->email);
             $this->flashMessage(

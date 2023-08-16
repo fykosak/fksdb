@@ -13,16 +13,17 @@ use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 abstract class Button extends BaseItem
 {
-    /** @var callable(TModel):array{string,array<string,scalar>} */
+    /** @phpstan-var callable(TModel):array{string,array<string,scalar>} */
     private $linkCallback;
-    /** @var (callable(TModel,int):bool)|null */
+    /** @phpstan-var (callable(TModel,int):bool)|null */
     private $showCallback;
     private ?string $buttonClassName;
+    private Title $buttonLabel;
 
     /**
      * @phpstan-param callable(TModel):array{string,array<string,scalar>} $linkCallback
@@ -30,7 +31,8 @@ abstract class Button extends BaseItem
      */
     public function __construct(
         Container $container,
-        Title $title,
+        ?Title $title,
+        Title $buttonLabel,
         callable $linkCallback,
         ?string $buttonClassName = null,
         ?callable $showCallback = null
@@ -39,10 +41,11 @@ abstract class Button extends BaseItem
         $this->linkCallback = $linkCallback;
         $this->buttonClassName = $buttonClassName;
         $this->showCallback = $showCallback;
+        $this->buttonLabel = $buttonLabel;
     }
 
     /**
-     * @param TModel $model
+     * @phpstan-param TModel $model
      * @throws InvalidLinkException
      */
     public function render(Model $model, int $userPermission): void
@@ -54,9 +57,7 @@ abstract class Button extends BaseItem
                 'href' => $this->getLinkControl()->link($destination, $params),
                 'class' => $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary',
             ]);
-            $html->setHtml(
-                isset($this->title) ? $this->title->toHtml() : $this->getLinkControl()->link($destination, $params)
-            );
+            $html->setHtml($this->buttonLabel->toHtml());
         }
         $this->renderHtml($html);
     }

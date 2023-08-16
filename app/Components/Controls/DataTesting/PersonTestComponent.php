@@ -28,13 +28,13 @@ class PersonTestComponent extends BaseComponent
      */
     public ?int $endId = 0;
     /**
-     * @var PersonTest[]|null
+     * @phpstan-var PersonTest[]|null
      * @persistent
      */
     public ?array $tests = [];
     /**
      * @persistent
-     * @var string[]|null
+     * @phpstan-var string[]|null
      */
     public ?array $levels = [];
 

@@ -16,7 +16,7 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * @template TModel of (Model&Resource)
+ * @phpstan-template TModel of (Model&Resource)
  */
 trait EntityPresenterTrait
 {
@@ -97,7 +97,7 @@ trait EntityPresenterTrait
      */
     private function loadModel(): Model
     {
-        /** @var TModel|null $candidate */
+        /** @phpstan-var TModel|null $candidate */
         $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;

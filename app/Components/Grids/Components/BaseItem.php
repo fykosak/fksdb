@@ -12,7 +12,7 @@ use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  */
 abstract class BaseItem extends BaseComponent
 {
@@ -33,7 +33,7 @@ abstract class BaseItem extends BaseComponent
     }
 
     /**
-     * @param TModel $model
+     * @phpstan-param TModel $model
      * @note do not call from parent
      * @throws GoneException
      */

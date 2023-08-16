@@ -14,7 +14,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
 /**
- * @template THolder of ModelHolder
+ * @phpstan-template THolder of ModelHolder
  */
 class TransitionButtonsComponent extends BaseComponent
 {

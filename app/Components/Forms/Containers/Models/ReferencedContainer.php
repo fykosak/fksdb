@@ -22,7 +22,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 abstract class ReferencedContainer extends ContainerWithOptions
 {

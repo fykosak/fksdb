@@ -22,7 +22,7 @@ final class PersonService extends Service
     }
 
     /**
-     * @param array{gender?:string|null,family_name:string} $data
+     * @phpstan-param array{gender?:string|null,family_name:string} $data
      */
     public function storeModel(array $data, ?Model $model = null): PersonModel
     {

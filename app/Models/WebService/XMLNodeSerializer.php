@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 /**
- * @template TDataSource
+ * @phpstan-template TDataSource
  */
 interface XMLNodeSerializer
 {
@@ -13,7 +13,7 @@ interface XMLNodeSerializer
     public const EXPORT_FORMAT_2 = 2;
 
     /**
-     * @param TDataSource $dataSource
+     * @phpstan-param TDataSource $dataSource
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void;
 }

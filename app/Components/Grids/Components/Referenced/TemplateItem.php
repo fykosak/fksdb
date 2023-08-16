@@ -12,15 +12,15 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
- * @template TModelHelper of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
-    /** @var (callable(TModel):TModelHelper)|null */
+    /** @phpstan-var (callable(TModel):TModelHelper)|null */
     protected $modelAccessorHelper = null;
     protected ColumnRendererComponent $printer;
 
@@ -40,7 +40,7 @@ class TemplateItem extends BaseItem
             $container,
             $titleString
                 ? new Title(null, $this->printer->renderToString($titleString, null, null))
-                : new Title(null, '')
+                : null
         );
         $this->templateString = $templateString;
         $this->modelAccessorHelper = $modelAccessorHelper;

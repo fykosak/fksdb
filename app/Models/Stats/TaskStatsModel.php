@@ -21,7 +21,7 @@ class TaskStatsModel
     }
 
     /**
-     * @param string[] $labels
+     * @phpstan-param string[] $labels
      * @phpstan-return Row[]
      * @throws \PDOException
      */

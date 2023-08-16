@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
 /**
- * @template THolder of ModelHolder
+ * @phpstan-template THolder of ModelHolder
  * @phpstan-import-type Enum from Transition
  */
 abstract class Machine
@@ -21,7 +21,7 @@ abstract class Machine
     public const STATE_INIT = '__init';
     public const STATE_ANY = '*';
 
-    /** @var Transition<THolder>[] */
+    /** @phpstan-var Transition<THolder>[] */
     protected array $transitions = [];
     protected Explorer $explorer;
 
@@ -31,7 +31,7 @@ abstract class Machine
     }
 
     /**
-     * @param Transition<THolder> $transition
+     * @phpstan-param Transition<THolder> $transition
      */
     public function addTransition(Transition $transition): void
     {
@@ -60,7 +60,7 @@ abstract class Machine
     }
 
     /**
-     * @param Transition<THolder>[] $transitions
+     * @phpstan-param Transition<THolder>[] $transitions
      * @phpstan-return Transition<THolder>
      * Protect more that one transition between nodes
      * @throws UnavailableTransitionsException
@@ -79,7 +79,7 @@ abstract class Machine
     }
 
     /**
-     * @param TransitionsDecorator<THolder>|null $decorator
+     * @phpstan-param TransitionsDecorator<THolder>|null $decorator
      */
     final public function decorateTransitions(?TransitionsDecorator $decorator): void
     {
@@ -89,7 +89,7 @@ abstract class Machine
     }
 
     /**
-     * @param THolder $holder
+     * @phpstan-param THolder $holder
      * @phpstan-return Transition<THolder>[]
      */
     public function getAvailableTransitions(ModelHolder $holder): array

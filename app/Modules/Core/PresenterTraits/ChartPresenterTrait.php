@@ -12,7 +12,7 @@ use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait
 {
-    /** @var (Chart&IComponent)[] */
+    /** @phpstan-var (Chart&IComponent)[] */
     private array $chartComponents;
 
     public function titleList(): PageTitle

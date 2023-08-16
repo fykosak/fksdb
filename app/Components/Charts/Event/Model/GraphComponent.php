@@ -11,11 +11,11 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template TMachine of Machine
+ * @phpstan-template TMachine of Machine
  */
 class GraphComponent extends FrontEndComponent implements Chart
 {
-    /** @var TMachine */
+    /** @phpstan-var TMachine */
     private Machine $machine;
 
     /**

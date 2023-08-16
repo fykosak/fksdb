@@ -56,7 +56,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
     }
 
     /**
-     * @param NavItem[] $items
+     * @phpstan-param NavItem[] $items
      */
     final public function renderBoardInline(array $items, bool $subTitle = false): void
     {

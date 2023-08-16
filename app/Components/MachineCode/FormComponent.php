@@ -13,7 +13,7 @@ abstract class FormComponent extends \FKSDB\Components\Controls\FormComponent\Fo
     final protected function handleSuccess(Form $form): void
     {
         try {
-            /** @var array{bypass:bool,code:string,} $values */
+            /** @phpstan-var array{bypass:bool,code:string,} $values */
             $values = $form->getValues('array');
             $code = MachineCode::createFromCode($this->container, $values['code']);
             if (!$values['bypass']) {

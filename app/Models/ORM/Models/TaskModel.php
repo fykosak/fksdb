@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
@@ -38,7 +39,7 @@ use Nette\Utils\Strings;
 final class TaskModel extends Model
 {
     public function getFullLabel(
-        string $lang,
+        Language $lang,
         bool $includeContest = false,
         bool $includeYear = false,
         bool $includeSeries = true
@@ -47,7 +48,7 @@ final class TaskModel extends Model
         if ($includeContest) {
             $label .= $this->contest->name . ' ';
         }
-        switch ($lang) {
+        switch ($lang->value) {
             case 'cs':
                 if ($includeYear) {
                     $label .= $this->year . '. ročník ';
@@ -55,7 +56,7 @@ final class TaskModel extends Model
                 if ($includeSeries) {
                     $label .= $this->series . '. série ';
                 }
-                return $label . $this->label . ' - ' . $this->name_cs;
+                break;
             default:
                 if ($includeYear) {
                     $label .= $this->year . Utils::ordinal($this->year) . ' year ';
@@ -63,8 +64,8 @@ final class TaskModel extends Model
                 if ($includeSeries) {
                     $label .= $this->series . Utils::ordinal($this->series) . ' series ';
                 }
-                return $label . $this->label . ' - ' . $this->name_en;
         }
+        return $label . $this->label . ' - ' . $this->name->getText('en');
     }
 
     /**
@@ -72,6 +73,7 @@ final class TaskModel extends Model
      */
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<TaskContributionModel> $contributions */
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type) {
             $contributions->where('type', $type->value);
@@ -84,7 +86,9 @@ final class TaskModel extends Model
      */
     public function getCategories(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<TaskCategoryModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
+        return $selection;
     }
 
     public function isForCategory(?ContestCategoryModel $category): bool
@@ -163,7 +167,9 @@ final class TaskModel extends Model
      */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_SUBMIT, 'task_id');
+        return $selection;
     }
 
     /**
@@ -171,7 +177,9 @@ final class TaskModel extends Model
      */
     public function getQuestions(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitQuestionModel> $selection */
+        $selection = $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
+        return $selection;
     }
 
     public function isOpened(): bool

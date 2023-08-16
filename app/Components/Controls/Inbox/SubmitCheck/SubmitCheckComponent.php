@@ -65,7 +65,7 @@ class SubmitCheckComponent extends BaseComponent
             }
         }
         $this->flashMessage(
-            sprintf(ngettext("Test done, found %d error", 'Test done, found %d errors', $errors)),
+            sprintf(ngettext("Test done, found %d error", 'Test done, found %d errors', $errors), $errors),
             $errors ? Message::LVL_WARNING : Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

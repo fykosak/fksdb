@@ -17,7 +17,7 @@ use Nette\Forms\Form;
 class PointsFormComponent extends SeriesTableFormComponent
 {
 
-    /** @var callable():void */
+    /** @phpstan-var callable():void */
     private $invalidCacheCallback;
 
     private SubmitService $submitService;

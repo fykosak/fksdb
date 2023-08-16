@@ -97,6 +97,7 @@ class GroupListComponent extends BaseList
         $itemsRow->addButton(
             new PresenterButton(
                 $this->container,
+                null,
                 new Title(null, _('Edit')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->getPrimary()]]
             ),
@@ -105,6 +106,7 @@ class GroupListComponent extends BaseList
         $itemsRow->addButton(
             new PresenterButton(
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->getPrimary()]]
             ),
@@ -113,6 +115,7 @@ class GroupListComponent extends BaseList
         $itemsRow->addButton(
             new PresenterButton(
                 $this->container,
+                null,
                 new Title(null, _('Attendance')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:attendance', ['id' => $model->getPrimary()]]
             ),
@@ -121,6 +124,7 @@ class GroupListComponent extends BaseList
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:detail', ['id' => $model->getPrimary()]]
             ),
@@ -129,6 +133,7 @@ class GroupListComponent extends BaseList
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Edit')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:edit', ['id' => $model->getPrimary()]]
             ),
@@ -137,6 +142,7 @@ class GroupListComponent extends BaseList
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Attendance')),
                 fn(ScheduleGroupModel $model) => [':Schedule:Group:attendance', ['id' => $model->getPrimary()]]
             ),

@@ -64,7 +64,7 @@ class PersonsGrid extends BaseGrid
     }
 
     /**
-     * @param Message[] $logs
+     * @phpstan-param Message[] $logs
      * @throws BadTypeException
      * @throws NotImplementedException
      */

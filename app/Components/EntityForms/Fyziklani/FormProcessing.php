@@ -19,7 +19,7 @@ abstract class FormProcessing
     }
 
     /**
-     * @param array{team:array{category:string,force_a:bool,name:string}} $values
+     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
      * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
      */
     abstract public function __invoke(array $values, Form $form, EventModel $event): array;

@@ -15,16 +15,16 @@ class OptimisticForm extends Form
 
     private const FINGERPRINT = '__fp';
 
-    /** @var callable():string */
+    /** @phpstan-var callable():string */
     private $fingerprintCallback;
 
-    /** @var callable():mixed */
+    /** @phpstan-var callable():mixed */
     private $defaultsCallback;
 
     /**
      *
-     * @param callable():string $fingerprintCallback returns fingerprint of current version of the data
-     * @param callable():mixed $defaultsCallback returns current version of data, formatted as an array
+     * @phpstan-param callable():string $fingerprintCallback returns fingerprint of current version of the data
+     * @phpstan-param callable():mixed $defaultsCallback returns current version of data, formatted as an array
      */
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback)
     {

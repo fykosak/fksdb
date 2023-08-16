@@ -17,7 +17,7 @@ class SeriesData
     private \SimpleXMLElement $data;
 
     /**
-     * @var TaskModel[]
+     * @phpstan-var TaskModel[]
      */
     private array $tasks = [];
 

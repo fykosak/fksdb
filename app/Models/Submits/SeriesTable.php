@@ -22,7 +22,7 @@ class SeriesTable
 
     /**
      *
-     * @var (callable(TypedGroupedSelection<TaskModel>):void)|null
+     * @phpstan-var (callable(TypedGroupedSelection<TaskModel>):void)|null
      */
     public $taskFilter = null;
 

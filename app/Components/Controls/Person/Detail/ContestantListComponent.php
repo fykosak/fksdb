@@ -51,6 +51,7 @@ class ContestantListComponent extends DetailComponent
             $this->addButton(
                 new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Edit')),
                     fn(ContestantModel $contestant): array => [
                         ':Org:Contestant:edit',
@@ -66,6 +67,7 @@ class ContestantListComponent extends DetailComponent
             $this->addButton(
                 new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Detail')),
                     fn(ContestantModel $contestant): array => [
                         ':Org:Contestant:detail',
@@ -82,6 +84,7 @@ class ContestantListComponent extends DetailComponent
             $this->addButton(
                 new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Detail')),
                     fn(ContestantModel $contestant): array => [
                         ':Public:Dashboard:default',

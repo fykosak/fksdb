@@ -9,12 +9,12 @@ use Fykosak\Utils\Logging\MemoryLogger;
 /**
  * Represents a simple pipeline where each stage has its input and output and they
  * comprise a linear chain.
- * @template TData
+ * @phpstan-template TData
  */
 class Pipeline
 {
 
-    /** @var Stage<TData>[] */
+    /** @phpstan-var Stage<TData>[] */
     public array $stages = [];
 
     public ?MemoryLogger $logger;
@@ -26,7 +26,7 @@ class Pipeline
 
     /**
      * Starts the pipeline.
-     * @param TData $data
+     * @phpstan-param TData $data
      * @phpstan-return TData output of the last stage
      */
     public function __invoke($data)

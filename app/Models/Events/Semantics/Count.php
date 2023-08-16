@@ -16,12 +16,12 @@ class Count implements Statement
 {
     use SmartObject;
 
-    /** @var string[] */
+    /** @phpstan-var string[] */
     private array $states;
     private EventParticipantService $eventParticipantService;
 
     /**
-     * @param string[] $states
+     * @phpstan-param string[] $states
      */
     public function __construct(array $states, EventParticipantService $eventParticipantService)
     {
@@ -30,7 +30,7 @@ class Count implements Statement
     }
 
     /**
-     * @param BaseHolder ...$args
+     * @param BaseHolder $args
      */
     public function __invoke(...$args): int
     {

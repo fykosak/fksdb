@@ -27,7 +27,7 @@ class PerSeriesChart extends AbstractPerSeriesChart
             ->group('task.series, task.year')
             ->select('COUNT(DISTINCT contestant_id) AS count,task.series, task.year');
         $data = [];
-        /** @var object{year:number,series:number,count:int} $row */
+        /** @phpstan-var object{year:number,series:number,count:int} $row */
         foreach ($query as $row) {
             $year = (int)$row->year;
             $series = (int)$row->series;

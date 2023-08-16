@@ -11,7 +11,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 class PersonFactory
 {
     /**
-     * @param PersonProvider $dataProvider
+     * @phpstan-param PersonProvider $dataProvider
      * @phpstan-return AutocompleteSelectBox<PersonProvider>
      */
     public function createPersonSelect(

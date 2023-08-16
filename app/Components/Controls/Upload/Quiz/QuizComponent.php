@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
@@ -69,7 +70,7 @@ class QuizComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $quizQuestions = new QuizContainer($this->container, $this->task, $this->contestant);
-        $quizQuestions->setOption('label', $this->task->getFullLabel($this->translator->lang));
+        $quizQuestions->setOption('label', $this->task->getFullLabel(Language::from($this->translator->lang)));
         $form->addComponent($quizQuestions, 'quiz_questions');
 
         // show contestant registration form if contestant is null
@@ -107,7 +108,7 @@ class QuizComponent extends FormComponent
             // create and save contestant
             // TODO separate contestant creation into handler and reuse it in contestant register form
             if (!isset($this->contestant)) {
-                /** @var ReferencedId<PersonModel> $referencedId */
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
                 $person = $referencedId->getModel();
                 $contestant = $person->getContestantByContestYear($this->task->getContestYear());
@@ -123,7 +124,11 @@ class QuizComponent extends FormComponent
                 // send invite mail if the person does not have a login
                 $email = $person->getInfo()->email;
                 if ($email && !$person->getLogin()) {
-                    $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
+                    $this->accountManager->sendLoginWithInvitation(
+                        $person,
+                        $email,
+                        Language::from($this->translator->lang)
+                    );
                 }
             }
 

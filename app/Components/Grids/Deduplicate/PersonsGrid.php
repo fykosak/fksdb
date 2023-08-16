@@ -18,14 +18,14 @@ use Nette\DI\Container;
  */
 class PersonsGrid extends BaseGrid
 {
-    /** @var PersonModel[] trunkId => ModelPerson */
+    /** @phpstan-var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
     /** @phpstan-var TypedSelection<PersonModel> $data */
     private TypedSelection $data;
 
     /**
      * @phpstan-param TypedSelection<PersonModel> $trunkPersons
-     * @param PersonModel[] $pairs
+     * @phpstan-param PersonModel[] $pairs
      */
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
@@ -73,6 +73,7 @@ class PersonsGrid extends BaseGrid
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -88,6 +89,7 @@ class PersonsGrid extends BaseGrid
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -102,6 +104,7 @@ class PersonsGrid extends BaseGrid
         $this->addButton(
             new PresenterButton(// @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:dontMerge',

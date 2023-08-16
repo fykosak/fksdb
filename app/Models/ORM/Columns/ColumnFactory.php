@@ -17,8 +17,8 @@ use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
- * @template TModel of Model
- * @template ArgType
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
  */
 abstract class ColumnFactory
 {

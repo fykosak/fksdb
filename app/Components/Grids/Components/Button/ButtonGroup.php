@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class ButtonGroup extends BaseItem
@@ -20,7 +20,7 @@ class ButtonGroup extends BaseItem
     }
 
     /**
-     * @param TModel $model
+     * @phpstan-param TModel $model
      */
     public function render(Model $model, int $userPermission): void
     {

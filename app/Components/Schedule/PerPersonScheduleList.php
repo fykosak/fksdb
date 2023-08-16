@@ -76,8 +76,14 @@ class PerPersonScheduleList extends BaseList
             new Title(null, '')
         );
         $row1->addComponent($relatedTable, 'schedule');
-        $relatedTable->addColumn(new TemplateItem($this->container, '@schedule_item.name'), 'item');
-        $relatedTable->addColumn(new TemplateItem($this->container, '@schedule_group.name'), 'group');
+        $relatedTable->addColumn(
+            new TemplateItem($this->container, '@schedule_item.name', '@schedule_item.name:title'),
+            'item'
+        );
+        $relatedTable->addColumn(
+            new TemplateItem($this->container, '@schedule_group.name', '@schedule_group.name:title'),
+            'group'
+        );
         $relatedTable->addColumn(
             new TemplateItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur'),
             'price'

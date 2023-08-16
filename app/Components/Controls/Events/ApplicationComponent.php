@@ -159,7 +159,7 @@ class ApplicationComponent extends BaseComponent
             if (!$transition || $transition->getValidation()) {
                 try {
                     $this->connection->beginTransaction();
-                    /** @var ArrayHash<mixed> $values */
+                    /** @phpstan-var ArrayHash<mixed> $values */
                     $values = $form->getValues();
                     $values = FormUtils::emptyStrToNull($values);
                     Debugger::log(json_encode((array)$values), 'app-form');
@@ -211,7 +211,7 @@ class ApplicationComponent extends BaseComponent
                     ExistingPaymentException $exception
                 ) {
                     $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-                    /** @var ReferencedId<PersonModel> $referencedId */
+                    /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                     foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
                         $referencedId->rollback();
                     }

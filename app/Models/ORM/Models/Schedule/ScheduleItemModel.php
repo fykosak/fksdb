@@ -88,7 +88,9 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
      */
     public function getInterested(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PERSON_SCHEDULE);
+        /** @phpstan-var TypedGroupedSelection<PersonScheduleModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_SCHEDULE);
+        return $selection;
     }
 
     public function getUsedCapacity(): int

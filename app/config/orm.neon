@@ -665,6 +665,9 @@ orm:
             name_cs:
                 type: string
                 title: _('Name cs')
+            name:
+                type: localizedString
+                title: _('Name')
             task_id:
                 type: primaryKey
                 title: _('Task Id')

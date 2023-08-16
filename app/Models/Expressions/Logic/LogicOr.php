@@ -7,7 +7,7 @@ namespace FKSDB\Models\Expressions\Logic;
 use FKSDB\Models\Expressions\VariadicExpression;
 
 /**
- * @template ArgType
+ * @phpstan-template ArgType
  * @phpstan-extends VariadicExpression<ArgType>
  */
 class LogicOr extends VariadicExpression

@@ -36,7 +36,9 @@ final class ContestModel extends Model
      */
     public function getOrganisers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_ORG, 'contest_id');
+        /** @phpstan-var TypedGroupedSelection<OrgModel> $selection */
+        $selection = $this->related(DbNames::TAB_ORG, 'contest_id');
+        return $selection;
     }
 
     /**
@@ -44,7 +46,9 @@ final class ContestModel extends Model
      */
     public function getTasks(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_TASK, 'contest_id');
+        /** @phpstan-var TypedGroupedSelection<TaskModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK, 'contest_id');
+        return $selection;
     }
 
     /**
@@ -52,7 +56,9 @@ final class ContestModel extends Model
      */
     public function getEventTypes(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_TYPE, 'contest_id');
+        /** @phpstan-var TypedGroupedSelection<EventTypeModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_TYPE, 'contest_id');
+        return $selection;
     }
 
     /**
@@ -60,7 +66,9 @@ final class ContestModel extends Model
      */
     public function getContestYears(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_CONTEST_YEAR, 'contest_id');
+        /** @phpstan-var TypedGroupedSelection<ContestYearModel> $selection */
+        $selection = $this->related(DbNames::TAB_CONTEST_YEAR, 'contest_id');
+        return $selection;
     }
 
     public function getContestYear(?int $year): ?ContestYearModel

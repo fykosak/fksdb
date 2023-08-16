@@ -20,11 +20,11 @@ class StoredQueriesGrid extends BaseGrid
     public const DESCRIPTION_TRUNC = 80;
 
     private QueryService $storedQueryService;
-    /** @var int[] */
+    /** @phpstan-var int[] */
     private array $activeTagIds;
 
     /**
-     * @param int[] $activeTagIds
+     * @phpstan-param int[] $activeTagIds
      */
     public function __construct(Container $container, array $activeTagIds)
     {

@@ -8,7 +8,7 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\DI\Container;
 
 /**
- * @template TData
+ * @phpstan-template TData
  */
 abstract class Stage
 {
@@ -21,8 +21,7 @@ abstract class Stage
     }
 
     /**
-     * @param MemoryLogger $logger
-     * @param TData $data
+     * @phpstan-param TData $data
      * @phpstan-return TData
      */
     abstract public function __invoke(MemoryLogger $logger, $data);

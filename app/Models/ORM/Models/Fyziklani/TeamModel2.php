@@ -56,7 +56,9 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        return $selection;
     }
 
     /**
@@ -64,7 +66,9 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getMembers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamMemberModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        return $selection;
     }
 
     public function getTeamSeat(): ?TeamSeatModel
@@ -79,7 +83,9 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        return $selection;
     }
 
     /**
@@ -130,7 +136,7 @@ final class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @param string[] $types
+     * @phpstan-param string[] $types
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(

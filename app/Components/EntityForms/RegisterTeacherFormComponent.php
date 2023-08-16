@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -81,7 +82,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
-        /** @var ReferencedId<PersonModel> $referencedId */
+        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
         $referencedId = $form[self::CONT_TEACHER]['person_id'];
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
@@ -92,7 +93,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
                 $this->accountManager->sendLoginWithInvitation(
                     $person,
                     $person->getInfo()->email,
-                    $this->translator->lang
+                    Language::from($this->translator->lang)
                 );
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
