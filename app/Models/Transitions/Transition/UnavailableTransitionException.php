@@ -10,13 +10,13 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\InvalidStateException;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
+ * @template TModel of \Fykosak\NetteORM\Model
  */
 class UnavailableTransitionException extends InvalidStateException
 {
     /**
-     * @param M|ModelHolder<FakeStringEnum&EnumColumn,M>|null $holder
-     * @param Transition<ModelHolder<FakeStringEnum&EnumColumn,M>> $transition
+     * @param TModel|ModelHolder<FakeStringEnum&EnumColumn,TModel>|null $holder
+     * @param Transition<ModelHolder<FakeStringEnum&EnumColumn,TModel>> $transition
      */
     public function __construct(Transition $transition, $holder)
     {

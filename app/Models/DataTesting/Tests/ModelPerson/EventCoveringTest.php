@@ -93,7 +93,7 @@ class EventCoveringTest extends PersonTest
     }
 
     /**
-     * @return array<int,array<int,int>>
+     * @phpstan-return array<int,array<int,int>>
      */
     private function getEventOrgYears(PersonModel $person): array
     {

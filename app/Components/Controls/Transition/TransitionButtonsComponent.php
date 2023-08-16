@@ -14,19 +14,19 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
 /**
- * @template H of ModelHolder
+ * @template THolder of ModelHolder
  */
 class TransitionButtonsComponent extends BaseComponent
 {
-    /** @phpstan-var Machine<H> */
+    /** @phpstan-var Machine<THolder> */
     protected Machine $machine;
 
-    /** @phpstan-var H */
+    /** @phpstan-var THolder */
     private ModelHolder $holder;
 
     /**
-     * @phpstan-param Machine<H> $machine
-     * @phpstan-param H $holder
+     * @phpstan-param Machine<THolder> $machine
+     * @phpstan-param THolder $holder
      */
     public function __construct(Container $container, Machine $machine, ModelHolder $holder)
     {

@@ -7,8 +7,8 @@ namespace FKSDB\Models\ORM\Links;
 use Fykosak\NetteORM\Model;
 
 /**
- * @template M of Model
- * @phpstan-extends LinkFactory<M>
+ * @template TModel of Model
+ * @phpstan-extends LinkFactory<TModel>
  */
 class Link extends LinkFactory
 {
@@ -18,7 +18,7 @@ class Link extends LinkFactory
     private string $title;
 
     /**
-     * @param class-string<M> $modelClassName
+     * @phpstan-param class-string<TModel> $modelClassName
      * @phpstan-param array<string,string> $params
      */
     public function __construct(string $destination, array $params, string $title, string $modelClassName)
@@ -35,7 +35,7 @@ class Link extends LinkFactory
     }
 
     /**
-     * @phpstan-param M $model
+     * @phpstan-param TModel $model
      */
     protected function getDestination(Model $model): string
     {
@@ -43,7 +43,7 @@ class Link extends LinkFactory
     }
 
     /**
-     * @phpstan-param M $model
+     * @phpstan-param TModel $model
      * @phpstan-return array<string,scalar>
      */
     protected function prepareParams(Model $model): array

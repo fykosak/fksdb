@@ -13,7 +13,7 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 class FOLTeamFormComponent extends TeamFormComponent
 {
     /**
-     * @return FormProcessing[]
+     * @phpstan-return FormProcessing[]
      */
     protected function getProcessing(): array
     {
@@ -34,7 +34,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return EvaluatedFieldsDefinition
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getMemberFieldsDefinition(): array
     {
@@ -88,7 +88,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return array<string,EvaluatedFieldMetaData>
+     * @phpstan-return array<string,EvaluatedFieldMetaData>
      */
     protected function getTeamFieldsDefinition(): array
     {

@@ -30,6 +30,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Application\UI\ComponentReflection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
@@ -83,7 +84,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @param \ReflectionMethod|\ReflectionClass<self> $element
+     * @param \ReflectionMethod|ComponentReflection $element
      * @throws \ReflectionException
      * @throws \Exception
      */
@@ -175,7 +176,7 @@ abstract class BasePresenter extends Presenter
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
-     * @phpstan-param array<string,mixed>|null $args
+     * @phpstan-param array<string,scalar>|null $args
      */
     public function authorized(string $destination, ?array $args = null): bool
     {
@@ -218,7 +219,7 @@ abstract class BasePresenter extends Presenter
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {
-                $testedPresenter->checkRequirements($testedPresenter->getReflection()); // @phpstan-ignore-line
+                $testedPresenter->checkRequirements($testedPresenter->getReflection());
                 $this->authorizedCache[$key] = $testedPresenter->authorized;
             } catch (BadRequestException $exception) {
                 $this->authorizedCache[$key] = false;
@@ -271,15 +272,16 @@ abstract class BasePresenter extends Presenter
 
     protected function getLoggedPerson(): ?PersonModel
     {
-        /**@var LoginModel|null $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
-        return $this->getUser()->isLoggedIn() ? $login->person : null; // @phpstan-ignore-line
+        return $this->getUser()->isLoggedIn() ? $login->person : null;
     }
 
     protected function createTemplate(): Template
     {
+        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
         $template = parent::createTemplate();
-        $template->setTranslator($this->translator); // @phpstan-ignore-line
+        $template->setTranslator($this->translator);
         return $template;
     }
 
@@ -343,7 +345,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     protected function getNavRoots(): array
     {

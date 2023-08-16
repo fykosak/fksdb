@@ -68,7 +68,7 @@ trait ContestPresenterTrait
     }
 
     /**
-     * @return TypedSelection<ContestModel>
+     * @phpstan-return TypedSelection<ContestModel>
      */
     private function getAvailableContests(): TypedSelection
     {

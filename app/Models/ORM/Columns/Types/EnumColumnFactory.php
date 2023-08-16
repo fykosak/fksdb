@@ -22,7 +22,7 @@ class EnumColumnFactory extends ColumnFactory
     private string $className;
 
     /**
-     * @param class-string<EnumColumn&FakeStringEnum> $className
+     * @phpstan-param class-string<EnumColumn&FakeStringEnum> $className
      */
     public function setEnumClassName(string $className): void
     {

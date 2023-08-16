@@ -48,8 +48,7 @@ class MailSender extends MailCallback
 
     /**
      * @param BaseHolder $holder
-     * @return PersonModel[]
-     * @throws \ReflectionException
+     * @phpstan-return PersonModel[]
      */
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {

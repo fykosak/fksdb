@@ -12,16 +12,16 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
 /**
- * @template M of Machine
+ * @template TMachine of Machine
  */
 class MassTransitionsComponent extends BaseComponent
 {
-    /** @phpstan-var M */
+    /** @phpstan-var TMachine */
     protected Machine $machine;
     private EventModel $event;
 
     /**
-     * @phpstan-param M $machine
+     * @phpstan-param TMachine $machine
      */
     public function __construct(Container $container, Machine $machine, EventModel $event)
     {

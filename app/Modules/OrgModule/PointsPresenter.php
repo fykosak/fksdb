@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\Models\{ContestYearModel, TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -37,6 +38,9 @@ final class PointsPresenter extends BasePresenter
         return new PageTitle(null, sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedEntry(): bool
     {
         return $this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest());
@@ -47,6 +51,9 @@ final class PointsPresenter extends BasePresenter
         return new PageTitle(null, _('Points list'), 'fas fa-clipboard-list');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedPreview(): bool
     {
         return $this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest());

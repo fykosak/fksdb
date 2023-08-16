@@ -43,7 +43,7 @@ class SubmitWebModel extends WebModel
      *     code:string,
      *     points:int,
      * } $params
-     * @return Message[]
+     * @phpstan-return Message[]
      */
     public function getJsonResponse(array $params): array
     {

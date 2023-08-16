@@ -209,7 +209,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return OrgModel[] indexed by contest_id
+     * @phpstan-return OrgModel[] indexed by contest_id
      * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
      */
     public function getActiveOrgs(): array
@@ -249,7 +249,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return array{
+     * @phpstan-return array{
      *     other_name:string,
      *     family_name:string,
      *     gender:string,
@@ -285,7 +285,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return array<int,int>
+     * @phpstan-return array<int,int>
      */
     public function getSerializedSchedule(EventModel $event, string $type): array
     {
@@ -346,7 +346,7 @@ final class PersonModel extends Model implements Resource
 
     /**
      * @param string[] $types
-     * @return PersonScheduleModel[]
+     * @phpstan-return PersonScheduleModel[]
      */
     public function getScheduleRests(
         EventModel $event,
@@ -385,7 +385,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return EventRole[]
+     * @phpstan-return EventRole[]
      */
     public function getEventRoles(EventModel $event): array
     {

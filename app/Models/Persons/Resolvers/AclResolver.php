@@ -8,7 +8,6 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
-use Nette\Security\Resource;
 use Nette\SmartObject;
 
 class AclResolver implements Resolver

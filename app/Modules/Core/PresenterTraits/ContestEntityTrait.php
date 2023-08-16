@@ -12,26 +12,27 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template CM of (Model&\Nette\Security\Resource)
+ * @template TContestModel of (Model&\Nette\Security\Resource)
  */
 trait ContestEntityTrait
 {
-    /** @phpstan-use EntityPresenterTrait<CM> */
+    /** @phpstan-use EntityPresenterTrait<TContestModel> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
 
     /**
-     * @return CM
+     * @phpstan-return TContestModel
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws CannotAccessModelException
+     * @throws NoContestAvailable
      */
     protected function getEntity(): Model
     {
-        /** @var CM $model */
+        /** @var TContestModel $model */
         $model = $this->getBaseEntity();
         try {
             $contest = $model->getReferencedModel(ContestModel::class);

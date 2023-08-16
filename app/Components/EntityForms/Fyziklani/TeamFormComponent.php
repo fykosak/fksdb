@@ -237,17 +237,17 @@ abstract class TeamFormComponent extends EntityFormComponent
     abstract protected function getMemberFieldsDefinition(): array;
 
     /**
-     * @return array<string,EvaluatedFieldMetaData>
+     * @phpstan-return array<string,EvaluatedFieldMetaData>
      */
     abstract protected function getTeamFieldsDefinition(): array;
 
     /**
-     * @return FormProcessing[]
+     * @phpstan-return FormProcessing[]
      */
     abstract protected function getProcessing(): array;
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public static function getMembersFromForm(Form $form): array
     {

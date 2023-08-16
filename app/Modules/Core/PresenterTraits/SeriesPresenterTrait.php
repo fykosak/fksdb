@@ -42,7 +42,7 @@ trait SeriesPresenterTrait
     }
 
     /**
-     * @return int[]
+     * @phpstan-return int[]
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */

@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -44,8 +43,7 @@ class PersonsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
-                new Title(null, _('#'))
+                fn(PersonScheduleModel $model) => (string)$model->person_schedule_id
             ),
             'person_schedule_id'
         );

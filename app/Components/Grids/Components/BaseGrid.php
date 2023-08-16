@@ -21,15 +21,15 @@ use Nette\Utils\Paginator as NettePaginator;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseComponent<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseComponent<TModel>
  */
 abstract class BaseGrid extends BaseComponent
 {
     public bool $paginate = true;
     public bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
-    /** @var TableRow<M> */
+    /** @var TableRow<TModel> */
     public TableRow $tableRow;
 
     public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
@@ -84,7 +84,7 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @phpstan-param BaseItem<M> $component
+     * @phpstan-param BaseItem<TModel> $component
      */
     protected function addColumn(BaseItem $component, string $name): void
     {
@@ -92,7 +92,7 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @phpstan-param BaseItem<M> $component
+     * @phpstan-param BaseItem<TModel> $component
      */
     protected function addButton(BaseItem $component, string $name): void
     {
@@ -100,20 +100,20 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @phpstan-return PresenterButton<M>
+     * @phpstan-return PresenterButton<TModel>
      * @throws BadTypeException
      * @deprecated
      */
     protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-        /** @phpstan-var PresenterButton<M> $button */
+        /** @phpstan-var PresenterButton<TModel> $button */
         $button = new PresenterButton(
             $this->container,
             new Title(null, $factory->getText()),
-            fn(Model $model): array => $factory->createLinkParameters($model),
+            fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,
-            fn(Model $model): bool => $checkACL
+            fn(?Model $model): bool => $checkACL
                 ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
                 : true
         );

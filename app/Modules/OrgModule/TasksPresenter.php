@@ -52,6 +52,9 @@ final class TasksPresenter extends BasePresenter
         return new PageTitle(null, _('Task import'), 'fas fa-download');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedImport(): bool
     {
         return $this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest());
@@ -62,6 +65,9 @@ final class TasksPresenter extends BasePresenter
         return new PageTitle(null, _('Handout'), 'fas fa-folder-open');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedDispatch(): bool
     {
         return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
@@ -88,7 +94,9 @@ final class TasksPresenter extends BasePresenter
 
 
     /**
-     * TODO to separate Component
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * TODO to separate component
      */
     protected function createComponentSeriesForm(): FormControl
     {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseList<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseList<TModel>
  */
 abstract class FilterList extends BaseList
 {

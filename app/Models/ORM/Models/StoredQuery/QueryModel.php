@@ -23,7 +23,7 @@ final class QueryModel extends Model implements Resource
     public const RESOURCE_ID = 'storedQuery';
 
     /**
-     * @return ParameterModel[]
+     * @phpstan-return ParameterModel[]
      */
     public function getParameters(): array
     {
@@ -44,7 +44,7 @@ final class QueryModel extends Model implements Resource
     }
 
     /**
-     * @return StoredQueryParameter[]
+     * @phpstan-return StoredQueryParameter[]
      */
     public function getQueryParameters(): array
     {
@@ -60,7 +60,7 @@ final class QueryModel extends Model implements Resource
     }
 
     /**
-     * @return TagTypeModel[]
+     * @phpstan-return TagTypeModel[]
      */
     public function getStoredQueryTagTypes(): array
     {

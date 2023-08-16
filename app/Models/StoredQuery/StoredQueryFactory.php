@@ -48,6 +48,10 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     public function createQuery(BasePresenter $presenter, QueryModel $patternQuery): StoredQuery
     {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);

@@ -6,40 +6,34 @@ namespace FKSDB\Components\Grids\Components\Renderer;
 
 use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseItem<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<TModel>
  */
 class RendererItem extends BaseItem
 {
     /**
-     * @phpstan-var callable(M):(string|Html) $renderer
+     * @phpstan-var callable(TModel,int):(string|Html) $renderer
      */
     protected $renderer;
 
     /**
-     * @phpstan-param callable(M):(string|Html) $renderer
+     * @phpstan-param callable(TModel,int):(string|Html) $renderer
      */
-    public function __construct(Container $container, callable $renderer, Title $title)
+    public function __construct(Container $container, callable $renderer)
     {
-        parent::__construct($container, $title);
+        parent::__construct($container);
         $this->renderer = $renderer;
     }
 
     /**
-     * @param M|null $model
+     * @param TModel $model
      */
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(Model $model, int $userPermission): void
     {
-        $this->doRender($model, $userPermission, ['renderer' => $this->renderer]);
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte';
+        $this->renderHtml(($this->renderer)($model, $userPermission));
     }
 }

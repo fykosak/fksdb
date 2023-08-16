@@ -27,7 +27,7 @@ class Pipeline
     /**
      * Starts the pipeline.
      * @param TData $data
-     * @return TData output of the last stage
+     * @phpstan-return TData output of the last stage
      */
     public function __invoke($data)
     {

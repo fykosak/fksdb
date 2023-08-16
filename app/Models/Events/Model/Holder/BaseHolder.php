@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
 
@@ -66,7 +65,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @return Field[]
+     * @phpstan-return Field[]
      */
     public function getFields(): array
     {
@@ -74,7 +73,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param bool|callable $modifiable
+     * @param bool|callable(BaseHolder):bool $modifiable
      */
     public function setModifiable($modifiable): void
     {
@@ -153,9 +152,6 @@ class BaseHolder implements ModelHolder
         return $container;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function getPerson(): ?PersonModel
     {
         try {
@@ -163,14 +159,14 @@ class BaseHolder implements ModelHolder
             if (!$app) {
                 return null;
             }
-            return $app->getReferencedModel(PersonModel::class);
+            return $app->person;
         } catch (CannotAccessModelException $exception) {
             return null;
         }
     }
 
     /**
-     * @phpstan-param FakeStringEnum&EnumColumn $newState
+     * @phpstan-param EventParticipantStatus $newState
      */
     public function updateState(EnumColumn $newState): void
     {

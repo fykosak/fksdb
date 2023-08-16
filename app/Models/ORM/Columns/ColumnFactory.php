@@ -17,8 +17,8 @@ use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
- * @template M of Model = Model
- * @phpstan-template ArgType
+ * @template TModel of Model
+ * @template ArgType
  */
 abstract class ColumnFactory
 {
@@ -41,7 +41,7 @@ abstract class ColumnFactory
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
-    /** @phpstan-var class-string<M> */
+    /** @phpstan-var class-string<TModel> */
     protected string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory)
@@ -50,7 +50,7 @@ abstract class ColumnFactory
     }
 
     /**
-     * @phpstan-param class-string<M> $modelClassName
+     * @phpstan-param class-string<TModel> $modelClassName
      */
     final public function setUp(
         string $tableName,
@@ -139,7 +139,7 @@ abstract class ColumnFactory
     }
 
     /**
-     * @param M $model
+     * @param TModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
@@ -172,7 +172,7 @@ abstract class ColumnFactory
     }
 
     /**
-     * @return M|null
+     * @phpstan-return TModel|null
      * @throws \ReflectionException
      * @throws CannotAccessModelException
      */

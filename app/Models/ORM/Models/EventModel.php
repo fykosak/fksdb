@@ -90,7 +90,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @return LocalizedString<'cs'|'en'>
+     * @phpstan-return LocalizedString<'cs'|'en'>
      */
     public function getName(): LocalizedString
     {
@@ -295,7 +295,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @return array<string,mixed>
+     * @phpstan-return array<string,mixed>
      */
     private function getParameters(): array
     {

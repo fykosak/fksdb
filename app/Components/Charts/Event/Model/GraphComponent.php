@@ -11,15 +11,15 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template M of Machine
+ * @template TMachine of Machine
  */
 class GraphComponent extends FrontEndComponent implements Chart
 {
-    /** @var M */
+    /** @var TMachine */
     private Machine $machine;
 
     /**
-     * @phpstan-param M $machine
+     * @phpstan-param TMachine $machine
      */
     public function __construct(Container $container, Machine $machine)
     {
@@ -28,7 +28,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string}>}
+     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string}>}
      */
     final public function getData(): array
     {

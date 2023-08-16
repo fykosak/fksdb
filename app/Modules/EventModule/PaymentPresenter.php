@@ -17,6 +17,7 @@ use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -108,6 +109,7 @@ final class PaymentPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedDetailedList(): bool
     {

@@ -262,7 +262,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public static function decodeParameters(string $data): array
     {
@@ -301,6 +301,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
      */
     protected function getStyleId(): string
     {

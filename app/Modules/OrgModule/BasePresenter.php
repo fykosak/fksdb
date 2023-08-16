@@ -32,7 +32,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     protected function getNavRoots(): array
     {

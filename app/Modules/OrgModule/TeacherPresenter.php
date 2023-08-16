@@ -11,6 +11,8 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
@@ -68,14 +70,20 @@ final class TeacherPresenter extends BasePresenter
         return new TeachersGrid($this->getContext());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): TeacherFormComponent
     {
         return new TeacherFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function createComponentEditForm(): TeacherFormComponent
     {
@@ -84,6 +92,7 @@ final class TeacherPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

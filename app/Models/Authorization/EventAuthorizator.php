@@ -44,7 +44,7 @@ class EventAuthorizator
     }
 
     /**
-     * @return EventRole[]
+     * @phpstan-return EventRole[]
      */
     private function getRolesForEvent(EventModel $event): array
     {

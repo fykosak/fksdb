@@ -24,7 +24,7 @@ class TestLog extends Message
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     public static function getAvailableLevels(): array
     {

@@ -8,7 +8,6 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Transition\BehaviorType;
 use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\Schema\Elements\Structure;
@@ -18,7 +17,7 @@ use Nette\Schema\Schema;
 /**
  * @phpstan-type Item array{
  *      machine:string,
- *      stateEnum:class-string<EnumColumn&FakeStringEnum>,
+ *      stateEnum:class-string<EnumColumn&\FKSDB\Models\Utils\FakeStringEnum>,
  *      decorator:\Nette\DI\Definitions\Statement|null,
  *      transitions:array<string,TransitionType>
  * }
@@ -116,8 +115,9 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @phpstan-param class-string<EnumColumn&FakeStringEnum> $enumClassName
-     * @return array{(EnumColumn&FakeStringEnum)[],EnumColumn&FakeStringEnum}
+     * @template TEnum of (EnumColumn&\FKSDB\Models\Utils\FakeStringEnum)
+     * @phpstan-param class-string<TEnum> $enumClassName
+     * @phpstan-return array{TEnum[],TEnum}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {

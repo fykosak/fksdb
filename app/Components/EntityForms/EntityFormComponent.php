@@ -16,17 +16,17 @@ use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**
- * @template M of Model
+ * @template TModel of Model
  */
 abstract class EntityFormComponent extends FormComponent
 {
     /**
-     * @phpstan-var M|null
+     * @phpstan-var TModel|null
      */
     protected ?Model $model;
 
     /**
-     * @phpstan-param M|null $model
+     * @phpstan-param TModel|null $model
      */
     public function __construct(Container $container, ?Model $model)
     {

@@ -65,7 +65,7 @@ final class EmailMessageModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return static::RESOURCE_ID;
+        return self::RESOURCE_ID;
     }
 
     /**

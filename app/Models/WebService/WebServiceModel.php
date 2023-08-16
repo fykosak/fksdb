@@ -37,9 +37,7 @@ class WebServiceModel
     private Container $container;
     private ContestAuthorizator $contestAuthorizator;
     private User $user;
-    /**
-     * @phpstan-var array<string,class-string<WebModel<array<string,mixed>,array<string|int,mixed>>>>
-     */
+
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
         'game/results' => Game\ResultsWebModel::class,

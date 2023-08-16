@@ -9,6 +9,8 @@ use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthMethod;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -19,11 +21,17 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedContestant(): bool
     {
         return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedEvent(): bool
     {
         return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
@@ -40,6 +48,10 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
         );
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     public function renderEvent(): void
     {
         $eventName = $this->getParameter('eventName');

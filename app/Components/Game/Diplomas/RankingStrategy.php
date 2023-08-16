@@ -132,7 +132,7 @@ class RankingStrategy
     }
 
     /**
-     * @return TeamModel2[]
+     * @phpstan-return TeamModel2[]
      */
     public function getInvalidTeamsPoints(?TeamCategory $category = null): array
     {
@@ -151,7 +151,7 @@ class RankingStrategy
 
     /**
      * Validate ranking of teams
-     * @return TeamModel2[]
+     * @phpstan-return TeamModel2[]
      * @throws NoMemberException
      */
     public function getInvalidTeamsRank(?TeamCategory $category = null): array

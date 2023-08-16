@@ -72,7 +72,7 @@ class AddressHandler extends ReferencedHandler
     }
 
     /**
-     * @return array{
+     * @phpstan-return array{
      *     country_subdivision_id?:int,
      *     country_id:int,
      * }|null

@@ -32,7 +32,7 @@ class SeriesTable
     }
 
     /**
-     * @return TypedGroupedSelection<ContestantModel>
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
      */
     public function getContestants(): TypedGroupedSelection
     {
@@ -40,7 +40,7 @@ class SeriesTable
     }
 
     /**
-     * @return TypedGroupedSelection<TaskModel>
+     * @phpstan-return TypedGroupedSelection<TaskModel>
      */
     public function getTasks(): TypedGroupedSelection
     {
@@ -52,7 +52,7 @@ class SeriesTable
     }
 
     /**
-     * @return TypedSelection<SubmitModel>
+     * @phpstan-return TypedSelection<SubmitModel>
      */
     public function getSubmits(): TypedSelection
     {
@@ -62,7 +62,7 @@ class SeriesTable
     }
 
     /**
-     * @return array<int,array<int,SubmitModel>>
+     * @phpstan-return array<int,array<int,SubmitModel>>
      */
     public function getSubmitsTable(): array
     {
@@ -77,7 +77,7 @@ class SeriesTable
     }
 
     /**
-     * @return array{contestant:array<int,array{submit:array<int,SubmitModel>|null}>}
+     * @phpstan-return array{contestant:array<int,array{submit:array<int,SubmitModel>|null}>}
      */
     public function formatAsFormValues(): array
     {

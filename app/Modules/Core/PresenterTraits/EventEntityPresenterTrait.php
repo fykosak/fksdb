@@ -13,11 +13,11 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template EM of (Model&\Nette\Security\Resource)
+ * @template TEventModel of (Model&\Nette\Security\Resource)
  */
 trait EventEntityPresenterTrait
 {
-    /** @phpstan-use EntityPresenterTrait<EM> */
+    /** @phpstan-use EntityPresenterTrait<TEventModel> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -29,11 +29,11 @@ trait EventEntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @return EM
+     * @phpstan-return TEventModel
      */
     protected function getEntity(): Model
     {
-        /** @var EM $model */
+        /** @var TEventModel $model */
         $model = $this->getBaseEntity();
         /** @var EventModel $event */
         $event = $model->getReferencedModel(EventModel::class);

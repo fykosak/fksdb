@@ -31,7 +31,7 @@ final class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @return NavItem[]
+     * @phpstan-return NavItem[]
      */
     private function getAllContestants(PersonModel $person): array
     {
@@ -69,7 +69,7 @@ final class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @return NavItem[]
+     * @phpstan-return NavItem[]
      */
     private function getAllOrganisers(LoginModel $login): array
     {

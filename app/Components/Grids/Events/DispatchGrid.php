@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -22,13 +23,7 @@ class DispatchGrid extends EntityGrid
         parent::__construct(
             $container,
             EventService::class,
-            [
-                'event.event_id',
-                'event.name',
-                'contest.contest',
-                'event.year',
-                'event.role',
-            ],
+            [],
         );
     }
 
@@ -51,6 +46,21 @@ class DispatchGrid extends EntityGrid
         parent::configure();
 
         $this->paginate = true;
+        $this->addColumns([
+            'event.event_id',
+        ]);
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(EventModel $model) => $model->getName()->getText($this->translator->lang) //@phpstan-ignore-line
+            ),
+            'event_name'
+        );
+        $this->addColumns([
+            'contest.contest',
+            'event.year',
+            'event.role',
+        ]);
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 }

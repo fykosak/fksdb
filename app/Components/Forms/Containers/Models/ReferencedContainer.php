@@ -22,7 +22,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @template M of Model
+ * @template TModel of Model
  */
 abstract class ReferencedContainer extends ContainerWithOptions
 {
@@ -30,7 +30,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
     /**
-     * @phpstan-var ReferencedId<M>|null
+     * @phpstan-var ReferencedId<TModel>|null
      */
     private ?ReferencedId $referencedId = null;
 
@@ -61,7 +61,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     }
 
     /**
-     * @phpstan-return ReferencedId<M>|null
+     * @phpstan-return ReferencedId<TModel>|null
      */
     public function getReferencedId(): ?ReferencedId
     {
@@ -69,7 +69,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     }
 
     /**
-     * @phpstan-param ReferencedId<M> $referencedId
+     * @phpstan-param ReferencedId<TModel> $referencedId
      */
     public function setReferencedId(ReferencedId $referencedId): void
     {
@@ -104,7 +104,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     }
 
     /**
-     * @phpstan-param array<string,scalar|null>|array<string,array<string,scalar|null>> $conflicts
+     * @phpstan-param array<string,scalar|null|array<string,scalar|null>> $conflicts
      */
     public function setConflicts(array $conflicts, ?ContainerWithOptions $container = null): void
     {

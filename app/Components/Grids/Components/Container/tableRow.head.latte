@@ -4,7 +4,9 @@
     {varType FKSDB\Components\Grids\Components\BaseItem $component}
     {continueIf $name === 'buttons'}
     <th>
-        {$component->title->toHtml()}
+        {if $component->title}
+            {$component->title->toHtml()}
+        {/if}
     </th>
 {/foreach}
 {if count($control->buttons->getComponents())}

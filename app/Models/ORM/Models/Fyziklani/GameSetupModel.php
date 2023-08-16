@@ -20,7 +20,7 @@ use Fykosak\NetteORM\Model;
 final class GameSetupModel extends Model
 {
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getAvailablePoints(): array
     {

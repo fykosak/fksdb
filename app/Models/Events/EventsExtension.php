@@ -115,7 +115,7 @@ class EventsExtension extends CompilerExtension
 
     /**
      * @param string[][] $definition
-     * @return string[]
+     * @phpstan-return string[]
      */
     private function createAccessKeys(array $definition): array
     {

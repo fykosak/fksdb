@@ -40,7 +40,7 @@ class StoredQueryTagCloudComponent extends BaseComponent
     }
 
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getActiveTagIds(): array
     {

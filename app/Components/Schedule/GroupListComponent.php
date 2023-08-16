@@ -62,8 +62,7 @@ class GroupListComponent extends BaseList
                 $this->container,
                 fn(ScheduleGroupModel $model) => ($model->start->format('j-n') === $model->end->format('j-n'))
                     ? $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('H:i')
-                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i'),
-                new Title(null, '')
+                    : $model->start->format('j. n. Y H:i') . ' - ' . $model->end->format('j. n. Y H:i')
             ),
             'duration'
         );

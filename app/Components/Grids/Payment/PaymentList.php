@@ -82,28 +82,30 @@ class PaymentList extends FilterList
             'full_name'
         );
         $row->addComponent(new TemplateItem($this->container, '@event.role'), 'role');
+        /** @phpstan-var RelatedTable<PaymentModel,SchedulePaymentModel> $items */
         $items = new RelatedTable(
             $this->container,
-            fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(),  //@phpstan-ignore-line
+            fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(), // @phpstan-ignore-line
             new Title(null, _('Items')),
             true
         );
         $this->addRow($items, 'items');
         $items->addColumn(
+        /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, _('@schedule_group.name_en: @schedule_item.name_en'), _('Item')),
             'name'
         );
         $items->addColumn(
-        /** @phpstan-ignore-next-line */
             new TemplateItem(
                 $this->container,
                 '@person.full_name (@event.role)',
                 _('For'),
-                fn(SchedulePaymentModel $model) => $model->person_schedule // @phpstan-ignore-line
+                fn(SchedulePaymentModel $model) => $model->person_schedule
             ),
             'person'
         );
         $items->addColumn(
+        /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
             'price'
         );

@@ -98,7 +98,7 @@ final class TeamState extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return TeamState[]
+     * @phpstan-return TeamState[]
      */
     public static function cases(): array
     {

@@ -12,8 +12,8 @@ use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseGrid<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseGrid<TModel>
  */
 class PersonRelatedGrid extends BaseGrid
 {
@@ -31,11 +31,11 @@ class PersonRelatedGrid extends BaseGrid
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<M>
+     * @phpstan-return TypedGroupedSelection<TModel>
      */
     protected function getModels(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<M> $query */
+        /** @phpstan-var TypedGroupedSelection<TModel> $query */
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');

@@ -33,6 +33,9 @@ final class SubmitPresenter extends BasePresenter
         $this->taskService = $taskService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedLegacy(): bool
     {
         return $this->authorizedDefault();
@@ -43,11 +46,18 @@ final class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Legacy upload system'), 'fas fa-cloud-upload-alt');
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     public function renderLegacy(): void
     {
         $this->renderDefault();
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedDefault(): bool
     {
         return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
@@ -58,11 +68,18 @@ final class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     public function renderDefault(): void
     {
         $this->template->hasTasks = $this->getSelectedContestYear()->isActive();
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedQuiz(): bool
     {
         return $this->authorizedDefault();
@@ -78,12 +95,18 @@ final class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedQuizDetail(): bool
     {
         $submit = $this->submitService->findByPrimary($this->id);
         return $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest());
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedList(): bool
     {
         return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
@@ -95,8 +118,11 @@ final class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @throws TaskNotFoundException
      * @throws ForbiddenRequestException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws NotFoundException
+     * @throws TaskNotFoundException
      */
     protected function createComponentQuizComponent(): QuizComponent
     {

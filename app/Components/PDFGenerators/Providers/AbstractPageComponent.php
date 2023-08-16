@@ -30,7 +30,7 @@ abstract class AbstractPageComponent extends BaseComponent
     abstract public function getPageFormat(): string;
 
     /**
-     * @return array<string,string>
+     * @phpstan-return array<string,string>
      */
     public static function getAvailableFormats(): array
     {

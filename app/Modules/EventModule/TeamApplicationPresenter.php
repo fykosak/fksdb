@@ -197,7 +197,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     protected function getMachine(): TeamMachine
     {
-        return $this->eventDispatchFactory->getEventMachine($this->getEvent()); //@phpstan-ignore-line
+        return $this->eventDispatchFactory->getTeamMachine($this->getEvent());
     }
 
     /**
@@ -335,7 +335,7 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return AttendanceComponent<TeamHolder>
+     * @phpstan-return AttendanceComponent<TeamHolder>
      * @throws EventNotFoundException|BadTypeException
      */
     protected function createComponentFastTransition(): AttendanceComponent
@@ -355,7 +355,7 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return TransitionButtonsComponent<TeamHolder>
+     * @phpstan-return TransitionButtonsComponent<TeamHolder>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException

@@ -87,7 +87,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return static[]
+     * @phpstan-return self[]
      */
     public static function getPrimarySchoolCases(): array
     {
@@ -106,7 +106,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return static[]
+     * @phpstan-return static[]
      */
     public static function getHighSchoolCases(): array
     {

@@ -16,7 +16,7 @@ use Nette\DI\Container;
 
 /**
  * @method BasePresenter getPresenter()
- * @template M of Model
+ * @template TModel of Model
  */
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
@@ -34,12 +34,12 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     abstract protected function configure(): void;
 
     /**
-     * @return TypedSelection<M>|TypedGroupedSelection<M>
+     * @phpstan-return TypedSelection<TModel>|TypedGroupedSelection<TModel>
      */
     abstract protected function getModels(): Selection;
 
     /**
-     * @param BaseItem<M> $component
+     * @phpstan-param BaseItem<TModel> $component
      */
     abstract protected function addButton(BaseItem $component, string $name): void;
 
@@ -52,7 +52,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     }
 
     /**
-     * @phpstan-return PresenterButton<M>
+     * @phpstan-return PresenterButton<TModel>
      * @phpstan-param array<string,string> $params
      */
     protected function addPresenterButton(
@@ -70,7 +70,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             }
             return $hrefParams;
         };
-        /** @phpstan-var PresenterButton<M> $button */
+        /** @phpstan-var PresenterButton<TModel> $button */
         $button = new PresenterButton(
             $this->container,
             new Title(null, _($label)),

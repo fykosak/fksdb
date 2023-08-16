@@ -15,7 +15,7 @@ abstract class EventParticipantCallback extends MailCallback
 {
     /**
      * @param BaseHolder $holder
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     final protected function getPersonsFromHolder(ModelHolder $holder): array
     {

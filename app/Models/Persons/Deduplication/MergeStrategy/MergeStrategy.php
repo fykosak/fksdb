@@ -12,7 +12,7 @@ interface MergeStrategy
     /**
      * @param TValue $trunk
      * @param TValue $merged
-     * @return TValue
+     * @phpstan-return TValue
      * @throws CannotMergeException
      */
     public function mergeValues($trunk, $merged);

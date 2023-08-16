@@ -65,7 +65,7 @@ trait YearPresenterTrait
     }
 
     /**
-     * @return TypedGroupedSelection<ContestYearModel>
+     * @phpstan-return TypedGroupedSelection<ContestYearModel>
      * @throws NoContestAvailable
      */
     protected function getAvailableYears(): TypedGroupedSelection
@@ -105,7 +105,6 @@ trait YearPresenterTrait
     }
 
     /**
-     * @return YearChooserComponent
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */

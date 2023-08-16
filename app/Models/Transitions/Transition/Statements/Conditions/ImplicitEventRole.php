@@ -11,8 +11,8 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 
 /**
- * @template M of (\Nette\Security\Resource&\Fykosak\NetteORM\Model)
- * @phpstan-extends EventRole<ModelHolder<FakeStringEnum&EnumColumn,M>>
+ * @template TModel of (\Nette\Security\Resource&\Fykosak\NetteORM\Model)
+ * @phpstan-extends EventRole<ModelHolder<FakeStringEnum&EnumColumn,TModel>>
  */
 class ImplicitEventRole extends EventRole
 {

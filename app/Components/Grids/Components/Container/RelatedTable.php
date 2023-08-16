@@ -10,20 +10,20 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @template C of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseItem<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @template TRelatedModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<TModel>
  */
 class RelatedTable extends BaseItem
 {
-    /** @var callable(M):iterable<C> */
+    /** @var callable(TModel):iterable<TRelatedModel> */
     private $modelToIterator;
     private bool $head;
-    /** @var TableRow<C> */
+    /** @var TableRow<TRelatedModel> */
     public TableRow $tableRow;
 
     /**
-     * @phpstan-param callable(M):iterable<C> $modelToIterator
+     * @phpstan-param callable(TModel):iterable<TRelatedModel> $modelToIterator
      */
     public function __construct(Container $container, callable $modelToIterator, Title $title, bool $head = false)
     {
@@ -35,20 +35,20 @@ class RelatedTable extends BaseItem
     }
 
     /**
-     * @param M|null $model
+     * @param TModel $model
      */
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(Model $model, int $userPermission): void
     {
-        $this->doRender($model, $userPermission, ['models' => ($this->modelToIterator)($model), 'head' => $this->head]);
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'relatedTable.latte';
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'relatedTable.latte', [
+            'models' => ($this->modelToIterator)($model),
+            'head' => $this->head,
+            'title' => $this->title,
+            'userPermission' => $userPermission,
+        ]);
     }
 
     /**
-     * @phpstan-param BaseItem<C> $component
+     * @phpstan-param BaseItem<TRelatedModel> $component
      */
     public function addColumn(BaseItem $component, string $name): void
     {
@@ -56,7 +56,7 @@ class RelatedTable extends BaseItem
     }
 
     /**
-     * @phpstan-param BaseItem<C> $component
+     * @phpstan-param BaseItem<TRelatedModel> $component
      */
     public function addButton(BaseItem $component, string $name): void
     {

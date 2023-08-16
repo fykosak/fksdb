@@ -35,7 +35,7 @@ final class ProviderComponent extends BaseComponent
     }
 
     /**
-     * @return AbstractPageComponent<TRow,TParam>
+     * @phpstan-return AbstractPageComponent<TRow,TParam>
      */
     protected function createComponentPage(): AbstractPageComponent
     {

@@ -14,7 +14,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -26,7 +25,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class ApplicationPresenter extends BasePresenter
 {
@@ -124,7 +122,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param EventParticipantModel|Resource|string|null $resource
+     * @param EventParticipantModel|string|null $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -200,7 +198,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     public function getHolder(): BaseHolder
@@ -210,16 +207,14 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function getMachine(): EventParticipantMachine
     {
-        return $this->eventDispatchFactory->getEventMachine($this->getEvent());//@phpstan-ignore-line
+        return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return AttendanceComponent<BaseHolder>
      */
     protected function createComponentFastTransition(): AttendanceComponent
@@ -250,13 +245,12 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return TransitionButtonsComponent<BaseHolder>
+     * @phpstan-return TransitionButtonsComponent<BaseHolder>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent
@@ -270,7 +264,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return MassTransitionsComponent<EventParticipantMachine>
      */
     protected function createComponentMassTransitions(): MassTransitionsComponent

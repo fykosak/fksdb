@@ -16,7 +16,7 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * @template M of (Model&Resource)
+ * @template TModel of (Model&Resource)
  */
 trait EntityPresenterTrait
 {
@@ -26,6 +26,7 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedList(): bool
     {
@@ -46,13 +47,14 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return Service<M>
+     * @phpstan-return Service<TModel>
      */
     abstract protected function getORMService(): Service;
 
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedCreate(): bool
     {
@@ -61,9 +63,11 @@ trait EntityPresenterTrait
 
     /**
      * @throws EventNotFoundException
-     * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
@@ -72,7 +76,7 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return M
+     * @phpstan-return TModel
      * @throws GoneException
      * @throws ModelNotFoundException
      */
@@ -89,11 +93,11 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
-     * @phpstan-return M
+     * @phpstan-return TModel
      */
     private function loadModel(): Model
     {
-        /** @var M|null $candidate */
+        /** @var TModel|null $candidate */
         $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;
@@ -105,8 +109,10 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedDelete(): bool
@@ -117,8 +123,10 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedDetail(): bool
@@ -154,8 +162,10 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function traitHandleDelete(): void

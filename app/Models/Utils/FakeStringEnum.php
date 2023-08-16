@@ -14,7 +14,7 @@ abstract class FakeStringEnum
     }
 
     /**
-     * @return static|null
+     * @phpstan-return static|null
      */
     final public static function tryFrom(?string $value): ?self
     {
@@ -29,7 +29,7 @@ abstract class FakeStringEnum
     }
 
     /**
-     * @return static
+     * @phpstan-return static
      */
     final public static function from(string $value): self
     {
@@ -42,7 +42,7 @@ abstract class FakeStringEnum
     }
 
     /**
-     * @return static[]
+     * @phpstan-return static[]
      */
     abstract public static function cases(): array;
 

@@ -87,13 +87,13 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return literal-string
+     * @phpstan-return literal-string
      */
     abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
-     * @phpstan-param array<string,int|null>|array<string,array<int,int|null>> $conditions
+     * @phpstan-param array<string,int|null|array<int,int|null>> $conditions
      */
     protected function conditionsToWhere(array $conditions): string
     {
@@ -133,7 +133,7 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return ContestCategoryModel[]
+     * @phpstan-return ContestCategoryModel[]
      */
     public function getCategories(): array
     {

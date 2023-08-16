@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons;
 use Fykosak\NetteORM\Model;
 
 /**
- * @template M of Model
+ * @template TModel of Model
  */
 abstract class ReferencedHandler
 {
@@ -24,8 +24,8 @@ abstract class ReferencedHandler
     }
 
     /**
-     * @phpstan-param M|null $model
-     * @phpstan-return M|null
+     * @phpstan-param TModel|null $model
+     * @phpstan-return TModel|null
      * @phpstan-ignore-next-line
      */
     abstract public function store(array $values, ?Model $model = null): ?Model;

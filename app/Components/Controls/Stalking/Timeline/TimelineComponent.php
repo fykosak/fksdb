@@ -46,7 +46,6 @@ class TimelineComponent extends FrontEndComponent
     }
 
     /**
-     * @return array[][]
      * @throws \Exception
      * @phpstan-return array{
      *  array{
@@ -153,7 +152,7 @@ class TimelineComponent extends FrontEndComponent
 
     /**
      * @param EventModel[] $events
-     * @return \DateTimeInterface[]
+     * @phpstan-return \DateTimeInterface[]
      * @phpstan-param array<string,\DateTimeInterface[]> $dates
      */
     private function calculateFirstAndLast(array $events, array $dates): array

@@ -7,6 +7,7 @@ namespace FKSDB\Components\Game\Submits;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -46,17 +47,20 @@ class AllSubmitsGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->addColumn(
+        /** @phpstan-ignore-next-line */
+            new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
+            'name_n_id'
+        );
         $this->addColumns(
             $this->event->event_type_id === 1
                 ? [
-                'fyziklani_team.name_n_id',
                 'fyziklani_task.label',
                 'fyziklani_submit.state',
                 'fyziklani_submit.points',
                 'fyziklani_submit.modified',
             ]
                 : [
-                'fyziklani_team.name_n_id',
                 'fyziklani_task.label',
                 'fyziklani_submit.points',
             ]
@@ -69,7 +73,7 @@ class AllSubmitsGrid extends FilterGrid
                 $this->container,
                 $this,
                 new Title(null, _('Revoke')),
-                fn(SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
+                fn(?SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',
                 function (SubmitModel $row): bool {
                     try {

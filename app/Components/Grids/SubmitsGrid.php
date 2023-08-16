@@ -54,24 +54,21 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator->lang),
-                new Title(null, _('Task'))
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator->lang)
             ),
             'task'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
-                new Title(null, _('Timestamp'))
+                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time'))
             ),
             'submitted_on'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->source->value,
-                new Title(null, _('Method of handing'))
+                fn(SubmitModel $model): string => $model->source->value
             ),
             'source'
         );

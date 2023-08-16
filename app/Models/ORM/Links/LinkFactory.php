@@ -10,15 +10,15 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
 /**
- * @template M of Model
+ * @template TModel of Model
  */
 abstract class LinkFactory
 {
-    /** @phpstan-var class-string<M> */
+    /** @phpstan-var class-string<TModel> */
     protected string $modelClassName;
 
     /**
-     * @param class-string<M>|null $modelClassName
+     * @phpstan-param class-string<TModel>|null $modelClassName
      */
     public function __construct(string $modelClassName = null)
     {
@@ -38,7 +38,7 @@ abstract class LinkFactory
     /**
      * @throws CannotAccessModelException
      * @throws \ReflectionException
-     * @phpstan-return M
+     * @phpstan-return TModel
      */
     protected function getModel(Model $modelSingle): ?Model
     {
@@ -66,7 +66,7 @@ abstract class LinkFactory
     abstract protected function getDestination(Model $model): string;
 
     /**
-     * @phpstan-param M $model
+     * @phpstan-param TModel $model
      * @phpstan-return array<string,scalar>
      */
     abstract protected function prepareParams(Model $model): array;
