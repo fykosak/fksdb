@@ -33,7 +33,7 @@ class PipelineFactory
     }
 
     /**
-     * @return Pipeline<SeriesData>
+     * @phpstan-return Pipeline<SeriesData>
      */
     public function create(): Pipeline
     {

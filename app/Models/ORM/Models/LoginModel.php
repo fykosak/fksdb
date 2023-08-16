@@ -48,7 +48,7 @@ final class LoginModel extends Model implements IIdentity
     private array $roles;
 
     /**
-     * @return Grant[]
+     * @phpstan-return Grant[]
      */
     public function getRoles(): array
     {
@@ -86,7 +86,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @return Grant[]
+     * @phpstan-return Grant[]
      */
     public function createGrantModels(): array
     {

@@ -83,7 +83,7 @@ class SchoolProvider implements FilteredDataProvider
     }
 
     /**
-     * @return array{label:string,value:int}
+     * @phpstan-return array{label:string,value:int}
      */
     private function getItem(SchoolModel $school): array
     {

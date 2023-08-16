@@ -79,7 +79,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
     }
 
     /**
-     * @return NavItem[]
+     * @phpstan-return NavItem[]
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws BadRequestException
@@ -94,7 +94,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
                 $items[] = new NavItem(
                     $this->getItemTitle($item),
                     ':' . $item['presenter'] . ':' . $item['action'],
-                    $item['params'], //@phpstan-ignore-line
+                    $item['params'],
                     [],
                     $this->isItemActive($item)
                 );

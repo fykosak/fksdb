@@ -120,7 +120,7 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @return StoredQueryParameter[]
+     * @phpstan-return StoredQueryParameter[]
      */
     public function getQueryParameters(): array
     {

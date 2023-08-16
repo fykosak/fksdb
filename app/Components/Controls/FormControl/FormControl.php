@@ -29,13 +29,13 @@ class FormControl extends BaseComponent
     final public function render(): void
     {
         if (!isset($this->template->mainContainer)) {
-            $this->template->form = $this->getComponent('form');
+            $this->template->form = $this->getComponent('form');//TODO
         }
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 
     /**
-     * @return array{class:string,id:string}
+     * @phpstan-return array{class:string,id:string}
      */
     public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array
     {

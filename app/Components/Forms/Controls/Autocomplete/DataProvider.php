@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 interface DataProvider
 {
     /**
-     * @return array<int,array<string,scalar>> array of associative arrays with at least LABEL and VALUE keys
+     * @phpstan-return array<int,array<string,scalar>> array of associative arrays with at least LABEL and VALUE keys
      */
     public function getItems(): array;
 

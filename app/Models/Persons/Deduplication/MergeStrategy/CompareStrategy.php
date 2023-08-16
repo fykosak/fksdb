@@ -28,7 +28,7 @@ class CompareStrategy implements MergeStrategy
     /**
      * @param TValue $trunk
      * @param TValue $merged
-     * @return TValue
+     * @phpstan-return TValue
      */
     public function mergeValues($trunk, $merged)
     {

@@ -11,6 +11,8 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Modules\Core\PresenterTraits\ContestEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
@@ -31,6 +33,7 @@ final class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     public function titleEdit(): PageTitle
     {
@@ -45,6 +48,7 @@ final class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     public function titleDetail(): PageTitle
     {
@@ -69,6 +73,7 @@ final class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     final public function renderDetail(): void
     {
@@ -85,6 +90,10 @@ final class OrgPresenter extends BasePresenter
         return OrgModel::RESOURCE_ID;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): OrgFormComponent
     {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
@@ -95,12 +104,17 @@ final class OrgPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function createComponentEditForm(): OrgFormComponent
     {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function createComponentGrid(): OrgsGrid
     {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
@@ -108,6 +122,7 @@ final class OrgPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

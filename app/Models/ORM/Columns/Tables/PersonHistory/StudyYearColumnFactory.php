@@ -37,7 +37,7 @@ class StudyYearColumnFactory extends ColumnFactory
     }
 
     /**
-     * @return array<string,array<int,string>>
+     * @phpstan-return array<string,array<int,string>>
      */
     private function createOptions(ContestYearModel $contestYear): array
     {

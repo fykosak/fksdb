@@ -20,32 +20,32 @@ use Nette\Forms\Controls\HiddenField;
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
  * it should always be run inside a transaction.
- * @template M of Model
+ * @template TModel of Model
  */
 class ReferencedId extends HiddenField
 {
     public const VALUE_PROMISE = '__promise';
-    /** @phpstan-var ReferencedContainer<M> */
+    /** @phpstan-var ReferencedContainer<TModel> */
     public ReferencedContainer $referencedContainer;
-    /** @phpstan-var  SearchContainer<M> */
+    /** @phpstan-var  SearchContainer<TModel> */
     public SearchContainer $searchContainer;
-    /** @phpstan-var Service<M> */
+    /** @phpstan-var Service<TModel> */
     public Service $service;
-    /** @phpstan-var ReferencedHandler<M> */
+    /** @phpstan-var ReferencedHandler<TModel> */
     public ReferencedHandler $handler;
     /** @phpstan-var Promise<int>|null */
     private ?Promise $promise = null;
     private bool $modelCreated = false;
-    /** @phpstan-var M|null */
+    /** @phpstan-var TModel|null */
     private ?Model $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
     /**
-     * @phpstan-param SearchContainer<M> $searchContainer
-     * @phpstan-param ReferencedContainer<M> $referencedContainer
-     * @phpstan-param Service<M> $service
-     * @phpstan-param ReferencedHandler<M> $handler
+     * @phpstan-param SearchContainer<TModel> $searchContainer
+     * @phpstan-param ReferencedContainer<TModel> $referencedContainer
+     * @phpstan-param Service<TModel> $service
+     * @phpstan-param ReferencedHandler<TModel> $handler
      */
     public function __construct(
         SearchContainer $searchContainer,
@@ -81,7 +81,7 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @phpstan-return M|null
+     * @phpstan-return TModel|null
      */
     public function getModel(): ?Model
     {
@@ -89,7 +89,7 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @param string|int|M|null $value
+     * @param string|int|TModel|null $value
      * @return static
      */
     public function setValue($value, bool $force = false): self
@@ -196,7 +196,7 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @phpstan-param M|null $model
+     * @phpstan-param TModel|null $model
      */
     protected function setModel(?Model $model, ReferencedIdMode $mode): void
     {

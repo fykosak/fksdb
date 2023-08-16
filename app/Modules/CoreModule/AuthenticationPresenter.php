@@ -190,7 +190,7 @@ final class AuthenticationPresenter extends BasePresenter
     {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Login or e-mail'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'))
+            ->addRule(\Nette\Forms\Form::FILLED, _('Insert login or email address.'))
             ->getControlPrototype()->addAttributes(
                 [
                     'class' => 'top form-control',

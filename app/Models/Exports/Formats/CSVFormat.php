@@ -34,7 +34,7 @@ class CSVFormat implements ExportFormat
     }
 
     /**
-     * @return CSVResponse<\PDOStatement>
+     * @phpstan-return CSVResponse<\PDOStatement>
      */
     public function getResponse(): CSVResponse
     {

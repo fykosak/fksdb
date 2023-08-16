@@ -19,7 +19,7 @@ use Nette\Utils\Html;
 class OrderColumnFactory extends ColumnFactory
 {
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     public function getOrderMapping(): array
     {

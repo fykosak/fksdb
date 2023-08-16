@@ -17,8 +17,8 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @template H of ModelHolder
- * @implements Statement<void,ModelHolder>
+ * @template THolder of ModelHolder
+ * @implements Statement<void,THolder>
  */
 abstract class MailCallback implements Statement
 {
@@ -43,7 +43,7 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @param H ...$args
+     * @param THolder ...$args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -60,7 +60,7 @@ abstract class MailCallback implements Statement
 
     /**
      * @throws BadTypeException
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     protected function createMessageText(ModelHolder $holder, PersonModel $person): string
     {
@@ -81,7 +81,7 @@ abstract class MailCallback implements Statement
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
     {
@@ -90,10 +90,10 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      * @throws \ReflectionException
      * @throws BadTypeException
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {
@@ -105,12 +105,12 @@ abstract class MailCallback implements Statement
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     abstract protected function getTemplatePath(ModelHolder $holder): string;
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
      *     subject:string,

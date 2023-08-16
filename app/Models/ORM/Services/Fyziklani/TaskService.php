@@ -25,7 +25,7 @@ final class TaskService extends Service
     }
 
     /**
-     * @return SerializedTaskModel[]
+     * @phpstan-return SerializedTaskModel[]
      */
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {

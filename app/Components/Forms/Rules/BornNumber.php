@@ -68,7 +68,7 @@ class BornNumber
     }
 
     /**
-     * @return int[]|null[] [year,month,day,extension,control]
+     * @phpstan-return (int|null)[] [year,month,day,extension,control]
      * @throws OutOfRangeException
      */
     private static function parseBornNumber(string $bornNumber): array

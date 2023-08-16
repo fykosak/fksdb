@@ -23,7 +23,7 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
     }
 
     /**
-     * @return array<int,array{person:array{name:string,gender:string},participation:array<int,int>}>
+     * @phpstan-return array<int,array{person:array{name:string,gender:string},participation:array<int,int>}>
      */
     public function getData(): array
     {

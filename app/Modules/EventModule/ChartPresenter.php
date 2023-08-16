@@ -12,6 +12,8 @@ use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanc
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\ComponentModel\IComponent;
 
@@ -31,6 +33,8 @@ final class ChartPresenter extends BasePresenter
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function startup(): void
     {
@@ -39,7 +43,7 @@ final class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return (Chart&IComponent)[]
+     * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
      * @throws BadTypeException
      */

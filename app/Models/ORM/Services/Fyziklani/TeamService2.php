@@ -27,7 +27,7 @@ final class TeamService2 extends Service
     }
 
     /**
-     * @return SerializedTeamModel[]
+     * @phpstan-return SerializedTeamModel[]
      */
     public static function serialiseTeams(EventModel $event): array
     {

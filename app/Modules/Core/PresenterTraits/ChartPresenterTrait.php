@@ -25,6 +25,8 @@ trait ChartPresenterTrait
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     final public function renderList(): void
     {
@@ -32,7 +34,7 @@ trait ChartPresenterTrait
     }
 
     /**
-     * @return (Chart&IComponent)[]
+     * @phpstan-return (Chart&IComponent)[]
      * @throws BadTypeException
      * @throws BadTypeException
      * @throws EventNotFoundException
@@ -42,6 +44,8 @@ trait ChartPresenterTrait
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function registerCharts(): void
     {

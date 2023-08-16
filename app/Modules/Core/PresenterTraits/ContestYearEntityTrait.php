@@ -12,26 +12,28 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template CYM of (Model&\Nette\Security\Resource)
+ * @template TContestYearModel of (Model&\Nette\Security\Resource)
  */
 trait ContestYearEntityTrait
 {
-    /** @phpstan-use ContestEntityTrait<CYM> */
+    /** @phpstan-use ContestEntityTrait<TContestYearModel> */
     use ContestEntityTrait {
         getEntity as getContestEntity;
     }
 
     /**
-     * @return CYM
+     * @phpstan-return TContestYearModel
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws CannotAccessModelException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function getEntity(): Model
     {
-        /** @var CYM $model */
+        /** @var TContestYearModel $model */
         $model = $this->getContestEntity();
         try {
             /** @var ContestYearModel $contestYear */

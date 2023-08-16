@@ -53,7 +53,7 @@ final class PaymentModel extends Model implements Resource
     public const RESOURCE_ID = 'event.payment';
 
     /**
-     * @return PersonScheduleModel[]
+     * @phpstan-return PersonScheduleModel[]
      */
     public function getRelatedPersonSchedule(): array
     {

@@ -10,17 +10,17 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
+ * @template TModel of \Fykosak\NetteORM\Model
  */
 abstract class SearchContainer extends ContainerWithOptions
 {
     protected const CONTROL_SEARCH = '_c_search';
     protected const SUBMIT_SEARCH = '__search';
-    /** @phpstan-var ReferencedId<M> */
+    /** @phpstan-var ReferencedId<TModel> */
     protected ReferencedId $referencedId;
 
     /**
-     * @phpstan-param ReferencedId<M> $referencedId
+     * @phpstan-param ReferencedId<TModel> $referencedId
      */
     public function setReferencedId(ReferencedId $referencedId): void
     {
@@ -68,7 +68,7 @@ abstract class SearchContainer extends ContainerWithOptions
     abstract protected function createSearchControl(): ?BaseControl;
 
     /**
-     * @phpstan-return callable(string|null):(M|null)
+     * @phpstan-return callable(string|null):(TModel|null)
      */
     abstract protected function getSearchCallback(): callable;
 

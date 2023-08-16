@@ -30,7 +30,7 @@ final class MyApplicationsPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonRelatedGrid<TeamTeacherModel>
+     * @phpstan-return PersonRelatedGrid<TeamTeacherModel>
      */
     protected function createComponentEventTeachersGrid(): PersonRelatedGrid
     {
@@ -44,7 +44,7 @@ final class MyApplicationsPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonRelatedGrid<EventParticipantModel>
+     * @phpstan-return PersonRelatedGrid<EventParticipantModel>
      */
     protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
     {
@@ -58,7 +58,7 @@ final class MyApplicationsPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonRelatedGrid<TeamMemberModel>
+     * @phpstan-return PersonRelatedGrid<TeamMemberModel>
      */
     protected function createComponentTeamMembersGrid(): PersonRelatedGrid
     {

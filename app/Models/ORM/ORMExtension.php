@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     EnumColumnFactory,
     FloatColumnFactory,
     IntColumnFactory,
+    LocalizedStringColumnFactory,
     LogicColumnFactory,
     PhoneColumnFactory,
     PrimaryKeyColumnFactory,
@@ -78,7 +79,7 @@ class ORMExtension extends Extension
                 'columns' => Expect::arrayOf(
                     Expect::anyOf(
                         $this->createDefaultStructure(
-                            Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email')
+                            Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email', 'localizedString')
                         ),
                         $this->createDefaultStructure(Expect::anyOf('dateTime', 'time', 'date'), [
                             'format' => Expect::string(),
@@ -243,6 +244,16 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     EmailColumnFactory::class,
+                    $definition
+                );
+                break;
+            case 'localizedString':
+                $this->setUpDefaultFactory(
+                    $factory,
+                    $tableName,
+                    $modelClassName,
+                    $fieldName,
+                    LocalizedStringColumnFactory::class,
                     $definition
                 );
                 break;

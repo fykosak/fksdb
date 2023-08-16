@@ -22,11 +22,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @template H of \FKSDB\Models\Transitions\Holder\ModelHolder
+ * @template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
  */
 class AttendanceComponent extends FormComponent
 {
-    /** @var Machine<H> */
+    /** @var Machine<THolder> */
     protected Machine $machine;
     private EventModel $event;
 
@@ -38,7 +38,7 @@ class AttendanceComponent extends FormComponent
     /**
      * @param EnumColumn&FakeStringEnum $fromState
      * @param EnumColumn&FakeStringEnum $toState
-     * @phpstan-param Machine<H> $machine
+     * @phpstan-param Machine<THolder> $machine
      */
     public function __construct(
         Container $container,
@@ -66,7 +66,7 @@ class AttendanceComponent extends FormComponent
     }
 
     /**
-     * @phpstan-return Transition<H>
+     * @phpstan-return Transition<THolder>
      */
     private function getTransition(): Transition
     {

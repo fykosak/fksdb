@@ -13,6 +13,8 @@ use FKSDB\Components\Charts\TotalPersonsChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -22,6 +24,9 @@ final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedList(): bool
     {
         return $this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest());
@@ -41,7 +46,11 @@ final class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return (Chart&IComponent)[]
+     * @phpstan-return (Chart&IComponent)[]
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function getCharts(): array
     {

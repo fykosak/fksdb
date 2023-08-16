@@ -46,8 +46,7 @@ final class ItemModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
-     * @return ItemState|mixed
+     * @phpstan-return ItemState|mixed
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

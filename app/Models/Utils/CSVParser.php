@@ -38,7 +38,7 @@ class CSVParser implements \Iterator
     }
 
     /**
-     * @return array<string,string>
+     * @phpstan-return array<string,string>
      */
     public function current(): array
     {

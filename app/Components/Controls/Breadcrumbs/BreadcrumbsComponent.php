@@ -141,7 +141,7 @@ class BreadcrumbsComponent extends BaseComponent
     }
 
     /**
-     * @return NaviRequest[]
+     * @phpstan-return NaviRequest[]
      */
     private function getTraversePath(AppRequest $request, ?int $maxLen = null): array
     {

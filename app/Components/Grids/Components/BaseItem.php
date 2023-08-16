@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
+ * @template TModel of \Fykosak\NetteORM\Model
  */
 abstract class BaseItem extends BaseComponent
 {
@@ -22,33 +24,36 @@ abstract class BaseItem extends BaseComponent
         $this->title = $title;
     }
 
-    abstract protected function getTemplatePath(): string;
-
     /**
-     * @param M|null $model
-     * @note do not call from parent
+     * @throws GoneException
      */
-    public function render(?Model $model, ?int $userPermission): void
+    protected function getTemplatePath(): string
     {
-        $this->doRender($model, $userPermission, [
-            'model' => $model,
-            'title' => $this->title,
-            'userPermission' => $userPermission,
-        ]);
+        throw new GoneException();
     }
 
     /**
-     * @phpstan-param array<string,mixed> $params
+     * @param TModel $model
+     * @note do not call from parent
+     * @throws GoneException
      */
-    final public function doRender(?Model $model, ?int $userPermission, array $params = []): void
+    public function render(Model $model, int $userPermission): void
     {
         $this->template->render(
             $this->getTemplatePath(),
-            array_merge([
+            [
                 'model' => $model,
                 'title' => $this->title,
                 'userPermission' => $userPermission,
-            ], $params)
+            ]
         );
+    }
+
+    /**
+     * @param Html|string $html
+     */
+    final public function renderHtml($html): void
+    {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'html.latte', ['html' => $html,]);
     }
 }

@@ -25,7 +25,7 @@ class ItemsGrid extends BaseGrid
     }
 
     /**
-     * @return TypedGroupedSelection<ScheduleItemModel>
+     * @phpstan-return TypedGroupedSelection<ScheduleItemModel>
      */
     protected function getModels(): TypedGroupedSelection
     {

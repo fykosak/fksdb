@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -54,8 +53,7 @@ class ContestantsGrid extends BaseGrid
                 )->render(
                     $row->getPersonHistory(),
                     1024
-                ),
-                new Title(null, _('School'))
+                )
             ),
             'school_name',
         );

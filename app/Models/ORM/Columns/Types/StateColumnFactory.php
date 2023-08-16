@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * @phpstan-extends ColumnFactory<Model,never>
- * @phpstan-template ArgType
+ * @template ArgType
  */
 class StateColumnFactory extends ColumnFactory
 {

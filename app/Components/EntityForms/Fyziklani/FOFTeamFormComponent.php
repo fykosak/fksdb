@@ -86,7 +86,7 @@ class FOFTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return FormProcessing[]
+     * @phpstan-return FormProcessing[]
      */
     protected function getProcessing(): array
     {
@@ -171,7 +171,7 @@ class FOFTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public static function getTeacherFromForm(Form $form): array
     {

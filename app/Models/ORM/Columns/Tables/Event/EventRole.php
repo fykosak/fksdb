@@ -16,7 +16,7 @@ use Nette\Security\User;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventModel>
+ * @phpstan-extends ColumnFactory<Model,never>
  */
 class EventRole extends ColumnFactory
 {

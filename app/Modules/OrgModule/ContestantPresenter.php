@@ -12,6 +12,8 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -31,10 +33,11 @@ final class ContestantPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
+     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws ForbiddenRequestException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
@@ -56,6 +59,10 @@ final class ContestantPresenter extends BasePresenter
         return new PageTitle('contestant-list', _('Contestants'), 'fas fa-user-graduate');
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentGrid(): ContestantsGrid
     {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
@@ -93,22 +100,28 @@ final class ContestantPresenter extends BasePresenter
 
     /**
      * @param Resource|string $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): ContestantFormComponent
     {
         return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
-     * @return ContestantFormComponent
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ContestantFormComponent

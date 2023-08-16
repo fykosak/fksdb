@@ -22,7 +22,7 @@ class TaskStatsModel
 
     /**
      * @param string[] $labels
-     * @return Row[]
+     * @phpstan-return Row[]
      * @throws \PDOException
      */
     public function getData(array $labels): array

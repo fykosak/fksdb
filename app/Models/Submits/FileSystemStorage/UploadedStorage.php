@@ -196,7 +196,7 @@ class UploadedStorage implements SubmitStorage
     }
 
     /**
-     * @return \SplFileInfo[]
+     * @phpstan-return \SplFileInfo[]
      */
     private function retrieveFiles(SubmitModel $submit): array
     {

@@ -55,8 +55,8 @@ final class SchedulePaymentService extends Service
     }
 
     /**
-     * @param array<array<int,bool>> $data
-     * @return array<int,int>
+     * @phpstan-param array<array<int,bool>> $data
+     * @phpstan-return array<int,int>
      */
     private function filerData(array $data): array
     {

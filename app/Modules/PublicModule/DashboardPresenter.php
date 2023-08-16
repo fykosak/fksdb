@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\News;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
 final class DashboardPresenter extends BasePresenter
@@ -26,6 +27,9 @@ final class DashboardPresenter extends BasePresenter
         return (bool)$this->getLoggedPerson();
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     final public function renderDefault(): void
     {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->translator->lang) as $new) {

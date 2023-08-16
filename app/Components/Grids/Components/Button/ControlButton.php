@@ -9,16 +9,16 @@ use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends Button<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends Button<TModel>
  */
 class ControlButton extends Button
 {
     private Control $control;
 
     /**
-     * @phpstan-param callable(M):array{string,array<string,mixed>} $linkCallback
-     * @phpstan-param (callable(M,int|null):bool)|null $showCallback
+     * @phpstan-param callable(TModel):array{string,array<string,mixed>} $linkCallback
+     * @phpstan-param (callable(TModel,int):bool)|null $showCallback
      */
     public function __construct(
         Container $container,

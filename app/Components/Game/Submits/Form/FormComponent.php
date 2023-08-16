@@ -25,7 +25,7 @@ class FormComponent extends AjaxComponent
     }
 
     /**
-     * @return array{
+     * @phpstan-return array{
      *     tasks:array<int,mixed>,
      *     teams:array<int,mixed>,
      *     availablePoints:int[],

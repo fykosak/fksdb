@@ -27,7 +27,7 @@ class FOFCategoryProcessing extends FormProcessing
 
     /**
      * @param PersonModel[] $members
-     * @return array{int,array<string,int>}
+     * @phpstan-return array{int,array<string,int>}
      * @throws NoMemberException
      */
     public static function getTeamMembersYears(array $members, EventModel $event): array

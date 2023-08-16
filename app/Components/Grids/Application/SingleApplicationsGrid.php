@@ -31,7 +31,7 @@ class SingleApplicationsGrid extends FilterGrid
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     protected function getHoldersColumns(): array
     {

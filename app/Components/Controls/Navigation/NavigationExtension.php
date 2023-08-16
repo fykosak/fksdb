@@ -37,7 +37,7 @@ class NavigationExtension extends CompilerExtension
 
     /**
      * @phpstan-param array<string,array<string,array<string,scalar|null>>> $structure
-     * @return array<string,TRootItem>
+     * @phpstan-return array<string,TRootItem>
      */
     private function createFromStructure(array $structure): array
     {

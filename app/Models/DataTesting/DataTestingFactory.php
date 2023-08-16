@@ -40,7 +40,7 @@ class DataTestingFactory
     }
 
     /**
-     * @return PersonTest[]
+     * @phpstan-return PersonTest[]
      */
     public function getTests(string $section): array
     {

@@ -108,7 +108,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @return array<int,array{model:PersonModel,log:Message[]}>
+     * @phpstan-return  array<int,array{model:PersonModel,log:Message[]}>
      */
     private function calculateProblems(): array
     {

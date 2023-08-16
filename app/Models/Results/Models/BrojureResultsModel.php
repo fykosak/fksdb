@@ -79,7 +79,7 @@ class BrojureResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getSeries(): array
     {

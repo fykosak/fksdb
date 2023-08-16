@@ -23,7 +23,7 @@ abstract class Stage
     /**
      * @param MemoryLogger $logger
      * @param TData $data
-     * @return TData
+     * @phpstan-return TData
      */
     abstract public function __invoke(MemoryLogger $logger, $data);
 }

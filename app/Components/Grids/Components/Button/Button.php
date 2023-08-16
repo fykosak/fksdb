@@ -8,23 +8,25 @@ use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseItem<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<TModel>
  */
 abstract class Button extends BaseItem
 {
-    /** @var callable(M):array{string,array<string,mixed>} */
+    /** @var callable(TModel):array{string,array<string,scalar>} */
     private $linkCallback;
-    /** @var (callable(M,int|null):bool)|null */
+    /** @var (callable(TModel,int):bool)|null */
     private $showCallback;
     private ?string $buttonClassName;
 
     /**
-     * @phpstan-param callable(M):array{string,array<string,mixed>} $linkCallback
-     * @phpstan-param (callable(M,int|null):bool)|null $showCallback
+     * @phpstan-param callable(TModel):array{string,array<string,scalar>} $linkCallback
+     * @phpstan-param (callable(TModel,int):bool)|null $showCallback
      */
     public function __construct(
         Container $container,
@@ -39,24 +41,24 @@ abstract class Button extends BaseItem
         $this->showCallback = $showCallback;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'button.latte';
-    }
-
     /**
-     * @param M|null $model
+     * @param TModel $model
+     * @throws InvalidLinkException
      */
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(Model $model, int $userPermission): void
     {
         [$destination, $params] = ($this->linkCallback)($model);
-        $this->doRender($model, $userPermission, [
-            'linkControl' => $this->getLinkControl(),
-            'show' => isset($this->showCallback) ? ($this->showCallback)($model, $userPermission) : true,
-            'destination' => $destination,
-            'params' => $params,
-            'buttonClassName' => $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary',
-        ]);
+        $html = Html::el('a');
+        if (!isset($this->showCallback) || ($this->showCallback)($model, $userPermission)) {
+            $html->addAttributes([
+                'href' => $this->getLinkControl()->link($destination, $params),
+                'class' => $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary',
+            ]);
+            $html->setHtml(
+                isset($this->title) ? $this->title->toHtml() : $this->getLinkControl()->link($destination, $params)
+            );
+        }
+        $this->renderHtml($html);
     }
 
     abstract protected function getLinkControl(): Control;

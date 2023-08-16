@@ -22,7 +22,7 @@ final class MyPaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonRelatedGrid<PaymentModel>
+     * @phpstan-return PersonRelatedGrid<PaymentModel>
      */
     protected function createComponentMyPaymentGrid(): PersonRelatedGrid
     {

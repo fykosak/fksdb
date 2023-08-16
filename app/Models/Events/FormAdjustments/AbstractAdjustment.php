@@ -12,8 +12,8 @@ use Nette\Forms\Form;
 use Nette\SmartObject;
 
 /**
- * @template H of ModelHolder
- * @phpstan-implements FormAdjustment<H>
+ * @template THolder of ModelHolder
+ * @phpstan-implements FormAdjustment<THolder>
  */
 abstract class AbstractAdjustment implements FormAdjustment
 {
@@ -37,7 +37,7 @@ abstract class AbstractAdjustment implements FormAdjustment
     }
 
     /**
-     * @phpstan-param H $holder
+     * @phpstan-param THolder $holder
      */
     abstract protected function innerAdjust(Form $form, ModelHolder $holder): void;
 

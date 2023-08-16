@@ -12,12 +12,12 @@ use Nette\DI\Container;
 
 /**
  * @deprecated
- * @template M of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseGrid<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseGrid<TModel>
  */
 abstract class EntityGrid extends BaseGrid
 {
-    /** @phpstan-var Service<M> */
+    /** @phpstan-var Service<TModel> */
     protected Service $service;
     /** @phpstan-var array<string,scalar|null> */
     private array $queryParams;
@@ -25,7 +25,7 @@ abstract class EntityGrid extends BaseGrid
     private array $columns;
 
     /**
-     * @phpstan-param class-string<Service<M>> $classNameService
+     * @phpstan-param class-string<Service<TModel>> $classNameService
      * @phpstan-param string[] $columns
      * @phpstan-param array<string,scalar|null> $queryParams
      */
@@ -42,7 +42,7 @@ abstract class EntityGrid extends BaseGrid
     }
 
     /**
-     * @phpstan-return TypedSelection<M>
+     * @phpstan-return TypedSelection<TModel>
      */
     protected function getModels(): TypedSelection
     {

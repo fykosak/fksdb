@@ -35,8 +35,8 @@ class Helpers
     {
         if ($expression instanceof Statement) {
             return self::resolveStatementExpression($expression);
-        } elseif (is_iterable($expression)) {
-            return self::resolveArrayExpression((array)$expression);
+        } elseif (is_array($expression)) {
+            return self::resolveArrayExpression($expression);
         } else {
             return $expression;
         }
@@ -59,9 +59,9 @@ class Helpers
     }
 
     /**
-     * @phpstan-template AValue of array
+     * @template AValue of array
      * @phpstan-param AValue $expressionArray
-     * @return AValue
+     * @phpstan-return AValue
      */
     public static function resolveArrayExpression(array $expressionArray): array
     {

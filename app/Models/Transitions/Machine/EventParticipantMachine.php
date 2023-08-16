@@ -30,7 +30,7 @@ final class EventParticipantMachine extends Machine
 
     /**
      * @param BaseHolder $holder
-     * @return Transition<BaseHolder>[]
+     * @phpstan-return Transition<BaseHolder>[]
      * @phpstan-param (EnumColumn&FakeStringEnum)|null $sourceState
      */
     public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
@@ -43,7 +43,7 @@ final class EventParticipantMachine extends Machine
 
     /**
      * @phpstan-param FakeStringEnum&EnumColumn $sourceState
-     * @return Transition<BaseHolder>[]
+     * @phpstan-return Transition<BaseHolder>[]
      */
     private function getMatchingTransitions(EnumColumn $sourceState): array
     {

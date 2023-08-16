@@ -12,21 +12,22 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template M of \Fykosak\NetteORM\Model
- * @template MH of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseItem<M>
+ * @template TModel of \Fykosak\NetteORM\Model
+ * @template TModelHelper of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseItem<TModel>
  */
 class TemplateItem extends BaseItem
 {
     protected string $templateString;
     protected ?string $titleString;
-    /** @var (callable(M):M)|null */
+    /** @var (callable(TModel):TModelHelper)|null */
     protected $modelAccessorHelper = null;
+    protected ColumnRendererComponent $printer;
 
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
-     * @phpstan-param (callable(M):M)|null $modelAccessorHelper
+     * @phpstan-param (callable(TModel):TModelHelper)|null $modelAccessorHelper
      */
     public function __construct(
         Container $container,
@@ -34,37 +35,33 @@ class TemplateItem extends BaseItem
         ?string $titleString = null,
         ?callable $modelAccessorHelper = null
     ) {
-        $printer = new ColumnRendererComponent($container);
+        $this->printer = new ColumnRendererComponent($container);
         parent::__construct(
             $container,
             $titleString
-                ? new Title(null, $printer->renderToString($titleString, null, null))
+                ? new Title(null, $this->printer->renderToString($titleString, null, null))
                 : new Title(null, '')
         );
         $this->templateString = $templateString;
-        $this->titleString = $titleString;
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
 
     /**
-     * @param M|null $model
+     * @phpstan-param TModel $model
+     * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    public function render(?Model $model, ?int $userPermission): void
+    public function render(Model $model, int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->doRender($model, $userPermission, [
-            'templateString' => $this->templateString,
-            'titleString' => $this->titleString,
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'template.latte', [
+            'title' => $this->title,
+            'html' => $this->printer->renderToString($this->templateString, $model, $userPermission),
         ]);
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
-    }
-
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'template.latte';
     }
 }

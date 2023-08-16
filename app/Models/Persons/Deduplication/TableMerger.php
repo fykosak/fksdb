@@ -24,11 +24,15 @@ class TableMerger
     private Explorer $explorer;
     private Model $trunkRow;
     private Model $mergedRow;
-    /** @phpstan-var array<string,MergeStrategy> */
+    /** @phpstan-var array<string,MergeStrategy<mixed>> */
     private array $columnMergeStrategies = [];
+    /** @phpstan-var MergeStrategy<mixed> */
     private MergeStrategy $globalMergeStrategy;
     private Logger $logger;
 
+    /**
+     * @phpstan-param MergeStrategy<mixed> $globalMergeStrategy
+     */
     public function __construct(
         string $table,
         Merger $merger,
@@ -49,6 +53,10 @@ class TableMerger
         $this->mergedRow = $mergedRow;
     }
 
+    /**
+     * @template TLocalValue
+     * @phpstan-param MergeStrategy<TLocalValue>|null $mergeStrategy
+     */
     public function setColumnMergeStrategy(string $column, ?MergeStrategy $mergeStrategy = null): void
     {
         if (!$mergeStrategy) {
@@ -119,12 +127,10 @@ class TableMerger
                     if ($refTrunk && $refMerged) {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
-                        if ($referencingMerger->trunkRow) {
-                            $referencingMerger->setMergedPair(
-                                $referencingMerger->trunkRow,
-                                $referencingMerger->mergedRow
-                            );
-                        }
+                        $referencingMerger->setMergedPair(
+                            $referencingMerger->trunkRow,
+                            $referencingMerger->mergedRow
+                        );
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged

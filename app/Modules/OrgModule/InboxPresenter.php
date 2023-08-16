@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
@@ -40,6 +41,9 @@ final class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('Inbox'), 'fas fa-envelope');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedInbox(): bool
     {
         return $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest());
@@ -50,6 +54,9 @@ final class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('List of submits'), 'fas fa-list-ul');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedList(): bool
     {
         return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
@@ -60,6 +67,9 @@ final class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('Corrected'), 'fas fa-file-signature');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedCorrected(): bool
     {
         return $this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest());
@@ -70,6 +80,9 @@ final class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedQuizDetail(): bool
     {
         return $this->authorizedCorrected();

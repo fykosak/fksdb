@@ -66,7 +66,7 @@ class CumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getSeries(): array
     {
@@ -84,7 +84,7 @@ class CumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return literal-string
+     * @phpstan-return literal-string
      */
     protected function composeQuery(ContestCategoryModel $category): string
     {

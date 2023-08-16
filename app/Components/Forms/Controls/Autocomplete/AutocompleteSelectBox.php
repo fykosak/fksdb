@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 /**
  * @todo Implement AJAX loading
  *       Should return school_id or null.
- * @template D of DataProvider
+ * @template TProvider of DataProvider
  */
 class AutocompleteSelectBox extends TextBase
 {
@@ -22,7 +22,7 @@ class AutocompleteSelectBox extends TextBase
     private const PARAM_NAME = 'acName';
     private const INTERNAL_DELIMITER = ',';
     private const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
-    /** @phpstan-var D */
+    /** @phpstan-var TProvider */
     private DataProvider $dataProvider;
 
     private bool $ajax;
@@ -59,7 +59,7 @@ class AutocompleteSelectBox extends TextBase
         $this->renderMethod = $renderMethod;
     }
 
-    /** @phpstan-return D|null */
+    /** @phpstan-return TProvider|null */
     public function getDataProvider(): ?DataProvider
     {
         return $this->dataProvider ?? null;
@@ -80,7 +80,7 @@ class AutocompleteSelectBox extends TextBase
         return $this->multiSelect;
     }
 
-    /** @phpstan-param D $dataProvider */
+    /** @phpstan-param TProvider $dataProvider */
     public function setDataProvider(DataProvider $dataProvider): void
     {
         if ($this->ajax && !($dataProvider instanceof FilteredDataProvider)) {

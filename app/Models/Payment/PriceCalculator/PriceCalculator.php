@@ -27,7 +27,7 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @return Currency[]
+     * @phpstan-return Currency[]
      */
     public function getAllowedCurrencies(): array
     {

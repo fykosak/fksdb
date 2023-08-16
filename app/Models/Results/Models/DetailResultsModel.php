@@ -62,7 +62,7 @@ class DetailResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return literal-string
+     * @phpstan-return literal-string
      */
     protected function composeQuery(ContestCategoryModel $category): string
     {

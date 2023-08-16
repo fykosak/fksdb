@@ -44,7 +44,7 @@ class SeriesData
     }
 
     /**
-     * @return TaskModel[]
+     * @phpstan-return TaskModel[]
      */
     public function getTasks(): array
     {

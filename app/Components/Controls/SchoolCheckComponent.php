@@ -46,7 +46,7 @@ class SchoolCheckComponent extends BaseComponent
     }
 
     /**
-     * @return SchoolModel[]
+     * @phpstan-return SchoolModel[]
      */
     private function getSchoolsFromTeam(TeamModel2 $team): array
     {

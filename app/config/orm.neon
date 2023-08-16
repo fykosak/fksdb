@@ -128,6 +128,9 @@ orm:
                 type: text
                 description: _('Summary of the event in english.')
                 title: _('Report in english')
+            report:
+                type: localizedString
+                title: _('Report')
             description_cs:
                 type: text
                 description: _('Description of the event in czech.')
@@ -136,6 +139,9 @@ orm:
                 type: text
                 description: _('Description of the event in english.')
                 title: _('Description in english')
+            description:
+                type: localizedString
+                title: _('Description')
             place:
                 type: text
                 title: _('Place')
@@ -834,10 +840,6 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
                 title: _('Team name')
-            name_n_id:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameNIdColumnFactory
-                title: _('Team')
             opened_submitting:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
@@ -895,8 +897,7 @@ orm:
                 type: string
                 title: _('Name en')
             name:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
+                type: localizedString
                 title: _('Group name')
             registration_begin:
                 type: dateTime
@@ -929,8 +930,7 @@ orm:
                 type: string
                 title: _('Name cs')
             name:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\NameColumnFactory
+                type: localizedString
                 title: _('Item name')
                 omitInputField: true
             description_en:
@@ -939,6 +939,9 @@ orm:
             description_cs:
                 type: string
                 title: _('Description cs')
+            description:
+                type: localizedString
+                title: _('Description')
             capacity:
                 type: int
                 title: _('Total capacity')

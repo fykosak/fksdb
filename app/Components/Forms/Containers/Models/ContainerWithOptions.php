@@ -28,7 +28,7 @@ class ContainerWithOptions extends Container
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @phpstan-template TNewValue
+     * @template TNewValue
      * @param TNewValue $value
      * @return static
      */
@@ -44,9 +44,9 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific option
-     * @phpstan-template TDefaultValue of mixed
+     * @template TDefaultValue of mixed
      * @param TDefaultValue $default
-     * @return TDefaultValue
+     * @phpstan-return TDefaultValue
      */
     final public function getOption(string $key, $default = null)
     {
@@ -55,7 +55,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific options.
-     * @return array<string,mixed>
+     * @phpstan-return array<string,mixed>
      */
     final public function getOptions(): array
     {

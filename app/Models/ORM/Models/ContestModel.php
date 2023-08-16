@@ -71,7 +71,7 @@ final class ContestModel extends Model
     }
 
     /**
-     * @return ContestYearModel[]
+     * @phpstan-return ContestYearModel[]
      */
     public function getActiveYears(): array
     {

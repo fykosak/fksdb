@@ -63,8 +63,7 @@ class PerPersonScheduleList extends BaseList
         $row0->addComponent(
             new RendererItem(
                 $this->container,
-                fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event),
-                new Title(null, '')
+                fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event)
             ),
             'role'
         );

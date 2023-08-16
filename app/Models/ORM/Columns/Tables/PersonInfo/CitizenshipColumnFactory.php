@@ -34,7 +34,7 @@ class CitizenshipColumnFactory extends ColumnFactory
     }
 
     /**
-     * @return array<string,string>
+     * @phpstan-return array<string,string>
      */
     private function getCountries(): array
     {
