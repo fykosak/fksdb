@@ -41,12 +41,12 @@ class ImportComponent extends BaseComponent
         $form = $control->getForm();
 
         $form->addUpload('file', _('File with applications'))
-            ->addRule(Form::FILLED)
-            ->addRule(
-                Form::MIME_TYPE,
-                _('Only CSV files are accepted.'),
-                'text/plain'
-            );
+            ->addRule(Form::FILLED);
+        /*   ->addRule(
+               Form::MIME_TYPE,
+               _('Only CSV files are accepted.'),
+               'text/csv'
+           );*/
 
         $form->addSubmit('import', _('Import'));
 
@@ -75,7 +75,7 @@ class ImportComponent extends BaseComponent
             foreach ($parser as $row) {
                 $values = [];
                 foreach ($row as $columnName => $value) {
-                    $value[$columnName] = $value;
+                    $values[$columnName] = $value;
                 }
                 $values['event_id'] = $this->event->event_id;
                 $this->eventParticipantService->storeModel($values);
