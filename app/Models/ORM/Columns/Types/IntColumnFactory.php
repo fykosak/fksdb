@@ -12,6 +12,9 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 class IntColumnFactory extends ColumnFactory
 {
     use NumberFactoryTrait;

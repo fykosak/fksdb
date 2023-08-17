@@ -13,9 +13,9 @@ use Nette\Security\Resource;
  * @property-read ContestantModel $contestant
  * @property-read int $task_id
  * @property-read TaskModel $task
- * @property-read \DateTimeInterface $submitted_on
+ * @property-read \DateTimeInterface|null $submitted_on
  * @property-read SubmitSource $source
- * @property-read string $note
+ * @property-read string|null $note
  * @property-read float|null $raw_points
  * @property-read float|null $calc_points
  * @property-read int $corrected FUCK MARIADB
@@ -35,7 +35,7 @@ final class SubmitModel extends Model implements Resource
         return md5(
             implode(':', [
                 $this->submit_id,
-                $this->submitted_on,
+                $this->submitted_on->format('c'),
                 $this->source,
                 $this->note,
                 $this->raw_points,
@@ -65,7 +65,6 @@ final class SubmitModel extends Model implements Resource
         // TODO rewrite to do sum directly in sql
         /** @var SubmitQuestionModel $question */
         foreach ($this->task->getQuestions() as $question) {
-            /** @var SubmitQuestionAnswerModel $answer */
             $answer = $this->contestant->getAnswer($question);
             if (!isset($answer)) {
                 continue;
@@ -98,6 +97,15 @@ final class SubmitModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return array{
+     * submitId:int,
+     * taskId:int,
+     * source:string,
+     * rawPoints:float|null,
+     * calcPoints:float|null,
+     * }
+     */
     public function __toArray(): array
     {
         return [

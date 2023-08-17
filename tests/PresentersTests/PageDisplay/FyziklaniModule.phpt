@@ -23,6 +23,8 @@ class FyziklaniModule extends EventModuleTestCase
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
             'name' => 'TEST FOF',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ];
     }
 

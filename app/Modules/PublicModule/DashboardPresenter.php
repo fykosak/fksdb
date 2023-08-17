@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\News;
+use FKSDB\Modules\Core\Language;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
     private News $news;
 
@@ -23,13 +25,15 @@ class DashboardPresenter extends BasePresenter
 
     public function authorizedDefault(): bool
     {
-        $login = $this->getUser()->getIdentity();
-        return (bool)$login;
+        return (bool)$this->getLoggedPerson();
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     final public function renderDefault(): void
     {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
+        foreach ($this->news->getNews($this->getSelectedContest(), Language::from($this->translator->lang)) as $new) {
             $this->flashMessage($new);
         }
     }

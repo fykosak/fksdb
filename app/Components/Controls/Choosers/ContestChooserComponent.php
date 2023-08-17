@@ -12,10 +12,13 @@ use Nette\DI\Container;
 
 final class ContestChooserComponent extends ChooserComponent
 {
-
+    /** @phpstan-var TypedSelection<ContestModel> */
     private TypedSelection $availableContests;
     private ContestModel $contest;
 
+    /**
+     * @phpstan-param TypedSelection<ContestModel> $availableContests
+     */
     public function __construct(Container $container, ContestModel $contest, TypedSelection $availableContests)
     {
         parent::__construct($container);

@@ -6,26 +6,65 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
+use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
-class ApplicationPresenter extends AbstractApplicationPresenter
+final class ApplicationPresenter extends BasePresenter
 {
+    /** @use EventEntityPresenterTrait<EventParticipantModel> */
+    use EventEntityPresenterTrait;
+
+    protected EventParticipantService $eventParticipantService;
+
+    public function injectServiceEventParticipant(EventParticipantService $eventParticipantService): void
+    {
+        $this->eventParticipantService = $eventParticipantService;
+    }
 
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Application import'), 'fas fa-download');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function renderList(): void
+    {
+        $this->template->event = $this->getEvent();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws \Throwable
+     */
+    public function titleDetail(): PageTitle
+    {
+        $entity = $this->getEntity();
+        return new PageTitle(
+            null,
+            sprintf(_('Application detail "%s"'), $entity->__toString()),
+            'fas fa-user'
+        );
     }
 
     /**
@@ -50,9 +89,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    final public function renderDetail(): void
+    public function renderDetail(): void
     {
-        parent::renderDetail();
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+        $this->template->isOrg = $this->isAllowed('event.application', 'default');
         $this->template->fields = $this->getDummyHolder()->getFields();
         $this->template->model = $this->getEntity();
         $this->template->groups = [
@@ -73,11 +114,68 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedFastEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
+    /**
+     * @param EventParticipantModel|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isAllowed($resource, $privilege);
+    }
+
+    public function titleAttendance(): PageTitle
+    {
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedAttendance(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
+    public function titleMass(): PageTitle
+    {
+        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedMass(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+    }
+
+
+    public function titleFastEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
+    }
+
+    /**
+     * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
      */
     protected function createComponentGrid(): SingleApplicationsGrid
     {
         return new SingleApplicationsGrid($this->getEvent(), $this->getDummyHolder(), $this->getContext());
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
 
 
@@ -96,15 +194,37 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
      * @throws EventNotFoundException
+     */
+    public function getHolder(): BaseHolder
+    {
+        return $this->getMachine()->createHolder($this->getEntity());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function getMachine(): EventParticipantMachine
+    {
+        return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @phpstan-return AttendanceComponent<BaseHolder>
      */
     protected function createComponentFastTransition(): AttendanceComponent
     {
         return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PAID),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+            EventParticipantStatus::from(EventParticipantStatus::PAID),
+            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(),
         );
     }
 
@@ -122,5 +242,38 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     protected function createComponentEditForm(): Control
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @phpstan-return TransitionButtonsComponent<BaseHolder>
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws EventNotFoundException
+     */
+    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
+    {
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            $this->getMachine(),
+            $this->getHolder()
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @phpstan-return MassTransitionsComponent<EventParticipantMachine>
+     */
+    protected function createComponentMassTransitions(): MassTransitionsComponent
+    {
+        return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+    }
+
+
+    protected function createComponentPersonScheduleGrid(): PersonGrid
+    {
+        return new PersonGrid($this->getContext());
     }
 }

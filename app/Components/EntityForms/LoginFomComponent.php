@@ -16,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
- * @property-read LoginModel $model
+ * @phpstan-extends EntityFormComponent<LoginModel>
  */
 class LoginFomComponent extends EntityFormComponent
 {
@@ -48,7 +48,10 @@ class LoginFomComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{login:array{login:string}} $values
+         */
+        $values = $form->getValues('array');
         $loginData = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->loginService->storeModel($loginData, $this->model);
         $this->getPresenter()->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);

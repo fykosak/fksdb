@@ -20,12 +20,12 @@ use Fykosak\NetteORM\Model;
 final class GameSetupModel extends Model
 {
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getAvailablePoints(): array
     {
         return $this->available_points ? \array_map(
-            fn(string $value): int => +trim($value),
+            fn(string $value): int => (int)trim($value),
             \explode(',', $this->available_points)
         )
         : [];

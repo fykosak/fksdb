@@ -21,6 +21,8 @@ class SingleEvent extends EventModuleTestCase
             'begin' => new DateTime(),
             'end' => new DateTime(),
             'name' => 'TEST TSAF',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ];
     }
 

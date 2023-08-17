@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Modules\CoreModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class PostContactPresenter extends BasePresenter
+final class PostContactPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -23,12 +23,12 @@ class PostContactPresenter extends BasePresenter
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     private function createComponentPostContactForm(PostContactType $type): AddressFormComponent

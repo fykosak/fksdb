@@ -22,7 +22,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class DeduplicatePresenter extends BasePresenter
+final class DeduplicatePresenter extends BasePresenter
 {
 
     private PersonService $personService;
@@ -116,7 +116,7 @@ class DeduplicatePresenter extends BasePresenter
     public function actionMerge(): void
     {
         $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
+        $this->updateMergeForm($this->getComponent('mergeForm')->getForm()); // @phpstan-ignore-line
     }
 
     private function updateMergeForm(Form $form): void
@@ -159,7 +159,7 @@ class DeduplicatePresenter extends BasePresenter
 
                     $trunk = Html::el('div');
                     $trunk->addAttributes(['class' => 'mergeSource']);
-                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $trunk->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($value);
                     $trunk->addText(_('Trunk') . ': ');
@@ -170,7 +170,7 @@ class DeduplicatePresenter extends BasePresenter
 
                     $merged = Html::el('div');
                     $merged->addAttributes(['class' => 'mergeSource']);
-                    $merged->data['field'] = $textElement->getHtmlId();
+                    $merged->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
                     $elVal->addAttributes(['class' => 'value']);
@@ -217,8 +217,8 @@ class DeduplicatePresenter extends BasePresenter
 
     private function handleMergeFormSuccess(Form $form): void
     {
-
-        $values = $form->getValues();
+        /** @phpstan-var array<mixed> $values */
+        $values = $form->getValues('array');
         $values = FormUtils::emptyStrToNull2($values);
 
         $merger = $this->merger;

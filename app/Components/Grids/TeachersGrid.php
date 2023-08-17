@@ -6,9 +6,13 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\NetteORM\TypedSelection;
 
+/**
+ * @phpstan-extends BaseGrid<TeacherModel>
+ */
 class TeachersGrid extends BaseGrid
 {
     private TeacherService $teacherService;
@@ -18,6 +22,9 @@ class TeachersGrid extends BaseGrid
         $this->teacherService = $teacherService;
     }
 
+    /**
+     * @phpstan-return TypedSelection<TeacherModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->teacherService->getTable();
@@ -32,11 +39,9 @@ class TeachersGrid extends BaseGrid
         $this->addColumns([
             'person.full_name',
             'teacher.note',
-            'teacher.state',
-            'teacher.since',
-            'teacher.until',
-            'teacher.number_brochures',
             'school.school',
+            'teacher.role',
+            'teacher.active',
         ]);
         $this->addORMLink('teacher.edit');
         $this->addORMLink('teacher.detail');

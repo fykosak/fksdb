@@ -61,7 +61,8 @@ navigation:
             Org.Validation.preview: []
             Org.Validation.list: []
         Public.Dashboard.default:
-            Public.Submit.ajax:
+            Public.Submit.default: []
+            Public.Submit.legacy: []
             Public.Submit.list: []
         Game.Dashboard.default:
             Game.Submit.create: []

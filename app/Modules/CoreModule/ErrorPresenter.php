@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-class ErrorPresenter extends BasePresenter
+final class ErrorPresenter extends BasePresenter
 {
 
     public function titleDefault(): PageTitle

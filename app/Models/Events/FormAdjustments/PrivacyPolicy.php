@@ -20,6 +20,7 @@ use Nette\Utils\ArrayHash;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
+ * @phpstan-implements FormAdjustment<BaseHolder>
  */
 class PrivacyPolicy implements Processing, FormAdjustment
 {
@@ -55,11 +56,17 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
+    /**
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
     public function process(ArrayHash $values): void
     {
         $this->trySetAgreed($values);
     }
 
+    /**
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
     private function trySetAgreed(ArrayHash $values): void
     {
         foreach ($values as $key => $value) {

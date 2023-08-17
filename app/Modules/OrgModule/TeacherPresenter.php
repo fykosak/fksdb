@@ -10,15 +10,15 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method TeacherModel getEntity()
- */
-class TeacherPresenter extends BasePresenter
+final class TeacherPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<TeacherModel> */
     use EntityPresenterTrait;
 
     private TeacherService $teacherService;
@@ -70,14 +70,20 @@ class TeacherPresenter extends BasePresenter
         return new TeachersGrid($this->getContext());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): TeacherFormComponent
     {
         return new TeacherFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function createComponentEditForm(): TeacherFormComponent
     {
@@ -86,6 +92,7 @@ class TeacherPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

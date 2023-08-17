@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 
 /**
@@ -20,7 +19,7 @@ final class TaskContributionModel extends Model
 
     /**
      * @param string $key
-     * @return TaskContributionType|FakeStringEnum|mixed|null
+     * @return TaskContributionType|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

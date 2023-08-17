@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonHistoryModel,never>
+ */
 class SchoolIdColumnFactory extends ColumnFactory
 {
 

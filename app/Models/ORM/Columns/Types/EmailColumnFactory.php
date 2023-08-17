@@ -12,9 +12,15 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template ArgType
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 class EmailColumnFactory extends ColumnFactory
 {
-
+    /**
+     * @param never $args
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());

@@ -35,7 +35,7 @@ class Helpers
     {
         if ($expression instanceof Statement) {
             return self::resolveStatementExpression($expression);
-        } elseif (is_iterable($expression)) {
+        } elseif (is_array($expression)) {
             return self::resolveArrayExpression($expression);
         } else {
             return $expression;
@@ -50,15 +50,20 @@ class Helpers
         }
         $class = $statement->entity;
         if (!is_array($statement->entity)) {
-            $class = self::SEMANTIC_MAP[$statement->entity] ?? $class;
-            if (function_exists($class)) { // workaround for Nette interpretation of entities
+            $class = self::SEMANTIC_MAP[$statement->entity] ?? $class;//@phpstan-ignore-line
+            if (function_exists($class)) { //@phpstan-ignore-line // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
         }
         return new Statement($class, $arguments);
     }
 
-    public static function resolveArrayExpression(iterable $expressionArray): array
+    /**
+     * @phpstan-template AValue of array
+     * @phpstan-param AValue $expressionArray
+     * @phpstan-return AValue
+     */
+    public static function resolveArrayExpression(array $expressionArray): array
     {
         $result = [];
         foreach ($expressionArray as $key => $expression) {

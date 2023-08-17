@@ -6,7 +6,7 @@ namespace FKSDB\Modules\ProfileModule;
 
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

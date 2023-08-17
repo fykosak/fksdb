@@ -46,6 +46,13 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return [];
+        return [
+            new self(self::INITIAL_LOGIN),
+            new self(self::RECOVERY),
+            new self(self::EVENT_NOTIFY),
+            new self(self::CHANGE_EMAIL),
+            new self(self::EMAIL_MESAGE),
+            new self(self::SSO),
+        ];
     }
 }

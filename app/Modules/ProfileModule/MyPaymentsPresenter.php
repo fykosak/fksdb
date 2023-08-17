@@ -6,9 +6,10 @@ namespace FKSDB\Modules\ProfileModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\Utils\UI\PageTitle;
 
-class MyPaymentsPresenter extends BasePresenter
+final class MyPaymentsPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -20,8 +21,12 @@ class MyPaymentsPresenter extends BasePresenter
         return true;
     }
 
+    /**
+     * @phpstan-return PersonRelatedGrid<PaymentModel>
+     */
     protected function createComponentMyPaymentGrid(): PersonRelatedGrid
     {
+        /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid(
             'payment',
             $this->getLoggedPerson(),

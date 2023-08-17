@@ -8,10 +8,18 @@ use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 
+/**
+ * @phpstan-extends MailCallback<PaymentHolder>
+ */
 class NewPaymentCallback extends MailCallback
 {
     /**
      * @param PaymentHolder $holder
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
      */
     protected function getData(ModelHolder $holder): array
     {
@@ -29,6 +37,9 @@ class NewPaymentCallback extends MailCallback
         ];
     }
 
+    /**
+     * @param PaymentHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'create';

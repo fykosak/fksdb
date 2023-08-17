@@ -21,7 +21,7 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @property PostContactModel $model
+ * @phpstan-extends EntityFormComponent<PostContactModel>
  */
 class AddressFormComponent extends EntityFormComponent
 {
@@ -57,8 +57,12 @@ class AddressFormComponent extends EntityFormComponent
     {
         try {
             $this->postContactService->explorer->getConnection()->beginTransaction();
+            /**
+             * @phpstan-var array{address:array<string,mixed>} $values
+             */
             $values = $form->getValues('array');
             $address = (new AddressHandler($this->container))->store(
+            /** @phpstan-ignore-next-line */
                 $values[self::CONTAINER],
                 isset($this->model) ? $this->model->address : null
             );
@@ -95,7 +99,7 @@ class AddressFormComponent extends EntityFormComponent
         $container = $form->getComponent(self::CONTAINER);
         $container->setModel(
             isset($this->model) ? $this->model->address : null,
-            ReferencedIdMode::tryFrom(ReferencedIdMode::NORMAL)
+            ReferencedIdMode::from(ReferencedIdMode::NORMAL)
         );
     }
 
@@ -116,8 +120,8 @@ class AddressFormComponent extends EntityFormComponent
 
     public function render(): void
     {
-        $this->template->type = $this->postContactType;
         $this->template->hasAddress = isset($this->model);
+        $this->template->type = $this->postContactType;
         parent::render();
     }
 

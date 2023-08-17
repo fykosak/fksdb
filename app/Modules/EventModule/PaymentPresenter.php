@@ -14,30 +14,25 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method PaymentModel getEntity
- */
-class PaymentPresenter extends BasePresenter
+final class PaymentPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<PaymentModel> */
     use EventEntityPresenterTrait;
 
     private PaymentService $paymentService;
-    private PriceCalculator $priceCalculator;
 
-    final public function injectServicePayment(
-        PaymentService $paymentService,
-        PriceCalculator $priceCalculator
-    ): void {
+    public function inject(PaymentService $paymentService): void
+    {
         $this->paymentService = $paymentService;
-        $this->priceCalculator = $priceCalculator;
     }
 
     public function titleCreate(): PageTitle
@@ -114,6 +109,7 @@ class PaymentPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedDetailedList(): bool
     {
@@ -204,12 +200,13 @@ class PaymentPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @phpstan-return TransitionButtonsComponent<PaymentHolder>
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getEvent(),
+            $this->getMachine(),
             $this->getMachine()->createHolder($this->getEntity())
         );
     }
@@ -239,6 +236,7 @@ class PaymentPresenter extends BasePresenter
         return new PaymentFormComponent(
             $this->getContext(),
             $this->getEvent(),
+            $this->getLoggedPerson(),
             $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
             $this->getMachine(),
             null
@@ -258,6 +256,7 @@ class PaymentPresenter extends BasePresenter
         return new PaymentFormComponent(
             $this->getContext(),
             $this->getEvent(),
+            $this->getLoggedPerson(),
             $this->isAllowed($this->getEntity(), 'org-edit'),
             $this->getMachine(),
             $this->getEntity()

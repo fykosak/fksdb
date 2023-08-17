@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class PersonSchedulePresenter extends BasePresenter
+final class PersonSchedulePresenter extends BasePresenter
 {
     public function titleList(): PageTitle
     {

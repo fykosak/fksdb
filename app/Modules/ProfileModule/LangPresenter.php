@@ -7,7 +7,7 @@ namespace FKSDB\Modules\ProfileModule;
 use FKSDB\Components\Controls\PreferredLangFormComponent;
 use Fykosak\Utils\UI\PageTitle;
 
-class LangPresenter extends BasePresenter
+final class LangPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

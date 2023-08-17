@@ -6,6 +6,9 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ValuePrinter<string>
+ */
 class StringPrinter extends ValuePrinter
 {
     /***

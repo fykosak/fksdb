@@ -14,6 +14,11 @@ use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends FilterGrid<SchoolModel,array{
+ *     term?:string,
+ * }>
+ */
 class SchoolsGrid extends FilterGrid
 {
     private SchoolService $service;
@@ -28,14 +33,17 @@ class SchoolsGrid extends FilterGrid
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
     }
 
+    /**
+     * @phpstan-return TypedSelection<SchoolModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
-        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+        if (!isset($this->filterParams['term'])) {
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
         }
         return $query;
@@ -47,7 +55,11 @@ class SchoolsGrid extends FilterGrid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererItem($this->container, fn(SchoolModel $model) => $model->name, new Title(null, _('Name'))),
+            new RendererItem(
+                $this->container,
+                fn(SchoolModel $model) => $model->name,
+                new Title(null, _('School name'))
+            ),
             'name'
         );
         $this->addColumn(
@@ -64,7 +76,7 @@ class SchoolsGrid extends FilterGrid
                 fn(SchoolModel $row): Html => Html::el('span')
                     ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
                     ->addText(($row->active)),
-                new Title(null, _('Active?'))
+                new Title(null, _('Active'))
             ),
             'active'
         );

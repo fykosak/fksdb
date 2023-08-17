@@ -10,16 +10,17 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\OrgService;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\ContestEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-class OrgPresenter extends BasePresenter
+final class OrgPresenter extends BasePresenter
 {
-    use EntityPresenterTrait {
-        getEntity as traitGetEntity;
-    }
+    /** @phpstan-use ContestEntityTrait<OrgModel> */
+    use ContestEntityTrait;
 
     private OrgService $orgService;
 
@@ -31,7 +32,8 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     public function titleEdit(): PageTitle
     {
@@ -45,7 +47,8 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     public function titleDetail(): PageTitle
     {
@@ -69,23 +72,8 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws GoneException
-     */
-    public function getEntity(): OrgModel
-    {
-        /** @var OrgModel $entity */
-        $entity = $this->traitGetEntity();
-        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing organizer outside chosen seminar'));
-        }
-        return $entity;
-    }
-
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
+     * @throws GoneException|\ReflectionException
+     * @throws NoContestAvailable
      */
     final public function renderDetail(): void
     {
@@ -102,6 +90,10 @@ class OrgPresenter extends BasePresenter
         return OrgModel::RESOURCE_ID;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): OrgFormComponent
     {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
@@ -111,12 +103,18 @@ class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function createComponentEditForm(): OrgFormComponent
     {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function createComponentGrid(): OrgsGrid
     {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
@@ -124,6 +122,7 @@ class OrgPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

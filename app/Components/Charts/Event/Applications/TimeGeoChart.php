@@ -26,7 +26,7 @@ class TimeGeoChart extends FrontEndComponent implements Chart
         $this->event = $event;
     }
 
-    public function inject(Storage $storage)
+    public function inject(Storage $storage): void
     {
         $this->cache = new Cache($storage, self::class);
     }
@@ -38,6 +38,7 @@ class TimeGeoChart extends FrontEndComponent implements Chart
 
     /**
      * @throws \Throwable
+     * @phpstan-return array<int,array{country:string,created:string,createdBefore:int}>
      */
     protected function getData(): array
     {

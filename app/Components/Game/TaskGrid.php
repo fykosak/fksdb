@@ -7,9 +7,13 @@ namespace FKSDB\Components\Game;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<TaskModel>
+ */
 class TaskGrid extends BaseGrid
 {
     private EventModel $event;
@@ -20,6 +24,9 @@ class TaskGrid extends BaseGrid
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->event->getTasks();

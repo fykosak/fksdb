@@ -14,11 +14,10 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 /**
- * @property SchoolModel|null $model
+ * @phpstan-extends EntityFormComponent<SchoolModel>
  */
 class SchoolFormComponent extends EntityFormComponent
 {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 
@@ -38,14 +37,32 @@ class SchoolFormComponent extends EntityFormComponent
         $form->addComponent($this->schoolFactory->createContainer(), self::CONT_SCHOOL);
     }
 
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . '/school.latte';
+    }
+
     /**
      * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{school:array{
+         *     name_full:string,
+         *     name:string,
+         *     name_abbrev:string,
+         *     description:string,
+         *     email:string,
+         *     ic:string,
+         *     izo:string,
+         *     active:bool,
+         *     note:string,
+         *     address_id:int,
+         * }} $values
+         */
         $values = $form->getValues('array');
         $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
-        $this->schoolService->storeModel($schoolData, $this->model ?? null);
+        $this->schoolService->storeModel($schoolData, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS

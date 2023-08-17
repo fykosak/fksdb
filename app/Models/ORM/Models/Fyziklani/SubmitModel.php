@@ -17,14 +17,23 @@ use Nette\Security\Resource;
  * @property-read int $fyziklani_task_id
  * @property-read int $fyziklani_submit_id
  * @property-read int $task_id
- * @property-read TeamModel2 fyziklani_team
+ * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
  * @property-read \DateTimeInterface $modified
+ * @phpstan-type SerializedSubmitModel array{
+ *      points:int|null,
+ *      teamId:int,
+ *      taskId:int,
+ *      modified:string,
+ * }
  */
 final class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
 
+    /**
+     * @phpstan-return SerializedSubmitModel
+     */
     public function __toArray(): array
     {
         return [
@@ -49,8 +58,7 @@ final class SubmitModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
-     * @return SubmitState|mixed|null
+     * @return SubmitState|null|int|string
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

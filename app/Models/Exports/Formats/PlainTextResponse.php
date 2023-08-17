@@ -16,18 +16,9 @@ class PlainTextResponse implements Response
     private string $content;
     private string $name;
 
-    public function __construct(string $content)
+    public function __construct(string $content, string $name)
     {
         $this->content = $content;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
         $this->name = $name;
     }
 

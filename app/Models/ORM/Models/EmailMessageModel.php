@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
@@ -66,11 +65,11 @@ final class EmailMessageModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return static::RESOURCE_ID;
+        return self::RESOURCE_ID;
     }
 
     /**
-     * @return EmailMessageState|FakeStringEnum|mixed|null
+     * @return EmailMessageState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

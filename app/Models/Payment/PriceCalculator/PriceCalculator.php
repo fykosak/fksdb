@@ -6,15 +6,19 @@ namespace FKSDB\Models\Payment\PriceCalculator;
 
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
+/**
+ * @implements Statement<void,PaymentHolder>
+ */
 class PriceCalculator implements Statement
 {
 
     private PaymentService $paymentService;
-    /** @var Preprocess[] */
+    /** @phpstan-var Preprocess[] */
     private array $preProcess = [];
 
     public function __construct(PaymentService $paymentService)
@@ -23,7 +27,7 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @return Currency[]
+     * @phpstan-return Currency[]
      */
     public function getAllowedCurrencies(): array
     {
@@ -36,7 +40,7 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @param ...$args
+     * @param PaymentHolder $args
      * @throws \Exception
      */
     final public function __invoke(...$args): void

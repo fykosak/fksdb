@@ -20,6 +20,14 @@ use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{event_id:int},array{
+ *     teams?: mixed,
+ *     participants?:mixed,
+ *     schedule?:mixed,
+ *     personSchedule?:mixed,
+ * }>
+ */
 class EventWebModel extends WebModel
 {
 
@@ -73,6 +81,12 @@ class EventWebModel extends WebModel
 
     /**
      * @throws \Exception
+     * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
+     * @phpstan-import-type SerializedScheduleItemModel from ScheduleItemModel
+     * @phpstan-return (SerializedScheduleGroupModel&array{
+     *     scheduleItems:SerializedScheduleItemModel[],
+     *     schedule_items:SerializedScheduleItemModel[],
+     *  })[]
      */
     private function createScheduleListArray(EventModel $event): array
     {
@@ -171,16 +185,6 @@ class EventWebModel extends WebModel
     {
         $pNode = $participant->createXMLNode($doc);
         XMLHelper::fillArrayToNode($this->createParticipantArray($participant), $doc, $pNode);
-        return $pNode;
-    }
-
-    /**
-     * @throws \DOMException
-     */
-    private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
-    {
-        $pNode = $member->createXMLNode($doc);
-        XMLHelper::fillArrayToNode($this->createParticipantArray($member), $doc, $pNode);
         return $pNode;
     }
 

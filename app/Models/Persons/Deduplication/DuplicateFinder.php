@@ -29,7 +29,7 @@ class DuplicateFinder
 
     public function getPairs(): array
     {
-        /** @var PersonModel[][] $buckets */
+        /** @phpstan-var PersonModel[][] $buckets */
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var PersonModel $person */

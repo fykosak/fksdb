@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Neon\Exception;
 use Nette\Neon\Neon;
 
+/**
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class FOFTeamFormComponent extends TeamFormComponent
 {
 
@@ -30,6 +35,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getMemberFieldsDefinition(): array
     {
@@ -38,6 +44,7 @@ class FOFTeamFormComponent extends TeamFormComponent
 
     /**
      * @throws Exception
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getTeacherFieldsDefinition(): array
     {
@@ -53,13 +60,14 @@ class FOFTeamFormComponent extends TeamFormComponent
         $this->appendMemberFields($form);
         foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
             /** @var BaseControl $genderField */
-            $genderField = $component['person']['gender'];
+            $genderField = $component['person']['gender'];//@phpstan-ignore-line
             /** @var BaseControl $idNumberField */
-            $idNumberField = $component['person_info']['id_number'];
+            $idNumberField = $component['person_info']['id_number'];//@phpstan-ignore-line
             /** @var ScheduleContainer $accommodationField */
-            $accommodationField = $component['person_schedule']['accommodation'];
+            $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
-            $bornField = $component['person_info']['born'];
+            $bornField = $component['person_info']['born'];//@phpstan-ignore-line
+            /** @var Control $baseComponent */
             foreach ($accommodationField->getComponents() as $baseComponent) {
                 $genderField->addConditionOn($baseComponent, Form::FILLED)
                     ->addRule(Form::FILLED, _('Field %label is required.'));
@@ -77,6 +85,9 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
+    /**
+     * @phpstan-return FormProcessing[]
+     */
     protected function getProcessing(): array
     {
         return [
@@ -93,7 +104,7 @@ class FOFTeamFormComponent extends TeamFormComponent
         if (count($persons)) {
             $oldMemberQuery->where('person_id NOT IN', array_keys($persons));
         }
-        /** @var TeamMemberModel $oldTeacher */
+        /** @var TeamTeacherModel $oldTeacher */
         foreach ($oldMemberQuery as $oldTeacher) {
             $this->teacherService->disposeModel($oldTeacher);
         }
@@ -141,6 +152,14 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
+    /**
+     * @phpstan-return array{
+     *     name:EvaluatedFieldMetaData,
+     *     game_lang:EvaluatedFieldMetaData,
+     *     phone:EvaluatedFieldMetaData,
+     *     force_a:EvaluatedFieldMetaData,
+     * }
+     */
     protected function getTeamFieldsDefinition(): array
     {
         return [
@@ -152,19 +171,18 @@ class FOFTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public static function getTeacherFromForm(Form $form): array
     {
         $persons = [];
         $teacherIndex = 0;
         while (true) {
-            /** @var ReferencedId $referencedId */
+            /** @phpstan-var ReferencedId<PersonModel>|null $referencedId */
             $referencedId = $form->getComponent('teacher_' . $teacherIndex, false);
             if (!$referencedId) {
                 break;
             }
-            /** @var PersonModel $person */
             $person = $referencedId->getModel();
             if ($person) {
                 $persons[$person->person_id] = $person;
@@ -181,7 +199,7 @@ class FOFTeamFormComponent extends TeamFormComponent
             $index = 0;
             /** @var TeamTeacherModel $teacher */
             foreach ($this->model->getTeachers() as $teacher) {
-                /** @var ReferencedId $referencedId */
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
                 $index++;

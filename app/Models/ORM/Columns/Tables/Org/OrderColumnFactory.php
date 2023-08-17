@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<OrgModel,never>
+ */
 class OrderColumnFactory extends ColumnFactory
 {
-
+    /**
+     * @phpstan-return string[]
+     */
     public function getOrderMapping(): array
     {
         return [
@@ -40,7 +45,7 @@ class OrderColumnFactory extends ColumnFactory
         if (\array_key_exists($model->order, $this->getOrderMapping())) {
             return (new StringPrinter())($this->getOrderMapping()[$model->order]);
         }
-        return (new StringPrinter())($model->order);
+        return (new StringPrinter())((string)$model->order);
     }
 
     protected function createFormControl(...$args): BaseControl

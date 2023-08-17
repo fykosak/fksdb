@@ -8,6 +8,10 @@ use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
+/**
+ * @phpstan-import-type TItem from NavigationFactory
+ * @phpstan-import-type TRootItem from NavigationFactory
+ */
 class NavigationExtension extends CompilerExtension
 {
     public function getConfigSchema(): Schema
@@ -24,14 +28,17 @@ class NavigationExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-
         $config = $this->getConfig();
         $navbar = $this->getContainerBuilder()->addDefinition('navbar')
             ->setType(NavigationFactory::class);
 
-        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);
+        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);//@phpstan-ignore-line
     }
 
+    /**
+     * @phpstan-param array<string,array<string,array<string,scalar|null>>> $structure
+     * @phpstan-return array<string,TRootItem>
+     */
     private function createFromStructure(array $structure): array
     {
         $structureData = [];
@@ -45,6 +52,10 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
+    /**
+     * @phpstan-param array<string,scalar|null> $params
+     * @phpstan-return TItem
+     */
     private function createNode(string $nodeId, array $params): array
     {
         [$link, $fragment] = explode('#', $nodeId);

@@ -73,8 +73,9 @@ fksrouter:
             mask: 'profile/<presenter=Dashboard>/<action=default>'
             module: Profile
         -
-            mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
-            module: Public
+            mask: 'register/[<contestId %contests%>/[year<year [0-9]+>/]]<action=default>'
+            module: Core
+            presenter: Register
             contestId: [filterTable: %inverseContestMapping%]
             year: null
 

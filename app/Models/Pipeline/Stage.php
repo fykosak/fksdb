@@ -7,6 +7,9 @@ namespace FKSDB\Models\Pipeline;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-template TData
+ */
 abstract class Stage
 {
     protected Container $container;
@@ -18,9 +21,8 @@ abstract class Stage
     }
 
     /**
-     * @param MemoryLogger $logger
-     * @param mixed $data
-     * @return mixed
+     * @phpstan-param TData $data
+     * @phpstan-return TData
      */
     abstract public function __invoke(MemoryLogger $logger, $data);
 }

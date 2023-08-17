@@ -9,6 +9,16 @@ use FKSDB\Models\ORM\Services\ContestService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<never>,array<int,array{
+ *      contestId:int,
+ *      contest:string,
+ *      name:string,
+ *      currentYear:int,
+ *      firstYear:int,
+ *      lastYear:int,
+ * }>>
+ */
 class ContestsModel extends WebModel
 {
     private ContestService $contestService;
@@ -18,24 +28,12 @@ class ContestsModel extends WebModel
         $this->contestService = $contestService;
     }
 
-    private function createContestArray(ContestModel $contest): array
-    {
-        return [
-            'contestId' => $contest->contest_id,
-            'contest' => $contest->getContestSymbol(),
-            'name' => $contest->name,
-            'currentYear' => $contest->getCurrentContestYear()->year,
-            'firstYear' => $contest->getFirstYear(),
-            'lastYear' => $contest->getLastYear(),
-        ];
-    }
-
     public function getJsonResponse(array $params): array
     {
         $data = [];
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
-            $data[] = $this->createContestArray($contest);
+            $data[] = $contest->__toArray();
         }
         return $data;
     }

@@ -7,14 +7,16 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\TaskGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class TaskPresenter extends BasePresenter
+final class TaskPresenter extends BasePresenter
 {
+    /** @use EventEntityPresenterTrait<TaskModel> */
     use EventEntityPresenterTrait;
 
     public function titleList(): PageTitle
@@ -50,7 +52,7 @@ class TaskPresenter extends BasePresenter
     /**
      * @throws GoneException
      */
-    protected function getORMService(): Service
+    protected function getORMService(): TaskService
     {
         throw new GoneException();
     }

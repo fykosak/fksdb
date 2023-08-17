@@ -25,44 +25,80 @@ use Nette\Security\Resource;
  * @property-read TeamState $state
  * @property-read TeamCategory $category
  * @property-read \DateTimeInterface $created
- * @property-read string $phone
- * @property-read string $note
- * @property-read string $password
- * @property-read int $points
- * @property-read int $rank_total
- * @property-read int $rank_category
- * @property-read int $force_a
- * @property-read GameLang $game_lang
+ * @property-read string|null $phone
+ * @property-read string|null $note
+ * @property-read string|null $password
+ * @property-read int|null $points
+ * @property-read int|null $rank_total
+ * @property-read int|null $rank_category
+ * @property-read int|null $force_a
+ * @property-read GameLang|null $game_lang
+ * @phpstan-type SerializedTeamModel array{
+ *      teamId:int,
+ *      name:string,
+ *      status:string,
+ *      category:string,
+ *      created:string,
+ *      phone:string|null,
+ *      points:int|null,
+ *      rankCategory:int|null,
+ *      rankTotal:int|null,
+ *      forceA:int|null,
+ *      gameLang:string|null,
+ * }
  */
 final class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
+     */
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamMemberModel>
+     */
     public function getMembers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamMemberModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        return $selection;
     }
 
     public function getTeamSeat(): ?TeamSeatModel
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        /** @var TeamSeatModel|null $teamSeat */
+        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        return $teamSeat;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonRevokedSubmits(): TypedGroupedSelection
     {
         return $this->getSubmits()->where('points IS NOT NULL');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);
@@ -94,11 +130,14 @@ final class TeamModel2 extends Model implements Resource
 
     public function getSubmit(TaskModel $task): ?SubmitModel
     {
-        return $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        /** @var SubmitModel|null $submit */
+        $submit = $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        return $submit;
     }
 
     /**
-     * @return PersonScheduleModel[]
+     * @phpstan-param string[] $types
+     * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
         array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
@@ -114,7 +153,7 @@ final class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public function getPersons(): array
     {
@@ -152,6 +191,9 @@ final class TeamModel2 extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return SerializedTeamModel
+     */
     public function __toArray(): array
     {
         return [

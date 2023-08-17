@@ -12,6 +12,7 @@ use Nette\Utils\DateTime;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class DeadlineFromXML extends Stage
 {

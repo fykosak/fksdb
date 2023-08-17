@@ -6,6 +6,7 @@ namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
@@ -19,13 +20,15 @@ class ScheduleGroupField extends SelectBox
     /**
      * @throws BadRequestException
      */
-    public function __construct(ScheduleGroupModel $group, string $lang)
+    public function __construct(ScheduleGroupModel $group, Language $lang)
     {
         $regEnd = $group->getRegistrationEnd();
         parent::__construct(
-            $lang === 'cs'
-                ? $group->name_cs . ' - konec registrace: ' . $regEnd
-                : $group->name_en . ' - end of registration: ' . $regEnd
+            sprintf(
+                _('%s - - end of registration: %s'),
+                $group->name->getText($lang->value),
+                $regEnd->format(_('__date_time'))
+            )
         );
         $this->group = $group;
         $this->registerFrontend('schedule.group-container');
@@ -33,15 +36,21 @@ class ScheduleGroupField extends SelectBox
         $items = [];
         /** @var ScheduleItemModel $item */
         foreach ($this->group->getItems() as $item) {
-            $items[$item->getPrimary()] = $lang === 'cs'
-                ? ($item->name_cs . ' - ' . $item->description_cs)
-                : ($item->name_en . ' - ' . $item->description_en);
+            $items[$item->getPrimary()] = sprintf(
+                _('%s - %s'),
+                $item->name->getText($lang->value),
+                $item->description->getText($lang->value)
+            );
         }
-        $this->setItems($items)->setPrompt($lang === 'cs' ? '-- nevybráno --' : '-- not selected --');
+        $this->setItems($items)->setPrompt(_('-- not selected --'));
     }
 
     /**
      * @throws \Exception
+     * @phpstan-return array{
+     *     group:array<string,mixed>,
+     *     options:array<string,bool>,
+     * }
      */
     protected function getData(): array
     {

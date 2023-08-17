@@ -13,11 +13,15 @@ use Fykosak\NetteORM\Model;
  * @property-read int $ac_year
  * @property-read int|null $school_id
  * @property-read SchoolModel|null $school
- * @property-read string $class
+ * @property-read string|null $class
  * @property-read int|null $study_year
  */
 final class PersonHistoryModel extends Model
 {
+    public function getStudyYear(): ?StudyYear
+    {
+        return StudyYear::tryFromLegacy($this->study_year);
+    }
     /*
      * @return StudyYear|mixed|null
      * @throws \ReflectionException

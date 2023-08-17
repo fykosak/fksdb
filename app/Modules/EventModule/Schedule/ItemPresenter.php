@@ -12,24 +12,21 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleItemModel getEntity()
- */
-class ItemPresenter extends BasePresenter
+final class ItemPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleItemModel> */
     use EventEntityPresenterTrait;
-
-    private ScheduleGroupModel $group;
 
     private ScheduleItemService $scheduleItemService;
 
@@ -50,7 +47,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Schedule item "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Schedule item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-clipboard'
         );
     }
@@ -67,11 +64,20 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
+     */
     public function authorizedAttendance(): bool
     {
         return $this->authorizedEdit();
@@ -88,7 +94,7 @@ class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-user-check'
         );
     }
@@ -171,6 +177,10 @@ class ItemPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
     protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();

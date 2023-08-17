@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 
 class DataTestingFactory
 {
-    /** @var PersonTest[][] */
+    /** @phpstan-var PersonTest[][] */
     private array $tests = [];
     private ORMFactory $tableReflectionFactory;
 
@@ -40,7 +40,7 @@ class DataTestingFactory
     }
 
     /**
-     * @return PersonTest[]
+     * @phpstan-return PersonTest[]
      */
     public function getTests(string $section): array
     {

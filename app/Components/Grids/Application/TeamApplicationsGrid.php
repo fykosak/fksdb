@@ -7,11 +7,17 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<TeamModel2,array{
+ *     status?:string,
+ * }>
+ */
 class TeamApplicationsGrid extends FilterGrid
 {
     protected EventModel $event;
@@ -22,13 +28,16 @@ class TeamApplicationsGrid extends FilterGrid
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
         foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
+            }
             switch ($key) {
                 case 'status':
                     $query->where('state', $filterParam);

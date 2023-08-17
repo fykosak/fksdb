@@ -84,7 +84,7 @@ WHERE
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
-        return $sum;
+        return (int)$sum;
     }
 
     /**

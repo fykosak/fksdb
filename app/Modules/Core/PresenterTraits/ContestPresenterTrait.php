@@ -30,8 +30,9 @@ trait ContestPresenterTrait
      */
     protected function contestTraitStartup(): void
     {
-        $contest = $this->getSelectedContest();
-        if (!$this->isValidContest($contest)) {
+        try {
+            $this->validGivenContest();
+        } catch (NoContestAvailable $exception) {
             $this->redirect(
                 'this',
                 array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id])
@@ -39,23 +40,36 @@ trait ContestPresenterTrait
         }
     }
 
-    public function getSelectedContest(): ?ContestModel
+    /**
+     * @throws NoContestAvailable
+     */
+    public function getSelectedContest(): ContestModel
     {
         static $contest;
         if (!isset($contest) || $contest->contest_id !== $this->contestId) {
             $contest = $this->contestService->findByPrimary($this->contestId);
         }
+        if (!$contest) {
+            throw new NoContestAvailable();
+        }
         return $contest;
     }
 
-    private function isValidContest(?ContestModel $contest): bool
+    /**
+     * @throws NoContestAvailable
+     */
+    private function validGivenContest(): void
     {
-        if (!isset($contest)) {
-            return false;
+        $contest = $this->getSelectedContest();
+        $contest = $this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
+        if (!$contest) {
+            throw new NoContestAvailable();
         }
-        return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
     }
 
+    /**
+     * @phpstan-return TypedSelection<ContestModel>
+     */
     private function getAvailableContests(): TypedSelection
     {
         $person = $this->getLoggedPerson();
@@ -92,18 +106,21 @@ trait ContestPresenterTrait
     abstract protected function getRole(): PresenterRole;
 
     /**
-     * @throws BadRequestException
+     * @throws NoContestAvailable
      */
     private function selectContest(): ContestModel
     {
-        /** @var ContestModel $candidate */
+        /** @var ContestModel|null $candidate */
         $candidate = $this->getAvailableContests()->fetch();
         if (!$candidate) {
-            throw new BadRequestException(_('No contest available'));
+            throw new NoContestAvailable();
         }
         return $candidate;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function createComponentContestChooser(): ContestChooserComponent
     {
         return new ContestChooserComponent(

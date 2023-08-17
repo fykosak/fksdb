@@ -21,12 +21,15 @@ use Nette\Utils\Paginator as NettePaginator;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseComponent<TModel>
  */
 abstract class BaseGrid extends BaseComponent
 {
     public bool $paginate = true;
     public bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
+    /** @phpstan-var TableRow<TModel> */
     public TableRow $tableRow;
 
     public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
@@ -67,41 +70,51 @@ abstract class BaseGrid extends BaseComponent
 
     /**
      * @throws BadTypeException|\ReflectionException
+     * @phpstan-param string[] $fields
      */
     protected function addColumns(array $fields): void
     {
         foreach ($fields as $name) {
             $this->addColumn(
+            /** @phpstan-ignore-next-line */
                 new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
                 str_replace('.', '__', $name)
             );
         }
     }
 
+    /**
+     * @phpstan-param BaseItem<TModel> $component
+     */
     protected function addColumn(BaseItem $component, string $name): void
     {
         $this->tableRow->addComponent($component, $name);
     }
 
+    /**
+     * @phpstan-param BaseItem<TModel> $component
+     */
     protected function addButton(BaseItem $component, string $name): void
     {
         $this->tableRow->addButton($component, $name);
     }
 
     /**
+     * @phpstan-return PresenterButton<TModel>
      * @throws BadTypeException
      * @deprecated
      */
     protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-
+        /** @phpstan-var PresenterButton<TModel> $button */
         $button = new PresenterButton(
             $this->container,
+            null,
             new Title(null, $factory->getText()),
-            fn(Model $model): array => $factory->createLinkParameters($model),
+            fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,
-            fn(Model $model): bool => $checkACL
+            fn(?Model $model): bool => $checkACL
                 ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
                 : true
         );

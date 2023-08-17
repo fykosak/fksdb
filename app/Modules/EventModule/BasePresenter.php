@@ -12,6 +12,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\ComponentReflection;
 use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
@@ -28,7 +29,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
-     * @param mixed $element
+     * @param ComponentReflection|\ReflectionMethod $element
      * @throws \ReflectionException
      * @throws ForbiddenRequestException
      */
@@ -108,7 +109,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     protected function getNavRoots(): array
     {

@@ -1,17 +1,17 @@
 .panel {
   padding: 4.3rem 0;
-  background-color: var(--panel-bg);
+  background-color: rgba(var(--panel-bg-rgb), 0.95);
 
   &:first-of-type {
     padding: .5rem 0;
   }
 
   &.panel-dark, &.color-auto:nth-of-type(2n) {
-    --panel-bg: var(--bs-secondary-bg);
+    --panel-bg-rgb: var(--bs-secondary-bg-rgb);
   }
 
   &.panel-light, &.color-auto:nth-of-type(2n+1) {
-    background-color: var(--bs-body-bg);
+    --panel-bg-rgb: var(--bs-body-bg-rgb);
   }
 
   .page-header {

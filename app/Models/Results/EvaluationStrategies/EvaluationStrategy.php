@@ -53,7 +53,7 @@ abstract class EvaluationStrategy
     abstract public function getSumColumn(): string;
 
     /**
-     * @return array of int (study years of students with category)
+     * @phpstan-return (int|null)[]
      */
     final public function categoryToStudyYears(ContestCategoryModel $category): array
     {
@@ -110,10 +110,13 @@ abstract class EvaluationStrategy
 
     abstract public function getSubmitPoints(SubmitModel $submit): ?float;
 
+    /**
+     * @phpstan-return array<string,array<int,int|null>>
+     */
     abstract protected function getCategoryMap(): array;
 
     /**
-     * @return ContestCategoryModel[]
+     * @phpstan-return ContestCategoryModel[]
      */
     final public function getCategories(): array
     {

@@ -8,7 +8,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
@@ -16,6 +15,9 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
+/**
+ * @phpstan-template TModel of (Model&Resource)
+ */
 trait EntityPresenterTrait
 {
     /** @persistent */
@@ -24,6 +26,7 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedList(): bool
     {
@@ -43,11 +46,15 @@ trait EntityPresenterTrait
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }
 
+    /**
+     * @phpstan-return Service<TModel>
+     */
     abstract protected function getORMService(): Service;
 
     /**
      * @throws EventNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedCreate(): bool
     {
@@ -56,9 +63,11 @@ trait EntityPresenterTrait
 
     /**
      * @throws EventNotFoundException
-     * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
@@ -67,15 +76,16 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @phpstan-return TModel
      * @throws GoneException
+     * @throws ModelNotFoundException
      */
-    public function getEntity(bool $throw = true): ?Model
+    public function getEntity(): Model
     {
         static $model;
         // protection for tests ev . change URL during app is running
         if (!isset($model) || $this->id !== $model->getPrimary()) {
-            $model = $this->loadModel($throw);
+            $model = $this->loadModel();
         }
         return $model;
     }
@@ -83,24 +93,26 @@ trait EntityPresenterTrait
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @phpstan-return TModel
      */
-    private function loadModel(bool $throw = true): ?Model
+    private function loadModel(): Model
     {
+        /** @phpstan-var TModel|null $candidate */
         $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;
-        } elseif ($throw) {
-            throw new ModelNotFoundException(_('Model does not exists'));
         } else {
-            return null;
+            throw new ModelNotFoundException(_('Model does not exists'));
         }
     }
 
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedDelete(): bool
@@ -111,8 +123,10 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function authorizedDetail(): bool
@@ -148,16 +162,15 @@ trait EntityPresenterTrait
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      */
     public function traitHandleDelete(): void
     {
-        $success = $this->getEntity()->delete();
-        if (!$success) {
-            throw new ModelException(_('Error during deleting'));
-        }
+        $this->getORMService()->disposeModel($this->getEntity());
     }
 
     /**

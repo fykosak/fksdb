@@ -19,7 +19,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property OrgModel|null $model
+ * @phpstan-extends EntityFormComponent<OrgModel>
  */
 class OrgFormComponent extends EntityFormComponent
 {
@@ -66,7 +66,20 @@ class OrgFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
+        /**
+         * @phpstan-var array{org:array{
+         *      since:int,
+         *      until:int|null,
+         *      role:string,
+         *      tex_signature:string,
+         *      domain_alias:string,
+         *      order:int,
+         *      contribution:string,
+         *     contest_id?:int,
+         * }} $values
+         */
+        $values = $form->getValues('array');
+        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contestYear->contest_id;
         }

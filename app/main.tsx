@@ -4,7 +4,7 @@ import PerYearsChart from './Components/Charts/Contestants/per-years-chart';
 import TimeGeoChart from './Components/Charts/Event/Applications/time-geo-chart';
 import AcquaintanceChart from './Components/Charts/Event/ParticipantAcquaintance/acquaintance-chart';
 import TotalPersonsChart from './Components/Charts/total-persons-chart';
-import AjaxSubmitComponent from './Components/Controls/AjaxSubmit/component';
+import AjaxSubmitComponent from './Components/Controls/Upload/AjaxSubmit/component';
 import ResultsPresentation from './Components/Game/ResultsAndStatistics/Presentation/main';
 import ResultsTable from './Components/Game/ResultsAndStatistics/Table/main';
 import StatisticsComponent from './Components/Game/ResultsAndStatistics/Statistics/component';
@@ -43,16 +43,16 @@ renderer.hashMapLoader.register('schedule.group-container', (element, reactId, r
 });
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent, {translator});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable, {translator});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.results.table', ResultsTable, {translator});
+renderer.hashMapLoader.registerActionsComponent('game.statistics.team', StatisticsComponent, {
     mode: 'team',
     translator,
 });
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.statistics.task', StatisticsComponent, {
     mode: 'task',
     translator,
 });
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.statistics.correlation', StatisticsComponent, {
     mode: 'correlation',
     translator,
 });

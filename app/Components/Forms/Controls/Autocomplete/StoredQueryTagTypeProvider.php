@@ -10,9 +10,8 @@ use Fykosak\NetteORM\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
-
-    private const DESCRIPTION = 'description';
     private TagTypeService $storedQueryTagTypeService;
+    /** @phpstan-var TypedSelection<TagTypeModel> */
     private TypedSelection $searchTable;
 
     public function __construct(TagTypeService $storedQueryTagTypeService)
@@ -21,9 +20,6 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim((string)$search);
@@ -35,14 +31,11 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var TagTypeModel $tagType */
+        /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
         return $tagType->name;
     }
 
-    /**
-     * @return TagTypeModel[]
-     */
     public function getItems(): array
     {
         $tagTypes = $this->searchTable
@@ -52,9 +45,9 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
-                self::LABEL => $tagType->name,
-                self::VALUE => $tagType->tag_type_id,
-                self::DESCRIPTION => $tagType->description,
+                'label' => $tagType->name,
+                'value' => $tagType->tag_type_id,
+                'description' => $tagType->description,
             ];
         }
         return $result;

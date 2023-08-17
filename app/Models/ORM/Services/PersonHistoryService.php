@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PersonHistoryModel storeModel(array $data, ?PersonHistoryModel $model = null)
+ * @phpstan-extends Service<PersonHistoryModel>
  */
 final class PersonHistoryService extends Service
 {

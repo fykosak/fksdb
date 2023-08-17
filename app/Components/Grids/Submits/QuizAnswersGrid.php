@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Submits;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -15,6 +14,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends BaseGrid<SubmitQuestionModel>
+ */
 class QuizAnswersGrid extends BaseGrid
 {
 
@@ -34,6 +36,9 @@ class QuizAnswersGrid extends BaseGrid
         parent::__construct($container);
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitQuestionModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->submit->task->getQuestions()->order('label');
@@ -41,14 +46,11 @@ class QuizAnswersGrid extends BaseGrid
 
     protected function configure(): void
     {
-        /**
-         * @var SubmitQuestionAnswerModel $answer
-         */
         $this->addColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => $question->getFQName(),
-                new Title(null, _('Name'))
+                new Title(null, _('Task'))
             ),
             'name'
         );
@@ -56,7 +58,7 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): int => $question->points ?? 0,
+                fn(SubmitQuestionModel $question): string => (string)($question->points ?? 0),
                 new Title(null, _('Points'))
             ),
             'points'

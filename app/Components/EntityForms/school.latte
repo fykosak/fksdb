@@ -1,0 +1,67 @@
+{layout '../Controls/FormComponent/layout.latte'}
+{block content}
+    <div class="panel color-auto">
+        <div class="container">
+            <p>Původně jsou školy naplěny z <a href="http://rejskol.msmt.cz/">rejstříku MŠMT</a>. </p>
+
+            <h3>Atributy školy</h3>
+            <ul>
+                <li><strong>Plný název</strong>
+                    <ul>
+                        <li>zatím nepoužito, mělo by mít formát jako hlavní název škol v rejstříku MŠMT (někdy i včetně
+                            adresy)
+                        <li> vyhledává se podle ní
+                    </ul>
+                </li>
+                <li><strong>Název</strong>
+                    <ul>
+                        <li> název, který patří na obálku
+                        <li> uvažujte, že nad tím bude osoba/organizační jednotka pod tím ulice
+                    </ul>
+                </li>
+                <li><strong>Zkrácený název</strong>
+                    <ul>
+                        <li>nejčastěji používaný název (výsledkovky, vyhledávací pole, exporty)
+                        <li> délka omezena na 32 znaků
+                        <li>měl by obsahovat typ školy (G, ZŠ, SŠ apod.) a město
+                        <li>pokud jde o školu mimo ČR nebo SR (nebo světové metropole)
+                            <span class="text-decoration-line-through">hodí se do názvu doplnit i zkrácené označení státu</span>
+                        <li>pokud je (předokládá se) více školy daného typu v daném městě doplnit i ulici anebo
+                            oficiální název (případně zkrácený)
+                    </ul>
+                </li>
+                <li><strong>Aktivní záznam</strong>
+                    <ul>
+                        <li>význam je 1=>škola existuje, 0=>škola je neplatná (např. zanikla)
+                        <li>školy s hodnotou 0 nejsou nabízeny řešitelům v přihlášce
+                    </ul>
+                </li>
+                <li><strong>IČ, IZO</strong>
+                    <ul>
+                        <li>pokud je známo/podaří se vygooglit, hodí se vyplnit kvůli synchronizaci s jinými systémy
+                        <li>Do kolonky IZO se vyplňuje pro české školy REDIZO
+                        <li>U slovenských škol se jako IZO vyplňuje slovenský kód školy (9-ciferné číslo), viz
+                            <a href="http://web.uips.sk/rs/register.html">http://web.uips.sk/rs/register.html</a>.
+                    </ul>
+                </li>
+                <li><strong>Adresa</strong>
+                    <ul>
+                        <li> pokud je známo/podaří se vygooglit, hodí se pro korespondenci na školy (případně doplnit
+                            lazy)
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Vložení školy</h3>
+            <p>
+                <strong class="text-danger">Školu vkládejte jenom tehdy, jste-li přesvědčení, že v systému není (hledání
+                    dle názvu, typu, adresy).</strong>
+            </p>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            {include parent}
+        </div>
+    </div>
+{/block}

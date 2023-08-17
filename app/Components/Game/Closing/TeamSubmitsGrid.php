@@ -6,11 +6,15 @@ namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<SubmitModel>
+ */
 class TeamSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
@@ -27,6 +31,9 @@ class TeamSubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->team->getSubmits()->order('fyziklani_submit.created');

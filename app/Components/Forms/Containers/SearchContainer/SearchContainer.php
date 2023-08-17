@@ -9,14 +9,19 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ */
 abstract class SearchContainer extends ContainerWithOptions
 {
-
     protected const CONTROL_SEARCH = '_c_search';
     protected const SUBMIT_SEARCH = '__search';
-
+    /** @phpstan-var ReferencedId<TModel> */
     protected ReferencedId $referencedId;
 
+    /**
+     * @phpstan-param ReferencedId<TModel> $referencedId
+     */
     public function setReferencedId(ReferencedId $referencedId): void
     {
         $this->referencedId = $referencedId;
@@ -31,7 +36,7 @@ abstract class SearchContainer extends ContainerWithOptions
     {
         return $this->getForm(false)
             && $this->getComponent(self::SUBMIT_SEARCH, false)
-            && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
+            && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy(); // @phpstan-ignore-line
     }
 
     protected function createSearchButton(): void
@@ -45,7 +50,7 @@ abstract class SearchContainer extends ContainerWithOptions
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);
 
         $cb = function (): void {
-            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
+            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue(); // @phpstan-ignore-line
             $model = ($this->getSearchCallback())($term);
 
             $values = [];
@@ -62,7 +67,13 @@ abstract class SearchContainer extends ContainerWithOptions
 
     abstract protected function createSearchControl(): ?BaseControl;
 
+    /**
+     * @phpstan-return callable(string|null):(TModel|null)
+     */
     abstract protected function getSearchCallback(): callable;
 
+    /**
+     * @phpstan-return callable(string|null):array<string,mixed>)
+     */
     abstract protected function getTermToValuesCallback(): callable;
 }

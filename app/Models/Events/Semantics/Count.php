@@ -9,22 +9,31 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @implements Statement<int,BaseHolder>
+ */
 class Count implements Statement
 {
     use SmartObject;
 
+    /** @phpstan-var string[] */
     private array $states;
     private EventParticipantService $eventParticipantService;
 
+    /**
+     * @phpstan-param string[] $states
+     */
     public function __construct(array $states, EventParticipantService $eventParticipantService)
     {
         $this->states = $states;
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @param BaseHolder $args
+     */
     public function __invoke(...$args): int
     {
-        /** @var BaseHolder $holder */
         [$holder] = $args;
         $table = $this->eventParticipantService->getTable();
         $table->where('event_participant.event_id', $holder->event->getPrimary());

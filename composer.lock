@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "177134eb9cb3da69470342f46d6bd84f",
+    "content-hash": "00ce957f9cd3cf1d7bfad00fbcda4b1b",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
-            "version": "dev-dev-context-translator",
+            "version": "v0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-fks-utils.git",
-                "reference": "6c299c7"
+                "reference": "5d3f8e7256d345102c3c3b0e8fed9574e29fcefa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/6c299c7",
-                "reference": "6c299c7",
+                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/5d3f8e7256d345102c3c3b0e8fed9574e29fcefa",
+                "reference": "5d3f8e7256d345102c3c3b0e8fed9574e29fcefa",
                 "shasum": ""
             },
             "require": {
@@ -34,6 +34,7 @@
             },
             "require-dev": {
                 "nette/tester": "^v2.4.0",
+                "phpstan/phpstan": "1.10.26",
                 "squizlabs/php_codesniffer": "3.6.0"
             },
             "type": "library",
@@ -55,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-fks-utils/issues",
-                "source": "https://github.com/fykosak/nette-fks-utils/tree/dev-context-translator"
+                "source": "https://github.com/fykosak/nette-fks-utils/tree/v0.1.1"
             },
-            "time": "2023-07-17T17:35:18+00:00"
+            "time": "2023-08-15T18:55:05+00:00"
         },
         {
             "name": "fykosak/nette-frontend-component",
@@ -65,16 +66,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-frontend-component.git",
-                "reference": "5650c5f8aecc174992230e026404327b90b5c7de"
+                "reference": "1f6b66fe654e3f9bf2350b1a1e0c35917a8d37fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-frontend-component/zipball/5650c5f8aecc174992230e026404327b90b5c7de",
-                "reference": "5650c5f8aecc174992230e026404327b90b5c7de",
+                "url": "https://api.github.com/repos/fykosak/nette-frontend-component/zipball/1f6b66fe654e3f9bf2350b1a1e0c35917a8d37fa",
+                "reference": "1f6b66fe654e3f9bf2350b1a1e0c35917a8d37fa",
                 "shasum": ""
             },
             "require": {
-                "fykosak/nette-fks-utils": "dev-dev-context-translator#a4a8bbb",
+                "fykosak/nette-fks-utils": "^v0.1.1",
                 "nette/application": "^v3.1.0",
                 "nette/forms": "^3.1.0",
                 "php": ">=7.4"
@@ -93,20 +94,20 @@
                 "issues": "https://github.com/fykosak/nette-frontend-component/issues",
                 "source": "https://github.com/fykosak/nette-frontend-component/tree/dev-74"
             },
-            "time": "2023-07-08T19:15:18+00:00"
+            "time": "2023-08-16T08:38:29+00:00"
         },
         {
             "name": "fykosak/nette-orm",
-            "version": "dev-dev-mapper",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "d6b6381"
+                "reference": "b2c936da18815415a677a891ec5231ad946977fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/d6b6381",
-                "reference": "d6b6381",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/b2c936da18815415a677a891ec5231ad946977fe",
+                "reference": "b2c936da18815415a677a891ec5231ad946977fe",
                 "shasum": ""
             },
             "require": {
@@ -148,9 +149,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-orm/issues",
-                "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
+                "source": "https://github.com/fykosak/nette-orm/tree/v0.4.3"
             },
-            "time": "2023-07-19T15:55:38+00:00"
+            "time": "2023-08-16T19:24:12+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -280,16 +281,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "3a494dc7dc1d7d12e511890177ae2d0e6c107da6"
+                "reference": "111166291a0f8130081195ac4556a5587d7f1b5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/3a494dc7dc1d7d12e511890177ae2d0e6c107da6",
-                "reference": "3a494dc7dc1d7d12e511890177ae2d0e6c107da6",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/111166291a0f8130081195ac4556a5587d7f1b5d",
+                "reference": "111166291a0f8130081195ac4556a5587d7f1b5d",
                 "shasum": ""
             },
             "require": {
@@ -343,7 +344,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.0.0"
+                "source": "https://github.com/guzzle/promises/tree/2.0.1"
             },
             "funding": [
                 {
@@ -359,20 +360,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-21T13:50:22+00:00"
+            "time": "2023-08-03T15:11:55+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.5.0",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "b635f279edd83fc275f822a1188157ffea568ff6"
+                "reference": "8bd7c33a0734ae1c5d074360512beb716bef3f77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/b635f279edd83fc275f822a1188157ffea568ff6",
-                "reference": "b635f279edd83fc275f822a1188157ffea568ff6",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/8bd7c33a0734ae1c5d074360512beb716bef3f77",
+                "reference": "8bd7c33a0734ae1c5d074360512beb716bef3f77",
                 "shasum": ""
             },
             "require": {
@@ -459,7 +460,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.5.0"
+                "source": "https://github.com/guzzle/psr7/tree/2.6.0"
             },
             "funding": [
                 {
@@ -475,7 +476,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-17T16:11:26+00:00"
+            "time": "2023-08-03T15:06:02+00:00"
         },
         {
             "name": "latte/latte",
@@ -1839,21 +1840,21 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.2.3",
+            "version": "v1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "abbdbb70e0245d5f3bf77874cea1dfb0c930d06f"
+                "reference": "c9ff517a53903b3d4e29ec547fb20feecb05b8ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/abbdbb70e0245d5f3bf77874cea1dfb0c930d06f",
-                "reference": "abbdbb70e0245d5f3bf77874cea1dfb0c930d06f",
+                "url": "https://api.github.com/repos/nette/schema/zipball/c9ff517a53903b3d4e29ec547fb20feecb05b8ab",
+                "reference": "c9ff517a53903b3d4e29ec547fb20feecb05b8ab",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^2.5.7 || ^3.1.5 ||  ^4.0",
-                "php": ">=7.1 <8.3"
+                "php": "7.1 - 8.3"
             },
             "require-dev": {
                 "nette/tester": "^2.3 || ^2.4",
@@ -1895,9 +1896,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.2.3"
+                "source": "https://github.com/nette/schema/tree/v1.2.4"
             },
-            "time": "2022-10-13T01:24:26+00:00"
+            "time": "2023-08-05T18:56:25+00:00"
         },
         {
             "name": "nette/security",
@@ -2802,8 +2803,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fykosak/nette-orm": 20,
-        "fykosak/nette-fks-utils": 20,
         "fykosak/nette-frontend-component": 20
     },
     "prefer-stable": false,

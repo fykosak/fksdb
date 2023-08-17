@@ -7,6 +7,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
 
 /**
@@ -26,11 +27,11 @@ final class PersonScheduleModel extends Model
         return $schedulePayment ? $schedulePayment->payment : null;
     }
 
-    public function getLabel(string $lang): string
+    public function getLabel(Language $lang): string
     {
         return $this->person->getFullName() . ': '
-            . $this->schedule_item->schedule_group->name->getText($lang) . ' - '
-            . $this->schedule_item->name->getText($lang);
+            . $this->schedule_item->schedule_group->name->getText($lang->value) . ' - '
+            . $this->schedule_item->name->getText($lang->value);
     }
 
     /**

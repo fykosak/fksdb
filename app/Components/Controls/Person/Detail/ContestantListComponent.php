@@ -13,6 +13,9 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
+/**
+ * @phpstan-extends DetailComponent<ContestantModel>
+ */
 class ContestantListComponent extends DetailComponent
 {
     protected function getMinimalPermissions(): int
@@ -20,6 +23,9 @@ class ContestantListComponent extends DetailComponent
         return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         return $this->person->getContestants();
@@ -33,17 +39,21 @@ class ContestantListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
             $contestant->contest->getContestSymbol();
-        $this->setTitle(new TemplateItem($this->container, '@contest.name'));
+        $this->setTitle(
+            new TemplateItem($this->container, '@contest.name', '@contest.name:title')// @phpstan-ignore-line
+        );
+        /** @phpstan-var RowContainer<ContestantModel> $row1 */
         $row1 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row1, 'row1');
         $row1->addComponent(
-            new TemplateItem($this->container, _('Contest year @contestant.year')),
+            new TemplateItem($this->container, _('Contest year @contestant.year'), '@contestant.year:title'),
             'contestant__year'
         );
         if ($this->isOrg) {
             $this->addButton(
-                new PresenterButton(
+                new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Edit')),
                     fn(ContestantModel $contestant): array => [
                         ':Org:Contestant:edit',
@@ -57,8 +67,9 @@ class ContestantListComponent extends DetailComponent
                 'edit'
             );
             $this->addButton(
-                new PresenterButton(
+                new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Detail')),
                     fn(ContestantModel $contestant): array => [
                         ':Org:Contestant:detail',
@@ -73,8 +84,9 @@ class ContestantListComponent extends DetailComponent
             );
         } else {
             $this->addButton(
-                new PresenterButton(
+                new PresenterButton( // @phpstan-ignore-line
                     $this->container,
+                    null,
                     new Title(null, _('Detail')),
                     fn(ContestantModel $contestant): array => [
                         ':Public:Dashboard:default',

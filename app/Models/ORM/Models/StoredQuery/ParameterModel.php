@@ -8,12 +8,14 @@ use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 /**
- * @property-read ParameterType $type
- * @property-read int $default_integer
- * @property-read string $default_string
+ * @property-read int $parameter_id
  * @property-read int $query_id
+ * @property-read QueryModel $query
  * @property-read string $name
- * @property-read string $description
+ * @property-read string|null $description
+ * @property-read ParameterType $type
+ * @property-read int|null $default_integer
+ * @property-read string|null $default_string
  */
 final class ParameterModel extends Model
 {
@@ -34,7 +36,11 @@ final class ParameterModel extends Model
     }
 
     /**
-     * @param mixed $value
+     * @param int|string|bool $value
+     * @phpstan-return array{
+     *     default_integer?:int,
+     *     default_string?:string,
+     * }
      */
     public static function setInferDefaultValue(string $type, $value): array
     {
@@ -45,7 +51,7 @@ final class ParameterModel extends Model
                 $data['default_integer'] = (int)$value;
                 break;
             case ParameterType::STRING:
-                $data['default_string'] = $value;
+                $data['default_string'] = (string)$value;
                 break;
             default:
                 throw new InvalidStateException("Unsupported parameter type '$type'.");

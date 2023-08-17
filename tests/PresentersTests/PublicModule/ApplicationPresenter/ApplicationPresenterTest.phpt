@@ -38,7 +38,7 @@ class ApplicationPresenterTest extends EventTestCase
     public function test404(): void
     {
         Assert::exception(function (): void {
-            $request = new Request('Public:Register', 'GET', [
+            $request = new Request('Core:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'cs',
                 'eventId' => 666,
@@ -57,7 +57,7 @@ class ApplicationPresenterTest extends EventTestCase
             'registration_end' => DateTime::from(time() + DateTime::DAY),
         ]);
         Assert::exception(function () use ($event): void {
-            $request = new Request('Public:Register', 'GET', [
+            $request = new Request('Core:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'en',
                 'id' => 666,

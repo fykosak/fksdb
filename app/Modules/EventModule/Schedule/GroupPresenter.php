@@ -14,6 +14,8 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\Navigation\NavItem;
@@ -22,11 +24,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleGroupModel getEntity()
- */
-class GroupPresenter extends BasePresenter
+final class GroupPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
     use EventEntityPresenterTrait;
 
     private ScheduleGroupService $scheduleGroupService;
@@ -57,11 +57,20 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Edit schedule group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
+     */
     public function authorizedAttendance(): bool
     {
         return $this->authorizedEdit();
@@ -78,7 +87,7 @@ class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->getLang())),
+            \sprintf(_('Attendance for group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-user-check'
         );
     }

@@ -9,6 +9,9 @@ use FKSDB\Models\ValuePrinters\DatePrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory
 {
 

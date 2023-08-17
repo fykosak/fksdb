@@ -14,6 +14,9 @@ use FKSDB\Models\WebService\Models\WebModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{event_id:int,last_update?:string|null},array<string,mixed>>
+ */
 class ResultsWebModel extends WebModel
 {
     private EventService $eventService;

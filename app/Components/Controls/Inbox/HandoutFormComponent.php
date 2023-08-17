@@ -16,8 +16,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class HandoutFormComponent extends BaseComponent
 {
@@ -53,7 +53,7 @@ class HandoutFormComponent extends BaseComponent
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(
                 false,
-                $task->label . ' ' . $task->name_cs,
+                $task->label . ' ' . $task->name->getText($this->translator->lang),
                 $orgProvider
             );
             $control->setMultiSelect(true);
@@ -71,14 +71,16 @@ class HandoutFormComponent extends BaseComponent
      */
     public function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array<string,int[]> $values */
+        $values = $form->getValues('array');
         $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
+            /** @var TaskContributionModel $contribution */
             foreach (
                 $task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 ) as $contribution
             ) {
                 $this->taskContributionService->disposeModel($contribution);
@@ -113,7 +115,7 @@ class HandoutFormComponent extends BaseComponent
             $contributions = [
                 ...$contributions,
                 ...$task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 )->fetchAll(),
             ];
         }

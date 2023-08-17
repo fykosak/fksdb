@@ -26,6 +26,9 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
         $this->personService = $personService;
     }
 
+    /**
+     * @phpstan-return array<int,array{created:string,gender:string,personId:int}>
+     */
     public function getData(): array
     {
         $query = $this->personService->getTable()->order('created');
