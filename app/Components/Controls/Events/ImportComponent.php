@@ -75,6 +75,7 @@ class ImportComponent extends BaseComponent
             foreach ($parser as $row) {
                 $values = [];
                 foreach ($row as $columnName => $value) {
+                    //value jsem změnil na values
                     $values[$columnName] = $value;
                 }
                 $values['event_id'] = $this->event->event_id;
@@ -86,6 +87,7 @@ class ImportComponent extends BaseComponent
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import failed.'), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
+            //myslím, že to hromadný import kazí tenhle rollBack
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
         }
