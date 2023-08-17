@@ -15,7 +15,7 @@ class PDFStamper implements StorageProcessing
 
     private string $outputFile;
 
-    /** @var int used font size in pt */
+    /** @var int used font size in pt, currently set at app/config/config.neon */
     private int $fontSize;
     public function __construct(int $fontSize)
     {
