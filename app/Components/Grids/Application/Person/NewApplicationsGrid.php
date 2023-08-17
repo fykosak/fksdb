@@ -51,6 +51,7 @@ class NewApplicationsGrid extends BaseGrid
         ]);
         $button = new PresenterButton(
             $this->container,
+            null,
             new Title(null, _('Create application')),
             fn(EventModel $event): array => $event->isTeamEvent()
                 ? [':Event:TeamApplication:create', ['eventId' => $event->event_id]]

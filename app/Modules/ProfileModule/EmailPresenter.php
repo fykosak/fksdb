@@ -48,6 +48,6 @@ final class EmailPresenter extends BasePresenter
 
     protected function createComponentChangeEmailForm(): ChangeEmailComponent
     {
-        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson(), $this->translator->lang);
+        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson());
     }
 }

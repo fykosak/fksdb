@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 /**
- * @template TValue
+ * @phpstan-template TValue
  * @phpstan-implements MergedStrategy<TValue>
  */
 class ConstantStrategy implements MergeStrategy
 {
-    /** @var TValue */
+    /** @phpstan-var TValue */
     private $constant;
 
     /**
-     * @param TValue $constant
+     * @phpstan-param TValue $constant
      */
     public function __construct($constant)
     {
@@ -22,8 +22,8 @@ class ConstantStrategy implements MergeStrategy
     }
 
     /**
-     * @param TValue $trunk
-     * @param TValue $merged
+     * @phpstan-param TValue $trunk
+     * @phpstan-param TValue $merged
      * @phpstan-return TValue
      */
     public function mergeValues($trunk, $merged)

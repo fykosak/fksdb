@@ -4,34 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\NetteORM\TypedSelection;
-use Nette\DI\Container;
 
 /**
- * @phpstan-extends EntityGrid<EmailMessageModel>
+ * @phpstan-extends BaseGrid<EmailMessageModel>
  */
-class EmailsGrid extends EntityGrid
+class EmailsGrid extends BaseGrid
 {
+    private EmailMessageService $service;
 
-    public function __construct(Container $container)
+    public function inject(EmailMessageService $service): void
     {
-        parent::__construct($container, EmailMessageService::class, [
-            'email_message.email_message_id',
-            'email_message.recipient',
-            'person.full_name',
-            'email_message.subject',
-            'email_message.state',
-        ]);
+        $this->service = $service;
     }
 
+    /**
+     * @phpstan-return TypedSelection<EmailMessageModel>
+     */
     protected function getModels(): TypedSelection
     {
-        $value = parent::getModels();
-        $value->order('created DESC');
-        return $value;
+        return $this->service->getTable()->order('created DESC');
     }
 
     /**
@@ -40,7 +36,13 @@ class EmailsGrid extends EntityGrid
      */
     protected function configure(): void
     {
-        parent::configure();
+        $this->addColumns([
+            'email_message.email_message_id',
+            'email_message.recipient',
+            'person.full_name',
+            'email_message.subject',
+            'email_message.state',
+        ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }

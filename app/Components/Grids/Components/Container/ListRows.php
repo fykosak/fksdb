@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Components\Container;
 use FKSDB\Components\Grids\Components\BaseItem;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class ListRows extends BaseItem

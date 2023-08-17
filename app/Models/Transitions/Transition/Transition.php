@@ -11,7 +11,7 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\SmartObject;
 
 /**
- * @template THolder of ModelHolder
+ * @phpstan-template THolder of ModelHolder
  * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
  * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
  * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
@@ -27,7 +27,7 @@ class Transition
 {
     use SmartObject;
 
-    /** @var (callable(THolder):bool)|bool|null */
+    /** @phpstan-var (callable(THolder):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
@@ -89,7 +89,7 @@ class Transition
     }
 
     /**
-     * @param (callable(THolder):bool)|bool $condition
+     * @phpstan-param (callable(THolder):bool)|bool $condition
      */
     public function setCondition($condition): void
     {

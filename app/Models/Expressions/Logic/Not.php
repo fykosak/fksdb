@@ -8,12 +8,12 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
 
 /**
  * @phpstan-extends EvaluatedExpression<bool,bool,ArgType>
- * @template ArgType
+ * @phpstan-template ArgType
  */
 class Not extends EvaluatedExpression
 {
 
-    /** @var (callable(ArgType):bool)|bool */
+    /** @phpstan-var (callable(ArgType):bool)|bool */
     private $expression;
 
     /** @phpstan-param (callable(ArgType):bool)|bool $expression */

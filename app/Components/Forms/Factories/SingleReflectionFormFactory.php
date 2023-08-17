@@ -71,7 +71,7 @@ final class SingleReflectionFormFactory
     }
 
     /**
-     * @param mixed ...$args
+     * @param mixed $args
      * @throws BadTypeException
      * @throws OmittedControlException
      * @phpstan-param EvaluatedFieldMetaData $metaData

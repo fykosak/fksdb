@@ -16,7 +16,7 @@ class ColumnTableComponent extends BaseComponent
         return new ColumnRendererComponent($this->getContext());
     }
     /**
-     * @param string[] $fields
+     * @phpstan-param string[] $fields
      * @throws CannotAccessModelException
      */
     final public function render(

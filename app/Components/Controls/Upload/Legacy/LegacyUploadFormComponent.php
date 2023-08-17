@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -75,7 +76,7 @@ class LegacyUploadFormComponent extends FormComponent
                     );
                     continue;
                 }
-                /** @var array{file:FileUpload|null} $taskValues */
+                /** @phpstan-var array{file:FileUpload|null} $taskValues */
                 $taskValues = $values['task' . $task->task_id];
                 if (!isset($taskValues['file'])) { // upload field was disabled
                     continue;
@@ -129,7 +130,7 @@ class LegacyUploadFormComponent extends FormComponent
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
 
-            $upload = $container->addUpload('file', $task->getFullLabel($this->translator->lang));
+            $upload = $container->addUpload('file', $task->getFullLabel(Language::from($this->translator->lang)));
             $conditionedUpload = $upload
                 ->addCondition(Form::FILLED)
                 ->addRule(

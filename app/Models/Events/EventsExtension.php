@@ -86,7 +86,7 @@ class EventsExtension extends CompilerExtension
     }
 
     /**
-     * @param array{
+     * @phpstan-param array{
      *  label:string,
      *  description?:string,
      *  required:(callable():bool)|bool,
@@ -114,7 +114,7 @@ class EventsExtension extends CompilerExtension
     }
 
     /**
-     * @param string[][] $definition
+     * @phpstan-param string[][] $definition
      * @phpstan-return string[]
      */
     private function createAccessKeys(array $definition): array

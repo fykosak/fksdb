@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template TContestModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TContestModel of (Model&\Nette\Security\Resource)
  */
 trait ContestEntityTrait
 {
@@ -32,7 +32,7 @@ trait ContestEntityTrait
      */
     protected function getEntity(): Model
     {
-        /** @var TContestModel $model */
+        /** @phpstan-var TContestModel $model */
         $model = $this->getBaseEntity();
         try {
             $contest = $model->getReferencedModel(ContestModel::class);

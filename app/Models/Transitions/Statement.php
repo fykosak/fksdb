@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions;
 
 /**
- * @template TGlobalReturn
- * @template TArgType
+ * @phpstan-template TGlobalReturn
+ * @phpstan-template TArgType
  */
 interface Statement
 {

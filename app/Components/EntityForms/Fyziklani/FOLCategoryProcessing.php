@@ -13,7 +13,7 @@ use Nette\Forms\Form;
 class FOLCategoryProcessing extends FormProcessing
 {
     /**
-     * @param array{team:array{category:string,force_a:bool,name:string}} $values
+     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
      * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
@@ -29,7 +29,7 @@ class FOLCategoryProcessing extends FormProcessing
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param PersonModel[] $members
+     * @phpstan-param PersonModel[] $members
      */
     protected function getCategory(array $members, EventModel $event): TeamCategory
     {

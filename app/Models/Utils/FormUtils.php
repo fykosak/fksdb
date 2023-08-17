@@ -11,13 +11,13 @@ use Nette\Utils\ArrayHash;
 class FormUtils
 {
     /**
-     * @template TArray of ArrayHash
+     * @phpstan-template TArray of ArrayHash
      * @phpstan-param TArray $values
      * @phpstan-return TArray
      */
     public static function emptyStrToNull(ArrayHash $values): ArrayHash
     {
-        /** @var TArray $result */
+        /** @phpstan-var TArray $result */
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
@@ -32,7 +32,7 @@ class FormUtils
     }
 
     /**
-     * @template TArray of array
+     * @phpstan-template TArray of array
      * @phpstan-param TArray $values
      * @phpstan-return TArray
      */
@@ -52,7 +52,7 @@ class FormUtils
     }
 
     /**
-     * @template TArray of array
+     * @phpstan-template TArray of array
      * @phpstan-param TArray $values
      * @phpstan-return TArray
      */

@@ -9,7 +9,7 @@ use Nette\Utils\ArrayHash;
 interface Processing
 {
     /**
-     * @param ArrayHash<ArrayHash<mixed>> $values
+     * @phpstan-param ArrayHash<ArrayHash<mixed>> $values
      */
     public function process(ArrayHash $values): void;
 }

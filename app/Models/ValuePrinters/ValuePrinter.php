@@ -8,17 +8,17 @@ use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
 /**
- * @template TValue
+ * @phpstan-template TValue
  */
 abstract class ValuePrinter
 {
     /**
-     * @param TValue|mixed $value
+     * @phpstan-param TValue|mixed $value
      */
     abstract protected function getHtml($value): Html;
 
     /**
-     * @param TValue|mixed $value
+     * @phpstan-param TValue|mixed $value
      */
     public function __invoke($value): Html
     {

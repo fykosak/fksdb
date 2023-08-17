@@ -10,12 +10,12 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class TableRow extends BaseItem
 {
-    /** @var ButtonGroup<TModel>  */
+    /** @phpstan-var ButtonGroup<TModel>  */
     public ButtonGroup $buttons;
 
     public function __construct(Container $container, Title $title)

@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template TContestYearModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TContestYearModel of (Model&\Nette\Security\Resource)
  */
 trait ContestYearEntityTrait
 {
@@ -33,7 +33,7 @@ trait ContestYearEntityTrait
      */
     protected function getEntity(): Model
     {
-        /** @var TContestYearModel $model */
+        /** @phpstan-var TContestYearModel $model */
         $model = $this->getContestEntity();
         try {
             /** @var ContestYearModel $contestYear */

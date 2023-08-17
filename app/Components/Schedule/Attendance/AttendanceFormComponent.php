@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -56,11 +57,15 @@ abstract class AttendanceFormComponent extends FormComponent
             if ($personSchedule->state->value === PersonScheduleState::PARTICIPATED) { // TODO
                 throw new BadRequestException(_('Already participated'));
             }
-            /** @var array{only_check:bool} $values */
+            /** @phpstan-var array{only_check:bool} $values */
             $values = $form->getValues('array');
             if ($values['only_check']) {
                 $this->getPresenter()->flashMessage(
-                    sprintf(_('Person %s applied in %s.'), $person->getFullName(), $personSchedule->getLabel('cs')),
+                    sprintf(
+                        _('Person %s applied in %s.'),
+                        $person->getFullName(),
+                        $personSchedule->getLabel(Language::from($this->translator->lang))
+                    ),
                     Message::LVL_INFO
                 );
             } else {
@@ -69,7 +74,7 @@ abstract class AttendanceFormComponent extends FormComponent
                     sprintf(
                         _('Person %s successfully showed up in %s.'),
                         $person->getFullName(),
-                        $personSchedule->getLabel('cs')
+                        $personSchedule->getLabel(Language::from($this->translator->lang))
                     ),
                     Message::LVL_SUCCESS
                 );

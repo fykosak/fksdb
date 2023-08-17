@@ -16,11 +16,11 @@ class Field
     private FieldFactory $factory;
     /** @var mixed */
     private $default;
-    /** @var bool|(callable(BaseHolder):bool) */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $required;
-    /** @var bool|(callable(BaseHolder):bool) */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $modifiable;
-    /** @var bool|(callable(BaseHolder):bool) */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $visible;
 
     public function __construct(string $name, ?string $label)
@@ -74,7 +74,7 @@ class Field
         return (bool)$this->required;
     }
 
-    /** @param bool|(callable(BaseHolder):bool) $required */
+    /** @phpstan-param bool|(callable(BaseHolder):bool) $required */
     public function setRequired($required): void
     {
         $this->required = $required;
@@ -93,7 +93,7 @@ class Field
         return (bool)$this->modifiable;
     }
 
-    /** @param bool|(callable(BaseHolder):bool) $modifiable */
+    /** @phpstan-param bool|(callable(BaseHolder):bool) $modifiable */
     public function setModifiable($modifiable): void
     {
         $this->modifiable = $modifiable;
@@ -110,7 +110,7 @@ class Field
     }
 
     /**
-     * @param bool|(callable(BaseHolder):bool) $visible
+     * @phpstan-param bool|(callable(BaseHolder):bool) $visible
      */
     public function setVisible($visible): void
     {

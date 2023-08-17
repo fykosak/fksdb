@@ -13,7 +13,7 @@ use Nette\InvalidStateException;
  */
 class CumulativeResultsModel extends AbstractResultsModel
 {
-    /** @var int[] */
+    /** @phpstan-var int[] */
     protected array $series;
 
     /**
@@ -74,7 +74,7 @@ class CumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @param int[] $series
+     * @phpstan-param int[] $series
      */
     public function setSeries(array $series): void
     {

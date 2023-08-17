@@ -21,7 +21,7 @@ use Nette\Utils\Paginator as NettePaginator;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseComponent<TModel>
  */
 abstract class BaseGrid extends BaseComponent
@@ -29,7 +29,7 @@ abstract class BaseGrid extends BaseComponent
     public bool $paginate = true;
     public bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
-    /** @var TableRow<TModel> */
+    /** @phpstan-var TableRow<TModel> */
     public TableRow $tableRow;
 
     public function __construct(DIContainer $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
@@ -70,7 +70,7 @@ abstract class BaseGrid extends BaseComponent
 
     /**
      * @throws BadTypeException|\ReflectionException
-     * @param string[] $fields
+     * @phpstan-param string[] $fields
      */
     protected function addColumns(array $fields): void
     {
@@ -110,6 +110,7 @@ abstract class BaseGrid extends BaseComponent
         /** @phpstan-var PresenterButton<TModel> $button */
         $button = new PresenterButton(
             $this->container,
+            null,
             new Title(null, $factory->getText()),
             fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,

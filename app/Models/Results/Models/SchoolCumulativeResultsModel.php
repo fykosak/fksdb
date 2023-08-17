@@ -15,7 +15,7 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel
 {
-    /** @var int[] */
+    /** @phpstan-var int[] */
     protected array $series;
     /**
      * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
@@ -81,7 +81,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @param int[] $series
+     * @phpstan-param int[] $series
      */
     public function setSeries(array $series): void
     {

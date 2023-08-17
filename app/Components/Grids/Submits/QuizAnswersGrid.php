@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -48,7 +49,8 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): string => $question->getFQName()
+                fn(SubmitQuestionModel $question): string => $question->getFQName(),
+                new Title(null, _('Task'))
             ),
             'name'
         );
@@ -56,7 +58,8 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): string => (string)($question->points ?? 0)
+                fn(SubmitQuestionModel $question): string => (string)($question->points ?? 0),
+                new Title(null, _('Points'))
             ),
             'points'
         );
@@ -70,7 +73,8 @@ class QuizAnswersGrid extends BaseGrid
                         return Html::el('span')->setText($answer->answer);
                     }
                     return Html::el('i')->setAttribute('class', 'text-warning fas fa-slash fa-flip-horizontal');
-                }
+                },
+                new Title(null, _('Answer'))
             ),
             'answer'
         );
@@ -82,7 +86,8 @@ class QuizAnswersGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitQuestionModel $question): string => $question->answer
+                fn(SubmitQuestionModel $question): string => $question->answer,
+                new Title(null, _('Correct answer'))
             ),
             'correct_answer'
         );
@@ -101,7 +106,8 @@ class QuizAnswersGrid extends BaseGrid
                     }
 
                     return Html::el('i')->setAttribute('class', 'text-danger fas fa-times');
-                }
+                },
+                new Title(null, _('Correctness'))
             ),
             'correctness'
         );

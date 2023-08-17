@@ -151,7 +151,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getScheduleGroups(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<ScheduleGroupModel> $selection */
+        $selection = $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
+        return $selection;
     }
 
     /**
@@ -159,7 +161,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getParticipants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<EventParticipantModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
+        return $selection;
     }
 
     /**
@@ -167,7 +171,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getPossiblyAttendingParticipants(): TypedGroupedSelection
     {
-        return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
+        /** @phpstan-var TypedGroupedSelection<EventParticipantModel> $selection */
+        $selection = $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
+        return $selection;
     }
 
     /**
@@ -175,7 +181,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getTeams(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
+        return $selection;
     }
 
     /**
@@ -183,7 +191,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getParticipatingTeams(): TypedGroupedSelection
     {
-        return $this->getTeams()->where('state', TeamState::PARTICIPATED);
+        /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
+        $selection = $this->getTeams()->where('state', TeamState::PARTICIPATED);
+        return $selection;
     }
 
     /**
@@ -191,7 +201,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
-        return $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
+        /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
+        $selection = $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
+        return $selection;
     }
 
     /**
@@ -199,7 +211,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getEventOrgs(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<EventOrgModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+        return $selection;
     }
 
     /**
@@ -207,7 +221,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getPayments(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PAYMENT, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<PaymentModel> $selection */
+        $selection = $this->related(DbNames::TAB_PAYMENT, 'event_id');
+        return $selection;
     }
 
     /**
@@ -215,7 +231,9 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function getTasks(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<\FKSDB\Models\ORM\Models\Fyziklani\TaskModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TASK, 'event_id');
+        return $selection;
     }
 
     /**

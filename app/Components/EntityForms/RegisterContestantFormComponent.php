@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -78,7 +79,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $form->getValues('array');//trigger RPC
-        /** @var ReferencedId<PersonModel> $referencedId */
+        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
         $referencedId = $form[self::CONT_CONTESTANT]['person_id']; //@phpstan-ignore-line
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
@@ -88,7 +89,11 @@ class RegisterContestantFormComponent extends EntityFormComponent
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->sendLoginWithInvitation($person, $email, $this->translator->lang);
+                $this->accountManager->sendLoginWithInvitation(
+                    $person,
+                    $email,
+                    Language::from($this->translator->lang)
+                );
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);

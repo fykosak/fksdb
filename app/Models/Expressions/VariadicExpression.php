@@ -6,7 +6,7 @@ namespace FKSDB\Models\Expressions;
 
 /**
  * @phpstan-extends EvaluatedExpression<bool,bool,ArgType>
- * @template ArgType
+ * @phpstan-template ArgType
  */
 abstract class VariadicExpression extends EvaluatedExpression
 {

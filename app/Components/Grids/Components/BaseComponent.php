@@ -16,7 +16,7 @@ use Nette\DI\Container;
 
 /**
  * @method BasePresenter getPresenter()
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
@@ -73,6 +73,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         /** @phpstan-var PresenterButton<TModel> $button */
         $button = new PresenterButton(
             $this->container,
+            null,
             new Title(null, _($label)),
             fn(Model $model): array => [$destination, $paramMapCallback($model)],
             $className,

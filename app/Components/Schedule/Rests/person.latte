@@ -7,7 +7,7 @@
             <tbody>
             {foreach $rests as $rest}
                 <tr>
-                    <td>{$rest->getLabel('cs')}</td>
+                    <td>{$rest->getLabel(FKSDB\Modules\Core\Language::from('cs'))}</td>
                     <td>{$rest->schedule_item->getPrice()->__toString()}</td>
                 </tr>
             {/foreach}

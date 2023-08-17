@@ -97,7 +97,7 @@ abstract class TeamFormComponent extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
-        /** @var array{team:array{category:string,force_a:bool,name:string}} $values */
+        /** @phpstan-var array{team:array{category:string,force_a:bool,name:string}} $values */
         $values = $form->getValues('array');
         $this->teamService->explorer->beginTransaction();
         try {
@@ -155,7 +155,7 @@ abstract class TeamFormComponent extends EntityFormComponent
             $index = 0;
             /** @var TeamMemberModel $member */
             foreach ($this->model->getMembers() as $member) {
-                /** @var ReferencedId<PersonModel> $referencedId */
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
                 $index++;
@@ -253,7 +253,7 @@ abstract class TeamFormComponent extends EntityFormComponent
     {
         $persons = [];
         for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId<PersonModel> $referencedId */
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
             $referencedId = $form->getComponent('member_' . $member);
             $person = $referencedId->getModel();
             if ($person) {

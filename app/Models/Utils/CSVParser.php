@@ -8,7 +8,8 @@ use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
- * @phpstan-implements \Iterator<array>
+ * @phpstan-template TRow of array
+ * @phpstan-implements \Iterator<TRow>
  */
 class CSVParser implements \Iterator
 {
@@ -22,7 +23,7 @@ class CSVParser implements \Iterator
     private string $delimiter;
     private int $indexType;
     private ?int $rowNumber = null;
-    /** @phpstan-var array<string,string>|null */
+    /** @phpstan-var TRow|null */
     private ?array $currentRow = null;
     /** @phpstan-var array<string,string> */
     private ?array $header;
@@ -38,7 +39,7 @@ class CSVParser implements \Iterator
     }
 
     /**
-     * @phpstan-return array<string,string>
+     * @phpstan-return TRow
      */
     public function current(): array
     {
@@ -56,13 +57,13 @@ class CSVParser implements \Iterator
         if (!$newRow) {
             return;
         }
-        $this->currentRow = $newRow; //@phpstan-ignore-line
+        $this->currentRow = $newRow;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $result = [];
             foreach ($this->header as $i => $name) {
                 $result[$name] = $this->currentRow[$i];
             }
-            $this->currentRow = $result; //@phpstan-ignore-line
+            $this->currentRow = $result;
         }
         $this->rowNumber++;
     }

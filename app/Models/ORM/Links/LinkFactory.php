@@ -10,7 +10,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
 /**
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 abstract class LinkFactory
 {

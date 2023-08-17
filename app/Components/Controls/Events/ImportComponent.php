@@ -41,12 +41,12 @@ class ImportComponent extends BaseComponent
         $form = $control->getForm();
 
         $form->addUpload('file', _('File with applications'))
-            ->addRule(Form::FILLED)
-            ->addRule(
-                Form::MIME_TYPE,
-                _('Only CSV files are accepted.'),
-                'text/plain'
-            );
+            ->addRule(Form::FILLED);
+        /*   ->addRule(
+               Form::MIME_TYPE,
+               _('Only CSV files are accepted.'),
+               'text/csv'
+           );*/
 
         $form->addSubmit('import', _('Import'));
 
@@ -65,7 +65,7 @@ class ImportComponent extends BaseComponent
      */
     private function handleFormImport(Form $form): void
     {
-        /** @var array{file:FileUpload,event_id:int} $values */
+        /** @phpstan-var array{file:FileUpload,event_id:int} $values */
         $values = $form->getValues();
         try {
             // process form values
@@ -75,7 +75,6 @@ class ImportComponent extends BaseComponent
             foreach ($parser as $row) {
                 $values = [];
                 foreach ($row as $columnName => $value) {
-                    //value jsem změnil na values
                     $values[$columnName] = $value;
                 }
                 $values['event_id'] = $this->event->event_id;
@@ -87,7 +86,6 @@ class ImportComponent extends BaseComponent
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import failed.'), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
-            //myslím, že to hromadný import kazí tenhle rollBack
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
         }

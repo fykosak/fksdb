@@ -8,15 +8,15 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
 /**
- * @template TRow
- * @template TParam of array
+ * @phpstan-template TRow
+ * @phpstan-template TParam of array
  */
 final class ProviderComponent extends BaseComponent
 {
     /** @phpstan-var AbstractPageComponent<TRow,TParam> */
     private AbstractPageComponent $pageComponent;
     /**
-     * @var iterable<TRow>
+     * @phpstan-var iterable<TRow>
      */
     private iterable $items;
 
@@ -43,7 +43,7 @@ final class ProviderComponent extends BaseComponent
     }
 
     /**
-     * @param TParam $params
+     * @phpstan-param TParam $params
      */
     public function renderPrint(array $params = []): void
     {
@@ -55,7 +55,7 @@ final class ProviderComponent extends BaseComponent
     }
 
     /**
-     * @param TParam $params
+     * @phpstan-param TParam $params
      */
     public function renderPreview(array $params = []): void
     {

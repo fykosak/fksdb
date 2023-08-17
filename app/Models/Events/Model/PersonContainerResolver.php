@@ -24,8 +24,8 @@ class PersonContainerResolver implements Resolver
     private SelfResolver $selfResolver;
 
     /**
-     * @param callable(BaseHolder):bool|bool $modifiableCondition
-     * @param callable(BaseHolder):bool|bool $visibleCondition
+     * @phpstan-param callable(BaseHolder):bool|bool $modifiableCondition
+     * @phpstan-param callable(BaseHolder):bool|bool $visibleCondition
      */
     public function __construct(
         Field $field,

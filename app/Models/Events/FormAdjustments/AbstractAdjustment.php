@@ -12,7 +12,7 @@ use Nette\Forms\Form;
 use Nette\SmartObject;
 
 /**
- * @template THolder of ModelHolder
+ * @phpstan-template THolder of ModelHolder
  * @phpstan-implements FormAdjustment<THolder>
  */
 abstract class AbstractAdjustment implements FormAdjustment

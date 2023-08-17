@@ -20,7 +20,7 @@ use Nette\Forms\Controls\HiddenField;
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
  * it should always be run inside a transaction.
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 class ReferencedId extends HiddenField
 {

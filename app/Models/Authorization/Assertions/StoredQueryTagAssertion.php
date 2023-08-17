@@ -15,12 +15,12 @@ class StoredQueryTagAssertion implements Assertion
     use SmartObject;
 
     /**
-     * @var string[]
+     * @phpstan-var string[]
      */
     private array $tagNames;
 
     /**
-     * @param string[] $tagNames
+     * @phpstan-param string[] $tagNames
      */
     public function __construct(array $tagNames)
     {

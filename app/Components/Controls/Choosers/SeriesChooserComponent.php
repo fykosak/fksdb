@@ -12,11 +12,11 @@ final class SeriesChooserComponent extends ChooserComponent
 {
 
     private int $series;
-    /** @var int[] */
+    /** @phpstan-var int[] */
     private array $allowedSeries;
 
     /**
-     * @param int[] $allowedSeries
+     * @phpstan-param int[] $allowedSeries
      */
     public function __construct(Container $container, int $series, array $allowedSeries)
     {

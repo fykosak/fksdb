@@ -22,11 +22,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
+ * @phpstan-template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
  */
 class AttendanceComponent extends FormComponent
 {
-    /** @var Machine<THolder> */
+    /** @phpstan-var Machine<THolder> */
     protected Machine $machine;
     private EventModel $event;
 

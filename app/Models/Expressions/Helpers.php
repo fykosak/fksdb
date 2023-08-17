@@ -59,7 +59,7 @@ class Helpers
     }
 
     /**
-     * @template AValue of array
+     * @phpstan-template AValue of array
      * @phpstan-param AValue $expressionArray
      * @phpstan-return AValue
      */

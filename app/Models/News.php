@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models;
 
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -19,12 +20,12 @@ class News
         $this->container = $container;
     }
 
-    public function getNews(ContestModel $contest, string $lang): array
+    public function getNews(ContestModel $contest, Language $lang): array
     {
-        if (!isset($this->container->getParameters()[$contest->getContestSymbol()]['news'][$lang])) {
+        if (!isset($this->container->getParameters()[$contest->getContestSymbol()]['news'][$lang->value])) {
             return [];
         }
-        $news = $this->container->getParameters()[$contest->getContestSymbol()]['news'][$lang];
+        $news = $this->container->getParameters()[$contest->getContestSymbol()]['news'][$lang->value];
         if ($news) {
             return $news;
         } else {

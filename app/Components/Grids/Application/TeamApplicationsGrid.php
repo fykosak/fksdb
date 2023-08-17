@@ -14,7 +14,9 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<TeamModel2>
+ * @phpstan-extends FilterGrid<TeamModel2,array{
+ *     status?:string,
+ * }>
  */
 class TeamApplicationsGrid extends FilterGrid
 {
@@ -32,10 +34,10 @@ class TeamApplicationsGrid extends FilterGrid
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
         foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
+            }
             switch ($key) {
                 case 'status':
                     $query->where('state', $filterParam);

@@ -8,7 +8,7 @@ use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Transitions\Statement;
 
 /**
- * @template ArgType
+ * @phpstan-template ArgType
  * @phpstan-implements Statement<bool,ArgType>
  */
 abstract class EventRole implements Statement

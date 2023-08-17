@@ -44,7 +44,7 @@ class EventDispatchFactory
     }
 
     /**
-     * @param string[] $key
+     * @phpstan-param string[] $key
      */
     public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
     {

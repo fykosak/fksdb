@@ -54,7 +54,7 @@ class TableMerger
     }
 
     /**
-     * @template TLocalValue
+     * @phpstan-template TLocalValue
      * @phpstan-param MergeStrategy<TLocalValue>|null $mergeStrategy
      */
     public function setColumnMergeStrategy(string $column, ?MergeStrategy $mergeStrategy = null): void

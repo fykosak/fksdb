@@ -16,7 +16,9 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<EventParticipantModel>
+ * @phpstan-extends FilterGrid<EventParticipantModel,array{
+ *     status?:string,
+ * }>
  */
 class SingleApplicationsGrid extends FilterGrid
 {
@@ -77,10 +79,10 @@ class SingleApplicationsGrid extends FilterGrid
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getParticipants();
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
         foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
+            }
             switch ($key) {
                 case 'status':
                     $query->where('event_participant.status', $filterParam);

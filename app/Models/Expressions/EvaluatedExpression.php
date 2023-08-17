@@ -8,9 +8,9 @@ use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
 /**
- * @template GlobalReturn
- * @template SubReturn
- * @template ArgType
+ * @phpstan-template GlobalReturn
+ * @phpstan-template SubReturn
+ * @phpstan-template ArgType
  * @phpstan-implements Statement<GlobalReturn,ArgType>
  */
 abstract class EvaluatedExpression implements Statement

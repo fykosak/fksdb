@@ -43,14 +43,14 @@ class PerYearsChart extends FrontEndComponent implements Chart
             ->select('COUNT(DISTINCT contestant_id) AS count, task.year');
 
         $data = [];
-        /** @var object{year:number,series:number,count:int} $row */
+        /** @phpstan-var object{year:number,series:number,count:int} $row */
         foreach ($seriesQuery as $row) {
             $year = (int)$row->year;
             $series = (int)$row->series;
             $data[$year] = $data[$year] ?? [];
             $data[$year][$series] = (int)$row->count;
         }
-        /** @var object{year:number,count:int} $row */
+        /** @phpstan-var object{year:number,count:int} $row */
         foreach ($yearsQuery as $row) {
             $year = (int)$row->year;
             $data[$year] = $data[$year] ?? [];

@@ -4,27 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Warehouse;
 
-use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use Nette\DI\Container;
+use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @phpstan-extends EntityGrid<ProductModel>
+ * @phpstan-extends BaseGrid<ProductModel>
  */
-class ProductsGrid extends EntityGrid
+class ProductsGrid extends BaseGrid
 {
+    private ProductService $service;
 
-    public function __construct(Container $container)
+    public function inject(ProductService $service): void
     {
-        parent::__construct($container, ProductService::class, [
-            'warehouse_product.product_id',
-            'warehouse_product.name_cs',
-            'warehouse_product.name_en',
-            'warehouse_product.category',
-            'warehouse_producer.name',
-        ]);
+        $this->service = $service;
+    }
+
+    /**
+     * @phpstan-return TypedSelection<ProductModel>
+     */
+    protected function getModels(): TypedSelection
+    {
+        return $this->service->getTable();
     }
 
     /**
@@ -33,7 +36,13 @@ class ProductsGrid extends EntityGrid
      */
     protected function configure(): void
     {
-        parent::configure();
+        $this->addColumns([
+            'warehouse_product.product_id',
+            'warehouse_product.name_cs',
+            'warehouse_product.name_en',
+            'warehouse_product.category',
+            'warehouse_producer.name',
+        ]);
         $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }
 }

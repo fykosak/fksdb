@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TFilterParams of array
  * @phpstan-extends BaseGrid<TModel>
  */
 abstract class FilterGrid extends BaseGrid
 {
+    /** @phpstan-use FilterTrait<TFilterParams> */
     use FilterTrait;
 
     public function render(): void

@@ -48,7 +48,7 @@ class UploadedStorage implements SubmitStorage
      * @var string
      */
     private string $filenameMask;
-    /** @var StorageProcessing[] */
+    /** @phpstan-var StorageProcessing[] */
     private array $processings = [];
 
     public function __construct(string $root, string $directoryMask, string $filenameMask)

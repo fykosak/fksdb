@@ -53,7 +53,7 @@ class HandoutFormComponent extends BaseComponent
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(
                 false,
-                $task->label . ' ' . $task->name_cs,
+                $task->label . ' ' . $task->name->getText($this->translator->lang),
                 $orgProvider
             );
             $control->setMultiSelect(true);
@@ -71,7 +71,7 @@ class HandoutFormComponent extends BaseComponent
      */
     public function handleFormSuccess(Form $form): void
     {
-        /** @var array<string,int[]> $values */
+        /** @phpstan-var array<string,int[]> $values */
         $values = $form->getValues('array');
         $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();

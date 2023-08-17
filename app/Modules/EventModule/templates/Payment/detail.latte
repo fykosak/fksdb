@@ -67,7 +67,7 @@
                 {foreach $model->getRelatedPersonSchedule() as $personSchedule}
                     {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
                     <tr>
-                        <td>{$personSchedule->getLabel($lang)}</td>
+                        <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
                         <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
                     </tr>
                 {/foreach}

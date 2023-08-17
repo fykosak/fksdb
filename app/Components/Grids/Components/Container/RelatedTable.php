@@ -10,16 +10,16 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
- * @template TRelatedModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TRelatedModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class RelatedTable extends BaseItem
 {
-    /** @var callable(TModel):iterable<TRelatedModel> */
+    /** @phpstan-var callable(TModel):iterable<TRelatedModel> */
     private $modelToIterator;
     private bool $head;
-    /** @var TableRow<TRelatedModel> */
+    /** @phpstan-var TableRow<TRelatedModel> */
     public TableRow $tableRow;
 
     /**
@@ -35,7 +35,7 @@ class RelatedTable extends BaseItem
     }
 
     /**
-     * @param TModel $model
+     * @phpstan-param TModel $model
      */
     public function render(Model $model, int $userPermission): void
     {

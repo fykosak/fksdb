@@ -15,7 +15,7 @@ class BrojureResultsModel extends AbstractResultsModel
 {
 
     public const COL_SERIES_PREFIX = 's';
-    /** @var int[] */
+    /** @phpstan-var int[] */
     protected array $series;
     /**
      * Number of (single) series that is listed in detail
@@ -87,7 +87,7 @@ class BrojureResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @param int[] $series
+     * @phpstan-param int[] $series
      */
     public function setSeries(array $series): void
     {
