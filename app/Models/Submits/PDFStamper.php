@@ -7,6 +7,9 @@ namespace FKSDB\Models\Submits;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
+
+Debugger::$logDirectory = '/var/www/html/fksdb/log';
 
 class PDFStamper implements StorageProcessing
 {
@@ -74,20 +77,20 @@ class PDFStamper implements StorageProcessing
 
     private function stampText(string $text): void
     {
-        $pdf = new \FPDI();
+        $pdf = new PDF();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
-
+        Debugger::log('hello world');
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
-            $orientation = $specs['h'] > $specs['w'] ? 'P' : 'L';
+            $orientation = $specs['orientation'];
             $pdf->AddPage($orientation);
-            $pdf->useTemplate($tpl, 1, 1, 0, 0, true);
+            $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
             $pdf->SetFont('Courier', 'b', $this->getFontSize());
-            $pdf->SetTextColor(0, 0, 0);// @phpstan-ignore-line
+            $pdf->SetDrawColor(0, 0, 0);// @phpstan-ignore-line
             $pw = 210; // pagewidth, A4 210 mm
             $offset = 7; // vertical offset
             $tw = $pdf->GetStringWidth($actText); // @phpstan-ignore-line
