@@ -15,7 +15,6 @@ use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 /**
  * @phpstan-type MetaItem array{
