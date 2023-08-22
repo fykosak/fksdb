@@ -15,6 +15,7 @@ use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
+use Tracy\Debugger;
 
 /**
  * @phpstan-type MetaItem array{
@@ -34,7 +35,7 @@ class DBReflectionFactory extends AbstractFactory
 
     private Connection $connection;
     /** @phpstan-var array<string,MetaItem> */
-    private array $columns = [];
+    private array $columns;
     private ORMFactory $tableReflectionFactory;
 
     public function __construct(
