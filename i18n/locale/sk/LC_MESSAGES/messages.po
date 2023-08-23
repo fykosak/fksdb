@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 18:40+0200\n"
+"POT-Creation-Date: 2023-08-23 19:07+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2322,7 +2322,7 @@ msgstr "Registrácia"
 
 #: ../app/Components/Schedule/Input/ScheduleGroupField.php:28
 #, php-format
-msgid "%s - - end of registration: %s"
+msgid "%s -- end of registration: %s"
 msgstr ""
 
 #: ../app/Components/Schedule/Input/ScheduleGroupField.php:40
@@ -3622,6 +3622,7 @@ msgid "Organizer %s"
 msgstr ""
 
 #: ../app/Modules/CoreModule/RegisterPresenter.php:97
+#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:50
 #, fuzzy, php-format
 msgid "Register to %s"
 msgstr "Registrácia"
@@ -3794,19 +3795,14 @@ msgstr "Registrácia"
 
 #: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:45
 msgid ""
-"Physics correspondence competition of CUNI FMP for high-school students."
+"Physics correspondence competition of CUNI MFF for high-school students."
 msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:47
 msgid ""
-"Physics correspondence seminar of CUNI FMP for the students of elementary "
+"Physics correspondence seminar of CUNI MFF for the students of elementary "
 "schools."
 msgstr ""
-
-#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:50
-#, fuzzy, php-format
-msgid "Register to %s!"
-msgstr "Registrácia"
 
 #: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:62
 #: ../app/Modules/ProfileModule/templates/MyApplications.default.latte.latte2php:22
@@ -4758,7 +4754,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/BasePresenter.php:33
 #, fuzzy
-msgid "Contestant nof found"
+msgid "Contestant not found"
 msgstr "Nová platba"
 
 #: ../app/Modules/PublicModule/BasePresenter.php:68
@@ -6677,6 +6673,10 @@ msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
 #~ msgid "Register into competition"
+#~ msgstr "Registrácia"
+
+#, fuzzy, php-format
+#~ msgid "Register to %s!"
 #~ msgstr "Registrácia"
 
 #, fuzzy

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 18:40+0200\n"
+"POT-Creation-Date: 2023-08-23 19:07+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3519,8 +3519,9 @@ msgid "Organizer %s"
 msgstr "Organizátor %s"
 
 #: ../app/Modules/CoreModule/RegisterPresenter.php:97
+#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:50
 #, php-format
-msgid "Register to %s!"
+msgid "Register to %s"
 msgstr "Zaregistrovat se do soutěže %s!"
 
 #: ../app/Modules/CoreModule/RegisterPresenter.php:99
@@ -3694,11 +3695,6 @@ msgid ""
 "schools."
 msgstr ""
 "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií."
-
-#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:50
-#, php-format
-msgid "Register to %s!"
-msgstr "Zaregistrovat se do soutěže %s!"
 
 #: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:62
 #: ../app/Modules/ProfileModule/templates/MyApplications.default.latte.latte2php:22
