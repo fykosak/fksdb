@@ -10,6 +10,11 @@ use FKSDB\Models\ORM\Services\PaymentService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{
+ *     event_id:int,
+ * },array<string|int,mixed>>
+ */
 class PaymentListWebModel extends WebModel
 {
     private PaymentService $paymentService;

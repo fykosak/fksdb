@@ -31,7 +31,9 @@ class CodeCloseForm extends FormComponent
     {
         $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
-            $code = $form->getValues('array')['code'];
+            /** @phpstan-var array{code:string} $values */
+            $values = $form->getValues('array');
+            $code = $values['code'];
             $team = $codeProcessor->getTeam($code);
             $expectedTask = $this->handler->getNextTask($team);
             try {

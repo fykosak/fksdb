@@ -13,7 +13,7 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * @property SubmitModel $model
+ * @phpstan-extends EntityFormComponent<SubmitModel>
  */
 class FyziklaniSubmitFormComponent extends EntityFormComponent
 {
@@ -37,10 +37,13 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{points:int} $values
+         */
+        $values = $form->getValues('array');
         try {
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
-            $handler->edit($this->model, +$values['points']);
+            $handler->edit($this->model, (int)$values['points']);
             FlashMessageDump::dump($handler->logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {

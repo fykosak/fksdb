@@ -26,6 +26,9 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-extends ReferencedHandler<PersonModel>
+ */
 class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;
@@ -39,14 +42,14 @@ class ReferencedPersonHandler extends ReferencedHandler
     private PostContactService $postContactService;
 
     private PersonHasFlagService $personHasFlagService;
-    private ContestYearModel $contestYear;
+    private ?ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
     private FlagService $flagService;
     private Container $container;
 
     private EventModel $event;
 
-    public function __construct(ContestYearModel $contestYear, ResolutionMode $resolution)
+    public function __construct(?ContestYearModel $contestYear, ResolutionMode $resolution)
     {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
@@ -74,6 +77,10 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
+     * @phpstan-param array{
+     *     person_info:array{email?:string},
+     *     person:array<string,mixed>,
+     * }|array<string,array<string,mixed>> $values
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws ScheduleException
@@ -87,6 +94,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             return $model;
         } else {
             $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            /** @phpstan-ignore-next-line */
             $person = $this->storePerson($person, (array)$values['person']);
             $this->innerStore($person, $values);
             return $person;
@@ -104,6 +112,7 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
+     * @phpstan-param array<string,array<string,mixed>> $data
      */
     private function innerStore(PersonModel $person, array $data): void
     {
@@ -119,6 +128,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
 
             if (isset($data['person'])) {
+                /** @phpstan-ignore-next-line */
                 $this->storePerson($person, (array)$data['person']);
             }
 
@@ -159,6 +169,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         }
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $infoData
+     */
     private function storePersonInfo(PersonModel $person, array $infoData): void
     {
         $info = $person->getInfo();
@@ -171,8 +184,14 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $historyData
+     */
     private function storePersonHistory(PersonModel $person, array $historyData): void
     {
+        if (!isset($this->contestYear)) {
+            throw new \InvalidArgumentException('Cannot store person_history without ContestYear');
+        }
         $history = $person->getHistoryByContestYear($this->contestYear);
         $this->personHistoryService->storeModel(
             array_merge(
@@ -186,6 +205,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $flagData
+     */
     private function storeFlags(PersonModel $person, array $flagData): void
     {
         foreach ($flagData as $flagId => $flagValue) {
@@ -200,7 +222,9 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
         }
     }
-
+    /**
+     * @phpstan-param array<string,mixed> $data
+     */
     private function storePostContact(
         PersonModel $person,
         array $data,
@@ -230,14 +254,17 @@ class ReferencedPersonHandler extends ReferencedHandler
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return PostContactType::tryFrom(PostContactType::PERMANENT);
+                return PostContactType::from(PostContactType::PERMANENT);
             case self::POST_CONTACT_DELIVERY:
-                return PostContactType::tryFrom(PostContactType::DELIVERY);
+                return PostContactType::from(PostContactType::DELIVERY);
             default:
                 throw new InvalidArgumentException();
         }
     }
 
+    /**
+     * @phpstan-param array{gender?:string,family_name:string} $personData
+     */
     private function storePerson(?PersonModel $person, array $personData): PersonModel
     {
         return $this->personService->storeModel(
@@ -253,7 +280,7 @@ class ReferencedPersonHandler extends ReferencedHandler
         ?PersonModel $person,
         string $sub,
         string $field,
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear = null,
         ?EventModel $event = null
     ) {
         if (!$person) {
@@ -272,13 +299,16 @@ class ReferencedPersonHandler extends ReferencedHandler
                 }
                 return $result;
             case 'person_history':
+                if (!isset($contestYear)) {
+                    throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
+                }
                 return ($history = $person->getHistoryByContestYear($contestYear))
                     ? $history->{$field}
                     : null;
             case 'post_contact_d':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+                return $person->getPostContact(PostContactType::from(PostContactType::DELIVERY));
             case 'post_contact_p':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
+                return $person->getPostContact(PostContactType::from(PostContactType::PERMANENT));
             case 'person_has_flag':
                 return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
             default:

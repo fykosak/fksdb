@@ -11,23 +11,23 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Security\User;
 
 /**
- * @property PaymentModel|null $model
+ * @phpstan-extends EntityFormComponent<PaymentModel>
  */
 class PaymentFormComponent extends EntityFormComponent
 {
@@ -38,12 +38,13 @@ class PaymentFormComponent extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
-    private User $user;
     private EventModel $event;
+    private PersonModel $loggedPerson;
 
     public function __construct(
         Container $container,
         EventModel $event,
+        PersonModel $loggedPerson,
         bool $isOrg,
         PaymentMachine $machine,
         ?PaymentModel $model
@@ -52,17 +53,16 @@ class PaymentFormComponent extends EntityFormComponent
         $this->machine = $machine;
         $this->isOrg = $isOrg;
         $this->event = $event;
+        $this->loggedPerson = $loggedPerson;
     }
 
     final public function injectPrimary(
-        User $user,
         PaymentService $paymentService,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         SchedulePaymentService $schedulePaymentService,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
-        $this->user = $user;
         $this->paymentService = $paymentService;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
@@ -98,6 +98,7 @@ class PaymentFormComponent extends EntityFormComponent
             new PersonPaymentContainer(
                 $this->getContext(),
                 $this->event,
+                $this->loggedPerson,
                 $this->isOrg,
                 $this->model
             ),
@@ -113,9 +114,8 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
         $values = $form->getValues('array');
-        /** @var LoginModel $login */
-        $login = $this->user->getIdentity();
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
@@ -123,11 +123,15 @@ class PaymentFormComponent extends EntityFormComponent
                 [
                     'event_id' => $this->event->event_id,
                     'currency' => $values['currency'],
-                    'person_id' => $this->isOrg ? $values['person_id'] : $login->person->person_id,
+                    'person_id' => $this->isOrg ? $values['person_id'] : $this->loggedPerson->person_id,
                 ],
                 $this->model
             );
-            $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
+            $this->schedulePaymentService->storeItems(
+                (array)$values['items'],
+                $model,
+                Language::from($this->translator->lang)
+            );
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $transition = $this->machine->getImplicitTransition($holder);

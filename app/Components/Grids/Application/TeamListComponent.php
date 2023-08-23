@@ -23,6 +23,15 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterList<TeamModel2,array{
+ *     category?:string|null,
+ *     game_lang?:string|null,
+ *     name?:string|null,
+ *     state?:string|null,
+ *     team_id?:int|null,
+ *     }>
+ */
 class TeamListComponent extends FilterList
 {
     private EventModel $event;
@@ -47,8 +56,12 @@ class TeamListComponent extends FilterList
     {
         $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
         $this->setTitle(
-            new TemplateItem($this->container, '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>')
+            new TemplateItem(// @phpstan-ignore-line
+                $this->container,
+                '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>'
+            )
         );
+        /** @phpstan-var RowContainer<TeamModel2> $row */
         $row = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row, 'row0');
         $row->addComponent(
@@ -67,6 +80,7 @@ class TeamListComponent extends FilterList
             new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
             'phone'
         );
+        /** @phpstan-ignore-next-line */
         $memberList = new RelatedTable($this->container, function (TeamModel2 $team): array {
             $members = [];
             /** @var TeamMemberModel $member */
@@ -76,19 +90,26 @@ class TeamListComponent extends FilterList
             return $members;
         }, new Title(null, _('Members')));
         $this->addRow($memberList, 'members');
-        $memberList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
-        $memberList->addColumn(new TemplateItem($this->container, '@school.school'), 'school');
+        $memberList->addColumn(
+            new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'),
+            'name'
+        );
+        $memberList->addColumn(new TemplateItem($this->container, '@school.school', '@school.school:title'), 'school');
 
         $teacherList = new RelatedTable(
             $this->container,
-            fn(TeamModel2 $team): iterable => $team->getTeachers(),
+            fn(TeamModel2 $team): iterable => $team->getTeachers(),  //@phpstan-ignore-line
             new Title(null, _('Teachers'))
         );
         $this->addRow($teacherList, 'teachers');
-        $teacherList->addColumn(new TemplateItem($this->container, '@person.full_name'), 'name');
+        $teacherList->addColumn(
+            new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'),
+            'name'
+        );
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
             ),
@@ -96,31 +117,31 @@ class TeamListComponent extends FilterList
         );
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
-        foreach ($this->filterParams as $key => $value) {
-            if (is_null($value)) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (is_null($filterParam)) {
                 continue;
             }
             switch ($key) {
                 case 'category':
-                    $query->where('category', $value);
+                    $query->where('category', $filterParam);
                     break;
                 case 'game_lang':
-                    $query->where('game_lang', $value);
+                    $query->where('game_lang', $filterParam);
                     break;
                 case 'name':
-                    $query->where('name LIKE ?', '%' . $value . '%');
+                    $query->where('name LIKE ?', '%' . $filterParam . '%');
                     break;
                 case 'state':
-                    $query->where('state', $value);
+                    $query->where('state', $filterParam);
                     break;
                 case 'team_id':
-                    $query->where('fyziklani_team_id', $value);
+                    $query->where('fyziklani_team_id', $filterParam);
             }
         }
         return $query;

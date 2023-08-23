@@ -4,36 +4,44 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
-class EventsGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<EventModel>
+ */
+class EventsGrid extends BaseGrid
 {
+    private EventService $service;
+    private ContestYearModel $contestYear;
 
     public function __construct(Container $container, ContestYearModel $contestYear)
     {
-        parent::__construct($container, EventService::class, [
-            'event.event_id',
-            'event.event_type',
-            'event.name',
-            'event.year',
-            'event.event_year',
-        ], [
-            'event_type.contest_id' => $contestYear->contest_id,
-            'year' => $contestYear->year,
-        ]);
+        parent::__construct($container);
+        $this->contestYear = $contestYear;
     }
 
+    public function inject(EventService $service): void
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     protected function getModels(): TypedSelection
     {
-        $value = parent::getModels();
-        $value->order('event.begin ASC');
-        return $value;
+        return $this->service->getTable()->where([
+            'event_type.contest_id' => $this->contestYear->contest_id,
+            'year' => $this->contestYear->year,
+        ])->order('event.begin ASC');
     }
+
 
     /**
      * @throws BadTypeException
@@ -41,12 +49,17 @@ class EventsGrid extends EntityGrid
      */
     protected function configure(): void
     {
-        parent::configure();
-
+        $this->addColumns([
+            'event.event_id',
+            'event.event_type',
+            'event.name',
+            'event.year',
+            'event.event_year',
+        ]);
         $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-       // $this->addORMLink('event.application.list');
+        // $this->addORMLink('event.application.list');
 
         $this->addPresenterButton(':Event:EventOrg:list', 'org', _('Organizers'), true, ['eventId' => 'event_id']);
     }

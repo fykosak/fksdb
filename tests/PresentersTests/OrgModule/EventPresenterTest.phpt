@@ -36,6 +36,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
             'begin' => new DateTime(),
             'end' => new DateTime(),
             'name' => 'Dummy Event',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ]);
     }
 
@@ -60,6 +62,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ]);
         Assert::type(RedirectResponse::class, $response);
@@ -78,6 +82,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ]);
 
@@ -97,6 +103,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event edited',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ], [
             'id' => $this->event->event_id,

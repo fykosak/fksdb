@@ -10,19 +10,24 @@ use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Service;
 
+/**
+ * @phpstan-extends Service<SchedulePaymentModel>
+ */
 final class SchedulePaymentService extends Service
 {
 
     /**
-     * @throws DuplicatePaymentException
+     * @phpstan-param array<array<int,bool>> $data
      * @throws EmptyDataException
      * @throws StorageException
      * @throws ModelException
+     * @throws DuplicatePaymentException
      */
-    public function storeItems(array $data, PaymentModel $payment, string $lang): void
+    public function storeItems(array $data, PaymentModel $payment, Language $lang): void
     {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
@@ -34,7 +39,7 @@ final class SchedulePaymentService extends Service
         }
         $payment->getSchedulePayment()->delete();
         foreach ($newScheduleIds as $id) {
-            /** @var SchedulePaymentModel $model */
+            /** @var SchedulePaymentModel|null $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
                 ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
                 ->fetch();
@@ -50,6 +55,10 @@ final class SchedulePaymentService extends Service
         }
     }
 
+    /**
+     * @phpstan-param array<array<int,bool>> $data
+     * @phpstan-return array<int,int>
+     */
     private function filerData(array $data): array
     {
         $results = [];

@@ -4,41 +4,44 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transition;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-template TMachine of Machine
+ */
 class MassTransitionsComponent extends BaseComponent
 {
-    use TransitionComponent;
+    /** @phpstan-var TMachine */
+    protected Machine $machine;
+    private EventModel $event;
 
-    public function __construct(Container $container, EventModel $event)
+    /**
+     * @phpstan-param TMachine $machine
+     */
+    public function __construct(Container $container, Machine $machine, EventModel $event)
     {
         parent::__construct($container);
         $this->event = $event;
+        $this->machine = $machine;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
-        $this->template->transitions = $this->getMachine()->getTransitions();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'mass.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'mass.latte', [
+            'transitions' => $this->machine->getTransitions(),
+        ]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function handleTransition(string $name): void
     {
         $total = 0;
         $errored = 0;
-        $machine = $this->getMachine();
-        $transition = $this->getMachine()->getTransitionById($name);
+        $transition = $this->machine->getTransitionById($name);
         if ($this->event->isTeamEvent()) {
             $query = $this->event->getTeams();
         } else {
@@ -46,10 +49,10 @@ class MassTransitionsComponent extends BaseComponent
         }
         /** @var EventParticipantModel|TeamModel2 $model */
         foreach ($query as $model) {
-            $holder = $machine->createHolder($model);
+            $holder = $this->machine->createHolder($model);
             $total++;
             try {
-                $machine->execute($transition, $holder);
+                $this->machine->execute($transition, $holder);
             } catch (\Throwable $exception) {
                 $errored++;
             }

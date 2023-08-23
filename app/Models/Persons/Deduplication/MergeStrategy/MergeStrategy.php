@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
+/**
+ * @phpstan-template TValue
+ */
 interface MergeStrategy
 {
-
     /**
-     * @template T
-     * @param T $trunk
-     * @param T $merged
+     * @phpstan-param TValue $trunk
+     * @phpstan-param TValue $merged
+     * @phpstan-return TValue
      * @throws CannotMergeException
-     * @return T
      */
     public function mergeValues($trunk, $merged);
 }

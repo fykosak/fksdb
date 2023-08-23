@@ -20,14 +20,11 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
-/**
- * @method QueryModel getEntity()
- */
-class ExportPresenter extends BasePresenter
+final class ExportPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
-    private const PARAM_HTTP_AUTH = 'ha';
     private QueryService $queryService;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
@@ -119,13 +116,13 @@ class ExportPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'compose':
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
                 $this->forward(':Org:StoredQuery:list', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
@@ -176,6 +173,10 @@ class ExportPresenter extends BasePresenter
         return false;
     }
 
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
     protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();

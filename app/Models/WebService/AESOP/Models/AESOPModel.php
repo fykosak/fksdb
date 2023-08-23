@@ -68,6 +68,11 @@ abstract class AESOPModel
         return 'ufo';
     }
 
+    /**
+     * @phpstan-param string[] $params
+     * @phpstan-param iterable<Row> $data
+     * @phpstan-param string[] $cools
+     */
     public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
     {
         $text = '';
@@ -76,14 +81,11 @@ abstract class AESOPModel
             $text .= $key . "\t" . $value . "\n";
         }
         $text .= "\n";
-        /** @var Row $datum */
         $text .= join("\t", $cools) . "\n";
         foreach ($data as $datum) {
             $text .= join("\t", iterator_to_array($datum->getIterator())) . "\n";
         }
-        $response = new PlainTextResponse($text);
-        $response->setName($this->getMask() . '.txt');
-        return $response;
+        return new PlainTextResponse($text, $this->getMask() . '.txt');
     }
 
     protected function getAESOPContestant(PersonModel $person): array

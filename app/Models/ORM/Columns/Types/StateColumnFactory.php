@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Badges\NotSetBadge;
-use Nette\Forms\Controls\SelectBox;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ * @phpstan-template ArgType
+ */
 class StateColumnFactory extends ColumnFactory
 {
+    /** @phpstan-var array<string,array{badge:string,label:string}> */
     protected array $states = [];
 
     protected function createHtmlValue(Model $model): Html
@@ -24,11 +29,17 @@ class StateColumnFactory extends ColumnFactory
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
     }
 
+    /**
+     * @phpstan-param array<string,array{badge:string,label:string}> $states
+     */
     public function setStates(array $states): void
     {
         $this->states = $states;
     }
 
+    /**
+     * @phpstan-return array{badge:string,label:string}
+     */
     public function getState(string $state): array
     {
         if (isset($this->states[$state])) {
@@ -42,6 +53,9 @@ class StateColumnFactory extends ColumnFactory
         return new SelectBox($this->getTitle(), $this->getItems());
     }
 
+    /**
+     * @phpstan-return array<string,string>
+     */
     protected function getItems(): array
     {
         $data = [];

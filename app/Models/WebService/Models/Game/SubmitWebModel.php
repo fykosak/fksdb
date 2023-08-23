@@ -14,6 +14,9 @@ use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class SubmitWebModel extends WebModel
 {
     protected EventService $eventService;
@@ -33,10 +36,19 @@ class SubmitWebModel extends WebModel
         ]);
     }
 
+    /**
+     * @phpstan-param array{
+     *     method:string,
+     *     event_id:int,
+     *     code:string,
+     *     points:int,
+     * } $params
+     * @phpstan-return Message[]
+     */
     public function getJsonResponse(array $params): array
     {
         try {
-            /** @var EventModel $event */
+            /** @var EventModel|null $event */
             $event = $this->eventService->findByPrimary($params['event_id']);
             if (!$event) {
                 throw new BadRequestException();

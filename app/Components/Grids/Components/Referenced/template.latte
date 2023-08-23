@@ -1,8 +1,6 @@
-{varType Fykosak\NetteORM\Model|null $model}
-{varType string $templateString}
-{varType int|null $userPermission}
 {varType Fykosak\Utils\UI\Title|null $title}
+{varType Nette\Utils\Html|string $html}
 <span title="{$title->title}">
-        {control printer:templateString $templateString, $model, $userPermission}
+        {$html|noescape}
 </span>
 

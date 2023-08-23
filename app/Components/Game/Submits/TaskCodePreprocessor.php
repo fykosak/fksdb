@@ -23,7 +23,7 @@ final class TaskCodePreprocessor
     public function getTeam(string $code): TeamModel2
     {
         $teamId = self::extractTeamId($code);
-        /** @var TeamModel2 $team */
+        /** @var TeamModel2|null $team */
         $team = $this->event->getTeams()->where('fyziklani_team_id', $teamId)->fetch();
         if (!$team) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exist.'), $teamId));
@@ -40,7 +40,7 @@ final class TaskCodePreprocessor
         if ($taskLabel === 'XX') {
             throw new NoTaskLeftException();
         }
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $this->event->getTasks()->where('label', $taskLabel)->fetch();
         if (!$task) {
             throw new TaskCodeException(\sprintf(_('Task %s does not exist.'), $taskLabel));
@@ -78,9 +78,9 @@ final class TaskCodePreprocessor
             str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'X'], [1, 2, 3, 4, 5, 6, 7, 8, 0], $code)
         );
 
-        $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6])
-            + 7 * ($subCode[1] + $subCode[4] + $subCode[7])
-            + ($subCode[2] + $subCode[5] + $subCode[8]);
+        $sum = 3 * ((int)$subCode[0] + (int)$subCode[3] + (int)$subCode[6])
+            + 7 * ((int)$subCode[1] + (int)$subCode[4] + (int)$subCode[7])
+            + ((int)$subCode[2] + (int)$subCode[5] + (int)$subCode[8]);
         if ($sum % 10 !== 0) {
             throw new ControlMismatchException();
         }

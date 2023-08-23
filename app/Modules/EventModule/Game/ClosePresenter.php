@@ -23,8 +23,9 @@ use Nette\Security\Resource;
 /**
  * @method TeamModel2 getEntity()
  */
-class ClosePresenter extends BasePresenter
+final class ClosePresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<TeamModel2> */
     use EventEntityPresenterTrait;
 
     public function titleList(): PageTitle

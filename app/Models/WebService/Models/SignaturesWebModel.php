@@ -11,6 +11,7 @@ use Nette\SmartObject;
 
 /**
  * @deprecated replaced by \FKSDB\Models\WebService\Models\OrganizersWebModel
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
  */
 class SignaturesWebModel extends WebModel
 {

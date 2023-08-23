@@ -83,7 +83,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      */
     private function findByLogin(string $id): LoginModel
     {
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->loginService->getTable()->where('login = ?', $id)->fetch();
         if ($login) {
             return $login;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 
 class ColumnRendererComponent extends BaseComponent
 {
@@ -24,10 +24,12 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
+    final public function renderTemplateString(string $templateString, Model $model, ?int $userPermission): void
     {
-        $this->template->html = $this->renderToString($templateString, $model, $userPermission);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'string.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'string.latte',
+            ['html' => $this->renderToString($templateString, $model, $userPermission)]
+        );
     }
 
     /**
@@ -44,11 +46,14 @@ class ColumnRendererComponent extends BaseComponent
                 switch ($render) {
                     default:
                     case 'value':
-                        return $factory->render($model, $userPermission);
+                        if (!$model) {
+                            throw new \InvalidArgumentException(_('"value" is available only with model'));
+                        }
+                        return (string)$factory->render($model, $userPermission);
                     case 'title':
                         return $factory->getTitle();
                     case 'description':
-                        return $factory->getDescription();
+                        return (string)$factory->getDescription();
                 }
             },
             $templateString
@@ -64,9 +69,10 @@ class ColumnRendererComponent extends BaseComponent
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
-        $this->template->name = $field;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'name' => $field,
+        ]);
     }
 }

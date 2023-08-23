@@ -8,7 +8,7 @@ use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class PresentationPresenter extends BasePresenter
+final class PresentationPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

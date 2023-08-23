@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -27,7 +28,9 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property TeamModel2 $model
+ * @phpstan-extends EntityFormComponent<TeamModel2>
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 abstract class TeamFormComponent extends EntityFormComponent
 {
@@ -94,6 +97,7 @@ abstract class TeamFormComponent extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{team:array{category:string,force_a:bool,name:string}} $values */
         $values = $form->getValues('array');
         $this->teamService->explorer->beginTransaction();
         try {
@@ -148,10 +152,10 @@ abstract class TeamFormComponent extends EntityFormComponent
     {
         if (isset($this->model)) {
             $form->setDefaults(['team' => $this->model->toArray()]);
-            /** @var TeamMemberModel $member */
             $index = 0;
+            /** @var TeamMemberModel $member */
             foreach ($this->model->getMembers() as $member) {
-                /** @var ReferencedId $referencedId */
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
                 $index++;
@@ -196,9 +200,7 @@ abstract class TeamFormComponent extends EntityFormComponent
 
     protected function checkUniqueTeamName(string $name): void
     {
-        $query = $this->teamService->getTable()
-            ->where('event_id', $this->event->event_id)
-            ->where('name', $name);
+        $query = $this->event->getTeams()->where('name', $name);
         if (isset($this->model)) {
             $query->where('fyziklani_team_id != ?', $this->model->fyziklani_team_id);
         }
@@ -229,22 +231,30 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
     abstract protected function getMemberFieldsDefinition(): array;
 
+    /**
+     * @phpstan-return array<string,EvaluatedFieldMetaData>
+     */
     abstract protected function getTeamFieldsDefinition(): array;
 
+    /**
+     * @phpstan-return FormProcessing[]
+     */
     abstract protected function getProcessing(): array;
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public static function getMembersFromForm(Form $form): array
     {
         $persons = [];
         for ($member = 0; $member < 5; $member++) {
-            /** @var ReferencedId $referencedId */
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
             $referencedId = $form->getComponent('member_' . $member);
-            /** @var PersonModel $person */
             $person = $referencedId->getModel();
             if ($person) {
                 $persons[$person->person_id] = $person;

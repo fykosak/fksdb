@@ -27,6 +27,7 @@ class Component extends BaseComponent
 
     /**
      * @throws NotImplementedException
+     * @phpstan-param array{table:string,rows:array<int,string>} $definition
      */
     private function renderSingle(array $definition): void
     {
@@ -43,10 +44,13 @@ class Component extends BaseComponent
             default:
                 throw new NotImplementedException();
         }
-
-        $this->template->model = $model;
-        $this->template->rows = $definition['rows'];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'single.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'single.latte',
+            [
+                'model' => $model,
+                'rows' => $definition['rows'],
+            ]
+        );
     }
 
     protected function getMinimalPermissions(): int

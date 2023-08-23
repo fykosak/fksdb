@@ -50,7 +50,7 @@ final class Language extends FakeStringEnum
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {

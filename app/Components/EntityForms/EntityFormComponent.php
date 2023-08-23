@@ -15,10 +15,19 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class EntityFormComponent extends FormComponent
 {
+    /**
+     * @phpstan-var TModel|null
+     */
     protected ?Model $model;
 
+    /**
+     * @phpstan-param TModel|null $model
+     */
     public function __construct(Container $container, ?Model $model)
     {
         parent::__construct($container);
@@ -44,7 +53,7 @@ abstract class EntityFormComponent extends FormComponent
             } else {
                 $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
-        } catch (AbortException $exception) {
+        } catch (AbortException $exception) {// @phpstan-ignore-line
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);

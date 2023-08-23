@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
 class SchoolCheckComponent extends BaseComponent
@@ -40,12 +40,13 @@ class SchoolCheckComponent extends BaseComponent
                 $schools[$schoolId][] = $team;
             }
         }
-        $this->template->schools = $schools;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte', [
+            'schools' => $schools,
+        ]);
     }
 
     /**
-     * @return SchoolModel[]
+     * @phpstan-return SchoolModel[]
      */
     private function getSchoolsFromTeam(TeamModel2 $team): array
     {

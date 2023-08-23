@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\DataTesting\PersonTestComponent;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use Fykosak\Utils\UI\PageTitle;
 
-class ValidationPresenter extends BasePresenter
+final class ValidationPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

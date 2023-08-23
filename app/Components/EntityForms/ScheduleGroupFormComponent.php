@@ -16,7 +16,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ScheduleGroupModel|null $model
+ * @phpstan-extends EntityFormComponent<ScheduleGroupModel>
  */
 class ScheduleGroupFormComponent extends EntityFormComponent
 {
@@ -42,7 +42,18 @@ class ScheduleGroupFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array{container:array{
+         *         name_cs:string,
+         *         name_en:string,
+         *         start:\DateTimeInterface,
+         *         end:\DateTimeInterface,
+         *         schedule_group_type:string,
+         *         registration_begin:\DateTimeInterface,
+         *         registration_end:\DateTimeInterface,
+         *         modification_end:\DateTimeInterface,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleGroupService->storeModel($data, $this->model);

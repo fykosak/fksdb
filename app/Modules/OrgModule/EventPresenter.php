@@ -11,16 +11,17 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method EventModel getEntity()
- */
-class EventPresenter extends BasePresenter
+final class EventPresenter extends BasePresenter
 {
-    use EntityPresenterTrait;
+    /** @phpstan-use ContestYearEntityTrait<EventModel> */
+    use ContestYearEntityTrait;
 
     private EventService $eventService;
 
@@ -40,8 +41,12 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -56,19 +61,31 @@ class EventPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentGrid(): EventsGrid
     {
         return new EventsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): EventFormComponent
     {
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): EventFormComponent
     {
@@ -82,6 +99,7 @@ class EventPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

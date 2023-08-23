@@ -132,6 +132,15 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         throw new NotImplementedException();
     }
 
+    /**
+     * @phpstan-return array{
+     *      capacity:bool,
+     *      description:bool,
+     *      groupLabel:bool,
+     *      price:bool,
+     *      groupTime:bool,
+     * }
+     */
     public function getRenderOptions(): array
     {
         $params = [

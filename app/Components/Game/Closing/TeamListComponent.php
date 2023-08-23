@@ -18,6 +18,13 @@ use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterList<TeamModel2,array{
+ *     team_id?:int,
+ *     code?:string,
+ *     name?:string,
+ * }>
+ */
 class TeamListComponent extends FilterList
 {
     private EventModel $event;
@@ -28,30 +35,33 @@ class TeamListComponent extends FilterList
         $this->event = $event;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPossiblyAttendingTeams()->order('points');
-        foreach ($this->filterParams as $key => $condition) {
-            if (!$condition) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
                 continue;
             }
             switch ($key) {
                 case 'team_id':
-                    $query->where('fyziklani_team_id', $condition);
+                    $query->where('fyziklani_team_id', $filterParam);
                     break;
                 case 'code':
                     $codeProcessor = new TaskCodePreprocessor($this->event);
                     try {
                         $query->where(
                             'fyziklani_team_id =? ',
-                            $codeProcessor->getTeam($condition)->fyziklani_team_id
+                            $codeProcessor->getTeam($filterParam)->fyziklani_team_id
                         );
                     } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
                     }
                     break;
                 case 'name':
-                    $query->where('name LIKE ?', '%' . $condition . '%');
+                    $query->where('name LIKE ?', '%' . $filterParam . '%');
                     break;
             }
         }
@@ -81,6 +91,7 @@ class TeamListComponent extends FilterList
                 return 'alert alert-danger';
             }
         };
+        /** @phpstan-var RowContainer<TeamModel2> $row1 */
         $row1 = new RowContainer($this->container);
         $row1->addComponent(
             new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
@@ -89,6 +100,7 @@ class TeamListComponent extends FilterList
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
         $this->addRow($row1, 'row1');
+        /** @phpstan-var RowContainer<TeamModel2> $row2 */
         $row2 = new RowContainer($this->container);
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
         $this->addRow($row2, 'row2');

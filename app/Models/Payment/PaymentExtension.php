@@ -16,7 +16,7 @@ class PaymentExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();
-        foreach ($this->config as $item) {
+        foreach ($this->config as $item) {//@phpstan-ignore-line
             $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
                 ->setFactory(DefaultGenerator::class)->addSetup('setUp', [
                     $item['symbolGenerator']['variableSymbolStart'],

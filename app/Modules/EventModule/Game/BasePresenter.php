@@ -40,7 +40,7 @@ abstract class BasePresenter extends EventBasePresenter
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     protected function getNavRoots(): array
     {

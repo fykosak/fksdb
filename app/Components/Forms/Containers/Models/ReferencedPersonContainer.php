@@ -30,22 +30,29 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-extends ReferencedContainer<PersonModel>
+ * @phpstan-type EvaluatedFieldMetaData array{required?:bool,caption?:string|null,description?:string|null}
+ * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>>
+ */
 class ReferencedPersonContainer extends ReferencedContainer
 {
-
     public Resolver $resolver;
-    public ContestYearModel $contestYear;
+    public ?ContestYearModel $contestYear;
+    /** @phpstan-var EvaluatedFieldsDefinition */
     private array $fieldsDefinition;
     protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
     protected ?EventModel $event;
 
-
+    /**
+     * @phpstan-param EvaluatedFieldsDefinition $fieldsDefinition
+     */
     public function __construct(
         Container $container,
         Resolver $resolver,
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear,
         array $fieldsDefinition,
         ?EventModel $event,
         bool $allowClear
@@ -78,19 +85,34 @@ class ReferencedPersonContainer extends ReferencedContainer
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
-                $subContainer->setOption('showGroup', true);
                 $subContainer->setOption('label', _('Deliver address'));
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
-                $subContainer->setOption('showGroup', true);
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
                 }
                 $subContainer->setOption('label', $label);
             }
-            foreach ($fields as $fieldName => $metadata) {
-                $control = $this->createField($sub, $fieldName, $metadata);
-                $subContainer->addComponent($control, $fieldName);
+            if (
+                $sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
+                $sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT
+            ) {
+                if (isset($fields['address'])) {
+                    $control = new AddressDataContainer(
+                        $this->container,
+                        true,
+                        (bool)($fields['address']['required'] ?? false)
+                    );
+                } else {
+                    $control = new AddressDataContainer($this->container, true, (bool)($fields['required'] ?? false));
+                }
+                $subContainer->setOption('showGroup', true);
+                $subContainer->addComponent($control, 'address');
+            } else {
+                foreach ($fields as $fieldName => $metadata) {
+                    $control = $this->createField($sub, $fieldName, $metadata);
+                    $subContainer->addComponent($control, $fieldName);
+                }
             }
             $this->addComponent($subContainer, $sub);
         }
@@ -109,34 +131,42 @@ class ReferencedPersonContainer extends ReferencedContainer
         }
         $this->getReferencedId()->handler->setResolution($resolution);
 
+        /** @phpstan-ignore-next-line */
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
-
+        /**
+         * @var string $sub
+         */
         foreach ($this->getComponents() as $sub => $subContainer) {
             if (!$subContainer instanceof ContainerWithOptions) {
                 continue;
             }
-            /** @var BaseControl|ModelContainer|AddressDataContainer $component */
+            /**
+             * @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component
+             * @var string $fieldName
+             */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                $realValue = ReferencedPersonHandler::getPersonValue(
+                $value = ReferencedPersonHandler::getPersonValue(
                     $model,
                     $sub,
                     $fieldName,
                     $this->contestYear,
                     $this->event
                 );
-                $controlModifiable = isset($realValue) ? $modifiable : true;
+                $controlModifiable = isset($value) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
+                    /** @phpstan-ignore-next-line */
                     $this[$sub]->removeComponent($component);
+                    /** @phpstan-ignore-next-line */
                 } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setHtmlAttribute('readonly', 'readonly');
                     if ($component instanceof ContainerWithOptions) {
-                        $component->setValues($realValue);
+                        $component->setValues($value);
                     } else {
-                        $component->setValue($realValue);
+                        $component->setValue($value);
                     }
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
@@ -147,18 +177,18 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->setWriteOnly($component, false);
                 } else {
                     if ($component instanceof AddressDataContainer) {
-                        $component->setModel($realValue ? $realValue->address : null, $mode);
+                        $component->setModel($value ? $value->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
-                        $component->setValues($realValue);
+                        $component->setValues($value);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
                     ) {
-                        $component->setValue($realValue);
+                        $component->setValue($value); //@phpstan-ignore-line
                     } else {
-                        $component->setDefaultValue($realValue);
+                        $component->setDefaultValue($value); //@phpstan-ignore-line
                     }
-                    if ($realValue && $resolution->value == ResolutionMode::EXCEPTION) {
+                    if ($value && $resolution->value == ResolutionMode::EXCEPTION) {
                         $component->setHtmlAttribute('readonly', 'readonly');
                         // $component->setDisabled(); // could not store different value anyway
                     }
@@ -173,17 +203,11 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {
         switch ($sub) {
-            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
-            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
-                if ($fieldName === 'address') {
-                    return new AddressDataContainer($this->container, true, (bool)$metadata['required'] ?? false);
-                } else {
-                    throw new InvalidArgumentException("Only 'address' field is supported.");
-                }
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
@@ -191,13 +215,16 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $this->container,
                     $this->event,
                     ScheduleGroupType::tryFrom($fieldName),
-                    (bool)$metadata['required'] ?? false
+                    (bool)($metadata['required'] ?? false)
                 );
             case 'person':
             case 'person_info':
                 $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
                 break;
             case 'person_history':
+                if (!isset($this->contestYear)) {
+                    throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
+                }
                 $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
                 break;
             default:
@@ -207,6 +234,9 @@ class ReferencedPersonContainer extends ReferencedContainer
         return $control;
     }
 
+    /**
+     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     */
     protected function appendMetadataField(BaseControl $control, string $fieldName, array $metadata): void
     {
         foreach ($metadata as $key => $value) {

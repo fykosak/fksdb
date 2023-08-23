@@ -9,6 +9,9 @@ use FKSDB\Models\Transitions\Holder\TeamHolder;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'member.latte';
@@ -16,6 +19,11 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
      */
     protected function getData(ModelHolder $holder): array
     {

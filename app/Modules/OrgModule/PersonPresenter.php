@@ -30,10 +30,10 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @method PersonModel getEntity()
  */
-class PersonPresenter extends BasePresenter
+final class PersonPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<PersonModel> */
     use EntityPresenterTrait;
 
     private PersonService $personService;
@@ -154,13 +154,15 @@ class PersonPresenter extends BasePresenter
         $form->addSubmit('stalk', _('Let\'s stalk'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @phpstan-var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('detail', ['id' => $values['person_id']]);
             };
         $form->addSubmit('edit', _('Edit'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @phpstan-var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('edit', ['id' => $values['person_id']]);
             };
 
@@ -182,7 +184,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     /**
@@ -191,7 +193,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     /**
@@ -251,6 +253,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @return never
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid

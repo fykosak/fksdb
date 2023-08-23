@@ -16,17 +16,18 @@ class ColumnTableComponent extends BaseComponent
         return new ColumnRendererComponent($this->getContext());
     }
     /**
+     * @phpstan-param string[] $fields
      * @throws CannotAccessModelException
-     * @deprecated
      */
     final public function render(
         array $fields,
         Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
-        $this->template->model = $model;
-        $this->template->userPermission = $userPermission;
-        $this->template->fields = $fields;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'fields' => $fields,
+        ]);
     }
 }

@@ -6,15 +6,17 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,bool,ArgType>
+ * @phpstan-template ArgType
+ */
 class Not extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):bool)|bool */
     private $expression;
 
-    /**
-     * @param callable|mixed $expression
-     */
+    /** @phpstan-param (callable(ArgType):bool)|bool $expression */
     public function __construct($expression)
     {
         $this->expression = $expression;

@@ -16,6 +16,10 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ */
 abstract class ColumnFactory
 {
     use SmartObject;
@@ -28,12 +32,16 @@ abstract class ColumnFactory
     protected string $tableName;
     protected string $modelAccessKey;
     protected ?string $description;
+    /**
+     * @phpstan-var array{size:int|null}
+     */
     protected array $metaData;
     protected bool $required = false;
     protected bool $omitInputField = false;
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
+    /** @phpstan-var class-string<TModel> */
     protected string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory)
@@ -41,6 +49,9 @@ abstract class ColumnFactory
         $this->metaDataFactory = $metaDataFactory;
     }
 
+    /**
+     * @phpstan-param class-string<TModel> $modelClassName
+     */
     final public function setUp(
         string $tableName,
         string $modelClassName,
@@ -57,6 +68,7 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     final public function createField(...$args): BaseControl
     {
@@ -106,6 +118,9 @@ abstract class ColumnFactory
         return $this->description ? _($this->description) : null;
     }
 
+    /**
+     * @phpstan-return array{size:int|null}
+     */
     final protected function getMetaData(): array
     {
         if (!isset($this->metaData)) {
@@ -116,12 +131,16 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     protected function createFormControl(...$args): BaseControl
     {
         throw new OmittedControlException();
     }
 
+    /**
+     * @param TModel $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->modelAccessKey});
@@ -153,8 +172,9 @@ abstract class ColumnFactory
     }
 
     /**
-     * @throws CannotAccessModelException
+     * @phpstan-return TModel|null
      * @throws \ReflectionException
+     * @throws CannotAccessModelException
      */
     protected function resolveModel(Model $modelSingle): ?Model
     {

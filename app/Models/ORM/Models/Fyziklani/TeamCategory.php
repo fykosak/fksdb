@@ -19,7 +19,7 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
     public const F = 'F';
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {
@@ -51,7 +51,7 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function casesForEvent(EventModel $event): array
     {

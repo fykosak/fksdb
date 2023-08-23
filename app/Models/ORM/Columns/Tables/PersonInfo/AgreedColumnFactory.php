@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
+ */
 class AgreedColumnFactory extends ColumnFactory
 {
 

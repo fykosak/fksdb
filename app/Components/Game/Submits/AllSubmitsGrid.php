@@ -7,6 +7,7 @@ namespace FKSDB\Components\Game\Submits;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -21,6 +22,16 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<SubmitModel,array{
+ *     team?:int,
+ *     code?:string,
+ *     not_null?:bool,
+ *     warnings?:bool,
+ *     task?:string,
+ *     state?:string,
+ * }>
+ */
 class AllSubmitsGrid extends FilterGrid
 {
     protected SubmitService $submitService;
@@ -43,17 +54,20 @@ class AllSubmitsGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->addColumn(
+        /** @phpstan-ignore-next-line */
+            new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
+            'name_n_id'
+        );
         $this->addColumns(
             $this->event->event_type_id === 1
                 ? [
-                'fyziklani_team.name_n_id',
                 'fyziklani_task.label',
                 'fyziklani_submit.state',
                 'fyziklani_submit.points',
                 'fyziklani_submit.modified',
             ]
                 : [
-                'fyziklani_team.name_n_id',
                 'fyziklani_task.label',
                 'fyziklani_submit.points',
             ]
@@ -65,8 +79,9 @@ class AllSubmitsGrid extends FilterGrid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Revoke')),
-                fn(SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
+                fn(?SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',
                 function (SubmitModel $row): bool {
                     try {
@@ -81,27 +96,27 @@ class AllSubmitsGrid extends FilterGrid
         );
     }
 
+    /**
+     * @phpstan-return TypedSelection<SubmitModel>
+     */
     protected function getModels(): TypedSelection
     {
         $query = $this->submitService->getTable()->where('fyziklani_team.event_id', $this->event->event_id);
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
-        foreach ($this->filterParams as $key => $condition) {
-            if (!$condition) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
                 continue;
             }
             switch ($key) {
                 case 'team':
-                    $query->where('fyziklani_submit.fyziklani_team_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_team_id', $filterParam);
                     break;
                 case 'code':
                     $codeProcessor = new TaskCodePreprocessor($this->event);
                     try {
                         $query->where(
                             'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.fyziklani_task_id =? ',
-                            $codeProcessor->getTeam($condition)->fyziklani_team_id,
-                            $codeProcessor->getTask($condition)->fyziklani_task_id
+                            $codeProcessor->getTeam($filterParam)->fyziklani_team_id,
+                            $codeProcessor->getTask($filterParam)->fyziklani_task_id
                         );
                     } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
@@ -117,10 +132,10 @@ class AllSubmitsGrid extends FilterGrid
                     );
                     break;
                 case 'task':
-                    $query->where('fyziklani_submit.fyziklani_task_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_task_id', $filterParam);
                     break;
                 case 'state':
-                    $query->where('fyziklani_submit.state', $condition);
+                    $query->where('fyziklani_submit.state', $filterParam);
                     break;
             }
         }
@@ -129,7 +144,7 @@ class AllSubmitsGrid extends FilterGrid
 
     public function handleRevoke(int $id): void
     {
-        /** @var SubmitModel $submit */
+        /** @var SubmitModel|null $submit */
         $submit = $this->submitService->findByPrimary($id);
         if (!$submit) {
             $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);

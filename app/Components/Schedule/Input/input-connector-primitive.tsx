@@ -1,5 +1,4 @@
 import { setInitialData } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/actions';
-import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InputConnectorStateMap } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';

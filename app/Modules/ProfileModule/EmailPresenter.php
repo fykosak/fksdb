@@ -10,7 +10,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\UI\PageTitle;
 
-class EmailPresenter extends BasePresenter
+final class EmailPresenter extends BasePresenter
 {
     private AccountManager $accountManager;
 
@@ -48,6 +48,6 @@ class EmailPresenter extends BasePresenter
 
     protected function createComponentChangeEmailForm(): ChangeEmailComponent
     {
-        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson(), $this->getLang());
+        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson());
     }
 }

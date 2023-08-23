@@ -9,20 +9,23 @@ use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method TaskModel storeModel(array $data, ?TaskModel $model = null)
+ * @phpstan-extends Service<TaskModel>
+ * @phpstan-import-type SerializedTaskModel from TaskModel
  */
 final class TaskService extends Service
 {
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
-        return $event->getTasks()->where([
+        /** @var TaskModel|null $task */
+        $task = $event->getTasks()->where([
             'label' => $label,
         ])->fetch();
+        return $task;
     }
 
     /**
-     * @return TaskModel[]
+     * @phpstan-return SerializedTaskModel[]
      */
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {

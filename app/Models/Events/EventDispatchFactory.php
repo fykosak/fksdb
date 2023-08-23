@@ -16,8 +16,19 @@ use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-type TDefinition array{
+ *      keys:string[],
+ *      holderMethod:string,
+ *      machineName:string,
+ *      formLayout:string
+ * }
+ */
 class EventDispatchFactory
 {
+    /**
+     * @phpstan-var array<int,TDefinition>
+     */
     private array $definitions = [];
     private Container $container;
     private string $templateDir;
@@ -32,6 +43,9 @@ class EventDispatchFactory
         $this->templateDir = $templateDir;
     }
 
+    /**
+     * @phpstan-param string[] $key
+     */
     public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
     {
         $this->definitions[] = [
@@ -49,7 +63,9 @@ class EventDispatchFactory
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
         $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName']);
+        /** @var EventParticipantMachine $machine */
+        $machine = $this->container->getService($definition['machineName']);
+        return $machine;
     }
 
     /**
@@ -97,6 +113,7 @@ class EventDispatchFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine|TeamMachine
      */
     public function getEventMachine(EventModel $event): Machine
     {
@@ -118,6 +135,7 @@ class EventDispatchFactory
 
     /**
      * @throws ConfigurationNotFoundException
+     * @phpstan-return TDefinition
      */
     private function findDefinition(EventModel $event): array
     {

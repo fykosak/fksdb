@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
@@ -14,22 +15,31 @@ use Nette\Utils\Strings;
 /**
  * @property-read int $task_id
  * @property-read string $label
- * @property-read string $name_cs
- * @property-read string $name_en
+ * @property-read string|null $name_cs
+ * @property-read string|null $name_en
  * @property-read LocalizedString $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
  * @property-read int $series
- * @property-read int $tasknr
- * @property-read int $points
- * @property-read \DateTimeInterface $submit_start
- * @property-read \DateTimeInterface $submit_deadline
+ * @property-read int|null $tasknr
+ * @property-read int|null $points
+ * @property-read \DateTimeInterface|null $submit_start
+ * @property-read \DateTimeInterface|null $submit_deadline
+ * @phpstan-type SerializedTaskModel array{
+ *     taskId:int,
+ *     series:int,
+ *     label:string,
+ *     name:array<string,string>,
+ *     taskNumber:int|null,
+ *     points:int|null,
+ * }
+ * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
 final class TaskModel extends Model
 {
     public function getFullLabel(
-        string $lang,
+        Language $lang,
         bool $includeContest = false,
         bool $includeYear = false,
         bool $includeSeries = true
@@ -38,7 +48,7 @@ final class TaskModel extends Model
         if ($includeContest) {
             $label .= $this->contest->name . ' ';
         }
-        switch ($lang) {
+        switch ($lang->value) {
             case 'cs':
                 if ($includeYear) {
                     $label .= $this->year . '. ročník ';
@@ -46,7 +56,7 @@ final class TaskModel extends Model
                 if ($includeSeries) {
                     $label .= $this->series . '. série ';
                 }
-                return $label . $this->label . ' - ' . $this->name_cs;
+                break;
             default:
                 if ($includeYear) {
                     $label .= $this->year . Utils::ordinal($this->year) . ' year ';
@@ -54,12 +64,16 @@ final class TaskModel extends Model
                 if ($includeSeries) {
                     $label .= $this->series . Utils::ordinal($this->series) . ' series ';
                 }
-                return $label . $this->label . ' - ' . $this->name_en;
         }
+        return $label . $this->label . ' - ' . $this->name->getText('en');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
+     */
     public function getContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<TaskContributionModel> $contributions */
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type) {
             $contributions->where('type', $type->value);
@@ -67,9 +81,14 @@ final class TaskModel extends Model
         return $contributions;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskCategoryModel>
+     */
     public function getCategories(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<TaskCategoryModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK_CATEGORY, 'task_id');
+        return $selection;
     }
 
     public function isForCategory(?ContestCategoryModel $category): bool
@@ -80,9 +99,9 @@ final class TaskModel extends Model
         return (bool)$this->getCategories()->where('contest_category_id', $category->contest_category_id)->fetch();
     }
 
-    public function getContestYear(): ContestYearModel
+    public function getContestYear(): ?ContestYearModel
     {
-        /** @var ContestYearModel $contestYear */
+        /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
             'year',
             $this->year
@@ -111,6 +130,9 @@ final class TaskModel extends Model
         return Strings::webalize($this->label, null, false);
     }
 
+    /**
+     * @phpstan-return TaskStatsType
+     */
     public function getTaskStats(): array
     {
         $count = 0;
@@ -125,6 +147,9 @@ final class TaskModel extends Model
         return ['solversCount' => $count, 'averagePoints' => $count ? ($sum / $count) : null];
     }
 
+    /**
+     * @phpstan-return SerializedTaskModel
+     */
     public function __toArray(): array
     {
         return [
@@ -137,14 +162,24 @@ final class TaskModel extends Model
         ];
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_SUBMIT, 'task_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitQuestionModel>
+     */
     public function getQuestions(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitQuestionModel> $selection */
+        $selection = $this->related(DbNames::TAB_SUBMIT_QUESTION, 'task_id');
+        return $selection;
     }
 
     public function isOpened(): bool

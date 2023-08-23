@@ -11,6 +11,9 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Forms\Control;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends AbstractAdjustment<BaseHolder>
+ */
 class UniqueCheck extends AbstractAdjustment
 {
     private string $field;
@@ -33,6 +36,7 @@ class UniqueCheck extends AbstractAdjustment
         if (!$control) {
             return;
         }
+        /** @phpstan-ignore-next-line */
         $control->addRule(function (Control $control) use ($holder): bool {
             $query = $this->eventParticipantService->getTable();
             $column = BaseHolder::getBareColumn($this->field);

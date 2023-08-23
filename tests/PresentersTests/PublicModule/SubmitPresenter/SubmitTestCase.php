@@ -112,10 +112,10 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected function createPostRequest(array $formData): Request
     {
         $formData = Helpers::merge($formData, [
-            '_do' => 'uploadForm-form-submit',
+            '_do' => 'uploadForm-formControl-form-submit',
         ]);
         return new Request('Public:Submit', 'POST', [
-            'action' => 'default',
+            'action' => 'legacy',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,

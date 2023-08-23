@@ -10,7 +10,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
-class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
+final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
 
     private WebServiceModel $server;

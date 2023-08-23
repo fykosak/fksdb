@@ -11,13 +11,11 @@ use Nette\Security\Resource;
  * @property-read int $teacher_id
  * @property-read int $person_id
  * @property-read PersonModel $person
- * @property-read int $school_id
- * @property-read SchoolModel $school
- * @property-read \DateTimeInterface $since
- * @property-read \DateTimeInterface $until
- * @property-read string $note
- * @property-read string $state TODO ENUM('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
- * @property-read int $number_brochures
+ * @property-read int|null $school_id
+ * @property-read SchoolModel|null $school
+ * @property-read string|null $note
+ * @property-read string|null $role
+ * @property-read int $active
  */
 final class TeacherModel extends Model implements Resource
 {

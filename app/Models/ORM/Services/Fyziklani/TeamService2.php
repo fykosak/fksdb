@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method TeamModel2 findByPrimary(int $key)
- * @method TeamModel2 storeModel(array $data, ?TeamModel2 $model = null)
+ * @phpstan-extends Service<TeamModel2>
+ * @phpstan-import-type SerializedTeamModel from TeamModel2
  */
 final class TeamService2 extends Service
 {
@@ -27,7 +27,7 @@ final class TeamService2 extends Service
     }
 
     /**
-     * @return TeamModel2[]
+     * @phpstan-return SerializedTeamModel[]
      */
     public static function serialiseTeams(EventModel $event): array
     {

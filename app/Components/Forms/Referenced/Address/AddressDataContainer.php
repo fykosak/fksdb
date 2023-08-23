@@ -11,10 +11,13 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use Fykosak\NetteORM\Model;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends ReferencedContainer<AddressModel>
+ */
 class AddressDataContainer extends ReferencedContainer
 {
     private bool $writeOnly;

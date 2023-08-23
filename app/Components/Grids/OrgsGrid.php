@@ -7,10 +7,16 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\OrgModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends FilterGrid<OrgModel,array{
+ *    term?:string,
+ * }>
+ */
 class OrgsGrid extends FilterGrid
 {
     private ContestModel $contest;
@@ -21,14 +27,17 @@ class OrgsGrid extends FilterGrid
         $this->contest = $contest;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrgModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->contest->getOrganisers()->order('since DESC');
-        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+        if (!isset($this->filterParams['term'])) {
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) {
+        foreach ($tokens as $token) { //@phpstan-ignore-line
             $query->where(
                 'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
                             LIKE CONCAT(\'%\', ? , \'%\')',

@@ -12,19 +12,17 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Fykosak\NetteORM\Service;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * @method RoomModel getEntity(bool $throw = true)
- */
-class SeatingPresenter extends BasePresenter
+final class SeatingPresenter extends BasePresenter
 {
+    /** @use EntityPresenterTrait<RoomModel> */
     use EntityPresenterTrait;
 
     private RoomService $roomService;
@@ -93,14 +91,17 @@ class SeatingPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
     protected function createComponentSeatingList(): ProviderComponent
     {
         $limit = $this->getParameter('limit', 1000);
         $offset = $this->getParameter('offset', 0);
+        /** @phpstan-var \Iterator<TeamModel2> $teams */ // TODO!!!!
+        $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
+            $teams,
             $this->getContext()
         );
     }
@@ -109,6 +110,7 @@ class SeatingPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @phpstan-return ProviderComponent<null,('dev'|'all')[]>
      */
     protected function createComponentSeatingPreview(): ProviderComponent
     {
@@ -132,7 +134,7 @@ class SeatingPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): Service
+    protected function getORMService(): RoomService
     {
         return $this->roomService;
     }
@@ -154,6 +156,7 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
+     * @return never
      * @throws GoneException
      */
     protected function createComponentGrid(): BaseGrid

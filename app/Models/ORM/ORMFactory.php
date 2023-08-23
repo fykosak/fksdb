@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Links\LinkFactory;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
@@ -23,8 +24,9 @@ final class ORMFactory
     }
 
     /**
-     * @throws BadTypeException
+     * @phpstan-return ColumnFactory<Model,mixed>
      * @throws MissingServiceException
+     * @throws BadTypeException
      */
     public function loadColumnFactory(string $tableName, string $colName): ColumnFactory
     {
@@ -38,6 +40,7 @@ final class ORMFactory
     /**
      * @throws BadTypeException
      * @throws MissingServiceException
+     * @phpstan-return LinkFactory<Model>
      */
     public function loadLinkFactory(string $tableName, string $linkId): LinkFactory
     {

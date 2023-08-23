@@ -31,6 +31,9 @@ class ParticipantGeoChart extends FrontEndComponent implements Chart
         return null;
     }
 
+    /**
+     * @phpstan-return array<string,int>
+     */
     protected function getData(): array
     {
         $data = [];

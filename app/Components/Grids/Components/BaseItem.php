@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ */
 abstract class BaseItem extends BaseComponent
 {
     public ?Title $title;
@@ -19,13 +24,36 @@ abstract class BaseItem extends BaseComponent
         $this->title = $title;
     }
 
-    abstract protected function getTemplatePath(): string;
-
-    public function render(?Model $model, ?int $userPermission): void
+    /**
+     * @throws GoneException
+     */
+    protected function getTemplatePath(): string
     {
-        $this->template->model = $model;
-        $this->template->title = $this->title;
-        $this->template->userPermission = $userPermission;
-        $this->template->render($this->getTemplatePath());
+        throw new GoneException();
+    }
+
+    /**
+     * @phpstan-param TModel $model
+     * @note do not call from parent
+     * @throws GoneException
+     */
+    public function render(Model $model, int $userPermission): void
+    {
+        $this->template->render(
+            $this->getTemplatePath(),
+            [
+                'model' => $model,
+                'title' => $this->title,
+                'userPermission' => $userPermission,
+            ]
+        );
+    }
+
+    /**
+     * @param Html|string $html
+     */
+    final public function renderHtml($html): void
+    {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'html.latte', ['html' => $html,]);
     }
 }

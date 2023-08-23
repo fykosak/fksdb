@@ -7,6 +7,9 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ValuePrinter<int|float>
+ */
 class NumberPrinter extends ValuePrinter
 {
     public const NULL_VALUE_NOT_SET = 'notSet';

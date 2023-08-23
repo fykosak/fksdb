@@ -16,6 +16,9 @@ use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-extends ReferencedHandler<AddressModel>
+ */
 class AddressHandler extends ReferencedHandler
 {
     private const PATTERN = '/[0-9]{5}/';
@@ -34,6 +37,15 @@ class AddressHandler extends ReferencedHandler
         $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
+    /**
+     * @param AddressModel|null $model
+     * @phpstan-param array{
+     *     target?:string|null,
+     *     city?:string|null,
+     *     country_id?:int|null,
+     *     postal_code:string|null,
+     * }$values
+     */
     public function store(array $values, ?Model $model = null): ?AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
@@ -59,6 +71,12 @@ class AddressHandler extends ReferencedHandler
         return $this->addressService->storeModel($data, $model);
     }
 
+    /**
+     * @phpstan-return array{
+     *     country_subdivision_id?:int,
+     *     country_id:int,
+     * }|null
+     */
     public function inferCountry(?string $postalCode): ?array
     {
         if (!$postalCode) {
@@ -67,7 +85,7 @@ class AddressHandler extends ReferencedHandler
         if (!preg_match(self::PATTERN, $postalCode)) {
             return null;
         }
-        /** @var PSCSubdivisionModel $pscSubdivision */
+        /** @var PSCSubdivisionModel|null $pscSubdivision */
         $pscSubdivision = $this->PSCSubdivisionService->findByPrimary($postalCode);
         if ($pscSubdivision) {
             return [

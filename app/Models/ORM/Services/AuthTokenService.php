@@ -14,6 +14,9 @@ use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
+/**
+ * @phpstan-extends Service<AuthTokenModel>
+ */
 final class AuthTokenService extends Service
 {
 
@@ -43,7 +46,7 @@ final class AuthTokenService extends Service
         }
 
         if ($refresh) {
-            /** @var AuthTokenModel $token */
+            /** @var AuthTokenModel|null $token */
             $token = $login->getTokens($type)
                 ->where('data', $data)
                 ->where('since <= NOW()')
@@ -81,7 +84,9 @@ final class AuthTokenService extends Service
         if ($strict) {
             $tokens->where('since <= NOW()')->where('until IS NULL OR until >= NOW()');
         }
-        return $tokens->fetch();
+        /** @var AuthTokenModel|null $token */
+        $token = $tokens->fetch();
+        return $token;
     }
 
     /**
@@ -97,6 +102,9 @@ final class AuthTokenService extends Service
         }
     }
 
+    /**
+     * @phpstan-return TypedSelection<AuthTokenModel>
+     */
     public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()

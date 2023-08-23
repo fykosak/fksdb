@@ -10,7 +10,6 @@ use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
@@ -31,6 +30,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Application\UI\ComponentReflection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
@@ -42,7 +42,7 @@ use Tracy\Debugger;
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
+abstract class BasePresenter extends Presenter
 {
     /**
      * @persistent
@@ -54,6 +54,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     protected bool $authorized = true;
+    /** @phpstan-var array<string,bool> */
     private array $authorizedCache = [];
     private Container $diContainer;
 
@@ -83,7 +84,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     }
 
     /**
-     * @param \ReflectionMethod|\ReflectionClass $element
+     * @param \ReflectionMethod|ComponentReflection $element
      * @throws \ReflectionException
      * @throws \Exception
      */
@@ -91,13 +92,13 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::TOKEN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::HTTP))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
                 $this->tryHttpAuth();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::LOGIN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::LOGIN))) {
                 $this->optionalLoginRedirect();
             }
             $method = $this->formatAuthorizedMethod();
@@ -116,7 +117,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         $method = 'authorized' . $this->getAction();
         try {
             $reflectionMethod = new \ReflectionMethod($this, $method);
-            if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+            if ($reflectionMethod->getReturnType()->getName() !== 'bool') { // @phpstan-ignore-line
                 throw new InvalidStateException(
                     sprintf('Method %s of %s should return bool.', $reflectionMethod->getName(), get_class($this))
                 );
@@ -175,6 +176,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-param array<string,scalar>|null $args
      */
     public function authorized(string $destination, ?array $args = null): bool
     {
@@ -213,6 +215,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
+            /** @phpstan-ignore-next-line*/
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {
@@ -242,10 +245,10 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      */
     private function selectLang(): string
     {
-        $candidate = $this->getUserPreferredLang() ?? $this->lang;
+        $candidate = $this->lang ?? $this->getUserPreferredLang();
         $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
-            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages); // @phpstan-ignore-line
         }
         if (!$candidate) {
             $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
@@ -269,13 +272,14 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     protected function getLoggedPerson(): ?PersonModel
     {
-        /**@var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
         return $this->getUser()->isLoggedIn() ? $login->person : null;
     }
 
     protected function createTemplate(): Template
     {
+        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -299,10 +303,11 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         parent::beforeRender();
 
         $this->template->pageTitle = $this->getTitle();
-        $this->template->lang = $this->getLang();
+        $this->template->lang = $this->translator->lang;
         $this->template->navRoots = $this->getNavRoots();
         $this->template->styleId = $this->getStyleId();
         $this->template->theme = $this->getTheme();
+        $this->template->loggedPerson = $this->getLoggedPerson();
     }
 
     public function getTitle(): PageTitle
@@ -339,11 +344,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return 'default';
     }
 
-    public function getLang(): string
-    {
-        return $this->language;
-    }
-
+    /**
+     * @phpstan-return string[]
+     */
     protected function getNavRoots(): array
     {
         return [];
@@ -376,7 +379,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
-        return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
+        return new LanguageChooserComponent($this->getContext());
     }
 
     /**

@@ -15,11 +15,14 @@ class DetailResultsModel extends AbstractResultsModel
 {
 
     protected int $series;
-    /** Cache */
+    /**
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
+     */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
@@ -58,6 +61,9 @@ class DetailResultsModel extends AbstractResultsModel
         $this->dataColumns = [];
     }
 
+    /**
+     * @phpstan-return literal-string
+     */
     protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
@@ -99,6 +105,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
+        /** @phpstan-ignore-next-line */
         return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM .
             " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' .
             self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "

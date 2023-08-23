@@ -8,8 +8,7 @@ use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method SchoolModel storeModel(array $data, ?SchoolModel $model = null)
- * @method SchoolModel findByPrimary($key)
+ * @phpstan-extends Service<SchoolModel>
  */
 final class SchoolService extends Service
 {

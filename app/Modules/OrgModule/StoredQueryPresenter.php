@@ -12,16 +12,15 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method QueryModel getEntity()
- */
-class StoredQueryPresenter extends BasePresenter
+final class StoredQueryPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
     private QueryService $storedQueryService;
@@ -116,6 +115,7 @@ class StoredQueryPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

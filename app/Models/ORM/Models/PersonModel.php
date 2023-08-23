@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
+    EventRole,
     FyziklaniTeamMemberRole,
     FyziklaniTeamTeacherRole,
     ParticipantRole
@@ -17,8 +18,6 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
@@ -27,8 +26,8 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read string $family_name
  * @property-read string $other_name
- * @property-read string $born_family_name
- * @property-read string $display_name
+ * @property-read string|null $born_family_name
+ * @property-read string|null $display_name
  * @property-read PersonGender $gender
  * @property-read \DateTimeInterface $created
  */
@@ -43,7 +42,16 @@ final class PersonModel extends Model implements Resource
      */
     public function getLogin(): ?LoginModel
     {
-        return $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        /** @var LoginModel|null $login */
+        $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        return $login;
+    }
+
+    public function getTeacher(): ?TeacherModel
+    {
+        /** @var TeacherModel|null $teacher */
+        $teacher = $this->related(DbNames::TAB_TEACHER, 'person_id')->fetch();
+        return $teacher;
     }
 
     public function getPreferredLang(): ?string
@@ -53,7 +61,9 @@ final class PersonModel extends Model implements Resource
 
     public function getInfo(): ?PersonInfoModel
     {
-        return $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        /** @var PersonInfoModel|null $info */
+        $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        return $info;
     }
 
     public function getHistoryByContestYear(ContestYearModel $contestYear): ?PersonHistoryModel
@@ -65,9 +75,14 @@ final class PersonModel extends Model implements Resource
         return $history;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonHistoryModel>
+     */
     public function getHistories(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<PersonHistoryModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id');
+        return $selection;
     }
 
     public function getHistory(int $acYear): ?PersonHistoryModel
@@ -79,8 +94,12 @@ final class PersonModel extends Model implements Resource
         return $history;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
     public function getContestants(?ContestModel $contest = null): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<ContestantModel> $related */
         $related = $this->related(DbNames::TAB_CONTESTANT, 'person_id');
         if ($contest) {
             $related->where('contest_id', $contest->contest_id);
@@ -90,11 +109,14 @@ final class PersonModel extends Model implements Resource
 
     public function getContestantByContestYear(ContestYearModel $contestYear): ?ContestantModel
     {
-        return $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+        /** @var ContestantModel|null $contestant */
+        $contestant = $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
+        return $contestant;
     }
 
     /**
      * @deprecated
+     * @phpstan-return TypedGroupedSelection<OrgModel>
      */
     public function getOrgs(?int $contestId = null): TypedGroupedSelection
     {
@@ -105,19 +127,31 @@ final class PersonModel extends Model implements Resource
         return $related;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonHasFlagModel>
+     */
     public function getFlags(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<PersonHasFlagModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
+        return $selection;
     }
 
     public function hasPersonFlag(string $flagType): ?PersonHasFlagModel
     {
-        return $this->getFlags()->where('flag.fid', $flagType)->fetch();
+        /** @var PersonHasFlagModel|null $personFlag */
+        $personFlag = $this->getFlags()->where('flag.fid', $flagType)->fetch();
+        return $personFlag;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PostContactModel>
+     */
     public function getPostContacts(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<PostContactModel> $selection */
+        $selection = $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
+        return $selection;
     }
 
     public function getAddress(PostContactType $type): ?AddressModel
@@ -128,33 +162,55 @@ final class PersonModel extends Model implements Resource
 
     public function getPostContact(PostContactType $type): ?PostContactModel
     {
-        return $this->getPostContacts()->where(['type' => $type->value])->fetch();
+        /** @var PostContactModel|null $postContact */
+        $postContact = $this->getPostContacts()->where(['type' => $type->value])->fetch();
+        return $postContact;
     }
 
     public function getActivePostContact(): ?PostContactModel
     {
-        return $this->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT)) ??
-            $this->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->getPostContact(PostContactType::from(PostContactType::PERMANENT)) ??
+            $this->getPostContact(PostContactType::from(PostContactType::DELIVERY));
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventParticipantModel>
+     */
     public function getEventParticipants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<EventParticipantModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
+     */
     public function getFyziklaniTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamMemberModel>
+     */
     public function getTeamMembers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<TeamMemberModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     */
     public function getEventOrgs(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<EventOrgModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
+        return $selection;
     }
 
     public function getFullName(): string
@@ -168,7 +224,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return OrgModel[] indexed by contest_id
+     * @phpstan-return OrgModel[] indexed by contest_id
      * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
      */
     public function getActiveOrgs(): array
@@ -184,15 +240,22 @@ final class PersonModel extends Model implements Resource
         return $result;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrgModel>
+     */
     public function getOrganisers(?ContestModel $contest = null): TypedGroupedSelection
     {
-        $related = $this->related(DbNames::TAB_ORG, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<OrgModel> $selection */
+        $selection = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contest) {
-            $related->where('contest_id', $contest->contest_id);
+            $selection->where('contest_id', $contest->contest_id);
         }
-        return $related;
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrgModel>
+     */
     public function getActiveOrgsAsQuery(ContestModel $contest): TypedGroupedSelection
     {
         $year = $contest->getCurrentContestYear()->year;
@@ -201,6 +264,13 @@ final class PersonModel extends Model implements Resource
             ->where('until IS NULL OR until >=?', $year);
     }
 
+    /**
+     * @phpstan-return array{
+     *     other_name:string,
+     *     family_name:string,
+     *     gender:string,
+     * }
+     */
     public static function parseFullName(string $fullName): array
     {
         $names = explode(' ', $fullName);
@@ -213,6 +283,9 @@ final class PersonModel extends Model implements Resource
         ];
     }
 
+    /**
+     * @phpstan-param array{family_name:string} $data
+     */
     public static function inferGender(array $data): string
     {
         if (mb_substr($data['family_name'], -1) == 'á') {
@@ -227,6 +300,9 @@ final class PersonModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @phpstan-return array<int,int>
+     */
     public function getSerializedSchedule(EventModel $event, string $type): array
     {
         $query = $this->getSchedule()
@@ -247,10 +323,13 @@ final class PersonModel extends Model implements Resource
     public function removeScheduleForEvent(EventModel $event): void
     {
         foreach ($this->getScheduleForEvent($event) as $row) {
-            $row->delete();
+            $row->delete();//@phpstan-ignore-line
         }
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     public function getScheduleForEvent(EventModel $event): TypedGroupedSelection
     {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
@@ -258,22 +337,34 @@ final class PersonModel extends Model implements Resource
 
     public function getScheduleByGroup(ScheduleGroupModel $group): ?PersonScheduleModel
     {
-        return $this->getSchedule()->where('schedule_item.schedule_group_id', $group->schedule_group_id)->fetch();
+        /** @var PersonScheduleModel|null $personSchedule */
+        $personSchedule = $this->getSchedule()->where(
+            'schedule_item.schedule_group_id',
+            $group->schedule_group_id
+        )->fetch();
+        return $personSchedule;
     }
 
     public function getScheduleByItem(ScheduleItemModel $item): ?PersonScheduleModel
     {
-        return $this->getSchedule()->where('schedule_item_id', $item->schedule_item_id)->fetch();
-    }
-
-    public function getSchedule(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
+        /** @var PersonScheduleModel|null $personSchedule */
+        $personSchedule = $this->getSchedule()->where('schedule_item_id', $item->schedule_item_id)->fetch();
+        return $personSchedule;
     }
 
     /**
-     * @param string[] $types
-     * @return SchedulePaymentModel[]
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
+    public function getSchedule(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PersonScheduleModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
+        return $selection;
+    }
+
+    /**
+     * @phpstan-param string[] $types
+     * @phpstan-return PersonScheduleModel[]
      */
     public function getScheduleRests(
         EventModel $event,
@@ -297,7 +388,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return PersonGender|FakeStringEnum|mixed|null
+     * @return PersonGender|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
@@ -311,6 +402,9 @@ final class PersonModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return EventRole[]
+     */
     public function getEventRoles(EventModel $event): array
     {
         $roles = [];
@@ -323,22 +417,22 @@ final class PersonModel extends Model implements Resource
             }
             $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
-        /** @var EventOrgModel $eventOrg */
+        /** @var EventOrgModel|null $eventOrg */
         $eventOrg = $this->getEventOrgs()->where('event_id', $event->event_id)->fetch();
         if (isset($eventOrg)) {
             $roles[] = new EventOrgRole($event, $eventOrg);
         }
-        /** @var EventParticipantModel $eventParticipant */
+        /** @var EventParticipantModel|null $eventParticipant */
         $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
         if (isset($eventParticipant)) {
             $roles[] = new ParticipantRole($event, $eventParticipant);
         }
-        /** @var TeamMemberModel $teamMember */
+        /** @var TeamMemberModel|null $teamMember */
         $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
         if ($teamMember) {
             $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
         }
-        /** @var OrgModel $org */
+        /** @var OrgModel|null $org */
         $org = $this->getActiveOrgsAsQuery($event->event_type->contest)->fetch();
         if (isset($org)) {
             $roles[] = new ContestOrgRole($event, $org);
@@ -346,12 +440,16 @@ final class PersonModel extends Model implements Resource
         return $roles;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
+     */
     public function getTaskContributions(?TaskContributionType $type = null): TypedGroupedSelection
     {
-        $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<TaskContributionModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'person_id');
         if ($type) {
-            $contributions->where('type', $type->value);
+            $selection->where('type', $type->value);
         }
-        return $contributions;
+        return $selection;
     }
 }

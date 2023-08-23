@@ -1,0 +1,24 @@
+{varType bool $hasTasks}
+{block titleBody}
+    {include parent}
+    <a class="btn btn-outline-success" href="{plink default}">{_'New submit system'}</a>
+{/block}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {if $hasTasks}
+                {control uploadForm}
+            {else}
+                <p class="alert alert-info">
+                    {_'No tasks available to submit.'}
+                </p>
+            {/if}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Submited solutions'}</h2>
+            {control submitsGrid}
+        </div>
+    </div>
+{/block}
