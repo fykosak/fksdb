@@ -12,6 +12,7 @@ msg_pattern = re.compile('(?P<type>(msgid|msgstr|msgid_plural)(\[(?P<index>\d+)\
 
 def parse_record(record):
     attributes = {}
+    # extract all key: value pairs from .po file records
     for line in record:
         msg_match = msg_pattern.match(line)
         if line == "" or line[0] == "#":
@@ -25,14 +26,15 @@ def parse_record(record):
         #    res[type] += line[1:-1]
         else:
             raise ValueError("\"{}\" is not a valid record.".format(line))
+
     if 'msgid_plural' in attributes:
-        res = {}
+        res = []
         for index in range(0,3):
             if (f'msgstr[{index}]' in attributes):
-                res[index] = attributes[f'msgstr[{index}]']
+                res.append(attributes[f'msgstr[{index}]'])
         return attributes['msgid'], res
 
-    return attributes['msgid'], attributes['msgstr']
+    return attributes['msgid'], [attributes['msgstr']]
 
 def parse(filename):
     res = {}
@@ -40,11 +42,14 @@ def parse(filename):
         inside = False
         for line in f:
             line = line.rstrip('\n')
-            if inside:
-                record.append(line)
+            if not inside and js_pattern.search(line):
+                record = []
+                inside = True
             if js_pattern.search(line):
                 record = []
                 inside = True
+            if inside:
+                record.append(line)
             if inside and line == "":
                 key,value = parse_record(record)
                 res[key] = value
