@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons;
 use Fykosak\NetteORM\Model;
 
 /**
- * @template TModel of Model
+ * @phpstan-template TModel of Model
  */
 abstract class ReferencedHandler
 {
@@ -31,7 +31,7 @@ abstract class ReferencedHandler
     abstract public function store(array $values, ?Model $model = null): ?Model;
 
     /**
-     * @template TArray of array<string,mixed>|array<string,array<string,mixed>>
+     * @phpstan-template TArray of array<string,mixed>|array<string,array<string,mixed>>
      * @phpstan-param TArray $values
      * @phpstan-return TArray
      */

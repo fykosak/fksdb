@@ -43,16 +43,16 @@ renderer.hashMapLoader.register('schedule.group-container', (element, reactId, r
 });
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent, {translator});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTable, {translator});
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.results.table', ResultsTable, {translator});
+renderer.hashMapLoader.registerActionsComponent('game.statistics.team', StatisticsComponent, {
     mode: 'team',
     translator,
 });
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.statistics.task', StatisticsComponent, {
     mode: 'task',
     translator,
 });
-renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {
+renderer.hashMapLoader.registerActionsComponent('game.statistics.correlation', StatisticsComponent, {
     mode: 'correlation',
     translator,
 });

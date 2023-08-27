@@ -66,7 +66,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
+    public function sendLoginWithInvitation(PersonModel $person, string $email, Language $lang): LoginModel
     {
         $login = $this->createLogin($person);
 
@@ -83,9 +83,9 @@ class AccountManager
                 'person' => $person,
                 'email' => $email,
                 'until' => $until,
-                'lang' => $person->getPreferredLang() ?? $lang,
+                'lang' => $person->getPreferredLang() ?? $lang->value,
             ],
-            $person->getPreferredLang() ?? $lang
+            Language::from($person->getPreferredLang() ?? $lang->value)
         );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
@@ -98,7 +98,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(LoginModel $login, string $lang): void
+    public function sendRecovery(LoginModel $login, Language $lang): void
     {
         if (!$login->person_id) {
             throw new RecoveryNotImplementedException();
@@ -119,7 +119,7 @@ class AccountManager
         $data['text'] = $this->mailTemplateFactory->renderPasswordRecovery([
             'token' => $token,
             'person' => $person,
-            'lang' => $lang,
+            'lang' => $lang->value,
         ], $lang);
         $data['subject'] = _('Password recovery');
         $data['sender'] = $this->emailFrom;

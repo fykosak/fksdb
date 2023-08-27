@@ -9,12 +9,12 @@ use Nette\InvalidStateException;
 
 /**
  * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
- * @template ArgType
+ * @phpstan-template ArgType
  */
 class Before extends EvaluatedExpression
 {
 
-    /** @var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
+    /** @phpstan-var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
     /** @phpstan-param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime */

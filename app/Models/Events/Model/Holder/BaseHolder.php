@@ -23,7 +23,7 @@ use Nette\DI\Container;
  */
 class BaseHolder implements ModelHolder
 {
-    /** @var bool|(callable(BaseHolder):bool)|null */
+    /** @phpstan-var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
     private Container $container;
     public EventModel $event;
@@ -32,11 +32,11 @@ class BaseHolder implements ModelHolder
     /** @phpstan-var array<string,mixed> */
     public array $data = [];
 
-    /** @var Field[] */
+    /** @phpstan-var Field[] */
     private array $fields = [];
-    /** @var FormAdjustment<BaseHolder>[] */
+    /** @phpstan-var FormAdjustment<BaseHolder>[] */
     public array $formAdjustments = [];
-    /** @var Processing[] */
+    /** @phpstan-var Processing[] */
     public array $processings = [];
 
     public function __construct(Container $container, EventParticipantService $service)
@@ -46,7 +46,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param FormAdjustment<BaseHolder> $formAdjustment
+     * @phpstan-param FormAdjustment<BaseHolder> $formAdjustment
      */
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
@@ -73,7 +73,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param bool|callable(BaseHolder):bool $modifiable
+     * @phpstan-param bool|callable(BaseHolder):bool $modifiable
      */
     public function setModifiable($modifiable): void
     {

@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Service;
 
@@ -26,7 +27,7 @@ final class SchedulePaymentService extends Service
      * @throws ModelException
      * @throws DuplicatePaymentException
      */
-    public function storeItems(array $data, PaymentModel $payment, string $lang): void
+    public function storeItems(array $data, PaymentModel $payment, Language $lang): void
     {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));

@@ -151,7 +151,7 @@ class TimelineComponent extends FrontEndComponent
     }
 
     /**
-     * @param EventModel[] $events
+     * @phpstan-param EventModel[] $events
      * @phpstan-return \DateTimeInterface[]
      * @phpstan-param array<string,\DateTimeInterface[]> $dates
      */

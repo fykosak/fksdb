@@ -37,7 +37,7 @@ class SubmitWebModel extends WebModel
     }
 
     /**
-     * @param array{
+     * @phpstan-param array{
      *     method:string,
      *     event_id:int,
      *     code:string,

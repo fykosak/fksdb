@@ -10,12 +10,11 @@ use Nette\Utils\Html;
 
 class FyziklaniTeamTeacherRole extends EventRole
 {
-    /** @var TeamModel2[] */
+    /** @phpstan-var TeamModel2[] */
     public array $teams;
 
     /**
-     * @param EventModel $event
-     * @param TeamModel2[] $teams
+     * @phpstan-param TeamModel2[] $teams
      */
     public function __construct(EventModel $event, array $teams)
     {

@@ -52,7 +52,7 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @param (StoredQueryParameter|ParameterModel)[] $parameters
+     * @phpstan-param (StoredQueryParameter|ParameterModel)[] $parameters
      */
     public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self
     {
@@ -128,7 +128,7 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @param (StoredQueryParameter|ParameterModel)[] $queryParameters
+     * @phpstan-param (StoredQueryParameter|ParameterModel)[] $queryParameters
      */
     private function setQueryParameters(array $queryParameters): void
     {

@@ -21,7 +21,9 @@ final class RoomModel extends Model implements Resource
      */
     public function getSeats(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_SEAT);
+        /** @phpstan-var TypedGroupedSelection<SeatModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_SEAT);
+        return $selection;
     }
 
     public function getResourceId(): string

@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Strings;
@@ -100,7 +101,7 @@ class MailSender extends MailCallback
         $token = $this->createToken($person, $holder);
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder),
-            $person->getPreferredLang(),
+            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'token' => $token,

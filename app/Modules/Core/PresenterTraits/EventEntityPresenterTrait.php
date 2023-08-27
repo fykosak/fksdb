@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @template TEventModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TEventModel of (Model&\Nette\Security\Resource)
  */
 trait EventEntityPresenterTrait
 {
@@ -33,7 +33,7 @@ trait EventEntityPresenterTrait
      */
     protected function getEntity(): Model
     {
-        /** @var TEventModel $model */
+        /** @phpstan-var TEventModel $model */
         $model = $this->getBaseEntity();
         /** @var EventModel $event */
         $event = $model->getReferencedModel(EventModel::class);

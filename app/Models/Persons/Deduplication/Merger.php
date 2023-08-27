@@ -26,7 +26,7 @@ class Merger
     private Explorer $explorer;
     private array $configuration;
     private Logger $logger;
-    /** @var TableMerger[] */
+    /** @phpstan-var TableMerger[] */
     private array $tableMergers = [];
 
     public function __construct(array $configuration, Explorer $explorer)

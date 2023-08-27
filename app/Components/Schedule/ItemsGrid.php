@@ -40,8 +40,7 @@ class ItemsGrid extends BaseGrid
     {
         $this->addColumns([
             'schedule_item.schedule_item_id',
-            'schedule_item.name_cs',
-            'schedule_item.name_en',
+            'schedule_item.name',
             'schedule_item.price_czk',
             'schedule_item.price_eur',
             'schedule_item.capacity',

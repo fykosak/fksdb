@@ -9,9 +9,9 @@ use Nette\DI\Container;
 
 class OptimisticFormControl extends FormControl
 {
-    /** @var callable():string */
+    /** @phpstan-var callable():string */
     private $fingerprintCallback;
-    /** @var callable():mixed */
+    /** @phpstan-var callable():mixed */
     private $defaultsCallback;
 
     /**

@@ -1,11 +1,13 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Submits\SeriesTable $seriesTable}
 {varType bool $displayAll}
+{varType string $lang}
 {define table-head}
     <tr class="table-dark">
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
-            <th>{$task->label}</th>
+            {varType FKSDB\Models\ORM\Models\TaskModel $task}
+            <th>{$task->label} - {$task->name->getText($lang)}</th>
         {/foreach}
     </tr>
 {/define}
@@ -30,7 +32,7 @@
                 <tr>
                     <th scope="row">{$contestant->person->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
-                        {var $submit = isset($table[$contestant->contestant_id][$task->task_id])?$table[$contestant->contestant_id][$task->task_id]:null}
+                        {var $submit = $table[$contestant->contestant_id][$task->task_id]??null}
                         {include submit-row, submit=>$submit,ctId=>$contestant->contestant_id,taskId=>$task->task_id}
                     {/foreach}
                 </tr>

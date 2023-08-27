@@ -52,7 +52,7 @@ class ResultsComponent extends BaseComponent
         $form->addSubmit('execute', _('Execute'));
         $form->onSuccess[] = function (Form $form) {
             $this->parameters = [];
-            /** @var array{params:array<string,array{value:scalar}>} $values */
+            /** @phpstan-var array{params:array<string,array{value:scalar}>} $values */
             $values = $form->getValues('array');
             /**
              * @var string $key
@@ -121,7 +121,7 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @param ParameterModel[] $queryParameters
+     * @phpstan-param ParameterModel[] $queryParameters
      */
     private function createParametersValues(array $queryParameters): ContainerWithOptions
     {

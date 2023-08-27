@@ -9,16 +9,16 @@ use Nette\InvalidStateException;
 
 /**
  * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
- * @template ArgType
+ * @phpstan-template ArgType
  */
 class After extends EvaluatedExpression
 {
 
-    /** @var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
+    /** @phpstan-var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
     /**
-     * @param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime
+     * @phpstan-param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime
      */
     public function __construct($datetime)
     {

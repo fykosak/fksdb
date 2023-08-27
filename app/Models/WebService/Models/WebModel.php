@@ -15,8 +15,8 @@ use Nette\SmartObject;
 use Tracy\Debugger;
 
 /**
- * @template ParamsType of array
- * @template ReturnType of array
+ * @phpstan-template ParamsType of array
+ * @phpstan-template ReturnType of array
  */
 abstract class WebModel
 {

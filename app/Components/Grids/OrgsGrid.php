@@ -13,7 +13,9 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<OrgModel>
+ * @phpstan-extends FilterGrid<OrgModel,array{
+ *    term?:string,
+ * }>
  */
 class OrgsGrid extends FilterGrid
 {
@@ -31,7 +33,7 @@ class OrgsGrid extends FilterGrid
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->contest->getOrganisers()->order('since DESC');
-        if (!isset($this->filterParams) || !isset($this->filterParams['term'])) {
+        if (!isset($this->filterParams['term'])) {
             return $query;
         }
         $tokens = preg_split('/\s+/', $this->filterParams['term']);

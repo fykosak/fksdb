@@ -14,10 +14,11 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
+use FKSDB\Modules\Core\Language;
 use Nette\SmartObject;
 
 /**
- * @template THolder of ModelHolder
+ * @phpstan-template THolder of ModelHolder
  * @implements Statement<void,THolder>
  */
 abstract class MailCallback implements Statement
@@ -43,7 +44,7 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @param THolder ...$args
+     * @phpstan-param THolder $args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -66,7 +67,7 @@ abstract class MailCallback implements Statement
     {
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder),
-            $person->getPreferredLang(),
+            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'holder' => $holder,

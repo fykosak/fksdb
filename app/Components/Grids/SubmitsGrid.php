@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
@@ -54,21 +55,24 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator->lang)
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
+                new Title(null, _('Task'))
             ),
             'task'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time'))
+                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
+                new Title(null, _('Submitted on'))
             ),
             'submitted_on'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->source->value
+                fn(SubmitModel $model): string => $model->source->value,
+                new Title(null, _('Source'))
             ),
             'source'
         );
@@ -77,6 +81,7 @@ class SubmitsGrid extends BaseGrid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Cancel')),
                 fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
                 'btn btn-sm me-1 btn-outline-warning',
@@ -89,6 +94,7 @@ class SubmitsGrid extends BaseGrid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Download original')),
                 fn(SubmitModel $submit): array => ['downloadUploaded!', ['id' => $submit->submit_id]],
                 null,
@@ -101,6 +107,7 @@ class SubmitsGrid extends BaseGrid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Download corrected')),
                 fn(SubmitModel $submit): array => ['downloadCorrected!', ['id' => $submit->submit_id]],
                 null,
@@ -112,6 +119,7 @@ class SubmitsGrid extends BaseGrid
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
                 null,
@@ -131,7 +139,7 @@ class SubmitsGrid extends BaseGrid
             $this->flashMessage(
                 sprintf(
                     _('Submitting of task %s cancelled.'),
-                    $submit->task->getFullLabel($this->translator->lang)
+                    $submit->task->getFullLabel(Language::from($this->translator->lang))
                 ),
                 Message::LVL_WARNING
             );

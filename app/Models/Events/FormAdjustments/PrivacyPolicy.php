@@ -57,7 +57,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     /**
-     * @param ArrayHash<ArrayHash<mixed>|mixed> $values
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
      */
     public function process(ArrayHash $values): void
     {
@@ -65,7 +65,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     /**
-     * @param ArrayHash<ArrayHash<mixed>|mixed> $values
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
      */
     private function trySetAgreed(ArrayHash $values): void
     {

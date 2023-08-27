@@ -44,7 +44,7 @@ final class LoginModel extends Model implements IIdentity
         return $this->login_id;
     }
 
-    /** @var Grant[]   cache */
+    /** @phpstan-var Grant[]   cache */
     private array $roles;
 
     /**
@@ -82,7 +82,9 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getGrants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_GRANT, 'login_id');
+        /** @phpstan-var TypedGroupedSelection<GrantModel> $selection */
+        $selection = $this->related(DbNames::TAB_GRANT, 'login_id');
+        return $selection;
     }
 
     /**
@@ -103,6 +105,7 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<AuthTokenModel> $query */
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
         if (isset($type)) {
             $query->where('type', $type);
@@ -115,10 +118,7 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
-        $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
-        if (isset($type)) {
-            $query->where('type', $type->value);
-        }
+        $query = $this->getTokens($type);
         $query->where('until > ?', new \DateTime());
         return $query;
     }

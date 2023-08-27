@@ -12,7 +12,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseGrid<TModel>
  */
 class PersonRelatedGrid extends BaseGrid

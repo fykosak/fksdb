@@ -18,7 +18,7 @@ class PriceCalculator implements Statement
 {
 
     private PaymentService $paymentService;
-    /** @var Preprocess[] */
+    /** @phpstan-var Preprocess[] */
     private array $preProcess = [];
 
     public function __construct(PaymentService $paymentService)
@@ -40,12 +40,11 @@ class PriceCalculator implements Statement
     }
 
     /**
-     * @param ...$args
+     * @param PaymentHolder $args
      * @throws \Exception
      */
     final public function __invoke(...$args): void
     {
-        /** @var PaymentHolder $holder */
         [$holder] = $args;
         $multiPrice = MultiCurrencyPrice::createFromCurrencies([$holder->getModel()->getCurrency()]);
 

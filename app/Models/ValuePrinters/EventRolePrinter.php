@@ -30,7 +30,7 @@ class EventRolePrinter
     }
 
     /**
-     * @param EventRole[] $roles
+     * @phpstan-param EventRole[] $roles
      */
     private function getHtml(array $roles): Html
     {

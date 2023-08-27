@@ -10,7 +10,7 @@ use Nette\Forms\Form;
 class SchoolsPerTeamProcessing extends FormProcessing
 {
     /**
-     * @template TValue of array<string,mixed>
+     * @phpstan-template TValue of array<string,mixed>
      * @phpstan-param TValue $values
      * @phpstan-return TValue
      */

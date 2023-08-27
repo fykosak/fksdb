@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 
@@ -75,10 +76,10 @@ class Handler
             } elseif (!$group->canCreate()) {
                 throw new ScheduleException($group, _('Given item is not available at this time'));
             } elseif (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, $this->translator->lang);
+                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
             }
             if (!$item->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, $this->translator->lang);
+                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
             }
 
             $this->service->storeModel(

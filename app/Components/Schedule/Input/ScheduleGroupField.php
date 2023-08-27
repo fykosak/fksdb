@@ -6,6 +6,7 @@ namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
@@ -19,13 +20,13 @@ class ScheduleGroupField extends SelectBox
     /**
      * @throws BadRequestException
      */
-    public function __construct(ScheduleGroupModel $group, string $lang)
+    public function __construct(ScheduleGroupModel $group, Language $lang)
     {
         $regEnd = $group->getRegistrationEnd();
         parent::__construct(
             sprintf(
                 _('%s - - end of registration: %s'),
-                $group->name->getText($lang),
+                $group->name->getText($lang->value),
                 $regEnd->format(_('__date_time'))
             )
         );
@@ -37,8 +38,8 @@ class ScheduleGroupField extends SelectBox
         foreach ($this->group->getItems() as $item) {
             $items[$item->getPrimary()] = sprintf(
                 _('%s - %s'),
-                $item->name->getText($lang),
-                $item->description->getText($lang)
+                $item->name->getText($lang->value),
+                $item->description->getText($lang->value)
             );
         }
         $this->setItems($items)->setPrompt(_('-- not selected --'));

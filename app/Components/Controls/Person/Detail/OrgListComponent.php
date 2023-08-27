@@ -53,12 +53,19 @@ class OrgListComponent extends DetailComponent
         );
         /** @phpstan-var RowContainer<OrgModel> $row1 */
         $row1 = new RowContainer($this->container);
-        $row1->addComponent(new TemplateItem($this->container, '@org.domain_alias'), 'domain_alias');
-        $row1->addComponent(new TemplateItem($this->container, '\signature{@org.tex_signature}'), 'tex_signature');
+        $row1->addComponent(
+            new TemplateItem($this->container, '@org.domain_alias', '@org.domain_alias:title'),
+            'domain_alias'
+        );
+        $row1->addComponent(
+            new TemplateItem($this->container, '\signature{@org.tex_signature}', '@org.tex_signature:title'),
+            'tex_signature'
+        );
         $this->addRow($row1, 'row1');
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Edit')),
                 fn(OrgModel $model) => [':Org:Org:edit', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
                 null,
@@ -69,6 +76,7 @@ class OrgListComponent extends DetailComponent
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(OrgModel $model) => [':Org:Org:detail', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
                 null,

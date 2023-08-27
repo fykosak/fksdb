@@ -23,7 +23,14 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<SubmitModel>
+ * @phpstan-extends FilterGrid<SubmitModel,array{
+ *     team?:int,
+ *     code?:string,
+ *     not_null?:bool,
+ *     warnings?:bool,
+ *     task?:string,
+ *     state?:string,
+ * }>
  */
 class AllSubmitsGrid extends FilterGrid
 {
@@ -72,6 +79,7 @@ class AllSubmitsGrid extends FilterGrid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Revoke')),
                 fn(?SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',
@@ -94,24 +102,21 @@ class AllSubmitsGrid extends FilterGrid
     protected function getModels(): TypedSelection
     {
         $query = $this->submitService->getTable()->where('fyziklani_team.event_id', $this->event->event_id);
-        if (!isset($this->filterParams)) {
-            return $query;
-        }
-        foreach ($this->filterParams as $key => $condition) {
-            if (!$condition) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
                 continue;
             }
             switch ($key) {
                 case 'team':
-                    $query->where('fyziklani_submit.fyziklani_team_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_team_id', $filterParam);
                     break;
                 case 'code':
                     $codeProcessor = new TaskCodePreprocessor($this->event);
                     try {
                         $query->where(
                             'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.fyziklani_task_id =? ',
-                            $codeProcessor->getTeam($condition)->fyziklani_team_id,
-                            $codeProcessor->getTask($condition)->fyziklani_task_id
+                            $codeProcessor->getTeam($filterParam)->fyziklani_team_id,
+                            $codeProcessor->getTask($filterParam)->fyziklani_task_id
                         );
                     } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
@@ -127,10 +132,10 @@ class AllSubmitsGrid extends FilterGrid
                     );
                     break;
                 case 'task':
-                    $query->where('fyziklani_submit.fyziklani_task_id', $condition);
+                    $query->where('fyziklani_submit.fyziklani_task_id', $filterParam);
                     break;
                 case 'state':
-                    $query->where('fyziklani_submit.state', $condition);
+                    $query->where('fyziklani_submit.state', $filterParam);
                     break;
             }
         }

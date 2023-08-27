@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
@@ -113,7 +114,7 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
+        /** @phpstan-var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
         $values = $form->getValues('array');
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
@@ -126,7 +127,11 @@ class PaymentFormComponent extends EntityFormComponent
                 ],
                 $this->model
             );
-            $this->schedulePaymentService->storeItems((array)$values['items'], $model, $this->translator->lang);
+            $this->schedulePaymentService->storeItems(
+                (array)$values['items'],
+                $model,
+                Language::from($this->translator->lang)
+            );
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
                 $transition = $this->machine->getImplicitTransition($holder);

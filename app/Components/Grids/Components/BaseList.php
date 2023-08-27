@@ -11,17 +11,17 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
  * @phpstan-extends BaseComponent<TModel>
  */
 abstract class BaseList extends BaseComponent
 {
     protected ORMFactory $reflectionFactory;
-    /** @var ButtonGroup<TModel> */
+    /** @phpstan-var ButtonGroup<TModel> */
     public ButtonGroup $buttons;
-    /** @var ListRows<TModel> */
+    /** @phpstan-var ListRows<TModel> */
     public ListRows $rows;
-    /** @var callable(TModel):string */
+    /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
 
     public function __construct(Container $container, int $userPermission)

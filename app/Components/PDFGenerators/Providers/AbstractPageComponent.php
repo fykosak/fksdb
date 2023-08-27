@@ -7,8 +7,8 @@ namespace FKSDB\Components\PDFGenerators\Providers;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 
 /**
- * @template TRow
- * @template TParam of array
+ * @phpstan-template TRow
+ * @phpstan-template TParam of array
  */
 abstract class AbstractPageComponent extends BaseComponent
 {

@@ -115,7 +115,7 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @template TEnum of (EnumColumn&\FKSDB\Models\Utils\FakeStringEnum)
+     * @phpstan-template TEnum of (EnumColumn&\FKSDB\Models\Utils\FakeStringEnum)
      * @phpstan-param class-string<TEnum> $enumClassName
      * @phpstan-return array{TEnum[],TEnum}
      */

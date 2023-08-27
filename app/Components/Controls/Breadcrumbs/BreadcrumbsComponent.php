@@ -189,7 +189,7 @@ class BreadcrumbsComponent extends BaseComponent
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
-            /** @var class-string<Presenter> $presenterClassName */
+            /** @phpstan-var class-string<Presenter> $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
            // $methodName = ($presenterClassName)::publicFormatActionMethod($action);

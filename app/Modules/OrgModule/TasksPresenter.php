@@ -145,7 +145,7 @@ final class TasksPresenter extends BasePresenter
      */
     private function validSubmitSeriesForm(Form $seriesForm): void
     {
-        /** @var array{file:FileUpload,series:int,source:string} $values */
+        /** @phpstan-var array{file:FileUpload,series:int,source:string} $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
         switch ($values['source']) {

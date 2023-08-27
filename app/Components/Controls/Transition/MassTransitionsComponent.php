@@ -12,7 +12,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
 /**
- * @template TMachine of Machine
+ * @phpstan-template TMachine of Machine
  */
 class MassTransitionsComponent extends BaseComponent
 {

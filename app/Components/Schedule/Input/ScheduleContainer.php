@@ -8,6 +8,8 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -42,7 +44,7 @@ class ScheduleContainer extends ContainerWithOptions
         }
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
-            $field = new ScheduleGroupField($group, (string)$this->translator->lang);
+            $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
             if ($this->required) {
                 $field->setRequired(_('Field %label is required.'));
             }

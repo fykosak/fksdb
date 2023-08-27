@@ -20,7 +20,10 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterList<PaymentModel>
+ * @phpstan-extends FilterList<PaymentModel,array{
+ *     state?:string,
+ *     vs?:string,
+ * }>
  */
 class PaymentList extends FilterList
 {
@@ -38,16 +41,16 @@ class PaymentList extends FilterList
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPayments();
-        foreach ($this->filterParams as $key => $param) {
-            if (!$param) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
                 continue;
             }
             switch ($key) {
                 case 'state':
-                    $query->where('state', $param);
+                    $query->where('state', $filterParam);
                     break;
                 case 'vs':
-                    $query->where('variable_symbol', $param);
+                    $query->where('variable_symbol', $filterParam);
             }
         }
         return $query;
@@ -112,6 +115,7 @@ class PaymentList extends FilterList
         $this->addButton(
             new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(PaymentModel $model) => ['detail', ['id' => $model->getPrimary()]]
             ),

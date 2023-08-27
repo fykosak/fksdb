@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -20,8 +21,9 @@ class LocalizedStringColumnFactory extends ColumnFactory
 {
     private GettextTranslator $translator;
 
-    public function inject(GettextTranslator $translator): void
+    public function __construct(MetaDataFactory $metaDataFactory, GettextTranslator $translator)
     {
+        parent::__construct($metaDataFactory);
         $this->translator = $translator;
     }
 

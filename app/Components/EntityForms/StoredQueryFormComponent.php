@@ -146,7 +146,7 @@ class StoredQueryFormComponent extends EntityFormComponent
     }
 
     /**
-     * @param int[] $tags
+     * @phpstan-param int[] $tags
      */
     private function saveTags(array $tags, QueryModel $query): void
     {
@@ -261,7 +261,7 @@ class StoredQueryFormComponent extends EntityFormComponent
      */
     private function handleComposeExecute(Form $form): void
     {
-        /** @var array{params:array{name:string,default:mixed,type:string},sql:array{sql:string}} $data */
+        /** @phpstan-var array{params:array{name:string,default:mixed,type:string},sql:array{sql:string}} $data */
         $data = $form->getValues('array');
         $parameters = [];
         foreach ($data[self::CONT_PARAMS] as $paramMetaData) {

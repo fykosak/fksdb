@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 /**
  * @todo Implement AJAX loading
  *       Should return school_id or null.
- * @template TProvider of DataProvider
+ * @phpstan-template TProvider of DataProvider
  */
 class AutocompleteSelectBox extends TextBase
 {

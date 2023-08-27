@@ -19,7 +19,11 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterList<TeamModel2>
+ * @phpstan-extends FilterList<TeamModel2,array{
+ *     team_id?:int,
+ *     code?:string,
+ *     name?:string,
+ * }>
  */
 class TeamListComponent extends FilterList
 {
@@ -37,27 +41,27 @@ class TeamListComponent extends FilterList
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getPossiblyAttendingTeams()->order('points');
-        foreach ($this->filterParams as $key => $condition) {
-            if (!$condition) {
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
                 continue;
             }
             switch ($key) {
                 case 'team_id':
-                    $query->where('fyziklani_team_id', $condition);
+                    $query->where('fyziklani_team_id', $filterParam);
                     break;
                 case 'code':
                     $codeProcessor = new TaskCodePreprocessor($this->event);
                     try {
                         $query->where(
                             'fyziklani_team_id =? ',
-                            $codeProcessor->getTeam($condition)->fyziklani_team_id
+                            $codeProcessor->getTeam($filterParam)->fyziklani_team_id
                         );
                     } catch (GameException $exception) {
                         $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
                     }
                     break;
                 case 'name':
-                    $query->where('name LIKE ?', '%' . $condition . '%');
+                    $query->where('name LIKE ?', '%' . $filterParam . '%');
                     break;
             }
         }

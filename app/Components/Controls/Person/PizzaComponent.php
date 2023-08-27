@@ -15,7 +15,7 @@ use Nette\Forms\Form;
 
 class PizzaComponent extends BaseComponent
 {
-    /** @var PersonModel[] */
+    /** @phpstan-var PersonModel[] */
     private array $persons = [];
     private PersonService $personService;
     private PersonFactory $personFactory;
@@ -39,7 +39,7 @@ class PizzaComponent extends BaseComponent
         $form->addComponent($personsField, 'persons');
         $form->addSubmit('submit', _('Get pizza!'));
         $form->onSuccess[] = function (Form $form) {
-            /** @var array{persons:int[]} $values */
+            /** @phpstan-var array{persons:int[]} $values */
             $values = $form->getValues('array');
             foreach ($values['persons'] as $personId) {
                 $person = $this->personService->findByPrimary($personId);
