@@ -1,10 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
 namespace FKSDB\Models\Submits;
-
-include '../../../vendor/setasign/fpdi/src/Fpdi.php';
 
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
@@ -79,9 +76,9 @@ class PDFStamper implements StorageProcessing
 
     private function stampText(string $text): void
     {
-        $pdf = new Fpdi();
+        $pdf = new \setasign\Fpdi\Fpdi();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
-        Debugger::log('hello world');
+        Debugger::log('finally fucking working!');
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
