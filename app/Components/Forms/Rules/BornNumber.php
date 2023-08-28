@@ -22,23 +22,25 @@ class BornNumber
         if ($rc == WriteOnly::VALUE_ORIGINAL) {
             return true;
         }
+
         // "be liberal in what you receive"
         try {
             [$year, $month, $day, $ext, $controlNumber] = self::parseBornNumber($rc);
         } catch (OutOfRangeException $exception) {
             return false;
         }
+
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if (is_null($controlNumber)) {
             return $year < 54;
         }
 
         // kontrolní číslice
-        $mod = ((int)($year . $month . $day . $ext)) % 11;
+        $mod = (int)(sprintf("%02d%02d%02d%03d", $year, $month, $day, $ext)) % 11;
         if ($mod === 10) {
             $mod = 0;
         }
-        if ($mod !== +$controlNumber) {
+        if ($mod !== $controlNumber) {
             return false;
         }
 
@@ -57,11 +59,11 @@ class BornNumber
             $month -= 20;
         }
 
-        if (!checkdate(+$month, +$day, +$year)) {
+        if (!checkdate($month, $day, $year)) {
             return false;
         }
 
-        $normalized = "$originalYear$originalMonth$originalDay/$ext$controlNumber";
+        $normalized = sprintf("%02d%02d%02d/%03d%d", $originalYear, $originalMonth, $originalDay, $ext, $controlNumber);
         $control->setValue($normalized);
         // cislo je OK
         return true;
