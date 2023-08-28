@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 19:07+0200\n"
+"POT-Creation-Date: 2023-08-29 00:11+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -5100,8 +5100,8 @@ msgid "City and region"
 msgstr "Město a okres (kvůli diplomům)."
 
 #: ../app/config/orm.neon.neon2php:536
-msgid "Current role"
-msgstr "Aktuální role"
+msgid "Current career/study"
+msgstr "Aktuální práce/studium"
 
 #: ../app/config/orm.neon.neon2php:538
 msgid "Shown in the organizers' list"
