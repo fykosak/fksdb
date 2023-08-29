@@ -6,6 +6,7 @@ namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
@@ -49,6 +50,7 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, \FKSDB\Tests\TEMP_DIR);
+        /** @var AddressModel $address */
         $address = $this->container->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );

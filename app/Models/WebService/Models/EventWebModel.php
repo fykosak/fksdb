@@ -201,7 +201,7 @@ class EventWebModel extends WebModel
             'schoolId' => $history ? (string)$history->school_id : null,
             'schoolName' => $history ? $history->school->name_abbrev : null,
             'studyYear' => $history ? (string)$history->study_year_new->numeric() : null,
-            'studyYearNew' => $history ? (string)$history->study_year_new->value : null,
+            'studyYearNew' => $history ? $history->study_year_new->value : null,
             'countryIso' => $history ? (
             ($school = $history->school) ? $school->address->country->alpha_2 : null
             ) : null,

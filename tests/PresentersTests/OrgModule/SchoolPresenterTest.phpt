@@ -10,6 +10,7 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\CountryService;
@@ -29,6 +30,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
         $this->container->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
+        /** @var AddressModel $address */
         $address = $this->container->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',

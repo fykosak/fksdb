@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\ModelsTests\Schedule;
 
 use FKSDB\Components\Schedule\Input\Handler;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -38,6 +39,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
         $this->groupService = $this->container->getByType(ScheduleGroupService::class);
         $this->handler = new Handler($this->container);
         $this->tester = $this->createPerson('Tester', 'testorovič');
+        /** @var EventModel $event */
         $event = $this->container->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,

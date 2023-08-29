@@ -14,9 +14,7 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of Model
- * @phpstan-template ArgType
- * @phpstan-extends ColumnFactory<TModel,ArgType>
+ * @phpstan-extends ColumnFactory<Model,never>
  */
 class EnumColumnFactory extends ColumnFactory
 {

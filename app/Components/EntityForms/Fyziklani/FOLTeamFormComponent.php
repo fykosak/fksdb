@@ -19,6 +19,7 @@ class FOLTeamFormComponent extends TeamFormComponent
     protected function getProcessing(): array
     {
         return [
+            new FOLSchoolCheckProcessing($this->container),
             new FOLCategoryProcessing($this->container),
         ];
     }

@@ -49,8 +49,7 @@ class FOFCategoryProcessing extends FormProcessing
             $history = $member->getHistoryByContestYear($event->getContestYear());
             $studyYear = $history->study_year_new;
             if (
-                is_null($studyYear)
-                || $studyYear->value === StudyYear::None
+                $studyYear->value === StudyYear::None
                 || $studyYear->value === StudyYear::UniversityAll
             ) {
                 $olds += 1;

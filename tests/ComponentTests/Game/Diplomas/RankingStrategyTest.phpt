@@ -21,8 +21,10 @@ use Tester\Assert;
 class RankingStrategyTest extends FyziklaniTestCase
 {
     private RankingStrategy $rankingStrategy;
+    /** @phpstan-var array<int,array{'A'|'B'|'C',string,int,int,array<int,int>}> */
     private array $teamsData;
-    private array $teams;
+    /** @phpstan-var TeamModel2[] */
+    private array $teams = [];
 
     protected function setUp(): void
     {
@@ -51,7 +53,6 @@ class RankingStrategyTest extends FyziklaniTestCase
         ];
 
         // create teams
-        $this->teams = [];
         foreach ($this->teamsData as $index => $data) {
             $sum = array_sum($data[4]);
             $this->teams[] = $this->createTeam([
