@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Model;
  * @property-read int|null $school_id
  * @property-read SchoolModel|null $school
  * @property-read string|null $class
- * @property-read int|null $study_year
  * @property-read StudyYear $study_year_new
  */
 final class PersonHistoryModel extends Model

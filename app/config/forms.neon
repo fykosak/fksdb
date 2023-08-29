@@ -39,7 +39,7 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
+                study_year_new:
                     required: true
                     flag: PS
                 class:
@@ -106,7 +106,7 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
+                study_year_new:
                     required: true
                     flag: ALL
             post_contact_d:
