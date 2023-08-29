@@ -15,8 +15,9 @@ person_info:
 person_history:
     school_id:
         required: true
-    study_year:
+    study_year_new:
         required: true
+        flag: HS
 person_has_flag:
     spam_mff:
         required: true

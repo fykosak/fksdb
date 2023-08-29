@@ -73,13 +73,14 @@ final class ContestYearModel extends Model
         return $this->contest_id === ContestModel::ID_VYFUK && $this->year >= 9;
     }
 
-    public function getGraduationYear(StudyYear $studyYear): int
+    public function getGraduationYear(StudyYear $studyYear): ?int
     {
         if ($studyYear->isHighSchool()) {
             return $this->ac_year + 5 - $studyYear->numeric();
         } elseif ($studyYear->isPrimarySchool()) {
             return $this->ac_year + 14 - $studyYear->numeric();
         }
-        throw new \InvalidArgumentException('Graduation year not match');
+        return null;
+        // throw new \InvalidArgumentException('Graduation year not match');
     }
 }

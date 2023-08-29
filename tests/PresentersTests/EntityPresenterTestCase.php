@@ -93,6 +93,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 
     public static function personToValues(PersonModel $person): array
     {
+        $history = $person->getHistory(ContestYearService::getCurrentAcademicYear());
         return [
             '_c_compact' => $person->getFullName(),
             'person' => [
@@ -104,13 +105,11 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
                 'email' => $person->getInfo()->email,
                 'born' => $person->getInfo()->born,
             ],
-            'person_history' => [
-                'school_id__meta' => (string)$person->getHistory(
-                    ContestYearService::getCurrentAcademicYear()
-                )->school_id,
-                'school_id' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->school_id,
-                'study_year' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->study_year,
-            ],
+            'person_history' => $history ? [
+                'school_id__meta' => (string)$history->school_id,
+                'school_id' => (string)$history->school_id,
+                'study_year_new' => $history->study_year_new->value,
+            ] : [],
             'person_has_flag' => [
                 'spam_mff' => '1',
             ],

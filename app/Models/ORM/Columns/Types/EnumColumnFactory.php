@@ -14,10 +14,13 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model,never>
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-extends ColumnFactory<TModel,ArgType>
  */
 class EnumColumnFactory extends ColumnFactory
 {
+
     /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */
     private string $className;
 

@@ -106,9 +106,8 @@ abstract class AESOPModel
             'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
-            'end-year' => $history->study_year
-                ? $this->contestYear->getGraduationYear(StudyYear::tryFromLegacy($history->study_year))
-                : null,
+            'end-year' => $this->contestYear->getGraduationYear($history->study_year_new)
+                ,
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
             'spam-date' => date('Y-m-d', $spamFlag->modified->getTimestamp()),

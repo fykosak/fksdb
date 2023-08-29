@@ -162,7 +162,7 @@ abstract class DatabaseTestCase extends TestCase
         PersonModel $person,
         int $acYear,
         ?SchoolModel $school = null,
-        ?int $studyYear = null,
+        string $studyYear = null,
         ?string $class = null
     ): PersonHistoryModel {
         return $this->container->getByType(PersonHistoryService::class)->storeModel([
@@ -170,7 +170,7 @@ abstract class DatabaseTestCase extends TestCase
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,
             'class' => $class,
-            'study_year' => $studyYear,
+            'study_year_new' => $studyYear,
         ]);
     }
 

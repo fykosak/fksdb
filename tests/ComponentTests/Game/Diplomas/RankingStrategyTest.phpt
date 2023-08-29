@@ -12,6 +12,7 @@ use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
 use FKSDB\Components\Game\Diplomas\RankingStrategy;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Tests\PresentersTests\FyziklaniModule\FyziklaniTestCase;
@@ -39,14 +40,14 @@ class RankingStrategyTest extends FyziklaniTestCase
 
         $this->teamsData = [
             // team_id => category, team member coefficient, expected total rank, expected category rank, points array
-            8 => ['A', 4, 1, 1, [5, 5, 5]], // higher sum
-            2 => ['B', 4, 2, 1, [5, 3]],    // higher average
-            1 => ['A', 4, 3, 2, [5, 2, 1]], // more 5 point submits
-            4 => ['B', 4, 4, 2, [3, 3, 2]], // higher sum
-            3 => ['A', 4, 5, 3, [3, 1]], // more 3 point submits
-            7 => ['B', 1, 6, 3, [2, 2]], // lower team coefficient
-            5 => ['A', 4, 7, 4, [2, 2]], // lower team id
-            6 => ['B', 4, 8, 4, [2, 2]],
+            8 => ['A', StudyYear::High4, 1, 1, [5, 5, 5]], // higher sum
+            2 => ['B', StudyYear::High4, 2, 1, [5, 3]],    // higher average
+            1 => ['A', StudyYear::High4, 3, 2, [5, 2, 1]], // more 5 point submits
+            4 => ['B', StudyYear::High4, 4, 2, [3, 3, 2]], // higher sum
+            3 => ['A', StudyYear::High4, 5, 3, [3, 1]], // more 3 point submits
+            7 => ['B', StudyYear::High1, 6, 3, [2, 2]], // lower team coefficient
+            5 => ['A', StudyYear::High4, 7, 4, [2, 2]], // lower team id
+            6 => ['B', StudyYear::High4, 8, 4, [2, 2]],
         ];
 
         // create teams

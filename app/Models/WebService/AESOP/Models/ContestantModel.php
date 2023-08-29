@@ -154,11 +154,11 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
+    private function studyYearToGraduation(?string $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
+        return $contestYear->getGraduationYear(StudyYear::from($studyYear));
     }
 }

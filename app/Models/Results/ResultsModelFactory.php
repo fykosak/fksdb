@@ -179,6 +179,7 @@ class ResultsModelFactory implements XMLNodeSerializer
             }
         } catch (\Throwable $exception) {
             Debugger::log($exception);
+            var_dump($exception->getMessage());
             throw new \SoapFault('Receiver', 'Internal error.');
         }
     }
