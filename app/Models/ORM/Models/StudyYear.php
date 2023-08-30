@@ -138,33 +138,6 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
         return Strings::startsWith($this->value, 'H');
     }
 
-    public static function tryFromLegacy(?int $studyYear): ?self
-    {
-        if (is_null($studyYear)) {
-            return null;
-        }
-        switch ($studyYear) {
-            case 1:
-                return new self(self::High1);
-            case 2:
-                return new self(self::High2);
-            case 3:
-                return new self(self::High3);
-            case 4:
-                return new self(self::High4);
-
-            case 6:
-                return new self(self::Primary6);
-            case 7:
-                return new self(self::Primary7);
-            case 8:
-                return new self(self::Primary8);
-            case 9:
-                return new self(self::Primary9);
-        }
-        throw new \InvalidArgumentException();
-    }
-
     public function getGraduationYear(int $acYear): ?int
     {
         if ($this->isHighSchool()) {

@@ -53,6 +53,7 @@ class RankingStrategyTest extends FyziklaniTestCase
         ];
 
         // create teams
+        $this->teams = [];
         foreach ($this->teamsData as $index => $data) {
             $sum = array_sum($data[4]);
             $this->teams[] = $this->createTeam([
