@@ -24,14 +24,15 @@
                         {$group->name->getText($lang)}
                     </h3>
                     {if $group->hasEnded()}
-                        <div class="badge bg-secondary">{_'Block eneded'}</div>
+                        <div class="badge bg-secondary">{_'Block ended'}</div>
                     {elseif $group->hasStarted()}
                         <div class="badge bg-success">{_'Block is ongoing'}</div>
                     {else}
                     {var $toStart = $group->start->getTimestamp()-time()}
                         <div class="badge bg-warning">
                             {if $toStart < 60 * 60}
-                                {_'Block starts in'} {floor($toStart / 60)} {_'minutes'}
+                                {var minutesUntilStart = floort($toStart / 60)}
+                                {_'Block starts in'} {sprintf(ngettext('%d minute', '%d minutes', $minutesUntilStart), $minutesUntilStart)}
                             {else}
                                 {_'Block has not started yet'}
                             {/if}

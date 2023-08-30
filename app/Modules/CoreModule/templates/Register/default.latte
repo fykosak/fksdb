@@ -42,12 +42,12 @@
                                     <h3 class="card-title text-{$contest->getContestSymbol()}">{$contest->name}</h3>
                                     {switch $contest->contest_id}
                                         {case FKSDB\Models\ORM\Models\ContestModel::ID_FYKOS}
-                                        <p class="card-text">{_'Physics correspondence competition of CUNI FMP for high-school students.'}</p>
+                                        <p class="card-text">{_'Physics correspondence competition of CUNI MFF for high-school students.'}</p>
                                     {case FKSDB\Models\ORM\Models\ContestModel::ID_VYFUK}
-                                        <p class="card-text">{_'Physics correspondence seminar of CUNI FMP for the students of elementary schools.'}</p>
+                                        <p class="card-text">{_'Physics correspondence seminar of CUNI MFF for the students of elementary schools.'}</p>
                                     {/switch}
                                     <a class="btn btn-{$contest->getContestSymbol()}"
-                                       href="{plink 'year' ,'contestId'=>$contest->contest_id}">{sprintf(_('Register to %s!'),$contest->name)}</a>
+                                       href="{plink 'year' ,'contestId'=>$contest->contest_id}">{sprintf(_('Register to %s'),$contest->name)}</a>
                                 </div>
                             </div>
                         </div>

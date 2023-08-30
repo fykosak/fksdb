@@ -23,7 +23,7 @@ class ParticipantGeoChart extends FrontEndComponent implements Chart
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Participant per country'), 'fas fa-globe');
+        return new Title(null, _('Participants per country'), 'fas fa-globe');
     }
 
     public function getDescription(): ?string

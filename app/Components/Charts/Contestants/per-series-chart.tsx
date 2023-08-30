@@ -3,7 +3,7 @@ import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogra
 import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestatns-data';
+import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestants-data';
 import { Translator } from '@translator/translator';
 import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
