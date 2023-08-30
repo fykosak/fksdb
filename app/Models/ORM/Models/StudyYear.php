@@ -165,6 +165,17 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
         throw new \InvalidArgumentException();
     }
 
+    public function getGraduationYear(int $acYear): ?int
+    {
+        if ($this->isHighSchool()) {
+            return $acYear + 5 - $this->numeric();
+        } elseif ($this->isPrimarySchool()) {
+            return $acYear + 14 - $this->numeric();
+        }
+        return null;
+        // throw new \InvalidArgumentException('Graduation year not match');
+    }
+
     public static function cases(): array
     {
         return [

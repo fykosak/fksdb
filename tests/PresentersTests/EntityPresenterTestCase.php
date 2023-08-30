@@ -31,6 +31,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         $this->fixture = $this->createPresenter($this->getPresenterName());
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,scalar> $postData
+     */
     protected function createPostRequest(string $action, array $params, array $postData = []): Request
     {
         $params['lang'] = 'en';
@@ -38,6 +42,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'POST', $params, $postData);
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,scalar> $postData
+     */
     protected function createGetRequest(string $action, array $params, array $postData = []): Request
     {
         $params['lang'] = 'en';
@@ -74,7 +82,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         });
         return (string)$source;
     }
-
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,mixed> $formData
+     */
     protected function createFormRequest(string $action, array $formData, array $params = []): Response
     {
         $request = $this->createPostRequest(

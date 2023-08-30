@@ -159,6 +159,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear(StudyYear::from($studyYear));
+        return StudyYear::from($studyYear)->getGraduationYear($contestYear->ac_year);
     }
 }

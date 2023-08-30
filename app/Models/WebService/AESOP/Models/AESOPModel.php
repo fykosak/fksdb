@@ -8,7 +8,6 @@ use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Models\StudyYear;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;
@@ -106,8 +105,7 @@ abstract class AESOPModel
             'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
-            'end-year' => $this->contestYear->getGraduationYear($history->study_year_new)
-                ,
+            'end-year' => $history->getGraduationYear(),
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
             'spam-date' => date('Y-m-d', $spamFlag->modified->getTimestamp()),

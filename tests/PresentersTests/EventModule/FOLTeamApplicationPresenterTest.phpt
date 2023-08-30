@@ -362,6 +362,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
         Assert::type(RedirectResponse::class, $response);
+        /** @phpstan-var TeamModel2|null $newTeam */
         $newTeam = $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
         Assert::same(1, $newTeam->getMembers()->count('*'));
         Assert::same($this->personB->person_id, $newTeam->getMembers()->fetch()->person_id);
@@ -434,14 +435,17 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::same($before, $after);
     }
 
+    /**
+     * @phpstan-param PersonModel[] $persons
+     */
     protected function createTeam(string $name, array $persons): TeamModel2
     {
+        /** @phpstan-var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'name' => $name,
             'category' => 'B',
             'event_id' => $this->event->event_id,
         ]);
-        /** @var PersonModel $person */
         foreach ($persons as $person) {
             $this->container->getByType(TeamMemberService::class)->storeModel([
                 'person_id' => $person->person_id,

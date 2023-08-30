@@ -32,4 +32,9 @@ final class PersonHistoryModel extends Model
         }
         return $value;
     }
+
+    public function getGraduationYear(): ?int
+    {
+        return $this->study_year_new->getGraduationYear($this->ac_year);
+    }
 }

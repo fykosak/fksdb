@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\EventService;
@@ -26,6 +27,7 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        /** @phpstan-var SchoolModel $school */
         $school = $this->container->getByType(SchoolService::class)->getTable()->fetch();
         $this->mockApplication();
 

@@ -78,7 +78,7 @@ class StudyYearNewColumnFactory extends ColumnFactory
             $years[$studyYear->value] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear->numeric(),
-                $contestYear->getGraduationYear($studyYear)
+                $studyYear->getGraduationYear($contestYear->ac_year)
             );
         }
         return [_('primary school') => $years];
@@ -94,7 +94,7 @@ class StudyYearNewColumnFactory extends ColumnFactory
             $years[$studyYear->value] = sprintf(
                 _('grade %d (expected graduation in %d)'),
                 $studyYear->numeric(),
-                $contestYear->getGraduationYear($studyYear)
+                $studyYear->getGraduationYear($contestYear->ac_year)
             );
         }
         return [_('high school') => $years];
