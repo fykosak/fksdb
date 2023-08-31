@@ -127,7 +127,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
             'ct.year' => $this->contestYear->year,
             'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
+            'ct.study_year_new' => $this->evaluationStrategy->categoryToStudyYears($category),
         ]);
         $query .= " where $where";
 

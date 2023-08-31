@@ -456,9 +456,9 @@ orm:
                 type: string
                 title: _('Academic year')
                 omitInputField: true
-            study_year:
+            study_year_new:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory
                 description: _('For determinig the category.')
                 title: _('Study year')
             class:
@@ -533,7 +533,7 @@ orm:
                 description: _('City and region')
                 permission: FULL
             career:
-                title: _('Current role')
+                title: _('Current career/study')
                 type: text
                 description: _("Shown in the organizers' list")
             im:

@@ -15,9 +15,6 @@ final class ParameterType extends FakeStringEnum implements EnumColumn
     public const STRING = 'string';
     public const BOOL = 'bool';
 
-    public string $value;
-
-
     public function badge(): Html
     {
         return Html::el('span');

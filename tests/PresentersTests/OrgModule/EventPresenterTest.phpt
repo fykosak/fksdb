@@ -110,6 +110,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
             'id' => $this->event->event_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
+        /** @var EventModel $event */
         $event = $this->container
             ->getByType(EventService::class)
             ->findByPrimary($this->event->event_id);

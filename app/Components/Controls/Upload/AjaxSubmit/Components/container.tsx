@@ -19,7 +19,7 @@ export default function UploadContainer() {
     const actions = useSelector((state: Store) => state.fetch.actions);
     const getInnerContainer = (translator: Translator) => {
         if (submit.disabled) {
-            return <p className="alert alert-info">{translator.getText('Task is not available for your category.')}</p>;
+            return <p className="alert alert-info">{translator.getText('Task is not for your category.')}</p>;
         }
         if (submitting) {
             return <LoadingState/>;

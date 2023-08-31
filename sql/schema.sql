@@ -858,12 +858,13 @@ CREATE TABLE IF NOT EXISTS `study_year`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_history`
 (
-    `person_history_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`         INT         NOT NULL,
-    `ac_year`           SMALLINT(4) NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
-    `school_id`         INT         NULL DEFAULT NULL,
-    `class`             VARCHAR(16) NULL DEFAULT NULL COMMENT 'označení třídy',
-    `study_year`        TINYINT(1)  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
+    `person_history_id` INT                                                                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`         INT                                                                         NOT NULL,
+    `ac_year`           SMALLINT(4)                                                                 NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
+    `school_id`         INT                                                                         NULL DEFAULT NULL,
+    `class`             VARCHAR(16)                                                                 NULL DEFAULT NULL COMMENT 'označení třídy',
+    `study_year`        TINYINT(1)                                                                  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
+    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NULL DEFAULT NULL,
     UNIQUE INDEX `uq_person_history__year` (`person_id` ASC, `ac_year` ASC),
     INDEX `idx_person_history__school` (`school_id` ASC),
     INDEX `idx_person_history__contest_year` (`ac_year` ASC),

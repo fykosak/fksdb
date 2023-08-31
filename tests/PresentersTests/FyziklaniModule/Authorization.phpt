@@ -9,6 +9,8 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -65,12 +67,13 @@ class Authorization extends FyziklaniTestCase
         );
 
         $this->event = $this->createEvent([]);
+        /** @var TaskModel $task */
         $task = $this->container->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
-
+        /** @var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
