@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\ContestYearService;
 
 // phpcs:disable
@@ -21,7 +22,7 @@ class AllUpload extends SubmitTestCase
             $this->person,
             ContestYearService::getCurrentAcademicYear(),
             $this->genericSchool,
-            $this->getCategory(),
+            $this->getStudyYear(),
         );
     }
 
@@ -32,9 +33,9 @@ class AllUpload extends SubmitTestCase
         $this->assertSubmit($this->contestant, $this->taskRestricted);
     }
 
-    protected function getCategory(): int
+    protected function getStudyYear(): string
     {
-        return 6;
+        return StudyYear::Primary6;
     }
 }
 

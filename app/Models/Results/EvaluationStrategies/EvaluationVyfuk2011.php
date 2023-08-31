@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 
@@ -42,10 +43,10 @@ class EvaluationVyfuk2011 extends EvaluationStrategy
     protected function getCategoryMap(): array
     {
         return [
-            ContestCategoryModel::VYFUK_6 => [6],
-            ContestCategoryModel::VYFUK_7 => [7],
-            ContestCategoryModel::VYFUK_8 => [8],
-            ContestCategoryModel::VYFUK_9 => [null, 9],
+            ContestCategoryModel::VYFUK_6 => [StudyYear::Primary6],
+            ContestCategoryModel::VYFUK_7 => [StudyYear::Primary7],
+            ContestCategoryModel::VYFUK_8 => [StudyYear::Primary8],
+            ContestCategoryModel::VYFUK_9 => [StudyYear::None, StudyYear::Primary9],
         ];
     }
 }

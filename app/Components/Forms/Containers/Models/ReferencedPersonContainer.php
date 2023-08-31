@@ -225,7 +225,16 @@ class ReferencedPersonContainer extends ReferencedContainer
                 if (!isset($this->contestYear)) {
                     throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
                 }
-                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
+                if ($fieldName === 'study_year_new') {
+                    $control = $this->singleReflectionFormFactory->createField(
+                        $sub,
+                        $fieldName,
+                        $this->contestYear,
+                        $metadata['flag'] //@phpstan-ignore-line
+                    );
+                } else {
+                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
+                }
                 break;
             default:
                 throw new InvalidArgumentException();

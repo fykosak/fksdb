@@ -6,6 +6,8 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\SchoolService;
@@ -25,23 +27,54 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        /** @phpstan-var SchoolModel $school */
         $school = $this->container->getByType(SchoolService::class)->getTable()->fetch();
         $this->mockApplication();
 
         $this->personA = $this->createPerson('A', 'A', ['email' => 'a@a.a'], ['login' => 'AAAAAA', 'hash' => 'AAAAAA']);
-        $this->createPersonHistory($this->personA, ContestYearService::getCurrentAcademicYear(), $school, 1, '1A');
+        $this->createPersonHistory(
+            $this->personA,
+            ContestYearService::getCurrentAcademicYear(),
+            $school,
+            StudyYear::High1,
+            '1A'
+        );
 
         $this->personB = $this->createPerson('B', 'B', ['email' => 'b@b.b'], ['login' => 'BBBBBB', 'hash' => 'BBBBBB']);
-        $this->createPersonHistory($this->personB, ContestYearService::getCurrentAcademicYear(), $school, 2, '2A');
+        $this->createPersonHistory(
+            $this->personB,
+            ContestYearService::getCurrentAcademicYear(),
+            $school,
+            StudyYear::High2,
+            '2A'
+        );
 
         $this->personC = $this->createPerson('C', 'C', ['email' => 'c@c.c'], ['login' => 'CCCCCC', 'hash' => 'CCCCCC']);
-        $this->createPersonHistory($this->personC, ContestYearService::getCurrentAcademicYear(), $school, 3, '3C');
+        $this->createPersonHistory(
+            $this->personC,
+            ContestYearService::getCurrentAcademicYear(),
+            $school,
+            StudyYear::High3,
+            '3C'
+        );
 
         $this->personD = $this->createPerson('D', 'D', ['email' => 'd@d.d'], ['login' => 'DDDDDD', 'hash' => 'DDDDDD']);
-        $this->createPersonHistory($this->personD, ContestYearService::getCurrentAcademicYear(), $school, 4, '4D');
+        $this->createPersonHistory(
+            $this->personD,
+            ContestYearService::getCurrentAcademicYear(),
+            $school,
+            StudyYear::High4,
+            '4D'
+        );
 
         $this->personE = $this->createPerson('E', 'E', ['email' => 'e@e.e'], ['login' => 'EEEEEE', 'hash' => 'EEEEEE']);
-        $this->createPersonHistory($this->personE, ContestYearService::getCurrentAcademicYear(), $school, 9, '9D');
+        $this->createPersonHistory(
+            $this->personE,
+            ContestYearService::getCurrentAcademicYear(),
+            $school,
+            StudyYear::Primary9,
+            '9D'
+        );
 
         $this->event = $this->createEvent();
     }

@@ -14,26 +14,27 @@ use Fykosak\NetteORM\Model;
  * @property-read int|null $school_id
  * @property-read SchoolModel|null $school
  * @property-read string|null $class
- * @property-read int|null $study_year
+ * @property-read StudyYear $study_year_new
  */
 final class PersonHistoryModel extends Model
 {
-    public function getStudyYear(): ?StudyYear
-    {
-        return StudyYear::tryFromLegacy($this->study_year);
-    }
-    /*
+    /**
      * @return StudyYear|mixed|null
      * @throws \ReflectionException
      */
-    /* public function &__get(string $key)
-     {
-         $value = parent::__get($key);
-         switch ($key) {
-             case 'study_year':
-                 $value = StudyYear::tryFromLegacy($value);
-                 break;
-         }
-         return $value;
-     }*/
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'study_year_new':
+                $value = StudyYear::from($value);
+                break;
+        }
+        return $value;
+    }
+
+    public function getGraduationYear(): ?int
+    {
+        return $this->study_year_new->getGraduationYear($this->ac_year);
+    }
 }

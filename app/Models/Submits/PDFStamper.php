@@ -1,11 +1,18 @@
 <?php
 
 declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
+use setasign\Fpdi\PdfParser\Filter\FilterException;
+use setasign\Fpdi\PdfParser\PdfParserException;
+use setasign\Fpdi\PdfParser\Type\PdfTypeException;
+use setasign\Fpdi\PdfReader\PdfReaderException;
 
 class PDFStamper implements StorageProcessing
 {
@@ -71,33 +78,40 @@ class PDFStamper implements StorageProcessing
         }
     }
 
+    /**
+     * @throws CrossReferenceException
+     * @throws FilterException
+     * @throws PdfParserException
+     * @throws PdfTypeException
+     * @throws PdfReaderException
+     */
     private function stampText(string $text): void
     {
-        $pdf = new \setasign\Fpdi\Fpdi();
+        $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
-        
+
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
-            
-            $orientation = $specs['orientation'];
+
+            $orientation = $specs['orientation']; // @phpstan-ignore-line
             $pdf->AddPage($orientation);
             $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
             $pdf->SetFont('Courier', 'b', $this->getFontSize());
-            $pdf->SetDrawColor(0, 0, 0);// @phpstan-ignore-line
+            $pdf->SetDrawColor(0, 0, 0);
             $pw = 210; // pagewidth, A4 210 mm
             $offset = 7; // vertical offset
-            $tw = $pdf->GetStringWidth($actText); // @phpstan-ignore-line
+            $tw = $pdf->GetStringWidth($actText);
             $th = $this->getFontSize() * 0.35; // 1pt = 0.35mm
             $x = ($pw - $tw) / 2;
             $y = $th + $offset;
             // stamp background
             $margin = 2;
-            $pdf->SetFillColor(240, 240, 240); // @phpstan-ignore-line
-            $pdf->Rect( // @phpstan-ignore-line
+            $pdf->SetFillColor(240, 240, 240);
+            $pdf->Rect(
                 $x - $margin,
                 $y - $th - $margin,
                 $tw + 2 * $margin,
@@ -106,9 +120,9 @@ class PDFStamper implements StorageProcessing
             );
 
             $stampText = Strings::webalize($actText, ' ,.', false); // FPDF has only ASCII encoded fonts
-            $pdf->Text($x, $y, $stampText);// @phpstan-ignore-line
+            $pdf->Text($x, $y, $stampText);
         }
 
-        $pdf->Output($this->getOutputFile(), 'F');// @phpstan-ignore-line
+        $pdf->Output($this->getOutputFile(), 'F');
     }
 }

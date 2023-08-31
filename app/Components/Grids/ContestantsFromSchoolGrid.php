@@ -46,7 +46,7 @@ class ContestantsFromSchoolGrid extends BaseGrid
         $this->addColumns([
             'person.full_name',
             'contestant.year',
-            'person_history.study_year',
+            'person_history.study_year_new',
             'contest.contest',
         ]);
         $this->addPresenterButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);

@@ -93,7 +93,7 @@ abstract class AbstractResultsModel
 
     /**
      * @note Work only with numeric types.
-     * @phpstan-param array<string,int|null|array<int,int|null>> $conditions
+     * @phpstan-param array<string,int|null|array<int,string|int|null>> $conditions
      */
     protected function conditionsToWhere(array $conditions): string
     {
@@ -106,10 +106,11 @@ abstract class AbstractResultsModel
                     if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subValue;
+                        $set[] = is_string($subValue) ? ('"' . $subValue . '"') : $subValue;
                     }
                 }
-                $inClause = "$col IN (" . implode(',', $set) . ')';
+                $inClause = $col . ' IN (' .
+                    implode(',', $set) . ')';
                 if ($hasNull) {
                     $where[] = "$inClause OR $col IS NULL";
                 } else {
