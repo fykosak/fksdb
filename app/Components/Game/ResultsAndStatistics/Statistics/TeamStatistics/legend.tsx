@@ -7,18 +7,7 @@ export default function Legend() {
     const translator = useContext(TranslatorContext);
     const availablePoints = [1, 2, 3, 5];
     const legend = availablePoints.map((points: number) => {
-        let pointsLabel;
-        switch (points) {
-            case 1:
-                pointsLabel = translator.getText('bod');
-                break;
-            case 2:
-            case 3:
-                pointsLabel = translator.getText('body');
-                break;
-            default:
-                pointsLabel = translator.getText('bodů');
-        }
+        let pointsLabel = translator.nGetText('point', 'points', points);
         return <Item
             key={points}
             item={{

@@ -30,7 +30,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
             $contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
         }
         if (!$contestant) {
-            throw new NotFoundException(_('Contestant nof found'));
+            throw new NotFoundException(_('Contestant not found'));
         }
         return $contestant;
     }

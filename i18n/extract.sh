@@ -23,10 +23,11 @@ TS_SUFFIX=ts2php
 ROOT=`dirname ${BASH_SOURCE[0]}`/..
 
 # TODO find ngettext when on multiple lines
+# TODO catch bad matches when ) in msgId
 function latte2php {
-    perl -0777 -pe "s/{?_\(?'([^}]*)'\)?}?/<?php _('\1') ?>/g" $1 |\
-    perl -0777 -pe "s/{?_\(?\"([^}]*)\"\)?}?/<?php _(\"\1\") ?>/g" |\
-    perl -0777 -pe "s/ngettext\((.*),(.*),(.*)\)/<?php ngettext(\1,\2,\3) ?>/g" >$1.$LATTE_SUFFIX
+	perl -0777 -pe "s/{?_\(?'([^}]*)'\)?}?/<?php _('\1') ?>/g" $1 |\
+	perl -0777 -pe "s/{?_\(?\"([^}]*)\"\)?}?/<?php _(\"\1\") ?>/g" |\
+	perl -0777 -pe "s/ngettext\((.*),(.*),(.*)\)/<?php ngettext(\1,\2,\3) ?>/g" >$1.$LATTE_SUFFIX
 }
 
 function neon2php {
@@ -35,8 +36,9 @@ function neon2php {
 }
 
 function tsx2php {
-	sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
+	sed "s/translator.getLocalizedText(\('.*'\),\s?'.*')/\<\?php _(\1)\?\>/" $1 | \
+	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" | \
+	sed "s/translator.nGetText(\(.*\),\(.*\),\(.*\))/\<\?php ngettext(\1,\2,\3)\?\>/" >$1.$TSX_SUFFIX
 }
 
 function ts2php {
