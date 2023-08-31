@@ -8,7 +8,7 @@ use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 use Tracy\Debugger;
 
-Debugger::$logDirectory = '/var/www/html/fksdb/log';
+//Debugger::$logDirectory = '/var/www/html/fksdb/log';
 
 class PDFStamper implements StorageProcessing
 {
@@ -85,8 +85,8 @@ class PDFStamper implements StorageProcessing
             $specs = $pdf->getTemplateSize($tpl);
             
             $orientation = $specs['orientation'];
-            Debugger::log(strval($orientation));
-            $pdf->AddPage(strval($orientation));
+            Debugger::log(gettype($orientation)); //gets string
+            $pdf->AddPage($orientation);
             $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
