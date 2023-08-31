@@ -33,6 +33,7 @@
     "nette/nette": "^3.2.0",
     "setasign/fpdf": "v1.8.6",
     "setasign/fpdi": "v2.4.1",
+    "picqer/php-barcode-generator": "v2.3.3",
     "league/oauth2-google": "v3.0.3",
     "fykosak/nette-orm": "^v0.4.1",
     "fykosak/nette-fks-utils": "^v0.1.1",
