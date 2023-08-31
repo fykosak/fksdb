@@ -9,6 +9,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\UI\Navigation\NavigationItemComponent;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 
@@ -161,9 +162,13 @@ final class NavigationChooserComponent extends NavigationItemComponent
      */
     public function isItemVisible(array $item): bool
     {
-        return $this->getPresenter()->authorized(
-            ':' . $item['presenter'] . ':' . $item['action'],
-            array_merge($this->getPresenter()->getParameters(), $item['params'])
-        );
+        try {
+            return $this->getPresenter()->authorized(
+                ':' . $item['presenter'] . ':' . $item['action'],
+                array_merge($this->getPresenter()->getParameters(), $item['params'])
+            );
+        } catch (AbortException$exception) {
+            return false;
+        }
     }
 }
