@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -87,19 +86,21 @@ class PDFStamper implements StorageProcessing
      */
     private function stampText(string $text): void
     {
-        $pdf = new Fpdi();
+        $pdf = new \setasign\Fpdi\Fpdi();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
+
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
+
             $orientation = $specs['orientation']; // @phpstan-ignore-line
             $pdf->AddPage($orientation);
             $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
             $pdf->SetFont('Courier', 'b', $this->getFontSize());
-            $pdf->SetDrawColor(0, 0, 0);
+            $pdf->SetDrawColor(0, 0, 0);// @phpstan-ignore-line
             $pw = 210; // pagewidth, A4 210 mm
             $offset = 7; // vertical offset
             $tw = $pdf->GetStringWidth($actText);
