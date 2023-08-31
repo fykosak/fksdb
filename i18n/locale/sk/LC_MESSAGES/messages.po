@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-29 00:11+0200\n"
+"POT-Creation-Date: 2023-08-31 19:36+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -906,7 +906,7 @@ msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/Fyziklani/DuplicateMemberException.php:14
 #, php-format
-msgid "Person %s already applied."
+msgid "Person \"%s\" already applied."
 msgstr ""
 
 #: ../app/Components/EntityForms/Fyziklani/DuplicateTeamNameException.php:13
@@ -914,14 +914,10 @@ msgstr ""
 msgid "Team with name \"%s\" already exists."
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/FOFCategoryProcessing.php:82
-msgid "Found old member"
-msgstr ""
-
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:73
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:77
 #: ../app/Components/EntityForms/Fyziklani/FOFTeamFormComponent.php:81
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:253
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:262
 #: ../app/Components/Schedule/Input/ScheduleContainer.php:49
 msgid "Field %label is required."
 msgstr ""
@@ -932,21 +928,21 @@ msgstr ""
 msgid "Teacher #%d"
 msgstr "Zvoliť typ"
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:46
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:48
 #, fuzzy
 msgid "Usually the first part of your name. For example, \"Albert\"."
 msgstr " "
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:52
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:54
 #, fuzzy
 msgid "The second part of your name. For example, \"Einstein\"."
 msgstr " "
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:62
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:64
 msgid "Only for Czech and Slovak students"
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:69
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:71
 msgid ""
 "Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. \n"
 "                        Pokud nelze školu nalézt, pošlete na email schola."
@@ -954,22 +950,30 @@ msgid ""
 "                        adresu a pokud možno i odkaz na webovou stránku.\n"
 "                        Školu založíme a pošleme vám odpověď. Pak budete "
 "schopni dokončit \n"
-"                        registraci. Pokud nejste student, vyplňte \"not a "
-"student\"."
+"                        registraci."
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:78
-msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:80
+msgid "Pro výpočet kategorie."
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:84
+#: ../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:87
 msgid "Pouze pro české a slovenské studenty."
 msgstr ""
 
-#: ../app/Components/EntityForms/Fyziklani/NoMemberException.php:14
+#: ../app/Components/EntityForms/Fyziklani/NoMemberException.php:13
 #, fuzzy
 msgid "Application must have at least one member"
 msgstr "Zoznam platieb"
+
+#: ../app/Components/EntityForms/Fyziklani/OldMemberException.php:13
+msgid "Found old member"
+msgstr ""
+
+#: ../app/Components/EntityForms/Fyziklani/SchoolRequiredException.php:17
+#, php-format
+msgid "The school is required for person \"%s\" and study year \"%s\"."
+msgstr ""
 
 #: ../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:84
 #: ../app/Models/Events/FormAdjustments/PrivacyPolicy.php:53
@@ -1233,7 +1237,7 @@ msgstr ""
 msgid "(when different from delivery address)"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:250
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:259
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
@@ -2511,6 +2515,11 @@ msgstr ""
 msgid "Person participate %d years in the events of contestId %d"
 msgstr ""
 
+#: ../app/Models/DataTesting/Tests/ModelPerson/StudyYearTest.php:30
+#, fuzzy
+msgid "Study years"
+msgstr "Zvoliť typ"
+
 #: ../app/Models/Entity/ModelNotFoundException.php:13
 #, fuzzy
 msgid "Model not found"
@@ -2669,22 +2678,26 @@ msgstr ""
 msgid "Not payable"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:35
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:43
 msgid "Choose study year"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:47
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:55
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:79
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:95
 #, php-format
 msgid "grade %d (expected graduation in %d)"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:62
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:84
+msgid "primary school"
+msgstr ""
+
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:100
 msgid "high school"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:63
-msgid "primary school"
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:112
+msgid "graduated & others"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/AgreedColumnFactory.php:25
@@ -2745,7 +2758,7 @@ msgstr ""
 msgid "__time"
 msgstr ""
 
-#: ../app/Models/ORM/Columns/Types/EnumColumnFactory.php:43
+#: ../app/Models/ORM/Columns/Types/EnumColumnFactory.php:44
 #, fuzzy
 msgid "--Select options--"
 msgstr "Zvoliť typ"
@@ -3066,47 +3079,47 @@ msgstr ""
 msgid "Unlimited capacity"
 msgstr "Kapacita"
 
-#: ../app/Models/ORM/Models/StudyYear.php:38
+#: ../app/Models/ORM/Models/StudyYear.php:53
 msgid "Primary school 5th grade or lower."
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:40
+#: ../app/Models/ORM/Models/StudyYear.php:55
 msgid "Primary school 6th"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:42
+#: ../app/Models/ORM/Models/StudyYear.php:57
 msgid "Primary school 7th"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:44
+#: ../app/Models/ORM/Models/StudyYear.php:59
 msgid "Primary school 8th"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:46
+#: ../app/Models/ORM/Models/StudyYear.php:61
 msgid "Primary school 9th"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:48
+#: ../app/Models/ORM/Models/StudyYear.php:63
 msgid "High school 1st grade"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:50
+#: ../app/Models/ORM/Models/StudyYear.php:65
 msgid "High school 2nd grade"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:52
+#: ../app/Models/ORM/Models/StudyYear.php:67
 msgid "High school 3rd grade"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:54
+#: ../app/Models/ORM/Models/StudyYear.php:69
 msgid "High school 4th grade"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:56
+#: ../app/Models/ORM/Models/StudyYear.php:71
 msgid "University any grade"
 msgstr ""
 
-#: ../app/Models/ORM/Models/StudyYear.php:58
+#: ../app/Models/ORM/Models/StudyYear.php:73
 msgid "Not a student"
 msgstr ""
 
@@ -3277,15 +3290,15 @@ msgstr ""
 msgid "Error when deleting %s."
 msgstr ""
 
-#: ../app/Models/Submits/PDFStamper.php:56
+#: ../app/Models/Submits/PDFStamper.php:62
 msgid "Input file not set."
 msgstr ""
 
-#: ../app/Models/Submits/PDFStamper.php:60
+#: ../app/Models/Submits/PDFStamper.php:66
 msgid "Output file not set."
 msgstr ""
 
-#: ../app/Models/Submits/PDFStamper.php:71
+#: ../app/Models/Submits/PDFStamper.php:77
 msgid "Cannot add stamp to the PDF."
 msgstr ""
 
@@ -3438,7 +3451,7 @@ msgstr ""
 msgid "Undefined error"
 msgstr ""
 
-#: ../app/Modules/Core/BasePresenter.php:399
+#: ../app/Modules/Core/BasePresenter.php:398
 msgid "Successful token authentication."
 msgstr ""
 
@@ -4625,8 +4638,12 @@ msgstr ""
 msgid "Others"
 msgstr ""
 
-#: ../app/Modules/OrgModule/templates/Person/detail.latte.latte2php:7
+#: ../app/Modules/OrgModule/templates/Person/detail.latte.latte2php:10
 msgid "This is how you look, when you stalk yourself"
+msgstr ""
+
+#: ../app/Modules/OrgModule/templates/Person/detail.latte.latte2php:13
+msgid "Show!"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Person/edit.latte.latte2php:16
@@ -6652,10 +6669,6 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "Next year"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
 #~ msgid "Number of brochures"
 #~ msgstr "Zoznam akcií"
 
@@ -6675,7 +6688,7 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgid "Register into competition"
 #~ msgstr "Registrácia"
 
-#, fuzzy, php-format
+#, fuzzy
 #~ msgid "Register to %s!"
 #~ msgstr "Registrácia"
 

@@ -15,7 +15,7 @@ parameters:
                   required: true
                 study_year_new:
                     required: true
-                    flag: HS
+                    flag: ALL
                 class:
                   required: false
             post_contact_p:
@@ -41,7 +41,7 @@ parameters:
                   required: true
                 study_year_new:
                     required: true
-                    flag: PS
+                    flag: ALL
                 class:
                   required: false
             post_contact_p:

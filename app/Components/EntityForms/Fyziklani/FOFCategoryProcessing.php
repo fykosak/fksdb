@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 
 class FOFCategoryProcessing extends FormProcessing
@@ -16,7 +15,6 @@ class FOFCategoryProcessing extends FormProcessing
     /**
      * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
      * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
-     * @throws BadRequestException
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
@@ -71,14 +69,14 @@ class FOFCategoryProcessing extends FormProcessing
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @phpstan-param PersonModel[] $members
      * @throws NoMemberException
-     * @throws BadRequestException
+     * @throws OldMemberException
      * @phpstan-param array{team:array{force_a:bool}} $values
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {
         [$olds, $years] = self::getTeamMembersYears($members, $event);
         if ($olds > 0) {
-            throw new BadRequestException(_('Found old member'));
+            throw new OldMemberException();
         }
         if ($values['team']['force_a']) {
             return TeamCategory::from(TeamCategory::A);
