@@ -95,12 +95,10 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SCHEDULE_ITEM,
             DbNames::TAB_SCHEDULE_GROUP,
 
-            DbNames::TAB_E_FYZIKLANI_PARTICIPANT,
             DbNames::TAB_EVENT_PARTICIPANT,
             DbNames::TAB_FYZIKLANI_TEAM_TEACHER,
             DbNames::TAB_FYZIKLANI_TEAM_MEMBER,
             DbNames::TAB_FYZIKLANI_TEAM,
-            DbNames::TAB_E_FYZIKLANI_TEAM,
             DbNames::TAB_FYZIKLANI_GAME_SETUP,
             DbNames::TAB_EVENT_ORG,
             DbNames::TAB_EVENT,
