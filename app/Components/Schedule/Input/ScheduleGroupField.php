@@ -25,7 +25,7 @@ class ScheduleGroupField extends SelectBox
         $regEnd = $group->getRegistrationEnd();
         parent::__construct(
             sprintf(
-                _('%s - - end of registration: %s'),
+                _('%s -- end of registration: %s'),
                 $group->name->getText($lang->value),
                 $regEnd->format(_('__date_time'))
             )

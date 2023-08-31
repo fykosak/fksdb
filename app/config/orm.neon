@@ -533,7 +533,7 @@ orm:
                 description: _('City and region')
                 permission: FULL
             career:
-                title: _('Current role')
+                title: _('Current career/study')
                 type: text
                 description: _("Shown in the organizers' list")
             im:

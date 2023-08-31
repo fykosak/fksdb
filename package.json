@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "translations": "python i18n/compile-js.py",
     "build": "webpack --color --mode=\"production\" --config webpack.prod.js",
     "dev": "webpack --color --watch --mode=\"development\" --config webpack.dev.js"
   },

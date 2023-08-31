@@ -7,9 +7,9 @@
         {var $class = 'text-' . $transition->behaviorType->value}
         <div class="panel color-auto">
             <div class="container">
-                <h2 class="{$class}">{_($transition->getLabel())}</h2>
+                <h2 class="{$class}">{$transition->getLabel()}</h2>
                 <p>
-                    <small class="text-muted">{$transition->getLabel()}</small>
+                    <small class="text-muted">{$transition->source->badge()} --> {$transition->target->badge()}</small>
                 </p>
                 <p>
                     {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
