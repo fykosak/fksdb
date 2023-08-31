@@ -6,9 +6,6 @@ namespace FKSDB\Models\Submits;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
-use Tracy\Debugger;
-
-//Debugger::$logDirectory = '/var/www/html/fksdb/log';
 
 class PDFStamper implements StorageProcessing
 {
@@ -85,7 +82,6 @@ class PDFStamper implements StorageProcessing
             $specs = $pdf->getTemplateSize($tpl);
             
             $orientation = $specs['orientation'];
-            Debugger::log(gettype($orientation)); //gets string
             $pdf->AddPage($orientation);
             $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
