@@ -78,13 +78,15 @@ class PDFStamper implements StorageProcessing
     {
         $pdf = new \setasign\Fpdi\Fpdi();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
-        Debugger::log('finally fucking working!');
+        
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
+            
             $orientation = $specs['orientation'];
-            $pdf->AddPage($orientation);
+            Debugger::log(strval($orientation));
+            $pdf->AddPage(strval($orientation));
             $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
