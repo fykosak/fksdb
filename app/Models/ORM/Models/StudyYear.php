@@ -10,6 +10,7 @@ use Nette\Utils\Strings;
 
 enum StudyYear: string implements EnumColumn
 {
+    case Primary5 = 'P_5';
     case Primary6 = 'P_6';
     case Primary7 = 'P_7';
     case Primary8 = 'P_8';
