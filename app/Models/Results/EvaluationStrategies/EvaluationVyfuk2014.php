@@ -17,11 +17,11 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1') {
-            return 'IF (
+            return "IF (
             t.series < 7,
-            (IF (ct.study_year_new NOT IN ("P_5","P_6", "P_7"), null, s.raw_points)),
+            (IF (ct.study_year_new NOT IN ('P_5','P_6', 'P_7'), null, s.raw_points)),
             s.raw_points
-            )';
+            )";
         } else {
             return 's.raw_points';
         }
@@ -31,7 +31,7 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     {
         return "IF (t.series < 7,
         IF (t.label IN ('1'),
-        IF ( ct.study_year_new NOT IN ('P_5,'P_6', 'P_7'), null, s.raw_points),
+        IF ( ct.study_year_new NOT IN ('P_5','P_6', 'P_7'), null, s.raw_points),
         s.raw_points),
         s.raw_points)";
     }
