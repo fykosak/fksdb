@@ -94,7 +94,8 @@
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
                 <h2>{_'Parcipant'} #{$counter}</h2>
-                {control columnTable ['person.person_link','person_history.study_year_new','school.school'],$member,1024}
+                {control columnTable ['person.person_link','person_history.study_year_new'],$member,1024}
+                {control columnTable ['school.school'],$member->getPersonHistory(),1024}
                 {include personSchedule, person => $member->person,event=>$model->event}
             </div>
         </div>
