@@ -56,6 +56,7 @@ acl:
     - addResource(chart)         # list, chart
     - addResource(webService)    # default - stahovanie cez webService
     - addResource(aesop)    # default - stahovanie cez webService
+    - addResource(soap)    # default - stahovanie cez webService
 
     #applications
     - addResource(event.participant)  # list, detail
@@ -95,6 +96,7 @@ acl:
     - allow(contestant, submit, download.uploaded, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, download.corrected, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
+    - allow(contestant, submit, list)
 #ORG MODULE
     - allow(org, points, entry)      # zadávání bodů
     - allow(org, contestant, list)
@@ -142,6 +144,7 @@ acl:
     - allow(web, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['web-safe']))
     - allow(web, webService, ::constant(Nette\Security\Permission::ALL)) # new REST-API
     - allow(wiki, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe']))
+    - allow([wiki,web,org], soap, default) # new REST-API
 
     - allow(org, webService, ::constant(Nette\Security\Permission::ALL))
 ## NEW APPLICATIONS
@@ -150,6 +153,7 @@ acl:
     - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
     - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))# +org-edit org-create
 ## EVENT MODULE
+    - allow(event.org, event.participant, [list, detail])
     - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))

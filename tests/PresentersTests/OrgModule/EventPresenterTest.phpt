@@ -36,6 +36,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
             'begin' => new DateTime(),
             'end' => new DateTime(),
             'name' => 'Dummy Event',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ]);
     }
 
@@ -54,12 +56,14 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => (string)2,
-                'year' => (string)1,
-                'event_year' => (string)1,
+                'event_type_id' => '2',
+                'year' => '1',
+                'event_year' => '1',
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ]);
         Assert::type(RedirectResponse::class, $response);
@@ -72,12 +76,14 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => (string)1,
-                'year' => (string)1,
-                'event_year' => (string)1,
+                'event_type_id' => '1',
+                'year' => '1',
+                'event_year' => '1',
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ]);
 
@@ -91,17 +97,20 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
     {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => (string)1,
-                'year' => (string)1,
-                'event_year' => (string)1,
+                'event_type_id' => '1',
+                'year' => '1',
+                'event_year' => '1',
                 'begin' => (new DateTime())->format('c'),
                 'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event edited',
+                'registration_begin' => (new DateTime())->format('c'),
+                'registration_end' => (new DateTime())->format('c'),
             ],
         ], [
             'id' => $this->event->event_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
+        /** @var EventModel $event */
         $event = $this->container
             ->getByType(EventService::class)
             ->findByPrimary($this->event->event_id);

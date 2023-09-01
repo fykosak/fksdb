@@ -22,7 +22,6 @@ class ContestantModel extends AESOPModel
     private ?ContestCategoryModel $category;
 
     /**
-     * ContestantModel constructor.
      * @throws BadRequestException
      */
     public function __construct(Container $container, ContestYearModel $contestYear, ?string $category)
@@ -85,7 +84,7 @@ WHERE
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
-        return $sum;
+        return (int)$sum;
     }
 
     /**
@@ -160,6 +159,6 @@ WHERE
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
+        return $studyYear->getGraduationYear($contestYear->ac_year);
     }
 }

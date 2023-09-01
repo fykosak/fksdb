@@ -9,6 +9,10 @@ use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-import-type SerializedEventModel from EventModel
+ * @phpstan-extends WebModel<array{event_type_ids:array<int,int>},array<int,SerializedEventModel>>
+ */
 class EventListWebModel extends WebModel
 {
 

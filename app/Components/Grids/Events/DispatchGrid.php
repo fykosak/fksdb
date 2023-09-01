@@ -4,35 +4,49 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Database\Table\Selection;
-use Nette\DI\Container;
+use FKSDB\Models\ORM\Services\EventTypeService;
+use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
+use Nette\Forms\Form;
 
-class DispatchGrid extends EntityGrid
+/**
+ * @phpstan-extends FilterGrid<EventModel,array{
+ *     event_type?:int,
+ * }>
+ */
+class DispatchGrid extends FilterGrid
 {
+    private EventService $service;
+    private EventTypeService $eventTypeService;
 
-    public function __construct(Container $container)
+    public function inject(EventService $service, EventTypeService $eventTypeService): void
     {
-        parent::__construct(
-            $container,
-            EventService::class,
-            [
-                'event.event_id',
-                'event.name',
-                'contest.contest',
-                'event.year',
-                'event.role',
-            ],
-        );
+        $this->service = $service;
+        $this->eventTypeService = $eventTypeService;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
+    protected function getModels(): TypedSelection
     {
-        $value = parent::getModels();
-        $value->order('begin DESC');
-        return $value;
+        $query = $this->service->getTable()->order('begin DESC');
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
+            }
+            switch ($key) {
+                case 'event_type':
+                    $query->where('event_type_id', $filterParam);
+            }
+        }
+        return $query;
     }
 
     /**
@@ -41,8 +55,33 @@ class DispatchGrid extends EntityGrid
      */
     protected function configure(): void
     {
-        parent::configure();
         $this->paginate = true;
+        $this->addColumns([
+            'event.event_id',
+        ]);
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                fn(EventModel $model) => $model->getName()->getText($this->translator->lang), //@phpstan-ignore-line
+                new Title(null, _('Event name'))
+            ),
+            'event_name'
+        );
+        $this->addColumns([
+            'contest.contest',
+            'event.year',
+            'event.role',
+        ]);
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $items = [];
+        /** @var EventTypeModel $eventType */
+        foreach ($this->eventTypeService->getTable() as $eventType) {
+            $items[(string)$eventType->event_type_id] = $eventType->name;
+        }
+        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('-- select event type --'));
     }
 }

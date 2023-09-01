@@ -10,6 +10,11 @@ use FKSDB\Models\ORM\Services\PaymentService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{
+ *     event_id:int,
+ * },array<string|int,mixed>>
+ */
 class PaymentListWebModel extends WebModel
 {
     private PaymentService $paymentService;
@@ -33,9 +38,9 @@ class PaymentListWebModel extends WebModel
             foreach ($payment->getRelatedPersonSchedule() as $personSchedule) {
                 $paymentData['items'] [] = [
                     'price' => $personSchedule->schedule_item->getPrice()->__serialize(),
-                    'itemName' => $personSchedule->schedule_item->getName()->__serialize(),
-                    'description' => $personSchedule->schedule_item->getDescription()->__serialize(),
-                    'groupName' => $personSchedule->schedule_item->schedule_group->getName()->__serialize(),
+                    'itemName' => $personSchedule->schedule_item->name->__serialize(),
+                    'description' => $personSchedule->schedule_item->description->__serialize(),
+                    'groupName' => $personSchedule->schedule_item->schedule_group->name->__serialize(),
                 ];
             }
             $data[] = $paymentData;

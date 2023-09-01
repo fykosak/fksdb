@@ -6,23 +6,21 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method QueryModel getEntity()
- */
-class StoredQueryPresenter extends BasePresenter
+final class StoredQueryPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
     private QueryService $storedQueryService;
@@ -38,17 +36,17 @@ class StoredQueryPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen');
+        return new PageTitle(null, sprintf(_('Edit query %s'), $this->getEntity()->name), 'fas fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create query'), 'fa fa-plus');
+        return new PageTitle(null, _('Create query'), 'fas fa-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Exports'), 'fa fa-file-csv');
+        return new PageTitle(null, _('Exports'), 'fas fa-file-csv');
     }
 
     /**
@@ -63,7 +61,7 @@ class StoredQueryPresenter extends BasePresenter
             $title .= " ($qid)";
         }
 
-        return new PageTitle(null, $title, 'fa fa-file-csv');
+        return new PageTitle(null, $title, 'fas fa-file-csv');
     }
 
     /**
@@ -98,7 +96,7 @@ class StoredQueryPresenter extends BasePresenter
         return new StoredQueryFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): StoredQueriesGrid
     {
         /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');
@@ -117,6 +115,7 @@ class StoredQueryPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

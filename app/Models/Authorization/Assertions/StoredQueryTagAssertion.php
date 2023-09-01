@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\StoredQuery\StoredQuery;
-use Nette\InvalidArgumentException;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
@@ -14,18 +14,27 @@ class StoredQueryTagAssertion implements Assertion
 {
     use SmartObject;
 
+    /**
+     * @phpstan-var string[]
+     */
     private array $tagNames;
 
+    /**
+     * @phpstan-param string[] $tagNames
+     */
     public function __construct(array $tagNames)
     {
         $this->tagNames = $tagNames;
     }
 
+    /**
+     * @throws BadTypeException
+     */
     public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
-            throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
+            throw new BadTypeException(StoredQuery::class, $storedQuery);
         }
         foreach ($storedQuery->queryPattern->getStoredQueryTagTypes() as $tagType) {
             if (in_array($tagType->name, $this->tagNames)) {

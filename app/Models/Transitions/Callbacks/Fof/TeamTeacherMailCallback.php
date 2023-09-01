@@ -13,8 +13,15 @@ use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 
+/**
+ * @phpstan-extends MailCallback<TeamHolder>
+ */
 class TeamTeacherMailCallback extends MailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     * @throws BadTypeException
+     */
     protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
@@ -29,6 +36,7 @@ class TeamTeacherMailCallback extends MailCallback
     }
 
     /**
+     * @param TeamHolder $holder
      * @throws BadTypeException
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
@@ -38,13 +46,16 @@ class TeamTeacherMailCallback extends MailCallback
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY),
+            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $holder->getModel()->event->registration_end,
             null,
             true
         );
     }
 
+    /**
+     * @param TeamHolder $holder
+     */
     protected function getTemplatePath(ModelHolder $holder): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';
@@ -52,7 +63,11 @@ class TeamTeacherMailCallback extends MailCallback
 
     /**
      * @param TeamHolder $holder
-     * @return string[]
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
      */
     protected function getData(ModelHolder $holder): array
     {

@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\OrgModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method OrgModel storeModel(array $data, ?OrgModel $model = null)
+ * @phpstan-extends Service<OrgModel>
  */
-class OrgService extends Service
+final class OrgService extends Service
 {
 }

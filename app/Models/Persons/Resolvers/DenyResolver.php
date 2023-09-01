@@ -19,7 +19,7 @@ class DenyResolver implements Resolver
 
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
-        return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+        return ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool

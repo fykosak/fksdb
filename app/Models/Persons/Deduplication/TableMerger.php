@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
 use Nette\InvalidStateException;
@@ -24,11 +24,15 @@ class TableMerger
     private Explorer $explorer;
     private Model $trunkRow;
     private Model $mergedRow;
-    /** @var MergeStrategy[] */
+    /** @phpstan-var array<string,MergeStrategy<mixed>> */
     private array $columnMergeStrategies = [];
+    /** @phpstan-var MergeStrategy<mixed> */
     private MergeStrategy $globalMergeStrategy;
     private Logger $logger;
 
+    /**
+     * @phpstan-param MergeStrategy<mixed> $globalMergeStrategy
+     */
     public function __construct(
         string $table,
         Merger $merger,
@@ -43,16 +47,16 @@ class TableMerger
         $this->logger = $logger;
     }
 
-    /*     * ******************************
-     * Merging
-     * ****************************** */
-
     public function setMergedPair(Model $trunkRow, Model $mergedRow): void
     {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
+    /**
+     * @phpstan-template TLocalValue
+     * @phpstan-param MergeStrategy<TLocalValue>|null $mergeStrategy
+     */
     public function setColumnMergeStrategy(string $column, ?MergeStrategy $mergeStrategy = null): void
     {
         if (!$mergeStrategy) {
@@ -123,12 +127,10 @@ class TableMerger
                     if ($refTrunk && $refMerged) {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
-                        if ($referencingMerger->trunkRow) {
-                            $referencingMerger->setMergedPair(
-                                $referencingMerger->trunkRow,
-                                $referencingMerger->mergedRow
-                            );
-                        }
+                        $referencingMerger->setMergedPair(
+                            $referencingMerger->trunkRow,
+                            $referencingMerger->mergedRow
+                        );
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged
@@ -137,7 +139,7 @@ class TableMerger
             } else {
                 /* Redirect dependant to the new parent. */
                 foreach ($mergedDependants as $dependant) {
-                    $this->logUpdate($dependant, $newParent);
+                    $this->logUpdate($dependant, $newParent); // @phpstan-ignore-line
                     $dependant->update($newParent);
                 }
             }
@@ -198,10 +200,6 @@ class TableMerger
         return implode('_', $key);
     }
 
-    /*     * ******************************
-     * Logging sugar
-     * ****************************** */
-
     private function logUpdate(Model $row, iterable $changes): void
     {
         $msg = [];
@@ -244,10 +242,6 @@ class TableMerger
             )
         );
     }
-
-    /* ******************************
-     * DB reflection
-     * ****************************** */
 
     private ?array $refTables;
     private static bool $refreshReferencing = true;

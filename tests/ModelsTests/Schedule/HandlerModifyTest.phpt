@@ -8,8 +8,8 @@ namespace FKSDB\Tests\ModelsTests\Schedule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Components\Schedule\Input\ScheduleException;
 use Tester\Assert;
 
 class HandlerModifyTest extends HandlerTestCase

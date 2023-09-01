@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<OrgModel,int|null|never>
+ */
 class UntilColumnFactory extends ColumnFactory
 {
 
@@ -24,7 +27,7 @@ class UntilColumnFactory extends ColumnFactory
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Still organizes'));
         } else {
-            return (new StringPrinter())($model->until);
+            return (new StringPrinter())((string)$model->until);
         }
     }
 

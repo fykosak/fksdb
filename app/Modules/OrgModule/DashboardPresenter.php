@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
-
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $access = $login && count($login->person->getActiveOrgs());
-        $this->setAuthorized($access);
+        return true;
     }
 
     public function titleDefault(): PageTitle

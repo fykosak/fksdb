@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Models\DataTesting\TestLog;
-use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
 class EventCoveringTest extends PersonTest
@@ -54,6 +54,7 @@ class EventCoveringTest extends PersonTest
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
+    /** @phpstan-ignore-next-line */
     private function check(Logger $logger, array $data, array $organisers, string $type, PersonModel $person): void
     {
         foreach ($data as $contestId => $contestYears) {
@@ -91,6 +92,9 @@ class EventCoveringTest extends PersonTest
         );
     }
 
+    /**
+     * @phpstan-return array<int,array<int,int>>
+     */
     private function getEventOrgYears(PersonModel $person): array
     {
         $eventOrgYears = [

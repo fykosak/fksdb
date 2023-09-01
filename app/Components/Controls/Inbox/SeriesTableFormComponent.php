@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Inbox;
 use FKSDB\Components\Forms\OptimisticForm;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 
 abstract class SeriesTableFormComponent extends SeriesTableComponent
 {
@@ -15,8 +15,8 @@ abstract class SeriesTableFormComponent extends SeriesTableComponent
     protected function createComponentForm(): OptimisticForm
     {
         $form = new OptimisticForm(
-            fn(): string => $this->getSeriesTable()->getFingerprint(),
-            fn(): array => $this->getSeriesTable()->formatAsFormValues()
+            fn(): string => $this->seriesTable->getFingerprint(),
+            fn(): array => $this->seriesTable->formatAsFormValues()
         );
         $form->addSubmit('submit', _('Save'));
         $form->onError[] = function (Form $form) {
@@ -31,5 +31,5 @@ abstract class SeriesTableFormComponent extends SeriesTableComponent
     /**
      * @throws ForbiddenRequestException
      */
-    abstract protected function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form): void;
 }

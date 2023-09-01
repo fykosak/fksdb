@@ -12,8 +12,15 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 
+/**
+ * @phpstan-extends MailCallback<TeamHolder>
+ */
 abstract class TeamMemberMailCallback extends MailCallback
 {
+    /**
+     * @param TeamHolder $holder
+     * @throws BadTypeException
+     */
     final protected function getPersonsFromHolder(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
@@ -28,6 +35,7 @@ abstract class TeamMemberMailCallback extends MailCallback
     }
 
     /**
+     * @param TeamHolder $holder
      * @throws BadTypeException
      */
     protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
@@ -37,7 +45,7 @@ abstract class TeamMemberMailCallback extends MailCallback
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY),
+            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $holder->getModel()->event->registration_end,
             null,
             true

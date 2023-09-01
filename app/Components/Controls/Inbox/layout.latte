@@ -1,10 +1,13 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\Submits\SeriesTable $seriesTable}
+{varType bool $displayAll}
+{varType string $lang}
 {define table-head}
     <tr class="table-dark">
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
-            <th>{$task->label}</th>
+            {varType FKSDB\Models\ORM\Models\TaskModel $task}
+            <th>{$task->label} - {$task->name->getText($lang)}</th>
         {/foreach}
     </tr>
 {/define}
@@ -14,8 +17,8 @@
         <div class="mb-3 text-end">
             {var $contestantCount = count($table)}
             {var $submitsCount = count($seriesTable->getSubmits())}
-            {_'Total'} {$contestantCount} {_('active')} {($contestantCount == 1) ? _('řešitel') : (($contestantCount >= 2 && $contestantCount <= 4) ? _('řešitelé') : _('řešitelů'))},
-            {$submitsCount} {($submitsCount == 1) ? _('solution') : _('solutions')}
+            {sprintf(ngettext('Total of %d active contestant', 'Total of %d active contestants', abs($contestantCount)), $contestantCount)},
+            {sprintf(ngettext("%d solution", '%d solutions', abs($submitsCount)), $submitsCount)}
         </div>
         <thead>
         {include table-head}
@@ -29,13 +32,13 @@
                 <tr>
                     <th scope="row">{$contestant->person->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
-                        {var $submit = isset($table[$contestant->contestant_id][$task->task_id])?$table[$contestant->contestant_id][$task->task_id]:null}
+                        {var $submit = $table[$contestant->contestant_id][$task->task_id]??null}
                         {include submit-row, submit=>$submit,ctId=>$contestant->contestant_id,taskId=>$task->task_id}
                     {/foreach}
                 </tr>
             {/if}
             {if $counter>14}
-                {var $counter = 0}
+                {php $counter = 0}
                 {include table-head}
             {/if}
         {/foreach}

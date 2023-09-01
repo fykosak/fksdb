@@ -55,6 +55,8 @@ class Schedule extends EventModuleTestCase
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
             'name' => 'TEST FOF',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ];
     }
 
@@ -77,10 +79,13 @@ class Schedule extends EventModuleTestCase
             //['Schedule:PersonSchedule', 'default'],
             ['Schedule:Item', 'create'],
             ['Schedule:Item', 'edit'],
+            ['Schedule:Item', 'detail'],
+            ['Schedule:Item', 'attendance'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
-            ['Schedule:Group', 'detail'],
             ['Schedule:Group', 'edit'],
+            ['Schedule:Group', 'detail'],
+            ['Schedule:Group', 'attendance'],
         ];
     }
 }

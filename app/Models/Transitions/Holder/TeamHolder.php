@@ -8,7 +8,11 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\Utils\FakeStringEnum;
 
+/**
+ * @phpstan-implements ModelHolder<TeamState,TeamModel2>
+ */
 class TeamHolder implements ModelHolder
 {
     private TeamModel2 $team;
@@ -20,6 +24,7 @@ class TeamHolder implements ModelHolder
         $this->service = $service;
     }
 
+    /** @phpstan-param EnumColumn&FakeStringEnum $newState */
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->team);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Components\Grids\Components\Grid;
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -12,16 +11,15 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * @method ProducerModel getEntity(bool $throw = true)
- */
-class ProducerPresenter extends BasePresenter
+final class ProducerPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<ProducerModel> */
     use EntityPresenterTrait;
 
     private ProducerService $producerService;
@@ -43,7 +41,7 @@ class ProducerPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create producer'), 'fa fa-plus');
+        return new PageTitle(null, _('Create producer'), 'fas fa-plus');
     }
 
     /**
@@ -70,7 +68,7 @@ class ProducerPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): ProducersGrid
     {
         return new ProducersGrid($this->getContext());
     }
@@ -86,6 +84,7 @@ class ProducerPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

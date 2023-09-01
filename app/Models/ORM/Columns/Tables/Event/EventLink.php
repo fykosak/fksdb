@@ -6,12 +6,15 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model;
 use Nette\Application\LinkGenerator;
-use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<EventModel,never>
+ */
 class EventLink extends ColumnFactory
 {
 

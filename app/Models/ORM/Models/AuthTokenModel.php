@@ -7,14 +7,15 @@ namespace FKSDB\Models\ORM\Models;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read string token
- * @property-read LoginModel login
- * @property-read int login_id
- * @property-read string data
- * @property-read string type
- * @property-read \DateTimeInterface until
- * TODO
+ * @property-read int $token_id
+ * @property-read int $login_id
+ * @property-read LoginModel $login
+ * @property-read string $token
+ * @property-read string $type
+ * @property-read string|null $data
+ * @property-read \DateTimeInterface $since
+ * @property-read \DateTimeInterface|null $until
  */
-class AuthTokenModel extends Model
+final class AuthTokenModel extends Model
 {
 }

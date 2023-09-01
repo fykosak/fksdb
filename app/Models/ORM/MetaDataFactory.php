@@ -8,7 +8,9 @@ use Nette\Database\Connection;
 
 class MetaDataFactory
 {
-
+    /**
+     * @phpstan-var array<string,array<string,array{size:int|null}>>
+     */
     private array $metadata = [];
     private Connection $connection;
 
@@ -17,6 +19,9 @@ class MetaDataFactory
         $this->connection = $connection;
     }
 
+    /**
+     * @phpstan-return array{size:int|null}
+     */
     public function getMetaData(string $table, string $field): array
     {
         if (!isset($this->metadata[$table])) {
@@ -29,7 +34,7 @@ class MetaDataFactory
     {
         $this->metadata[$tableName] = [];
         foreach ($this->connection->getDriver()->getColumns($tableName) as $columnMeta) {
-            $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;
+            $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;//@phpstan-ignore-line
         }
     }
 }

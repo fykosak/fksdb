@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\DataTesting;
 
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\Utils\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 
-class PersonsGrid extends Grid
+/**
+ * @phpstan-extends BaseGrid<PersonModel>
+ */
+class PersonsGrid extends BaseGrid
 {
     private PersonService $personService;
 
@@ -29,7 +33,10 @@ class PersonsGrid extends Grid
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
+    protected function getModels(): TypedSelection
     {
         return $this->personService->getTable();
     }
@@ -44,9 +51,9 @@ class PersonsGrid extends Grid
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
             $this->addColumn(
-                new RendererBaseItem(
+                new RendererItem(
                     $this->container,
-                    function ($person) use ($test): Html {
+                    function (PersonModel $person) use ($test): Html {
                         $logger = new MemoryLogger();
                         $test->run($logger, $person);
                         return self::createHtmlLog($logger->getMessages());
@@ -59,7 +66,7 @@ class PersonsGrid extends Grid
     }
 
     /**
-     * @param Message[] $logs
+     * @phpstan-param Message[] $logs
      * @throws BadTypeException
      * @throws NotImplementedException
      */

@@ -9,11 +9,11 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent
@@ -28,12 +28,13 @@ class PersonTestComponent extends BaseComponent
      */
     public ?int $endId = 0;
     /**
-     * @var PersonTest[]
+     * @phpstan-var PersonTest[]|null
      * @persistent
      */
     public ?array $tests = [];
     /**
      * @persistent
+     * @phpstan-var string[]|null
      */
     public ?array $levels = [];
 
@@ -46,9 +47,6 @@ class PersonTestComponent extends BaseComponent
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -82,7 +80,14 @@ class PersonTestComponent extends BaseComponent
 
         $form->addSubmit('submit');
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
+            /** @phpstan-var array{
+             *     levels:array<string,bool>,
+             *     tests:array<string,bool>,
+             *     start_id:int,
+             *     end_id:int
+             * } $values
+             */
+            $values = $form->getValues('array');
             $this->levels = [];
             foreach ($values['levels'] as $level => $value) {
                 if ($value) {
@@ -103,7 +108,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @return array[]
+     * @phpstan-return  array<int,array{model:PersonModel,log:Message[]}>
      */
     private function calculateProblems(): array
     {
@@ -117,19 +122,17 @@ class PersonTestComponent extends BaseComponent
             }
             $personLog = \array_filter(
                 $logger->getMessages(),
-                fn(TestLog $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
+                fn(Message $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
             );
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
         }
-
         return $logs;
     }
 
     final public function render(): void
     {
-        $this->template->logs = $this->calculateProblems();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', ['logs' => $this->calculateProblems()]);
     }
 }

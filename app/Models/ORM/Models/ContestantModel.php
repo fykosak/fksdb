@@ -10,17 +10,17 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read int contestant_id
- * @property-read int contest_id
- * @property-read ContestModel contest
- * @property-read int year
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read \DateTimeInterface created
- * @property-read int contest_category_id
- * @property-read ContestCategoryModel contest_category
+ * @property-read int $contestant_id
+ * @property-read int $contest_id
+ * @property-read ContestModel $contest
+ * @property-read int $year
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int|null $contest_category_id
+ * @property-read ContestCategoryModel|null $contest_category
+ * @property-read \DateTimeInterface $created
  */
-class ContestantModel extends Model implements Resource
+final class ContestantModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'contestant';
 
@@ -39,11 +39,19 @@ class ContestantModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SUBMIT, 'contestant_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_SUBMIT, 'contestant_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmitsForSeries(int $series): TypedGroupedSelection
     {
         return $this->getSubmits()->where('task.series', $series);
@@ -51,13 +59,17 @@ class ContestantModel extends Model implements Resource
 
     public function getSubmitForTask(TaskModel $task): ?SubmitModel
     {
-        return $this->getSubmits()->where('task_id', $task->task_id)->fetch();
+        /** @var SubmitModel|null $submit */
+        $submit = $this->getSubmits()->where('task_id', $task->task_id)->fetch();
+        return $submit;
     }
 
     public function getAnswer(SubmitQuestionModel $question): ?SubmitQuestionAnswerModel
     {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
+        /** @var SubmitQuestionAnswerModel|null $answer */
+        $answer = $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'contestant_id')
             ->where('submit_question_id', $question->submit_question_id)
             ->fetch();
+        return $answer;
     }
 }

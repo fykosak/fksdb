@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class SubmitSource extends FakeStringEnum implements EnumColumn
+final class SubmitSource extends FakeStringEnum implements EnumColumn
 {
     public const UPLOAD = 'upload';
     public const POST = 'post';
@@ -27,9 +27,9 @@ class SubmitSource extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::POST),
-            new static(self::QUIZ),
-            new static(self::UPLOAD),
+            new self(self::POST),
+            new self(self::QUIZ),
+            new self(self::UPLOAD),
         ];
     }
 }

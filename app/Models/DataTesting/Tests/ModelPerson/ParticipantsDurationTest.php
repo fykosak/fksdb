@@ -45,13 +45,16 @@ class ParticipantsDurationTest extends PersonTest
             $logger->log(
                 new TestLog(
                     $this->title,
-                    \sprintf('Person participate %d years in the events of contestId %d', $delta, $contestId),
+                    \sprintf(_('Person participate %d years in the events of contestId %d'), $delta, $contestId),
                     $this->evaluateThresholds($delta, $contestDef['thresholds'])
                 )
             );
         }
     }
 
+    /**
+     * @phpstan-param array{int,int} $thresholds
+     */
     private function evaluateThresholds(int $delta, array $thresholds): string
     {
         if ($delta < $thresholds[0]) {

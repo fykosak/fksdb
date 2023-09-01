@@ -14,10 +14,11 @@ use Fykosak\Utils\Logging\Message;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class ContributionsFromXML extends Stage
 {
-    /** @var array   contribution type => xml element */
+    /** @phpstan-var array{author:string,solution:string}  contribution type => xml element */
     private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',

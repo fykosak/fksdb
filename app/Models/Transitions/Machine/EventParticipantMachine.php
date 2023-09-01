@@ -11,17 +11,15 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
-use Nette\InvalidArgumentException;
 
 /**
- * @property Transition[] $transitions
+ * @phpstan-extends Machine<BaseHolder>
  */
-class EventParticipantMachine extends Machine
+final class EventParticipantMachine extends Machine
 {
-    public string $name = 'participant';
-
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(EventDispatchFactory $eventDispatchFactory, Explorer $explorer)
@@ -30,53 +28,28 @@ class EventParticipantMachine extends Machine
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    public function addTransition(Transition $transition): void
-    {
-        $this->transitions[$transition->getId()] = $transition;
-    }
-
     /**
-     * @return Transition[]
+     * @param BaseHolder $holder
+     * @phpstan-return Transition<BaseHolder>[]
+     * @phpstan-param (EnumColumn&FakeStringEnum)|null $sourceState
      */
     public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
     {
         return array_filter(
-            $this->getMatchingTransitions($sourceState),
+            $this->getMatchingTransitions($sourceState ?? $holder->getState()),
             fn(Transition $transition): bool => $transition->canExecute($holder)
         );
     }
 
-    public function getTransitionByTarget(EnumColumn $sourceState, EnumColumn $target): ?Transition
-    {
-        $candidates = array_filter(
-            $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => $transition->target->value ==
-                $target->value
-        );
-        if (count($candidates) == 0) {
-            return null;
-        } elseif (count($candidates) > 1) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Target state %s is from state %s reachable via multiple edges.',
-                    $target->value,
-                    $sourceState->value
-                )
-            );
-        } else {
-            return reset($candidates);
-        }
-    }
-
     /**
-     * @return Transition[]
+     * @phpstan-param FakeStringEnum&EnumColumn $sourceState
+     * @phpstan-return Transition<BaseHolder>[]
      */
-    private function getMatchingTransitions(EnumColumn $sourceStateMask): array
+    private function getMatchingTransitions(EnumColumn $sourceState): array
     {
         return array_filter(
             $this->transitions,
-            fn(Transition $transition): bool => $sourceStateMask->value ===
-                $transition->source->value
+            fn(Transition $transition): bool => $sourceState->value === $transition->source->value
         );
     }
 
@@ -90,14 +63,14 @@ class EventParticipantMachine extends Machine
         return $holder;
     }
 
-    final public function execute2(
-        Transition $transition,
-        BaseHolder $holder
-    ): void {
+    /**
+     * @phpstan-param Transition<BaseHolder> $transition
+     */
+    final public function execute2(Transition $transition, BaseHolder $holder): void
+    {
         if (!$transition->canExecute($holder)) {
             throw new UnavailableTransitionsException();
         }
-
         $holder->setModelState($transition->target);
     }
 }

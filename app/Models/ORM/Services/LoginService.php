@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method LoginModel storeModel(array $data, ?LoginModel $model = null)
+ * @phpstan-extends Service<LoginModel>
  */
-class LoginService extends Service
+final class LoginService extends Service
 {
 }

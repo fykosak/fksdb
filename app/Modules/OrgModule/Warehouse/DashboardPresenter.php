@@ -6,11 +6,15 @@ namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Warehouse'), 'fa fa-warehouse');
+        return new PageTitle(null, _('Warehouse'), 'fas fa-warehouse');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 }

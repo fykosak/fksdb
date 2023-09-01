@@ -20,7 +20,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * @property PersonModel|null $model
+ * @phpstan-extends EntityFormComponent<PersonModel>
  */
 class PersonFormComponent extends EntityFormComponent
 {
@@ -77,7 +77,12 @@ class PersonFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $connection = $this->personService->explorer->getConnection();
-        $values = $form->getValues();
+        /** @phpstan-var array{
+         *     person_info: array<string,mixed>,
+         *     person: array{gender?:string|null,family_name:string}
+         * } $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values);
         $connection->beginTransaction();
         $this->logger->clear();

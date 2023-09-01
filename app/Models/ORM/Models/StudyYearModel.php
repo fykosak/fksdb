@@ -6,6 +6,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\Model;
 
-class StudyYearModel extends Model
+final class StudyYearModel extends Model
 {
 }

@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
+
+/**
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class FOLTeamFormComponent extends TeamFormComponent
 {
-
-
+    /**
+     * @phpstan-return FormProcessing[]
+     */
     protected function getProcessing(): array
     {
         return [
+            new FOLSchoolCheckProcessing($this->container),
             new FOLCategoryProcessing($this->container),
         ];
     }
@@ -26,6 +35,9 @@ class FOLTeamFormComponent extends TeamFormComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.fol.latte';
     }
 
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
     protected function getMemberFieldsDefinition(): array
     {
         return [
@@ -54,18 +66,19 @@ class FOLTeamFormComponent extends TeamFormComponent
             ],
             'person_history' => [
                 'school_id' => [
-                    'required' => true,
+                    'required' => false,
                     'description' => _(
                         'Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. 
                         Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz údaje o vaší škole jako název,
                         adresu a pokud možno i odkaz na webovou stránku.
                         Školu založíme a pošleme vám odpověď. Pak budete schopni dokončit 
-                        registraci. Pokud nejste student, vyplňte "not a student".'
+                        registraci.'
                     ),
                 ],
-                'study_year' => [
-                    'required' => false,
-                    'description' => _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.'),
+                'study_year_new' => [
+                    'required' => true,
+                    'description' => _('Pro výpočet kategorie.'),
+                    'flag' => StudyYearNewColumnFactory::FLAG_ALL,
                 ],
             ],
             'person_has_flag' => [
@@ -77,11 +90,17 @@ class FOLTeamFormComponent extends TeamFormComponent
         ];
     }
 
+    /**
+     * @phpstan-return array<string,EvaluatedFieldMetaData>
+     */
     protected function getTeamFieldsDefinition(): array
     {
         return ['name' => ['required' => true]];
     }
 
+    /**
+     * @phpstan-return array{}
+     */
     protected function getTeacherFieldsDefinition(): array
     {
         return [];

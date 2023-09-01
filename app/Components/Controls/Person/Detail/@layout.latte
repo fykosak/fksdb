@@ -1,7 +1,6 @@
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-<div class="card">
-    <div class="card-body">
-        <h4 class="{($person->gender->value == 'F'?'text-pink':'text-primary') . ' card-title'}">{include card-title}</h4>
-        {include card-body}
+<div class="panel color-auto">
+    <div class="container">
+        <h2>{include headline}</h2>
+        {include content}
     </div>
 </div>

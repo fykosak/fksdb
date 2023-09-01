@@ -7,7 +7,6 @@ namespace FKSDB\Components\Controls\Inbox;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -17,8 +16,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class HandoutFormComponent extends BaseComponent
 {
@@ -44,9 +43,6 @@ class HandoutFormComponent extends BaseComponent
         $this->taskContributionService = $taskContributionService;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $formControl = new FormControl($this->getContext());
@@ -55,7 +51,11 @@ class HandoutFormComponent extends BaseComponent
         $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
+            $control = $this->personFactory->createPersonSelect(
+                false,
+                $task->label . ' ' . $task->name->getText($this->translator->lang),
+                $orgProvider
+            );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
         }
@@ -71,14 +71,16 @@ class HandoutFormComponent extends BaseComponent
      */
     public function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array<string,int[]> $values */
+        $values = $form->getValues('array');
         $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
+            /** @var TaskContributionModel $contribution */
             foreach (
                 $task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 ) as $contribution
             ) {
                 $this->taskContributionService->disposeModel($contribution);
@@ -105,9 +107,6 @@ class HandoutFormComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function setDefaults(): void
     {
         $contributions = [];
@@ -116,7 +115,7 @@ class HandoutFormComponent extends BaseComponent
             $contributions = [
                 ...$contributions,
                 ...$task->getContributions(
-                    TaskContributionType::tryFrom(TaskContributionType::GRADE)
+                    TaskContributionType::from(TaskContributionType::GRADE)
                 )->fetchAll(),
             ];
         }

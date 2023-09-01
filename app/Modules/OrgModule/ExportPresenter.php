@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
@@ -20,14 +20,11 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
-/**
- * @method QueryModel getEntity()
- */
-class ExportPresenter extends BasePresenter
+final class ExportPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<QueryModel> */
     use EntityPresenterTrait;
 
-    private const PARAM_HTTP_AUTH = 'ha';
     private QueryService $queryService;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
@@ -44,9 +41,18 @@ class ExportPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute(): void
+    public function titleExecute(): PageTitle
     {
-        $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
+        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fas fa-play-circle');
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     */
+    public function authorizedExecute(): bool
+    {
+        return $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
     /**
@@ -72,15 +78,6 @@ class ExportPresenter extends BasePresenter
             return $this->queryService->findByQid($qid);
         }
         return null;
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws ModelNotFoundException
-     */
-    public function titleExecute(): PageTitle
-    {
-        return new PageTitle(null, $this->getStoredQuery()->getName(), 'fa fa-play-circle');
     }
 
     /**
@@ -119,13 +116,13 @@ class ExportPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'compose':
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
                 $this->forward(':Org:StoredQuery:list', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
@@ -176,7 +173,11 @@ class ExportPresenter extends BasePresenter
         return false;
     }
 
-    protected function createComponentGrid(): Grid
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }

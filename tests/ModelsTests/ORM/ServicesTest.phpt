@@ -8,9 +8,8 @@ namespace FKSDB\Tests\ModelsTests\ORM;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
-use Fykosak\NetteORM\Service;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\DI\Container;
+use Fykosak\NetteORM\Service;
 use Tester\Assert;
 
 class ServicesTest extends DatabaseTestCase

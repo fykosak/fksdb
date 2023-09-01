@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PaymentModel storeModel(array $data, ?PaymentModel $model = null)
+ * @phpstan-extends Service<PaymentModel>
  */
-class PaymentService extends Service
+final class PaymentService extends Service
 {
 }

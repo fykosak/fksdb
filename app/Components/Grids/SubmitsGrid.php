@@ -4,25 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\ControlButton;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-class SubmitsGrid extends Grid
+/**
+ * @phpstan-extends BaseGrid<SubmitModel>
+ */
+class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -38,7 +42,10 @@ class SubmitsGrid extends Grid
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->contestant->getSubmits()->order('task.series DESC, tasknr ASC');
     }
@@ -46,26 +53,26 @@ class SubmitsGrid extends Grid
     protected function configure(): void
     {
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFQName(),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
                 new Title(null, _('Task'))
             ),
             'task'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->submitted_on->format('c'),
-                new Title(null, _('Timestamp'))
+                fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
+                new Title(null, _('Submitted on'))
             ),
             'submitted_on'
         );
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->source->value,
-                new Title(null, _('Method of handing'))
+                new Title(null, _('Source'))
             ),
             'source'
         );
@@ -74,6 +81,7 @@ class SubmitsGrid extends Grid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Cancel')),
                 fn(SubmitModel $submit): array => ['revoke!', ['id' => $submit->submit_id]],
                 'btn btn-sm me-1 btn-outline-warning',
@@ -86,6 +94,7 @@ class SubmitsGrid extends Grid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Download original')),
                 fn(SubmitModel $submit): array => ['downloadUploaded!', ['id' => $submit->submit_id]],
                 null,
@@ -98,6 +107,7 @@ class SubmitsGrid extends Grid
             new ControlButton(
                 $this->container,
                 $this,
+                null,
                 new Title(null, _('Download corrected')),
                 fn(SubmitModel $submit): array => ['downloadCorrected!', ['id' => $submit->submit_id]],
                 null,
@@ -107,8 +117,9 @@ class SubmitsGrid extends Grid
         );
 
         $this->addButton(
-            new PresenterButton(
+            new PresenterButton( // @phpstan-ignore-line
                 $this->container,
+                null,
                 new Title(null, _('Detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
                 null,
@@ -126,7 +137,10 @@ class SubmitsGrid extends Grid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
-                sprintf(_('Submitting of task %s cancelled.'), $submit->task->getFQName()),
+                sprintf(
+                    _('Submitting of task %s cancelled.'),
+                    $submit->task->getFullLabel(Language::from($this->translator->lang))
+                ),
                 Message::LVL_WARNING
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {

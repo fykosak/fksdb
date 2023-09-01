@@ -12,8 +12,8 @@ use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\EventOrgService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
@@ -42,6 +42,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
             'name' => 'Dummy Event',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
         $this->eventOrg = $this->container->getByType(EventOrgService::class)->storeModel([
@@ -104,6 +106,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'id' => (string)$this->eventOrg->e_org_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
+        /** @var EventOrgModel $org */
         $org = $this->container
             ->getByType(EventOrgService::class)->findByPrimary($this->eventOrg->e_org_id);
         Assert::equal('note-edited', $org->note);

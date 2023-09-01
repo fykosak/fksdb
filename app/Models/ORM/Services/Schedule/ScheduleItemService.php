@@ -8,9 +8,8 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ScheduleItemModel|null findByPrimary($key)
- * @method ScheduleItemModel storeModel(array $data, ?ScheduleItemModel $model = null)
+ * @phpstan-extends Service<ScheduleItemModel>
  */
-class ScheduleItemService extends Service
+final class ScheduleItemService extends Service
 {
 }

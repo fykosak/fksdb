@@ -8,7 +8,7 @@ use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class PresentationPresenter extends BasePresenter
+final class PresentationPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -18,9 +18,9 @@ class PresentationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.presentation', 'default'));
+        return $this->isAllowed('game.presentation', 'default');
     }
 
     /**
@@ -33,11 +33,5 @@ class PresentationPresenter extends BasePresenter
             $this->getEvent(),
             $this->getEvent()->event_type_id === 1 ? 'fyziklani.results.presentation' : 'ctyrboj.results.presentation'
         );
-    }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->setWidePage();
-        parent::beforeRender();
     }
 }

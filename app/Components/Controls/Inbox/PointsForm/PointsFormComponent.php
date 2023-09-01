@@ -7,17 +7,17 @@ namespace FKSDB\Components\Controls\Inbox\PointsForm;
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 class PointsFormComponent extends SeriesTableFormComponent
 {
 
-    /** @var callable */
+    /** @phpstan-var callable():void */
     private $invalidCacheCallback;
 
     private SubmitService $submitService;
@@ -44,8 +44,8 @@ class PointsFormComponent extends SeriesTableFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
-            /** @var SubmitModel $submit */
-            $submit = $this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch();
+            /** @var SubmitModel|null $submit */
+            $submit = $this->seriesTable->getSubmits()->where('submit_id', $submitId)->fetch();
             if (!$submit) {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();

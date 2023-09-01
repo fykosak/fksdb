@@ -13,6 +13,13 @@ use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{
+ *     contest_id:int,
+ *     year:int,
+ *     series:int,
+ * },array<string,mixed>>
+ */
 class SeriesResultsWebModel extends WebModel
 {
     private ContestYearService $contestYearService;

@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
+use FKSDB\Components\Controls\Inbox\Corrected\CorrectedFormComponent;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
-use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Authorizator;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Security\Authorizator;
 
-class InboxPresenter extends BasePresenter
+final class InboxPresenter extends BasePresenter
 {
     use SeriesPresenterTrait;
 
@@ -33,45 +36,43 @@ class InboxPresenter extends BasePresenter
         $this->submitService = $submitService;
     }
 
-    /* ***************** AUTH ***********************/
-
-    public function authorizedInbox(): void
-    {
-        $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest())
-        );
-    }
-
-    public function authorizedList(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest()));
-    }
-
-    public function authorizedCorrected(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
-    }
-
-    public function authorizedQuizDetail(): void
-    {
-        $this->authorizedCorrected();
-    }
-
-    /* ***************** TITLES ***********************/
-
     public function titleInbox(): PageTitle
     {
-        return new PageTitle(null, _('Inbox'), 'fa fa-envelope');
+        return new PageTitle(null, _('Inbox'), 'fas fa-envelope');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedInbox(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of submits'), 'fa fa-list-ul');
+        return new PageTitle(null, _('List of submits'), 'fas fa-list-ul');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
     }
 
     public function titleCorrected(): PageTitle
     {
-        return new PageTitle(null, _('Corrected'), 'fa fa-file-signature');
+        return new PageTitle(null, _('Corrected'), 'fas fa-file-signature');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCorrected(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest());
     }
 
     public function titleQuizDetail(): PageTitle
@@ -79,12 +80,18 @@ class InboxPresenter extends BasePresenter
         return new PageTitle(null, _('Quiz detail'), 'fas fa-tasks');
     }
 
-    /* *********** LIVE CYCLE *************/
-
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedQuizDetail(): bool
+    {
+        return $this->authorizedCorrected();
+    }
 
     /**
-     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     protected function startup(): void
     {
@@ -93,16 +100,19 @@ class InboxPresenter extends BasePresenter
         $this->seriesTable->series = $this->getSelectedSeries();
     }
 
-    /* ******************* COMPONENTS ******************/
-
     protected function createComponentInboxForm(): InboxFormComponent
     {
         return new InboxFormComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentCorrectedFormControl(): CorrectedComponent
+    protected function createComponentCorrectedTable(): CorrectedComponent
     {
         return new CorrectedComponent($this->getContext(), $this->seriesTable);
+    }
+
+    protected function createComponentCorrectedForm(): CorrectedFormComponent
+    {
+        return new CorrectedFormComponent($this->getContext(), $this->seriesTable);
     }
 
     protected function createComponentCheckControl(): SubmitCheckComponent
@@ -119,14 +129,5 @@ class InboxPresenter extends BasePresenter
     {
         $submit = $this->submitService->findByPrimary($this->id);
         return new QuizAnswersGrid($this->getContext(), $submit, true);
-    }
-
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'inbox':
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
     }
 }

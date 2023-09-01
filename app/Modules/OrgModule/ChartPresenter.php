@@ -5,49 +5,61 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Charts\Contestants\AggregatedSeriesChart;
+use FKSDB\Components\Charts\Contestants\ParticipantGeoChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Charts\TotalPersonsChart;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
+use Nette\ComponentModel\IComponent;
 
-class ChartPresenter extends BasePresenter
+final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
-    public function authorizedList(): void
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest()));
+        return $this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest());
     }
 
-    public function authorizedChart(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest()));
-    }
-
+    /**
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
+     */
     protected function startup(): void
     {
         parent::startup();
-        $this->selectChart();
+        $this->registerCharts();
     }
 
-    protected function registerCharts(): array
+    /**
+     * @phpstan-return (Chart&IComponent)[]
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    protected function getCharts(): array
     {
         return [
             'contestantsPerSeries' => new PerSeriesChart($this->getContext(), $this->getSelectedContest()),
             'totalContestantsPerSeries' => new AggregatedSeriesChart($this->getContext(), $this->getSelectedContest()),
             'contestantsPerYears' => new PerYearsChart($this->getContext(), $this->getSelectedContest()),
             'totalPersons' => new TotalPersonsChart($this->getContext()),
+            'geo' => new ParticipantGeoChart($this->getContext(), $this->getSelectedContestYear()),
         ];
-    }
-
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'list':
-                break;
-            default:
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
     }
 }

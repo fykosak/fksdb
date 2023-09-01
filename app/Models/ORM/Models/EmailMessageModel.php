@@ -6,28 +6,27 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
 use Nette\Security\Resource;
 
 /**
- * @property-read int email_message_id`
- * @property-read string recipient
- * @property-read int|null recipient_person_id
- * @property-read PersonModel|null person
- * @property-read string sender
- * @property-read string reply_to
- * @property-read string subject
- * @property-read string|null carbon_copy
- * @property-read string|null blind_carbon_copy
- * @property-read string text
- * @property-read EmailMessageState state
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface sent
+ * @property-read int $email_message_id`
+ * @property-read string $recipient
+ * @property-read int|null $recipient_person_id
+ * @property-read PersonModel|null $person
+ * @property-read string $sender
+ * @property-read string $reply_to
+ * @property-read string $subject
+ * @property-read string|null $carbon_copy
+ * @property-read string|null $blind_carbon_copy
+ * @property-read string $text
+ * @property-read EmailMessageState $state
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $sent
  */
-class EmailMessageModel extends Model implements Resource
+final class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
 
@@ -66,11 +65,11 @@ class EmailMessageModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return static::RESOURCE_ID;
+        return self::RESOURCE_ID;
     }
 
     /**
-     * @return EmailMessageState|FakeStringEnum|mixed|null
+     * @return EmailMessageState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

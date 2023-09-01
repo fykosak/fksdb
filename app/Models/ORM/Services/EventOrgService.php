@@ -8,9 +8,8 @@ use FKSDB\Models\ORM\Models\EventOrgModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method EventOrgModel storeModel(array $data, ?EventOrgModel $model = null)
- * @method EventOrgModel findByPrimary($key)
+ * @phpstan-extends Service<EventOrgModel>
  */
-class EventOrgService extends Service
+final class EventOrgService extends Service
 {
 }

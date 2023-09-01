@@ -4,60 +4,51 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
 
 /**
- * @property-read int schedule_item_id
- * @property-read int schedule_group_id
- * @property-read ScheduleGroupModel schedule_group
- * @property-read float|null price_czk
- * @property-read float|null price_eur
- * @property-read string|null name_cs
- * @property-read string|null name_en
- * @property-read int|null capacity
- * @property-read string|null description_cs
- * @property-read string|null description_en
- * @property-read string|null long_description_cs
- * @property-read string|null long_description_en
- * @property-read \DateTimeInterface|null begin
- * @property-read \DateTimeInterface|null end
+ * @property-read int $schedule_item_id
+ * @property-read int $schedule_group_id
+ * @property-read ScheduleGroupModel $schedule_group
+ * @property-read float|null $price_czk
+ * @property-read float|null $price_eur
+ * @property-read string|null $name_cs
+ * @property-read string|null $name_en
+ * @property-read LocalizedString $name
+ * @property-read int|null $capacity
+ * @property-read string|null $description_cs
+ * @property-read string|null $description_en
+ * @property-read LocalizedString $description
+ * @property-read string|null $long_description_cs
+ * @property-read string|null $long_description_en
+ * @property-read LocalizedString $long_description
+ * @property-read \DateTimeInterface|null $begin
+ * @property-read \DateTimeInterface|null $end
+ * @phpstan-type SerializedScheduleItemModel array{
+ *      scheduleGroupId:int,
+ *      price:array<string, string>,
+ *      totalCapacity:int|null,
+ *      usedCapacity:int|null,
+ *      scheduleItemId:int,
+ *      name:array<string, string>,
+ *      begin:\DateTimeInterface,
+ *      end:\DateTimeInterface,
+ *      description:array<string, string>,
+ *      longDescription:array<string, string>,
+ * }
  */
-class ScheduleItemModel extends Model implements Resource, NodeCreator
+final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.scheduleItem';
-
-    public function getName(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->name_cs,
-            'en' => $this->name_en,
-        ]);
-    }
-
-    public function getDescription(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->description_cs,
-            'en' => $this->description_en,
-        ]);
-    }
-
-    public function getLongDescription(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->long_description_cs,
-            'en' => $this->long_description_en,
-        ]);
-    }
 
     public function getBegin(): \DateTimeInterface
     {
@@ -92,12 +83,16 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         return (bool)count($this->getPrice()->getPrices());
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     public function getInterested(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_PERSON_SCHEDULE);
+        /** @phpstan-var TypedGroupedSelection<PersonScheduleModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_SCHEDULE);
+        return $selection;
     }
 
-    /* ****** CAPACITY CALCULATION *******/
     public function getUsedCapacity(): int
     {
         return $this->getInterested()->count();
@@ -123,6 +118,7 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
+     * @phpstan-return SerializedScheduleItemModel
      * @throws \Exception
      */
     public function __toArray(): array
@@ -133,13 +129,45 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
             'totalCapacity' => $this->capacity,
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
-            'label' => $this->getName()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
             'begin' => $this->getBegin(),
             'end' => $this->getEnd(),
-            'description' => $this->getDescription()->__serialize(),
-            'longDescription' => $this->getLongDescription()->__serialize(),
+            'description' => $this->description->__serialize(),
+            'longDescription' => $this->long_description->__serialize(),
         ];
+    }
+
+    /**
+     * @param string $key
+     * @return LocalizedString|mixed|Model
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key) // phpcs:ignore
+    {
+
+        switch ($key) {
+            case 'name':
+                $value = new LocalizedString([
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ]);
+                break;
+            case 'description':
+                $value = new LocalizedString([
+                    'cs' => $this->description_cs,
+                    'en' => $this->description_en,
+                ]);
+                break;
+            case 'long_description':
+                $value = new LocalizedString([
+                    'cs' => $this->long_description_cs,
+                    'en' => $this->long_description_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
+        }
+        return $value;
     }
 
     /**
@@ -151,14 +179,14 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', (string)$this->schedule_item_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'totalCapacity' => $this->capacity,
-            'usedCapacity' => $this->getUsedCapacity(),
-            'scheduleItemId' => $this->schedule_item_id,
+            'scheduleGroupId' => (string)$this->schedule_group_id,
+            'totalCapacity' => (string)$this->capacity,
+            'usedCapacity' => (string)$this->getUsedCapacity(),
+            'scheduleItemId' => (string)$this->schedule_item_id,
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => $this->getDescription()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'description' => $this->description->__serialize(),
+            'name' => $this->name->__serialize(),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => $this->getPrice()->__serialize(),

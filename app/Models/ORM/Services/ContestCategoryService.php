@@ -7,11 +7,16 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use Fykosak\NetteORM\Service;
 
-class ContestCategoryService extends Service
+/**
+ * @phpstan-extends Service<ContestCategoryModel>
+ */
+final class ContestCategoryService extends Service
 {
 
     public function findByLabel(string $label): ?ContestCategoryModel
     {
-        return $this->getTable()->where('label', $label)->fetch();
+        /** @var ContestCategoryModel|null $contestCategory */
+        $contestCategory = $this->getTable()->where('label', $label)->fetch();
+        return $contestCategory;
     }
 }

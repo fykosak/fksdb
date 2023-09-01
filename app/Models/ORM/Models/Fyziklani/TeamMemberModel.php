@@ -10,13 +10,13 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int fyziklani_team_member_id
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int fyziklani_team_id
- * @property-read TeamModel2 fyziklani_team
+ * @property-read int $fyziklani_team_member_id
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $fyziklani_team_id
+ * @property-read TeamModel2 $fyziklani_team
  */
-class TeamMemberModel extends Model
+final class TeamMemberModel extends Model
 {
 
     public function getPersonHistory(): ?PersonHistoryModel
@@ -24,6 +24,12 @@ class TeamMemberModel extends Model
         return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
     }
 
+    /**
+     * @phpstan-return array{
+     *     participantId:int,
+     *     personId:int,
+     * }
+     */
     public function __toArray(): array
     {
         return [

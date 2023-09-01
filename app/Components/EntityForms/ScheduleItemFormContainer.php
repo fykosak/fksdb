@@ -17,7 +17,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ScheduleItemModel|null $model
+ * @phpstan-extends EntityFormComponent<ScheduleItemModel>
  */
 class ScheduleItemFormContainer extends EntityFormComponent
 {
@@ -44,7 +44,18 @@ class ScheduleItemFormContainer extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{container:array{
+         *               name_cs:string,
+         *               name_en:string,
+         *               description_cs:string|null,
+         *               description_en:string|null,
+         *               capacity:int|null,
+         *               price_czk:int|null,
+         *               price_eur:int|null,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleItemService->storeModel($data, $this->model);
@@ -79,7 +90,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->event->getScheduleGroups() as $group) {
-            $items[$group->schedule_group_id] = $group->getName()[$this->translator->lang]
+            $items[$group->schedule_group_id] = $group->name->getText($this->translator->lang)
                 . '(' . $group->schedule_group_type->value . ')';
         }
         $container->addSelect('schedule_group_id', _('Schedule group Id'), $items);

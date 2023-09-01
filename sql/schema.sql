@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `event_type`
 (
     `event_type_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `contest_id`    INT(11)     NOT NULL,
-    `name`          VARCHAR(45) NULL DEFAULT NULL,
+    `name`          VARCHAR(45) NOT NULL,
     INDEX `idx_event_type__contest` (`contest_id` ASC),
     CONSTRAINT `fk_event_type__contest`
         FOREIGN KEY (`contest_id`)
@@ -50,13 +50,16 @@ CREATE TABLE IF NOT EXISTS `event`
     `event_type_id`      INT          NOT NULL,
     `year`               TINYINT(4)   NOT NULL COMMENT 'ročník semináře',
     `event_year`         TINYINT(4)   NOT NULL COMMENT 'ročník akce',
-    `begin`              DATE         NOT NULL COMMENT 'první den akce',
-    `end`                DATE         NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
-    `registration_begin` DATETIME     NULL DEFAULT NULL COMMENT 'případný počátek webové registrace',
-    `registration_end`   DATETIME     NULL DEFAULT NULL COMMENT 'případný konec webové registrace',
+    `begin`              DATETIME     NOT NULL COMMENT 'první den akce',
+    `end`                DATETIME     NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
+    `registration_begin` DATETIME     NOT NULL COMMENT 'případný počátek webové registrace',
+    `registration_end`   DATETIME     NOT NULL COMMENT 'případný konec webové registrace',
     `name`               VARCHAR(255) NOT NULL COMMENT 'název akce',
-    `fb_album_id`        BIGINT(20)   NULL DEFAULT NULL COMMENT 'id galerie na Facebooku',
-    `report`             TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_cs`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_en`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `description_cs`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `description_en`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `place`              VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kde sa akcia uskutočnila (sústredka + tabory + setkani)',
     `parameters`         TEXT         NULL DEFAULT NULL COMMENT 'optional parameters in Neon syntax, scheme is define with action',
     INDEX `idx_event__event_type1` (`event_type_id` ASC),
     UNIQUE INDEX `uq_event__event_year__event_type` (`event_year` ASC, `event_type_id` ASC),
@@ -261,15 +264,15 @@ CREATE TABLE IF NOT EXISTS `contestant`
 CREATE TABLE IF NOT EXISTS `school`
 (
     `school_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name_full`   VARCHAR(255) NULL DEFAULT NULL COMMENT 'plný název školy',
+    `name_full`   VARCHAR(255) NULL     DEFAULT NULL COMMENT 'plný název školy',
     `name`        VARCHAR(255) NOT NULL COMMENT 'zkrácený název školy (na obálku)',
     `name_abbrev` VARCHAR(32)  NOT NULL COMMENT 'Zkratka pouzivana napr. ve vysledkove listine',
     `address_id`  INT(11)      NOT NULL,
-    `email`       VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kontaktní e-mail',
-    `ic`          CHAR(8)      NULL DEFAULT NULL COMMENT 'IČ (osm číslic)',
-    `izo`         VARCHAR(32)  NULL DEFAULT NULL COMMENT 'IZO kód (norma?)',
-    `active`      TINYINT(1)   NULL DEFAULT NULL COMMENT 'Platný záznam školy',
-    `note`        VARCHAR(255) NULL DEFAULT NULL,
+    `email`       VARCHAR(255) NULL     DEFAULT NULL COMMENT 'Kontaktní e-mail',
+    `ic`          CHAR(8)      NULL     DEFAULT NULL COMMENT 'IČ (osm číslic)',
+    `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
+    `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
+    `note`        VARCHAR(255) NULL     DEFAULT NULL,
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -361,36 +364,37 @@ CREATE TABLE IF NOT EXISTS `grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info`
 (
-    `person_id`              INT(11)          NOT NULL PRIMARY KEY,
-    `preferred_lang`         ENUM ('cs','en') NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
-    `born`                   DATE             NULL DEFAULT NULL COMMENT 'datum narození',
-    `id_number`              VARCHAR(32)      NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
-    `born_id`                VARCHAR(32)      NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
-    `phone`                  VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo',
-    `im`                     VARCHAR(32)      NULL DEFAULT NULL COMMENT 'ICQ, XMPP, etc.',
-    `note`                   TEXT             NULL DEFAULT NULL COMMENT 'ostatní/poznámka',
-    `uk_login`               VARCHAR(8)       NULL DEFAULT NULL COMMENT 'CAS login, pro orgy',
-    `isic_number`            VARCHAR(14)      NULL DEFAULT NULL COMMENT 'číslo ISICu',
-    `account`                VARCHAR(32)      NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
-    `agreed`                 DATETIME         NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
-    `birthplace`             VARCHAR(255)     NULL DEFAULT NULL COMMENT 'název města narození osoby',
-    `citizenship`            CHAR(2)          NULL DEFAULT NULL COMMENT 'Státní příslušnost',
-    `health_insurance`       INT(11)          NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
-    `employer`               VARCHAR(255)     NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
-    `academic_degree_prefix` varchar(64)      NULL DEFAULT NULL COMMENT 'titul před jménem',
-    `academic_degree_suffix` varchar(64)      NULL DEFAULT NULL COMMENT 'titul za jménem',
-    `email`                  VARCHAR(255)     NULL DEFAULT NULL,
-    `origin`                 TEXT             NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
-    `career`                 TEXT             NULL DEFAULT NULL COMMENT 'co studuje/kde pracuje',
-    `homepage`               VARCHAR(255)     NULL DEFAULT NULL COMMENT 'URL osobní homepage',
-    `fb_id`                  VARCHAR(255)     NULL DEFAULT NULL,
-    `linkedin_id`            VARCHAR(255)     NULL DEFAULT NULL,
-    `phone_parent_d`         VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
-    `phone_parent_m`         VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
-    `duplicates`             TEXT             NULL DEFAULT NULL COMMENT 'Označení neduplicitních osob.',
-    `email_parent_d`         VARCHAR(255)     NULL DEFAULT NULL COMMENT 'email rodič otec',
-    `email_parent_m`         VARCHAR(255)     NULL DEFAULT NULL COMMENT 'email rodič mama',
-    `pizza`                  VARCHAR(255)     NULL DEFAULT NULL COMMENT 'pizza',
+    `person_id`              INT(11)               NOT NULL PRIMARY KEY,
+    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
+    `born`                   DATE                  NULL DEFAULT NULL COMMENT 'datum narození',
+    `id_number`              VARCHAR(32)           NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
+    `born_id`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
+    `phone`                  VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo',
+    `im`                     VARCHAR(32)           NULL DEFAULT NULL COMMENT 'ICQ, XMPP, etc.',
+    `note`                   TEXT                  NULL DEFAULT NULL COMMENT 'ostatní/poznámka',
+    `uk_login`               VARCHAR(8)            NULL DEFAULT NULL COMMENT 'CAS login, pro orgy',
+    `isic_number`            VARCHAR(14)           NULL DEFAULT NULL COMMENT 'číslo ISICu',
+    `account`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
+    `agreed`                 DATETIME              NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
+    `birthplace`             VARCHAR(255)          NULL DEFAULT NULL COMMENT 'název města narození osoby',
+    `citizenship`            CHAR(2)               NULL DEFAULT NULL COMMENT 'Státní příslušnost',
+    `health_insurance`       INT(11)               NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
+    `employer`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
+    `academic_degree_prefix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul před jménem',
+    `academic_degree_suffix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul za jménem',
+    `email`                  VARCHAR(255)          NULL DEFAULT NULL,
+    `origin`                 TEXT                  NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
+    `career`                 TEXT                  NULL DEFAULT NULL COMMENT 'co studuje/kde pracuje',
+    `homepage`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'URL osobní homepage',
+    `fb_id`                  VARCHAR(255)          NULL DEFAULT NULL,
+    `linkedin_id`            VARCHAR(255)          NULL DEFAULT NULL,
+    `phone_parent_d`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
+    `phone_parent_m`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
+    `duplicates`             TEXT                  NULL DEFAULT NULL COMMENT 'Označení neduplicitních osob.',
+    `email_parent_d`         VARCHAR(255)          NULL DEFAULT NULL COMMENT 'email rodič otec',
+    `email_parent_m`         VARCHAR(255)          NULL DEFAULT NULL COMMENT 'email rodič mama',
+    `pizza`                  VARCHAR(255)          NULL DEFAULT NULL COMMENT 'pizza',
+    `theme`                  ENUM ('light','dark') NULL DEFAULT NULL,
     UNIQUE INDEX `uq_person_info__email` (`email` ASC),
     UNIQUE INDEX `uq_person_info__uk_login` (`uk_login` ASC),
     UNIQUE INDEX `uq_person_info__born_id` (`born_id` ASC),
@@ -449,6 +453,7 @@ CREATE TABLE IF NOT EXISTS `psc_region`
     DEFAULT CHARACTER SET = utf8
     COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision'
 /* comment truncated */ /*n*/;
+# TODO to ORM
 
 -- -----------------------------------------------------
 -- Table `mail_batch`
@@ -461,7 +466,7 @@ CREATE TABLE IF NOT EXISTS `mail_batch`
     `ts`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
     ENGINE = InnoDB;
-
+# TODO to ORM
 -- -----------------------------------------------------
 -- Table `mail_log`
 -- -----------------------------------------------------
@@ -494,7 +499,7 @@ CREATE TABLE IF NOT EXISTS `mail_log`
     DEFAULT CHARACTER SET = utf8
     COMMENT = 'v tabulce se loguje historická hodnota adresy nebo emailu, '
 /* comment truncated */ /*kam se posílalo*/;
-
+# TODO to ORM
 -- -----------------------------------------------------
 -- Table `task`
 -- -----------------------------------------------------
@@ -528,12 +533,12 @@ CREATE TABLE IF NOT EXISTS `submit`
     `submit_id`     INT(11)                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `contestant_id` INT(11)                         NOT NULL COMMENT 'Contestant',
     `task_id`       INT(11)                         NOT NULL COMMENT 'Task',
-    `submitted_on`  DATETIME                        NULL DEFAULT NULL,
+    `submitted_on`  DATETIME                        NULL     DEFAULT NULL,
     `source`        ENUM ('post', 'upload', 'quiz') NOT NULL COMMENT 'Typ příjmu řešení',
-    `note`          VARCHAR(255)                    NULL DEFAULT NULL COMMENT 'Pocet stranek a jine poznamky',
-    `raw_points`    DECIMAL(4, 2)                   NULL DEFAULT NULL COMMENT 'Pred prepoctem',
-    `calc_points`   DECIMAL(4, 2)                   NULL DEFAULT NULL COMMENT 'Cache spoctenych bodu.',
-    `corrected`     BOOLEAN                         NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
+    `note`          VARCHAR(255)                    NULL     DEFAULT NULL COMMENT 'Pocet stranek a jine poznamky',
+    `raw_points`    DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Pred prepoctem',
+    `calc_points`   DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Cache spoctenych bodu.',
+    `corrected`     BOOLEAN                         NOT NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
     UNIQUE INDEX `uq_submit__contestant_task` (`contestant_id` ASC, `task_id` ASC),
     INDEX `idx_task__submit` (`task_id` ASC),
     CONSTRAINT `fk_submit__contestant`
@@ -853,12 +858,13 @@ CREATE TABLE IF NOT EXISTS `study_year`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_history`
 (
-    `person_history_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`         INT         NOT NULL,
-    `ac_year`           SMALLINT(4) NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
-    `school_id`         INT         NULL DEFAULT NULL,
-    `class`             VARCHAR(16) NULL DEFAULT NULL COMMENT 'označení třídy',
-    `study_year`        TINYINT(1)  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
+    `person_history_id` INT                                                                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`         INT                                                                         NOT NULL,
+    `ac_year`           SMALLINT(4)                                                                 NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
+    `school_id`         INT                                                                         NULL DEFAULT NULL,
+    `class`             VARCHAR(16)                                                                 NULL DEFAULT NULL COMMENT 'označení třídy',
+    `study_year`        TINYINT(1)                                                                  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
+    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NULL DEFAULT NULL,
     UNIQUE INDEX `uq_person_history__year` (`person_id` ASC, `ac_year` ASC),
     INDEX `idx_person_history__school` (`school_id` ASC),
     INDEX `idx_person_history__contest_year` (`ac_year` ASC),
@@ -1143,14 +1149,13 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id`       INT(11)                                           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`        INT(11)                                           NOT NULL,
-    `school_id`        INT(11)                                           NOT NULL,
-    `since`            DATE,
-    `until`            DATE,
-    `note`             TEXT,
-    `state`            ENUM ('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
-    `number_brochures` INT(11)                                           NOT NULL DEFAULT 0,
+    `teacher_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT(11)      NOT NULL,
+    `school_id`  INT(11)      NULL     DEFAULT NULL,
+    `note`       TEXT         NULL     DEFAULT NULL,
+    `active`     BOOL         NOT NULL DEFAULT FALSE,
+    `role`       VARCHAR(256) NULL     DEFAULT NULL,
+    UNIQUE INDEX `uq_teacher__person_id` (`person_id` ASC),
     CONSTRAINT `fk_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
@@ -1287,9 +1292,10 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT NOT NULL,
-    `schedule_item_id`   INT NOT NULL,
+    `person_schedule_id` INT                            NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT                            NOT NULL,
+    `schedule_item_id`   INT                            NOT NULL,
+    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
     INDEX `idx_person_schedule__item` (`schedule_item_id` ASC),
     INDEX `idx_person_schedule__person` (`person_id` ASC),
     CONSTRAINT `fk_person_schedule__schedule_item`

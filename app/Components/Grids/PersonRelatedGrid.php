@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
-class PersonRelatedGrid extends Grid
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-extends BaseGrid<TModel>
+ */
+class PersonRelatedGrid extends BaseGrid
 {
     protected PersonModel $person;
+    /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
     protected array $definition;
     protected int $userPermissions;
 
@@ -25,8 +30,12 @@ class PersonRelatedGrid extends Grid
         $this->userPermissions = $userPermissions;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedGroupedSelection<TModel>
+     */
+    protected function getModels(): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<TModel> $query */
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
@@ -41,7 +50,6 @@ class PersonRelatedGrid extends Grid
      */
     protected function configure(): void
     {
-
         $this->paginate = false;
         $this->addColumns($this->definition['rows']);
         foreach ($this->definition['links'] as $link) {

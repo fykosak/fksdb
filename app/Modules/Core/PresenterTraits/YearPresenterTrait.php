@@ -28,29 +28,46 @@ trait YearPresenterTrait
     protected function yearTraitStartup(): void
     {
         $this->contestTraitStartup();
-        $contestYear = $this->getSelectedContestYear();
-        if (!$this->isValidContestYear($contestYear)) {
+        try {
+            $this->validGivenContestYear();
+        } catch (NoContestYearAvailable $exception) {
             $this->redirect('this', array_merge($this->getParameters(), ['year' => $this->selectYear()->year]));
         }
     }
 
-    public function getSelectedContestYear(): ?ContestYearModel
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    public function getSelectedContestYear(): ContestYearModel
     {
         static $contestYear;
         if (!isset($contestYear) || $contestYear->year !== $this->year) {
             $contestYear = $this->getSelectedContest()->getContestYear($this->year);
         }
+        if (!$contestYear) {
+            throw new NoContestYearAvailable();
+        }
         return $contestYear;
     }
 
-    private function isValidContestYear(?ContestYearModel $contestYear): bool
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    private function validGivenContestYear(): void
     {
-        if (!isset($contestYear)) {
-            return false;
+        $contestYear = $this->getSelectedContestYear();
+        $contestYear = $this->getAvailableYears()->where('year', $contestYear->year)->fetch();
+        if (!$contestYear) {
+            throw new NoContestYearAvailable();
         }
-        return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestYearModel>
+     * @throws NoContestAvailable
+     */
     protected function getAvailableYears(): TypedGroupedSelection
     {
         $contest = $this->getSelectedContest();
@@ -75,15 +92,22 @@ trait YearPresenterTrait
                 }
                 return $contest->getContestYears()->where('1=0');
             default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()->value));
+                throw new InvalidStateException(sprintf(_('Role %s is not supported'), $this->getRole()->value));
         }
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     private function selectYear(): ContestYearModel
     {
         return $this->getSelectedContest()->getCurrentContestYear();
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentYearChooser(): YearChooserComponent
     {
         return new YearChooserComponent(

@@ -1,0 +1,18 @@
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $rests}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block content}
+    <h4>{$person->getFullName()}</h4>
+    {if count($rests)}
+        <table class="table table-sm table-striped">
+            <tbody>
+            {foreach $rests as $rest}
+                <tr>
+                    <td>{$rest->getLabel(FKSDB\Modules\Core\Language::from('cs'))}</td>
+                    <td>{$rest->schedule_item->getPrice()->__toString()}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/if}
+    <span class="badge bg-success"><i class="fas fa-check me-1"></i>{_'No rests found!'}</span>
+{/block}

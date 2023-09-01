@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\StoredQuery;
 
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
-class StoredQueriesGrid extends Grid
+/**
+ * @phpstan-extends BaseGrid<QueryModel>
+ */
+class StoredQueriesGrid extends BaseGrid
 {
     /** @const No. of characters that are showed from query description. */
     public const DESCRIPTION_TRUNC = 80;
 
     private QueryService $storedQueryService;
-
+    /** @phpstan-var int[] */
     private array $activeTagIds;
 
+    /**
+     * @phpstan-param int[] $activeTagIds
+     */
     public function __construct(Container $container, array $activeTagIds)
     {
         parent::__construct($container);
@@ -30,7 +37,10 @@ class StoredQueriesGrid extends Grid
         $this->storedQueryService = $storedQueryService;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedSelection<QueryModel>
+     */
+    protected function getModels(): TypedSelection
     {
         if (count($this->activeTagIds)) {
             return $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');

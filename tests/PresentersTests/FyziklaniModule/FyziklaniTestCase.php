@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
-use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Utils\DateTime;
@@ -60,6 +60,13 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
+        if (!isset($data['registration_begin'])) {
+            $data['registration_begin'] = '2016-01-01';
+        }
+        if (!isset($data['registration_end'])) {
+            $data['registration_end'] = '2017-01-01';
+        }
+        /** @var EventModel $event */
         $event = $this->container->getByType(EventService::class)->storeModel($data);
         $this->container->getByType(GameSetupService::class)->storeModel([
             'event_id' => $event->event_id,

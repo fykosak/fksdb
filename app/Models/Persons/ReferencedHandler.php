@@ -6,6 +6,9 @@ namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\Model;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class ReferencedHandler
 {
     protected ResolutionMode $resolution;
@@ -20,8 +23,18 @@ abstract class ReferencedHandler
         $this->resolution = $resolution;
     }
 
+    /**
+     * @phpstan-param TModel|null $model
+     * @phpstan-return TModel|null
+     * @phpstan-ignore-next-line
+     */
     abstract public function store(array $values, ?Model $model = null): ?Model;
 
+    /**
+     * @phpstan-template TArray of array<string,mixed>|array<string,array<string,mixed>>
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
     protected function findModelConflicts(Model $model, array $values, ?string $subKey): array
     {
         foreach ($values as $key => $value) {

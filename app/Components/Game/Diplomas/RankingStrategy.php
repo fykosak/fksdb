@@ -15,6 +15,18 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-type TeamStats array{
+ *      data:array<int,array{
+ *          task_id:int,
+ *          points:int|null,
+ *          time:\DateTimeInterface,
+ *      }>,
+ *      sum:int,
+ *      count:int,
+ *      pointsCount:array<int,int>,
+ * }
+ */
 class RankingStrategy
 {
     use SmartObject;
@@ -49,12 +61,14 @@ class RankingStrategy
         return $log;
     }
 
+    /**
+     * @phpstan-param array<int,array{team:TeamModel2}> $data
+     */
     private function saveResults(array $data, bool $total): Html
     {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
             $rank = $index + 1;
-            /** @var TeamModel2 $team */
             $team = $teamData['team'];
             if ($total) {
                 $this->teamService->storeModel(['rank_total' => $rank], $team);
@@ -63,10 +77,7 @@ class RankingStrategy
             }
             $log->addHtml(
                 Html::el('li')
-                    ->addText(
-                        _('Team') . " " . $team->name . ' (' . $team->fyziklani_team_id . ')'
-                        . " - " . _('Rank') . ': ' . ($rank)
-                    )
+                    ->addText(sprintf(_('Team %s (%d) - rank: %d'), $team->name, $team->fyziklani_team_id, $rank))
             );
         }
         return $log;
@@ -120,6 +131,9 @@ class RankingStrategy
         };
     }
 
+    /**
+     * @phpstan-return TeamModel2[]
+     */
     public function getInvalidTeamsPoints(?TeamCategory $category = null): array
     {
         $invalidTeams = [];
@@ -137,6 +151,7 @@ class RankingStrategy
 
     /**
      * Validate ranking of teams
+     * @phpstan-return TeamModel2[]
      * @throws NoMemberException
      */
     public function getInvalidTeamsRank(?TeamCategory $category = null): array
@@ -175,7 +190,9 @@ class RankingStrategy
         return $invalidTeams;
     }
 
-
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
     {
         $query = $this->event->getParticipatingTeams();
@@ -186,8 +203,13 @@ class RankingStrategy
     }
 
     /**
-     * @return array[]
+     * @phpstan-return array<int,array{
+     *     points:int|null,
+     *     submits:TeamStats,
+     *     team:TeamModel2,
+     * }>
      * @throws NotClosedTeamException
+     * @phpstan-param TypedGroupedSelection<TeamModel2> $teams
      */
     private function getTeamsStats(TypedGroupedSelection $teams): array
     {
@@ -209,7 +231,7 @@ class RankingStrategy
     }
 
     /**
-     * @return array[]|int[]
+     * @phpstan-return TeamStats
      */
     protected function getAllSubmits(TeamModel2 $team): array
     {

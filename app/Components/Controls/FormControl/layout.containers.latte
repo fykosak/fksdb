@@ -33,7 +33,7 @@
     {varType int $level}
     {var $controls = []}
     {foreach $container->getComponents() as $component}
-        {if $component instanceof Nette\Forms\Container}
+        {if $component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
             {if $controls}
                 {include controls controls => $controls}
                 {php $controls = []}

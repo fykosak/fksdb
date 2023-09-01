@@ -11,9 +11,8 @@ use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Grids\Components\Grid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -31,10 +30,10 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @method PersonModel getEntity()
  */
-class PersonPresenter extends BasePresenter
+final class PersonPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<PersonModel> */
     use EntityPresenterTrait;
 
     private PersonService $personService;
@@ -49,10 +48,14 @@ class PersonPresenter extends BasePresenter
         $this->personFactory = $personFactory;
     }
 
-    /* *********** TITLE ***************/
     public function titleSearch(): PageTitle
     {
-        return new PageTitle(null, _('Find person'), 'fa fa-search');
+        return new PageTitle(null, _('Find person'), 'fas fa-search');
+    }
+
+    public function authorizedSearch(): bool
+    {
+        return $this->isAnyContestAuthorized('person', 'stalk.search');
     }
 
     /**
@@ -61,7 +64,20 @@ class PersonPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
+        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fas fa-eye');
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedDetail(): bool
+    {
+        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
+        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
+        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
+
+        return $full || $restrict || $basic;
     }
 
     /**
@@ -73,45 +89,29 @@ class PersonPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
-            'fa fa-user-edit'
+            'fas fa-user-edit'
         );
+    }
+
+    public function authorizedEdit(): bool
+    {
+        return $this->isAnyContestAuthorized($this->getEntity(), 'edit');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create person'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create person'), 'fas fa-user-plus');
     }
 
     public function titlePizza(): PageTitle
     {
-        return new PageTitle(null, _('Pizza'), 'fa fa-pizza-slice');
+        return new PageTitle(null, _('Pizza'), 'fas fa-pizza-slice');
     }
 
-    /* *********** AUTH ***************/
-    public function authorizedSearch(): void
+    public function authorizedPizza(): bool
     {
-        $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
+        return $this->isAnyContestAuthorized('person', 'pizza');
     }
-
-    public function authorizedEdit(): void
-    {
-        $this->setAuthorized($this->isAnyContestAuthorized($this->getEntity(), 'edit'));
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedDetail(): void
-    {
-        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
-        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
-        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
-
-        $this->setAuthorized($full || $restrict || $basic);
-    }
-
-    /* ********************* ACTIONS **************/
 
     /**
      * @throws ModelNotFoundException
@@ -133,8 +133,6 @@ class PersonPresenter extends BasePresenter
         );
     }
 
-    /* ******************* COMPONENTS *******************/
-
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
@@ -144,9 +142,6 @@ class PersonPresenter extends BasePresenter
         return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentFormSearch(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -159,13 +154,15 @@ class PersonPresenter extends BasePresenter
         $form->addSubmit('stalk', _('Let\'s stalk'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @phpstan-var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('detail', ['id' => $values['person_id']]);
             };
         $form->addSubmit('edit', _('Edit'))
             ->onClick[] =
             function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
+                /** @phpstan-var array{person_id:int} $values */
+                $values = $button->getForm()->getValues('array');
                 $this->redirect('edit', ['id' => $values['person_id']]);
             };
 
@@ -187,7 +184,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     /**
@@ -196,7 +193,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     /**
@@ -256,9 +253,10 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @return never
      * @throws NotImplementedException
      */
-    protected function createComponentGrid(): Grid
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
     }

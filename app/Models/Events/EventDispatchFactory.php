@@ -4,22 +4,33 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-type TDefinition array{
+ *      keys:string[],
+ *      holderMethod:string,
+ *      machineName:string,
+ *      formLayout:string
+ * }
+ */
 class EventDispatchFactory
 {
+    /**
+     * @phpstan-var array<int,TDefinition>
+     */
     private array $definitions = [];
-
     private Container $container;
-
     private string $templateDir;
 
     public function __construct(Container $container)
@@ -32,6 +43,9 @@ class EventDispatchFactory
         $this->templateDir = $templateDir;
     }
 
+    /**
+     * @phpstan-param string[] $key
+     */
     public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
     {
         $this->definitions[] = [
@@ -46,10 +60,34 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(EventModel $event): EventParticipantMachine
+    public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
         $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName']);
+        /** @var EventParticipantMachine $machine */
+        $machine = $this->container->getService($definition['machineName']);
+        return $machine;
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function getPaymentMachine(EventModel $event): PaymentMachine
+    {
+        $machine = $this->container->getService(
+            $this->getPaymentFactoryName($event) . '.machine'
+        );
+        if (!$machine instanceof PaymentMachine) {
+            throw new BadTypeException(PaymentMachine::class, $machine);
+        }
+        return $machine;
+    }
+
+    public function getPaymentFactoryName(EventModel $event): ?string
+    {
+        if ($event->event_type_id === 1) {
+            return sprintf('transitions.fyziklani%dpayment', $event->event_year);
+        }
+        return null;
     }
 
     /**
@@ -74,6 +112,19 @@ class EventDispatchFactory
     }
 
     /**
+     * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine|TeamMachine
+     */
+    public function getEventMachine(EventModel $event): Machine
+    {
+        if ($event->isTeamEvent()) {
+            return $this->getTeamMachine($event);
+        } else {
+            return $this->getParticipantMachine($event);
+        }
+    }
+
+    /**
      * @throws ConfigurationNotFoundException
      */
     public function getFormLayout(EventModel $event): string
@@ -84,6 +135,7 @@ class EventDispatchFactory
 
     /**
      * @throws ConfigurationNotFoundException
+     * @phpstan-return TDefinition
      */
     private function findDefinition(EventModel $event): array
     {

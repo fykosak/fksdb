@@ -9,6 +9,8 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -65,12 +67,13 @@ class Authorization extends FyziklaniTestCase
         );
 
         $this->event = $this->createEvent([]);
+        /** @var TaskModel $task */
         $task = $this->container->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
-
+        /** @var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
@@ -101,8 +104,8 @@ class Authorization extends FyziklaniTestCase
     {
         $params = [
             'lang' => 'cs',
-            'contestId' => (string)1,
-            'year' => (string)1,
+            'contestId' => "1",
+            'year' => "1",
             'eventId' => (string)$this->event->event_id,
             'action' => $action,
             'id' => (string)$this->submit->fyziklani_submit_id,
@@ -116,12 +119,7 @@ class Authorization extends FyziklaniTestCase
      */
     public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
-        if (!is_array($actions)) {
-            $actions = [$actions];
-        }
-        if (!is_array($results)) {
-            $results = array_fill(0, count($actions), $results);
-        }
+        $results = array_fill(0, count($actions), $results);
         $presenter = $this->createPresenter($presenterName);
         if ($person()) {
             /* Use indirect access because data provider is called before test set up. */

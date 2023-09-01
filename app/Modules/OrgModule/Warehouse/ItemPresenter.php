@@ -10,16 +10,14 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\UI\Control;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method ItemModel getEntity(bool $throw = true)
- */
-class ItemPresenter extends BasePresenter
+final class ItemPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<ItemModel> */
     use EntityPresenterTrait;
 
     private ItemService $itemService;
@@ -31,7 +29,7 @@ class ItemPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Items'), 'fa fa-barcode');
+        return new PageTitle(null, _('Items'), 'fas fa-barcode');
     }
 
     public function titleEdit(): PageTitle
@@ -41,10 +39,13 @@ class ItemPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create item'), 'fas fa-plus');
     }
 
-    protected function createComponentCreateForm(): Control
+    /**
+     * @throws NoContestAvailable
+     */
+    protected function createComponentCreateForm(): ItemFormComponent
     {
         return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
@@ -52,12 +53,16 @@ class ItemPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
-    protected function createComponentEditForm(): Control
+    protected function createComponentEditForm(): ItemFormComponent
     {
         return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     protected function createComponentGrid(): ItemsGrid
     {
         return new ItemsGrid($this->getContext(), $this->getSelectedContest());
@@ -70,6 +75,7 @@ class ItemPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

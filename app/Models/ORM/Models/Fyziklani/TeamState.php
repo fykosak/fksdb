@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-// TODO to enum
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TeamState extends FakeStringEnum implements EnumColumn
+final class TeamState extends FakeStringEnum implements EnumColumn
 {
     public const APPLIED = 'applied';
     public const PENDING = 'pending';
@@ -99,7 +98,7 @@ class TeamState extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return TeamState[]
+     * @phpstan-return TeamState[]
      */
     public static function cases(): array
     {
@@ -112,6 +111,7 @@ class TeamState extends FakeStringEnum implements EnumColumn
             new self(self::MISSED),
             new self(self::DISQUALIFIED),
             new self(self::CANCELLED),
+            new self(self::INIT),
         ];
     }
 }

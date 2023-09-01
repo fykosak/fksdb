@@ -18,7 +18,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ContestantModel $model
+ * @phpstan-extends EntityFormComponent<ContestantModel>
  */
 class ContestantFormComponent extends EntityFormComponent
 {
@@ -63,9 +63,8 @@ class ContestantFormComponent extends EntityFormComponent
         if (isset($this->model)) {
             $strategy->updateCategory($this->model);
         } else {
-            /** @var ReferencedId $referencedId */
-            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
-            /** @var PersonModel $person */
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
             $person = $referencedId->getModel();
             $strategy->createContestant($person);
         }

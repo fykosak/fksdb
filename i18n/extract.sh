@@ -6,13 +6,11 @@ LATTE_FILES="app libs data"
 NEON_FILES="app/config data/events"
 TSX_FILES="app"
 
-
 # Output
 POT_FILE=i18n/messages.pot
 
 # Locale directory
 LOCALE=i18n/locale
-
 
 # ---------------------
 # implementation
@@ -24,22 +22,28 @@ TSX_SUFFIX=tsx2php
 TS_SUFFIX=ts2php
 ROOT=`dirname ${BASH_SOURCE[0]}`/..
 
+# TODO find ngettext when on multiple lines
+# TODO catch bad matches when ) in msgId
 function latte2php {
-	sed "/{_'/{:next;/'}/{s/{_'\([^}]*\)'}/<?php _('\1') ?>/g;b;};N;b next;}" $1 | \
-	sed "/{_\"/{:next;/\"}/{s/{_\"\([^}]*\)\"}/<?php _(\"\1\") ?>/g;b;};N;b next;}" >$1.$LATTE_SUFFIX
+	perl -0777 -pe "s/{?_\(?'([^}]*)'\)?}?/<?php _('\1') ?>/g" $1 |\
+	perl -0777 -pe "s/{?_\(?\"([^}]*)\"\)?}?/<?php _(\"\1\") ?>/g" |\
+	perl -0777 -pe "s/ngettext\((.*),(.*),(.*)\)/<?php ngettext(\1,\2,\3) ?>/g" >$1.$LATTE_SUFFIX
 }
 
 function neon2php {
 	sed "s/_(\(['\"].*\))[^)]*\$/<?php _(\1) ?>/" $1 | \
 	sed "s/_(\([^'\"].*\))[^)]*\$/<?php _('\1') ?>/" >$1.$NEON_SUFFIX
 }
+
 function tsx2php {
-sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TSX_SUFFIX
+	sed "s/translator.getLocalizedText(\('.*'\),\s?'.*')/\<\?php _(\1)\?\>/" $1 | \
+	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" | \
+	sed "s/translator.nGetText(\(.*\),\(.*\),\(.*\))/\<\?php ngettext(\1,\2,\3)\?\>/" >$1.$TSX_SUFFIX
 }
+
 function ts2php {
-sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
-    sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
+	sed "s/translator.getLocalizedText(\('.*'\),\s'.*')/\<\?php _(\1)\?\>/" $1 | \
+	sed "s/translator.getText(\('.*'\))/\<\?php _(\1)\?\>/" >$1.$TS_SUFFIX
 }
 
 PHP_FILES=`echo "$PHP_FILES" | sed 's#^#'$ROOT'/#;s# # '$ROOT'/#g'`
@@ -83,5 +87,5 @@ find $TSX_FILES -iname "*.$TS_SUFFIX" | xargs rm
 #
 # Merge to PO files
 #
-find $ROOT/$LOCALE -iname "messages.po" -exec msgmerge -U {} $POT_FILE \;
+find $ROOT/$LOCALE -iname "messages.po" -exec msgmerge --sort-by-file -U {} $POT_FILE \;
 

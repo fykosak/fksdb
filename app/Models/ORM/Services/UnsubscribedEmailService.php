@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
+use Fykosak\NetteORM\DummyModel;
 use Fykosak\NetteORM\Service;
 
-class UnsubscribedEmailService extends Service
+/**
+ * @phpstan-extends Service<DummyModel>
+ */
+final class UnsubscribedEmailService extends Service
 {
     /**
      * @throws UnsubscribedEmailException

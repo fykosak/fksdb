@@ -6,18 +6,24 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
+use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
+use Nette\Schema\Processor;
+use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-template ParamsType of array
+ * @phpstan-template ReturnType of array
+ */
 abstract class WebModel
 {
     use SmartObject;
 
     protected Container $container;
-    protected ?LoginModel $authenticatedLogin;
+    protected User $user;
 
     final public function __construct(Container $container)
     {
@@ -25,9 +31,9 @@ abstract class WebModel
         $container->callInjects($this);
     }
 
-    final public function setLogin(?LoginModel $authenticatedLogin): void
+    final public function setUser(User $user): void
     {
-        $this->authenticatedLogin = $authenticatedLogin;
+        $this->user = $user;
     }
 
     /**
@@ -40,21 +46,34 @@ abstract class WebModel
 
     protected function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**
      * @throws GoneException
+     * @phpstan-param ParamsType $params
+     * @phpstan-return ReturnType
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         throw new GoneException();
+    }
+
+    /**
+     * @phpstan-param ParamsType $arguments
+     * @throws GoneException
+     * @throws NotImplementedException
+     */
+    final public function getApiResponse(array $arguments): JsonResponse
+    {
+        $arguments = $this->processArguments($arguments);
+        return new JsonResponse($this->getJsonResponse($arguments));
     }
 
     /**
@@ -63,5 +82,18 @@ abstract class WebModel
     public function getExpectedParams(): Structure
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     * @phpstan-param ParamsType $arguments
+     * @phpstan-return ParamsType
+     */
+    final public function processArguments(array $arguments): array
+    {
+        $processor = new Processor();
+        $schema = $this->getExpectedParams();
+        $schema->otherItems()->castTo('array');
+        return $processor->process($schema, $arguments);
     }
 }

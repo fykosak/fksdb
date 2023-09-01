@@ -15,28 +15,17 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
-use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property-read PersonModel $model
+ * @phpstan-extends EntityFormComponent<PersonModel>
  */
 class ChangeEmailComponent extends EntityFormComponent
 {
     private SingleReflectionFormFactory $reflectionFormFactory;
     private AccountManager $accountManager;
-    private string $lang;
-
-    public function __construct(
-        Container $container,
-        PersonModel $person,
-        string $lang
-    ) {
-        parent::__construct($container, $person);
-        $this->lang = $lang;
-    }
 
     public function inject(
         AccountManager $accountManager,
@@ -49,9 +38,9 @@ class ChangeEmailComponent extends EntityFormComponent
     public function render(): void
     {
         $login = $this->model->getLogin();
-        $this->template->lang = Language::tryFrom($this->lang);
+        $this->template->lang = Language::tryFrom($this->translator->lang);
         $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::tryFrom(AuthTokenType::CHANGE_EMAIL))->fetch();
+            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         parent::render();
     }
 
@@ -61,8 +50,6 @@ class ChangeEmailComponent extends EntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -88,11 +75,18 @@ class ChangeEmailComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{new_email:string} $values */
         $values = $form->getValues('array');
-        $this->accountManager->sendChangeEmail($this->model, $values['new_email'], Language::tryFrom($this->lang));
+        $this->accountManager->sendChangeEmail(
+            $this->model,
+            $values['new_email'],
+            Language::tryFrom($this->translator->lang)
+        );
         $this->getPresenter()->flashMessage(
-            _('Email with a verification link has been sent to the new email address,' .
-                ' the link is active for 20 minutes.'),
+            _(
+                'Email with a verification link has been sent to the new email address,' .
+                ' the link is active for 20 minutes.'
+            ),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

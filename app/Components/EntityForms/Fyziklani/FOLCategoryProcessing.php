@@ -12,6 +12,10 @@ use Nette\Forms\Form;
 
 class FOLCategoryProcessing extends FormProcessing
 {
+    /**
+     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
+     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
+     */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
         $members = TeamFormComponent::getMembersFromForm($form);
@@ -25,55 +29,22 @@ class FOLCategoryProcessing extends FormProcessing
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param PersonModel[] $members
+     * @phpstan-param PersonModel[] $members
      */
     protected function getCategory(array $members, EventModel $event): TeamCategory
     {
-        if (!count($members)) {
-            throw new NoMemberException();
-        }
-        // init stats
-        $olds = 0;
-        $year = [
-            'P' => 0,
-            StudyYear::High1->value => 0,
-            StudyYear::High2->value => 0,
-            StudyYear::High3->value => 0,
-            StudyYear::High4->value => 0,
-        ]; //0 - ZŠ, 1..4 - SŠ
-        // calculate stats
-        foreach ($members as $member) {
-            $history = $member->getHistoryByContestYear($event->getContestYear());
-            if (!$history->school) { // for future
-                $olds += 1;
-            }
-            $studyYear = StudyYear::tryFromLegacy($history->study_year);
-            if (is_null($studyYear) || $studyYear === StudyYear::None || $studyYear === StudyYear::UniversityAll) {
-                $olds += 1;
-            } elseif ($studyYear->isHighSchool()) {
-                $year[$studyYear->value] += 1;
-            } elseif ($studyYear->isPrimarySchool()) {
-                $year['P'] += 1;
-            }
-        }
+        [$olds, $years] = FOFCategoryProcessing::getTeamMembersYears($members, $event);
         // evaluate stats
         if ($olds > 0) {
-            return TeamCategory::tryFrom(TeamCategory::O);
+            return TeamCategory::O;
         } else {
-            $sum = 0;
-            $cnt = $year['P'];
-            /** @var StudyYear $value */
-            foreach ([StudyYear::High1, StudyYear::High2, StudyYear::High3, StudyYear::High4] as $value) {
-                $sum += $year[$value->value] * $value->numeric();
-                $cnt += $year[$value->value];
-            }
-            $avg = $sum / $cnt;
+              $avg = FOFCategoryProcessing::getCoefficientAvg($members, $event);
             if ($avg <= 2 && $year[StudyYear::High4->value] === 0 && $year[StudyYear::High3->value] <= 2) {
-                return TeamCategory::tryFrom(TeamCategory::C);
+                return TeamCategory::C;
             } elseif ($avg <= 3 && $year[StudyYear::High4->value] <= 2) {
-                return TeamCategory::tryFrom(TeamCategory::B);
+                return TeamCategory::B;
             } else {
-                return TeamCategory::tryFrom(TeamCategory::A);
+                return TeamCategory::A;
             }
         }
     }

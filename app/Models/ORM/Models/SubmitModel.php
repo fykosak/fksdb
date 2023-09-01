@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
- * @property-read int submit_id
- * @property-read int contestant_id
- * @property-read ContestantModel contestant
- * @property-read int task_id
- * @property-read TaskModel task
- * @property-read \DateTimeInterface submitted_on
- * @property-read SubmitSource source
- * @property-read string note
- * @property-read float|null raw_points
- * @property-read float|null calc_points
- * @property-read int corrected FUCK MARIADB
+ * @property-read int $submit_id
+ * @property-read int $contestant_id
+ * @property-read ContestantModel $contestant
+ * @property-read int $task_id
+ * @property-read TaskModel $task
+ * @property-read \DateTimeInterface|null $submitted_on
+ * @property-read SubmitSource $source
+ * @property-read string|null $note
+ * @property-read float|null $raw_points
+ * @property-read float|null $calc_points
+ * @property-read int $corrected FUCK MARIADB
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'submit';
@@ -35,7 +35,7 @@ class SubmitModel extends Model implements Resource
         return md5(
             implode(':', [
                 $this->submit_id,
-                $this->submitted_on,
+                $this->submitted_on->format('c'),
                 $this->source,
                 $this->note,
                 $this->raw_points,
@@ -65,7 +65,6 @@ class SubmitModel extends Model implements Resource
         // TODO rewrite to do sum directly in sql
         /** @var SubmitQuestionModel $question */
         foreach ($this->task->getQuestions() as $question) {
-            /** @var SubmitQuestionAnswerModel $answer */
             $answer = $this->contestant->getAnswer($question);
             if (!isset($answer)) {
                 continue;
@@ -98,6 +97,15 @@ class SubmitModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return array{
+     * submitId:int,
+     * taskId:int,
+     * source:string,
+     * rawPoints:float|null,
+     * calcPoints:float|null,
+     * }
+     */
     public function __toArray(): array
     {
         return [

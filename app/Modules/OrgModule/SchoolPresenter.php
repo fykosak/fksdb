@@ -11,15 +11,13 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-/**
- * @method SchoolModel getEntity()
- */
-class SchoolPresenter extends BasePresenter
+final class SchoolPresenter extends BasePresenter
 {
+    /** @phpstan-use EntityPresenterTrait<SchoolModel> */
     use EntityPresenterTrait;
 
     private SchoolService $schoolService;
@@ -31,12 +29,12 @@ class SchoolPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Schools'), 'fa fa-school');
+        return new PageTitle(null, _('Schools'), 'fas fa-school');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create school'), 'fa fa-plus');
+        return new PageTitle(null, _('Create school'), 'fas fa-plus');
     }
 
     /**
@@ -57,7 +55,7 @@ class SchoolPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev),
-            'fa fa-university'
+            'fas fa-university'
         );
     }
 

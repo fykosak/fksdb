@@ -4,31 +4,31 @@
     {if $submit}
         <td>
             {if $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::POST}
-                <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
+                <i class="text-warning fas fa-envelope" title="#{$submit->submit_id}"></i>
             {elseif $submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::QUIZ}
                 <a href={plink :QuizDetail 'id'=>$submit->submit_id}>
-                    <i class="text-primary fa fa-list-ul" title="#{$submit->submit_id}"></i></a>
+                    <i class="text-primary fas fa-list-ul" title="#{$submit->submit_id}"></i></a>
             {else}
                 <a title="{_'Download'}"
                    href="{link downloadUploaded! $submit->submit_id}">
-                    <i class="text-success fa fa-file"></i></a>
+                    <i class="text-success fas fa-file"></i></a>
             {/if}
 
             {if $submit->source->value == FKSDB\Models\ORM\Models\SubmitSource::UPLOAD }
                 {if $submit->corrected }
                     <a title="{_'Download'}"
                        href="{link downloadCorrected! $submit->submit_id}">
-                        <i class="text-success fa fa-file-alt"></i></a>
+                        <i class="text-success fas fa-file-alt"></i></a>
                 {else}
-                    <i class="text-danger fa fa-file-alt"></i>
+                    <i class="text-danger fas fa-file-alt"></i>
                 {/if}
             {/if}
 
             {if is_null($submit->raw_points) }
-                <i class="text-danger fa fa-chart-bar"
+                <i class="text-danger fas fa-chart-bar"
                    title="{_'Not graded.'}"></i>
             {else}
-                <i class="text-success fa fa-chart-bar"
+                <i class="text-success fas fa-chart-bar"
                    title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->task->points}"></i>
             {/if}
         </td>

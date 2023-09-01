@@ -1,0 +1,21 @@
+parameters:
+    level: 7
+    paths:
+        - app
+        - libs
+        #- tests
+    ignoreErrors:
+        - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'
+        - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
+        - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
+        - '#Access to an undefined property Nette\\Application\\UI\\Template|stdClass::.*.#'
+    excludePaths:
+        - app/Models/Persons/Deduplication/*.php
+        - app/Components/Controls/Breadcrumbs/*.php
+        - app/Components/EntityForms/RegisterTeacherFormComponent.php
+        - app/Models/Results/Models/SchoolCumulativeResultsModel.php
+        - app/Models/News.php
+        - libs/Forms/KdybyReplicator/KdybyReplicator.php
+        - app/Models/WebService/*
+        #- app/Models/WebService/AESOP/*
+

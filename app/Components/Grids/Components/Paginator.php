@@ -49,14 +49,13 @@ class Paginator extends BaseComponent
             sort($arr);
             $steps = array_values(array_unique($arr));
         }
-        $this->template->steps = $steps;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'paginator.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'paginator.latte', ['steps' => $steps]);
     }
 
     /**
      * @throws BadRequestException
      */
-    public function loadState(array $params): void
+    public function loadState(array $params): void //@phpstan-ignore-line
     {
         parent::loadState($params);
         $this->paginator->page = $this->page;

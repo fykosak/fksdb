@@ -8,7 +8,6 @@ use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Models\StudyYear;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;
@@ -68,6 +67,11 @@ abstract class AESOPModel
         return 'ufo';
     }
 
+    /**
+     * @phpstan-param string[] $params
+     * @phpstan-param iterable<Row> $data
+     * @phpstan-param string[] $cools
+     */
     public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
     {
         $text = '';
@@ -76,14 +80,11 @@ abstract class AESOPModel
             $text .= $key . "\t" . $value . "\n";
         }
         $text .= "\n";
-        /** @var Row $datum */
         $text .= join("\t", $cools) . "\n";
         foreach ($data as $datum) {
             $text .= join("\t", iterator_to_array($datum->getIterator())) . "\n";
         }
-        $response = new PlainTextResponse($text);
-        $response->setName($this->getMask() . '.txt');
-        return $response;
+        return new PlainTextResponse($text, $this->getMask() . '.txt');
     }
 
     protected function getAESOPContestant(PersonModel $person): array
@@ -104,9 +105,7 @@ abstract class AESOPModel
             'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
-            'end-year' => $history->study_year
-                ? $this->contestYear->getGraduationYear(StudyYear::tryFromLegacy($history->study_year))
-                : null,
+            'end-year' => $history->getGraduationYear(),
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
             'spam-date' => date('Y-m-d', $spamFlag->modified->getTimestamp()),

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -39,10 +38,14 @@ class PreferredLangFormComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array{preferred_lang:string} $values */
+        $values = $form->getValues('array');
         try {
             $this->personInfoService->storeModel(
-                ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
+                [
+                    'preferred_lang' => $values['preferred_lang'],
+                    'person_id' => $this->person->person_id,
+                ],
                 $this->person->getInfo()
             );
             $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
@@ -64,9 +67,6 @@ class PreferredLangFormComponent extends FormComponent
         $form->addSelect('preferred_lang')->setItems($items);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);

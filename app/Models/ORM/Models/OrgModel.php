@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
+use Nette\Security\Resource;
 
 /**
- * @property-read int org_id
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int contest_id
- * @property-read ContestModel contest
- * @property-read int since
- * @property-read int|null until
- * @property-read string role
- * @property-read int order
- * @property-read string contribution
- * @property-read string tex_signature
- * @property-read string domain_alias
+ * @property-read int $org_id
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $contest_id
+ * @property-read ContestModel $contest
+ * @property-read int $since
+ * @property-read int|null $until
+ * @property-read string|null $role
+ * @property-read int $order
+ * @property-read string|null $contribution
+ * @property-read string|null $tex_signature
+ * @property-read string|null $domain_alias
  */
-class OrgModel extends Model implements Resource
+final class OrgModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'org';
 

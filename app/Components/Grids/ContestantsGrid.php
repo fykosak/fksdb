@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Renderer\RendererBaseItem;
+use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 
-class ContestantsGrid extends Grid
+/**
+ * @phpstan-extends BaseGrid<ContestantModel>
+ */
+class ContestantsGrid extends BaseGrid
 {
     private ContestYearModel $contestYear;
 
@@ -23,7 +27,10 @@ class ContestantsGrid extends Grid
         $this->contestYear = $contestYear;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
+    protected function getModels(): TypedGroupedSelection
     {
         return $this->contestYear->getContestants()->order('person.other_name ASC');
     }
@@ -37,18 +44,23 @@ class ContestantsGrid extends Grid
         $this->addColumns([
             'person.full_name',
             'contestant.contest_category',
-            'person_history.study_year',
+            'person_history.study_year_new',
         ]);
         $this->addColumn(
-            new RendererBaseItem(
+            new RendererItem(
                 $this->container,
-                fn(ContestantModel $row) => $this->tableReflectionFactory->loadColumnFactory(
-                    'school',
-                    'school'
-                )->render(
-                    $row->getPersonHistory(),
-                    1024
-                ),
+                function (ContestantModel $row) {
+                    if (!$row->getPersonHistory()) {
+                        return NotSetBadge::getHtml();
+                    }
+                    return $this->tableReflectionFactory->loadColumnFactory(
+                        'school',
+                        'school'
+                    )->render(
+                        $row->getPersonHistory(),
+                        1024
+                    );
+                },
                 new Title(null, _('School'))
             ),
             'school_name',

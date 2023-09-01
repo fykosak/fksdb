@@ -6,12 +6,15 @@ namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ValuePrinters\PersonLink;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonModel,never>
+ */
 class PersonLinkColumnFactory extends ColumnFactory
 {
     private LinkGenerator $presenterComponent;

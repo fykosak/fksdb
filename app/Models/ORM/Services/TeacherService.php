@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\TeacherModel;
 use Fykosak\NetteORM\Service;
 
-class TeacherService extends Service
+/**
+ * @phpstan-extends Service<TeacherModel>
+ */
+final class TeacherService extends Service
 {
 }

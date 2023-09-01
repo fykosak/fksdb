@@ -10,23 +10,38 @@ use Nette\Utils\Strings;
 
 enum StudyYear: string implements EnumColumn
 {
-    case Primary6 = 'PRIMARY_6';
-    case Primary7 = 'PRIMARY_7';
-    case Primary8 = 'PRIMARY_8';
-    case Primary9 = 'PRIMARY_9';
+    case Primary6 = 'P_6';
+    case Primary7 = 'P_7';
+    case Primary8 = 'P_8';
+    case Primary9 = 'P_9';
 
-    case High1 = 'HIGH_1';
-    case High2 = 'HIGH_2';
-    case High3 = 'HIGH_3';
-    case High4 = 'HIGH_4';
+    case High1 = 'H_1';
+    case High2 = 'H_2';
+    case High3 = 'H_3';
+    case High4 = 'H_4';
 
-    case UniversityAll = 'UNIVERSITY_ALL';
+    case UniversityAll = 'U_ALL';
 
     case None = 'NONE';
 
     public function badge(): Html
     {
-        return Html::el('span')->addText($this->label());
+        if ($this->isPrimarySchool()) {
+            return Html::el('span')
+                ->setAttribute('class', 'badge bg-primary')
+                ->addText($this->label());
+        } elseif ($this->isHighSchool()) {
+            return Html::el('span')
+                ->setAttribute('class', 'badge bg-success')
+                ->addText($this->label());
+        } elseif ($this->value === self::UniversityAll) {
+            return Html::el('span')
+                ->setAttribute('class', 'badge bg-warning')
+                ->addText($this->label());
+        }
+        return Html::el('span')
+            ->setAttribute('class', 'badge bg-dark')
+            ->addText($this->label());
     }
 
     public function label(): string
@@ -62,6 +77,9 @@ enum StudyYear: string implements EnumColumn
         };
     }
 
+    /**
+     * @phpstan-return self[]
+     */
     public static function getPrimarySchoolCases(): array
     {
         return [
@@ -79,7 +97,7 @@ enum StudyYear: string implements EnumColumn
     }
 
     /**
-     * @return static[]
+     * @phpstan-return static[]
      */
     public static function getHighSchoolCases(): array
     {
@@ -96,21 +114,15 @@ enum StudyYear: string implements EnumColumn
         return Strings::startsWith($this->value, 'HIGH_');
     }
 
-    public static function tryFromLegacy(?int $studyYear): ?self
+    public function getGraduationYear(int $acYear): ?int
     {
-        if (is_null($studyYear)) {
-            return null;
+        if ($this->isHighSchool()) {
+            return $acYear + 5 - $this->numeric();
+        } elseif ($this->isPrimarySchool()) {
+            return $acYear + 14 - $this->numeric();
         }
-        return match ($studyYear) {
-            1 => self::High1,
-            2 => self::High2,
-            3 => self::High3,
-            4 => self::High4,
-            6 => self::Primary6,
-            7 => self::Primary7,
-            8 => self::Primary8,
-            9 => self::Primary9,
-            default => throw new \InvalidArgumentException(),
-        };
+        return null;
+        // throw new \InvalidArgumentException('Graduation year not match');
+    }
     }
 }

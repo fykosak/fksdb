@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
-use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PaymentModel|ItemModel,never>
+ */
 class PaymentColumnFactory extends ColumnFactory
 {
     private ORMFactory $reflectionFactory;
@@ -56,10 +60,10 @@ class PaymentColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
+        $factory = $this->reflectionFactory->loadColumnFactory('payment', 'state');
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
         $text = $html->getText();
-        $html->setText('#' . $model->payment_id . ' - ' . $text);
+        $html->setText(sprintf('#%d %s', $model->payment_id, $text));
         return $html;
     }
 

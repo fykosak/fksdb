@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestantService;
@@ -36,7 +37,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Environment::lock(LOCK_UPLOAD, TEMP_DIR);
+        Environment::lock(LOCK_UPLOAD, \FKSDB\Tests\TEMP_DIR);
         $serviceTask = $this->container->getByType(TaskService::class);
         $taskCategoryService = $this->container->getByType(TaskCategoryService::class);
         $this->taskAll = $serviceTask->storeModel([
@@ -83,7 +84,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->person->person_id,
-            'contest_category_id' => $this->getCategory(),
+            'contest_category_id' => StudyYear::from($this->getStudyYear())->numeric(),
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
@@ -91,7 +92,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         $this->fakeProtection(self::TOKEN);
     }
 
-    abstract protected function getCategory(): int;
+    abstract protected function getStudyYear(): string;
 
     protected function tearDown(): void
     {
@@ -112,10 +113,10 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected function createPostRequest(array $formData): Request
     {
         $formData = Helpers::merge($formData, [
-            '_do' => 'uploadForm-form-submit',
+            '_do' => 'uploadForm-formControl-form-submit',
         ]);
         return new Request('Public:Submit', 'POST', [
-            'action' => 'default',
+            'action' => 'legacy',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
@@ -124,7 +125,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function createFileUpload(): array
     {
-        $file = tempnam(TEMP_DIR, 'upload');
+        $file = tempnam(__DIR__ . '/../temp/tester', 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
         return [

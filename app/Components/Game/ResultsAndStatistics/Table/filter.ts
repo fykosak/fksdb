@@ -1,5 +1,5 @@
-import { translator } from '@translator/translator';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
+import { Translator } from '@translator/translator';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 
 export class Filter {
     public name: string;
@@ -26,7 +26,7 @@ export class Filter {
     }
 }
 
-export const createFilters = (categories: string[] = []): Filter[] => {
+export const createFilters = (categories: string[] = [], translator: Translator): Filter[] => {
     return categories.map((category: string) => {
         return new Filter({roomId: null, category, name: translator.getText('Category') + ' ' + category});
     });

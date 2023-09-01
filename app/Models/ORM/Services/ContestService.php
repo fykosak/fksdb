@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ContestModel findByPrimary($key)
+ * @phpstan-extends Service<ContestModel>
  */
-class ContestService extends Service
+final class ContestService extends Service
 {
 }

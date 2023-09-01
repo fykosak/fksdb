@@ -9,33 +9,29 @@ use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
-class ApplicationPresenter extends BasePresenter
+final class ApplicationPresenter extends BasePresenter
 {
 
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
-    private ?Model $eventApplication = null;
     private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
@@ -59,27 +55,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws GoneException|EventNotFoundException
-     */
-    public function authorizedDefault(): void
-    {
-        $event = $this->getEvent();
-        if (
-            $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
-            || $this->eventAuthorizator->isAllowed('fyziklani.team', 'edit', $event)
-        ) {
-            $this->setAuthorized(true);
-            return;
-        }
-        if (
-            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
-            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
-        ) {
-            throw new GoneException();
-        }
-    }
-
-    /**
+     * @throws EventNotFoundException
      * @throws \Throwable
      */
     public function titleDefault(): PageTitle
@@ -100,16 +76,26 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return EventParticipantModel|null
+     * @throws GoneException|EventNotFoundException
      */
-    private function getEventApplication(): ?Model
+    public function authorizedDefault(): bool
     {
-        if (!isset($this->eventApplication)) {
-            $id = $this->getParameter('id');
-            $this->eventApplication = $this->eventParticipantService->findByPrimary($id);
+        $event = $this->getEvent();
+        if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
+            return true;
         }
+        if (!$event->isRegistrationOpened()) {
+            throw new GoneException();
+        }
+        return true;
+    }
 
-        return $this->eventApplication;
+    private function getEventApplication(): ?EventParticipantModel
+    {
+        $id = $this->getParameter('id');
+        /** @var EventParticipantModel|null $eventApplication */
+        $eventApplication = $this->eventParticipantService->findByPrimary($id);
+        return $eventApplication;
     }
 
     /**
@@ -125,9 +111,18 @@ class ApplicationPresenter extends BasePresenter
         return $holder;
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function requiresLogin(): bool
     {
-        return $this->getAction() != 'default';
+        if ($this->getAction() == 'default') {
+            $this->initializeMachine();
+            if ($this->getHolder()->getModelState() == Machine::STATE_INIT) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -155,7 +150,7 @@ class ApplicationPresenter extends BasePresenter
 
         if (
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
             )
         ) {
             $data = $this->tokenAuthenticator->getTokenData();
@@ -165,13 +160,7 @@ class ApplicationPresenter extends BasePresenter
             }
         }
 
-        if (
-            !$this->getMachine()
-                ->getAvailableTransitions(
-                    $this->getHolder(),
-                    $this->getHolder()->getModelState()
-                )
-        ) {
+        if (!$this->getMachine()->getAvailableTransitions($this->getHolder(), $this->getHolder()->getModelState())) {
             if (
                 $this->getHolder()->getModelState() == Machine::STATE_INIT
             ) {
@@ -211,7 +200,7 @@ class ApplicationPresenter extends BasePresenter
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+            $machine = $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
         }
         return $machine;
     }
@@ -221,10 +210,10 @@ class ApplicationPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
-                break;
+                break; // @phpstan-ignore-line
             case 'list':
-                $this->forward(':Core:MyApplications:default', $this->getParameters());
-                break;
+                $this->forward(':Profile:MyApplications:default', $this->getParameters());
+                break; // @phpstan-ignore-line
             case 'default':
                 if (!isset($this->contestId)) {
                     // hack if contestId is not present, but there ale a eventId param
@@ -253,12 +242,12 @@ class ApplicationPresenter extends BasePresenter
             $eventId = null;
             if (
                 $this->tokenAuthenticator->isAuthenticatedByToken(
-                    AuthTokenType::tryFrom(AuthTokenType::EVENT_NOTIFY)
+                    AuthTokenType::from(AuthTokenType::EVENT_NOTIFY)
                 )
             ) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
-                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
+                    $data = self::decodeParameters($data);
                     $eventId = $data['eventId'];
                 }
             }
@@ -272,6 +261,9 @@ class ApplicationPresenter extends BasePresenter
         return $this->event;
     }
 
+    /**
+     * @phpstan-return int[]
+     */
     public static function decodeParameters(string $data): array
     {
         $parts = explode(':', $data);
@@ -279,26 +271,9 @@ class ApplicationPresenter extends BasePresenter
             throw new InvalidArgumentException("Cannot decode '$data'.");
         }
         return [
-            'eventId' => $parts[0],
-            'id' => $parts[1],
+            'eventId' => (int)$parts[0],
+            'id' => (int)$parts[1],
         ];
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws EventNotFoundException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        if ($this->getAction() == 'default') {
-            $this->initializeMachine();
-            if (
-                $this->getHolder()->getModelState() == Machine::STATE_INIT
-            ) {
-                return;
-            }
-        }
-        parent::unauthorizedAccess();
     }
 
     /**
@@ -315,53 +290,34 @@ class ApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplication(): ApplicationComponent
     {
-        $logger = new MemoryLogger();
-        $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
-        $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
-        $component->setRedirectCallback(
-            function ($modelId, $eventId) {
-                // $this->backLinkRedirect();
-                $this->redirect(
-                    'this',
-                    [
-                        'eventId' => $eventId,
-                        'id' => $modelId,
-                        self::PARAM_AFTER => true,
-                    ]
-                );
-            }
-        );
-        $component->setTemplate($this->eventDispatchFactory->getFormLayout($this->getEvent()));
-        return $component;
+        return new ApplicationComponent($this->getContext(), $this->getHolder());
     }
 
-    /**
-     * @throws BadRequestException
-     */
     protected function beforeRender(): void
     {
         parent::beforeRender();
-        $event = $this->getEvent();
-        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $event->event_type_id;
-        switch ($event->event_type_id) {
-            case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fof');
-                break;
-            case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-fol');
-                break;
-            default:
-                $this->getPageStyleContainer()->setNavBarClassName(
-                    'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
-                );
-        }
         $this->template->model = $this->getEventApplication();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestAvailable
+     */
+    protected function getStyleId(): string
+    {
+        try {
+            $contest = $this->getSelectedContest();
+            return 'contest-' . $contest->getContestSymbol() . ' event-type-' . $this->getEvent()->event_type_id;
+        } catch (NoContestAvailable$exception) {
+            return parent::getStyleId();
+        }
     }
 
     protected function getRole(): PresenterRole
     {
         if ($this->getAction() === 'default') {
-            return PresenterRole::tryFrom(PresenterRole::SELECTED);
+            return PresenterRole::from(PresenterRole::SELECTED);
         }
         return parent::getRole();
     }

@@ -1,105 +1,97 @@
 /* general setting */
-@import "/node_modules/bootstrap/scss/bootstrap";
-@import "./mixins/navigation-item";
-
-$fofMainColor: #e6060d;
-$folMainColor: rgb(0, 174, 107);
-$fykosMainColor: #1175da;
-$vyfukMainColor: #ff4800;
-$ctyrbojColor: #00a6cc;
-
-$fofColor: #e6060d;
-$folColor: #00ae6b;
-$fykosColor: #1175da;
-$dsefColor: #f2b72b;
+@import "navigation-item";
 
 $fyziklaniPoints5: #2d7dd2;
 $fyziklaniPoints3: #98cc04;
 $fyziklaniPoints2: #eeb902;
 $fyziklaniPoints1: #f45d01;
 
-@mixin color-variant($color,$index) {
-  .border-#{$index} {
-    border-color: $color;
-  }
-  .btn-#{$index} {
-    @include button-outline-variant($color);
-  }
-  .bg-#{$index} {
-    color: color-contrast($color);
-    background-color: $color;
-  }
-  .text-#{$index} {
-    color: $color;
-  }
-  $alert-background: shift-color($color, $alert-bg-scale);
-  $alert-border: shift-color($color, $alert-border-scale);
-  $alert-color: shift-color($color, $alert-color-scale);
-  @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
-    $alert-color: mix($color, color-contrast($alert-background), abs($alert-color-scale));
-  }
-  .alert-#{$index} {
-    @include alert-variant($alert-background, $alert-border, $alert-color);
+@mixin page-theme($color, $nav-bg:$color) {
+  nav.navbar {
+    background-color: $nav-bg;
+
+    .navbar-brand {
+      background-repeat: no-repeat;
+      height: 2rem;
+      width: 5rem;
+      display: inline-block;
+      background-size: 5rem;
+    }
+
+    // TODO!!!!!
+    @if (contrast-ratio($nav-bg, white) < $min-contrast-ratio) {
+      --#{$prefix}navbar-color: rgba(0, 0, 0, .65);
+      --#{$prefix}navbar-hover-color: rgba(0, 0, 0, .8);
+      --#{$prefix}navbar-disabled-color: rgba(0, 0, 0, .3);
+      --#{$prefix}navbar-active-color: rgba(0, 0, 0, 1);
+      --#{$prefix}navbar-brand-color: rgba(0, 0, 0, 1);
+      --#{$prefix}navbar-brand-hover-color: rgba(0, 0, 0, 1);
+      --#{$prefix}navbar-toggler-border-color: rgba(0, 0, 0, 15);
+      --#{$prefix}navbar-toggler-icon-bg: #{escape-svg($navbar-dark-toggler-icon-bg)};
+
+      .navbar-brand {
+        background-image: url(../../www/images/logo/black.svg);
+      }
+    } @else {
+      --#{$prefix}navbar-color: rgba(255, 255, 255, .55);
+      --#{$prefix}navbar-hover-color: rgba(255, 255, 255, .75);
+      --#{$prefix}navbar-disabled-color: rgba(255, 255, 255, .25);
+      --#{$prefix}navbar-active-color: #fff;
+      --#{$prefix}navbar-brand-color: #fff;
+      --#{$prefix}navbar-brand-hover-color: #fff;
+      --#{$prefix}navbar-toggler-border-color: rgba(255, 255, 255, .1);
+      --#{$prefix}navbar-toggler-icon-bg: #{escape-svg($navbar-light-toggler-icon-bg)};
+      .navbar-brand {
+        background-image: url(../../www/images/logo/white.svg);
+      }
+    }
   }
 }
 
-@mixin page-theme($color) {
-  .navigation-item {
-    @include navigation-item($color, white);
-  }
-  .bd-callout {
-    border-left-color: $color;
+.subtitle {
+  color: var(--fks-page-theme-color);
+}
 
-    h4 {
-      color: $color;
-    }
-  }
-  hr {
-    border-color: $color;
-    background-color: $color;
-  }
-  footer {
-    a {
-      font-weight: bold;
-      text-decoration: none;
-    }
-  }
+hr {
+  border-color: var(--fks-page-theme-color);
+  background-color: var(--fks-page-theme-color);
+  color: var(--fks-page-theme-color);
 }
 
 .bg-category-fykos-1 {
-  background-color: lighten($fykosMainColor, 20%);
+  background-color: lighten($fykos-color, 20%);
 }
 
 .bg-category-fykos-2 {
-  background-color: lighten($fykosMainColor, 10%);
+  background-color: lighten($fykos-color, 10%);
 }
 
 .bg-category-fykos-3 {
-  background-color: darken($fykosMainColor, 10%);
+  background-color: darken($fykos-color, 10%);
 }
 
 .bg-category-fykos-4 {
-  background-color: darken($fykosMainColor, 20%);
+  background-color: darken($fykos-color, 20%);
 }
 
 .bg-category-vyfuk-6 {
-  background-color: lighten($vyfukMainColor, 20%);
+  background-color: lighten($vyfuk-color, 20%);
 }
 
 .bg-category-vyfuk-7 {
-  background-color: lighten($vyfukMainColor, 10%);
+  background-color: lighten($vyfuk-color, 10%);
 }
 
 .bg-category-vyfuk-8 {
-  background-color: darken($vyfukMainColor, 10%);
+  background-color: darken($vyfuk-color, 10%);
 }
 
 .bg-category-vyfuk-9 {
-  background-color: darken($vyfukMainColor, 20%);
+  background-color: darken($vyfuk-color, 20%);
 }
 
 .bg-category-vyfuk-unk {
-  background-color: $vyfukMainColor;
+  background-color: $vyfuk-color;
 }
 
 .bg-category-all {

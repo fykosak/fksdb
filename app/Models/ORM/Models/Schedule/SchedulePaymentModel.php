@@ -8,10 +8,10 @@ use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PaymentModel;
 
 /**
- * @property-read PaymentModel payment
- * @property-read PersonScheduleModel person_schedule
- * @property-read int person_schedule_id
+ * @property-read PaymentModel $payment
+ * @property-read PersonScheduleModel $person_schedule
+ * @property-read int $person_schedule_id
  */
-class SchedulePaymentModel extends Model
+final class SchedulePaymentModel extends Model
 {
 }

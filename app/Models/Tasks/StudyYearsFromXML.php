@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskCategoryModel;
 use FKSDB\Models\ORM\Services\StudyYearService;
 use FKSDB\Models\ORM\Services\TaskCategoryService;
 use FKSDB\Models\Pipeline\Stage;
@@ -13,17 +14,21 @@ use Nette\DI\Container;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class StudyYearsFromXML extends Stage
 {
 
     public const XML_ELEMENT_PARENT = 'study-years';
     public const XML_ELEMENT_CHILD = 'study-year';
-
+    /** @phpstan-var array<int,int[]> */
     private array $defaultCategories;
     private TaskCategoryService $taskCategoryService;
     private StudyYearService $studyYearService;
 
+    /**
+     * @phpstan-param array<int,int[]> $defaultCategories
+     */
     public function __construct(
         array $defaultCategories,
         Container $container
@@ -94,7 +99,7 @@ class StudyYearsFromXML extends Stage
         } else {
             $categories = $studyYears;
         }
-
+        /** @var TaskCategoryModel $category */
         foreach ($task->getCategories() as $category) {
             $this->taskCategoryService->disposeModel($category);
         }

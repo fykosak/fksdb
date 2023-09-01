@@ -1,0 +1,19 @@
+{layout '../../@layout.latte'}
+{varType FKSDB\Models\DataTesting\TestLog[] $logs}
+{block content}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Validation'}</h2>
+            <table class="table-hover table">
+                <tbody>
+                {foreach $logs as $log}
+                    <tr class="table-{$log->level}">
+                        <td><strong>{$log->testName}:</strong></td>
+                        <td>{$log->text}</td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{/block}

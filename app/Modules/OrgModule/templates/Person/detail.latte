@@ -1,10 +1,23 @@
 {varType bool $isSelf}
-{block content}
+{block titleBody}
+    {include parent}
+
+{/block}
+{block outerContent}
     {if $isSelf}
-        <p class="alert alert-info">
-            <a href="https://9gag.com/gag/agVYA4g/this-is-you-liking-your-own-fb-status">
-                {_'This is how you look, when you stalk yourself'}</a>
-        </p>
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'This is how you look, when you stalk yourself'}</h2>
+                <p>
+                    <a class="btn btn-info btn-lg" data-bs-toggle="collapse" href="#self" role="button">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>{_'Show!'}
+                    </a>
+                </p>
+                <div class="collapse" id="self">
+                    <img alt="self" src="{$basePath}/images/self.svg"/>
+                </div>
+            </div>
+        </div>
     {/if}
     {control stalkingContainer}
 {/block}

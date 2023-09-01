@@ -7,7 +7,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -23,7 +22,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class DeduplicatePresenter extends BasePresenter
+final class DeduplicatePresenter extends BasePresenter
 {
 
     private PersonService $personService;
@@ -42,34 +41,33 @@ class DeduplicatePresenter extends BasePresenter
         $this->personInfoService = $personInfoService;
     }
 
-    public function authorizedPerson(): void
+    public function authorizedPerson(): bool
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('person', 'list'));
+        return $this->contestAuthorizator->isAllowed('person', 'list');
     }
 
     /**
      * @throws NotFoundException
      */
-    public function authorizedDontMerge(int $trunkId, int $mergedId): void
+    public function authorizedDontMerge(): bool
     {
-        $this->authorizedMerge($trunkId, $mergedId);
+        return $this->authorizedMerge();
     }
 
     /**
      * @throws NotFoundException
      */
-    public function authorizedMerge(int $trunkId, int $mergedId): void
+    public function authorizedMerge(): bool
     {
-        $trunkPerson = $this->personService->findByPrimary($trunkId);
-        $mergedPerson = $this->personService->findByPrimary($mergedId);
+        $trunkPerson = $this->personService->findByPrimary($this->getParameter('trunkId'));
+        $mergedPerson = $this->personService->findByPrimary($this->getParameter('mergedId'));
         if (is_null($trunkPerson) || is_null($mergedPerson)) {
             throw new NotFoundException('Person does not exists');
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        $authorized = $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
+        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
             $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge');
-        $this->setAuthorized($authorized);
     }
 
     public function titleMerge(): PageTitle
@@ -88,27 +86,37 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titlePerson(): PageTitle
     {
-        return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
+        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
     }
 
-    public function actionDontMerge(int $trunkId, int $mergedId): void
+    public function actionDontMerge(): void
     {
+        $trunkId = $this->getParameter('trunkId');
+        $mergedId = $this->getParameter('mergedId');
         $mergedPI = $this->personInfoService->findByPrimary($mergedId);
-        $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->personInfoService->storeModel($mergedData, $mergedPI);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ','),
+            ],
+            $mergedPI
+        );
 
         $trunkPI = $this->personInfoService->findByPrimary($trunkId);
-        $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->personInfoService->storeModel($trunkData, $trunkPI);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ','),
+            ],
+            $trunkPI
+        );
 
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         //$this->backLinkRedirect(true);
     }
 
-    public function actionMerge(int $trunkId, int $mergedId): void
+    public function actionMerge(): void
     {
         $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
-        $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
+        $this->updateMergeForm($this->getComponent('mergeForm')->getForm()); // @phpstan-ignore-line
     }
 
     private function updateMergeForm(Form $form): void
@@ -151,7 +159,7 @@ class DeduplicatePresenter extends BasePresenter
 
                     $trunk = Html::el('div');
                     $trunk->addAttributes(['class' => 'mergeSource']);
-                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $trunk->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($value);
                     $trunk->addText(_('Trunk') . ': ');
@@ -162,7 +170,7 @@ class DeduplicatePresenter extends BasePresenter
 
                     $merged = Html::el('div');
                     $merged->addAttributes(['class' => 'mergeSource']);
-                    $merged->data['field'] = $textElement->getHtmlId();
+                    $merged->addAttributes(['data-field' => $textElement->getHtmlId()]);
                     $elVal = Html::el('span');
                     $elVal->setText($data[Merger::IDX_MERGED][$column]);
                     $elVal->addAttributes(['class' => 'value']);
@@ -190,9 +198,6 @@ class DeduplicatePresenter extends BasePresenter
         return new DuplicateFinder($this->personService, $this->getContext());
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentMergeForm(): FormControl
     {
         $control = new FormControl($this->getContext());
@@ -212,8 +217,8 @@ class DeduplicatePresenter extends BasePresenter
 
     private function handleMergeFormSuccess(Form $form): void
     {
-
-        $values = $form->getValues();
+        /** @phpstan-var array<mixed> $values */
+        $values = $form->getValues('array');
         $values = FormUtils::emptyStrToNull2($values);
 
         $merger = $this->merger;

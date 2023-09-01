@@ -11,7 +11,7 @@ services:
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
-        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8})
+        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
 
@@ -80,7 +80,7 @@ services:
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     #handlers
-    - FKSDB\Components\Forms\Controls\Schedule\Handler
+    - FKSDB\Components\Schedule\Input\Handler
 
 includes:
     - merger.neon

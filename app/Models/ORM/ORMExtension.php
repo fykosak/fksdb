@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     DateTime\DateTimeColumnFactory,
     DateTime\TimeColumnFactory,
     EmailColumnFactory,
+    EnumColumn,
     EnumColumnFactory,
     FloatColumnFactory,
     IntColumnFactory,
+    LocalizedStringColumnFactory,
     LogicColumnFactory,
     PhoneColumnFactory,
     PrimaryKeyColumnFactory,
@@ -20,6 +23,7 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     TextColumnFactory
 };
 use FKSDB\Models\ORM\Links\Link;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Extension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
@@ -37,7 +41,7 @@ class ORMExtension extends Extension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-        foreach ($this->config as $tableName => $fieldDefinitions) {
+        foreach ($this->config as $tableName => $fieldDefinitions) {//@phpstan-ignore-line
             foreach ($fieldDefinitions['columns'] as $fieldName => $field) {
                 $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
@@ -47,6 +51,9 @@ class ORMExtension extends Extension
         }
     }
 
+    /**
+     * @phpstan-param array<string,Schema> $items
+     */
     private function createDefaultStructure(AnyOf $type, array $items = []): Structure
     {
         return Expect::structure(
@@ -72,7 +79,7 @@ class ORMExtension extends Extension
                 'columns' => Expect::arrayOf(
                     Expect::anyOf(
                         $this->createDefaultStructure(
-                            Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email')
+                            Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email', 'localizedString')
                         ),
                         $this->createDefaultStructure(Expect::anyOf('dateTime', 'time', 'date'), [
                             'format' => Expect::string(),
@@ -113,6 +120,9 @@ class ORMExtension extends Extension
         )->castTo('array');
     }
 
+    /**
+     * @phpstan-param array{destination:string,params:array<string,string>,title:string} $def
+     */
     private function createLinkFactory(
         string $tableName,
         string $modelClassName,
@@ -129,6 +139,24 @@ class ORMExtension extends Extension
 
     /**
      * @throws NotImplementedException
+     * @phpstan-param array{
+     *     type:string,
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     class:class-string<ColumnFactory<M,mixed>>|class-string<FakeStringEnum&EnumColumn>,
+     *     format?:string,
+     *     decimalDigitsCount:int,
+     *     nullValueFormat:string,
+     *     prefix:string,
+     *     suffix:string,
+     *     states:array<string,array{badge:string,label:string}>,
+     * } $definition
+     * @phpstan-template M of \Fykosak\NetteORM\Model
      */
     private function createColumnFactory(
         string $tableName,
@@ -219,6 +247,16 @@ class ORMExtension extends Extension
                     $definition
                 );
                 break;
+            case 'localizedString':
+                $this->setUpDefaultFactory(
+                    $factory,
+                    $tableName,
+                    $modelClassName,
+                    $fieldName,
+                    LocalizedStringColumnFactory::class,
+                    $definition
+                );
+                break;
             case 'state':
                 $this->registerStateRow($factory, $tableName, $modelClassName, $fieldName, $definition);
                 break;
@@ -246,16 +284,40 @@ class ORMExtension extends Extension
                 );
                 break;
             case 'class':
-                $this->registerClassColumnFactory($factory, $tableName, $modelClassName, $fieldName, $definition);
+                $this->registerClassColumnFactory(
+                    $factory,
+                    $tableName,
+                    $modelClassName,
+                    $fieldName,
+                    $definition// @phpstan-ignore-line
+                );
                 break;
             case 'enum':
-                $this->registerEnumColumnFactory($factory, $tableName, $modelClassName, $fieldName, $definition);
+                $this->registerEnumColumnFactory(
+                    $factory,
+                    $tableName,
+                    $modelClassName,
+                    $fieldName,
+                    $definition// @phpstan-ignore-line
+                );
                 break;
             default:
                 throw new NotImplementedException();
         }
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     class:class-string<FakeStringEnum&EnumColumn>
+     * } $field
+     */
     private function registerEnumColumnFactory(
         ServiceDefinition $factory,
         string $tableName,
@@ -267,6 +329,19 @@ class ORMExtension extends Extension
         $factory->addSetup('setEnumClassName', [$field['class']]);
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     class:class-string<ColumnFactory<M,mixed>>,
+     * } $field
+     * @phpstan-template M of \Fykosak\NetteORM\Model
+     */
     private function registerClassColumnFactory(
         ServiceDefinition $factory,
         string $tableName,
@@ -277,6 +352,18 @@ class ORMExtension extends Extension
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, $field['class'], $field);
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     states: array<string,array{badge:string,label:string}>,
+     * } $field
+     */
     private function registerStateRow(
         ServiceDefinition $factory,
         string $tableName,
@@ -295,6 +382,21 @@ class ORMExtension extends Extension
         $factory->addSetup('setStates', [$field['states']]);
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     decimalDigitsCount:int,
+     *     nullValueFormat:string,
+     *     prefix:string,
+     *     suffix:string,
+     * } $field
+     */
     private function registerFloatRow(
         ServiceDefinition $factory,
         string $tableName,
@@ -306,6 +408,22 @@ class ORMExtension extends Extension
         $factory->addSetup('setDecimalDigitsCount', [$field['decimalDigitsCount']]);
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     nullValueFormat:string,
+     *     prefix:string,
+     *     suffix:string,
+     * } $field
+     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     */
     private function setUpNumberFactory(
         ServiceDefinition $factory,
         string $tableName,
@@ -325,6 +443,20 @@ class ORMExtension extends Extension
         $factory->addSetup('setNumberFactory', [$field['nullValueFormat'], $field['prefix'], $field['suffix']]);
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     *     format?:string,
+     * } $field
+     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     */
     private function registerAbstractDateTimeRow(
         ServiceDefinition $factory,
         string $tableName,
@@ -345,11 +477,24 @@ class ORMExtension extends Extension
     private function translate($value): string
     {
         if ($value instanceof Statement) {
-            return ($value->entity)(...$value->arguments);
+            return ($value->entity)(...$value->arguments);// @phpstan-ignore-line
         }
         return $value;
     }
 
+    /**
+     * @phpstan-param array{
+     *     permission: string,
+     *     accessKey?:string,
+     *     omitInputField:bool,
+     *     required:bool,
+     *     description?:string,
+     *     writeOnly:bool,
+     *     title:string,
+     * } $field
+     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     */
     private function setUpDefaultFactory(
         ServiceDefinition $factory,
         string $tableName,

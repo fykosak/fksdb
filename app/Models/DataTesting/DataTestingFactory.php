@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\DataTesting;
 
-use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
+use FKSDB\Models\DataTesting\Tests\ModelPerson\StudyYearTest;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\ORMFactory;
 
 class DataTestingFactory
 {
-    /** @var PersonTest[][] */
+    /** @phpstan-var PersonTest[][] */
     private array $tests = [];
     private ORMFactory $tableReflectionFactory;
 
@@ -32,6 +33,7 @@ class DataTestingFactory
             new Tests\ModelPerson\GenderFromBornNumberTest(),
             new Tests\ModelPerson\ParticipantsDurationTest(),
             new Tests\ModelPerson\EventCoveringTest(),
+            new StudyYearTest(),
         ];
         foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
             $tests[] = new Tests\ModelPerson\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
@@ -40,7 +42,7 @@ class DataTestingFactory
     }
 
     /**
-     * @return PersonTest[]
+     * @phpstan-return PersonTest[]
      */
     public function getTests(string $section): array
     {

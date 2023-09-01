@@ -7,25 +7,27 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Models\Astrid\Downloader;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Submits\SeriesTable;
-use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
+use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
 
-class TasksPresenter extends BasePresenter
+final class TasksPresenter extends BasePresenter
 {
 
     public const SOURCE_ASTRID = 'astrid';
@@ -45,29 +47,32 @@ class TasksPresenter extends BasePresenter
         $this->seriesTable = $seriesTable;
     }
 
-    public function authorizedImport(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
-    }
-
-    public function authorizedDispatch(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest()));
-    }
-
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Task import'), 'fas fa-download');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedImport(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest());
+    }
+
     public function titleDispatch(): PageTitle
     {
-        return new PageTitle(null, _('Handout'), 'fa fa-folder-open');
+        return new PageTitle(null, _('Handout'), 'fas fa-folder-open');
     }
 
     /**
-     * @throws BadTypeException
+     * @throws NoContestAvailable
      */
+    public function authorizedDispatch(): bool
+    {
+        return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
+    }
+
     public function actionDispatch(): void
     {
         /** @var HandoutFormComponent $control */
@@ -76,8 +81,9 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup(): void
     {
@@ -88,8 +94,9 @@ class TasksPresenter extends BasePresenter
 
 
     /**
-     * @throws BadTypeException
-     * TODO to separate Component
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * TODO to separate component
      */
     protected function createComponentSeriesForm(): FormControl
     {
@@ -116,7 +123,9 @@ class TasksPresenter extends BasePresenter
             ->setItems($seriesItems, false);
 
         $upload = $form->addUpload('file', _('XML file'));
-        $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
+        $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle(
+            $upload->getHtmlId() . '-pair'
+        );
 
         $form->addSubmit('submit', _('Import'));
 
@@ -131,11 +140,12 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @throws UploadException
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
      */
     private function validSubmitSeriesForm(Form $seriesForm): void
     {
-        /** @var FileUpload[]|int[] $values */
+        /** @phpstan-var array{file:FileUpload,series:int,source:string} $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
         switch ($values['source']) {
@@ -153,6 +163,7 @@ class TasksPresenter extends BasePresenter
         }
 
         try {
+            /** @var \SimpleXMLElement $xml */
             $xml = simplexml_load_file($file);
 
             if ($xml->getName() === 'problems') {

@@ -6,7 +6,7 @@ namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 
-class ResolutionMode extends FakeStringEnum
+final class ResolutionMode extends FakeStringEnum
 {
     public const OVERWRITE = 'overwrite';
     public const KEEP = 'keep';

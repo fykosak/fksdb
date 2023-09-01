@@ -24,7 +24,7 @@ class TestLog extends Message
     }
 
     /**
-     * @return string[]
+     * @phpstan-return string[]
      */
     public static function getAvailableLevels(): array
     {
@@ -40,13 +40,13 @@ class TestLog extends Message
             case self::LVL_ERROR:
                 return 'fas fa-times';
             case self::LVL_WARNING:
-                return 'fa fa-warning';
+                return 'fas fa-warning';
             case self::LVL_INFO:
                 return 'fas fa-info';
             case self::LVL_SUCCESS:
-                return 'fa fa-check';
+                return 'fas fa-check';
             case self::LVL_SKIP:
-                return 'fa fa-minus';
+                return 'fas fa-minus';
             default:
                 throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->level));
         }

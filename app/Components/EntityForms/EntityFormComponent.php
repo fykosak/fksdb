@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
@@ -16,19 +15,25 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class EntityFormComponent extends FormComponent
 {
+    /**
+     * @phpstan-var TModel|null
+     */
     protected ?Model $model;
 
+    /**
+     * @phpstan-param TModel|null $model
+     */
     public function __construct(Container $container, ?Model $model)
     {
         parent::__construct($container);
         $this->model = $model;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function render(): void
     {
         $this->setDefaults($this->getForm());
@@ -48,11 +53,11 @@ abstract class EntityFormComponent extends FormComponent
             } else {
                 $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
-        } catch (AbortException $exception) {
+        } catch (AbortException $exception) {// @phpstan-ignore-line
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('Error in the form') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(sprintf(_('Error in the form: %s'), $exception->getMessage()), Message::LVL_ERROR);
         }
     }
 

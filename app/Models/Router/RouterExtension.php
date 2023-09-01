@@ -18,7 +18,7 @@ class RouterExtension extends CompilerExtension
         $config = $this->getConfig();
         /** @var ServiceDefinition $router */
         $router = $container->getDefinition('router');
-
+        /** @phpstan-ignore-next-line */
         foreach ($config['routes'] as $action) {
             $mask = $action['mask'];
             unset($action['mask']);

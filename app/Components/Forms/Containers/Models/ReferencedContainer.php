@@ -16,19 +16,22 @@ use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class ReferencedContainer extends ContainerWithOptions
 {
-
     public const ID_MASK = 'frm%s-%s';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
-
+    /**
+     * @phpstan-var ReferencedId<TModel>|null
+     */
     private ?ReferencedId $referencedId = null;
 
     protected bool $allowClear = true;
@@ -47,6 +50,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
         }, fn() => $this->attachedJS = false);
         $this->monitor(IContainer::class, function (): void {
             if (!$this->configured) {
+                $this->configured = true;
                 $this->configure();
             }
         });
@@ -56,11 +60,17 @@ abstract class ReferencedContainer extends ContainerWithOptions
         $this->setAllowClear($allowClear);
     }
 
+    /**
+     * @phpstan-return ReferencedId<TModel>|null
+     */
     public function getReferencedId(): ?ReferencedId
     {
         return $this->referencedId;
     }
 
+    /**
+     * @phpstan-param ReferencedId<TModel> $referencedId
+     */
     public function setReferencedId(ReferencedId $referencedId): void
     {
         $this->referencedId = $referencedId;
@@ -86,19 +96,23 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(
-                __CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class(
+                self::class . ' can contain only components with get/set option funcionality, ' . get_class(
                     $child
                 ) . ' given.'
             );
         }
     }
 
-    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void
+    /**
+     * @phpstan-param array<string,scalar|null|array<string,scalar|null>> $conflicts
+     */
+    public function setConflicts(array $conflicts, ?ContainerWithOptions $container = null): void
     {
         $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
-            if ($component instanceof Container) {
+            if ($component instanceof ContainerWithOptions) {
+                /** @phpstan-var array<string,scalar|null> $value */
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
                 $component->addError(_('Field does not match an existing record.'));

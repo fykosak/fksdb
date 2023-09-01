@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\ContestantModel;
 use Fykosak\NetteORM\Service;
 
-class ContestantService extends Service
+/**
+ * @phpstan-extends Service<ContestantModel>
+ */
+final class ContestantService extends Service
 {
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 
@@ -16,7 +17,11 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1') {
-            return 'IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)';
+            return 'IF (
+            t.series < 7,
+            (IF (ct.study_year_new NOT IN ("P_5","P_6", "P_7"), null, s.raw_points)),
+            s.raw_points
+            )';
         } else {
             return 's.raw_points';
         }
@@ -24,10 +29,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
 
     public function getSumColumn(): string
     {
-        return "IF (t.series < 7, 
-        IF (t.label IN ('1'), 
-        IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), 
-        s.raw_points), 
+        return "IF (t.series < 7,
+        IF (t.label IN ('1'),
+        IF ( ct.study_year_new NOT IN ('P_5,'P_6', 'P_7'), null, s.raw_points),
+        s.raw_points),
         s.raw_points)";
     }
 
@@ -54,14 +59,14 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
         if ($submit->task->series > 6) {
             return $submit->raw_points;
         }
-        switch ($submit->contestant->contest_category->label) {
-            case ContestCategoryModel::VYFUK_6:
-            case ContestCategoryModel::VYFUK_7:
-                if ($submit->task->label == '1') {
+        if ($submit->task->label == '1') {
+            switch ($submit->contestant->contest_category->label) {
+                case ContestCategoryModel::VYFUK_6:
+                case ContestCategoryModel::VYFUK_7:
                     return $submit->raw_points;
-                } else {
+                default:
                     return null;
-                }
+            }
         }
         return $submit->raw_points;
     }
@@ -81,10 +86,10 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     protected function getCategoryMap(): array
     {
         return [
-            ContestCategoryModel::VYFUK_6 => [6],
-            ContestCategoryModel::VYFUK_7 => [7],
-            ContestCategoryModel::VYFUK_8 => [8],
-            ContestCategoryModel::VYFUK_9 => [null, 9],
+            ContestCategoryModel::VYFUK_6 => [StudyYear::Primary6],
+            ContestCategoryModel::VYFUK_7 => [StudyYear::Primary7],
+            ContestCategoryModel::VYFUK_8 => [StudyYear::Primary8],
+            ContestCategoryModel::VYFUK_9 => [StudyYear::None, StudyYear::Primary9],
         ];
     }
 }
