@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\PhoneNumber;
 
+use FKSDB\Components\Badges\FlagBadge;
 use FKSDB\Models\ORM\Models\CountryModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use Fykosak\NetteORM\TypedSelection;
@@ -26,15 +27,8 @@ class PhoneNumberFactory
         try {
             $country = $this->getCountry($number);
             if ($country) {
-                $flag = Html::el('span')
-                    ->addAttributes(['class' => 'phone-flag me-3'])
-                    ->addHtml(
-                        Html::el('i')
-                            ->addAttributes([
-                                'class' => 'flag-icon flag-icon-' . \strtolower($country->alpha_2),
-                            ])
-                    );
-                return Html::el('span')->addHtml($flag)->addText($country->formatPhoneNumber($number));
+                return Html::el('span')->addHtml(FlagBadge::getHtml($country))
+                    ->addText($country->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }

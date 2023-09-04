@@ -273,6 +273,9 @@ CREATE TABLE IF NOT EXISTS `school`
     `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
     `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
     `note`        VARCHAR(255) NULL     DEFAULT NULL,
+    `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
+    `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
+    `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),

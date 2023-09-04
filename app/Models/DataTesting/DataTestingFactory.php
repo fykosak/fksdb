@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\DataTesting;
 
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
+use FKSDB\Models\DataTesting\Tests\ModelPerson\SchoolTest;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\StudyYearTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\ORMFactory;
@@ -34,6 +35,7 @@ class DataTestingFactory
             new Tests\ModelPerson\ParticipantsDurationTest(),
             new Tests\ModelPerson\EventCoveringTest(),
             new StudyYearTest(),
+            new SchoolTest(),
         ];
         foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
             $tests[] = new Tests\ModelPerson\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
