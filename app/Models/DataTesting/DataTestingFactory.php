@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\DataTesting;
 
-use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
-use FKSDB\Models\DataTesting\Tests\ModelPerson\SchoolTest;
-use FKSDB\Models\DataTesting\Tests\ModelPerson\StudyYearTest;
+use FKSDB\Models\DataTesting\Tests\Person\SchoolTest;
+use FKSDB\Models\DataTesting\Tests\Person\StudyYearTest;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
 
+/**
+ * @phpstan-type TTests array{person:array<string,Test<PersonModel>>}
+ */
 class DataTestingFactory
 {
-    /** @phpstan-var PersonTest[][] */
+    /** @phpstan-var array<string,array<string,Test<PersonModel>>> */
     private array $tests = [];
     private ORMFactory $tableReflectionFactory;
 
@@ -31,20 +34,24 @@ class DataTestingFactory
     private function registersTests(): void
     {
         $tests = [
-            new Tests\ModelPerson\GenderFromBornNumberTest(),
-            new Tests\ModelPerson\ParticipantsDurationTest(),
-            new Tests\ModelPerson\EventCoveringTest(),
-            new StudyYearTest(),
-            new SchoolTest(),
+            'gender_born_number' => new Tests\Person\GenderFromBornNumberTest(),
+            'participants_duration' => new Tests\Person\ParticipantsDurationTest(),
+            'organization_participation' => new Tests\Person\EventCoveringTest(),
+            'study_year' => new StudyYearTest(),
+            'school_study' => new SchoolTest(),
         ];
-        foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
-            $tests[] = new Tests\ModelPerson\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
+        foreach (['phone', 'phone_parent_d', 'phone_parent_m'] as $fieldName) {
+            $tests[$fieldName] = new Tests\Person\PersonInfoFieldTest(
+                $this->tableReflectionFactory,
+                'person_info.' . $fieldName
+            );
         }
         $this->tests['person'] = $tests;
     }
 
     /**
-     * @phpstan-return PersonTest[]
+     * @phpstan-return value-of<TTests>
+     * @phpstan-param key-of<TTests> $section
      */
     public function getTests(string $section): array
     {

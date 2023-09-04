@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Columns\Types;
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -62,15 +61,14 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
             $logger->log(
-                new TestLog(
-                    $this->getTitle(),
+                new Message(
                     \sprintf(_('%s number (%s) is not valid'), $this->getTitle(), $value),
                     Message::LVL_ERROR
                 )
             );
         } else {
             $logger->log(
-                new TestLog($this->getTitle(), \sprintf(_('%s is valid'), $this->getTitle()), Message::LVL_SUCCESS)
+                new Message(\sprintf(_('%s is valid'), $this->getTitle()), Message::LVL_SUCCESS)
             );
         }
     }

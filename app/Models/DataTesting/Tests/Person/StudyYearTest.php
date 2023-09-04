@@ -2,22 +2,30 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
+namespace FKSDB\Models\DataTesting\Tests\Person;
 
-use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\DataTesting\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\StudyYear;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
-class StudyYearTest extends PersonTest
+/**
+ * @phpstan-extends Test<PersonModel>
+ */
+class StudyYearTest extends Test
 {
     public function __construct()
     {
-        parent::__construct('study_year', _('Study years'));
+        parent::__construct(_('Study years'));
     }
 
-    public function run(Logger $logger, PersonModel $person): void
+    /**
+     * @param PersonModel $person
+     */
+    public function run(Logger $logger, Model $person): void
     {
         $histories = $person->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $firstValid */
@@ -38,8 +46,7 @@ class StudyYearTest extends PersonTest
             if ($postgraduate) {
                 $hasError = true;
                 $logger->log(
-                    new TestLog(
-                        $this->title,
+                    new Message(
                         sprintf(
                             'Before %d found postgraduate study year in %d',
                             $history->ac_year,
@@ -60,8 +67,7 @@ class StudyYearTest extends PersonTest
                     $level = Message::LVL_ERROR;
                 }
                 $logger->log(
-                    new TestLog(
-                        $this->title,
+                    new Message(
                         sprintf(
                             'In %d expected graduated "%s" given "%s"',
                             $history->ac_year,
@@ -76,8 +82,7 @@ class StudyYearTest extends PersonTest
         }
         if (!$hasError) {
             $logger->log(
-                new TestLog(
-                    $this->title,
+                new Message(
                     'Study years OK',
                     Message::LVL_SUCCESS
                 )

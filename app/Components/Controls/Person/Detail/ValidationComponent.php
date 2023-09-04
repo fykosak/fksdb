@@ -20,13 +20,18 @@ class ValidationComponent extends BaseComponent
     final public function render(): void
     {
         if ($this->beforeRender()) {
-            $logger = new MemoryLogger();
-            foreach ($this->validationFactory->getTests('person') as $test) {
+            $logs = [];
+            foreach ($this->validationFactory->getTests('person') as $testId => $test) {
+                $logger = new MemoryLogger();
                 $test->run($logger, $this->person);
+                $logs[$testId] = $logger->getMessages();
             }
             $this->template->render(
                 __DIR__ . DIRECTORY_SEPARATOR . 'validation.latte',
-                ['logs' => $logger->getMessages()]
+                [
+                    'logs' => $logs,
+                    'tests' => $this->validationFactory->getTests('person'),
+                ]
             );
         }
     }

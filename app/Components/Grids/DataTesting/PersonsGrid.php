@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\DataTesting;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\DataTesting\DataTestingFactory;
-use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -49,7 +48,7 @@ class PersonsGrid extends BaseGrid
     {
         $this->addColumns(['person.person_link']);
 
-        foreach ($this->dataTestingFactory->getTests('person') as $test) {
+        foreach ($this->dataTestingFactory->getTests('person') as $id => $test) {
             $this->addColumn(
                 new RendererItem(
                     $this->container,
@@ -60,25 +59,20 @@ class PersonsGrid extends BaseGrid
                     },
                     new Title(null, $test->title)
                 ),
-                $test->id
+                $id
             );
         }
     }
 
     /**
      * @phpstan-param Message[] $logs
-     * @throws BadTypeException
      * @throws NotImplementedException
      */
     protected static function createHtmlLog(array $logs): Html
     {
         $container = Html::el('span');
         foreach ($logs as $log) {
-            if ($log instanceof TestLog) {
-                $icon = $log->createHtmlIcon();
-            } else {
-                throw new BadTypeException(TestLog::class, $log);
-            }
+            $icon = self::createHtmlIcon($log);
             $container->addHtml(
                 Html::el('span')->addAttributes([
                     'class' => 'text-' . $log->level,
@@ -87,5 +81,38 @@ class PersonsGrid extends BaseGrid
             );
         }
         return $container;
+    }
+    /**
+     * @throws NotImplementedException
+     */
+    public static function mapLevelToIcon(Message $message): string
+    {
+        switch ($message->level) {
+            case Message::LVL_ERROR:
+                return 'fas fa-times';
+            case Message::LVL_WARNING:
+                return 'fas fa-warning';
+            case Message::LVL_INFO:
+                return 'fas fa-info';
+            case Message::LVL_SUCCESS:
+                return 'fas fa-check';
+            default:
+                throw new NotImplementedException(\sprintf('Level "%s" is not supported', $message->level));
+        }
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public static function createHtmlIcon(Message $message): Html
+    {
+        $icon = Html::el('span');
+        $icon->addAttributes([
+            'class' => self::mapLevelToIcon($message),
+        ]);
+        return Html::el('span')->addAttributes([
+            'class' => 'text-' . $message->level,
+            'title' => $message->text,
+        ])->addHtml($icon);
     }
 }

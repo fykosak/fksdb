@@ -2,15 +2,19 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
+namespace FKSDB\Models\DataTesting\Tests\Person;
 
+use FKSDB\Models\DataTesting\Test;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
 
-abstract class PersonFileLevelTest extends PersonTest
+/**
+ * @phpstan-extends Test<PersonModel>
+ */
+abstract class PersonFileLevelTest extends Test
 {
     private string $fieldName;
     private ORMFactory $tableReflectionFactory;
@@ -22,7 +26,7 @@ abstract class PersonFileLevelTest extends PersonTest
     {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
-        parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
+        parent::__construct($this->getRowFactory()->getTitle());
     }
 
     /**

@@ -2,27 +2,34 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
+namespace FKSDB\Models\DataTesting\Tests\Person;
 
-use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\DataTesting\Test;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
-class EventCoveringTest extends PersonTest
+/**
+ * @phpstan-extends Test<PersonModel>
+ */
+class EventCoveringTest extends Test
 {
 
     public function __construct()
     {
-        parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
+        parent::__construct(_('Organization and participation at same year'));
     }
 
-    public function run(Logger $logger, PersonModel $person): void
+    /**
+     * @param PersonModel $person
+     */
+    public function run(Logger $logger, Model $person): void
     {
         $contestantYears = [
             ContestModel::ID_FYKOS => [],
@@ -77,10 +84,9 @@ class EventCoveringTest extends PersonTest
         }
     }
 
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO): Message
     {
-        return new TestLog(
-            $this->title,
+        return new Message(
             \sprintf(
                 _('Organization and participation at same year %d and contestId %d %s<->%s.'),
                 $year,

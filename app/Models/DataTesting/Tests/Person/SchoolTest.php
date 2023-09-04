@@ -2,35 +2,30 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
+namespace FKSDB\Models\DataTesting\Tests\Person;
 
-use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\DataTesting\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
-class SchoolTest extends PersonTest
+/**
+ * @phpstan-extends Test<PersonModel>
+ */
+class SchoolTest extends Test
 {
-    public const STUDY_YEARS = [
-        StudyYear::Primary5,
-        StudyYear::Primary6,
-        StudyYear::Primary7,
-        StudyYear::Primary8,
-        StudyYear::Primary9,
-        StudyYear::High1,
-        StudyYear::High2,
-        StudyYear::High3,
-        StudyYear::High4,
-    ];
-
     public function __construct()
     {
-        parent::__construct('school_study', _('School study'));
+        parent::__construct(_('School study'));
     }
 
-    public function run(Logger $logger, PersonModel $person): void
+    /**
+     * @param PersonModel $person
+     */
+    public function run(Logger $logger, Model $person): void
     {
         $histories = $person->getHistories();
 
@@ -63,14 +58,13 @@ class SchoolTest extends PersonTest
     private function addError(Logger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
-            new TestLog(
+            new Message(
                 sprintf(
                     _('School "%s" does not teach %s study year'),
                     $history->school->name,
                     $history->study_year_new->value
                 ),
-                Message::LVL_ERROR,
-                $this->title,
+                Message::LVL_ERROR
             )
         );
     }
@@ -78,14 +72,13 @@ class SchoolTest extends PersonTest
     private function addSuccess(Logger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
-            new TestLog(
+            new Message(
                 sprintf(
                     _('School "%s" teach %s study year'),
                     $history->school->name,
                     $history->study_year_new->value
                 ),
-                Message::LVL_SUCCESS,
-                $this->title,
+                Message::LVL_SUCCESS
             )
         );
     }

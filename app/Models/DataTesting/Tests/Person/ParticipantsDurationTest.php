@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
+namespace FKSDB\Models\DataTesting\Tests\Person;
 
-use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\DataTesting\Test;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 
-class ParticipantsDurationTest extends PersonTest
+/**
+ * @phpstan-extends Test<PersonModel>
+ */
+class ParticipantsDurationTest extends Test
 {
 
     private const CONTESTS = [
@@ -21,10 +25,13 @@ class ParticipantsDurationTest extends PersonTest
 
     public function __construct()
     {
-        parent::__construct('participants_duration', _('Participate events'));
+        parent::__construct(_('Participate events'));
     }
 
-    public function run(Logger $logger, PersonModel $person): void
+    /**
+     * @param PersonModel $person
+     */
+    public function run(Logger $logger, Model $person): void
     {
         foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
@@ -43,8 +50,7 @@ class ParticipantsDurationTest extends PersonTest
 
             $delta = ($max - $min) + 1;
             $logger->log(
-                new TestLog(
-                    $this->title,
+                new Message(
                     \sprintf(_('Person participate %d years in the events of contestId %d'), $delta, $contestId),
                     $this->evaluateThresholds($delta, $contestDef['thresholds'])
                 )

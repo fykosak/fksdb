@@ -1,19 +1,17 @@
 {layout '../../@layout.latte'}
-{varType FKSDB\Models\DataTesting\TestLog[] $logs}
+{varType Fykosak\Utils\Logging\Message[][] $logs}
+{varType FKSDB\Models\DataTesting\Test[] $tests}
 {block content}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Validation'}</h2>
-            <table class="table-hover table">
-                <tbody>
-                {foreach $logs as $log}
-                    <tr class="table-{$log->level}">
-                        <td><strong>{$log->testName}:</strong></td>
-                        <td>{$log->text}</td>
-                    </tr>
+    {foreach $logs as $testId=>$testLogs}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$tests[$testId]->title}</h2>
+                {foreach $testLogs as $log}
+                    <div class="alert alert-{$log->level}">
+                        {$log->text}
+                    </div>
                 {/foreach}
-                </tbody>
-            </table>
+            </div>
         </div>
-    </div>
+    {/foreach}
 {/block}
