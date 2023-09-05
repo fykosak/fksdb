@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -63,7 +63,7 @@ abstract class StalkingTestCase extends DatabaseTestCase
         $login = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $userPerson->person_id, 'active' => 1]
         );
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
         $this->container->getByType(GrantService::class)->storeModel(

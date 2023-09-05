@@ -37,7 +37,7 @@
             {control taskContributionsGrid}
         </div>
     </div>
-    {control orgList}
+    {control organizerList}
     {control role}
     {control contestantBasesGrid}
 {/define}
@@ -63,8 +63,8 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
-            <h2>{_'Event orgs'}</h2>
-            {control eventOrgsGrid}
+            <h2>{_'Event organizers'}</h2>
+            {control eventOrganizerGrid}
         </div>
     </div>
     <div class="panel color-auto">
@@ -95,8 +95,8 @@
                    role="tab"><i class="fas fa-trophy me-1"></i>{_'Contests'}</a>
                 <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-events"
                    role="tab"><i class="fas fa-calendar me-1"></i>{_'Events'}</a>
-                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-validation"
-                   role="tab"><i class="fas fa-check me-1"></i>{_'Validation'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-data-tests"
+                   role="tab"><i class="fas fa-check me-1"></i>{_'Data tests'}</a>
                 <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-timeline"
                    role="tab"><i class="fas fa-clock-o me-1"></i>{_'Timeline'}</a>
             </div>
@@ -118,8 +118,8 @@
         <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
             {include events}
         </div>
-        <div class="tab-pane fade show" id="nav-validation" role="tabpanel" aria-labelledby="nav-home-tab">
-            {control validation}
+        <div class="tab-pane fade show" id="nav-data-tests" role="tabpanel" aria-labelledby="nav-home-tab">
+            {control dataTest}
         </div>
         <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="panel color-auto">

@@ -78,7 +78,7 @@ class SchoolsGrid extends FilterGrid
                 $this->container,
                 fn(SchoolModel $school): Html => Html::el('span')
                     ->addAttributes(['class' => ('badge ' . ($school->active ? 'bg-success' : 'bg-danger'))])
-                    ->addText(($school->active)),
+                    ->addText($school->active),
                 new Title(null, _('Active'))
             ),
             'active'
@@ -126,7 +126,6 @@ class SchoolsGrid extends FilterGrid
             ),
             'study'
         );
-
 
         $this->addORMLink('school.edit');
         $this->addORMLink('school.detail');

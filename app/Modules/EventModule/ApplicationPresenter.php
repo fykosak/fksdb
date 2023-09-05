@@ -93,7 +93,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrg = $this->isAllowed('event.application', 'default');
+        $this->template->isOrganizer = $this->isAllowed('event.application', 'default');
         $this->template->fields = $this->getDummyHolder()->getFields();
         $this->template->model = $this->getEntity();
         $this->template->groups = [

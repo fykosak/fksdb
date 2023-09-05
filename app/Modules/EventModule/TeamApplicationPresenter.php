@@ -212,14 +212,14 @@ final class TeamApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrg = $this->isAllowed('event.application', 'default');
+        $this->template->isOrganizer = $this->isAllowed('event.application', 'default');
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
         }
-        $this->template->isOrg = $this->eventAuthorizator->isAllowed(
+        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
             $this->getEntity(),
             'org-detail',
             $this->getEvent()

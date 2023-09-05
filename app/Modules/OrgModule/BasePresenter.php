@@ -25,7 +25,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function startup(): void
     {
         parent::startup();
-        if (!$this->getLoggedPerson() || !count($this->getLoggedPerson()->getActiveOrgs())) {
+        if (!$this->getLoggedPerson() || !count($this->getLoggedPerson()->getActiveOrganizers())) {
             throw new ForbiddenRequestException();
         }
         $this->seriesTraitStartup();
@@ -67,6 +67,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 
     protected function getRole(): PresenterRole
     {
-        return PresenterRole::from(PresenterRole::ORG);
+        return PresenterRole::from(PresenterRole::ORGANIZER);
     }
 }

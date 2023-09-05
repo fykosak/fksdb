@@ -168,13 +168,13 @@ orm:
                 title: _('Event')
         links: []
     event_org:
-        service: FKSDB\Models\ORM\Services\EventOrgService
-        model: FKSDB\Models\ORM\Models\EventOrgModel
+        service: FKSDB\Models\ORM\Services\EventOrganizerService
+        model: FKSDB\Models\ORM\Models\EventOrganizerModel
         columns:
             event_org_id:
                 accessKey: e_org_id
                 type: primaryKey
-                title:  _('Event org Id')
+                title:  _('Event organizer Id')
             note:
                 type: string
                 title: _('Note')
@@ -298,32 +298,32 @@ orm:
                 title: _('Login')
                 permission: RESTRICT
     org:
-        service: FKSDB\Models\ORM\Services\OrgService
-        model: FKSDB\Models\ORM\Models\OrgModel
+        service: FKSDB\Models\ORM\Services\OrganizerService
+        model: FKSDB\Models\ORM\Models\OrganizerModel
         columns:
             org_id:
                 type: primaryKey
-                title: _('Org Id')
+                title: _('Organizer Id')
             since:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\SinceColumnFactory
                 title: _('Since')
             until:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\UntilColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\UntilColumnFactory
                 title: _('Until')
             order:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\OrderColumnFactory
                 description: _('Pro řazení v seznamu organizátorů')
                 title: _('Order')
             tex_signature:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\TexSignatureColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\TexSignatureColumnFactory
                 title: _('Tex signature')
             domain_alias:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\DomainAliasColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\DomainAliasColumnFactory
                 title: _('Domain alias')
             contribution:
                 type: string

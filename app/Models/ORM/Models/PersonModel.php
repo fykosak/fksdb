@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
-    EventOrgRole,
+use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
+    EventOrganizerRole,
     EventRole,
     FyziklaniTeamMemberRole,
     FyziklaniTeamTeacherRole,
@@ -116,11 +116,11 @@ final class PersonModel extends Model implements Resource
 
     /**
      * @deprecated
-     * @phpstan-return TypedGroupedSelection<OrgModel>
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
      */
-    public function getOrgs(?int $contestId = null): TypedGroupedSelection
+    public function getLegacyOrganizers(?int $contestId = null): TypedGroupedSelection
     {
-        $related = $this->getOrganisers();
+        $related = $this->getOrganizers();
         if ($contestId) {
             $related->where('contest_id', $contestId);
         }
@@ -204,12 +204,12 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     * @phpstan-return TypedGroupedSelection<EventOrganizerModel>
      */
-    public function getEventOrgs(): TypedGroupedSelection
+    public function getEventOrganizers(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<EventOrgModel> $selection */
-        $selection = $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<EventOrganizerModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_ORGANIZER, 'person_id');
         return $selection;
     }
 
@@ -224,29 +224,28 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @phpstan-return OrgModel[] indexed by contest_id
-     * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
+     * @phpstan-return OrganizerModel[] indexed by contest_id
      */
-    public function getActiveOrgs(): array
+    public function getActiveOrganizers(): array
     {
         $result = [];
-        /** @var OrgModel $org */
-        foreach ($this->getOrganisers() as $org) {
-            $year = $org->contest->getCurrentContestYear()->year;
-            if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
-                $result[$org->contest_id] = $org;
+        /** @var OrganizerModel $organizer */
+        foreach ($this->getOrganizers() as $organizer) {
+            $year = $organizer->contest->getCurrentContestYear()->year;
+            if ($organizer->since <= $year && ($organizer->until === null || $organizer->until >= $year)) {
+                $result[$organizer->contest_id] = $organizer;
             }
         }
         return $result;
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<OrgModel>
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
      */
-    public function getOrganisers(?ContestModel $contest = null): TypedGroupedSelection
+    public function getOrganizers(?ContestModel $contest = null): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<OrgModel> $selection */
-        $selection = $this->related(DbNames::TAB_ORG, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<OrganizerModel> $selection */
+        $selection = $this->related(DbNames::TAB_ORGANIZER, 'person_id');
         if ($contest) {
             $selection->where('contest_id', $contest->contest_id);
         }
@@ -254,12 +253,12 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<OrgModel>
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
      */
-    public function getActiveOrgsAsQuery(ContestModel $contest): TypedGroupedSelection
+    public function getActiveOrganizersAsQuery(ContestModel $contest): TypedGroupedSelection
     {
         $year = $contest->getCurrentContestYear()->year;
-        return $this->getOrganisers($contest)
+        return $this->getOrganizers($contest)
             ->where('since<=?', $year)
             ->where('until IS NULL OR until >=?', $year);
     }
@@ -417,10 +416,10 @@ final class PersonModel extends Model implements Resource
             }
             $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
-        /** @var EventOrgModel|null $eventOrg */
-        $eventOrg = $this->getEventOrgs()->where('event_id', $event->event_id)->fetch();
-        if (isset($eventOrg)) {
-            $roles[] = new EventOrgRole($event, $eventOrg);
+        /** @var EventOrganizerModel|null $eventOrganizer */
+        $eventOrganizer = $this->getEventOrganizers()->where('event_id', $event->event_id)->fetch();
+        if (isset($eventOrganizer)) {
+            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
         }
         /** @var EventParticipantModel|null $eventParticipant */
         $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
@@ -432,10 +431,10 @@ final class PersonModel extends Model implements Resource
         if ($teamMember) {
             $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
         }
-        /** @var OrgModel|null $org */
-        $org = $this->getActiveOrgsAsQuery($event->event_type->contest)->fetch();
-        if (isset($org)) {
-            $roles[] = new ContestOrgRole($event, $org);
+        /** @var OrganizerModel|null $organizer */
+        $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
+        if (isset($organizer)) {
+            $roles[] = new ContestOrganizerRole($event, $organizer);
         }
         return $roles;
     }

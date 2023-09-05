@@ -16,7 +16,7 @@ use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -46,7 +46,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
@@ -54,7 +54,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 

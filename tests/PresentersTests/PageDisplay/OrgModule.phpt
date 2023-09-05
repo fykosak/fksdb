@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 
 // phpcs:disable
@@ -17,7 +17,7 @@ class OrgModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->container->getByType(OrgService::class)->storeModel([
+        $this->container->getByType(OrganizerService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'contest_id' => 1,
             'since' => 1,

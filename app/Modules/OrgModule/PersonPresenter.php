@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\DataTest\PersonTestGrid;
+use FKSDB\Components\DataTest\PersonTestComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
@@ -133,6 +135,26 @@ final class PersonPresenter extends BasePresenter
         );
     }
 
+    public function authorizedTests(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'data-test');
+    }
+
+    public function titleTests(): PageTitle
+    {
+        return new PageTitle(null, _('Test data'), 'fas fa-tasks');
+    }
+
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'data-test');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Test data'), 'fas fa-tasks');
+    }
+
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
@@ -250,6 +272,16 @@ final class PersonPresenter extends BasePresenter
     protected function createComponentPizzaSelect(): PizzaComponent
     {
         return new PizzaComponent($this->getContext());
+    }
+
+    protected function createComponentDataTestGrid(): PersonTestGrid
+    {
+        return new PersonTestGrid($this->getContext());
+    }
+
+    protected function createComponentDataTestControl(): PersonTestComponent
+    {
+        return new PersonTestComponent($this->getContext());
     }
 
     /**

@@ -70,6 +70,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->addButton($button, 'create'); // @phpstan-ignore-line
+        $this->addButton($button, 'create');
     }
 }

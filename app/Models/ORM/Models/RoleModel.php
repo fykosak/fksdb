@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Model;
 final class RoleModel extends Model
 {
     public const CONTESTANT = 'contestant';
-    public const ORG = 'org';
+    public const ORGANIZER = 'org';
     public const REGISTERED = 'registered';
     public const GUEST = 'guest';
 }

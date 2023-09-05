@@ -1,0 +1,17 @@
+{layout '../../@layout.latte'}
+{varType Fykosak\Utils\Logging\Message[][] $logs}
+{varType FKSDB\Components\DataTest\Test[] $tests}
+{block content}
+    {foreach $logs as $testId=>$testLogs}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$tests[$testId]->title}</h2>
+                {foreach $testLogs as $log}
+                    <div class="alert alert-{$log->level}">
+                        {$log->text}
+                    </div>
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+{/block}

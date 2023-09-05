@@ -17,7 +17,7 @@ class ControlButton extends Button
     private Control $control;
 
     /**
-     * @phpstan-param callable(TModel):array{string,array<string,mixed>} $linkCallback
+     * @phpstan-param callable(TModel):array{string,array<string,scalar>} $linkCallback
      * @phpstan-param (callable(TModel,int):bool)|null $showCallback
      */
     public function __construct(

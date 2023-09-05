@@ -30,7 +30,6 @@ navigation:
             Warehouse.Dashboard.default: []
 
             #Common.Deduplicate.person:
-            Org.Validation.default: []
             Org.Chart.list: []
 
         Org.Dashboard.inbox:
@@ -56,10 +55,6 @@ navigation:
             Warehouse.Dashboard.default: []
         Org.Dashboard.others:
             Org.Chart.list: []
-            Org.Validation.default: []
-        Org.Validation.default:
-            Org.Validation.preview: []
-            Org.Validation.list: []
         Public.Dashboard.default:
             Public.Submit.default: []
             Public.Submit.legacy: []

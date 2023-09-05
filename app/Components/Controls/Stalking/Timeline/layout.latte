@@ -24,7 +24,7 @@
                     {var $contestntsContests = []}
                     {foreach $rows as $row}
                         {var $contest =  $row['model']->event_type->contest}
-                        {if $type=='orgs'}
+                        {if $type=='organizers'}
                             {php $rowNumber++}
                         {else}
                             {if in_array($contest->contest_id,$contestntsContests)}

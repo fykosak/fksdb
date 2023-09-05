@@ -25,11 +25,11 @@ class DbNames
     public const TAB_LOGIN = 'login';
     public const TAB_TEACHER = 'teacher';
     public const TAB_CONTESTANT = 'contestant';
-    public const TAB_ORG = 'org';
+    public const TAB_ORGANIZER = 'org';
     /* events + single applications */
     public const TAB_EVENT = 'event';
     public const TAB_EVENT_TYPE = 'event_type';
-    public const TAB_EVENT_ORG = 'event_org';
+    public const TAB_EVENT_ORGANIZER = 'event_org';
     public const TAB_EVENT_PARTICIPANT = 'event_participant';
     /* tasks & submits */
     public const TAB_SUBMIT = 'submit';

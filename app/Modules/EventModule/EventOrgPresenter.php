@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\EntityForms\EventOrgFormComponent;
-use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
+use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
+use FKSDB\Components\Grids\EventOrganizer\EventOrganizersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\EventOrgModel;
-use FKSDB\Models\ORM\Services\EventOrgService;
+use FKSDB\Models\ORM\Models\EventOrganizerModel;
+use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\Message;
@@ -21,14 +21,14 @@ use Nette\Security\Resource;
 
 final class EventOrgPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<EventOrgModel> */
+    /** @use EventEntityPresenterTrait<EventOrganizerModel> */
     use EventEntityPresenterTrait;
 
-    private EventOrgService $eventOrgService;
+    private EventOrganizerService $service;
 
-    final public function injectServiceEventOrg(EventOrgService $eventOrgService): void
+    final public function injectServiceEventOrganizer(EventOrganizerService $service): void
     {
-        $this->eventOrgService = $eventOrgService;
+        $this->service = $service;
     }
 
     public function titleList(): PageTitle
@@ -82,25 +82,25 @@ final class EventOrgPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): EventOrgService
+    protected function getORMService(): EventOrganizerService
     {
-        return $this->eventOrgService;
+        return $this->service;
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): EventOrgsGrid
+    protected function createComponentGrid(): EventOrganizersGrid
     {
-        return new EventOrgsGrid($this->getEvent(), $this->getContext());
+        return new EventOrganizersGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): EventOrgFormComponent
+    protected function createComponentCreateForm(): EventOrganizerFormComponent
     {
-        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), null);
+        return new EventOrganizerFormComponent($this->getContext(), $this->getEvent(), null);
     }
 
     /**
@@ -111,8 +111,8 @@ final class EventOrgPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): EventOrgFormComponent
+    protected function createComponentEditForm(): EventOrganizerFormComponent
     {
-        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
+        return new EventOrganizerFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
 }

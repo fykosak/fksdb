@@ -16,16 +16,16 @@ use Nette\DI\Container;
 abstract class DetailComponent extends BaseList
 {
     protected PersonModel $person;
-    protected bool $isOrg;
+    protected bool $isOrganizer;
 
     public function __construct(
         Container $container,
         PersonModel $person,
         int $userPermissions,
-        bool $isOrg
+        bool $isOrganizer
     ) {
         parent::__construct($container, $userPermissions);
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->person = $person;
     }
 

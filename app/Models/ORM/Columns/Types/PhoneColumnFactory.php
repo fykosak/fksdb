@@ -66,10 +66,6 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
                     Message::LVL_ERROR
                 )
             );
-        } else {
-            $logger->log(
-                new Message(\sprintf(_('%s is valid'), $this->getTitle()), Message::LVL_SUCCESS)
-            );
         }
     }
 

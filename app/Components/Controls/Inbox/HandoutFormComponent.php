@@ -47,14 +47,14 @@ class HandoutFormComponent extends BaseComponent
     {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
-        $orgProvider = new PersonProvider($this->personService);
-        $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
+        $provider = new PersonProvider($this->personService);
+        $provider->filterOrganizers($this->seriesTable->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(
                 false,
                 $task->label . ' ' . $task->name->getText($this->translator->lang),
-                $orgProvider
+                $provider
             );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);

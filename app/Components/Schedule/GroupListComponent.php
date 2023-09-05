@@ -67,6 +67,7 @@ class GroupListComponent extends BaseList
             ),
             'duration'
         );
+        /** @phpstan-var RelatedTable<ScheduleGroupModel,ScheduleItemModel> $itemsRow */
         $itemsRow = new RelatedTable(
             $this->container,
             fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
@@ -75,7 +76,7 @@ class GroupListComponent extends BaseList
         );
         $this->addRow($itemsRow, 'items');
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.name:value (@schedule_item.schedule_item_id:value)',
                 '@schedule_item.name:title'
@@ -83,7 +84,7 @@ class GroupListComponent extends BaseList
             'title'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.price_czk / @schedule_item.price_eur',
                 _('Price')
@@ -91,7 +92,7 @@ class GroupListComponent extends BaseList
             'price'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity',
                 _('Used / Free / Total')
@@ -126,7 +127,7 @@ class GroupListComponent extends BaseList
             'attendance'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Detail')),
@@ -135,7 +136,7 @@ class GroupListComponent extends BaseList
             'detail'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Edit')),
@@ -144,7 +145,7 @@ class GroupListComponent extends BaseList
             'edit'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Attendance')),

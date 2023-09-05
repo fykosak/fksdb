@@ -21,6 +21,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 use Tracy\Debugger;
 
 /**
@@ -71,7 +72,7 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $model): string => $model->source->value,
+                fn(SubmitModel $model): Html => $model->source->badge(),
                 new Title(null, _('Source'))
             ),
             'source'
@@ -117,7 +118,7 @@ class SubmitsGrid extends BaseGrid
         );
 
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Detail')),

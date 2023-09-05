@@ -8,13 +8,13 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Components\EntityForms\EventOrgFormComponent;
+use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\EventOrgService;
+use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -25,14 +25,14 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
 
     private PersonModel $person;
     private PersonModel $eventOrgPerson;
-    private EventOrgModel $eventOrg;
+    private EventOrganizerModel $eventOrg;
     private EventModel $event;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
         $this->event = $this->container->getByType(EventService::class)->storeModel([
@@ -46,7 +46,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'registration_end' => new \DateTime(),
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->eventOrg = $this->container->getByType(EventOrgService::class)->storeModel([
+        $this->eventOrg = $this->container->getByType(EventOrganizerService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'person_id' => $this->eventOrgPerson->person_id,
             'note' => 'note-original',
@@ -68,7 +68,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-            EventOrgFormComponent::CONTAINER => [
+            EventOrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
                 'person_id_container' => self::personToValues($this->person),
                 'note' => 'note-c',
@@ -83,7 +83,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-            EventOrgFormComponent::CONTAINER => [
+            EventOrganizerFormComponent::CONTAINER => [
                 'person_id' => null, // empty personId
                 'note' => '',
             ],
@@ -97,7 +97,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     public function testEdit(): void
     {
         $response = $this->createFormRequest('edit', [
-            EventOrgFormComponent::CONTAINER => [
+            EventOrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->eventOrgPerson->person_id,
                 'person_id_container' => self::personToValues($this->eventOrgPerson),
                 'note' => 'note-edited',
@@ -106,9 +106,9 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'id' => (string)$this->eventOrg->e_org_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        /** @var EventOrgModel $org */
+        /** @var EventOrganizerModel $org */
         $org = $this->container
-            ->getByType(EventOrgService::class)->findByPrimary($this->eventOrg->e_org_id);
+            ->getByType(EventOrganizerService::class)->findByPrimary($this->eventOrg->e_org_id);
         Assert::equal('note-edited', $org->note);
     }
 
@@ -142,7 +142,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     private function countEventOrgs(): int
     {
         return $this->container
-            ->getByType(EventOrgService::class)
+            ->getByType(EventOrganizerService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');

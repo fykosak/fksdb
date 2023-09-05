@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\CountryService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -27,7 +27,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
         /** @var AddressModel $address */

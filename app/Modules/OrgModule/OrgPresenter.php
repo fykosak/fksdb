@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\EntityForms\OrgFormComponent;
-use FKSDB\Components\Grids\OrgsGrid;
+use FKSDB\Components\EntityForms\OrganizerFormComponent;
+use FKSDB\Components\Grids\OrganizersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\OrgModel;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Models\OrganizerModel;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Modules\Core\PresenterTraits\ContestEntityTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
@@ -19,14 +19,14 @@ use Nette\Security\Resource;
 
 final class OrgPresenter extends BasePresenter
 {
-    /** @phpstan-use ContestEntityTrait<OrgModel> */
+    /** @phpstan-use ContestEntityTrait<OrganizerModel> */
     use ContestEntityTrait;
 
-    private OrgService $orgService;
+    private OrganizerService $service;
 
-    final public function injectServiceOrg(OrgService $orgService): void
+    final public function injectServiceOrganizer(OrganizerService $service): void
     {
-        $this->orgService = $orgService;
+        $this->service = $service;
     }
 
     /**
@@ -80,23 +80,23 @@ final class OrgPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): OrgService
+    protected function getORMService(): OrganizerService
     {
-        return $this->orgService;
+        return $this->service;
     }
 
     protected function getModelResource(): string
     {
-        return OrgModel::RESOURCE_ID;
+        return OrganizerModel::RESOURCE_ID;
     }
 
     /**
      * @throws NoContestYearAvailable
      * @throws NoContestAvailable
      */
-    protected function createComponentCreateForm(): OrgFormComponent
+    protected function createComponentCreateForm(): OrganizerFormComponent
     {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
+        return new OrganizerFormComponent($this->getContext(), $this->getSelectedContestYear(), null);
     }
 
     /**
@@ -107,17 +107,17 @@ final class OrgPresenter extends BasePresenter
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */
-    protected function createComponentEditForm(): OrgFormComponent
+    protected function createComponentEditForm(): OrganizerFormComponent
     {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
+        return new OrganizerFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
     }
 
     /**
      * @throws NoContestAvailable
      */
-    protected function createComponentGrid(): OrgsGrid
+    protected function createComponentGrid(): OrganizersGrid
     {
-        return new OrgsGrid($this->getContext(), $this->getSelectedContest());
+        return new OrganizersGrid($this->getContext(), $this->getSelectedContest());
     }
 
     /**

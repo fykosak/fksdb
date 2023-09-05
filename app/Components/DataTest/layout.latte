@@ -1,0 +1,26 @@
+{varType array $logs}
+{varType FKSDB\Components\DataTest\Test[] $tests}
+<div class="panel color-auto">
+    <div class="container">
+        {control form}
+    </div>
+</div>
+{foreach $logs as $log}
+    {varType FKSDB\Models\ORM\Models\PersonModel[]|Fykosak\Utils\Logging\Message[][][] $log}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>
+                <a href="{plink :Org:Person:detail id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
+                <span class="badge bg-secondary">#{$log['model']->person_id}</span>
+            </h2>
+            {foreach $log['logs'] as $key => $testLogs}
+                <h3>{$tests[$key]->title}</h3>
+                {foreach $testLogs as $log}
+                    <div class="alert alert-{$log->level}">
+                        {$log->text}
+                    </div>
+                {/foreach}
+            {/foreach}
+        </div>
+    </div>
+{/foreach}

@@ -113,7 +113,7 @@ class PaymentList extends FilterList
             'price'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Detail')),

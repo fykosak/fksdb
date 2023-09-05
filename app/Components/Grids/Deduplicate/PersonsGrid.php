@@ -74,7 +74,7 @@ class PersonsGrid extends BaseGrid
             'score'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Merge A<-B')),
@@ -90,7 +90,7 @@ class PersonsGrid extends BaseGrid
             'mergeAB'
         );
         $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('Merge B<-A')),
@@ -105,7 +105,7 @@ class PersonsGrid extends BaseGrid
             'mergeBA'
         );
         $this->addButton(
-            new PresenterButton(// @phpstan-ignore-line
+            new PresenterButton(
                 $this->container,
                 null,
                 new Title(null, _('It\'s not a duplicity')),

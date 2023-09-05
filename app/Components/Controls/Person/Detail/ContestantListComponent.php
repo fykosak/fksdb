@@ -49,9 +49,9 @@ class ContestantListComponent extends DetailComponent
             new TemplateItem($this->container, _('Contest year @contestant.year'), '@contestant.year:title'),
             'contestant__year'
         );
-        if ($this->isOrg) {
+        if ($this->isOrganizer) {
             $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
+                new PresenterButton(
                     $this->container,
                     null,
                     new Title(null, _('Edit')),
@@ -67,7 +67,7 @@ class ContestantListComponent extends DetailComponent
                 'edit'
             );
             $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
+                new PresenterButton(
                     $this->container,
                     null,
                     new Title(null, _('Detail')),
@@ -84,7 +84,7 @@ class ContestantListComponent extends DetailComponent
             );
         } else {
             $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
+                new PresenterButton(
                     $this->container,
                     null,
                     new Title(null, _('Detail')),

@@ -12,7 +12,7 @@ use DateTime;
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -25,7 +25,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 

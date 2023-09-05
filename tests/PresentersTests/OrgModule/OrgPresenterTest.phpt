@@ -8,29 +8,29 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Components\EntityForms\OrgFormComponent;
-use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Components\EntityForms\OrganizerFormComponent;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class OrgPresenterTest extends AbstractOrgPresenterTestCase
 {
     private PersonModel $person;
-    private OrgModel $org;
+    private OrganizerModel $org;
     private PersonModel $orgPerson;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
         $this->orgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->org = $this->container->getByType(OrgService::class)->storeModel([
+        $this->org = $this->container->getByType(OrganizerService::class)->storeModel([
             'person_id' => $this->orgPerson->person_id,
             'contest_id' => 1,
             'since' => 0,
@@ -54,7 +54,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            OrgFormComponent::CONTAINER => [
+            OrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
                 'person_id_container' => self::personToValues($this->person),
                 'since' => "1",
@@ -72,7 +72,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            OrgFormComponent::CONTAINER => [
+            OrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
                 'since' => "2", // out of range
                 'order' => "0",
@@ -89,7 +89,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            OrgFormComponent::CONTAINER => [
+            OrganizerFormComponent::CONTAINER => [
                 'person_id' => null, // empty personId
                 'since' => "1",
                 'order' => "0",
@@ -105,7 +105,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     public function testEdit(): void
     {
         $response = $this->createFormRequest('edit', [
-            OrgFormComponent::CONTAINER => [
+            OrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->orgPerson->person_id,
                 'person_id_container' => self::personToValues($this->person),
                 'since' => "1",
@@ -116,9 +116,9 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             'id' => (string)$this->org->org_id,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        /** @var OrgModel $org */
+        /** @var OrganizerModel $org */
         $org = $this->container
-            ->getByType(OrgService::class)
+            ->getByType(OrganizerService::class)
             ->getTable()
             ->where(['org_id' => $this->org->org_id])
             ->fetch();
@@ -144,7 +144,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     private function countOrgs(): int
     {
         return $this->container
-            ->getByType(OrgService::class)
+            ->getByType(OrganizerService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');

@@ -49,7 +49,7 @@ export interface ResponseData {
         visible: boolean;
     };
     lastUpdated: string;
-    isOrg: boolean;
+    isOrganizer: boolean;
     refreshDelay: number;
     tasksOnBoard: number;
 
