@@ -38,7 +38,6 @@ class PersonHistoryAdapter extends Test
     public function run(Logger $logger, Model $model): void
     {
         $histories = $model->getHistories();
-
         /** @var PersonHistoryModel $history */
         foreach ($histories as $history) {
             $this->test->run($logger, $history);

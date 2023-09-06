@@ -9,8 +9,10 @@ use FKSDB\Components\DataTest\Tests\Person\GenderFromBornNumberTest;
 use FKSDB\Components\DataTest\Tests\Person\ParticipantsDurationTest;
 use FKSDB\Components\DataTest\Tests\Person\PersonHistoryAdapter;
 use FKSDB\Components\DataTest\Tests\Person\PersonInfoAdapter;
+use FKSDB\Components\DataTest\Tests\Person\SchoolChangeTest;
 use FKSDB\Components\DataTest\Tests\Person\StudyYearTest;
 use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
+use FKSDB\Components\DataTest\Tests\PersonHistory\SetSchoolTest;
 use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
 use FKSDB\Models\ORM\ORMFactory;
@@ -45,6 +47,8 @@ class DataTestFactory
                 'organization_participation' => new EventCoveringTest(),
                 'study_year' => new StudyYearTest(),
                 'school_study' => new PersonHistoryAdapter(new SchoolStudyTest()),
+                'school_set' => new PersonHistoryAdapter(new SetSchoolTest()),
+                'school_change' => new SchoolChangeTest(),
                 'phone' => new PersonInfoAdapter(
                     new PersonInfoFileLevelTest($this->tableReflectionFactory, 'phone')
                 ),
