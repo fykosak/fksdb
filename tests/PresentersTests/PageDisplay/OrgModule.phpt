@@ -71,17 +71,18 @@ class OrgModule extends AbstractPageDisplayTestCase
             ['Org:Chart', 'list'],
 
             ['Org:Deduplicate', 'person'],
+
             ['Org:Person', 'create'],
             ['Org:Person', 'edit'],
             ['Org:Person', 'detail'],
             ['Org:Person', 'pizza'],
             ['Org:Person', 'search'],
+            ['Org:Person', 'tests'],
+            ['Org:Person', 'list'],
+
             ['Org:School', 'list'],
             ['Org:School', 'create'],
             ['Org:Spam', 'list'],
-            ['Org:Validation', 'default'],
-            ['Org:Validation', 'list'],
-            ['Org:Validation', 'preview'],
 
             ['Warehouse:Dashboard', 'default'],
 

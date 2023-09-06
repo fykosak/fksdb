@@ -9,6 +9,8 @@ use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
+use FKSDB\Components\DataTest\SingleTestComponent;
+use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -386,5 +388,10 @@ final class TeamApplicationPresenter extends BasePresenter
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
+    }
+
+    protected function createComponentStudySchoolTest(): SingleTestComponent
+    {
+        return new SingleTestComponent($this->getContext(), new SchoolStudyTest());
     }
 }

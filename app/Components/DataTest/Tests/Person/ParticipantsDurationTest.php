@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends Test<PersonModel>
@@ -23,9 +24,9 @@ class ParticipantsDurationTest extends Test
         ContestModel::ID_VYFUK => ['thresholds' => [5, 6]],
     ];
 
-    public function __construct()
+    public function getTitle(): Title
     {
-        parent::__construct(_('Participate events'));
+        return new Title(null, _('Participate events'));
     }
 
     /**

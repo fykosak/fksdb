@@ -6,7 +6,6 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use Fykosak\Utils\Logging\MemoryLogger;
 
 class DataTestComponent extends BaseComponent
 {
@@ -20,12 +19,7 @@ class DataTestComponent extends BaseComponent
     final public function render(): void
     {
         if ($this->beforeRender()) {
-            $logs = [];
-            foreach ($this->factory->getTests('person') as $testId => $test) {
-                $logger = new MemoryLogger();
-                $test->run($logger, $this->person);
-                $logs[$testId] = $logger->getMessages();
-            }
+            $logs = DataTestFactory::runForModel($this->person, $this->factory->getTests('person'));
             $this->template->render(
                 __DIR__ . DIRECTORY_SEPARATOR . 'dataTest.latte',
                 [

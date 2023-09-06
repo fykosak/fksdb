@@ -11,15 +11,16 @@ use FKSDB\Models\ORM\Models\StudyYear;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends Test<PersonModel>
  */
 class StudyYearTest extends Test
 {
-    public function __construct()
+    public function getTitle(): Title
     {
-        parent::__construct(_('Study years'));
+        return new Title(null, _('Study years'));
     }
 
     /**
@@ -30,7 +31,6 @@ class StudyYearTest extends Test
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $firstValid */
         $firstValid = null;
-        $hasError = false;
         /** @var PersonHistoryModel|null $postgraduate */
         $postgraduate = null;
         /** @var PersonHistoryModel $history */
@@ -44,7 +44,6 @@ class StudyYearTest extends Test
                 continue;
             }
             if ($postgraduate) {
-                $hasError = true;
                 $logger->log(
                     new Message(
                         sprintf(
@@ -57,7 +56,6 @@ class StudyYearTest extends Test
                 );
             }
             if ($firstValid->getGraduationYear() !== $history->getGraduationYear()) {
-                $hasError = true;
                 if (
                     $firstValid->study_year_new->value === StudyYear::Primary5 &&
                     $history->study_year_new->value === StudyYear::Primary5

@@ -10,15 +10,16 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends Test<PersonModel>
  */
 class GenderFromBornNumberTest extends Test
 {
-    public function __construct()
+    public function getTitle(): Title
     {
-        parent::__construct(_('Gender from born Id'));
+        return new Title(null, _('Gender from born Id'));
     }
 
     /**

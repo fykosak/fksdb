@@ -2,31 +2,39 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\DataTest\Tests\Person;
+namespace FKSDB\Components\DataTest\Tests\PersonInfo;
 
 use FKSDB\Components\DataTest\Test;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends Test<PersonModel>
+ * @phpstan-extends Test<PersonInfoModel>
  */
-abstract class PersonFileLevelTest extends Test
+class PersonInfoFileLevelTest extends Test
 {
     private string $fieldName;
     private ORMFactory $tableReflectionFactory;
 
-    /**
-     * @throws BadTypeException
-     */
     public function __construct(ORMFactory $tableReflectionFactory, string $fieldName)
     {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
-        parent::__construct($this->getRowFactory()->getTitle());
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function getTitle(): Title
+    {
+        return new Title(null, $this->getRowFactory()->getTitle());
     }
 
     /**
@@ -37,11 +45,20 @@ abstract class PersonFileLevelTest extends Test
     {
         static $rowFactory;
         if (!isset($rowFactory)) {
-            $rowFactory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $this->fieldName));
+            $rowFactory = $this->tableReflectionFactory->loadColumnFactory('person_info', $this->fieldName);
             if (!$rowFactory instanceof TestedColumnFactory) {
                 throw new BadTypeException(TestedColumnFactory::class, $rowFactory);
             }
         }
         return $rowFactory;
+    }
+
+    /**
+     * @param PersonInfoModel $model
+     * @throws BadTypeException
+     */
+    public function run(Logger $logger, Model $model): void
+    {
+        $this->getRowFactory()->runTest($logger, $model);
     }
 }

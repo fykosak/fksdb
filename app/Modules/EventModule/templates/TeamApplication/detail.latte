@@ -96,6 +96,9 @@
                 {control columnTable ['person.person_link','person_history.study_year_new','school.school'],$member,1024}
                 {control columnTable ['school.school'],$member->getPersonHistory(),1024}
                 {include personSchedule, person => $member->person,event=>$model->event}
+                {if $isOrganizer}
+                    {control studySchoolTest $member->getPersonHistory()}
+                {/if}
             </div>
         </div>
     {/foreach}

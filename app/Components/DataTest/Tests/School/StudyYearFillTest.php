@@ -9,15 +9,16 @@ use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends Test<SchoolModel>
  */
 class StudyYearFillTest extends Test
 {
-    public function __construct()
+    public function getTitle(): Title
     {
-        parent::__construct(_('Filled study years'));
+        return new Title(null, _('Filled study years'));
     }
 
     /**

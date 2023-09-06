@@ -5,6 +5,7 @@
         {control form}
     </div>
 </div>
+
 {foreach $logs as $log}
     {varType FKSDB\Models\ORM\Models\PersonModel[]|Fykosak\Utils\Logging\Message[][][] $log}
     <div class="panel color-auto">
@@ -14,12 +15,7 @@
                 <span class="badge bg-secondary">#{$log['model']->person_id}</span>
             </h2>
             {foreach $log['logs'] as $key => $testLogs}
-                <h3>{$tests[$key]->title}</h3>
-                {foreach $testLogs as $log}
-                    <div class="alert alert-{$log->level}">
-                        {$log->text}
-                    </div>
-                {/foreach}
+                {include test-results from './single.latte' logs:$testLogs,test:$tests[$key]}
             {/foreach}
         </div>
     </div>

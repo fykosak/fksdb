@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 /**
@@ -38,7 +37,7 @@ trait TestGridTrait
                     $test->run($logger, $person);
                     return self::createHtmlLog($logger);
                 },
-                new Title(null, sprintf(_('Test: "%s"'), $test->title))
+                $test->getTitle()
             );
             $this->addColumn($item, 'test_' . $id);
         }

@@ -7,12 +7,16 @@ namespace FKSDB\Components\DataTest;
 use FKSDB\Components\DataTest\Tests\Person\EventCoveringTest;
 use FKSDB\Components\DataTest\Tests\Person\GenderFromBornNumberTest;
 use FKSDB\Components\DataTest\Tests\Person\ParticipantsDurationTest;
-use FKSDB\Components\DataTest\Tests\Person\PersonInfoFieldTest;
-use FKSDB\Components\DataTest\Tests\Person\SchoolTest;
+use FKSDB\Components\DataTest\Tests\Person\PersonHistoryAdapter;
+use FKSDB\Components\DataTest\Tests\Person\PersonInfoAdapter;
 use FKSDB\Components\DataTest\Tests\Person\StudyYearTest;
+use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
+use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 
 /**
  * @phpstan-type TTests array{
@@ -26,18 +30,12 @@ class DataTestFactory
     private array $tests;
     private ORMFactory $tableReflectionFactory;
 
-    /**
-     * @throws BadTypeException
-     */
     public function __construct(ORMFactory $tableReflectionFactory)
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }
 
-    /**
-     * @throws BadTypeException
-     */
     private function registersTests(): void
     {
         $this->tests = [
@@ -46,15 +44,21 @@ class DataTestFactory
                 'participants_duration' => new ParticipantsDurationTest(),
                 'organization_participation' => new EventCoveringTest(),
                 'study_year' => new StudyYearTest(),
-                'school_study' => new SchoolTest(),
-                'phone' => new PersonInfoFieldTest($this->tableReflectionFactory, 'person_info.phone'),
-                'phone_parent_d' => new PersonInfoFieldTest(
-                    $this->tableReflectionFactory,
-                    'person_info.phone_parent_d'
+                'school_study' => new PersonHistoryAdapter(new SchoolStudyTest()),
+                'phone' => new PersonInfoAdapter(
+                    new PersonInfoFileLevelTest($this->tableReflectionFactory, 'phone')
                 ),
-                'phone_parent_m' => new PersonInfoFieldTest(
-                    $this->tableReflectionFactory,
-                    'person_info.phone_parent_m'
+                'phone_parent_d' => new PersonInfoAdapter(
+                    new PersonInfoFileLevelTest(
+                        $this->tableReflectionFactory,
+                        'phone_parent_d'
+                    )
+                ),
+                'phone_parent_m' => new PersonInfoAdapter(
+                    new PersonInfoFileLevelTest(
+                        $this->tableReflectionFactory,
+                        'phone_parent_m'
+                    )
                 ),
             ],
             'school' => [
@@ -65,9 +69,30 @@ class DataTestFactory
 
     /**
      * @phpstan-return value-of<TTests>
+     * @return Test[]
      */
     public function getTests(string $section): array
     {
         return $this->tests[$section] ?? [];
+    }
+
+    /**
+     * @phpstan-template TModel of Model
+     * @phpstan-param array<string,Test<TModel>> $tests
+     * @phpstan-param TModel $model
+     * @phpstan-return array<string,Message[]>
+     */
+    public static function runForModel(Model $model, array $tests): array
+    {
+        $log = [];
+        foreach ($tests as $testId => $test) {
+            $logger = new MemoryLogger();
+            $test->run($logger, $model);
+            $testLog = $logger->getMessages();
+            if (count($testLog)) {
+                $log[$testId] = $testLog;
+            }
+        }
+        return $log;
     }
 }
