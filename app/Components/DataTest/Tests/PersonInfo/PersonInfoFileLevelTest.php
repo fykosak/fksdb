@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
+use Nette\DI\Container;
 
 /**
  * @phpstan-extends Test<PersonInfoModel>
@@ -23,9 +24,14 @@ class PersonInfoFileLevelTest extends Test
     private string $fieldName;
     private ORMFactory $tableReflectionFactory;
 
-    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName)
+    public function __construct(string $fieldName, Container $container)
     {
+        parent::__construct($container);
         $this->fieldName = $fieldName;
+    }
+
+    public function inject(ORMFactory $tableReflectionFactory): void
+    {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

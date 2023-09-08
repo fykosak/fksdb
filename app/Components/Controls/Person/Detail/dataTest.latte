@@ -9,6 +9,7 @@
             <div class="panel color-auto">
                 <div class="container">
                     <h2>{$tests[$testId]->getTitle()->toHtml()}</h2>
+                    <span class="text-muted">{$tests[$testId]->getDescription()}</span>
                     {foreach $testLogs as $log}
                         <div class="alert alert-{$log->level}">
                             {$log->text}

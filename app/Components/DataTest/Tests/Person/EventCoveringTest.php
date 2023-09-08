@@ -16,17 +16,16 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Tracy\Debugger;
 
 /**
  * @phpstan-extends Test<PersonModel>
- * @phpstan-type TContestYears array<int,array<int,int>>
+ * @phpstan-type TContestYears array<int,array<int,ContestYearModel>>
  */
 class EventCoveringTest extends Test
 {
     public function getTitle(): Title
     {
-        return new Title(null, _('Organization and participation at same year'));
+        return new Title(null, _('Organization and participation in same year'));
     }
 
     /**
@@ -62,30 +61,25 @@ class EventCoveringTest extends Test
         string $organizersKey,
         array $organizers
     ): void {
-        Debugger::barDump($participants);
-        Debugger::barDump($organizers);
         foreach ($participants as $contestId => $years) {
-            foreach ($years as $year) {
-                if (isset($organizers[$contestId]) && \in_array($year, $organizers[$contestId])) {
-                    $logger->log(self::createLog($year, $contestId, $participantKey, $organizersKey));
+            foreach ($years as $year => $contestYear) {
+                if (isset($organizers[$contestId]) && \array_key_exists($year, $organizers[$contestId])) {
+                    $logger->log(
+                        new Message(
+                            \sprintf(
+                                _('Organization and participation at year %d (%d) year of contest %s "%s"<->"%s".'),
+                                $contestYear->year,
+                                $contestYear->ac_year,
+                                $contestYear->contest->name,
+                                _($participantKey),
+                                _($organizersKey)
+                            ),
+                            Message::LVL_ERROR
+                        )
+                    );
                 }
             }
         }
-    }
-
-
-    private static function createLog(int $year, int $contestId, string $participantKey, string $organizersKey): Message
-    {
-        return new Message(
-            \sprintf(
-                _('Organization and participation at %d year of contestId %d "%s"<->"%s".'),
-                $year,
-                $contestId,
-                _($participantKey),
-                _($organizersKey)
-            ),
-            Message::LVL_ERROR
-        );
     }
 
     /**
@@ -97,7 +91,7 @@ class EventCoveringTest extends Test
         $data = [];
         foreach ($contestYears as $contestYear) {
             $data[$contestYear->contest_id] = $data[$contestYear->contest_id] ?? [];
-            $data[$contestYear->contest_id][$contestYear->year] = $contestYear->year;
+            $data[$contestYear->contest_id][$contestYear->year] = $contestYear;
         }
         return $data;
     }
@@ -127,7 +121,7 @@ class EventCoveringTest extends Test
             $until = $organizer->until ?? $organizer->contest->getLastYear();
             $contestYears[$organizer->contest_id] = [];
             foreach (range($since, $until) as $year) {
-                $contestYears[$organizer->contest_id][$year] = $year;
+                $contestYears[$organizer->contest_id][$year] = $organizer->contest->getContestYear($year);
             }
         }
         return $contestYears;
@@ -136,12 +130,16 @@ class EventCoveringTest extends Test
     /**
      * @phpstan-return TContestYears
      */
-    private static function getTeamMember(PersonModel $model): array
+    public static function getTeamMember(PersonModel $model, bool $omitFOL = false): array
     {
         $contestYears = [];
         /** @var TeamMemberModel $teamMember */
         foreach ($model->getTeamMembers() as $teamMember) {
-            $contestYears[] = $teamMember->fyziklani_team->event->getContestYear();
+            $event = $teamMember->fyziklani_team->event;
+            if ($omitFOL && $event->event_type_id === 9) {
+                continue;
+            }
+            $contestYears[] = $event->getContestYear();
         }
         return self::contestYearsToArray($contestYears);
     }
@@ -149,7 +147,7 @@ class EventCoveringTest extends Test
     /**
      * @phpstan-return TContestYears
      */
-    private static function getEventParticipant(PersonModel $model): array
+    public static function getEventParticipant(PersonModel $model): array
     {
         $contestYears = [];
         /** @var EventParticipantModel $eventParticipant */
@@ -162,7 +160,7 @@ class EventCoveringTest extends Test
     /**
      * @phpstan-return TContestYears
      */
-    private static function getContestant(PersonModel $model): array
+    public static function getContestant(PersonModel $model): array
     {
         $contestYears = [];
         /** @var ContestantModel $contestant */

@@ -22,19 +22,17 @@ class SetSchoolTest extends Test
         return new Title(null, _('School set'));
     }
 
+    public function getDescription(): ?string
+    {
+        return _('Check if school is filled when study year is filled.');
+    }
+
     /**
      * @param PersonHistoryModel $model
      */
     public function run(Logger $logger, Model $model): void
     {
-        if (
-            (
-                $model->study_year_new->isPrimarySchool()
-                || $model->study_year_new->isHighSchool()
-                || $model->study_year_new->value === StudyYear::UniversityAll
-            )
-            && !$model->school_id
-        ) {
+        if ($model->study_year_new->value !== StudyYear::None && !$model->school_id) {
             $this->addError($logger, $model);
         }
     }

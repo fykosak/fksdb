@@ -9,16 +9,17 @@ use FKSDB\Components\DataTest\Tests\Person\GenderFromBornNumberTest;
 use FKSDB\Components\DataTest\Tests\Person\ParticipantsDurationTest;
 use FKSDB\Components\DataTest\Tests\Person\PersonHistoryAdapter;
 use FKSDB\Components\DataTest\Tests\Person\PersonInfoAdapter;
+use FKSDB\Components\DataTest\Tests\Person\PostgraduateStudyTest;
 use FKSDB\Components\DataTest\Tests\Person\SchoolChangeTest;
 use FKSDB\Components\DataTest\Tests\Person\StudyYearTest;
 use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
 use FKSDB\Components\DataTest\Tests\PersonHistory\SetSchoolTest;
 use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
-use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Nette\DI\Container;
 
 /**
  * @phpstan-type TTests array{
@@ -30,11 +31,11 @@ class DataTestFactory
 {
     /** @phpstan-var TTests */
     private array $tests;
-    private ORMFactory $tableReflectionFactory;
+    private Container $container;
 
-    public function __construct(ORMFactory $tableReflectionFactory)
+    public function __construct(Container $container)
     {
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->container = $container;
         $this->registersTests();
     }
 
@@ -42,31 +43,29 @@ class DataTestFactory
     {
         $this->tests = [
             'person' => [
-                'gender_born_number' => new GenderFromBornNumberTest(),
-                'participants_duration' => new ParticipantsDurationTest(),
-                'organization_participation' => new EventCoveringTest(),
-                'study_year' => new StudyYearTest(),
-                'school_study' => new PersonHistoryAdapter(new SchoolStudyTest()),
-                'school_set' => new PersonHistoryAdapter(new SetSchoolTest()),
-                'school_change' => new SchoolChangeTest(),
+                'gender_born_number' => new GenderFromBornNumberTest($this->container),
+                'participants_duration' => new ParticipantsDurationTest($this->container),
+                'organization_participation' => new EventCoveringTest($this->container),
+                'study_year' => new StudyYearTest($this->container),
+                'school_study' => new PersonHistoryAdapter(new SchoolStudyTest($this->container), $this->container),
+                'school_set' => new PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
+                'postgraduate' => new PostgraduateStudyTest($this->container),
+                'school_change' => new SchoolChangeTest($this->container),
                 'phone' => new PersonInfoAdapter(
-                    new PersonInfoFileLevelTest($this->tableReflectionFactory, 'phone')
+                    new PersonInfoFileLevelTest('phone', $this->container),
+                    $this->container
                 ),
                 'phone_parent_d' => new PersonInfoAdapter(
-                    new PersonInfoFileLevelTest(
-                        $this->tableReflectionFactory,
-                        'phone_parent_d'
-                    )
+                    new PersonInfoFileLevelTest('phone_parent_d', $this->container),
+                    $this->container
                 ),
                 'phone_parent_m' => new PersonInfoAdapter(
-                    new PersonInfoFileLevelTest(
-                        $this->tableReflectionFactory,
-                        'phone_parent_m'
-                    )
+                    new PersonInfoFileLevelTest('phone_parent_m', $this->container),
+                    $this->container
                 ),
             ],
             'school' => [
-                'study' => new StudyYearFillTest(),
+                'study' => new StudyYearFillTest($this->container),
             ],
         ];
     }

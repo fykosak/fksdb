@@ -22,24 +22,23 @@ class SchoolStudyTest extends Test
         return new Title(null, _('School study'));
     }
 
+    public function getDescription(): ?string
+    {
+        return _('Check if school provide study type filled in study_year field');
+    }
+
     /**
      * @param PersonHistoryModel $model
      */
     public function run(Logger $logger, Model $model): void
     {
         if ($model->school) {
-            if ($model->study_year_new->isPrimarySchool()) {
-                if (!$model->school->study_p) {
-                    $this->addError($logger, $model);
-                }
-            } elseif ($model->study_year_new->isHighSchool()) {
-                if (!$model->school->study_h) {
-                    $this->addError($logger, $model);
-                }
-            } elseif ($model->study_year_new->value = StudyYear::UniversityAll) {
-                if (!$model->school->study_u) {
-                    $this->addError($logger, $model);
-                }
+            if ($model->study_year_new->isPrimarySchool() && !$model->school->study_p) {
+                $this->addError($logger, $model);
+            } elseif ($model->study_year_new->isHighSchool() && !$model->school->study_h) {
+                $this->addError($logger, $model);
+            } elseif ($model->study_year_new->value === StudyYear::UniversityAll && !$model->school->study_u) {
+                $this->addError($logger, $model);
             }
         }
     }

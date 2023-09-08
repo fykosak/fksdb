@@ -27,6 +27,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -390,8 +391,11 @@ final class TeamApplicationPresenter extends BasePresenter
         return new PersonGrid($this->getContext());
     }
 
+    /**
+     * @return SingleTestComponent<PersonHistoryModel>
+     */
     protected function createComponentStudySchoolTest(): SingleTestComponent
     {
-        return new SingleTestComponent($this->getContext(), new SchoolStudyTest());
+        return new SingleTestComponent($this->getContext(), new SchoolStudyTest($this->getContext()));
     }
 }

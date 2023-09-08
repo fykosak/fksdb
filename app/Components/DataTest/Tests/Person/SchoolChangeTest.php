@@ -22,6 +22,10 @@ class SchoolChangeTest extends Test
     {
         return new Title(null, _('School change'));
     }
+    public function getDescription(): ?string
+    {
+        return _('Check if person change primary or high school during the study.');
+    }
 
     /**
      * @param PersonModel $model

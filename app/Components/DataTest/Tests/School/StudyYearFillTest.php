@@ -21,6 +21,11 @@ class StudyYearFillTest extends Test
         return new Title(null, _('Filled study years'));
     }
 
+    public function getDescription(): ?string
+    {
+        return _('Check if school has filled any of study types (study_* fields)');
+    }
+
     /**
      * @param SchoolModel $model
      */

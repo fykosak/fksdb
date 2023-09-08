@@ -20,7 +20,12 @@ class StudyYearTest extends Test
 {
     public function getTitle(): Title
     {
-        return new Title(null, _('Study years'));
+        return new Title(null, _('Graduation years'));
+    }
+
+    public function getDescription(): ?string
+    {
+        return _('Compare graduation years of each year, check if is same.');
     }
 
     /**
@@ -31,29 +36,11 @@ class StudyYearTest extends Test
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $firstValid */
         $firstValid = null;
-        /** @var PersonHistoryModel|null $postgraduate */
-        $postgraduate = null;
         /** @var PersonHistoryModel $history */
         foreach ($histories as $history) {
-            if ($history->getGraduationYear() === null) {
-                $postgraduate = $history;
-                continue;
-            }
             if ($firstValid === null) {
                 $firstValid = $history;
                 continue;
-            }
-            if ($postgraduate) {
-                $logger->log(
-                    new Message(
-                        sprintf(
-                            'Before %d found postgraduate study year in %d',
-                            $history->ac_year,
-                            $postgraduate->ac_year
-                        ),
-                        Message::LVL_ERROR
-                    )
-                );
             }
             if ($firstValid->getGraduationYear() !== $history->getGraduationYear()) {
                 if (
