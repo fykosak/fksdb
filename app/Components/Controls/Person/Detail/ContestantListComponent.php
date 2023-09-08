@@ -56,7 +56,7 @@ class ContestantListComponent extends DetailComponent
                     null,
                     new Title(null, _('Edit')),
                     fn(ContestantModel $contestant): array => [
-                        ':Org:Contestant:edit',
+                        ':Organizer:Contestant:edit',
                         [
                             'contestId' => $contestant->contest_id,
                             'year' => $contestant->year,
@@ -72,7 +72,7 @@ class ContestantListComponent extends DetailComponent
                     null,
                     new Title(null, _('Detail')),
                     fn(ContestantModel $contestant): array => [
-                        ':Org:Contestant:detail',
+                        ':Organizer:Contestant:detail',
                         [
                             'contestId' => $contestant->contest_id,
                             'year' => $contestant->year,

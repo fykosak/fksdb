@@ -11,7 +11,7 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>
-                <a href="{plink :Org:Person:detail id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
+                <a href="{plink :Organizer:Person:detail id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
                 <span class="badge bg-secondary">#{$log['model']->person_id}</span>
             </h2>
             {foreach $log['logs'] as $key => $testLogs}

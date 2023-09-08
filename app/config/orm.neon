@@ -35,7 +35,7 @@ orm:
                 class: FKSDB\Models\ORM\Columns\Tables\Contestant\ContestCategoryColumnFactory
         links:
             edit:
-                destination: :Org:Contestant:edit
+                destination: :Organizer:Contestant:edit
                 params:
                    contestId: contest_id
                    id: contestant_id
@@ -180,13 +180,13 @@ orm:
                 title: _('Note')
         links:
             edit:
-                destination: :Event:EventOrg:edit
+                destination: :Event:EventOrganizer:edit
                 params:
                     eventId: event_id
                     id: e_org_id
                 title: _('Edit')
             detail:
-                destination: :Event:EventOrg:detail
+                destination: :Event:EventOrganizer:detail
                 params:
                     eventId: event_id
                     id: e_org_id
@@ -334,13 +334,13 @@ orm:
                 title: _('Role')
         links:
             detail:
-                destination: :Org:Org:detail
+                destination: :Organizer:Organizer:detail
                 params:
                     contestId: contest_id
                     id: org_id
                 title: _('Detail')
             edit:
-                destination: :Org:Org:edit
+                destination: :Organizer:Organizer:edit
                 params:
                     contestId: contest_id
                     id: org_id
@@ -634,12 +634,12 @@ orm:
                   title: _('Note')
         links:
             edit:
-                  destination: :Org:School:edit
+                  destination: :Organizer:School:edit
                   params:
                       id: school_id
                   title: _('Edit')
             detail:
-                  destination: :Org:School:detail
+                  destination: :Organizer:School:detail
                   params:
                       id: school_id
                   title: _('Detail')
@@ -703,12 +703,12 @@ orm:
                 title: _('Note')
         links:
             edit:
-                destination: :Org:Teacher:edit
+                destination: :Organizer:Teacher:edit
                 params:
                     id: teacher_id
                 title: _('Edit')
             detail:
-                destination: :Org:Teacher:detail
+                destination: :Organizer:Teacher:detail
                 params:
                     id: teacher_id
                 title: _('Detail')

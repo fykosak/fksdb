@@ -81,7 +81,7 @@ final class DispatchPresenter extends BasePresenter
                     sprintf(_('Organizer %s'), $organizer->contest->name),
                     'icon icon-' . $organizer->contest->getContestSymbol()
                 ),
-                ':Org:Dashboard:default',
+                ':Organizer:Dashboard:default',
                 [
                     'contestId' => $contestId,
                 ]

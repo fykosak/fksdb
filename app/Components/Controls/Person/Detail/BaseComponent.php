@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -40,11 +39,6 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     }
 
     abstract protected function getMinimalPermissions(): int;
-
-    protected function createComponentContestBadge(): ContestBadge
-    {
-        return new ContestBadge($this->getContext());
-    }
 
     protected function createComponentValuePrinter(): ColumnRendererComponent
     {

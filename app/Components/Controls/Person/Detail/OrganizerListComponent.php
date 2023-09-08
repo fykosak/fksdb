@@ -67,7 +67,10 @@ class OrganizerListComponent extends DetailComponent
                 $this->container,
                 null,
                 new Title(null, _('Edit')),
-                fn(OrganizerModel $model) => [':Org:Org:edit', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
+                fn(OrganizerModel $model) => [
+                    ':Organizer:Organizer:edit',
+                    ['contestId' => $model->contest_id, 'id' => $model->org_id],
+                ],
                 null,
                 fn() => $this->isOrganizer,
             ),
@@ -78,7 +81,10 @@ class OrganizerListComponent extends DetailComponent
                 $this->container,
                 null,
                 new Title(null, _('Detail')),
-                fn(OrganizerModel $model) => [':Org:Org:detail', ['contestId' => $model->contest_id, 'id' => $model->org_id]],
+                fn(OrganizerModel $model) => [
+                    ':Organizer:Organizer:detail',
+                    ['contestId' => $model->contest_id, 'id' => $model->org_id],
+                ],
                 null,
                 fn() => $this->isOrganizer,
             ),

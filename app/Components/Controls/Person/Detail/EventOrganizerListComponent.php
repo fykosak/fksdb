@@ -66,7 +66,7 @@ class EventOrganizerListComponent extends DetailComponent
                 null,
                 new Title(null, _('Edit')),
                 fn(EventOrganizerModel $model) => [
-                    ':Event:EventOrg:edit',
+                    ':Event:EventOrganizer:edit',
                     [
                         'eventId' => $model->event_id,
                         'id' => $model->e_org_id,
@@ -81,7 +81,7 @@ class EventOrganizerListComponent extends DetailComponent
                 null,
                 new Title(null, _('Detail')),
                 fn(EventOrganizerModel $model) => [
-                    ':Event:EventOrg:detail',
+                    ':Event:EventOrganizer:detail',
                     [
                         'eventId' => $model->event_id,
                         'id' => $model->e_org_id,

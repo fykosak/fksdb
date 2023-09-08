@@ -13,7 +13,7 @@ parameters:
     rootPresenters: settings
 
     # Pipe-separated list of modules
-    constestModules: org|public|warehouse
+    constestModules: organizer|public|warehouse
     eventModules: event|game|schedule
 
     # Pipe-separated list of contest names
