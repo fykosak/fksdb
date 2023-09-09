@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
@@ -74,9 +74,9 @@ class PersonsGrid extends BaseGrid
             'score'
         );
         $this->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -90,9 +90,9 @@ class PersonsGrid extends BaseGrid
             'mergeAB'
         );
         $this->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -105,9 +105,9 @@ class PersonsGrid extends BaseGrid
             'mergeBA'
         );
         $this->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:dontMerge',

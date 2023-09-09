@@ -23,6 +23,7 @@ import ScheduleField from 'FKSDB/Components/Schedule/Input/schedule-field';
 import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
+import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 
 const translator = new Translator();
 
@@ -81,6 +82,8 @@ renderer.hashMapLoader.registerDataComponent('chart.events.bar-progress', BarPro
 renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeProgress, {translator});
 
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
+
+renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
 
 
 window.addEventListener('DOMContentLoaded', () => {

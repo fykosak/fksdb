@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -62,33 +61,21 @@ class OrganizerListComponent extends DetailComponent
             'tex_signature'
         );
         $this->addRow($row1, 'row1');
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Edit')),
-                fn(OrganizerModel $model) => [
-                    ':Organizer:Organizer:edit',
-                    ['contestId' => $model->contest_id, 'id' => $model->org_id],
-                ],
-                null,
-                fn() => $this->isOrganizer,
-            ),
-            'edit'
-        );
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(OrganizerModel $model) => [
-                    ':Organizer:Organizer:detail',
-                    ['contestId' => $model->contest_id, 'id' => $model->org_id],
-                ],
-                null,
-                fn() => $this->isOrganizer,
-            ),
-            'detail'
-        );
+        if ($this->isOrganizer) {
+            $this->addPresenterButton(
+                ':Organizer:Organizer:edit',
+                'edit',
+                _('Edit'),
+                false,
+                ['contestId' => 'contest_id', 'id' => 'org_id']
+            );
+            $this->addPresenterButton(
+                ':Organizer:Organizer:detail',
+                'detail',
+                _('Detail'),
+                false,
+                ['contestId' => 'contest_id', 'id' => 'org_id']
+            );
+        }
     }
 }

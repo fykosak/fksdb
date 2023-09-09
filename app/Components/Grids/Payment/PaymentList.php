@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
@@ -112,14 +111,12 @@ class PaymentList extends FilterList
             new TemplateItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
             'price'
         );
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(PaymentModel $model) => ['detail', ['id' => $model->getPrimary()]]
-            ),
-            'detail'
+        $this->addPresenterButton(
+            ':Event:Payment:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'payment_id']
         );
     }
 }

@@ -4,33 +4,37 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\TaskContributionService;
-use FKSDB\Models\Submits\SeriesTable;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-class HandoutFormComponent extends BaseComponent
+final class HandoutFormComponent extends FormComponent
 {
     public const TASK_PREFIX = 'task';
     private PersonService $personService;
-    private SeriesTable $seriesTable;
     private TaskContributionService $taskContributionService;
     private PersonFactory $personFactory;
+    private ContestYearModel $contestYear;
+    private int $series;
 
-    public function __construct(Container $container, SeriesTable $seriesTable)
-    {
+    public function __construct(
+        Container $container,
+        ContestYearModel $contestYear,
+        int $series
+    ) {
         parent::__construct($container);
-        $this->seriesTable = $seriesTable;
+        $this->contestYear = $contestYear;
+        $this->series = $series;
     }
 
     final public function injectPrimary(
@@ -43,75 +47,18 @@ class HandoutFormComponent extends BaseComponent
         $this->taskContributionService = $taskContributionService;
     }
 
-    protected function createComponentForm(): FormControl
+
+    public function render(): void
     {
-        $formControl = new FormControl($this->getContext());
-        $form = $formControl->getForm();
-        $provider = new PersonProvider($this->personService);
-        $provider->filterOrganizers($this->seriesTable->contestYear->contest);
-        /** @var TaskModel $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
-            $control = $this->personFactory->createPersonSelect(
-                false,
-                $task->label . ' ' . $task->name->getText($this->translator->lang),
-                $provider
-            );
-            $control->setMultiSelect(true);
-            $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
-        }
-
-        $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = fn(Form $form) => $this->handleFormSuccess($form);
-
-        return $formControl;
+        $this->setDefaults($this->getForm());
+        parent::render();
     }
 
-    /**
-     * @throws ModelException
-     */
-    public function handleFormSuccess(Form $form): void
-    {
-        /** @phpstan-var array<string,int[]> $values */
-        $values = $form->getValues('array');
-        $connection = $this->taskContributionService->explorer->getConnection();
-        $connection->beginTransaction();
-        /** @var TaskModel $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
-            /** @var TaskContributionModel $contribution */
-            foreach (
-                $task->getContributions(
-                    TaskContributionType::from(TaskContributionType::GRADE)
-                ) as $contribution
-            ) {
-                $this->taskContributionService->disposeModel($contribution);
-            }
-            $key = self::TASK_PREFIX . $task->task_id;
-            foreach ($values[$key] as $personId) {
-                $data = [
-                    'task_id' => $task->task_id,
-                    'person_id' => $personId,
-                    'type' => TaskContributionType::GRADE,
-                ];
-                $this->taskContributionService->storeModel($data);
-            }
-        }
-
-        $connection->commit();
-
-        $this->getPresenter()->flashMessage(_('Handout saved.'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('this');
-    }
-
-    final public function render(): void
-    {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
-    }
-
-    public function setDefaults(): void
+    public function setDefaults(Form $form): void
     {
         $contributions = [];
         /** @var TaskModel $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
+        foreach ($this->contestYear->getTasks($this->series)->order('tasknr') as $task) {
             $contributions = [
                 ...$contributions,
                 ...$task->getContributions(
@@ -130,8 +77,59 @@ class HandoutFormComponent extends BaseComponent
             }
             $values[$key][] = $personId;
         }
-        /** @var FormControl $control */
-        $control = $this->getComponent('form');
-        $control->getForm()->setDefaults($values);
+        $form->setDefaults($values);
+    }
+
+    protected function handleSuccess(Form $form): void
+    {
+        /** @phpstan-var array<string,int[]> $values */
+        $values = $form->getValues('array');
+        $connection = $this->taskContributionService->explorer->getConnection();
+        $connection->beginTransaction();
+        /** @var TaskModel $task */
+        foreach ($this->contestYear->getTasks($this->series)->order('tasknr') as $task) {
+            /** @var TaskContributionModel $contribution */
+            foreach (
+                $task->getContributions(
+                    TaskContributionType::from(TaskContributionType::GRADE)
+                ) as $contribution
+            ) {
+                $this->taskContributionService->disposeModel($contribution);
+            }
+            $key = self::TASK_PREFIX . $task->task_id;
+            foreach ($values[$key] as $personId) {
+                $data = [
+                    'task_id' => $task->task_id,
+                    'person_id' => $personId,
+                    'type' => TaskContributionType::GRADE,
+                ];
+                $this->taskContributionService->storeModel($data);
+            }
+        }
+        $connection->commit();
+        $this->getPresenter()->flashMessage(_('Handout saved.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('this');
+    }
+
+
+    protected function appendSubmitButton(Form $form): SubmitButton
+    {
+        return $form->addSubmit('save', _('Save'));
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $provider = new PersonProvider($this->personService);
+        $provider->filterOrganizers($this->contestYear->contest);
+        /** @var TaskModel $task */
+        foreach ($this->contestYear->getTasks($this->series)->order('tasknr') as $task) {
+            $control = $this->personFactory->createPersonSelect(
+                false,
+                $task->label . ' ' . $task->name->getText($this->translator->lang),
+                $provider
+            );
+            $control->setMultiSelect(true);
+            $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
+        }
     }
 }

@@ -19,6 +19,7 @@
     "d3-shape": "^3.0.1",
     "d3-time": "^3.0.0",
     "d3-force": "^3.0.0",
+    "d3-boxplot": "latest",
     "codemirror": "^5.65.13",
     "babel-polyfill": "^6.26.0",
     "promise-polyfill": "^8.3.0",

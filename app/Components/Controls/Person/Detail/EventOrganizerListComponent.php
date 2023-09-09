@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -60,35 +59,13 @@ class EventOrganizerListComponent extends DetailComponent
             new TemplateItem($this->container, '@event_org.note', '@event_org.note:title'),
             'event_org_note'
         );
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Edit')),
-                fn(EventOrganizerModel $model) => [
-                    ':Event:EventOrganizer:edit',
-                    [
-                        'eventId' => $model->event_id,
-                        'id' => $model->e_org_id,
-                    ],
-                ]
-            ),
-            'edit'
-        );
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(EventOrganizerModel $model) => [
-                    ':Event:EventOrganizer:detail',
-                    [
-                        'eventId' => $model->event_id,
-                        'id' => $model->e_org_id,
-                    ],
-                ]
-            ),
-            'detail'
-        );
+        $this->addPresenterButton(':Event:EventOrganizer:edit', 'edit', _('Edit'), false, [
+            'eventId' => 'event_id',
+            'id' => 'e_org_id',
+        ]);
+        $this->addPresenterButton(':Event:EventOrganizer:detail', 'detail', _('Detail'), false, [
+            'eventId' => 'event_id',
+            'id' => 'e_org_id',
+        ]);
     }
 }

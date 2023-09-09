@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Container\TableRow;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -100,17 +100,17 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @phpstan-return PresenterButton<TModel>
+     * @phpstan-return Button<TModel>
      * @throws BadTypeException
      * @deprecated
      */
-    protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
+    protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): Button
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-        /** @phpstan-var PresenterButton<TModel> $button */
-        $button = new PresenterButton(
+        /** @phpstan-var Button<TModel> $button */
+        $button = new Button(
             $this->container,
-            null,
+            $this->getPresenter(),
             new Title(null, $factory->getText()),
             fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,

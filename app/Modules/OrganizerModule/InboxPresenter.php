@@ -11,13 +11,10 @@ use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Services\SubmitService;
-use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Authorizator;
 
 final class InboxPresenter extends BasePresenter
@@ -27,12 +24,10 @@ final class InboxPresenter extends BasePresenter
     /** @persistent */
     public ?int $id = null;
 
-    private SeriesTable $seriesTable;
     private SubmitService $submitService;
 
-    final public function injectSeriesTable(SeriesTable $seriesTable, SubmitService $submitService): void
+    final public function injectSubmitService(SubmitService $submitService): void
     {
-        $this->seriesTable = $seriesTable;
         $this->submitService = $submitService;
     }
 
@@ -89,40 +84,69 @@ final class InboxPresenter extends BasePresenter
     }
 
     /**
-     * @throws UnsupportedLanguageException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->seriesTable->contestYear = $this->getSelectedContestYear();
-        $this->seriesTable->series = $this->getSelectedSeries();
-    }
-
     protected function createComponentInboxForm(): InboxFormComponent
     {
-        return new InboxFormComponent($this->getContext(), $this->seriesTable);
+        return new InboxFormComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries(),
+            true
+        );
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentCorrectedTable(): CorrectedComponent
     {
-        return new CorrectedComponent($this->getContext(), $this->seriesTable);
+        return new CorrectedComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentCorrectedForm(): CorrectedFormComponent
     {
-        return new CorrectedFormComponent($this->getContext(), $this->seriesTable);
+        return new CorrectedFormComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentCheckControl(): SubmitCheckComponent
     {
-        return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
+        return new SubmitCheckComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentSubmitsTableControl(): SubmitsPreviewComponent
     {
-        return new SubmitsPreviewComponent($this->getContext(), $this->seriesTable);
+        return new SubmitsPreviewComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 
     protected function createComponentQuizDetail(): QuizAnswersGrid

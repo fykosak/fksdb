@@ -6,10 +6,10 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\ORM\Models\{ContestYearModel, TaskContributionType, TaskModel};
+use FKSDB\Models\ORM\Models\{TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
-use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -25,12 +25,10 @@ final class PointsPresenter extends BasePresenter
      */
     public ?bool $all = null;
     private SQLResultsCache $resultsCache;
-    private SeriesTable $seriesTable;
 
-    final public function injectQuarterly(SQLResultsCache $resultsCache, SeriesTable $seriesTable): void
+    final public function injectQuarterly(SQLResultsCache $resultsCache): void
     {
         $this->resultsCache = $resultsCache;
-        $this->seriesTable = $seriesTable;
     }
 
     public function titleEntry(): PageTitle
@@ -59,26 +57,16 @@ final class PointsPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest());
     }
 
-    public function actionEntry(): void
-    {
-        $this->seriesTable->taskFilter = $this->all
-            ? null
-            : function (TypedGroupedSelection $selection) {
-                $selection->where(
-                    'task_id',
-                    $this->getLoggedPerson()->getTaskContributions(
-                        TaskContributionType::from(TaskContributionType::GRADE)
-                    )->fetchPairs('task_id', 'task_id')
-                );
-            };
-    }
-
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     final public function renderEntry(): void
     {
         $this->template->showAll = (bool)$this->all;
         $this->template->hasQuizTask = false;
         /** @var TaskModel $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
+        foreach ($this->getSelectedContestYear()->getTasks($this->getSelectedSeries()) as $task) {
             if ($task->getQuestions()->count('*') > 0) {
                 $this->template->hasQuizTask = true;
                 break;
@@ -105,11 +93,7 @@ final class PointsPresenter extends BasePresenter
     public function handleRecalculateAll(): void
     {
         try {
-            $years = $this->getSelectedContestYear()->contest->getContestYears();
-            /** @var ContestYearModel $contestYear */
-            foreach ($years as $contestYear) {
-                $this->resultsCache->recalculate($contestYear);
-            }
+            $this->resultsCache->recalculate($this->getSelectedContestYear());
             $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);
@@ -130,24 +114,43 @@ final class PointsPresenter extends BasePresenter
         }
     }
 
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->seriesTable->contestYear = $this->getSelectedContestYear();
-        $this->seriesTable->series = $this->getSelectedSeries();
-    }
-
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentPointsForm(): PointsFormComponent
     {
         return new PointsFormComponent(
-            fn() => $this->resultsCache->recalculate($this->getSelectedContestYear()),
             $this->getContext(),
-            $this->seriesTable,
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries(),
+            false,
+            $this->all
+                ?
+                null
+                :
+                function (TypedGroupedSelection $selection): void {
+                    $selection->where(
+                        'task_id',
+                        $this->getLoggedPerson()
+                            ->getTaskContributions(
+                                TaskContributionType::from(TaskContributionType::GRADE)
+                            )->fetchPairs('task_id', 'task_id')
+                    );
+                }
         );
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentPointsTableControl(): PointsPreviewComponent
     {
-        return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
+        return new PointsPreviewComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 }

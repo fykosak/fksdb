@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -52,7 +52,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     }
 
     /**
-     * @phpstan-return PresenterButton<TModel>
+     * @phpstan-return Button<TModel>
      * @phpstan-param array<string,string> $params
      */
     protected function addPresenterButton(
@@ -62,7 +62,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         bool $checkACL = true,
         array $params = [],
         ?string $className = null
-    ): PresenterButton {
+    ): Button {
         $paramMapCallback = function (Model $model) use ($params): array {
             $hrefParams = [];
             foreach ($params as $key => $value) {
@@ -70,10 +70,10 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             }
             return $hrefParams;
         };
-        /** @phpstan-var PresenterButton<TModel> $button */
-        $button = new PresenterButton(
+        /** @phpstan-var Button<TModel> $button */
+        $button = new Button(
             $this->container,
-            null,
+            $this->getPresenter(),
             new Title(null, _($label)),
             fn(Model $model): array => [$destination, $paramMapCallback($model)],
             $className,

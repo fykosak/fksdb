@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
@@ -107,14 +106,12 @@ class TeamListComponent extends FilterList
             new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'), //@phpstan-ignore-line
             'name'
         );
-        $this->addButton(
-            new PresenterButton(
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
-            ),
-            'detail'
+        $this->addPresenterButton(
+            ':Event:TeamApplication:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'fyziklani_team_id']
         );
     }
 

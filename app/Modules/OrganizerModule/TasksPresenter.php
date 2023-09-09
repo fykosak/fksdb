@@ -4,47 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
-use FKSDB\Models\Astrid\Downloader;
-use FKSDB\Models\Pipeline\PipelineException;
-use FKSDB\Models\Submits\SeriesTable;
-use FKSDB\Models\Submits\UploadException;
-use FKSDB\Models\Tasks\PipelineFactory;
-use FKSDB\Models\Tasks\SeriesData;
+use FKSDB\Components\Controls\Inbox\PointsVariance\ChartComponent;
+use FKSDB\Components\Controls\Inbox\TaskImportFormComponent;
+use FKSDB\Components\Grids\TaskGrid;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\TaskService;
+use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
-use Nette\DeprecatedException;
-use Nette\Forms\Form;
-use Nette\Http\FileUpload;
-use Nette\InvalidStateException;
-use Tracy\Debugger;
+use Nette\Application\UI\Control;
+use Nette\Security\Resource;
 
 final class TasksPresenter extends BasePresenter
 {
+    /** @use ContestYearEntityTrait<TaskModel> */
+    use ContestYearEntityTrait;
 
-    public const SOURCE_ASTRID = 'astrid';
-    public const SOURCE_FILE = 'file';
+    private TaskService $taskService;
 
-    private PipelineFactory $pipelineFactory;
-    private Downloader $downloader;
-    private SeriesTable $seriesTable;
-
-    final public function injectQuarterly(
-        PipelineFactory $pipelineFactory,
-        Downloader $downloader,
-        SeriesTable $seriesTable
-    ): void {
-        $this->pipelineFactory = $pipelineFactory;
-        $this->downloader = $downloader;
-        $this->seriesTable = $seriesTable;
+    public function injectService(TaskService $taskService): void
+    {
+        $this->taskService = $taskService;
     }
 
     public function titleImport(): PageTitle
@@ -73,119 +56,80 @@ final class TasksPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
     }
 
-    public function actionDispatch(): void
+    public function titleList(): PageTitle
     {
-        /** @var HandoutFormComponent $control */
-        $control = $this->getComponent('handoutForm');
-        $control->setDefaults();
+        return new PageTitle(null, _('Tasks'), 'fas fa-folder-open');
     }
 
     /**
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws UnsupportedLanguageException
+     * @throws NoContestAvailable
      */
-    protected function startup(): void
+    public function authorizedList(): bool
     {
-        parent::startup();
-        $this->seriesTable->contestYear = $this->getSelectedContestYear();
-        $this->seriesTable->series = $this->getSelectedSeries();
+        return $this->contestAuthorizator->isAllowed('task', 'list', $this->getSelectedContest());
     }
-
 
     /**
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
-     * TODO to separate component
      */
-    protected function createComponentSeriesForm(): FormControl
+    protected function createComponentSeriesForm(): TaskImportFormComponent
     {
-        $control = new FormControl($this->getContext());
-        $form = $control->getForm();
-
-        $source = $form->addRadioList(
-            'source',
-            _('Problem source'),
-            [
-                self::SOURCE_ASTRID => _('Astrid'),
-                self::SOURCE_FILE => _('XML file (new XML)'),
-            ]
-        );
-        $source->setDefaultValue(self::SOURCE_ASTRID);
-
-        // Astrid download
-        $seriesItems = range(1, $this->getSelectedContestYear()->getTotalSeries());
-        if ($this->getSelectedContestYear()->hasHolidaySeries()) {
-            $key = array_search('7', $seriesItems);
-            unset($seriesItems[$key]);
-        }
-        $form->addSelect('series', _('Series'))
-            ->setItems($seriesItems, false);
-
-        $upload = $form->addUpload('file', _('XML file'));
-        $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle(
-            $upload->getHtmlId() . '-pair'
-        );
-
-        $form->addSubmit('submit', _('Import'));
-
-        $form->onSuccess[] = fn(Form $seriesForm) => $this->validSubmitSeriesForm($seriesForm);
-
-        return $control;
+        return new TaskImportFormComponent($this->getContext(), $this->getSelectedContestYear());
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentHandoutForm(): HandoutFormComponent
     {
-        return new HandoutFormComponent($this->getContext(), $this->seriesTable);
+        return new HandoutFormComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getSelectedSeries()
+        );
     }
 
     /**
-     * @throws NoContestYearAvailable
+     * @param Resource|string|null $resource
      * @throws NoContestAvailable
      */
-    private function validSubmitSeriesForm(Form $seriesForm): void
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        /** @phpstan-var array{file:FileUpload,series:int,source:string} $values */
-        $values = $seriesForm->getValues();
-        $series = $values['series'];
-        switch ($values['source']) {
-            case self::SOURCE_ASTRID:
-                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContestYear(), $series);
-                break;
-            case self::SOURCE_FILE:
-                if (!$values['file']->isOk()) {
-                    throw new UploadException();
-                }
-                $file = $values['file']->getTemporaryFile();
-                break;
-            default:
-                throw new InvalidStateException();
-        }
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
+    }
 
-        try {
-            /** @var \SimpleXMLElement $xml */
-            $xml = simplexml_load_file($file);
+    protected function getORMService(): TaskService
+    {
+        return $this->taskService;
+    }
 
-            if ($xml->getName() === 'problems') {
-                throw new DeprecatedException();
-            } else {
-                $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
-                $pipeline = $this->pipelineFactory->create();
-                $pipeline($data);
-                FlashMessageDump::dump($pipeline->logger, $this);
-                $this->flashMessage(_('Tasks successfully imported.'), Message::LVL_SUCCESS);
-            }
-        } catch (PipelineException $exception) {
-            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), Message::LVL_ERROR);
-            Debugger::log($exception);
-        } catch (ModelException $exception) {
-            $this->flashMessage(_('Error during import.'), Message::LVL_ERROR);
-            Debugger::log($exception);
-        } catch (DeprecatedException $exception) {
-            $this->flashMessage(_('Legacy XML format is deprecated'), Message::LVL_ERROR);
-        } finally {
-            unlink($file);
-        }
-        $this->redirect('this');
+    protected function createComponentCreateForm(): Control
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function createComponentEditForm(): Control
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    protected function createComponentGrid(): TaskGrid
+    {
+        return new TaskGrid($this->getContext(), $this->getSelectedContestYear(), $this->getSelectedSeries());
+    }
+
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    protected function createComponentPointsVarianceChart(): ChartComponent
+    {
+        return new ChartComponent($this->getContext(), $this->getSelectedContestYear(), $this->getSelectedSeries());
     }
 }

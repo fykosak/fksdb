@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Nette\DI\Container;
@@ -43,10 +42,5 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     protected function createComponentValuePrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
     }
 }

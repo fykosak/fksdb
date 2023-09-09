@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -49,9 +49,9 @@ class NewApplicationsGrid extends BaseGrid
             'event.name',
             'contest.contest',
         ]);
-        $button = new PresenterButton(
+        $button = new Button(
             $this->container,
-            null,
+            $this->getPresenter(),
             new Title(null, _('Create application')),
             fn(EventModel $event): array => $event->isTeamEvent()
                 ? [':Event:TeamApplication:create', ['eventId' => $event->event_id]]

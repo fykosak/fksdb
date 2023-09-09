@@ -46,9 +46,8 @@ class PostgraduateStudyTest extends Test
                 $logger->log(
                     new Message(
                         sprintf(
-                            'Before %d found postgraduate study year in %d',
-                            $history->ac_year,
-                            $postgraduate->ac_year
+                            'Found undergraduate study year %d after postgraduate',
+                            $history->ac_year
                         ),
                         Message::LVL_ERROR
                     )

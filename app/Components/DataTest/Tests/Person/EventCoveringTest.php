@@ -117,10 +117,8 @@ class EventCoveringTest extends Test
         $contestYears = [];
         /** @var OrganizerModel $organizer */
         foreach ($person->getOrganizers() as $organizer) {
-            $since = $organizer->since;
-            $until = $organizer->until ?? $organizer->contest->getLastYear();
             $contestYears[$organizer->contest_id] = [];
-            foreach (range($since, $until) as $year) {
+            foreach (range($organizer->since, $organizer->until ?? $organizer->contest->getLastYear()) as $year) {
                 $contestYears[$organizer->contest_id][$year] = $organizer->contest->getContestYear($year);
             }
         }
