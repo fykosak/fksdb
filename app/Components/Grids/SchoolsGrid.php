@@ -102,7 +102,7 @@ class SchoolsGrid extends FilterGrid
                         $container->addHtml(
                             Html::el('span')
                                 ->addAttributes(['class' => 'badge bg-success'])
-                                ->addText(_('Hight'))
+                                ->addText(_('High'))
                         );
                     }
                     if ($school->study_u) {
@@ -110,7 +110,7 @@ class SchoolsGrid extends FilterGrid
                         $container->addHtml(
                             Html::el('span')
                                 ->addAttributes(['class' => 'badge bg-warning'])
-                                ->addText(_('High'))
+                                ->addText(_('University'))
                         );
                     }
                     if (!$has) {

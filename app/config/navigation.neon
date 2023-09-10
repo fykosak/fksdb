@@ -38,6 +38,7 @@ navigation:
             Organizer.Inbox.corrected: []
             Organizer.Points.preview: []
             Organizer.Points.entry: []
+        Organizer.Dashboard.task:
             Organizer.Tasks.dispatch: []
             Organizer.Tasks.import: []
             Organizer.Tasks.list: []

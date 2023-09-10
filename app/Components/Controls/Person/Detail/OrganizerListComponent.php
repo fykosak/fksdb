@@ -47,7 +47,7 @@ class OrganizerListComponent extends DetailComponent
         $this->addRow($row0, 'row0');
         $row0->addComponent(new TemplateItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(
-            new TemplateItem($this->container, _('@org.since - @org.until')),
+            new TemplateItem($this->container, '@org.since - @org.until'),
             'duration'
         );
         /** @phpstan-var RowContainer<OrganizerModel> $row1 */

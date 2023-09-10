@@ -1,5 +1,5 @@
 import { scaleLinear } from 'd3-scale';
-import BarHistogram from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
+import BarHistogram, { BarItemDatum, BarItemItemsDatum } from 'FKSDB/Components/Charts/Core/BarHistogram/bar-histogram';
 import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
@@ -19,10 +19,10 @@ export default function PerSeriesChart({data, translator}: OwnProps) {
     const yScale = scaleLinear<number, number>().domain([0, maxValue]);
     const xScale = scaleLinear<number, number>().domain([minYear - 1, maxYear]);
 
-    const histogramData = [];
+    const histogramData: BarItemDatum<number>[] = [];
     for (const year in data) {
         if (Object.hasOwn(data, year)) {
-            const histogramItems = [];
+            const histogramItems: BarItemItemsDatum[] = [];
             const datum = data[year];
             for (const series in datum) {
                 if (Object.hasOwn(datum, series)) {
@@ -33,7 +33,7 @@ export default function PerSeriesChart({data, translator}: OwnProps) {
                     });
                 }
             }
-            histogramData.push({xValue: year, items: histogramItems});
+            histogramData.push({xValue: +year, items: histogramItems});
         }
     }
     const legendData: LineChartData<number> & LegendItemDatum[] = [];
@@ -49,7 +49,7 @@ export default function PerSeriesChart({data, translator}: OwnProps) {
     }
 
     return <>
-        <BarHistogram
+        <BarHistogram<number>
             xScale={xScale}
             yScale={yScale}
             data={histogramData}
