@@ -150,6 +150,5 @@ class GroupListComponent extends BaseList
             false,
             ['id' => 'schedule_group_id']
         );
-
     }
 }
