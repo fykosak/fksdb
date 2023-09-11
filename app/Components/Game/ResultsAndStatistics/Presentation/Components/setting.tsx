@@ -9,7 +9,7 @@ export default function Setting() {
 
     const [show, setShow] = useState<boolean>(false);
     const translator = useContext(TranslatorContext);
-    const isOrg = useSelector((state: Store) => state.presentation.isOrg);
+    const isOrganizer = useSelector((state: Store) => state.presentation.isOrganizer);
     const cols = useSelector((state: Store) => state.presentation.cols);
     const delay = useSelector((state: Store) => state.presentation.delay);
     const rows = useSelector((state: Store) => state.presentation.rows);
@@ -38,7 +38,7 @@ export default function Setting() {
                         <button type="button" className="btn-close" onClick={() => setShow(false)}/>
                     </div>
                     <div className="modal-body">
-                        {isOrg &&
+                        {isOrganizer &&
                             <div className="form-group">
                                 <p>
                                     {translator.getText('Not public results')}

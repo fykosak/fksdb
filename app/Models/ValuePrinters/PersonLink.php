@@ -34,7 +34,7 @@ class PersonLink extends ValuePrinter
             throw new BadTypeException(PersonModel::class, $value);
         }
         return Html::el('a')
-            ->addAttributes(['href' => $this->presenterComponent->link('Org:Person:detail', [
+            ->addAttributes(['href' => $this->presenterComponent->link('Organizer:Person:detail', [
                 'id' => $value->person_id,
             ])])
             ->addText($value->getFullName());

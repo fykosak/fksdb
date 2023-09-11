@@ -3,11 +3,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InputConnectorStateMap } from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';
 
-export interface OwnProps {
+export interface Props {
     input: HTMLInputElement | HTMLSelectElement;
 }
 
-export default function InputConnectorPrimitive({input} : OwnProps) {
+export default function InputConnectorPrimitive({input}: Props) {
 
     const value = useSelector((state: { inputConnector: InputConnectorStateMap }) => +state.inputConnector?.data?.data);
     const dispatch = useDispatch();

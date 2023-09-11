@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Item } from '../../Helpers/calculate-data';
 
-interface OwnProps {
-    item: Item;
+interface OwnProps<AvailablePoints extends number> {
+    item: Item<AvailablePoints>;
     position: number;
-    availablePoints: number[];
+    availablePoints: Array<AvailablePoints>;
 }
 
-export default function TeamRow({item, position, availablePoints}: OwnProps) {
-
+export default function TeamRow<AvailablePoints extends number>(
+    {
+        item,
+        position,
+        availablePoints,
+    }: OwnProps<AvailablePoints>,
+) {
     const average = item.count > 0 ? Math.round(item.points / item.count * 100) / 100 : '-';
     return <div className="row team-row" key={item.team.teamId}>
         <div className="col-1">{position}</div>
@@ -24,7 +29,7 @@ export default function TeamRow({item, position, availablePoints}: OwnProps) {
                         (Math.round(item.groups[points] / item.count * 100)) :
                         0) + '%';
                     return <div
-                        key={points}
+                        key={points.toString()}
                         className="progress-bar"
                         data-points={points}
                         style={{width}}

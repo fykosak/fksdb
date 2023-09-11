@@ -24,7 +24,7 @@ use Nette\Utils\Html;
 class PersonPaymentContainer extends ContainerWithOptions
 {
     private PersonScheduleService $personScheduleService;
-    private bool $isOrg;
+    private bool $isOrganizer;
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
@@ -38,11 +38,11 @@ class PersonPaymentContainer extends ContainerWithOptions
         Container $container,
         EventModel $event,
         PersonModel $loggedPerson,
-        bool $isOrg,
+        bool $isOrganizer,
         ?PaymentModel $model
     ) {
         parent::__construct($container);
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->event = $event;
         $this->loggedPerson = $loggedPerson;
         $this->model = $model;
@@ -64,7 +64,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     {
         $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
-        if (!$this->isOrg) {
+        if (!$this->isOrganizer) {
             $roles = $this->loggedPerson->getEventRoles($this->event);
             $teams = [];
             foreach ($roles as $role) {

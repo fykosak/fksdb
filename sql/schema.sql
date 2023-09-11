@@ -273,6 +273,9 @@ CREATE TABLE IF NOT EXISTS `school`
     `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
     `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
     `note`        VARCHAR(255) NULL     DEFAULT NULL,
+    `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
+    `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
+    `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -577,51 +580,6 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
     ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `e_fyziklani_team`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_fyziklani_team`
-(
-    `e_fyziklani_team_id`  INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`             INT(11)     NOT NULL,
-    `name`                 VARCHAR(30) NOT NULL,
-    `status`               VARCHAR(20) NOT NULL,
-    `teacher_id`           INT(11)     NULL     DEFAULT NULL COMMENT 'kontaktní osoba',
-    `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
-    `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
-    `teacher_schedule`     TEXT        NULL     DEFAULT NULL COMMENT 'serializovaný program',
-    `category`             CHAR(1)     NOT NULL,
-    `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`                VARCHAR(30) NULL     DEFAULT NULL,
-    `note`                 TEXT        NULL     DEFAULT NULL,
-    `password`             CHAR(40)    NULL     DEFAULT NULL,
-    `points`               INT(11)     NULL     DEFAULT NULL,
-    `rank_category`        INT(11)     NULL     DEFAULT NULL,
-    `rank_total`           INT(11)     NULL     DEFAULT NULL,
-    `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
-    `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
-    `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL COMMENT 'Game lang',
-    INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
-    INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),
-    INDEX `fk_e_fyziklani_team_e_status1_idx` (`status` ASC),
-    CONSTRAINT `fk_e_fyziklani_team_event1`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_team_person1`
-        FOREIGN KEY (`teacher_id`)
-            REFERENCES `person` (`person_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_team_e_status1`
-        FOREIGN KEY (`status`)
-            REFERENCES `event_status` (`status`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `fyziklani_team`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team`
@@ -660,28 +618,6 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
 )
     ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `e_fyziklani_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_fyziklani_participant`
-(
-    `event_participant_id` INT NOT NULL PRIMARY KEY,
-    `e_fyziklani_team_id`  INT NOT NULL,
-    INDEX `fk_e_fyziklani_participant_e_fyziklani_team1_idx` (`e_fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_team_participan` (`event_participant_id` ASC, `e_fyziklani_team_id` ASC),
-    CONSTRAINT `fk_e_participant_fyziklani_event_participant1`
-        FOREIGN KEY (`event_participant_id`)
-            REFERENCES `event_participant` (`event_participant_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_participant_e_fyziklani_team1`
-        FOREIGN KEY (`e_fyziklani_team_id`)
-            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_team_member`
@@ -844,16 +780,6 @@ CREATE TABLE IF NOT EXISTS `person_has_flag`
     COMMENT = 'persons flags are per year';
 
 -- -----------------------------------------------------
--- Table `study_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `study_year`
-(
-    `study_year` TINYINT(1) NOT NULL PRIMARY KEY
-)
-    ENGINE = InnoDB
-    COMMENT = 'table just enforces referential integrity';
-
--- -----------------------------------------------------
 -- Table `person_history`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_history`
@@ -863,12 +789,10 @@ CREATE TABLE IF NOT EXISTS `person_history`
     `ac_year`           SMALLINT(4)                                                                 NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
     `school_id`         INT                                                                         NULL DEFAULT NULL,
     `class`             VARCHAR(16)                                                                 NULL DEFAULT NULL COMMENT 'označení třídy',
-    `study_year`        TINYINT(1)                                                                  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
-    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NULL DEFAULT NULL,
+    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NOT NULL DEFAULT 'NONE',
     UNIQUE INDEX `uq_person_history__year` (`person_id` ASC, `ac_year` ASC),
     INDEX `idx_person_history__school` (`school_id` ASC),
     INDEX `idx_person_history__contest_year` (`ac_year` ASC),
-    INDEX `idx_person_history__study_year` (`study_year` ASC),
     CONSTRAINT `fk_person_history__school`
         FOREIGN KEY (`school_id`)
             REFERENCES `school` (`school_id`)
@@ -883,79 +807,10 @@ CREATE TABLE IF NOT EXISTS `person_history`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_history__study_year`
-        FOREIGN KEY (`study_year`)
-            REFERENCES `study_year` (`study_year`)
-            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
     COMMENT = 'atributy osoby řezané dle akademického roku';
-
--- -----------------------------------------------------
--- Table `e_dsef_group`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_dsef_group`
-(
-    `e_dsef_group_id` INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`        INT(11)     NOT NULL,
-    `name`            VARCHAR(32) NOT NULL,
-    `capacity`        TINYINT(2)  NOT NULL,
-    INDEX `fk_e_dsef_group_event1_idx` (`event_id` ASC),
-    CONSTRAINT `fk_e_dsef_group_event1`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_dsef_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_dsef_participant`
-(
-    `event_participant_id` INT          NOT NULL PRIMARY KEY,
-    `e_dsef_group_id`      INT          NOT NULL,
-    `message`              VARCHAR(255) NULL DEFAULT NULL,
-    INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
-    CONSTRAINT `fk_e_dsef_participant_event_participant1`
-        FOREIGN KEY (`event_participant_id`)
-            REFERENCES `event_participant` (`event_participant_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
-        FOREIGN KEY (`e_dsef_group_id`)
-            REFERENCES `e_dsef_group` (`e_dsef_group_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `task_study_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `task_study_year`
-(
-    `task_id`    INT(11)    NOT NULL,
-    `study_year` TINYINT(1) NOT NULL,
-    PRIMARY KEY (`study_year`, `task_id`),
-    INDEX `idx_task_study_year__study_year` (`study_year` ASC),
-    INDEX `idx_task_study_year__task` (`task_id` ASC),
-    CONSTRAINT `fk_task_study_year__task`
-        FOREIGN KEY (`task_id`)
-            REFERENCES `task` (`task_id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_task_study_year__study_year`
-        FOREIGN KEY (`study_year`)
-            REFERENCES `study_year` (`study_year`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
-)
-    ENGINE = InnoDB
-    COMMENT = 'specification of allowed study years for a task';
 
 CREATE TABLE IF NOT EXISTS `task_category`
 (
@@ -1350,6 +1205,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
     `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME     NULL                                              DEFAULT NULL,
+    `priority`            BOOLEAN      NOT NULL                                          DEFAULT FALSE,
     INDEX `idx_email_message__person` (`recipient_person_id` ASC),
     CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
     CONSTRAINT `fk_email_message__person`

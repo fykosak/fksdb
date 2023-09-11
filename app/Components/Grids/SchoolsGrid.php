@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Badges\FlagBadge;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -57,15 +58,17 @@ class SchoolsGrid extends FilterGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $model) => $model->name,
-                new Title(null, _('School name'))
+                fn(SchoolModel $school) => $school->name_full ?? $school->name,
+                new Title(null, _('Full name'))
             ),
-            'name'
+            'full_name'
         );
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $school): string => $school->address->city,
+                fn(SchoolModel $school): Html => Html::el('span')
+                    ->addText($school->address->city . ' (' . $school->address->country->name . ')')
+                    ->addHtml(FlagBadge::getHtml($school->address->country)),
                 new Title(null, _('City'))
             ),
             'city'
@@ -73,12 +76,55 @@ class SchoolsGrid extends FilterGrid
         $this->addColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $row): Html => Html::el('span')
-                    ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
-                    ->addText(($row->active)),
+                fn(SchoolModel $school): Html => Html::el('span')
+                    ->addAttributes(['class' => ('badge ' . ($school->active ? 'bg-success' : 'bg-danger'))])
+                    ->addText($school->active),
                 new Title(null, _('Active'))
             ),
             'active'
+        );
+        $this->addColumn(
+            new RendererItem(
+                $this->container,
+                function (SchoolModel $school): Html {
+                    $container = Html::el('span');
+                    $has = false;
+                    if ($school->study_p) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-primary'])
+                                ->addText(_('Primary'))
+                        );
+                    }
+                    if ($school->study_h) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-success'])
+                                ->addText(_('High'))
+                        );
+                    }
+                    if ($school->study_u) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-warning'])
+                                ->addText(_('University'))
+                        );
+                    }
+                    if (!$has) {
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-danger'])
+                                ->addText(_('No study year'))
+                        );
+                    }
+                    return $container;
+                },
+                new Title(null, _('Study'))
+            ),
+            'study'
         );
 
         $this->addORMLink('school.edit');

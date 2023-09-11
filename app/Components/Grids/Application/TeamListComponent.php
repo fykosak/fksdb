@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
@@ -17,6 +16,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
@@ -95,7 +95,7 @@ class TeamListComponent extends FilterList
             'name'
         );
         $memberList->addColumn(new TemplateItem($this->container, '@school.school', '@school.school:title'), 'school');
-
+        /** @phpstan-var RelatedTable<TeamModel2,TeamTeacherModel> $teacherList */
         $teacherList = new RelatedTable(
             $this->container,
             fn(TeamModel2 $team): iterable => $team->getTeachers(),  //@phpstan-ignore-line
@@ -103,17 +103,15 @@ class TeamListComponent extends FilterList
         );
         $this->addRow($teacherList, 'teachers');
         $teacherList->addColumn(
-            new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'),
+            new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'), //@phpstan-ignore-line
             'name'
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(TeamModel2 $team): array => ['detail', ['id' => $team->fyziklani_team_id]]
-            ),
-            'detail'
+        $this->addPresenterButton(
+            ':Event:TeamApplication:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'fyziklani_team_id']
         );
     }
 

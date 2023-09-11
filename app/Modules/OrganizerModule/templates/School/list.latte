@@ -1,0 +1,15 @@
+{varType FKSDB\Modules\Core\BasePresenter|FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait $control}
+{block titleBody}
+    {include parent}
+    {var $pageTitle = $control->titleCreate()}
+    <a href="{plink create}" class="btn btn-outline-primary"><i
+                class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
+{/block}
+{block outerContent}
+
+    <div class="panel color-auto">
+        <div class="container">
+            {control grid}
+        </div>
+    </div>
+{/block}

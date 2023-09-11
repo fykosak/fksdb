@@ -28,7 +28,7 @@ class PersonProvider implements FilteredDataProvider
     /**
      * Syntactic sugar, should be solved more generally.
      */
-    public function filterOrgs(ContestModel $contest): void
+    public function filterOrganizers(ContestModel $contest): void
     {
         $this->searchTable = $this->personService->getTable()
             ->where([

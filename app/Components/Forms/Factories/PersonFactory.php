@@ -17,16 +17,10 @@ class PersonFactory
     public function createPersonSelect(
         bool $ajax,
         string $label,
-        DataProvider $dataProvider,
-        ?string $renderMethod = null
+        DataProvider $dataProvider
     ): AutocompleteSelectBox {
-        if ($renderMethod === null) {
-            $renderMethod = '$("<li>")
-                        .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")
-                        .appendTo(ul);';
-        }
         /** @phpstan-var AutocompleteSelectBox<PersonProvider> $select */
-        $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
+        $select = new AutocompleteSelectBox($ajax, $label, 'person');
         $select->setDataProvider($dataProvider);
         return $select;
     }

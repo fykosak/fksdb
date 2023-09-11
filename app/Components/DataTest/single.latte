@@ -1,0 +1,17 @@
+{layout '../Controls/@layout.latte'}
+{varType Fykosak\Utils\Logging\Message[] $logs}
+{varType FKSDB\Components\DataTest\Test $test}
+
+{define test-results Fykosak\Utils\Logging\Message[] $logs, FKSDB\Components\DataTest\Test $test}
+    {if count($logs)}
+        <h4>{_'Test:'} {$test->getTitle()->toHtml()}</h4>
+        {foreach $logs as $log}
+            <div class="alert alert-{$log->level}">
+                {$log->text}
+            </div>
+        {/foreach}
+    {/if}
+{/define}
+{block content}
+    {include test-results logs:$logs,test:$test}
+{/block}

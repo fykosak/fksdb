@@ -5,6 +5,7 @@ import {
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { Action } from 'redux';
 
 export interface State {
     lastUpdated?: string;
@@ -28,10 +29,10 @@ const fetchFail = (state: State): State => {
     };
 };
 
-export const downloader = (state: State = {lastUpdated: null}, action): State => {
+export const downloader = (state: State = {lastUpdated: null}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
-            return fetchSuccess(state, action);
+            return fetchSuccess(state, action as ActionFetchSuccess<DataResponse<ResponseData>>);
         case ACTION_FETCH_FAIL:
             return fetchFail(state);
         default:

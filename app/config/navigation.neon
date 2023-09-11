@@ -6,60 +6,57 @@ navigation:
             #Schedule:PersonSchedule:default:
             #    params:
             #        eventId: 173
-        Org.Dashboard.default:
-            Org.Dashboard.default: []
+        Organizer.Dashboard.default:
+            Organizer.Dashboard.default: []
 
-            Org.Inbox.list: []
-            Org.Inbox.inbox: []
-            Org.Tasks.dispatch: []
-            Org.Inbox.corrected: []
-            Org.Points.entry: []
-            Org.Points.preview: []
-            Org.Tasks.import: []
+            Organizer.Inbox.list: []
+            Organizer.Inbox.inbox: []
+            Organizer.Tasks.dispatch: []
+            Organizer.Inbox.corrected: []
+            Organizer.Points.entry: []
+            Organizer.Points.preview: []
+            Organizer.Tasks.import: []
 
-            Org.Person.search: []
-            Org.Contestant.list: []
-            Org.Org.list: []
-            Org.Teacher.list: []
-            Org.Person.pizza: []
+            Organizer.Person.search: []
+            Organizer.Contestant.list: []
+            Organizer.Organizer.list: []
+            Organizer.Teacher.list: []
+            Organizer.Person.pizza: []
 
-            Org.Event.list: []
-            Org.School.list: []
-            Org.StoredQuery.list: []
-            Org.Spam.list: []
+            Organizer.Event.list: []
+            Organizer.School.list: []
+            Organizer.StoredQuery.list: []
+            Organizer.Spam.list: []
             Warehouse.Dashboard.default: []
 
             #Common.Deduplicate.person:
-            Org.Validation.default: []
-            Org.Chart.list: []
+            Organizer.Chart.list: []
 
-        Org.Dashboard.inbox:
-            Org.Inbox.list: []
-            Org.Inbox.inbox: []
-            Org.Inbox.corrected: []
-            Org.Points.preview: []
-            Org.Points.entry: []
-            Org.Tasks.dispatch: []
-            Org.Tasks.import: []
-        Org.Dashboard.person:
-            Org.Person.search: []
-            Org.Person.pizza: []
-            Org.Contestant.list: []
-            Org.Org.list: []
-            Org.Teacher.list: []
+        Organizer.Dashboard.inbox:
+            Organizer.Inbox.list: []
+            Organizer.Inbox.inbox: []
+            Organizer.Inbox.corrected: []
+            Organizer.Points.preview: []
+            Organizer.Points.entry: []
+        Organizer.Dashboard.task:
+            Organizer.Tasks.dispatch: []
+            Organizer.Tasks.import: []
+            Organizer.Tasks.list: []
+        Organizer.Dashboard.person:
+            Organizer.Person.search: []
+            Organizer.Person.pizza: []
+            Organizer.Contestant.list: []
+            Organizer.Organizer.list: []
+            Organizer.Teacher.list: []
 
-        Org.Dashboard.entity:
-            Org.Event.list: []
-            Org.School.list: []
-            Org.StoredQuery.list: []
-            Org.Spam.list: []
+        Organizer.Dashboard.entity:
+            Organizer.Event.list: []
+            Organizer.School.list: []
+            Organizer.StoredQuery.list: []
+            Organizer.Spam.list: []
             Warehouse.Dashboard.default: []
-        Org.Dashboard.others:
-            Org.Chart.list: []
-            Org.Validation.default: []
-        Org.Validation.default:
-            Org.Validation.preview: []
-            Org.Validation.list: []
+        Organizer.Dashboard.others:
+            Organizer.Chart.list: []
         Public.Dashboard.default:
             Public.Submit.default: []
             Public.Submit.legacy: []
@@ -97,7 +94,7 @@ navigation:
             Event.Application.import: []
         Event.Dashboard.default#other:
             #others
-            Event.EventOrg.list: []
+            Event.EventOrganizer.list: []
             Event.Payment.create: []
             Event.Payment.detailedList: []
             Event.Payment.list: []

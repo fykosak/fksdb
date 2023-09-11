@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Services\TaskContributionService;
@@ -67,7 +67,7 @@ class ContributionsFromXML extends Stage
                 }
 
                 $row = $data->getContestYear()->contest
-                    ->getOrganisers()
+                    ->getOrganizers()
                     ->where('tex_signature', $signature)
                     ->fetch();
 
@@ -83,7 +83,7 @@ class ContributionsFromXML extends Stage
                 $this->taskContributionService->disposeModel($contribution);
             }
 
-            /** @var OrgModel $contributor */
+            /** @var OrganizerModel $contributor */
             foreach ($contributors as $contributor) {
                 $this->taskContributionService->storeModel([
                     'person_id' => $contributor->person_id,

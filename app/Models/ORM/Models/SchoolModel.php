@@ -19,6 +19,9 @@ use Nette\Security\Resource;
  * @property-read string|null $izo
  * @property-read int $active
  * @property-read string|null $note
+ * @property-read int $study_h
+ * @property-read int $study_p
+ * @property-read int $study_u
  */
 final class SchoolModel extends Model implements Resource
 {

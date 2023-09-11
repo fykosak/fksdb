@@ -1,0 +1,29 @@
+{layout '../../@layout.latte'}
+{varType Fykosak\Utils\Logging\Message[][] $logs}
+{varType FKSDB\Components\DataTest\Test[] $tests}
+{block content}
+    {var bool $hasError = false}
+    {foreach $logs as $testId=>$testLogs}
+        {if count($testLogs)}
+            {php $hasError = true}
+            <div class="panel color-auto">
+                <div class="container">
+                    <h2>{$tests[$testId]->getTitle()->toHtml()}</h2>
+                    <span class="text-muted">{$tests[$testId]->getDescription()}</span>
+                    {foreach $testLogs as $log}
+                        <div class="alert alert-{$log->level}">
+                            {$log->text}
+                        </div>
+                    {/foreach}
+                </div>
+            </div>
+        {/if}
+    {/foreach}
+    {if !$hasError}
+        <div class="panel color-auto">
+            <div class="container">
+                <p class="alert alert-success">{_'No error found'}</p>
+            </div>
+        </div>
+    {/if}
+{/block}

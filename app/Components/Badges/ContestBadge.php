@@ -8,21 +8,12 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
-/**
- * @phpstan-extends Badge<ContestModel|int>
- */
-class ContestBadge extends Badge
+class ContestBadge
 {
-    public static function getHtml(...$args): Html
+    public static function getHtml(ContestModel $contest): Html
     {
-        [$contest] = $args;
-        if ($contest instanceof ContestModel) {
-            $contestId = $contest->contest_id;
-        } else {
-            $contestId = (int)$contest;
-        }
         $component = Html::el('span');
-        switch ($contestId) {
+        switch ($contest->contest_id) {
             case ContestModel::ID_FYKOS:
                 return $component->addAttributes(['class' => 'badge bg-fykos'])->addText(_('FYKOS'));
             case ContestModel::ID_VYFUK:
@@ -30,6 +21,9 @@ class ContestBadge extends Badge
             case 3:
                 return $component->addAttributes(['class' => 'badge bg-ctyrboj'])->addText(_('Vědecký čtyřboj'));
         }
-        throw new \InvalidArgumentException(sprintf(_('Contest %d not found'), $contestId), IResponse::S404_NOT_FOUND);
+        throw new \InvalidArgumentException(
+            sprintf(_('Contest %d not found'), $contest->contest_id),
+            IResponse::S404_NOT_FOUND
+        );
     }
 }
