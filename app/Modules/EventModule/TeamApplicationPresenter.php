@@ -9,6 +9,8 @@ use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
+use FKSDB\Components\DataTest\SingleTestComponent;
+use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -25,6 +27,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -212,14 +215,14 @@ final class TeamApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrg = $this->isAllowed('event.application', 'default');
+        $this->template->isOrganizer = $this->isAllowed('event.application', 'default');
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
         }
-        $this->template->isOrg = $this->eventAuthorizator->isAllowed(
+        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
             $this->getEntity(),
             'org-detail',
             $this->getEvent()
@@ -386,5 +389,13 @@ final class TeamApplicationPresenter extends BasePresenter
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
+    }
+
+    /**
+     * @return SingleTestComponent<PersonHistoryModel>
+     */
+    protected function createComponentStudySchoolTest(): SingleTestComponent
+    {
+        return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
     }
 }

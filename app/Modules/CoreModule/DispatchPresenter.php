@@ -27,7 +27,7 @@ final class DispatchPresenter extends BasePresenter
     {
         $person = $this->getLoggedPerson();
         $this->template->contestants = $this->getAllContestants($person);
-        $this->template->orgs = $this->getAllOrganisers($person->getLogin());
+        $this->template->organizers = $this->getAllOrganizers($person->getLogin());
     }
 
     /**
@@ -71,17 +71,17 @@ final class DispatchPresenter extends BasePresenter
     /**
      * @phpstan-return NavItem[]
      */
-    private function getAllOrganisers(LoginModel $login): array
+    private function getAllOrganizers(LoginModel $login): array
     {
         $results = [];
-        foreach ($login->person->getActiveOrgs() as $contestId => $org) {
+        foreach ($login->person->getActiveOrganizers() as $contestId => $organizer) {
             $results[$contestId] = new NavItem(
                 new Title(
                     null,
-                    sprintf(_('Organizer %s'), $org->contest->name),
-                    'icon icon-' . $org->contest->getContestSymbol()
+                    sprintf(_('Organizer %s'), $organizer->contest->name),
+                    'icon icon-' . $organizer->contest->getContestSymbol()
                 ),
-                ':Org:Dashboard:default',
+                ':Organizer:Dashboard:default',
                 [
                     'contestId' => $contestId,
                 ]

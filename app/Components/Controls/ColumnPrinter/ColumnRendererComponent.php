@@ -47,7 +47,7 @@ class ColumnRendererComponent extends BaseComponent
                     default:
                     case 'value':
                         if (!$model) {
-                            throw new \InvalidArgumentException(_('"value" is available only with model'));
+                            throw new \InvalidArgumentException('"value" is available only with model');
                         }
                         return (string)$factory->render($model, $userPermission);
                     case 'title':

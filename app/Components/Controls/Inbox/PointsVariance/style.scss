@@ -1,0 +1,22 @@
+.point-variance-chart svg {
+
+  [data-label="1"], [data-label="2"] {
+    color: var(--bs-teal);
+  }
+
+  [data-label="3"], [data-label="4"], [data-label="5"] {
+    color: var(--bs-cyan);
+  }
+
+  [data-label="P"] {
+    color: var(--bs-orange);
+  }
+
+  [data-label="E"] {
+    color: var(--bs-pink);
+  }
+
+  [data-label="S"], [data-label="V"] {
+    color: var(--bs-yellow);
+  }
+}

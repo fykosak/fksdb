@@ -27,9 +27,6 @@ class ContestCategoryColumnFactory extends ColumnFactory
         $this->translator = $translator;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createHtmlValue(Model $model): Html
     {
         if (!isset($model->contest_category)) {

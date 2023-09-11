@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseList;
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
@@ -67,6 +67,7 @@ class GroupListComponent extends BaseList
             ),
             'duration'
         );
+        /** @phpstan-var RelatedTable<ScheduleGroupModel,ScheduleItemModel> $itemsRow */
         $itemsRow = new RelatedTable(
             $this->container,
             fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
@@ -75,7 +76,7 @@ class GroupListComponent extends BaseList
         );
         $this->addRow($itemsRow, 'items');
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.name:value (@schedule_item.schedule_item_id:value)',
                 '@schedule_item.name:title'
@@ -83,7 +84,7 @@ class GroupListComponent extends BaseList
             'title'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.price_czk / @schedule_item.price_eur',
                 _('Price')
@@ -91,66 +92,63 @@ class GroupListComponent extends BaseList
             'price'
         );
         $itemsRow->addColumn(
-            new TemplateItem(
+            new TemplateItem( // @phpstan-ignore-line
                 $this->container,
                 '@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity',
                 _('Used / Free / Total')
             ),
             'capacity'
         );
+
         $itemsRow->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Edit')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->getPrimary()]]
+                fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->schedule_item_id]]
             ),
             'edit'
         );
         $itemsRow->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Detail')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->getPrimary()]]
+                fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
             ),
             'detail'
         );
         $itemsRow->addButton(
-            new PresenterButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Attendance')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:attendance', ['id' => $model->getPrimary()]]
+                fn(ScheduleItemModel $model) => [':Schedule:Item:attendance', ['id' => $model->schedule_item_id]]
             ),
             'attendance'
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
-                $this->container,
-                null,
-                new Title(null, _('Detail')),
-                fn(ScheduleGroupModel $model) => [':Schedule:Group:detail', ['id' => $model->getPrimary()]]
-            ),
-            'detail'
+        $this->addPresenterButton(
+            ':Schedule:Group:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'schedule_group_id']
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
-                $this->container,
-                null,
-                new Title(null, _('Edit')),
-                fn(ScheduleGroupModel $model) => [':Schedule:Group:edit', ['id' => $model->getPrimary()]]
-            ),
-            'edit'
+
+        $this->addPresenterButton(
+            ':Schedule:Group:edit',
+            'edit',
+            _('Edit'),
+            false,
+            ['id' => 'schedule_group_id']
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
-                $this->container,
-                null,
-                new Title(null, _('Attendance')),
-                fn(ScheduleGroupModel $model) => [':Schedule:Group:attendance', ['id' => $model->getPrimary()]]
-            ),
-            'attendance'
+
+        $this->addPresenterButton(
+            ':Schedule:Group:attendance',
+            'attendance',
+            _('Attendance'),
+            false,
+            ['id' => 'schedule_group_id']
         );
     }
 }

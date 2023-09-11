@@ -22,7 +22,7 @@ use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use FKSDB\Modules\OrgModule\BasePresenter;
+use FKSDB\Modules\OrganizerModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;

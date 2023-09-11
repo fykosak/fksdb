@@ -90,7 +90,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::type(RedirectResponse::class, $response);
     }
 
-    public function testCreateOrg(): void
+    public function testCreateOrganizer(): void
     {
         $this->loginUser(5);
         $data = [
@@ -160,7 +160,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
 
-    public function testCreateOrgOutDate(): void
+    public function testCreateOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);
@@ -260,7 +260,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrg(): void
+    public function testEditOrganizer(): void
     {
         $this->loginUser(5);
         $team = $this->createTeam('Original', [$this->personA]);
@@ -315,7 +315,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrgOutDate(): void
+    public function testEditOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);

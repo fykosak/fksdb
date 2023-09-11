@@ -1,6 +1,6 @@
 {block outerContent}
     {varType array $contestants}
-    {varType array $orgs}
+    {varType array $organizers}
     {*<h2>{_'Shortcuts'}</h2>
     {control navigationChooser:board 'Core:Dispatch:default', true}*}
     <div class="panel color-auto">
@@ -11,9 +11,9 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
-            {if count($orgs)}
+            {if count($organizers)}
                 <h2>{_'Organizer'}</h2>
-                {control navigationChooser:boardInline $orgs, false}
+                {control navigationChooser:boardInline $organizers, false}
             {/if}
         </div>
     </div>

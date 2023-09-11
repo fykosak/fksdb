@@ -6,12 +6,9 @@ namespace FKSDB\Components\Badges;
 
 use Nette\Utils\Html;
 
-/**
- * @phpstan-extends Badge<never>
- */
-class NoTransitionBadge extends Badge
+class NoTransitionBadge
 {
-    public static function getHtml(...$args): Html
+    public static function getHtml(): Html
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-warning'])

@@ -6,26 +6,23 @@ import { setNewState } from '../../actions/stats';
 import './progress.scss';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
 
-interface StatItem extends TaskModel {
-    5: number;
-    3: number;
-    2: number;
-    1: number;
-    total: number;
+type StatItem<AvailablePoints extends number> =
+    { total: number; }
+    & { [points in AvailablePoints]: number; }
+    & TaskModel;
+
+interface Stats<AvailablePoints extends number> {
+    [taskId: number]: StatItem<AvailablePoints>;
 }
 
-interface Stats {
-    [taskId: number]: StatItem;
+interface Props<AvailablePoints extends number> {
+    availablePoints: Array<AvailablePoints>;
 }
 
-interface OwnProps {
-    availablePoints: number[];
-}
-
-export default function Progress({availablePoints}: OwnProps) {
+export default function Progress({availablePoints}: Props<5 | 3 | 2 | 1>) {
     const submits = useSelector((state: Store) => state.data.submits);
     const tasks = useSelector((state: Store) => state.data.tasks);
-    const tasksSubmits: Stats = {};
+    const tasksSubmits: Stats<5 | 3 | 2 | 1> = {};
     const dispatch = useDispatch();
     for (const task of tasks) {
         const {taskId} = task;
@@ -56,7 +53,7 @@ export default function Progress({availablePoints}: OwnProps) {
     const rows = [];
     for (const index in tasksSubmits) {
         if (Object.hasOwn(tasksSubmits, index)) {
-            const submit: StatItem = tasksSubmits[index];
+            const submit: StatItem<5 | 3 | 2 | 1> = tasksSubmits[index];
 
             rows.push(
                 <div className="row" key={index}>

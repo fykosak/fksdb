@@ -24,7 +24,7 @@
             {if $storedQuery}
                 {if isset($storedQuery->queryPattern)}
                     <a class="btn btn-outline-secondary"
-                       href="{plink :Org:StoredQuery:detail 'id'=>$storedQuery->queryPattern->query_id}">{_'Detail of the query'}</a>
+                       href="{plink :Organizer:StoredQuery:detail 'id'=>$storedQuery->queryPattern->query_id}">{_'Detail of the query'}</a>
                 {/if}
             {/if}
             {control grid}

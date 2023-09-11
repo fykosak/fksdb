@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits;
 
 use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Grids\Components\Button\ControlButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -76,10 +76,9 @@ class AllSubmitsGrid extends FilterGrid
             $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         }
         $this->addButton(
-            new ControlButton(
+            new Button(
                 $this->container,
                 $this,
-                null,
                 new Title(null, _('Revoke')),
                 fn(?SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',

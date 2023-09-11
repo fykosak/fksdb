@@ -16,7 +16,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Utils\DateTime;
 
@@ -35,7 +35,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
     }

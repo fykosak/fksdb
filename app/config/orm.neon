@@ -35,7 +35,7 @@ orm:
                 class: FKSDB\Models\ORM\Columns\Tables\Contestant\ContestCategoryColumnFactory
         links:
             edit:
-                destination: :Org:Contestant:edit
+                destination: :Organizer:Contestant:edit
                 params:
                    contestId: contest_id
                    id: contestant_id
@@ -168,25 +168,25 @@ orm:
                 title: _('Event')
         links: []
     event_org:
-        service: FKSDB\Models\ORM\Services\EventOrgService
-        model: FKSDB\Models\ORM\Models\EventOrgModel
+        service: FKSDB\Models\ORM\Services\EventOrganizerService
+        model: FKSDB\Models\ORM\Models\EventOrganizerModel
         columns:
             event_org_id:
                 accessKey: e_org_id
                 type: primaryKey
-                title:  _('Event org Id')
+                title:  _('Event organizer Id')
             note:
                 type: string
                 title: _('Note')
         links:
             edit:
-                destination: :Event:EventOrg:edit
+                destination: :Event:EventOrganizer:edit
                 params:
                     eventId: event_id
                     id: e_org_id
                 title: _('Edit')
             detail:
-                destination: :Event:EventOrg:detail
+                destination: :Event:EventOrganizer:detail
                 params:
                     eventId: event_id
                     id: e_org_id
@@ -298,32 +298,32 @@ orm:
                 title: _('Login')
                 permission: RESTRICT
     org:
-        service: FKSDB\Models\ORM\Services\OrgService
-        model: FKSDB\Models\ORM\Models\OrgModel
+        service: FKSDB\Models\ORM\Services\OrganizerService
+        model: FKSDB\Models\ORM\Models\OrganizerModel
         columns:
             org_id:
                 type: primaryKey
-                title: _('Org Id')
+                title: _('Organizer Id')
             since:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\SinceColumnFactory
                 title: _('Since')
             until:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\UntilColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\UntilColumnFactory
                 title: _('Until')
             order:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\OrderColumnFactory
                 description: _('Pro řazení v seznamu organizátorů')
                 title: _('Order')
             tex_signature:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\TexSignatureColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\TexSignatureColumnFactory
                 title: _('Tex signature')
             domain_alias:
                 type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Org\DomainAliasColumnFactory
+                class: FKSDB\Models\ORM\Columns\Tables\Organizer\DomainAliasColumnFactory
                 title: _('Domain alias')
             contribution:
                 type: string
@@ -334,13 +334,13 @@ orm:
                 title: _('Role')
         links:
             detail:
-                destination: :Org:Org:detail
+                destination: :Organizer:Organizer:detail
                 params:
                     contestId: contest_id
                     id: org_id
                 title: _('Detail')
             edit:
-                destination: :Org:Org:edit
+                destination: :Organizer:Organizer:edit
                 params:
                     contestId: contest_id
                     id: org_id
@@ -634,12 +634,12 @@ orm:
                   title: _('Note')
         links:
             edit:
-                  destination: :Org:School:edit
+                  destination: :Organizer:School:edit
                   params:
                       id: school_id
                   title: _('Edit')
             detail:
-                  destination: :Org:School:detail
+                  destination: :Organizer:School:detail
                   params:
                       id: school_id
                   title: _('Detail')
@@ -662,9 +662,6 @@ orm:
             label:
                 type: string
                 title: _('Label')
-            name_cs:
-                type: string
-                title: _('Name cs')
             name:
                 type: localizedString
                 title: _('Name')
@@ -677,6 +674,22 @@ orm:
             year:
                 type: string
                 title: _('Year')
+            submit_start:
+                type: dateTime
+                title: _('Submit start')
+            submit_deadline:
+                type: dateTime
+                title: _('Submit deadline')
+            average_points:
+                type: class
+                omitInputField: true
+                title: _('Average points')
+                class: FKSDB\Models\ORM\Columns\Tables\Task\AveragePointsColumnFactory
+            solvers_count:
+                type: class
+                omitInputField: true
+                title: _('Solvers count')
+                class: FKSDB\Models\ORM\Columns\Tables\Task\SolversCountColumnFactory
     task_contribution:
         service: FKSDB\Models\ORM\Services\TaskContributionService
         model: FKSDB\Models\ORM\Models\TaskContributionModel
@@ -703,12 +716,12 @@ orm:
                 title: _('Note')
         links:
             edit:
-                destination: :Org:Teacher:edit
+                destination: :Organizer:Teacher:edit
                 params:
                     id: teacher_id
                 title: _('Edit')
             detail:
-                destination: :Org:Teacher:detail
+                destination: :Organizer:Teacher:detail
                 params:
                     id: teacher_id
                 title: _('Detail')
@@ -854,12 +867,6 @@ orm:
                     eventId: event_id
                     id: fyziklani_team_id
                 title: _('Detail')
-            edit:
-                destination: :Event:TeamApplication:edit
-                params:
-                    eventId: event_id
-                    id: fyziklani_team_id
-                title: _('Edit')
     fyziklani_team_member:
         service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
         model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel

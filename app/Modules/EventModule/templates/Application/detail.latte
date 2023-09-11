@@ -2,7 +2,7 @@
     {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
     {varType array $groups}
     {varType bool $hasSchedule}
-    {varType bool $isOrg}
+    {varType bool $isOrganizer}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
@@ -48,7 +48,7 @@
                class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
         </div>
     </div>
-    {if $isOrg}
+    {if $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Transitions'}</h2>

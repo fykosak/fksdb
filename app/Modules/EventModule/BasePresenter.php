@@ -43,7 +43,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * Check if has contest permission or is Event org
+     * Check if has contest permission or is Event organizer
      * @throws EventNotFoundException
      */
     public function isAllowed($resource, ?string $privilege): bool

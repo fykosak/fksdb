@@ -49,8 +49,14 @@ class ContestantsFromSchoolGrid extends BaseGrid
             'person_history.study_year_new',
             'contest.contest',
         ]);
-        $this->addPresenterButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
-        $this->addPresenterButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            ':Organizer:Contestant:detail',
+            'detail',
+            _('Detail'),
+            false,
+            ['id' => 'contestant_id']
+        );
         $this->paginate = false;
     }
 

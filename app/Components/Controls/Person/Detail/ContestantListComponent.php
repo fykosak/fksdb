@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
 use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -49,52 +48,23 @@ class ContestantListComponent extends DetailComponent
             new TemplateItem($this->container, _('Contest year @contestant.year'), '@contestant.year:title'),
             'contestant__year'
         );
-        if ($this->isOrg) {
-            $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
-                    $this->container,
-                    null,
-                    new Title(null, _('Edit')),
-                    fn(ContestantModel $contestant): array => [
-                        ':Org:Contestant:edit',
-                        [
-                            'contestId' => $contestant->contest_id,
-                            'year' => $contestant->year,
-                            'id' => $contestant->contestant_id,
-                        ],
-                    ]
-                ),
-                'edit'
-            );
-            $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
-                    $this->container,
-                    null,
-                    new Title(null, _('Detail')),
-                    fn(ContestantModel $contestant): array => [
-                        ':Org:Contestant:detail',
-                        [
-                            'contestId' => $contestant->contest_id,
-                            'year' => $contestant->year,
-                            'id' => $contestant->contestant_id,
-                        ],
-                    ]
-                ),
-                'detail'
-            );
+        if ($this->isOrganizer) {
+            $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', _('Edit'), false, [
+                'contestId' => 'contest_id',
+                'year' => 'year',
+                'id' => 'contestant_id',
+            ]);
+
+            $this->addPresenterButton(':Organizer:Contestant:detail', 'detail', _('Detail'), false, [
+                'contestId' => 'contest_id',
+                'year' => 'year',
+                'id' => 'contestant_id',
+            ]);
         } else {
-            $this->addButton(
-                new PresenterButton( // @phpstan-ignore-line
-                    $this->container,
-                    null,
-                    new Title(null, _('Detail')),
-                    fn(ContestantModel $contestant): array => [
-                        ':Public:Dashboard:default',
-                        ['contestId' => $contestant->contest_id, 'year' => $contestant->year],
-                    ]
-                ),
-                'detail'
-            );
+            $this->addPresenterButton(':Public:Dashboard:default', 'detail', _('Detail'), false, [
+                'contestId' => 'contest_id',
+                'year' => 'year',
+            ]);
         }
     }
 

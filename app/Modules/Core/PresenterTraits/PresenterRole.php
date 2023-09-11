@@ -8,7 +8,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 
 final class PresenterRole extends FakeStringEnum
 {
-    public const ORG = 'org';
+    public const ORGANIZER = 'organizer';
     public const CONTESTANT = 'contestant';
     public const ALL = 'all';
     public const SELECTED = 'selected';
@@ -16,7 +16,7 @@ final class PresenterRole extends FakeStringEnum
     public static function cases(): array
     {
         return [
-            new self(self::ORG),
+            new self(self::ORGANIZER),
             new self(self::CONTESTANT),
             new self(self::ALL),
             new self(self::SELECTED),

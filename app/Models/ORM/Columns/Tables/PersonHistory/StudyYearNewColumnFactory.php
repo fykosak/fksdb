@@ -122,7 +122,8 @@ class StudyYearNewColumnFactory extends ColumnFactory
 }
 
 /*
- * update person_history set study_year_new = CONCAT(IF(study_year<5,'H_','P_'),study_year) where study_year IS NOT NULL;
+ * update person_history set study_year_new = CONCAT(IF(study_year<5,'H_','P_'),study_year)
+ * where study_year IS NOT NULL;
 
 update person_history set study_year_new = 'NONE' where study_year IS NULL AND school_id IS NULL;
 
