@@ -25,6 +25,7 @@ use Nette\Security\Resource;
  * @property-read EmailMessageState $state
  * @property-read \DateTimeInterface $created
  * @property-read \DateTimeInterface $sent
+ * @property-read bool|int $priority
  */
 final class EmailMessageModel extends Model implements Resource
 {

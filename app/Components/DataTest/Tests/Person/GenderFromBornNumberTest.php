@@ -21,6 +21,10 @@ class GenderFromBornNumberTest extends Test
     {
         return new Title(null, _('Gender from born Id'));
     }
+    public function getDescription(): ?string
+    {
+        return _('Tests, if gender matches born ID');
+    }
 
     /**
      * @param PersonModel $model
@@ -36,7 +40,7 @@ class GenderFromBornNumberTest extends Test
             return;
         }
         if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
-            $logger->log(new Message(_('Gender not match born Id'), Message::LVL_ERROR));
+            $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
         }
     }
 }

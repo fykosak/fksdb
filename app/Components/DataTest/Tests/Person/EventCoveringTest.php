@@ -25,7 +25,11 @@ class EventCoveringTest extends Test
 {
     public function getTitle(): Title
     {
-        return new Title(null, _('Organization and participation in same year'));
+        return new Title(null, _('Organization and participation in the same year'));
+    }
+    public function getDescription(): ?string
+    {
+        return _('Tests, if the person is participating and organizing in the same year of one contest.');
     }
 
     /**
@@ -67,7 +71,7 @@ class EventCoveringTest extends Test
                     $logger->log(
                         new Message(
                             \sprintf(
-                                _('Organization and participation at year %d (%d) year of contest %s "%s"<->"%s".'),
+                                _('Organization and participation in year %d (%d) of the contest %s "%s"<->"%s".'),
                                 $contestYear->year,
                                 $contestYear->ac_year,
                                 $contestYear->contest->name,

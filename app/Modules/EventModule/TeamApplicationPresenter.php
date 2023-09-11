@@ -10,7 +10,7 @@ use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\SingleTestComponent;
-use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
+use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -396,6 +396,6 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     protected function createComponentStudySchoolTest(): SingleTestComponent
     {
-        return new SingleTestComponent($this->getContext(), new SchoolStudyTest($this->getContext()));
+        return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
     }
 }

@@ -24,7 +24,7 @@ class SetSchoolTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Check if school is filled when study year is filled.');
+        return _('Checks if school is filled when study year is filled.');
     }
 
     /**
@@ -42,7 +42,7 @@ class SetSchoolTest extends Test
         $logger->log(
             new Message(
                 sprintf(
-                    _('School is required for primary and high schools study in year %d'),
+                    _('School is required for primary and high school study in year %d'),
                     $history->ac_year
                 ),
                 Message::LVL_ERROR

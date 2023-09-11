@@ -12,7 +12,7 @@ use FKSDB\Components\DataTest\Tests\Person\PersonInfoAdapter;
 use FKSDB\Components\DataTest\Tests\Person\PostgraduateStudyTest;
 use FKSDB\Components\DataTest\Tests\Person\SchoolChangeTest;
 use FKSDB\Components\DataTest\Tests\Person\StudyYearTest;
-use FKSDB\Components\DataTest\Tests\PersonHistory\SchoolStudyTest;
+use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\DataTest\Tests\PersonHistory\SetSchoolTest;
 use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
@@ -47,7 +47,7 @@ class DataTestFactory
                 'participants_duration' => new ParticipantsDurationTest($this->container),
                 'organization_participation' => new EventCoveringTest($this->container),
                 'study_year' => new StudyYearTest($this->container),
-                'school_study' => new PersonHistoryAdapter(new SchoolStudyTest($this->container), $this->container),
+                'school_study' => new PersonHistoryAdapter(new StudyTypeTest($this->container), $this->container),
                 'school_set' => new PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
                 'postgraduate' => new PostgraduateStudyTest($this->container),
                 'school_change' => new SchoolChangeTest($this->container),

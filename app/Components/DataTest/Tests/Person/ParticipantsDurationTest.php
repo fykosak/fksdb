@@ -25,12 +25,12 @@ class ParticipantsDurationTest extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Participate duration'));
+        return new Title(null, _('Participation duration'));
     }
 
     public function getDescription(): ?string
     {
-        return _('Check how long person participate in events of contest.');
+        return _('Check how long person participated in events of the contest.');
     }
 
     /**
@@ -67,7 +67,7 @@ class ParticipantsDurationTest extends Test
             }
             $logger->log(
                 new Message(
-                    \sprintf(_('Person participate %d years in contestId %d (and events)'), $delta, $contestId),
+                    \sprintf(_('Person participated %d years in contestId %d (and its events)'), $delta, $contestId),
                     $level
                 )
             );

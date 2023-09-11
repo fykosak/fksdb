@@ -24,7 +24,7 @@ class SchoolChangeTest extends Test
     }
     public function getDescription(): ?string
     {
-        return _('Check if person change primary or high school during the study.');
+        return _('Check if person changes primary school or high school during the study.');
     }
 
     /**
@@ -59,7 +59,7 @@ class SchoolChangeTest extends Test
         $logger->log(
             new Message(
                 sprintf(
-                    _('Change school in year %d'),
+                    _('School changed in year %d'),
                     $history->ac_year
                 ),
                 Message::LVL_WARNING

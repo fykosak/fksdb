@@ -1205,6 +1205,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
     `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME     NULL                                              DEFAULT NULL,
+    `priority`            BOOLEAN      NOT NULL                                          DEFAULT FALSE,
     INDEX `idx_email_message__person` (`recipient_person_id` ASC),
     CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
     CONSTRAINT `fk_email_message__person`

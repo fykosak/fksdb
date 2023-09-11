@@ -15,16 +15,16 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonHistoryModel>
  */
-class SchoolStudyTest extends Test
+class StudyTypeTest extends Test
 {
     public function getTitle(): Title
     {
-        return new Title(null, _('School study'));
+        return new Title(null, _('Study type'));
     }
 
     public function getDescription(): ?string
     {
-        return _('Check if school provide study type filled in study_year field');
+        return _('Checks if school provides study type filled in study_year field');
     }
 
     /**
@@ -48,7 +48,7 @@ class SchoolStudyTest extends Test
         $logger->log(
             new Message(
                 sprintf(
-                    _('School "%s" does not teach %s study year'),
+                    _('School "%s" does not teach %s study year.'),
                     $history->school->name,
                     $history->study_year_new->value
                 ),

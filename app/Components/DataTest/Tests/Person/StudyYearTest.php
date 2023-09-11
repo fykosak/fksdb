@@ -25,7 +25,7 @@ class StudyYearTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Compare graduation years of each year, check if is same.');
+        return _('Compares graduation years of each year, checks if they are the same.');
     }
 
     /**
@@ -54,7 +54,7 @@ class StudyYearTest extends Test
                 $logger->log(
                     new Message(
                         sprintf(
-                            'In %d expected graduated "%s" given "%s"',
+                            'In %d expected graduation "%s" given "%s"',
                             $history->ac_year,
                             $firstValid->getGraduationYear(),
                             $history->getGraduationYear()
