@@ -39,7 +39,7 @@ fksrouter:
             action: default
         -
             mask: 'web-service/<action>'
-            module: Org
+            module: Organizer
             presenter: WebService
             action: default
             flags: [ONE_WAY]
