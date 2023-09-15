@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Organizer;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
-use FKSDB\Models\ValuePrinters\EmailPrinter;
+use FKSDB\Models\UI\EmailPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<OrganizerModel,never>
+ * @phpstan-extends StringColumnFactory<OrganizerModel,never>
  */
-class DomainAliasColumnFactory extends ColumnFactory
+class DomainAliasColumnFactory extends StringColumnFactory
 {
     /**
      * @param OrganizerModel $model
@@ -27,9 +26,9 @@ class DomainAliasColumnFactory extends ColumnFactory
     {
         switch ($model->contest_id) {
             case ContestModel::ID_FYKOS:
-                return (new EmailPrinter())($model->domain_alias . '@fykos.cz');
+                return EmailPrinter::getHtml($model->domain_alias . '@fykos.cz');
             case ContestModel::ID_VYFUK:
-                return (new EmailPrinter())($model->domain_alias . '@vyfuk.mff.cuni.cz');
+                return EmailPrinter::getHtml($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
                 throw new \InvalidArgumentException(
                     sprintf(_('Contest %d not found'), $model->contest_id),
@@ -40,8 +39,7 @@ class DomainAliasColumnFactory extends ColumnFactory
 
     protected function createFormControl(...$args): BaseControl
     {
-        $control = new TextInput($this->getTitle());
-        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
+        $control = parent::createFormControl(...$args);
         $control->addCondition(Form::FILLED);
         $control->addRule(
             Form::PATTERN,

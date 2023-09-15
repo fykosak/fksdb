@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Organizer;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\OrganizerModel;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -43,9 +43,9 @@ class OrderColumnFactory extends ColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         if (\array_key_exists($model->order, $this->getOrderMapping())) {
-            return (new StringPrinter())($this->getOrderMapping()[$model->order]);
+            return StringPrinter::getHtml($this->getOrderMapping()[$model->order]);
         }
-        return (new StringPrinter())((string)$model->order);
+        return StringPrinter::getHtml((string)$model->order);
     }
 
     protected function createFormControl(...$args): BaseControl

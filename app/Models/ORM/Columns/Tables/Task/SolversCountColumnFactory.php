@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Task;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<TaskModel,never>
+ * @phpstan-extends AbstractColumnFactory<TaskModel,never>
  */
-class SolversCountColumnFactory extends ColumnFactory
+final class SolversCountColumnFactory extends AbstractColumnFactory
 {
     /**
      * @param TaskModel $model

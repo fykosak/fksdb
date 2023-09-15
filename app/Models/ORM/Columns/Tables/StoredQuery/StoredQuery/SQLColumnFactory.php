@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Components\Forms\Controls\SQLConsole;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\TextColumnFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<QueryModel,never>
+ * @phpstan-extends TextColumnFactory<QueryModel,never>
  */
-class SQLColumnFactory extends ColumnFactory
+class SQLColumnFactory extends TextColumnFactory
 {
     /**
      * @param QueryModel $model

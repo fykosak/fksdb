@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Components\Badges\FlagBadge;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\InvalidStateException;
-use Nette\Utils\Html;
 
 class SchoolProvider implements FilteredDataProvider
 {

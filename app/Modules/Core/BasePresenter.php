@@ -445,7 +445,6 @@ abstract class BasePresenter extends Presenter
 
     private function optionalLoginRedirect(): void
     {
-        Debugger::barDump($this->requiresLogin());
         if (!$this->requiresLogin()) {
             return;
         }
