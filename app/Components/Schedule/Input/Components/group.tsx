@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useContext } from 'react';
 import ScheduleItem from './item';
 import { TranslatorContext } from '@translator/context';
-import TimePrinter from 'FKSDB/Models/UI/time-printer';
 
 interface OwnProps {
     group: ScheduleGroupModel;
