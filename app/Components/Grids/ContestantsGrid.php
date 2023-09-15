@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;

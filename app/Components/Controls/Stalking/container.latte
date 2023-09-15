@@ -125,7 +125,7 @@
             <div class="panel color-auto">
                 <div class="container">
                     {if $userPermission < FKSDB\Models\ORM\FieldLevelPermission::ALLOW_RESTRICT}
-                        {FKSDB\Components\Badges\PermissionDeniedBadge::getHtml()}
+                        {FKSDB\Models\UI\PermissionDeniedBadge::getHtml()}
                     {else}
                         <h2>{_'Timeline'}</h2>
                         {control timeline}

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Task;
 
-use FKSDB\Components\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<TaskModel,never>
+ * @phpstan-extends AbstractColumnFactory<TaskModel,never>
  */
-class AveragePointsColumnFactory extends ColumnFactory
+final class AveragePointsColumnFactory extends AbstractColumnFactory
 {
     /**
      * @param TaskModel $model

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\PhoneNumber;
 
-use FKSDB\Components\Badges\FlagBadge;
 use FKSDB\Models\ORM\Models\CountryModel;
 use FKSDB\Models\ORM\Services\CountryService;
+use FKSDB\Models\UI\FlagBadge;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
 

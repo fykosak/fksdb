@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Badges;
+namespace FKSDB\Models\UI;
 
 use FKSDB\Models\ORM\Models\CountryModel;
 use Nette\Utils\Html;

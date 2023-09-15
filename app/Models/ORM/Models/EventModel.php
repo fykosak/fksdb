@@ -123,11 +123,6 @@ final class EventModel extends Model implements Resource, NodeCreator
         }
     }
 
-    public function getSymbol(): string
-    {
-        return $this->event_type->getSymbol();
-    }
-
     public function isTeamEvent(): bool
     {
         return in_array($this->event_type_id, EventModel::TEAM_EVENTS);

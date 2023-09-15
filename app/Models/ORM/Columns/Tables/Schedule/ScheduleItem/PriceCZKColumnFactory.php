@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;

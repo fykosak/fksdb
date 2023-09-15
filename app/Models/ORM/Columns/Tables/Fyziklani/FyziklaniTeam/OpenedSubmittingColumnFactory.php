@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<TeamModel2,never>
+ * @phpstan-extends AbstractColumnFactory<TeamModel2,never>
  */
-class OpenedSubmittingColumnFactory extends ColumnFactory
+class OpenedSubmittingColumnFactory extends AbstractColumnFactory
 {
 
     /**

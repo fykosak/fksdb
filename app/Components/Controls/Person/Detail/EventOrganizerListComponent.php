@@ -42,8 +42,7 @@ class EventOrganizerListComponent extends DetailComponent
     protected function configure(): void
     {
         $this->classNameCallback = fn(EventOrganizerModel $model) => 'alert alert-' .
-            ($model->event->event_type->getSymbol() !== 'secondary' ? $model->event->event_type->getSymbol()
-                : $model->event->event_type->contest->getContestSymbol());
+            $model->event->event_type->getSymbol();
         /** @phpstan-var RowContainer<EventOrganizerModel> $row0 */
         $row0 = new RowContainer($this->container, new Title(null, ''));
         $this->addRow($row0, 'row0');

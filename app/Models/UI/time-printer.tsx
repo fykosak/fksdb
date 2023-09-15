@@ -8,7 +8,7 @@ interface OwnProps {
     translator: Translator;
 }
 
-export default function TimeDisplay({options, translator, date}: OwnProps) {
+export default function TimePrinter({options, translator, date}: OwnProps) {
     return <span>{(new Date(date)).toLocaleTimeString(translator.getBCP47(), options ? options : {
         hour: 'numeric',
         minute: 'numeric',

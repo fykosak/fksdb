@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\ValuePrinters;
+namespace FKSDB\Models\UI;
 
 use Nette\Utils\Html;
 
-/**
- * @phpstan-extends ValuePrinter<int|bool>
- */
-class BinaryPrinter extends ValuePrinter
+class BooleanPrinter
 {
     /**
-     * @param int|bool $value
+     * @param int|bool|null $value
      */
-    protected function getHtml($value): Html
+    public static function getHtml($value): Html
     {
+        if (\is_null($value)) {
+            return NotSetBadge::getHtml();
+        }
         if ($value) {
             return Html::el('span')->addAttributes(['class' => 'fas fa-check text-success']);
         } else {

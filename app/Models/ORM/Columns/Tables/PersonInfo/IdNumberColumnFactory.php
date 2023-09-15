@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -26,8 +26,11 @@ class IdNumberColumnFactory extends ColumnFactory
         return $control;
     }
 
+    /**
+     * @param PersonInfoModel $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->modelAccessKey});
+        return StringPrinter::getHtml($model->id_number);
     }
 }

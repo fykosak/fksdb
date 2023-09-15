@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\ValuePrinters\EventRolePrinter;
+use FKSDB\Models\UI\EventRolePrinter;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -63,7 +63,7 @@ class PerPersonScheduleList extends BaseList
         $row0->addComponent(
             new RendererItem(
                 $this->container,
-                fn(PersonModel $person) => (new EventRolePrinter())($person, $this->event),
+                fn(PersonModel $person) => EventRolePrinter::getHtml($person, $this->event),
                 new Title(null, _('Role'))
             ),
             'role'

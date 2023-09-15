@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model,never>
+ * @phpstan-extends ColumnFactory<TModel,ArgType>
+ * @phpstan-template TModel of Model
  * @phpstan-template ArgType
  */
 class StateColumnFactory extends ColumnFactory

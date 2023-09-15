@@ -2,25 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\ValuePrinters;
+namespace FKSDB\Models\UI;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AddressModel;
 use Nette\Utils\Html;
 
-/**
- * @phpstan-extends ValuePrinter<AddressModel>
- */
-class AddressPrinter extends ValuePrinter
+class AddressPrinter
 {
-    /**
-     * @param AddressModel $value
-     * @throws BadTypeException
-     */
-    protected function getHtml($value): Html
+    public static function getHtml(?AddressModel $value): Html
     {
-        if (!$value instanceof AddressModel) {
-            throw new BadTypeException(AddressModel::class, $value);
+        if (\is_null($value)) {
+            return NotSetBadge::getHtml();
         }
         $container = Html::el('div');
         if (isset($value->first_row)) {
