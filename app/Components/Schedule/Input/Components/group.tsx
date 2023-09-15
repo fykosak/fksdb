@@ -1,11 +1,12 @@
 import { Params } from 'FKSDB/Components/Schedule/Input/schedule-field';
 import { ScheduleGroupModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-group-model';
-import TimeDisplay from 'FKSDB/Models/ValuePrinters/time-printer';
-import DateDisplay from 'FKSDB/Models/ValuePrinters/date-printer';
+import TimePrinter from 'FKSDB/Models/UI/time-printer';
+import DateDisplay from 'FKSDB/Models/UI/date-printer';
 import * as React from 'react';
 import { useContext } from 'react';
 import ScheduleItem from './item';
 import { TranslatorContext } from '@translator/context';
+import TimePrinter from 'FKSDB/Models/UI/time-printer';
 
 interface OwnProps {
     group: ScheduleGroupModel;
@@ -19,10 +20,10 @@ export default function Group({group, params}: OwnProps) {
             {translator.get(group.name)}
             {params.groupTime && (
                 <small className="ms-3 text-muted">
-                    <TimeDisplay
+                    <TimePrinter
                         date={group.start}
                         translator={translator}
-                    /> - <TimeDisplay
+                    /> - <TimePrinter
                     date={group.end}
                     translator={translator}
                 />

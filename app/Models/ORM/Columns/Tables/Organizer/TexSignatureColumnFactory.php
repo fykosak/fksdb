@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Organizer;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ColumnFactory<OrganizerModel,never>
+ * @phpstan-extends StringColumnFactory<OrganizerModel,never>
  */
-class TexSignatureColumnFactory extends ColumnFactory
+class TexSignatureColumnFactory extends StringColumnFactory
 {
 
     protected function createFormControl(...$args): BaseControl
     {
-        $control = new TextInput($this->getTitle());
+        $control = parent::createFormControl(...$args);
 
-        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->addCondition(Form::FILLED)
             ->addRule(
                 Form::PATTERN,

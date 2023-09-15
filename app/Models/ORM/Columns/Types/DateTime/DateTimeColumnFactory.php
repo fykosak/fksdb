@@ -7,6 +7,11 @@ namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use Nette\Forms\Controls\BaseControl;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template ArgType
+ * @phpstan-extends AbstractDateTimeColumnFactory<TModel,ArgType>
+ */
 class DateTimeColumnFactory extends AbstractDateTimeColumnFactory
 {
     protected function createFormControl(...$args): BaseControl

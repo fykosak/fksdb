@@ -41,7 +41,7 @@ final class EventTypeModel extends Model
             case 16:
                 return 'fov';
             default:
-                return 'secondary';
+                return $this->contest->getContestSymbol();
         }
     }
 

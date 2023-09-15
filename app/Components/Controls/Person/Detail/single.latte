@@ -3,7 +3,7 @@
 {block content}
     {if is_null($model)}
         <div class="card-body">
-            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+            {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
         </div>
     {else}
         <table class="table table-hover">

@@ -10,11 +10,10 @@
 {/block}
 {block content}
     {if address}
-        {var $addressPrinter = new FKSDB\Models\ValuePrinters\AddressPrinter()}
         <div class="card-body">
-            {$addressPrinter($address)}
+            {FKSDB\Models\UI\AddressPrinter::getHtml($address)}
         </div>
     {else}
-        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+        {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
     {/if}
 {/block}

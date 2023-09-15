@@ -4,29 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Contestant;
 
-use FKSDB\Components\Badges\ContestCategoryBadge;
-use FKSDB\Components\Badges\NotSetBadge;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\UI\ContestCategoryBadge;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<ContestantModel,never>
+ * @phpstan-extends AbstractColumnFactory<ContestantModel,never>
  */
-class ContestCategoryColumnFactory extends ColumnFactory
+class ContestCategoryColumnFactory extends AbstractColumnFactory
 {
-    private GettextTranslator $translator;
-
-    public function __construct(MetaDataFactory $metaDataFactory, GettextTranslator $translator)
-    {
-        parent::__construct($metaDataFactory);
-        $this->translator = $translator;
-    }
-
     protected function createHtmlValue(Model $model): Html
     {
         if (!isset($model->contest_category)) {

@@ -289,7 +289,6 @@ orm:
                 class: FKSDB\Models\ORM\Columns\Tables\Login\HashColumnFactory
                 permission: RESTRICT
                 title: _('Password')
-                omitInputField: true
             last_login:
                 type: dateTime
                 title: _('Last logged')
@@ -682,12 +681,10 @@ orm:
                 title: _('Submit deadline')
             average_points:
                 type: class
-                omitInputField: true
                 title: _('Average points')
                 class: FKSDB\Models\ORM\Columns\Tables\Task\AveragePointsColumnFactory
             solvers_count:
                 type: class
-                omitInputField: true
                 title: _('Solvers count')
                 class: FKSDB\Models\ORM\Columns\Tables\Task\SolversCountColumnFactory
     task_contribution:
@@ -942,7 +939,6 @@ orm:
             name:
                 type: localizedString
                 title: _('Item name')
-                omitInputField: true
             description_en:
                 type: string
                 title: _('Description en')
@@ -976,6 +972,7 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\QIDColumnFactory
                 title: _('QID')
+                description: _('The queries with QID cannot be deleted and QID can be used for permissions and permanent reference.')
             tags:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\TagsColumnFactory

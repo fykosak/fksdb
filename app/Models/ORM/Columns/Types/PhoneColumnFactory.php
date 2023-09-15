@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
+use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
@@ -20,16 +19,17 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model,never>
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-extends ColumnFactory<TModel,ArgType>
  */
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 {
     protected PhoneNumberFactory $phoneNumberFactory;
 
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory)
+    public function injectFactory(PhoneNumberFactory $phoneNumberFactory): void
     {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($metaDataFactory);
     }
 
     protected function createFormControl(...$args): BaseControl
@@ -52,6 +52,9 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         return $control;
     }
 
+    /**
+     * @phpstan-param TModel $model
+     */
     final public function runTest(Logger $logger, Model $model): void
     {
 
@@ -69,6 +72,9 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         }
     }
 
+    /**
+     * @phpstan-param TModel $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
         $value = $model->{$this->modelAccessKey};

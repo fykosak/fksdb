@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Organizer;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\OrganizerModel;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -27,7 +27,7 @@ class UntilColumnFactory extends ColumnFactory
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Still organizes'));
         } else {
-            return (new StringPrinter())((string)$model->until);
+            return StringPrinter::getHtml((string)$model->until);
         }
     }
 

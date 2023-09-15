@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model;
 use Nette\Application\LinkGenerator;
@@ -13,16 +12,14 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventModel,never>
  */
-class EventLink extends ColumnFactory
+class EventLink extends AbstractColumnFactory
 {
-
     private LinkGenerator $linkGenerator;
 
-    public function __construct(LinkGenerator $linkGenerator, MetaDataFactory $metaDataFactory)
+    final public function injectLink(LinkGenerator $linkGenerator): void
     {
-        parent::__construct($metaDataFactory);
         $this->linkGenerator = $linkGenerator;
     }
 
