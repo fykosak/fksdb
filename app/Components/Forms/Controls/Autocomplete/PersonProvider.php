@@ -8,8 +8,17 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedSelection;
 
+/**
+ * @phpstan-type TData array{
+ * label:string,
+ * value:int,
+ * place:string|null,
+ * }
+ * @phpstan-implements FilteredDataProvider<PersonModel,TData>
+ */
 class PersonProvider implements FilteredDataProvider
 {
 
@@ -39,7 +48,7 @@ class PersonProvider implements FilteredDataProvider
     }
 
     /**
-     * Prefix search.
+     * @phpstan-return array<int,TData>
      */
     public function getFilteredItems(?string $search): array
     {
@@ -56,12 +65,18 @@ class PersonProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    /**
+     * @phpstan-return TData
+     */
+    public function serializeItemId(int $id): array
     {
         $person = $this->personService->findByPrimary($id);
-        return $person->getFullName();
+        return $this->serializeItem($person);
     }
 
+    /**
+     * @phpstan-return array<int,TData>
+     */
     public function getItems(): array
     {
         $persons = $this->searchTable
@@ -70,28 +85,25 @@ class PersonProvider implements FilteredDataProvider
         $result = [];
         /** @var PersonModel $person */
         foreach ($persons as $person) {
-            $result[] = $this->getItem($person);
+            $result[] = $this->serializeItem($person);
         }
         return $result;
     }
 
     /**
-     * @phpstan-return array{
-     *     label:string,
-     *     value:int,
-     *     place:string|null,
-     * }
+     * @phpstan-return TData
+     * @param PersonModel $model
      */
-    private function getItem(PersonModel $person): array
+    public function serializeItem(Model $model): array
     {
         $place = null;
-        $address = $person->getAddress(PostContactType::from(PostContactType::DELIVERY));
+        $address = $model->getAddress(PostContactType::from(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }
         return [
-            'label' => $person->getFullName(),
-            'value' => $person->person_id,
+            'label' => $model->getFullName(),
+            'value' => $model->person_id,
             'place' => $place,
         ];
     }

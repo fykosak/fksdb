@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     LogicColumnFactory,
     PhoneColumnFactory,
     PrimaryKeyColumnFactory,
-    StateColumnFactory,
     StringColumnFactory,
     TextColumnFactory
 };
@@ -93,7 +92,7 @@ class ORMExtension extends Extension
                             Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email', 'localizedString')
                         ),
                         $this->createDefaultStructure(Expect::anyOf('dateTime', 'time', 'date'), [
-                            'format' => Expect::string(),
+                            'dateFormat' => Expect::string(),
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('state'), [
                             'states' => Expect::arrayOf(
@@ -106,15 +105,22 @@ class ORMExtension extends Extension
                             'class' => Expect::string()->required(),
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('float'), [
-                            'decimalDigitsCount' => Expect::int()->required(),
-                            'suffix' => Expect::string()->nullable()->default(null),
-                            'prefix' => Expect::string()->nullable()->default(null),
-                            'nullValueFormat' => Expect::anyOf('infinite', 'notSet', 'zero')->default('notSet'),
+                            'numberFormat' => Expect::structure([
+                                'decimalDigits' => Expect::int()->required(),
+                                'suffix' => Expect::string()->nullable()->default(null),
+                                'prefix' => Expect::string()->nullable()->default(null),
+                                'nullValue' => Expect::anyOf('infinite', 'notSet', 'zero')->default('notSet'),
+                            ])->castTo('array'),
+
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('int'), [
-                            'suffix' => Expect::string()->nullable()->default(null),
-                            'prefix' => Expect::string()->nullable()->default(null),
-                            'nullValueFormat' => Expect::anyOf('infinite', 'notSet', 'zero')->default('notSet'),
+                            'numberFormat' => Expect::structure([
+                                'decimalDigits' => Expect::int()->default(0),
+                                'suffix' => Expect::string()->nullable()->default(null),
+                                'prefix' => Expect::string()->nullable()->default(null),
+                                'nullValue' => Expect::anyOf('infinite', 'notSet', 'zero')->default('notSet'),
+                            ])->castTo('array'),
+
                         ]),
                     ),
                     Expect::string()
@@ -160,11 +166,13 @@ class ORMExtension extends Extension
      *     writeOnly:bool,
      *     title:string,
      *     class:class-string<ColumnFactory<M,mixed>>|class-string<FakeStringEnum&EnumColumn>,
-     *     format?:string,
-     *     decimalDigitsCount:int,
-     *     nullValueFormat:string,
-     *     prefix:string,
-     *     suffix:string,
+     *     dataFormat?:string,
+     *     numberFormat:array{
+     *          decimalDigits:int,
+     *          nullValue:string,
+     *          prefix:string,
+     *          suffix:string,
+     *      },
      *     states:array<string,array{badge:string,label:string}>,
      * } $definition
      * @phpstan-template M of \Fykosak\NetteORM\Model
@@ -268,9 +276,15 @@ class ORMExtension extends Extension
                     $definition
                 );
                 break;
-            case 'state':
-                $this->registerStateRow($factory, $tableName, $modelClassName, $fieldName, $definition);
-                break;
+            case 'float':
+                $this->setUpNumberFactory(
+                    $factory,
+                    $tableName,
+                    $modelClassName,
+                    $fieldName,
+                    FloatColumnFactory::class,
+                    $definition
+                );
             case 'int':
                 $this->setUpNumberFactory(
                     $factory,
@@ -280,9 +294,6 @@ class ORMExtension extends Extension
                     IntColumnFactory::class,
                     $definition
                 );
-                break;
-            case 'float':
-                $this->registerFloatRow($factory, $tableName, $modelClassName, $fieldName, $definition);
                 break;
             case 'bool':
                 $this->setUpDefaultFactory(
@@ -372,65 +383,13 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     states: array<string,array{badge:string,label:string}>,
-     * } $field
-     */
-    private function registerStateRow(
-        ServiceDefinition $factory,
-        string $tableName,
-        string $modelClassName,
-        string $fieldName,
-        array $field
-    ): void {
-        $this->setUpDefaultFactory(
-            $factory,
-            $tableName,
-            $modelClassName,
-            $fieldName,
-            StateColumnFactory::class,
-            $field
-        );
-        $factory->addSetup('setStates', [$field['states']]);
-    }
-
-    /**
-     * @phpstan-param array{
-     *     permission: string,
-     *     accessKey?:string,
-     *     omitInputField:bool,
-     *     required:bool,
-     *     description?:string,
-     *     writeOnly:bool,
-     *     title:string,
-     *     decimalDigitsCount:int,
-     *     nullValueFormat:string,
-     *     prefix:string,
-     *     suffix:string,
-     * } $field
-     */
-    private function registerFloatRow(
-        ServiceDefinition $factory,
-        string $tableName,
-        string $modelClassName,
-        string $fieldName,
-        array $field
-    ): void {
-        $this->setUpNumberFactory($factory, $tableName, $modelClassName, $fieldName, FloatColumnFactory::class, $field);
-        $factory->addSetup('setDecimalDigitsCount', [$field['decimalDigitsCount']]);
-    }
-
-    /**
-     * @phpstan-param array{
-     *     permission: string,
-     *     accessKey?:string,
-     *     omitInputField:bool,
-     *     required:bool,
-     *     description?:string,
-     *     writeOnly:bool,
-     *     title:string,
-     *     nullValueFormat:string,
-     *     prefix:string,
-     *     suffix:string,
+     *     dataFormat?:string,
+     *     numberFormat:array{
+     *          decimalDigits:int,
+     *          nullValue:string,
+     *          prefix:string,
+     *          suffix:string,
+     *      },
      * } $field
      * @phpstan-template M of \Fykosak\NetteORM\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
@@ -442,7 +401,8 @@ class ORMExtension extends Extension
         string $fieldName,
         string $factoryClassName,
         array $field
-    ): void {
+    ): void
+    {
         $this->setUpDefaultFactory(
             $factory,
             $tableName,
@@ -451,7 +411,11 @@ class ORMExtension extends Extension
             $factoryClassName,
             $field
         );
-        $factory->addSetup('setNumberFactory', [$field['nullValueFormat'], $field['prefix'], $field['suffix']]);
+        $data = $field['numberFormat'];
+        $factory->addSetup(
+            'setNumberFactory',
+            [$data['nullValue'], $data['prefix'], $data['suffix'], $data['decimalDigits']]
+        );
     }
 
     /**
@@ -463,7 +427,7 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     format?:string,
+     *     dateFormat?:string,
      * } $field
      * @phpstan-template M of \Fykosak\NetteORM\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
@@ -475,10 +439,11 @@ class ORMExtension extends Extension
         string $fieldName,
         string $factoryClassName,
         array $field
-    ): void {
+    ): void
+    {
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, $factoryClassName, $field);
-        if (isset($field['format'])) {
-            $factory->addSetup('setFormat', [$field['format']]);
+        if (isset($field['dateFormat'])) {
+            $factory->addSetup('setDateFormat', [$field['dateFormat']]);
         }
     }
 

@@ -255,13 +255,48 @@ window.addEventListener('DOMContentLoaded', () => {
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
         options: {},
         _create: function () {
-            const extractLast = (term: string): string => {
-                return term.split(/,\s*/).pop();
+            type Item = ({
+                place: string;
+            } | {
+                description: string;
+            } | {
+                iso: string;
+                country: string;
+                city: string;
+            }) & {
+                label: string;
+                value: number | string;
+            };
+            const innerRenderHtml = (item: Item): string => {
+                const renderMethod = this.element.data('ac-render-method');
+                switch (renderMethod) {
+                    case 'tags':
+                        return item.label + '<br>' + item.description;
+                    case 'person':
+                        return item.label + '<br>' + item.place + ', ID: ' + item.value;
+                    case 'school':
+                        return item.label + '<br>' + item.city + ' (' + item.country + ')' + '<i class="mx-2 flag-icon flag-icon-' + item.iso + '"/>';
+                    default:
+                        return item.label;
+                }
+            }
+            const innerRenderPlain = (item: Item): string => {
+                const renderMethod = this.element.data('ac-render-method');
+                switch (renderMethod) {
+                    case 'tags':
+                        return item.label + ' ' + item.description;
+                    case 'person':
+                        return item.label;
+                    case 'school':
+                        return item.label + ' ' + item.city + ' (' + item.country + ')';
+                    default:
+                        return item.label;
+                }
             }
 
             const multiSelect: boolean = this.element.data('ac-multiselect');
             const defaultValue: number = this.element.val();
-            const defaultText: string | string[] = this.element.data('ac-default-value');
+            const defaultItems: Item[] = this.element.data('ac-default-value');
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
@@ -279,98 +314,65 @@ window.addEventListener('DOMContentLoaded', () => {
             metaEl.insertAfter(el);
 
             this.element.data('autocomplete', el);
-            if (defaultText) {
-                if (typeof defaultText === 'string') {
-                    el.val(defaultText);
-                } else {
-                    el.val(defaultText.join(', '));
-                }
+            if (defaultItems.length) {
+                el.val(defaultItems.map((item) => innerRenderPlain(item)).join(' ,'));
             }
-            type TData = Array<{ value: number; label?: string | string[] }>
 
-            const cache: { [key: string]: TData } = {};
-            const labelCache: Record<string, string> = {};
-            let termFunction = (arg: string): string => arg;
-            // ensures default value is always suggested (needed for AJAX)
-            const conservationFunction = (data: TData): TData => {
-                if (!defaultText) {
-                    return data;
-                }
-                let found = false;
-                for (const i in data) {
-                    if (data[i].value == defaultValue) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    data.push({
-                        label: defaultText,
-                        value: defaultValue,
-                    });
-                }
-                return data;
-            };
-            if (multiSelect) {
-                termFunction = extractLast;
-            }
+            const termFunction = multiSelect
+                ? (term: string): string => term
+                : (term: string): string => term.split(/,\s*/).pop();
 
             const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
-                options.source = (request: { term: string }, response: (data: TData) => void) => {
+                options.source = (request: { term: string }, response: (data: Array<Item>) => void) => {
                     const term = termFunction(request.term);
-                    if (term in cache) {
-                        response(cache[term]);
-                        return;
-                    }
                     fetch(this.element.data('ac-ajax-url'), {
                             body: JSON.stringify({acQ: term}),
                             method: 'POST',
                         },
-                    ).then((response): Promise<TData> => {
+                    ).then((response): Promise<Array<Item>> => {
                         return response.json();
-                    }).then((jsonData: TData) => {
-                        const data = conservationFunction(jsonData);
-                        cache[term] = data;
-                        response(data);
+                    }).then((jsonData: Array<Item>) => {
+                        // ensures default value is always suggested (needed for AJAX)
+                        response([...jsonData.filter((item) => item.value !== defaultValue), ...defaultItems]);
                     });
                 };
                 options.minLength = 3;
             } else {
                 const items = this.element.data('ac-items');
-                options.source = (request: { term: string }, response: (data: TData) => void) => {
+                options.source = (request: { term: string }, response: (data: Array<Item>) => void) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
                     response($.ui.autocomplete.filter(items, s));
                 };
                 options.minLength = 3;
             }
-
+            const labelCache: Record<string, Item> = {};
             if (multiSelect) {
-                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
-                    labelCache[ui.item.value] = ui.item.label;
+                options.select = (event: JQuery.Event, ui: { item: Item }) => {
+                    labelCache[ui.item.value] = ui.item;
                     if (this.element.val()) {
                         this.element.val(this.element.val() + ',' + ui.item.value);
                     } else {
                         this.element.val(ui.item.value);
                     }
-                    el.val([].concat($.map(this.element.val().split(','), (arg) => {
-                        return labelCache[arg];
+                    el.val([].concat($.map(this.element.val().split(','), (arg: string) => {
+                        return innerRenderPlain(labelCache[arg]);
                     }), ['']).join(', '));
                     return false;
                 };
                 options.focus = () => false;
             } else {
-                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
+                options.select = (event: JQuery.Event, ui: { item: Item }) => {
                     this.element.val(ui.item.value);
-                    el.val(ui.item.label);
+                    el.val(innerRenderPlain(ui.item));
                     this.element.change();
                     return false;
                 };
-                options.focus = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
+                options.focus = (event: JQuery.Event, ui: { item: Item }) => {
                     this.element.val(ui.item.value);
-                    el.val(ui.item.label);
+                    el.val(innerRenderPlain(ui.item));
                     return false;
                 };
             }
@@ -378,23 +380,11 @@ window.addEventListener('DOMContentLoaded', () => {
             // @ts-ignore
             const acEl = el.autocomplete(options);
 
-            const renderMethod = this.element.data('ac-render-method');
-            if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: { label: string, description?: string, place?: string, value: number }): JQuery => {
-                    switch (renderMethod) {
-                        case 'tags':
-                            return $('<li>')
-                                .append('<a>' + item.label + '<br>' + item.description + '</a>')
-                                .appendTo(ul);
-                        case 'person':
-                            return $('<li>')
-                                .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>')
-                                .appendTo(ul);
-                        default:
-                            return eval(renderMethod);
-                    }
-                };
-            }
+            acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: Item): JQuery => {
+                return $('<li>')
+                    .append('<a>' + innerRenderHtml(item) + '</a>')
+                    .appendTo(ul);
+            };
         },
     });
     $('input[data-ac]')['autocomplete-select']();

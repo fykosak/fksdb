@@ -7,8 +7,13 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-type TData array{label:string,value:int,iso:string,city:string,country:string}
+ * @phpstan-implements FilteredDataProvider<SchoolModel,TData>
+ */
 class SchoolProvider implements FilteredDataProvider
 {
 
@@ -29,9 +34,6 @@ class SchoolProvider implements FilteredDataProvider
         $this->schoolService = $schoolService;
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);
@@ -60,21 +62,25 @@ class SchoolProvider implements FilteredDataProvider
         $result = [];
         /** @var SchoolModel $school */
         foreach ($schools as $school) {
-            $result[] = $this->getItem($school);
+            $result[] = $this->serializeItem($school);
         }
         return $result;
     }
 
-    public function getItemLabel(int $id): string
+    /**
+     * @phpstan-return TData
+     */
+    public function serializeItemId(int $id): array
     {
         $school = $this->schoolService->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
         }
-        return $school->name_abbrev;
+        return $this->serializeItem($school);
     }
 
     /**
+     * @return never
      * @throws NotImplementedException
      */
     public function getItems(): array
@@ -83,13 +89,17 @@ class SchoolProvider implements FilteredDataProvider
     }
 
     /**
-     * @phpstan-return array{label:string,value:int}
+     * @phpstan-return TData
+     * @param SchoolModel $model
      */
-    private function getItem(SchoolModel $school): array
+    public function serializeItem(Model $model): array
     {
         return [
-            'label' => $school->name_abbrev,
-            'value' => $school->school_id,
+            'label' => $model->name_abbrev,
+            'iso' => strtolower($model->address->country->alpha_2),
+            'country' => $model->address->country->name,
+            'city' => $model->address->city,
+            'value' => $model->school_id,
         ];
     }
 

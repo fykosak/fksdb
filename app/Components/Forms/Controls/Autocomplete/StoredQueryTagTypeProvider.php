@@ -6,8 +6,17 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedSelection;
 
+/**
+ * @phpstan-type TData array{
+ * label:string,
+ * value:int,
+ * description?:string,
+ * }
+ * @phpstan-implements FilteredDataProvider<TagTypeModel,TData>
+ */
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
     private TagTypeService $storedQueryTagTypeService;
@@ -20,6 +29,9 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
+    /**
+     * @phpstan-return array<int,TData>
+     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim((string)$search);
@@ -29,28 +41,42 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    /**
+     * @phpstan-return TData
+     */
+    public function serializeItemId(int $id): array
     {
         /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
-        return $tagType->name;
+        return $this->serializeItem($tagType);
     }
 
+    /**
+     * @phpstan-return array<int,TData>
+     */
     public function getItems(): array
     {
-        $tagTypes = $this->searchTable
-            ->order('name');
+        $tagTypes = $this->searchTable->order('name');
 
         $result = [];
         /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
-            $result[] = [
-                'label' => $tagType->name,
-                'value' => $tagType->tag_type_id,
-                'description' => $tagType->description,
-            ];
+            $result[] = $this->serializeItem($tagType);
         }
         return $result;
+    }
+
+    /**
+     * @param TagTypeModel $model
+     * @phpstan-return TData
+     */
+    public function serializeItem(Model $model): array
+    {
+        return [
+            'label' => $model->name,
+            'value' => $model->tag_type_id,
+            'description' => $model->description,
+        ];
     }
 
     /**

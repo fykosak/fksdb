@@ -235,14 +235,14 @@ orm:
             arrival_time:
                 type: time
                 title:  _('Arrival time')
-                format: %H:%I
+                dateFormat: %H:%I
             arrival_destination:
                 type: string
                 title: _('Arrival destination')
             departure_time:
                 type: time
                 title: _('Departure time')
-                format: %H:%I
+                dateFormat: %H:%I
             departure_destination:
                 type: string
                 title: _('Departure destination')
@@ -746,11 +746,11 @@ orm:
             created:
                 type: dateTime
                 title: _('Created')
-                format: 'H:m:s d-M-Y'
+                dateFormat: 'H:m:s d-M-Y'
             modified:
                 type: dateTime
                 title: _('Modified')
-                format: 'H:m:s d-M-Y'
+                dateFormat: 'H:m:s d-M-Y'
             points:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
@@ -790,7 +790,8 @@ orm:
             refresh_delay:
                 type: int
                 title: _('Refresh delay')
-                suffix: ms
+                numberFormat:
+                    suffix: ms
             result_hard_display:
                 type: bool
                 title: _('Hard display')
@@ -951,7 +952,8 @@ orm:
             capacity:
                 type: int
                 title: _('Total capacity')
-                nullValueFormat: infinite
+                numberFormat:
+                    nullValue: infinite
             free_capacity:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
@@ -1065,7 +1067,8 @@ orm:
                 title: _('Data')
             purchase_price:
                 type: float
-                decimalDigitsCount: 2
+                numberFormat:
+                    decimalDigits: 2
                 title: _('Price')
             purchase_currency:
                 type: class

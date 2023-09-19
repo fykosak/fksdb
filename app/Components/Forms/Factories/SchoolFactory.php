@@ -81,7 +81,7 @@ class SchoolFactory
     public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox
     {
         /** @phpstan-var AutocompleteSelectBox<SchoolProvider> $schoolElement */
-        $schoolElement = new AutocompleteSelectBox(true, _('School'));
+        $schoolElement = new AutocompleteSelectBox(true, _('School'), 'school');
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($showUnknownSchoolHint) {
             $schoolElement->setOption(

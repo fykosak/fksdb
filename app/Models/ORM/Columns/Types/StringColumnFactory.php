@@ -37,6 +37,9 @@ class StringColumnFactory extends ColumnFactory
         if ($meteData['nativetype'] === 'CHAR' && $meteData['size']) {
             $control->addRule(Form::LENGTH, _('Max length reached'), $meteData['size']);
         }
+        if ($meteData['nativetype'] === 'TEXT') {
+            trigger_error('Use better TextColumnFactory for TEXT', E_USER_WARNING);
+        }
         /*if (!$this->metaData['nullable']) {
           //  $control->setRequired(true);
         } else {

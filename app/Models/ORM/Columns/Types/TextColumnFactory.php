@@ -29,9 +29,11 @@ class TextColumnFactory extends ColumnFactory
         $control = new TextArea(_($this->getTitle()));
         $meteData = $this->getMetaData();
         if ($meteData['nativetype'] === 'VARCHAR' && $meteData['size']) {
+            trigger_error('Use better StringColumnFactory for VARCHAR', E_USER_WARNING);
             $control->addRule(Form::MAX_LENGTH, _('Max length reached'), $meteData['size']);
         }
         if ($meteData['nativetype'] === 'CHAR' && $meteData['size']) {
+            trigger_error('Use better StringColumnFactory for CHAR', E_USER_WARNING);
             $control->addRule(Form::LENGTH, _('Max length reached'), $meteData['size']);
         }
         return $control;

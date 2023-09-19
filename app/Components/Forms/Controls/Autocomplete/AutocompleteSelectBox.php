@@ -31,17 +31,11 @@ class AutocompleteSelectBox extends TextBase
 
     private string $ajaxUrl;
 
-    /**
-     * Body of JS function(ul, item) returning jQuery element.
-     *
-     * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
-     * @var string|null
-     */
-    private ?string $renderMethod;
+    private string $renderMethod;
 
     private bool $attachedJSON = false;
 
-    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null)
+    public function __construct(bool $ajax, ?string $label, string $renderMethod)
     {
         parent::__construct($label);
 
@@ -65,21 +59,6 @@ class AutocompleteSelectBox extends TextBase
         return $this->dataProvider ?? null;
     }
 
-    public function getRenderMethod(): ?string
-    {
-        return $this->renderMethod;
-    }
-
-    public function isAjax(): bool
-    {
-        return $this->ajax;
-    }
-
-    public function isMultiSelect(): bool
-    {
-        return $this->multiSelect;
-    }
-
     /** @phpstan-param TProvider $dataProvider */
     public function setDataProvider(DataProvider $dataProvider): void
     {
@@ -95,36 +74,35 @@ class AutocompleteSelectBox extends TextBase
         $control = parent::getControl();
         $control->addAttributes([
             'data-ac' => 1,
-            'data-ac-ajax' => (int)$this->isAjax(),
-            'data-ac-multiselect' => (int)$this->isMultiSelect(),
+            'data-ac-ajax' => (int)$this->ajax,
+            'data-ac-multiselect' => (int)$this->multiSelect,
             'data-ac-ajax-url' => $this->ajaxUrl,
-            'data-ac-render-method' => $this->getRenderMethod(),
+            'data-ac-render-method' => $this->renderMethod,
             'class' => self::SELECTOR_CLASS . ' form-control',
         ]);
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
-            if ($this->isMultiSelect()) {
+            if ($this->multiSelect) {
                 $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
-                    $defaultTextValue[] = (string)$this->getDataProvider()->getItemLabel((int)$id);
+                    $defaultTextValue[] = $this->getDataProvider()->serializeItemId((int)$id);
                 }
-                $defaultTextValue = json_encode($defaultTextValue);
                 $control->addAttributes([
                     'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
                 ]);
             } else {
-                $defaultTextValue = (string)$this->getDataProvider()->getItemLabel((int)$defaultValue);
+                $defaultTextValue[] = $this->getDataProvider()->serializeItemId((int)$defaultValue);
                 $control->addAttributes([
                     'value' => $defaultValue,
                 ]);
             }
             $control->addAttributes([
-                'data-ac-default-value' => $defaultTextValue,
+                'data-ac-default-value' => json_encode($defaultTextValue),
             ]);
         }
 
-        if (!$this->isAjax()) {
+        if (!$this->ajax) {
             $control->addAttributes([
                 'data-ac-items' => json_encode($this->getDataProvider()->getItems()),
             ]);
@@ -157,7 +135,7 @@ class AutocompleteSelectBox extends TextBase
      */
     public function setValue($value): self
     {
-        if ($this->isMultiSelect()) {
+        if ($this->multiSelect) {
             if (is_array($value)) {
                 $this->value = $value;
             } elseif ($value === '') {
