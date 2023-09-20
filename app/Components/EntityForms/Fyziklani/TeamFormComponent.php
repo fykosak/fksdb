@@ -219,7 +219,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                 true,
                 new SelfACLResolver(
                     $this->model ?? TeamModel2::RESOURCE_ID,
-                    $this->model ? 'org-edit' : 'org-create',
+                    'organizer',
                     $this->event->event_type->contest,
                     $this->container
                 ),

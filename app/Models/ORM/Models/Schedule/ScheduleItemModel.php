@@ -48,7 +48,7 @@ use Nette\Security\Resource;
  */
 final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
-    public const RESOURCE_ID = 'event.scheduleItem';
+    public const RESOURCE_ID = 'event.schedule.item';
 
     public function getBegin(): \DateTimeInterface
     {

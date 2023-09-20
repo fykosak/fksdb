@@ -58,7 +58,7 @@ class OrganizerFormComponent extends EntityFormComponent
             $this->contestYear,
             !isset($this->model),
             new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
-            $this->getContext()->getParameters()['forms']['adminOrg']
+            $this->getContext()->getParameters()['forms']['adminOrganizer']
         );
         $container->addComponent($referencedId, 'person_id', 'since');
         $form->addComponent($container, self::CONTAINER);
