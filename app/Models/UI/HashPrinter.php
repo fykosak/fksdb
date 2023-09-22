@@ -13,6 +13,6 @@ class HashPrinter
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         }
-        return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Is set'));
+        return Html::el('span')->addAttributes(['class' => 'me-1 badge bg-success'])->addText(_('Is set'));
     }
 }

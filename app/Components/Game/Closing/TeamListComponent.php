@@ -6,7 +6,6 @@ namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -91,18 +90,16 @@ class TeamListComponent extends FilterList
                 return 'alert alert-danger';
             }
         };
-        /** @phpstan-var RowContainer<TeamModel2> $row1 */
-        $row1 = new RowContainer($this->container);
+        $row1 = $this->createRow();
         $row1->addComponent(
             new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
             'name'
         );
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
         $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
-        $this->addRow($row1, 'row1');
-        /** @phpstan-var RowContainer<TeamModel2> $row2 */
-        $row2 = new RowContainer($this->container);
+
+        $row2 = $this->createRow();
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
-        $this->addRow($row2, 'row2');
+
     }
 }

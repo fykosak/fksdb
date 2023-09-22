@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container as DIContainer;
+use Nette\DI\Container;
 
 /**
  * @phpstan-extends BaseGrid<TaskModel>
@@ -25,7 +25,7 @@ class TaskGrid extends BaseGrid
     private ContestYearModel $contestYear;
     private int $series;
 
-    public function __construct(DIContainer $container, ContestYearModel $contestYear, int $series)
+    public function __construct(Container $container, ContestYearModel $contestYear, int $series)
     {
         parent::__construct($container);
         $this->contestYear = $contestYear;

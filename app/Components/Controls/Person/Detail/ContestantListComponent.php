@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -41,9 +40,7 @@ class ContestantListComponent extends DetailComponent
         $this->setTitle(
             new TemplateItem($this->container, '@contest.name', '@contest.name:title')// @phpstan-ignore-line
         );
-        /** @phpstan-var RowContainer<ContestantModel> $row1 */
-        $row1 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row1, 'row1');
+        $row1 = $this->createRow();
         $row1->addComponent(
             new TemplateItem($this->container, _('Contest year @contestant.year'), '@contestant.year:title'),
             'contestant__year'

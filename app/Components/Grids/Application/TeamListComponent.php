@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -61,9 +60,7 @@ class TeamListComponent extends FilterList
                 '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>'
             )
         );
-        /** @phpstan-var RowContainer<TeamModel2> $row */
-        $row = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row, 'row0');
+        $row = $this->createRow();
         $row->addComponent(
             new TemplateItem($this->container, '@fyziklani_team.state', '@fyziklani_team.state:title'),
             'state'
@@ -80,28 +77,32 @@ class TeamListComponent extends FilterList
             new TemplateItem($this->container, '@fyziklani_team.phone', '@fyziklani_team.phone:title'),
             'phone'
         );
-        /** @phpstan-ignore-next-line */
-        $memberList = new RelatedTable($this->container, function (TeamModel2 $team): array {
-            $members = [];
-            /** @var TeamMemberModel $member */
-            foreach ($team->getMembers() as $member) {
-                $members[] = $member->getPersonHistory();
-            }
-            return $members;
-        }, new Title(null, _('Members')));
-        $this->addRow($memberList, 'members');
+
+        $memberList = $this->addRow(
+            new RelatedTable($this->container, function (TeamModel2 $team): array {
+                $members = [];
+                /** @var TeamMemberModel $member */
+                foreach ($team->getMembers() as $member) {
+                    $members[] = $member->getPersonHistory();
+                }
+                return $members;
+            }, new Title(null, _('Members'))),
+            'members'
+        );
         $memberList->addColumn(
             new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'),
             'name'
         );
         $memberList->addColumn(new TemplateItem($this->container, '@school.school', '@school.school:title'), 'school');
         /** @phpstan-var RelatedTable<TeamModel2,TeamTeacherModel> $teacherList */
-        $teacherList = new RelatedTable(
-            $this->container,
-            fn(TeamModel2 $team): iterable => $team->getTeachers(),  //@phpstan-ignore-line
-            new Title(null, _('Teachers'))
+        $teacherList = $this->addRow(
+            new RelatedTable(
+                $this->container,
+                fn(TeamModel2 $team): iterable => $team->getTeachers(),  //@phpstan-ignore-line
+                new Title(null, _('Teachers'))
+            ),
+            'teachers'
         );
-        $this->addRow($teacherList, 'teachers');
         $teacherList->addColumn(
             new TemplateItem($this->container, '@person.full_name', '@person.full_name:title'), //@phpstan-ignore-line
             'name'

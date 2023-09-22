@@ -1,0 +1,27 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType callable $classNameCallback}
+{varType Nette\Application\UI\Control $title}
+{varType FKSDB\Components\Grids\Components\BaseList $control}
+{varType int $userPermission}
+{block content}
+    {if count($models)}
+        {foreach $models as $model}
+            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+            <div class="panel color-auto {$className}">
+                <div class="container">
+                    {if $title}
+                        <h2>{control $title $model,$userPermission}</h2>
+                    {/if}
+                    {include rows from 'list.latte', $model,$userPermission,$control->rows}
+                    {include buttonGroup from './Button/group.latte',$model, $userPermission,$control->buttons->getComponents()}
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        <div class="panel color-auto {$className}">
+            <div class="container">
+                {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+            </div>
+        </div>
+    {/if}
+{/block}

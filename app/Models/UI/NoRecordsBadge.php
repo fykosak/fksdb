@@ -10,6 +10,6 @@ class NoRecordsBadge
 {
     public static function getHtml(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'bg-warning badge'])->setText(_('No records'));
+        return Html::el('span')->addAttributes(['class' => 'me-1 bg-warning badge'])->setText(_('No records'));
     }
 }

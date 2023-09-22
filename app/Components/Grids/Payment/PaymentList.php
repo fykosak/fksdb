@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\FilterList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -74,9 +73,7 @@ class PaymentList extends FilterList
         $this->classNameCallback = fn(PaymentModel $payment): string => 'alert alert-' .
             $payment->state->getBehaviorType();
         $this->setTitle(new TemplateItem($this->container, '@payment.payment_id')); // @phpstan-ignore-line
-        /** @phpstan-var RowContainer<PaymentModel> $row */
-        $row = new RowContainer($this->container);
-        $this->addRow($row, 'row');
+        $row = $this->createRow();
         $row->addComponent(new TemplateItem($this->container, '@payment.price'), 'price');
         $row->addComponent(new TemplateItem($this->container, 'VS: @payment.variable_symbol'), 'vs');
         $row->addComponent(
@@ -85,13 +82,16 @@ class PaymentList extends FilterList
         );
         $row->addComponent(new TemplateItem($this->container, '@event.role'), 'role');
         /** @phpstan-var RelatedTable<PaymentModel,SchedulePaymentModel> $items */
-        $items = new RelatedTable(
-            $this->container,
-            fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(), // @phpstan-ignore-line
-            new Title(null, _('Items')),
-            true
+        $items = $this->addRow(
+            new RelatedTable(
+                $this->container,
+                fn(PaymentModel $payment): TypedGroupedSelection => $payment->getSchedulePayment(),
+                // @phpstan-ignore-line
+                new Title(null, _('Items')),
+                true
+            ),
+            'items'
         );
-        $this->addRow($items, 'items');
         $items->addColumn(
         /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, _('@schedule_group.name_en: @schedule_item.name_en'), _('Item')),

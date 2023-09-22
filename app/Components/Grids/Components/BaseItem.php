@@ -8,52 +8,18 @@ use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
-use Nette\Utils\Html;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model
  */
 abstract class BaseItem extends BaseComponent
 {
-    public ?Title $title;
-
-    public function __construct(Container $container, ?Title $title = null)
-    {
-        parent::__construct($container);
-        $this->title = $title;
-    }
-
-    /**
-     * @throws GoneException
-     */
-    protected function getTemplatePath(): string
-    {
-        throw new GoneException();
-    }
-
     /**
      * @phpstan-param TModel $model
      * @note do not call from parent
      * @throws GoneException
      */
-    public function render(Model $model, int $userPermission): void
-    {
-        $this->template->render(
-            $this->getTemplatePath(),
-            [
-                'model' => $model,
-                'title' => $this->title,
-                'userPermission' => $userPermission,
-            ]
-        );
-    }
+    abstract public function render(Model $model, int $userPermission): void;
 
-    /**
-     * @param Html|string $html
-     */
-    final public function renderHtml($html): void
-    {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'html.latte', ['html' => $html,]);
-    }
+    abstract public function getTitle(): ?Title;
 }

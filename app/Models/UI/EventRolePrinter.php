@@ -15,7 +15,7 @@ class EventRolePrinter
         $roles = $person->getEventRoles($event);
         if (!count($roles)) {
             return Html::el('span')
-                ->addAttributes(['class' => 'badge bg-danger'])
+                ->addAttributes(['class' => 'me-1 badge bg-danger'])
                 ->addText(_('No role'));
         }
         $container = Html::el('span');

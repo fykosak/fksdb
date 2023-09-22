@@ -7,7 +7,6 @@ namespace FKSDB\Components\Schedule;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -53,9 +52,7 @@ class GroupListComponent extends BaseList
                 _('@schedule_group.name_en (@schedule_group.schedule_group_id)')
             )
         );
-        /** @phpstan-var RowContainer<ScheduleGroupModel> $row0 */
-        $row0 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row0, 'row0');
+        $row0 = $this->createRow();
         $row0->addComponent(new TemplateItem($this->container, '@schedule_group.schedule_group_type'), 'type');
         $row0->addComponent(
             new RendererItem(
@@ -68,13 +65,15 @@ class GroupListComponent extends BaseList
             'duration'
         );
         /** @phpstan-var RelatedTable<ScheduleGroupModel,ScheduleItemModel> $itemsRow */
-        $itemsRow = new RelatedTable(
-            $this->container,
-            fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
-            new Title(null, _('Items')),
-            true
+        $itemsRow = $this->addRow(
+            new RelatedTable(
+                $this->container,
+                fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
+                new Title(null, _('Items')),
+                true
+            ),
+            'items'
         );
-        $this->addRow($itemsRow, 'items');
         $itemsRow->addColumn(
             new TemplateItem( // @phpstan-ignore-line
                 $this->container,

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -43,17 +42,13 @@ class EventOrganizerListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(EventOrganizerModel $model) => 'alert alert-' .
             $model->event->event_type->getSymbol();
-        /** @phpstan-var RowContainer<EventOrganizerModel> $row0 */
-        $row0 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row0, 'row0');
+        $row0 = $this->createRow();
         $row0->addComponent(new TemplateItem($this->container, '@event.name', '@event.name:title'), 'event__name');
         $row0->addComponent(
             new TemplateItem($this->container, '@event.event_type', '@event.event_type:title'),
             'event__type'
         );
-        /** @phpstan-var RowContainer<EventOrganizerModel> $row1 */
-        $row1 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row1, 'row1');
+        $row1 = $this->createRow();
         $row1->addComponent(
             new TemplateItem($this->container, '@event_org.note', '@event_org.note:title'),
             'event_org_note'

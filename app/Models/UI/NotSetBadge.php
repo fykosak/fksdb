@@ -10,6 +10,6 @@ class NotSetBadge
 {
     public static function getHtml(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge bg-warning'])->addText(_('Not set'));
+        return Html::el('span')->addAttributes(['class' => 'me-1 badge bg-warning'])->addText(_('Not set'));
     }
 }

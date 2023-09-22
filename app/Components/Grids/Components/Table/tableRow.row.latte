@@ -1,0 +1,13 @@
+{varType Fykosak\NetteORM\Model|null $model}
+{varType int|null $userPermission}
+{varType FKSDB\Components\Grids\Components\TableRow\TableRow $control}
+{foreach $control->columns->getComponents() as $component}
+    <td>
+        {control $component $model, $userPermission}
+    </td>
+{/foreach}
+{if count($control->buttons->getComponents())}
+    <td>
+        {include buttonGroup from '../Button/group.latte',$model, $userPermission,$control->buttons->getComponents()}
+    </td>
+{/if}

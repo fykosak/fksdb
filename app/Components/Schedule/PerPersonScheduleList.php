@@ -6,7 +6,6 @@ namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Container\RelatedTable;
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -57,9 +56,7 @@ class PerPersonScheduleList extends BaseList
     {
         $this->setTitle(new TemplateItem($this->getContext(), '@person.full_name'));// @phpstan-ignore-line
         $this->classNameCallback = fn() => 'alert alert-secondary';
-        /** @phpstan-var RowContainer<PersonModel> $row0 */
-        $row0 = new RowContainer($this->container);
-        $this->addRow($row0, 'row0');
+        $row0 = $this->createRow();
         $row0->addComponent(
             new RendererItem(
                 $this->container,
@@ -68,9 +65,7 @@ class PerPersonScheduleList extends BaseList
             ),
             'role'
         );
-        /** @phpstan-var RowContainer<PersonModel> $row1 */
-        $row1 = new RowContainer($this->container);
-        $this->addRow($row1, 'row1');
+        $row1 = $this->createRow();
         $relatedTable = new RelatedTable(
             $this->container,
             fn(PersonModel $person) => $person->getScheduleForEvent($this->event),  //@phpstan-ignore-line

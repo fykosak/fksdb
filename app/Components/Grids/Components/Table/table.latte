@@ -1,6 +1,6 @@
 {block table}
     {varType Fykosak\NetteORM\Model[] $models}
-    {varType FKSDB\Components\Grids\Components\Container\TableRow $tableRow}
+    {varType FKSDB\Components\Grids\Components\TableRow\TableRow $tableRow}
     {default bool $head = true}
     {varType int|null $userPermission}
     {default string $className = 'table table-sm table-striped'}
@@ -11,7 +11,7 @@
                 {if $head}
                     <thead>
                     <tr>
-                        {$tableRow->renderHead()}
+                        {control $tableRow:head}
                     </tr>
                     </thead>
                 {/if}

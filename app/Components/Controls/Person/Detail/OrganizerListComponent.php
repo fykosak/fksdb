@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Container\RowContainer;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -42,16 +41,13 @@ class OrganizerListComponent extends DetailComponent
     protected function configure(): void
     {
         $this->classNameCallback = fn(OrganizerModel $model) => 'alert alert-' . $model->contest->getContestSymbol();
-        /** @phpstan-var RowContainer<OrganizerModel> $row0 */
-        $row0 = new RowContainer($this->container);
-        $this->addRow($row0, 'row0');
+        $row0 = $this->createRow();
         $row0->addComponent(new TemplateItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(
             new TemplateItem($this->container, '@org.since - @org.until'),
             'duration'
         );
-        /** @phpstan-var RowContainer<OrganizerModel> $row1 */
-        $row1 = new RowContainer($this->container);
+        $row1 = $this->createRow();
         $row1->addComponent(
             new TemplateItem($this->container, '@org.domain_alias', '@org.domain_alias:title'),
             'domain_alias'
@@ -60,7 +56,7 @@ class OrganizerListComponent extends DetailComponent
             new TemplateItem($this->container, '\signature{@org.tex_signature}', '@org.tex_signature:title'),
             'tex_signature'
         );
-        $this->addRow($row1, 'row1');
+
         if ($this->isOrganizer) {
             $this->addPresenterButton(
                 ':Organizer:Organizer:edit',

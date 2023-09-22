@@ -20,13 +20,15 @@ class RendererItem extends BaseItem
      * @phpstan-var callable(TModel,int):(string|Html) $renderer
      */
     protected $renderer;
+    public Title $title;
 
     /**
      * @phpstan-param callable(TModel,int):(string|Html) $renderer
      */
     public function __construct(Container $container, callable $renderer, Title $title)
     {
-        parent::__construct($container, $title);
+        parent::__construct($container);
+        $this->title = $title;
         $this->renderer = $renderer;
     }
 
@@ -36,8 +38,15 @@ class RendererItem extends BaseItem
     public function render(Model $model, int $userPermission): void
     {
         $this->template->render(
-            __DIR__ . DIRECTORY_SEPARATOR . 'template.latte',
-            ['html' => ($this->renderer)($model, $userPermission)]
+            __DIR__ . DIRECTORY_SEPARATOR . '../html.latte',
+            [
+                'html' => ($this->renderer)($model, $userPermission),
+            ]
         );
+    }
+
+    public function getTitle(): ?Title
+    {
+        return $this->title;
     }
 }

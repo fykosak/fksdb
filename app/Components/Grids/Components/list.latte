@@ -1,22 +1,58 @@
-{varType Fykosak\NetteORM\Model[] $models}
-{varType callable $classNameCallback}
-{varType Nette\Application\UI\Control $title}
-{varType FKSDB\Components\Grids\Components\BaseList $control}
-{varType int $userPermission}
 {block content}
+    {varType FKSDB\Components\Grids\Components\BaseList $control}
+    {varType bool $paginate}
+    {varType bool $counter}
+    {varType array $flashes}
+    {varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
+    {varType int $userPermission}
+
+    {varType callable $classNameCallback}
+    {varType Nette\Application\UI\Control $title}
+
+    {php $control->getPaginator()->setItemCount($models->count('*'))}
+    {if $paginate}
+        {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}
+    {/if}
+    {foreach $flashes as $flash}
+        <div class="alert alert-{$flash->type}">
+            {$flash->message}
+        </div>
+    {/foreach}
+    {include counter from './counter.latte', $counter,$paginate,$control}
     {if count($models)}
         {foreach $models as $model}
             {var string $className = $classNameCallback?($classNameCallback)($model):''}
-
             <div class="{$className}">
                 {if $title}
                     <h4>{control $title $model,$userPermission}</h4>
                 {/if}
-                {control $control->rows $model,$userPermission}
-                {control $control->buttons $model,$userPermission}
+                {include rows, $model,$userPermission,$control->rows}
+                {include buttonGroup from './Button/group.latte',$model, $userPermission,$control->buttons->getComponents()}
             </div>
         {/foreach}
     {else}
         {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
     {/if}
+    {if $paginate}
+        {control paginator}
+    {/if}
 {/block}
+
+{define cols Fykosak\NetteORM\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
+    {foreach $container->getComponents() as $component}
+        <div class="col">
+            {control $component $model, $userPermission}
+        </div>
+    {/foreach}
+{/define}
+{define rows Fykosak\NetteORM\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
+    {foreach $container->getComponents() as $component}
+        <div class="row mb-3">
+            {if $component instanceof FKSDB\Components\Grids\Components\BaseItem}
+                {control $component $model, $userPermission}
+            {else}
+                {include cols $model, $userPermission,$component}
+            {/if}
+        </div>
+    {/foreach}
+{/define}
