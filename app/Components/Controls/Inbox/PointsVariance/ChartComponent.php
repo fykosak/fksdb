@@ -22,6 +22,9 @@ final class ChartComponent extends FrontEndComponent
         $this->series = $series;
     }
 
+    /**
+     * @phpstan-return array<string,array<int,float>>
+     */
     protected function getData(): array
     {
         $tasks = $this->contestYear->getTasks($this->series);

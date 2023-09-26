@@ -25,6 +25,9 @@ class PasswordColumnFactory extends ColumnFactory
         return HashPrinter::getHtml($model->password);
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function createFormControl(...$args): BaseControl
     {
         throw new GoneException();

@@ -9,14 +9,6 @@ from person p
          left join person_info pi on pi.person_id = p.person_id
     );
 
-CREATE OR REPLACE VIEW v_task_stats as
-(
-SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count
-from task
-         LEFT JOIN submit ON submit.task_id = task.task_id
-GROUP BY task_id
-    );
-
 create or replace view v_contestant as
 (
 select IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name,

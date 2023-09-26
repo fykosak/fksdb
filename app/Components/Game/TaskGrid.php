@@ -12,7 +12,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<TaskModel>
+ * @phpstan-extends BaseGrid<TaskModel,array{}>
  */
 class TaskGrid extends BaseGrid
 {
@@ -38,6 +38,10 @@ class TaskGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns(['fyziklani_task.fyziklani_task_id', 'fyziklani_task.label', 'fyziklani_task.name']);
+        $this->addSimpleReferencedColumns([
+            '@fyziklani_task.fyziklani_task_id',
+            '@fyziklani_task.label',
+            '@fyziklani_task.name',
+        ]);
     }
 }

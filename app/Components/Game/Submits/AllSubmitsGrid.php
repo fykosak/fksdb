@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits;
 
 use FKSDB\Components\Game\GameException;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
-use FKSDB\Components\Grids\Components\FilterGrid;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -23,7 +23,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<SubmitModel,array{
+ * @phpstan-extends BaseGrid<SubmitModel,array{
  *     team?:int,
  *     code?:string,
  *     not_null?:bool,
@@ -32,7 +32,7 @@ use Nette\Forms\Form;
  *     state?:string,
  * }>
  */
-class AllSubmitsGrid extends FilterGrid
+class AllSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
     protected EventModel $event;
@@ -54,28 +54,30 @@ class AllSubmitsGrid extends FilterGrid
      */
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->filtered = true;
+        /** @phpstan-ignore-next-line */
+        $this->addTableColumn(
         /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
             'name_n_id'
         );
-        $this->addColumns(
+        $this->addSimpleReferencedColumns(
             $this->event->event_type_id === 1
                 ? [
-                'fyziklani_task.label',
-                'fyziklani_submit.state',
-                'fyziklani_submit.points',
-                'fyziklani_submit.modified',
+                '@fyziklani_task.label',
+                '@fyziklani_submit.state',
+                '@fyziklani_submit.points',
+                '@fyziklani_submit.modified',
             ]
                 : [
-                'fyziklani_task.label',
-                'fyziklani_submit.points',
+                '@fyziklani_task.label',
+                '@fyziklani_submit.points',
             ]
         );
         if ($this->event->event_type_id === 1) {
             $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         }
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,

@@ -1,30 +1,26 @@
-{block table}
-    {varType Fykosak\NetteORM\Model[] $models}
-    {varType FKSDB\Components\Grids\Components\TableRow\TableRow $tableRow}
-    {default bool $head = true}
-    {varType int|null $userPermission}
-    {default string $className = 'table table-sm table-striped'}
-    {default string $containerClassName = 'table-responsive'}
-    {if count($models)}
-        <div class="{$containerClassName}">
-            <table class="{$className}">
-                {if $head}
-                    <thead>
-                    <tr>
-                        {control $tableRow:head}
-                    </tr>
-                    </thead>
-                {/if}
-                <tbody>
-                {foreach $models as $model}
-                    <tr>
-                        {control $tableRow $model,$userPermission}
-                    </tr>
-                {/foreach}
-                </tbody>
-            </table>
-        </div>
-    {else}
-        {\FKSDB\Models\UI\NoRecordsBadge::getHtml()}
-    {/if}
-{/block}
+{varType Fykosak\NetteORM\Model[] $models}
+{varType int $userPermission}
+{varType bool $head}
+{varType string $className}
+{if count($models)}
+    <div class="table-responsive">
+        <table class="{$className}">
+            {if $head}
+                <thead>
+                <tr>
+                    {control $control:head}
+                </tr>
+                </thead>
+            {/if}
+            <tbody>
+            {foreach $models as $model}
+                <tr>
+                    {control $control:row $model,$userPermission}
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+{else}
+    {\FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+{/if}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -12,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends DetailComponent<ContestantModel>
+ * @phpstan-extends DetailComponent<ContestantModel,array{}>
  */
 class ContestantListComponent extends DetailComponent
 {
@@ -37,8 +38,8 @@ class ContestantListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
             $contestant->contest->getContestSymbol();
-        $this->setTitle(
-            new TemplateItem($this->container, '@contest.name', '@contest.name:title')// @phpstan-ignore-line
+        $this->setTitle(// @phpstan-ignore-line
+            new SimpleItem($this->container, '@contest.name')// @phpstan-ignore-line
         );
         $row1 = $this->createRow();
         $row1->addComponent(

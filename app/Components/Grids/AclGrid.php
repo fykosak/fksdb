@@ -4,28 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\GrantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
+use FKSDB\Models\ORM\Models\RoleModel;
 use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\RoleService;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends BaseGrid<LoginModel>
+ * @phpstan-extends BaseList<LoginModel,array{role?:int|null}>
  */
-class AclGrid extends BaseList
+final class AclGrid extends BaseList
 {
-
     private ContestModel $contest;
     private LoginService $loginService;
+    private RoleService $roleService;
 
     public function __construct(Container $container, ContestModel $contest)
     {
@@ -33,9 +35,10 @@ class AclGrid extends BaseList
         $this->contest = $contest;
     }
 
-    public function inject(LoginService $loginService): void
+    public function inject(LoginService $loginService, RoleService $roleService): void
     {
         $this->loginService = $loginService;
+        $this->roleService = $roleService;
     }
 
     protected function getTemplatePath(): string
@@ -45,6 +48,9 @@ class AclGrid extends BaseList
 
     protected function configure(): void
     {
+        $this->paginate = false;
+        $this->counter = false;
+        $this->filtered = true;
         $this->setTitle(
             new RendererItem(
                 $this->container,
@@ -91,12 +97,25 @@ class AclGrid extends BaseList
         );
     }
 
+    protected function configureForm(Form $form): void
+    {
+        $items = [];
+        /** @var RoleModel $role */
+        foreach ($this->roleService->getTable() as $role) {
+            $items[$role->role_id] = $role->name;
+        }
+        $form->addSelect('role', _('Role'), $items)->setPrompt(_('--select role--'));
+    }
+
     /**
      * @phpstan-return TypedSelection<LoginModel>
      */
     protected function getModels(): TypedSelection
     {
-        return $this->loginService->getTable()->where(':grant.contest_id', $this->contest->contest_id);
-        //  return $this->contest->related(DbNames::TAB_GRANT)->order('login_id')->group('login_id');
+        $query = $this->loginService->getTable()->where(':grant.contest_id', $this->contest->contest_id);
+        if (isset($this->filterParams['role'])) {
+            $query->where(':grant.role_id', $this->filterParams['role']);
+        }
+        return $query;
     }
 }

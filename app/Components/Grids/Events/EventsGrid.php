@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<EventModel>
+ * @phpstan-extends BaseGrid<EventModel,array{}>
  */
 class EventsGrid extends BaseGrid
 {
@@ -49,12 +49,12 @@ class EventsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'event.event_id',
-            'event.event_type',
-            'event.name',
-            'event.year',
-            'event.event_year',
+        $this->addSimpleReferencedColumns([
+            '@event.event_id',
+            '@event.event_type',
+            '@event.name',
+            '@event.year',
+            '@event.event_year',
         ]);
         $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);

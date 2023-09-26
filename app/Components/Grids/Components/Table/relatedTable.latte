@@ -1,9 +1,9 @@
 {varType Fykosak\NetteORM\Model[] $models}
-{varType ?Fykosak\Utils\UI\Title|null $title}
-{varType FKSDB\Components\Grids\Components\Container\RelatedTable $control}
+{varType ?Fykosak\Utils\UI\Title $title}
+{varType FKSDB\Components\Grids\Components\Table\Table $table}
 {varType bool $head}
 {varType int|null $userPermission}
 <div class="col-12 mb-3">
     <strong class="mb-3">{$title->toHtml()}</strong>
-    {include table from './table.latte' models=>$models,head:$head,userPermission:$userPermission,tableRow:$control->tableRow}
+    {control table models:$models,head:$head,userPermission:$userPermission}
 </div>

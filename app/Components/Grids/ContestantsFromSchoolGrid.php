@@ -13,9 +13,9 @@ use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ContestantModel>
+ * @phpstan-extends BaseGrid<ContestantModel,array{}>
  */
-class ContestantsFromSchoolGrid extends BaseGrid
+final class ContestantsFromSchoolGrid extends BaseGrid
 {
     private SchoolModel $school;
     private ContestantService $service;
@@ -43,13 +43,22 @@ class ContestantsFromSchoolGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'person.full_name',
-            'contestant.year',
-            'person_history.study_year_new',
-            'contest.contest',
+        $this->paginate = false;
+        $this->filtered = false;
+        $this->counter = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@contestant.year',
+            '@person_history.study_year_new',
+            '@contest.contest',
         ]);
-        $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            ':Organizer:Contestant:edit',
+            'edit',
+            _('Edit'),
+            false,
+            ['id' => 'contestant_id']
+        );
         $this->addPresenterButton(
             ':Organizer:Contestant:detail',
             'detail',
@@ -57,7 +66,6 @@ class ContestantsFromSchoolGrid extends BaseGrid
             false,
             ['id' => 'contestant_id']
         );
-        $this->paginate = false;
     }
 
     public function inject(ContestantService $service): void

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
@@ -15,18 +17,27 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Utils\Paginator as NettePaginator;
 
 /**
  * @method BasePresenter getPresenter()
  * @phpstan-template TModel of Model
+ * @phpstan-template TFilterParams of array
  */
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
+    protected bool $filtered = false;
     protected int $userPermission;
-    public bool $paginate = true;
-    public bool $counter = true;
+    protected bool $paginate = true;
+    protected bool $counter = true;
     protected ORMFactory $tableReflectionFactory;
+    /**
+     * @persistent
+     * @phpstan-var TFilterParams
+     */
+    public array $filterParams = [];
 
     public function __construct(Container $container, int $userPermission)
     {
@@ -43,6 +54,10 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     abstract protected function getTemplatePath(): string;
 
     abstract protected function configure(): void;
+
+    protected function configureForm(Form $form): void
+    {
+    }
 
     /**
      * @phpstan-return TypedSelection<TModel>|TypedGroupedSelection<TModel>
@@ -63,6 +78,8 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             'paginate' => $this->paginate,
             'models' => $this->getModels(),
             'userPermission' => $this->userPermission,
+            'filtered' => $this->filtered,
+            'filterParams' => $this->filterParams,
         ]);
     }
 
@@ -76,6 +93,34 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         /** @var Paginator $control */
         $control = $this->getComponent('paginator');
         return $control->paginator;
+    }
+
+    final protected function createComponentFilterForm(): FormControl
+    {
+        $control = new FormControl($this->getContext());
+        $form = $control->getForm();
+        $this->configureForm($form);
+        $applyButton = $control->getForm()->addSubmit('apply', _('Apply filter!'));
+        $resetButton = $control->getForm()->addSubmit('reset', _('Reset filter!'));
+        $applyButton->onClick[] = function (SubmitButton $button): void {
+            $this->filterParams = FormUtils::removeEmptyValues(
+            /** @phpstan-ignore-next-line */
+                FormUtils::emptyStrToNull2($button->getForm()->getValues('array'))
+            );
+            $this->redirect('this');
+        };
+        $resetButton->onClick[] = function (): void {
+            $this->filterParams = []; //@phpstan-ignore-line
+            $this->redirect('this');
+        };
+        $form->setDefaults($this->filterParams);
+        return $control;
+    }
+
+    public function handleDeleteFilterParams(string $param): void
+    {
+        unset($this->filterParams[$param]);
+        $this->redirect('this');
     }
 
     /**
@@ -97,8 +142,9 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             }
             return $hrefParams;
         };
-        /** @phpstan-var Button<TModel> $button */
-        $button = $this->addButton(
+        /** @phpstan-ignore-next-line */
+        return $this->addButton(
+        /** @phpstan-ignore-next-line */
             new Button(
                 $this->container,
                 $this->getPresenter(),
@@ -112,7 +158,6 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             ),
             $name
         );
-        return $button;
     }
 
     /**

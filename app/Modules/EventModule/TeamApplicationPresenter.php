@@ -15,8 +15,8 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\Grids\Application\TeamListComponent;
+use FKSDB\Components\Grids\Application\TeamGrid;
+use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Components\Schedule\PersonGrid;
@@ -314,17 +314,17 @@ final class TeamApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): TeamApplicationsGrid
+    protected function createComponentGrid(): TeamGrid
     {
-        return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+        return new TeamGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentList(): TeamListComponent
+    protected function createComponentList(): TeamList
     {
-        return new TeamListComponent($this->getEvent(), $this->getContext());
+        return new TeamList($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent

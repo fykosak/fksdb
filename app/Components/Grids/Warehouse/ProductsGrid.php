@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @phpstan-extends BaseGrid<ProductModel>
+ * @phpstan-extends BaseGrid<ProductModel,array{}>
  */
 class ProductsGrid extends BaseGrid
 {
@@ -36,12 +36,12 @@ class ProductsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'warehouse_product.product_id',
-            'warehouse_product.name_cs',
-            'warehouse_product.name_en',
-            'warehouse_product.category',
-            'warehouse_producer.name',
+        $this->addSimpleReferencedColumns([
+            '@warehouse_product.product_id',
+            '@warehouse_product.name_cs',
+            '@warehouse_product.name_en',
+            '@warehouse_product.category',
+            '@warehouse_producer.name',
         ]);
         $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }

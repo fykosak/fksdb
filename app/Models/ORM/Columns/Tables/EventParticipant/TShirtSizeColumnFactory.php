@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\UI\StringPrinter;
@@ -12,7 +11,8 @@ use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @deprecated
  */
 class TShirtSizeColumnFactory extends AbstractColumnFactory
 {

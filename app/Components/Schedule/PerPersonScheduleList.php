@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseList;
-use FKSDB\Components\Grids\Components\Container\RelatedTable;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -19,9 +20,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseList<PersonModel>
+ * @phpstan-extends BaseList<PersonModel,array{}>
  */
-class PerPersonScheduleList extends BaseList
+final class PerPersonScheduleList extends BaseList
 {
     private PersonService $personService;
     private EventModel $event;
@@ -37,6 +38,11 @@ class PerPersonScheduleList extends BaseList
         $this->personService = $personService;
     }
 
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . '../Grids/Components/list.panel.latte';
+    }
+
     /**
      * @phpstan-return TypedSelection<PersonModel>
      */
@@ -45,7 +51,7 @@ class PerPersonScheduleList extends BaseList
         return $this->personService->getTable()->where(
             ':person_schedule.schedule_item.schedule_group.event_id',
             $this->event->event_id
-        );
+        )->group('person_id');
     }
 
     /**
@@ -54,8 +60,8 @@ class PerPersonScheduleList extends BaseList
      */
     protected function configure(): void
     {
-        $this->setTitle(new TemplateItem($this->getContext(), '@person.full_name'));// @phpstan-ignore-line
-        $this->classNameCallback = fn() => 'alert alert-secondary';
+        $this->paginate = true;
+        $this->setTitle(new SimpleItem($this->getContext(), '@person.full_name'));// @phpstan-ignore-line
         $row0 = $this->createRow();
         $row0->addComponent(
             new RendererItem(
@@ -72,20 +78,28 @@ class PerPersonScheduleList extends BaseList
             new Title(null, '')
         );
         $row1->addComponent($relatedTable, 'schedule');
-        $relatedTable->addColumn(
-            new TemplateItem($this->container, '@schedule_item.name', '@schedule_item.name:title'),
+        /** @phpstan-ignore-next-line */
+        $relatedTable->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@schedule_item.name'),
             'item'
         );
-        $relatedTable->addColumn(
-            new TemplateItem($this->container, '@schedule_group.name', '@schedule_group.name:title'),
+        /** @phpstan-ignore-next-line */
+        $relatedTable->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@schedule_group.name'),
             'group'
         );
-        $relatedTable->addColumn(
+        /** @phpstan-ignore-next-line */
+        $relatedTable->addTableColumn(
+        /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, '@schedule_item.price_czk/@schedule_item.price_eur', _('Price')),
             'price'
         );
-        $relatedTable->addColumn(
-            new TemplateItem($this->container, '@payment.payment', '@payment.payment:title'),
+        /** @phpstan-ignore-next-line */
+        $relatedTable->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@payment.payment'),
             'payment'
         );
     }

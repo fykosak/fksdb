@@ -16,7 +16,6 @@ abstract class BaseItem extends BaseComponent
 {
     /**
      * @phpstan-param TModel $model
-     * @note do not call from parent
      * @throws GoneException
      */
     abstract public function render(Model $model, int $userPermission): void;

@@ -6,7 +6,8 @@ namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
-use FKSDB\Components\Grids\Components\FilterList;
+use FKSDB\Components\Grids\Components\BaseList;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -18,13 +19,13 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterList<TeamModel2,array{
+ * @phpstan-extends BaseList<TeamModel2,array{
  *     team_id?:int,
  *     code?:string,
  *     name?:string,
  * }>
  */
-class TeamListComponent extends FilterList
+class TeamListComponent extends BaseList
 {
     private EventModel $event;
 
@@ -80,6 +81,7 @@ class TeamListComponent extends FilterList
      */
     protected function configure(): void
     {
+        $this->filtered = true;
         $this->classNameCallback = function (TeamModel2 $team) {
             try {
                 $team->canClose();
@@ -95,11 +97,10 @@ class TeamListComponent extends FilterList
             new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
             'name'
         );
-        $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.category'), 'category');
-        $row1->addComponent(new TemplateItem($this->container, '@fyziklani_team.state'), 'state');
+        $row1->addComponent(new SimpleItem($this->container, '@fyziklani_team.category'), 'category');
+        $row1->addComponent(new SimpleItem($this->container, '@fyziklani_team.state'), 'state');
 
         $row2 = $this->createRow();
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
-
     }
 }
