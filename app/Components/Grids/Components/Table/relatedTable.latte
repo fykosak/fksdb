@@ -5,5 +5,5 @@
 {varType int|null $userPermission}
 <div class="col-12 mb-3">
     <strong class="mb-3">{$title->toHtml()}</strong>
-    {control table models:$models,head:$head,userPermission:$userPermission}
+    {control table $models,$head,$userPermission}
 </div>

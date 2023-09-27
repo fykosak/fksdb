@@ -3,5 +3,5 @@
 {varType int $userPermission}
 
 {block innerContent}
-    {control 'table' models:$models,head:true,userPermission:$userPermission,className:'table table-sm table-hover table-striped'}
+    {control table $models,true,$userPermission,'table table-sm table-hover table-striped'}
 {/block}
