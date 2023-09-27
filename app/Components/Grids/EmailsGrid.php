@@ -11,9 +11,9 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @phpstan-extends BaseGrid<EmailMessageModel>
+ * @phpstan-extends BaseGrid<EmailMessageModel,array{}>
  */
-class EmailsGrid extends BaseGrid
+final class EmailsGrid extends BaseGrid
 {
     private EmailMessageService $service;
 
@@ -36,14 +36,16 @@ class EmailsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'email_message.email_message_id',
-            'email_message.recipient',
-            'person.full_name',
-            'email_message.subject',
-            'email_message.state',
+        $this->paginate = true;
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@email_message.email_message_id',
+            '@email_message.recipient',
+            '@person.full_name',
+            '@email_message.subject',
+            '@email_message.state',
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
-        $this->paginate = true;
     }
 }

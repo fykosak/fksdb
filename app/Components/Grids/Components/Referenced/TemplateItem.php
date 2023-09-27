@@ -23,6 +23,7 @@ class TemplateItem extends BaseItem
     /** @phpstan-var (callable(TModel):TModelHelper)|null */
     protected $modelAccessorHelper = null;
     protected ColumnRendererComponent $printer;
+    public ?Title $title;
 
     /**
      * @throws BadTypeException
@@ -36,12 +37,8 @@ class TemplateItem extends BaseItem
         ?callable $modelAccessorHelper = null
     ) {
         $this->printer = new ColumnRendererComponent($container);
-        parent::__construct(
-            $container,
-            $titleString
-                ? new Title(null, $this->printer->renderToString($titleString, null, null))
-                : null
-        );
+        parent::__construct($container);
+        $this->title = $titleString ? new Title(null, $this->printer->renderToString($titleString, null, null)) : null;
         $this->templateString = $templateString;
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
@@ -54,8 +51,7 @@ class TemplateItem extends BaseItem
     public function render(Model $model, int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'template.latte', [
-            'title' => $this->title,
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', [
             'html' => $this->printer->renderToString($this->templateString, $model, $userPermission),
         ]);
     }
@@ -63,5 +59,10 @@ class TemplateItem extends BaseItem
     protected function createComponentPrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
+    }
+
+    public function getTitle(): ?Title
+    {
+        return $this->title;
     }
 }

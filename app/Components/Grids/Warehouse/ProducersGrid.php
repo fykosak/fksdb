@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @phpstan-extends BaseGrid<ProducerModel>
+ * @phpstan-extends BaseGrid<ProducerModel,array{}>
  */
 class ProducersGrid extends BaseGrid
 {
@@ -36,9 +36,9 @@ class ProducersGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'warehouse_producer.producer_id',
-            'warehouse_producer.name',
+        $this->addSimpleReferencedColumns([
+            '@warehouse_producer.producer_id',
+            '@warehouse_producer.name',
         ]);
     }
 }

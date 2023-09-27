@@ -27,8 +27,7 @@ class WriteOnlyInput extends TextInput implements WriteOnly
     public function getControl(): Html
     {
         $control = parent::getControl();
-        $control = $this->writeOnlyAdjustControl($control);
-        return $control;
+        return $this->writeOnlyAdjustControl($control);
     }
 
     public function loadHttpData(): void

@@ -13,9 +13,9 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseGrid<TModel>
+ * @phpstan-extends BaseGrid<TModel,array{}>
  */
-class PersonRelatedGrid extends BaseGrid
+final class PersonRelatedGrid extends BaseGrid
 {
     protected PersonModel $person;
     /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
@@ -51,7 +51,9 @@ class PersonRelatedGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->addColumns($this->definition['rows']);
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns(array_map(fn($value) => '@' . $value, $this->definition['rows']));
         foreach ($this->definition['links'] as $link) {
             $this->addORMLink($link);
         }

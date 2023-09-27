@@ -1,0 +1,26 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType int $userPermission}
+{varType bool $head}
+{varType string $className}
+{if count($models)}
+    <div class="table-responsive">
+        <table class="{$className}">
+            {if $head}
+                <thead>
+                <tr>
+                    {control $control:head}
+                </tr>
+                </thead>
+            {/if}
+            <tbody>
+            {foreach $models as $model}
+                <tr>
+                    {control $control:row $model,$userPermission}
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+{else}
+    {\FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+{/if}

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
@@ -16,11 +16,11 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<EventParticipantModel,array{
+ * @phpstan-extends BaseGrid<EventParticipantModel,array{
  *     status?:string,
  * }>
  */
-class SingleApplicationsGrid extends FilterGrid
+class SingleApplicationsGrid extends BaseGrid
 {
     protected EventModel $event;
     private BaseHolder $holder;
@@ -67,10 +67,10 @@ class SingleApplicationsGrid extends FilterGrid
         $fields = [];
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
+                $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
             }
         }
-        $this->addColumns($fields);
+        $this->addSimpleReferencedColumns($fields);
     }
 
     /**
@@ -97,10 +97,11 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->filtered = true;
         $this->paginate = false;
-        $this->addColumns([
-            'person.full_name',
-            'event_participant.status',
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@event_participant.status',
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         // $this->addCSVDownloadButton();

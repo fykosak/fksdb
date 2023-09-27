@@ -14,7 +14,7 @@ class EventOrganizerRole extends EventRole
 
     public function __construct(EventModel $event, EventOrganizerModel $eventOrganizer)
     {
-        parent::__construct('event.org', $event);
+        parent::__construct('event.organizer', $event);
         $this->eventOrganizer = $eventOrganizer;
     }
 

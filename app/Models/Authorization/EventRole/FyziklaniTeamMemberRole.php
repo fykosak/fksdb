@@ -14,7 +14,7 @@ class FyziklaniTeamMemberRole extends EventRole
 
     public function __construct(EventModel $event, TeamMemberModel $member)
     {
-        parent::__construct('event.fyziklaniTeamMember', $event);
+        parent::__construct('event.fyziklani.member', $event);
         $this->member = $member;
     }
 

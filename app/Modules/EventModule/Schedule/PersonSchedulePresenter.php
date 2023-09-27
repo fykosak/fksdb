@@ -21,7 +21,7 @@ final class PersonSchedulePresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed('event.scheduleGroup', 'create');
+        return $this->isAllowed('event.schedule.group', 'create');
     }
 
     public function titleDefault(): PageTitle

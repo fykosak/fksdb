@@ -43,7 +43,7 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('edit')
                 behaviorType: danger
             waiting->received:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('org-edit')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Paid')
                 behaviorType: success
                 afterExecute:

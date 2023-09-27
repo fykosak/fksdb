@@ -38,7 +38,7 @@ class Button extends BaseItem
         ?string $buttonClassName = null,
         ?callable $showCallback = null
     ) {
-        parent::__construct($container, null);
+        parent::__construct($container);
         $this->linkCallback = $linkCallback;
         $this->buttonClassName = $buttonClassName;
         $this->showCallback = $showCallback;
@@ -61,6 +61,11 @@ class Button extends BaseItem
             ]);
             $html->setHtml($this->buttonLabel->toHtml());
         }
-        $this->renderHtml($html);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', ['html' => $html]);
+    }
+
+    public function getTitle(): ?Title
+    {
+        return null;
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Components\Container;
+namespace FKSDB\Components\Grids\Components\Table;
 
 use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
@@ -16,22 +16,24 @@ use Nette\DI\Container;
  */
 class RelatedTable extends BaseItem
 {
+    /** @phpstan-use TableTrait<TRelatedModel> */
+    use TableTrait;
+
     /** @phpstan-var callable(TModel):iterable<TRelatedModel> */
     private $modelToIterator;
     private bool $head;
-    /** @phpstan-var TableRow<TRelatedModel> */
-    public TableRow $tableRow;
+    private Title $title;
 
     /**
      * @phpstan-param callable(TModel):iterable<TRelatedModel> $modelToIterator
      */
     public function __construct(Container $container, callable $modelToIterator, Title $title, bool $head = false)
     {
-        parent::__construct($container, $title);
+        parent::__construct($container);
+        $this->title = $title;
         $this->modelToIterator = $modelToIterator;
         $this->head = $head;
-        $this->tableRow = new TableRow($container, $title);
-        $this->addComponent($this->tableRow, 'row');
+        $this->registerTable($container);
     }
 
     /**
@@ -47,19 +49,8 @@ class RelatedTable extends BaseItem
         ]);
     }
 
-    /**
-     * @phpstan-param BaseItem<TRelatedModel> $component
-     */
-    public function addColumn(BaseItem $component, string $name): void
+    public function getTitle(): ?Title
     {
-        $this->tableRow->addComponent($component, $name);
-    }
-
-    /**
-     * @phpstan-param BaseItem<TRelatedModel> $component
-     */
-    public function addButton(BaseItem $component, string $name): void
-    {
-        $this->tableRow->addButton($component, $name);
+        return $this->title;
     }
 }

@@ -93,7 +93,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrganizer = $this->isAllowed('event.application', 'default');
+        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
         $this->template->fields = $this->getDummyHolder()->getFields();
         $this->template->model = $this->getEntity();
         $this->template->groups = [
@@ -118,7 +118,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedFastEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
     /**
@@ -141,7 +141,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedAttendance(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
     public function titleMass(): PageTitle
@@ -155,7 +155,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
 

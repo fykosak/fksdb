@@ -16,7 +16,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends BaseGrid<EventModel>
+ * @phpstan-extends BaseGrid<EventModel,array{}>
  */
 class NewApplicationsGrid extends BaseGrid
 {
@@ -45,9 +45,9 @@ class NewApplicationsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->addColumns([
-            'event.name',
-            'contest.contest',
+        $this->addSimpleReferencedColumns([
+            '@event.name',
+            '@contest.contest',
         ]);
         $button = new Button(
             $this->container,
@@ -70,6 +70,6 @@ class NewApplicationsGrid extends BaseGrid
                 }
             }
         );
-        $this->addButton($button, 'create');
+        $this->addTableButton($button, 'create');
     }
 }

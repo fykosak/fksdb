@@ -39,7 +39,7 @@ trait TestGridTrait
                 },
                 $test->getTitle()
             );
-            $this->addColumn($item, 'test_' . $id);
+            $this->addTableColumn($item, 'test_' . $id);
         }
     }
 

@@ -5,7 +5,7 @@
         {control filterForm}
         {foreach $filterParams as $key =>$value}
             {if $value}
-                <a href="{link delete! $key}"
+                <a href="{link deleteFilterParams! $key}"
                    class="btn btn-secondary"
                    title="{_'Remove parameter'}"
                 >{$control['filterForm']['form']->getComponent($key)->getCaption()}: {$value}

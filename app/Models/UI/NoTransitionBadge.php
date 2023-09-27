@@ -11,7 +11,7 @@ class NoTransitionBadge
     public static function getHtml(): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-warning'])
+            ->addAttributes(['class' => 'me-1 badge bg-warning'])
             ->addText(_('No transitions available'));
     }
 }

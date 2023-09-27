@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ItemModel>
+ * @phpstan-extends BaseGrid<ItemModel,array{}>
  */
 class ItemsGrid extends BaseGrid
 {
@@ -39,14 +39,14 @@ class ItemsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'warehouse_item.item_id',
-            'warehouse_product.name_cs',
-            'warehouse_item.state',
-            'warehouse_item.description_cs',
-            'warehouse_item.data',
-            'warehouse_item.purchase_price',
-            'warehouse_item.purchase_currency',
+        $this->addSimpleReferencedColumns([
+            '@warehouse_item.item_id',
+            '@warehouse_product.name_cs',
+            '@warehouse_item.state',
+            '@warehouse_item.description_cs',
+            '@warehouse_item.data',
+            '@warehouse_item.purchase_price',
+            '@warehouse_item.purchase_currency',
         ]);
         $this->addPresenterButton(':Warehouse:Item:edit', 'edit', _('Edit'), false, ['id' => 'item_id']);
     }

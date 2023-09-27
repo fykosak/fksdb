@@ -12,9 +12,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<PaymentModel>
+ * @phpstan-extends BaseGrid<PaymentModel,array{}>
  */
-class EventPaymentGrid extends BaseGrid
+final class EventPaymentGrid extends BaseGrid
 {
     private EventModel $event;
 
@@ -38,16 +38,17 @@ class EventPaymentGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'payment.payment_id',
-            'person.full_name',
-            'payment.price',
-            'payment.state',
-            'payment.variable_symbol',
+        $this->paginate = false;
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@payment.payment_id',
+            '@person.full_name',
+            '@payment.price',
+            '@payment.state',
+            '@payment.variable_symbol',
         ]);
 
         $this->addORMLink('payment.detail');
-        $this->paginate = false;
-       // $this->addCSVDownloadButton();
     }
 }

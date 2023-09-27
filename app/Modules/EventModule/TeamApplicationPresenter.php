@@ -15,8 +15,8 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\Grids\Application\TeamListComponent;
+use FKSDB\Components\Grids\Application\TeamGrid;
+use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Components\Schedule\PersonGrid;
@@ -65,7 +65,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function authorizedFastEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
     /**
@@ -88,7 +88,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function authorizedAttendance(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
     public function titleMass(): PageTitle
@@ -102,7 +102,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
 
@@ -131,7 +131,7 @@ final class TeamApplicationPresenter extends BasePresenter
     {
         $event = $this->getEvent();
         return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
                 $event->isRegistrationOpened()
                 && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
             );
@@ -171,7 +171,7 @@ final class TeamApplicationPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
                 $event->isRegistrationOpened()
                 && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
@@ -215,7 +215,7 @@ final class TeamApplicationPresenter extends BasePresenter
     {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrganizer = $this->isAllowed('event.application', 'default');
+        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -314,17 +314,17 @@ final class TeamApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): TeamApplicationsGrid
+    protected function createComponentGrid(): TeamGrid
     {
-        return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+        return new TeamGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentList(): TeamListComponent
+    protected function createComponentList(): TeamList
     {
-        return new TeamListComponent($this->getEvent(), $this->getContext());
+        return new TeamList($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent
@@ -392,7 +392,7 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return SingleTestComponent<PersonHistoryModel>
+     * @phpstan-return SingleTestComponent<PersonHistoryModel>
      */
     protected function createComponentStudySchoolTest(): SingleTestComponent
     {

@@ -14,7 +14,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<PersonScheduleModel>
+ * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
 class PersonsGrid extends BaseGrid
 {
@@ -41,7 +41,7 @@ class PersonsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
@@ -49,6 +49,11 @@ class PersonsGrid extends BaseGrid
             ),
             'person_schedule_id'
         );
-        $this->addColumns(['person.full_name', 'event.role', 'payment.payment', 'person_schedule.state']);
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@event.role',
+            '@payment.payment',
+            '@person_schedule.state',
+        ]);
     }
 }

@@ -15,7 +15,6 @@ use Nette\Utils\Html;
  */
 class ContestColumnFactory extends AbstractColumnFactory
 {
-
     /**
      * @param ContestModel $model
      */
