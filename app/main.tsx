@@ -191,7 +191,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <div className="input-group-append">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-secondary"
+                                    className="btn btn-outline-secondary me-1"
                                     title={translator.getText('Edit')}
                                     onClick={() => {
                                         decompactifyContainer();
