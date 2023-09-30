@@ -88,7 +88,7 @@
     "testPHPStan": [
       "vendor/bin/phpstan analyse -c phpstan.neon"
     ],
-    "testPHPStanClaer": [
+    "testPHPStanClear": [
       "vendor/bin/phpstan clear-result-cache"
     ]
   }
