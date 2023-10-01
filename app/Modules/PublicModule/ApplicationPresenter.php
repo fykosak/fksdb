@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
