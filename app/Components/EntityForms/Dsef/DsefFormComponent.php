@@ -6,15 +6,18 @@ namespace FKSDB\Components\EntityForms\Dsef;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -22,10 +25,10 @@ use Nette\Neon\Neon;
 
 /**
  * @method BasePresenter getPresenter($need = true)
+ * @phpstan-extends EntityFormComponent<EventParticipantModel>
  */
 class DsefFormComponent extends EntityFormComponent
 {
-
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected SingleReflectionFormFactory $reflectionFormFactory;
     protected BaseHolder $holder;
@@ -49,8 +52,8 @@ class DsefFormComponent extends EntityFormComponent
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
         SingleReflectionFormFactory $reflectionFormFactory,
-        EventParticipantService $eventParticipantService,
-    ) {
+        EventParticipantService $eventParticipantService
+    ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->reflectionFormFactory = $reflectionFormFactory;
         $this->eventParticipantService = $eventParticipantService;
@@ -75,7 +78,7 @@ class DsefFormComponent extends EntityFormComponent
         $personContainer->referencedContainer->setOption('label', _('Participant'));
         $form->addComponent($personContainer, 'person');
 
-        $participantContainer= $this->reflectionFormFactory->createContainerWithMetadata(
+        $participantContainer = $this->reflectionFormFactory->createContainerWithMetadata(
             'event_participant',
             ['lunch_count' => ['required' => false]],
             new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
@@ -93,12 +96,15 @@ class DsefFormComponent extends EntityFormComponent
             ->addRule(Form::BLANK, '');
     }
 
+    /**
+     * @return FormProcessing[]
+     */
     protected function getProcessing(): array
     {
         return [];
     }
 
-    private function getParticipantFieldsDefinition()
+    private function getParticipantFieldsDefinition(): array
     {
         return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'dsef.participant.neon');
     }
@@ -107,9 +113,10 @@ class DsefFormComponent extends EntityFormComponent
     {
         if (isset($this->model)) {
             $form->setDefaults($this->model);
+            /** @var ReferencedId<PersonModel> $referencedId */
             $referencedId = $form->getComponent('person');
             $referencedId->setDefaultValue($this->model->person);
-        } else if (isset($this->loggedPerson)) {
+        } elseif (isset($this->loggedPerson)) {
             $form->setDefaults(['person' => $this->loggedPerson->person_id]);
         }
     }
@@ -117,6 +124,7 @@ class DsefFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
+        $this->eventParticipantService->explorer->beginTransaction();
         $values = array_reduce(
             $this->getProcessing(),
             fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event),
@@ -132,7 +140,6 @@ class DsefFormComponent extends EntityFormComponent
             $this->machine->execute2($transition, $this->holder);
         }
 
-        $this->eventParticipantService->explorer->beginTransaction();
         $this->eventParticipantService->storeModel(array_merge($values, [
             'event_id' => $this->holder->event->event_id,
             'person_id' => $this->model->person->person_id
