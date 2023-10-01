@@ -299,6 +299,7 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws NotImplementedException
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): DsefFormComponent
     {
@@ -312,6 +313,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws NotImplementedException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     protected function createComponentEditForm(): DsefFormComponent
     {

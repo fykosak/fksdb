@@ -15,7 +15,6 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
-use Nette\DI\Container;
 
 /**
  * @phpstan-extends Machine<BaseHolder>

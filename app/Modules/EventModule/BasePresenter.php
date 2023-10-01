@@ -6,9 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Choosers\EventChooserComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\ForbiddenRequestException;

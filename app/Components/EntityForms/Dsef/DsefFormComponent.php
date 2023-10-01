@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms\Dsef;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
@@ -120,13 +121,25 @@ final class DsefFormComponent extends EntityFormComponent
             /** @var SelectBox[] $halfDayComponents */
             foreach ($halfDayComponents as $halfDayComponent) {
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
-                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group.'));
+                    ->addRule(
+                        Form::Blank,
+                        _('You must register both morning and afternoon groups or only the all day group.')
+                    );
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Blank)
-                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group.'));
+                    ->addRule(
+                        Form::Filled,
+                        _('You must register both morning and afternoon groups or only the all day group.')
+                    );
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Filled)
-                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group.'));
+                    ->addRule(
+                        Form::Blank,
+                        _('You must register both morning and afternoon groups or only the all day group.')
+                    );
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Blank)
-                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group.'));
+                    ->addRule(
+                        Form::Filled,
+                        _('You must register both morning and afternoon groups or only the all day group.')
+                    );
             }
         }
     }
@@ -162,6 +175,7 @@ final class DsefFormComponent extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array<mixed> $values */
         $values = $form->getValues('array');
         $this->eventParticipantService->explorer->beginTransaction();
         try {
