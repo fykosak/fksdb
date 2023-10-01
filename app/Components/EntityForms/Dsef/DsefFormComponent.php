@@ -120,13 +120,13 @@ final class DsefFormComponent extends EntityFormComponent
             /** @var SelectBox[] $halfDayComponents */
             foreach ($halfDayComponents as $halfDayComponent) {
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
-                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group'));
+                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group.'));
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Blank)
-                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group'));
+                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group.'));
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Filled)
-                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group'));
+                    ->addRule(Form::Blank, _('You must register both morning and afternoon groups or only the all day group.'));
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Blank)
-                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group'));
+                    ->addRule(Form::Filled, _('You must register both morning and afternoon groups or only the all day group.'));
             }
         }
     }
