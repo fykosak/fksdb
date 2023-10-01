@@ -6,6 +6,7 @@ namespace FKSDB\Components\EntityForms\Dsef;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
@@ -32,6 +33,7 @@ use Nette\Neon\Neon;
 /**
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-extends EntityFormComponent<EventParticipantModel>
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 final class DsefFormComponent extends EntityFormComponent
 {
@@ -103,24 +105,24 @@ final class DsefFormComponent extends EntityFormComponent
         $dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
         /** @var ScheduleContainer $dsefAllDay */
         $dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
+        $halfDayComponents = [];
+        foreach ($dsefMorning->getComponents() as $morningSelect) {
+            $halfDayComponents[] = $morningSelect;
+        }
+        foreach ($dsefAfternoon->getComponents() as $afternoonSelect) {
+            $halfDayComponents[] = $afternoonSelect;
+        }
         /** @var SelectBox $allDaySelect */
         foreach ($dsefAllDay->getComponents() as $allDaySelect) {
-            /** @var SelectBox[] $halfComponents */
-            $halfComponents = [];
-            foreach ($dsefMorning->getComponents() as $morningSelect) {
-                $halfComponents[] = $morningSelect;
-            }
-            foreach ($dsefAfternoon->getComponents() as $afternoonSelect) {
-                $halfComponents[] = $afternoonSelect;
-            }
-            foreach ($halfComponents as $halfComponent) {
-                $allDaySelect->addConditionOn($halfComponent, Form::Filled)
+            /** @var SelectBox[] $halfDayComponents */
+            foreach ($halfDayComponents as $halfDayComponent) {
+                $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
                     ->addRule(Form::Blank, _('TODO poslať do piče, iba ranná alebo celodenna'));
-                $allDaySelect->addConditionOn($halfComponent, Form::Blank)
+                $allDaySelect->addConditionOn($halfDayComponent, Form::Blank)
                     ->addRule(Form::Filled, _('TODO poslať do piče, iba ranná alebo celodenna'));
-                $halfComponent->addConditionOn($allDaySelect, Form::Filled)
+                $halfDayComponent->addConditionOn($allDaySelect, Form::Filled)
                     ->addRule(Form::Blank, _('TODO poslať do piče, iba ranná alebo celodenna'));
-                $halfComponent->addConditionOn($allDaySelect, Form::Blank)
+                $halfDayComponent->addConditionOn($allDaySelect, Form::Blank)
                     ->addRule(Form::Filled, _('TODO poslať do piče, iba ranná alebo celodenna'));
             }
         }
@@ -136,6 +138,7 @@ final class DsefFormComponent extends EntityFormComponent
 
     /**
      * @throws Exception
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     private function getParticipantFieldsDefinition(): array
     {
