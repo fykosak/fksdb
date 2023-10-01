@@ -6,6 +6,7 @@ namespace FKSDB\Components\EntityForms\Dsef;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -75,6 +76,7 @@ final class DsefFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
+        $container = new ContainerWithOptions($this->container);
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getParticipantFieldsDefinition(),
             $this->event->getContestYear(),
@@ -90,14 +92,16 @@ final class DsefFormComponent extends EntityFormComponent
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));
-        $form->addComponent($personContainer, 'person_id');
+        $container->addComponent($personContainer, 'person_id');
 
-        $participantContainer = $this->reflectionFormFactory->createContainerWithMetadata(
+        $this->reflectionFormFactory->addToContainer(
+            $container,
             'event_participant',
-            ['lunch_count' => ['required' => false]],
+            'lunch_count',
+            ['required' => false],
             new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
         );
-        $form->addComponent($participantContainer, 'participant');
+        $form->addComponent($container, 'participant');
 
         /** @var ScheduleContainer $dsefMorning */
         $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
@@ -148,9 +152,9 @@ final class DsefFormComponent extends EntityFormComponent
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $form->setDefaults($this->model);
+            $form->setDefaults(['participant' => $this->model]);
         } elseif (isset($this->loggedPerson)) {
-            $form->setDefaults(['person_id' => $this->loggedPerson->person_id]);
+            $form->setDefaults(['participant' => ['person_id' => $this->loggedPerson->person_id]]);
         }
     }
 
@@ -169,7 +173,7 @@ final class DsefFormComponent extends EntityFormComponent
               );*/
 
             $eventParticipant = $this->eventParticipantService->storeModel(
-                array_merge($values, [
+                array_merge($values['participant'], [
                     'event_id' => $this->event->event_id,
                 ]),
                 $this->model
@@ -178,7 +182,7 @@ final class DsefFormComponent extends EntityFormComponent
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($eventParticipant);
                 $transition = $this->machine->getImplicitTransition($holder);
-                $this->machine->execute2($transition, $holder);
+                $this->machine->execute($transition, $holder);
             }
             $this->eventParticipantService->explorer->commit();
             $this->getPresenter()->flashMessage(
