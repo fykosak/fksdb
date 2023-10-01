@@ -15,6 +15,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -125,7 +126,7 @@ final class ApplicationPresenter extends BasePresenter
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
-        $this->template->fields = $this->getDummyHolder()->getFields();
+        $this->template->fields = ['lunch_count']; // TODO per event
         $this->template->model = $this->getEntity();
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
@@ -245,6 +246,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     private function getHolder(): BaseHolder
     {
@@ -253,6 +255,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -265,7 +268,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function createComponentGrid(): SingleApplicationsGrid
     {
-        return new SingleApplicationsGrid($this->getEvent(), $this->getDummyHolder(), $this->getContext());
+        return new SingleApplicationsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
@@ -279,6 +282,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
      * @phpstan-return AttendanceComponent<BaseHolder>
      */
     protected function createComponentFastTransition(): AttendanceComponent
@@ -317,6 +321,7 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     private function createForm(?EventParticipantModel $model): DsefFormComponent
     {
@@ -342,6 +347,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent
     {
@@ -354,6 +360,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
      * @phpstan-return MassTransitionsComponent<EventParticipantMachine>
      */
     protected function createComponentMassTransitions(): MassTransitionsComponent

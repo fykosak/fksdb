@@ -58,19 +58,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function getDummyHolder(): BaseHolder
-    {
-        static $holder;
-        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $holder;
-    }
-
-    /**
-     * @throws EventNotFoundException
      */
     protected function getEvent(): EventModel
     {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -23,13 +22,11 @@ use Nette\Forms\Form;
 class SingleApplicationsGrid extends BaseGrid
 {
     protected EventModel $event;
-    private BaseHolder $holder;
 
-    public function __construct(EventModel $event, BaseHolder $holder, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
-        $this->holder = $holder;
     }
 
     /**
@@ -37,6 +34,11 @@ class SingleApplicationsGrid extends BaseGrid
      */
     protected function getHoldersColumns(): array
     {
+        switch ($this->event->event_type_id) {
+            case 2:
+            case 14:
+                return ['lunch_count'];
+        }
         return [
             'price',
             'lunch_count',
@@ -63,12 +65,9 @@ class SingleApplicationsGrid extends BaseGrid
      */
     protected function addHolderColumns(): void
     {
-        $holderFields = $this->holder->getFields();
         $fields = [];
-        foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
-            }
+        foreach ($this->getHoldersColumns() as $name => $def) {
+            $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
         }
         $this->addSimpleReferencedColumns($fields);
     }
