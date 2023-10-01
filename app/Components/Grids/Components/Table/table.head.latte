@@ -1,0 +1,13 @@
+{varType Nette\ComponentModel\Container $columns}
+{varType Nette\ComponentModel\Container $buttons}
+{foreach $columns->getComponents() as $component}
+    {varType FKSDB\Components\Grids\Components\BaseItem $component}
+    <th>
+        {if $component->getTitle()}
+            {$component->getTitle()->toHtml()}
+        {/if}
+    </th>
+{/foreach}
+{if count($buttons->getComponents())}
+    <th></th>
+{/if}

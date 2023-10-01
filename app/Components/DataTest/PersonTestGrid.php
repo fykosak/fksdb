@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @phpstan-extends BaseGrid<PersonModel>
+ * @phpstan-extends BaseGrid<PersonModel,array{}>
  */
 class PersonTestGrid extends BaseGrid
 {
@@ -39,7 +39,7 @@ class PersonTestGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns(['person.person_id', 'person.person_link']);
+        $this->addSimpleReferencedColumns(['@person.person_id', '@person.person_link']);
         $this->addTests('person');
     }
 }

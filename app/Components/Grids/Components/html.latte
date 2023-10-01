@@ -1,2 +1,6 @@
+{varType FKSDB\Components\Grids\Components\BaseItem $control}
 {varType Nette\Utils\Html|string $html}
-{$html|noescape}
+{var $title = $control->getTitle()}
+<span title="{$title?$title->title:''}">
+        {$html|noescape}
+</span>

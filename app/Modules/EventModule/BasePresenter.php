@@ -6,9 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Choosers\EventChooserComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\ForbiddenRequestException;
@@ -54,19 +52,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function isEnabled(): bool
     {
         return true;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function getDummyHolder(): BaseHolder
-    {
-        static $holder;
-        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $holder;
     }
 
     /**

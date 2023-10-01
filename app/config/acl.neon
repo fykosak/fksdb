@@ -1,10 +1,3 @@
-#
-# SECURITY WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
-#
-# If you don't protect this directory from direct web access, anybody will be able to see your passwords.
-# http://nette.org/security-warning
-#
-
 services:
     # assertions
     ownerAssertion: FKSDB\Models\Authorization\Assertions\OwnerAssertion
@@ -14,30 +7,32 @@ services:
 
 acl:
     ## Roles
+    # Roles automaticly added for event
+    - addRole(event.fyziklani.teacher)
+    - addRole(event.fyziklani.member)
+    - addRole(event.organizer)
+    - addRole(event.contestOrganizer)
+    - addRole(event.participant)
+    # implicit roles
     - addRole(guest)                    # anonym (automatická role)
     - addRole(registered, guest)        # registrant (automatická role)
     - addRole(contestant, registered)   # řešitel (automatická role)
-    - addRole(org, registered)          # org (automatická role)
-    - addRole(webmaster, org)           # webař TODO remove
-    - addRole(taskManager, org)         # úlohář
-    - addRole(inboxManager, org)        # koordinátor obálkování, příjemce řešení
-    - addRole(exportDesigner, org)      #  TODO remove
-    - addRole(dataManager, org) # správce dat DB tvůrce exportů (!! má RO přístup ke všem datům)
+    - addRole(organizer, registered)          # organizer (automatická role)
+    # explicit roles
+    - addRole(webmaster, organizer)           # webař TODO remove
+    - addRole(taskManager, organizer)         # úlohář
+    - addRole(inboxManager, organizer)        # koordinátor obálkování, příjemce řešení
     - addRole(schoolManager)            # správce dat škol
-    - addRole(eventManager, [org, schoolManager])        # správce přihlášek + allow add schools
-    - addRole(boss, org)                # šéf
-    - addRole(superuser, [org, taskManager, schoolManager, inboxManager, dataManager, eventManager, boss])
+    - addRole(eventManager, [organizer, schoolManager])        # správce přihlášek + allow add schools
+    - addRole(dataManager, [inboxManager,taskManager,eventManager]) # správce dat DB tvůrce exportů (!! má RO přístup ke všem datům)
+    - addRole(boss, organizer)                # šéf
+    - addRole(superuser, [organizer, taskManager, schoolManager, inboxManager, dataManager, eventManager, boss])
     - addRole(cartesian)
     # robot's roles
     - addRole(aesop)                    # AESOPový stahovač dat
     - addRole(web)                      # webový stahovač dat (např. fksdbexport)
-    - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
-    # Roles automaticly added for event
-    - addRole(event.fyziklaniTeamTeacher)
-    - addRole(event.fyziklaniTeamMember)
-    - addRole(event.org)
-    - addRole(event.contestOrg)
-    - addRole(event.participant)
+    - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na fiki)
+
 
     ## Resources
     - addResource(submit)        # revoke, upload, download, edit
@@ -49,7 +44,7 @@ acl:
     - addResource(storedQuery)   # create, edit, list, delete, detial
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
-    - addResource(org)           # create, edit, list, delete
+    - addResource(organizer)           # create, edit, list, delete
     - addResource(event)         # create, edit, list
     - addResource(teacher)       # create, edit, list, detail
     - addResource(emailMessage)  # list, detail
@@ -57,10 +52,8 @@ acl:
     - addResource(webService)    # default - stahovanie cez webService
     - addResource(aesop)    # default - stahovanie cez webService
     - addResource(soap)    # default - stahovanie cez webService
+    - addResource(acl) # list
 
-    #applications
-    - addResource(event.participant)  # list, detail
-    - addResource(fyziklani.team)     # route, list, detail, org-edit, org-create, org-detail
 
     #fyziklani
     - addResource(game.dashboard)  # default
@@ -72,17 +65,17 @@ acl:
     - addResource(game.diplomas)   # calculate, results
     - addResource(game.seating)    # default
     - addResource(game.statistics) # default
-    #event module
-    - addResource(event.application) # import
-    - addResource(event.dashboard)   # default
-    - addResource(event.schedule)    # default
-    - addResource(event.model)       # default
-    - addResource(event.payment)     # create, edit, list, detail, delete, org-create, org-edit
 
-    - addResource(event.org)         # create, edit, list, detail, delete
+    #applications
+    - addResource(event.participant)  # list, detail, organizer
+    - addResource(fyziklani.team)     # route, list, detail, organizer
+    #event module
+    - addResource(event.dashboard)   # default
+    - addResource(event.payment)     # create, edit, list, detail, delete, organizer, organizer
+    - addResource(event.organizer)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
-    - addResource(event.scheduleGroup) # create, edit, list, detail, delete
-    - addResource(event.scheduleItem) # create, edit, list, detail, delete
+    - addResource(event.schedule.group) # create, edit, list, detail, delete
+    - addResource(event.schedule.item) # create, edit, list, detail, delete
 
     # warehouse
     - addResource(warehouse.producer)
@@ -97,18 +90,19 @@ acl:
     - allow(contestant, submit, download.corrected, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, revoke, [@ownerAssertion, 'isSubmitUploader'])
     - allow(contestant, submit, list)
-#ORG MODULE
-    - allow(org, points, entry)      # zadávání bodů
-    - allow(org, contestant, list)
-    - allow(org, school, list)
-    - allow(org, org, list)
-    - allow(org, org, edit, @selfAssertion)
-    - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, person, stalk.search)
-    - allow(org, person, edit, @selfAssertion)
-    - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
-    - allow(org, person, stalk.full, @selfAssertion)
-    - allow(org, chart, ::constant(Nette\Security\Permission::ALL))
+#ORGANIZER MODULE
+    - allow(organizer, points, entry)      # zadávání bodů
+    - allow(organizer, contestant, list)
+    - allow(organizer, school, list)
+    - allow(organizer, organizer, list)
+    - allow(organizer, organizer, edit, @selfAssertion)
+    #- allow(organizer, teacher, ::constant(Nette\Security\Permission::ALL)) TODO not working
+    - allow(organizer, person, stalk.search)
+    - allow(organizer, person, edit, @selfAssertion)
+    - allow(organizer, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(organizer, person, stalk.full, @selfAssertion)
+    - allow(organizer, chart, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, webService, ::constant(Nette\Security\Permission::ALL))
 
     - allow(inboxManager, export, execute)
     - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
@@ -119,77 +113,72 @@ acl:
     - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
 
+    - allow(taskManager, submit, ::constant(Nette\Security\Permission::ALL))
     - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
     - allow(dataManager, storedQuery, ::constant(Nette\Security\Permission::ALL))
     - allow(dataManager, export, ::constant(Nette\Security\Permission::ALL))
     - allow(dataManager, export.adhoc, ::constant(Nette\Security\Permission::ALL))
     - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
-    - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
+    - allow(dataManager, emailMessage, list)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
-    - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
+    - allow(eventManager, export, execute)
     - allow(eventManager, person, stalk.full)
     - allow(eventManager, person, edit)
 
-    - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
-    - allow(boss, person, edit)
-    - allow(boss, person, stalk.full)
+    - allow(boss, organizer, ::constant(Nette\Security\Permission::ALL))
+    - allow(boss, person, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, emailMessage, list)
-
+    - allow(boss, acl, list)
     # robot role
     - allow(web, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['web-safe']))
     - allow(web, webService, ::constant(Nette\Security\Permission::ALL)) # new REST-API
     - allow(wiki, export, execute, FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe']))
-    - allow([wiki,web,org], soap, default) # new REST-API
+    - allow([wiki,web,organizer], soap, default) # old REST-API
 
-    - allow(org, webService, ::constant(Nette\Security\Permission::ALL))
+
 ## NEW APPLICATIONS
-    - allow(guest, fyziklani.team, create)
-    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], fyziklani.team, [detail,edit], @ownApplicationAssertion)
-    - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
-    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))# +org-edit org-create
+    - allow(guest, [fyziklani.team,event.participant], create)
+    - allow([event.fyziklani.teacher,event.fyziklani.member,event.participant], [fyziklani.team,event.participant], [detail,edit], @ownApplicationAssertion)
+    - allow(eventManager,[fyziklani.team,event.participant], ::constant(Nette\Security\Permission::ALL))# +organizer
 ## EVENT MODULE
-    - allow(event.org, event.participant, [list, detail])
-    - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
+    - allow(event.organizer, event.participant, [list, detail])
+    - allow(eventManager, event.organizer, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
-    - allow(eventManager, event.scheduleGroup, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
-    - allow(eventManager, event.scheduleItem, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
-    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
-    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
+    - allow(eventManager, event.schedule.group, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.schedule.item, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
 ## FYZIKLANI MODULE
-    #base for org
+    #base for organizer
 
-    - allow([org,event.org], game.dashboard, ::constant(Nette\Security\Permission::ALL))
-    - allow([org,event.org], game.task, ::constant(Nette\Security\Permission::ALL)) # može pozerať úlohy
-    - allow([org,event.org], game.close, default) # not hard!
-    - allow([org,event.org], game.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
-    - allow([org,event.org], game.diplomas, results) # môže pozerať definitívne výsledky
+    - allow([organizer,event.organizer], game.dashboard, ::constant(Nette\Security\Permission::ALL))
+    - allow([organizer,event.organizer], game.task, ::constant(Nette\Security\Permission::ALL)) # može pozerať úlohy
+    - allow([organizer,event.organizer], game.close, default) # not hard!
+    - allow([organizer,event.organizer], game.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
+    - allow([organizer,event.organizer], game.diplomas, results) # môže pozerať definitívne výsledky
     # specific ACL
-    - allow(org, game.presentation, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
-    - allow(org, game.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
-    - allow(org, game.statistics, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, game.seating, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, game.diplomas, ::constant(Nette\Security\Permission::ALL)) # môže pozerať definitívne výsledky
+    - allow(organizer, game.presentation, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
+    - allow(organizer, game.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
+    - allow(organizer, game.statistics, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, game.seating, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, game.diplomas, ::constant(Nette\Security\Permission::ALL)) # môže pozerať definitívne výsledky
 
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
 ##PAYMENTS (module)
-    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, detail, @selfAssertion)
-    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
-    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, create)
+    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, detail, @selfAssertion)
+    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
+    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, create)
     - allow(eventManager, event.payment, ::constant(Nette\Security\Permission::ALL))
 
 ## WAREHOUSE MODULE
-    - allow(org, warehouse.producer, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, warehouse.product, ::constant(Nette\Security\Permission::ALL))
-    - allow(org, warehouse.item, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, warehouse.producer, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, warehouse.product, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, warehouse.item, ::constant(Nette\Security\Permission::ALL))
 
 #CARTESIAN
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))

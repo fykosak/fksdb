@@ -1,0 +1,27 @@
+{varType FKSDB\Components\Grids\Components\BaseComponent $control}
+{varType bool $paginate}
+{varType bool $counter}
+{varType array $flashes}
+{varType bool $filtered}
+{varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
+{php $control->getPaginator()->setItemCount($models->count())}
+{if $paginate}
+    {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}
+{/if}
+{block head}
+    {if $filtered}
+        {include filter from './layout.filter.latte'}
+    {/if}
+    {foreach $flashes as $flash}
+        <div class="alert alert-{$flash->type}">
+            {$flash->message}
+        </div>
+    {/foreach}
+    {if $counter}
+        {include counter from './layout.counter.latte', $paginate,$control}
+    {/if}
+{/block}
+{include innerContent}
+{if $paginate}
+    {control paginator}
+{/if}

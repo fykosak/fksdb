@@ -24,9 +24,9 @@ use Nette\Utils\Html;
 use Tracy\Debugger;
 
 /**
- * @phpstan-extends BaseGrid<SubmitModel>
+ * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
-class SubmitsGrid extends BaseGrid
+final class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -52,7 +52,11 @@ class SubmitsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->paginate = false;
+        $this->counter = false;
+        $this->filtered = false;
+
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
@@ -60,7 +64,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'task'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
@@ -68,7 +72,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'submitted_on'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): Html => $model->source->badge(),
@@ -77,7 +81,7 @@ class SubmitsGrid extends BaseGrid
             'source'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -89,7 +93,7 @@ class SubmitsGrid extends BaseGrid
             'revoke'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -101,7 +105,7 @@ class SubmitsGrid extends BaseGrid
             'download_uploaded'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -113,7 +117,7 @@ class SubmitsGrid extends BaseGrid
             'download_corrected'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this->getPresenter(),
@@ -124,8 +128,6 @@ class SubmitsGrid extends BaseGrid
             ),
             'show_quiz_detail'
         );
-
-        $this->paginate = false;
     }
 
     public function handleRevoke(int $id): void

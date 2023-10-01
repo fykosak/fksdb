@@ -43,7 +43,7 @@ final class PaymentPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'org-create', $event)
+        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'organizer', $event)
             || ($this->isPaymentAllowed() &&
                 $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $event));
     }
@@ -75,7 +75,7 @@ final class PaymentPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event)
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event)
             || ($this->isPaymentAllowed() && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
 
@@ -237,7 +237,7 @@ final class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),
-            $this->isAllowed(PaymentModel::RESOURCE_ID, 'org-create'),
+            $this->isAllowed(PaymentModel::RESOURCE_ID, 'organizer'),
             $this->getMachine(),
             null
         );
@@ -257,7 +257,7 @@ final class PaymentPresenter extends BasePresenter
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),
-            $this->isAllowed($this->getEntity(), 'org-edit'),
+            $this->isAllowed($this->getEntity(), 'organizer'),
             $this->getMachine(),
             $this->getEntity()
         );

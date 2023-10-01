@@ -1,0 +1,12 @@
+{define counter,bool $paginate,FKSDB\Components\Grids\Components\BaseComponent $component}
+    <div class="row my-3">
+        <div class="offset-8 col-4">
+                <span class="badge bg-primary float-end">
+                    {sprintf(ngettext('Total of %d record', 'Total of %d records', $component->getPaginator()->getItemCount()), $component->getPaginator()->getItemCount())}
+                    {if $component->getPaginator()->getItemCount() && $paginate}
+                        {sprintf(_('(Showing from %d to %d)'), $component->getPaginator()->getFirstItemOnPage(), $component->getPaginator()->getLastItemOnPage())}
+                    {/if}
+                </span>
+        </div>
+    </div>
+{/define}

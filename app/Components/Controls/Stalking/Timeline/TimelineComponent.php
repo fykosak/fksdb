@@ -65,7 +65,8 @@ class TimelineComponent extends FrontEndComponent
         /** @var OrganizerModel $organizer */
         foreach ($this->person->getOrganizers() as $organizer) {
             $since = new \DateTime(
-                $organizer->contest->getContestYear($organizer->since)->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
+                $organizer->contest->getContestYear($organizer->since)->ac_year . '-' .
+                ContestYearService::FIRST_AC_MONTH . '-1'
             );
             $until = new \DateTime();
             if ($organizer->until) {

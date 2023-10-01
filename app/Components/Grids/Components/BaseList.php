@@ -4,33 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\Components\Button\ButtonGroup;
-use FKSDB\Components\Grids\Components\Container\ListRows;
-use FKSDB\Models\ORM\ORMFactory;
-use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseComponent<TModel>
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */
 abstract class BaseList extends BaseComponent
 {
-    protected ORMFactory $reflectionFactory;
-    /** @phpstan-var ButtonGroup<TModel> */
-    public ButtonGroup $buttons;
-    /** @phpstan-var ListRows<TModel> */
-    public ListRows $rows;
     /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
 
     public function __construct(Container $container, int $userPermission)
     {
         parent::__construct($container, $userPermission);
-        $this->buttons = new ButtonGroup($this->container);
-        $this->rows = new ListRows($this->container, new Title(null, ''));
-        $this->addComponent($this->buttons, 'buttons');
-        $this->addComponent($this->rows, 'rows');
+        $this->addComponent(new \Nette\ComponentModel\Container(), 'buttons');
+        $this->addComponent(new \Nette\ComponentModel\Container(), 'rows');
+        $this->paginate = false;
     }
 
     protected function getTemplatePath(): string
@@ -41,33 +32,49 @@ abstract class BaseList extends BaseComponent
     public function render(): void
     {
         $this->template->classNameCallback = $this->classNameCallback;
-        $this->template->title = $this->getComponent('title', false);
         parent::render();
     }
 
     abstract protected function configure(): void;
 
     /**
-     * @phpstan-param BaseItem<TModel> $title
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
      */
-    protected function setTitle(BaseItem $title): void
+    protected function setTitle(BaseItem $component): BaseItem
     {
-        $this->addComponent($title, 'title');
+        $this->addComponent($component, 'title');
+        return $component;
     }
 
     /**
-     * @phpstan-param BaseItem<TModel> $component
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
      */
-    public function addRow(BaseItem $component, string $name): void
+    public function addRow(BaseItem $component, string $name): BaseItem
     {
-        $this->rows->addComponent($component, $name);
+        $this->getComponent('rows')->addComponent($component, $name);
+        return $component;
+    }
+
+    public function createRow(): \Nette\ComponentModel\Container
+    {
+        $component = new \Nette\ComponentModel\Container();
+        $length = count($this->getComponent('rows')->getComponents());
+        $this->getComponent('rows')->addComponent($component, 'row' . $length);
+        return $component;
     }
 
     /**
-     * @phpstan-param BaseItem<TModel> $component
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
      */
-    public function addButton(BaseItem $component, string $name): void
+    public function addButton(BaseItem $component, string $name): BaseItem
     {
-        $this->buttons->addComponent($component, $name);
+        $this->getComponent('buttons')->addComponent($component, $name);
+        return $component;
     }
 }

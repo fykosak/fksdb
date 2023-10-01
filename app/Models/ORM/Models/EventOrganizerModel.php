@@ -18,7 +18,7 @@ use Nette\Security\Resource;
 final class EventOrganizerModel extends Model implements Resource
 {
 
-    public const RESOURCE_ID = 'event.org';
+    public const RESOURCE_ID = 'event.organizer';
 
     public function getResourceId(): string
     {

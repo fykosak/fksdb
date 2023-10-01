@@ -12,9 +12,9 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<EventOrganizerModel>
+ * @phpstan-extends BaseGrid<EventOrganizerModel,array{}>
  */
-class EventOrganizersGrid extends BaseGrid
+final class EventOrganizersGrid extends BaseGrid
 {
     private EventModel $event;
 
@@ -38,13 +38,15 @@ class EventOrganizersGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'person.full_name',
-            'event_org.note',
+        $this->paginate = false;
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@event_org.note',
         ]);
-        $this->addORMLink('event_org.edit');
-        //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
-        // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 }

@@ -23,7 +23,7 @@ use Nette\Security\Resource;
  */
 final class OrganizerModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'org';
+    public const RESOURCE_ID = 'organizer';
 
     public function getResourceId(): string
     {

@@ -27,7 +27,7 @@ navigation:
             Organizer.School.list: []
             Organizer.StoredQuery.list: []
             Organizer.Spam.list: []
-            Warehouse.Dashboard.default: []
+            #Warehouse.Dashboard.default: []
 
             #Common.Deduplicate.person:
             Organizer.Chart.list: []
@@ -54,9 +54,10 @@ navigation:
             Organizer.School.list: []
             Organizer.StoredQuery.list: []
             Organizer.Spam.list: []
-            Warehouse.Dashboard.default: []
+            #Warehouse.Dashboard.default: []
         Organizer.Dashboard.others:
             Organizer.Chart.list: []
+            Organizer.Acl.list: []
         Public.Dashboard.default:
             Public.Submit.default: []
             Public.Submit.legacy: []

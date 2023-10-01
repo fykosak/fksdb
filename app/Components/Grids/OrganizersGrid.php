@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
@@ -13,11 +13,11 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<OrganizerModel,array{
+ * @phpstan-extends BaseGrid<OrganizerModel,array{
  *    term?:string,
  * }>
  */
-class OrganizersGrid extends FilterGrid
+final class OrganizersGrid extends BaseGrid
 {
     private ContestModel $contest;
 
@@ -58,12 +58,14 @@ class OrganizersGrid extends FilterGrid
      */
     protected function configure(): void
     {
-
-        $this->addColumns([
-            'person.full_name',
-            'org.since',
-            'org.until',
-            'org.role',
+        $this->filtered = true;
+        $this->paginate = true;
+        $this->counter = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@org.since',
+            '@org.until',
+            '@org.role',
         ]);
 
         $this->addORMLink('org.edit', true);

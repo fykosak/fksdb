@@ -12,7 +12,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<QueryModel>
+ * @phpstan-extends BaseGrid<QueryModel,array{}>
  */
 class StoredQueriesGrid extends BaseGrid
 {
@@ -55,12 +55,16 @@ class StoredQueriesGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'stored_query.query_id',
-            'stored_query.name',
-            'stored_query.description',
-            'stored_query.qid',
-            'stored_query.tags',
+        $this->paginate = true;
+        $this->filtered = false;
+        $this->counter = true;
+
+        $this->addSimpleReferencedColumns([
+            '@stored_query.query_id',
+            '@stored_query.name',
+            '@stored_query.description',
+            '@stored_query.qid',
+            '@stored_query.tags',
         ]);
 
         $this->addPresenterButton(
