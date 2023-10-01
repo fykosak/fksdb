@@ -6,11 +6,14 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
-            {control columnTable [
+            {control columnTable $isOrganizer?[
             'person.person_link',
             'event_participant.event_participant_id',
             'event_participant.status',
-            'event_participant.price',
+            'event_participant.created'
+            ]:[
+            'person.full_name',
+            'event_participant.status',
             'event_participant.created'
             ],$model,1024}
         </div>

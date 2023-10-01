@@ -134,6 +134,7 @@ final class ApplicationPresenter extends BasePresenter
             _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
             _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
             _('Food') => ['lunch_count'],
+            _('Price') => ['price'],
         ];
     }
 
