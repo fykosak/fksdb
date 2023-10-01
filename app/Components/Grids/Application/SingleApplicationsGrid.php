@@ -66,7 +66,7 @@ class SingleApplicationsGrid extends BaseGrid
     protected function addHolderColumns(): void
     {
         $fields = [];
-        foreach ($this->getHoldersColumns() as $name => $def) {
+        foreach ($this->getHoldersColumns() as $name) {
             $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
         }
         $this->addSimpleReferencedColumns($fields);

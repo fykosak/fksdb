@@ -16,15 +16,15 @@
         </div>
     </div>
 
-    {varType array $fields}
+    {varType string[] $fields}
     {foreach $groups as $groupName=>$fieldDef}
-        {if count(array_intersect($fieldDef, array_keys($fields))) > 0}
+        {if count(array_intersect($fieldDef, $fields)) > 0}
             <div class="panel color-auto">
                 <div class="container">
                     <h2>{$groupName}</h2>
                     {var $currentFields = []}
                     {foreach $fieldDef as $field}
-                        {if array_key_exists($field,$fields)}
+                        {if in_array($field,$fields)}
                             {php $currentFields[] = 'event_participant.' . $field}
                         {/if}
                     {/foreach}
