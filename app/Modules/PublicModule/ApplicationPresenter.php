@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -29,7 +30,6 @@ use Nette\InvalidArgumentException;
 
 final class ApplicationPresenter extends BasePresenter
 {
-
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
     private EventService $eventService;
@@ -293,10 +293,16 @@ final class ApplicationPresenter extends BasePresenter
         return new ApplicationComponent($this->getContext(), $this->getHolder());
     }
 
+    protected function createComponentDsefApplication(): DsefFormComponent
+    {
+        return new DsefFormComponent($this->getContext(), $this->getEventApplication(), $this->getHolder(), $this->getMachine(), $this->getLoggedPerson());
+    }
+
     protected function beforeRender(): void
     {
         parent::beforeRender();
         $this->template->model = $this->getEventApplication();
+        $this->template->event = $this->event;
     }
 
     /**

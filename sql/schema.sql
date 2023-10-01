@@ -1097,6 +1097,7 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
+        'dsef_all_day',
         'apparal',
         'transport'
         )                              NOT NULL,

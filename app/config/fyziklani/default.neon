@@ -54,3 +54,24 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Zrušit tým')
                 behaviorType: danger
+    dsef:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        decorator: null
+        transitions:
+            __init->applied:
+                label: _('Register')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Dsef\ParticipantMailCallback()
+            applied->participated:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                label: _('Prezentovat')
+            applied->missed:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                label: _('Nepřijel')
+                behaviorType: danger
+            applied->cancelled:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                label: _('Zrušit přihlášku')
+                behaviorType: danger
+
