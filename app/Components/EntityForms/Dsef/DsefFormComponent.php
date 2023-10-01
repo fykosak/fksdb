@@ -21,6 +21,7 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
@@ -172,7 +173,7 @@ final class DsefFormComponent extends EntityFormComponent
               );*/
 
             $eventParticipant = $this->eventParticipantService->storeModel(
-                array_merge($values, [
+                array_merge(FormUtils::emptyStrToNull2($values), [
                     'event_id' => $this->event->event_id,
                 ]),
                 $this->model
