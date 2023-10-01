@@ -74,7 +74,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         if (in_array($this->getAction(), ['create', 'edit'])) {
             if (!in_array($this->getEvent()->event_type_id, [2, 14])) {
-                $this->forward(
+                $this->redirect(
                     ':Public:Application:default',
                     array_merge(['eventId' => $this->eventId], $this->getParameters())
                 );
