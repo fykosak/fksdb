@@ -39,7 +39,7 @@ class ItemListWebModel extends WebModel
     protected function getJsonResponse(array $params): array
     {
         $group = $this->scheduleGroupService->findByPrimary($params['groupId']);
-        if (is_null($group)) {
+        if (!$group) {
             throw new BadRequestException('Unknown group.', IResponse::S404_NOT_FOUND);
         }
         $data = [];

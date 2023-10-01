@@ -39,18 +39,14 @@ class PersonListWebModel extends WebModel
     protected function getJsonResponse(array $params): array
     {
         $item = $this->scheduleItemService->findByPrimary($params['itemId']);
-        if (is_null($item)) {
+        if (!$item) {
             throw new BadRequestException('Unknown item.', IResponse::S404_NOT_FOUND);
         }
         $data = [];
         /** @var PersonScheduleModel $model */
         foreach ($item->getInterested() as $model) {
             $data[] = [
-                'person' => [
-                    'name' => $model->person->getFullName(),
-                    'personId' => $model->person_id,
-                    'email' => $model->person->getInfo()->email,
-                ],
+                'person' => $model->person->__toArray(),
                 'scheduleItemId' => $model->schedule_item_id,
             ];
         }

@@ -76,21 +76,6 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @phpstan-return SerializedEventParticipantModel
-     */
-    public function __toArray(): array
-    {
-        return [
-            'participantId' => $this->event_participant_id,
-            'eventId' => $this->event_id,
-            'personId' => $this->person_id,
-            'status' => $this->status->value,
-            'created' => $this->created->format('c'),
-            'lunchCount' => $this->lunch_count,
-        ];
-    }
-
-    /**
      * @return EventParticipantStatus|mixed|null
      * @throws \ReflectionException
      */
@@ -112,7 +97,14 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     {
         $node = $document->createElement('participant');
         $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode([
+            'participantId' => $this->event_participant_id,
+            'eventId' => $this->event_id,
+            'personId' => $this->person_id,
+            'status' => $this->status->value,
+            'created' => $this->created->format('c'),
+            'lunchCount' => $this->lunch_count,
+        ], $document, $node);
         return $node;
     }
 }

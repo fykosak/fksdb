@@ -15,7 +15,8 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId:int},array>
+ * @phpstan-import-type SerializedTeamModel from TeamModel2
+ * @phpstan-extends WebModel<array{eventId:int},(SerializedTeamModel)[]>
  */
 class TeamListWebModel extends WebModel
 {
@@ -39,50 +40,27 @@ class TeamListWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['eventId']);
-        if (is_null($event)) {
+        if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
         $data = [];
         /** @var TeamModel2 $team */
         foreach ($event->getTeams() as $team) {
-            $teamData = [
-                'teamId' => $team->fyziklani_team_id,
-                'name' => $team->name,
-                'status' => $team->state->value,
-                'category' => $team->category->value,
-                'created' => $team->created->format('c'),
-                'phone' => $team->phone,
-                'points' => $team->points,
-                'rankCategory' => $team->rank_category,
-                'rankTotal' => $team->rank_total,
-                'forceA' => $team->force_a,
-                'gameLang' => $team->game_lang->value,
-                'teachers' => [],
-                'members' => [],
-            ];
+            $teamData = $team->__toArray();
+            $teamData['teachers'] = [];
+            $teamData['members'] = [];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
-                $teamData['teachers'][] = [
-                    'name' => $teacher->person->getFullName(),
-                    'personId' => $teacher->person->person_id,
-                    'email' => $teacher->person->getInfo()->email,
-                ];
+                $teamData['teachers'][] = $teacher->person->__toArray();
             }
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
                 $history = $member->getPersonHistory();
-                $teamData['members'][] = [
-                    'name' => $member->person->getFullName(),
-                    'personId' => $member->person->person_id,
-                    'email' => $member->person->getInfo()->email,
-                    'schoolId' => $history ? $history->school_id : null,
-                    'schoolName' => $history ? $history->school->name_abbrev : null,
-                    'studyYear' => $history ? $history->study_year_new->numeric() : null,
-                    'studyYearNew' => $history ? $history->study_year_new->value : null,
-                    'countryIso' => $history ? (
-                    ($school = $history->school) ? $school->address->country->alpha_2 : null
-                    ) : null,
-                ];
+                $school = $history->school;
+                $teamData['members'][] = array_merge($member->person->__toArray(), [
+                    'school' => $school ? $school->__toArray() : null,
+                    'studyYear' => $history ? $history->study_year_new->value : null,
+                ]);
             }
             $data[] = $teamData;
         }

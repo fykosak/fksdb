@@ -12,7 +12,6 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
-use function FKSDB\Models\WebService\Models\Event\count;
 
 /**
  * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
@@ -31,7 +30,7 @@ class GroupListWebModel extends WebModel
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
-            'types' => Expect::arrayOf(
+            'types' => Expect::listOf(
                 Expect::anyOf(
                     ...array_map(fn(ScheduleGroupType $type): string => $type->value, ScheduleGroupType::cases())
                 )
@@ -46,7 +45,7 @@ class GroupListWebModel extends WebModel
     protected function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['eventId']);
-        if (is_null($event)) {
+        if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
         $data = [];

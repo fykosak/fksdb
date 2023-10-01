@@ -46,8 +46,6 @@ class WebServiceModel
 
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
-        'game/results' => Game\ResultsWebModel::class,
-        'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
@@ -59,11 +57,19 @@ class WebServiceModel
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
+        // events
+        'events' => EventListWebModel::class,
         'event/schedule/groups' => GroupListWebModel::class,
         'event/schedule/items' => ItemListWebModel::class,
         'event/schedule/persons' => PersonListWebModel::class,
         'event/teams' => TeamListWebModel::class,
         'event/participants' => ParticipantListWebModel::class,
+        // game
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
+        // contest
+        'contest/organizers' => OrganizersWebModel::class,
+        'contest/stats' => StatsWebModel::class,
     ];
 
     public function __construct(
