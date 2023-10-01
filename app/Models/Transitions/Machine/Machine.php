@@ -130,7 +130,7 @@ abstract class Machine
      */
     protected function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
-        if ($transition->source->value !== $holder->getModelState()->value) {
+        if ($transition->source->value !== $holder->getState()->value) {
             return false;
         }
         return $transition->canExecute($holder);

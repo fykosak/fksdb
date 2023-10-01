@@ -36,7 +36,7 @@ final class EventParticipantMachine extends Machine
     public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
     {
         return array_filter(
-            $this->getMatchingTransitions($sourceState ?? $holder->getModelState()),
+            $this->getMatchingTransitions($sourceState ?? $holder->getState()),
             fn(Transition $transition): bool => $transition->canExecute($holder)
         );
     }

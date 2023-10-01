@@ -310,7 +310,6 @@ final class ApplicationPresenter extends BasePresenter
     {
         parent::beforeRender();
         $this->template->model = $this->getEventApplication();
-        $this->template->event = $this->event;
     }
 
     /**
