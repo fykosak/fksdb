@@ -21,7 +21,7 @@ export default function Item({item, params}: OwnProps) {
     const translator = useContext(TranslatorContext);
     const value = useSelector((state: Store) => state.inputConnector.data.data);
     const dispatch = useDispatch();
-    const {scheduleItemId, price, label, totalCapacity, usedCapacity, description} = item;
+    const {scheduleItemId, price, name, totalCapacity, usedCapacity, description} = item;
     const isChecked = (value === scheduleItemId);
 
     return <div
@@ -32,7 +32,7 @@ export default function Item({item, params}: OwnProps) {
         <div className="card-body">
             <h5 className="card-title">
                 <i className={isChecked ? 'me-3 fas fa-check-circle' : 'me-3 far fa-circle'}/>
-                {translator.get(label)}
+                {translator.get(name)}
             </h5>
             {params.description && <h6 className="card-subtitle">
                 {translator.get(description)}

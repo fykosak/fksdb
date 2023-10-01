@@ -1,7 +1,7 @@
 import * as CodeMirror from 'codemirror';
 import { fromTextArea } from 'codemirror';
 
-$(() => {
+window.onload = () => {
     document.querySelectorAll('.sql-console').forEach((el: HTMLTextAreaElement) => {
         fromTextArea(el,
             {
@@ -25,4 +25,4 @@ $(() => {
             autofocus: true,
         });
     });
-});
+};

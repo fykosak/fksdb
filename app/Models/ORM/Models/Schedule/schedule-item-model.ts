@@ -7,7 +7,7 @@ export interface ScheduleItemModel {
     totalCapacity?: number;
     usedCapacity: number;
     scheduleItemId: number;
-    label: LangMap<string, 'cs' | 'en'>;
+    name: LangMap<string, 'cs' | 'en'>;
     requireIdNumber: boolean;
     description: LangMap<string, 'cs' | 'en'>;
 }
