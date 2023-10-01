@@ -92,16 +92,15 @@ final class DsefFormComponent extends EntityFormComponent
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));
-        $container->addComponent($personContainer, 'person_id');
+        $form->addComponent($personContainer, 'person_id');
 
         $this->reflectionFormFactory->addToContainer(
-            $container,
+            $form,
             'event_participant',
             'lunch_count',
             ['required' => false],
             new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
         );
-        $form->addComponent($container, 'participant');
 
         /** @var ScheduleContainer $dsefMorning */
         $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
@@ -152,9 +151,9 @@ final class DsefFormComponent extends EntityFormComponent
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $form->setDefaults(['participant' => $this->model]);
+            $form->setDefaults($this->model);
         } elseif (isset($this->loggedPerson)) {
-            $form->setDefaults(['participant' => ['person_id' => $this->loggedPerson->person_id]]);
+            $form->setDefaults(['person_id' => $this->loggedPerson->person_id]);
         }
     }
 
@@ -173,7 +172,7 @@ final class DsefFormComponent extends EntityFormComponent
               );*/
 
             $eventParticipant = $this->eventParticipantService->storeModel(
-                array_merge($values['participant'], [
+                array_merge($values, [
                     'event_id' => $this->event->event_id,
                 ]),
                 $this->model

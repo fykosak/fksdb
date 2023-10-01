@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
+use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
@@ -77,7 +78,7 @@ final class SingleReflectionFormFactory
      * @phpstan-param EvaluatedFieldMetaData $metaData
      */
     public function addToContainer(
-        ContainerWithOptions $container,
+        IContainer $container,
         string $table,
         string $field,
         array $metaData = [],
