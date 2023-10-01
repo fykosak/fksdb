@@ -12,10 +12,10 @@ person_info:
         required: true
 person_schedule:
     dsef_morning:
-        required: true
+        required: false
     dsef_afternoon:
-        required: true
+        required: false
     dsef_all_day:
-        required: true
+        required: false
     accommodation:
         required: false

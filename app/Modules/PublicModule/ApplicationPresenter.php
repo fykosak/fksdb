@@ -207,6 +207,19 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function startup(): void
     {
+        if (in_array($this->getEvent()->event_type_id, [2, 14])) {
+            if ($this->getEventApplication()) {
+                $this->redirect(
+                    ':Event:Application:edit',
+                    [
+                        'eventId' => $this->getEvent()->event_id,
+                        'id' => $this->getEventApplication()->event_participant_id,
+                    ]
+                );
+            } else {
+                $this->redirect(':Event:Application:create', ['eventId' => $this->getEvent()->event_id, 'id' => null]);
+            }
+        }
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
@@ -291,11 +304,6 @@ final class ApplicationPresenter extends BasePresenter
     protected function createComponentApplication(): ApplicationComponent
     {
         return new ApplicationComponent($this->getContext(), $this->getHolder());
-    }
-
-    protected function createComponentDsefApplication(): DsefFormComponent
-    {
-        return new DsefFormComponent($this->getContext(), $this->getEventApplication(), $this->getHolder(), $this->getMachine(), $this->getLoggedPerson());
     }
 
     protected function beforeRender(): void

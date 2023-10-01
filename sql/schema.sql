@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     `event_id`              INT(11)       NOT NULL,
     `person_id`             INT(11)       NOT NULL,
     `note`                  TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
-    `status`                VARCHAR(20)   NOT NULL,
+    `status`                VARCHAR(20)   NOT NULL DEFAULT '__init',
     `created`               TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
     `accomodation`          TINYINT(1)    NULL     DEFAULT NULL,
     `diet`                  TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',

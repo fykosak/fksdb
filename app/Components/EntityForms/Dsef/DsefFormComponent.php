@@ -6,11 +6,13 @@ namespace FKSDB\Components\EntityForms\Dsef;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -19,32 +21,37 @@ use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
+use Nette\Neon\Exception;
 use Nette\Neon\Neon;
 
 /**
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-extends EntityFormComponent<EventParticipantModel>
  */
-class DsefFormComponent extends EntityFormComponent
+final class DsefFormComponent extends EntityFormComponent
 {
-    protected ReferencedPersonFactory $referencedPersonFactory;
-    protected SingleReflectionFormFactory $reflectionFormFactory;
-    protected BaseHolder $holder;
-    protected EventParticipantMachine $machine;
-    protected EventParticipantService $eventParticipantService;
-    protected ?PersonModel $loggedPerson;
+    private ReferencedPersonFactory $referencedPersonFactory;
+    private SingleReflectionFormFactory $reflectionFormFactory;
+    private EventParticipantService $eventParticipantService;
+
+    private EventParticipantMachine $machine;
+    private ?PersonModel $loggedPerson;
+    private EventModel $event;
 
     public function __construct(
         Container $container,
         ?Model $model,
-        BaseHolder $holder,
+        EventModel $event,
         EventParticipantMachine $machine,
         ?PersonModel $loggedPerson
     ) {
         parent::__construct($container, $model);
-        $this->holder = $holder;
+        $this->event = $event;
         $this->machine = $machine;
         $this->loggedPerson = $loggedPerson;
     }
@@ -59,24 +66,29 @@ class DsefFormComponent extends EntityFormComponent
         $this->eventParticipantService = $eventParticipantService;
     }
 
+    /**
+     * @throws Exception
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void
     {
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getParticipantFieldsDefinition(),
-            $this->holder->event->getContestYear(),
+            $this->event->getContestYear(),
             'email',
             true,
             new SelfACLResolver(
-                $this->model ?? 'event.participant',
+                $this->model ?? EventParticipantModel::RESOURCE_ID,
                 'organizer',
-                $this->holder->event->event_type->contest,
+                $this->event->event_type->contest,
                 $this->container
             ),
-            $this->holder->event
+            $this->event
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));
-        $form->addComponent($personContainer, 'person');
+        $form->addComponent($personContainer, 'person_id');
 
         $participantContainer = $this->reflectionFormFactory->createContainerWithMetadata(
             'event_participant',
@@ -85,15 +97,33 @@ class DsefFormComponent extends EntityFormComponent
         );
         $form->addComponent($participantContainer, 'participant');
 
+        /** @var ScheduleContainer $dsefMorning */
         $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
+        /** @var ScheduleContainer $dsefAfternoon */
         $dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
+        /** @var ScheduleContainer $dsefAllDay */
         $dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
-
-        // TODO add conditions to controls
-        $dsefMorning->addConditionOn($dsefAllDay, Form::FILLED)
-            ->addRule(Form::BLANK, '');
-        $dsefAfternoon->addConditionOn($dsefAllDay, Form::FILLED)
-            ->addRule(Form::BLANK, '');
+        /** @var SelectBox $allDaySelect */
+        foreach ($dsefAllDay->getComponents() as $allDaySelect) {
+            /** @var SelectBox[] $halfComponents */
+            $halfComponents = [];
+            foreach ($dsefMorning->getComponents() as $morningSelect) {
+                $halfComponents[] = $morningSelect;
+            }
+            foreach ($dsefAfternoon->getComponents() as $afternoonSelect) {
+                $halfComponents[] = $afternoonSelect;
+            }
+            foreach ($halfComponents as $halfComponent) {
+                $allDaySelect->addConditionOn($halfComponent, Form::Filled)
+                    ->addRule(Form::Blank, _('TODO poslať do piče, iba ranná alebo celodenna'));
+                $allDaySelect->addConditionOn($halfComponent, Form::Blank)
+                    ->addRule(Form::Filled, _('TODO poslať do piče, iba ranná alebo celodenna'));
+                $halfComponent->addConditionOn($allDaySelect, Form::Filled)
+                    ->addRule(Form::Blank, _('TODO poslať do piče, iba ranná alebo celodenna'));
+                $halfComponent->addConditionOn($allDaySelect, Form::Blank)
+                    ->addRule(Form::Filled, _('TODO poslať do piče, iba ranná alebo celodenna'));
+            }
+        }
     }
 
     /**
@@ -104,6 +134,9 @@ class DsefFormComponent extends EntityFormComponent
         return [];
     }
 
+    /**
+     * @throws Exception
+     */
     private function getParticipantFieldsDefinition(): array
     {
         return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'dsef.participant.neon');
@@ -113,40 +146,50 @@ class DsefFormComponent extends EntityFormComponent
     {
         if (isset($this->model)) {
             $form->setDefaults($this->model);
-            /** @var ReferencedId<PersonModel> $referencedId */
-            $referencedId = $form->getComponent('person');
-            $referencedId->setDefaultValue($this->model->person);
         } elseif (isset($this->loggedPerson)) {
-            $form->setDefaults(['person' => $this->loggedPerson->person_id]);
+            $form->setDefaults(['person_id' => $this->loggedPerson->person_id]);
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues('array');
         $this->eventParticipantService->explorer->beginTransaction();
-        $values = array_reduce(
-            $this->getProcessing(),
-            fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event),
-            $values
-        );
+        try {
+            /*  $values = array_reduce(
+                  $this->getProcessing(),
+                  fn(array $prevValue, FormProcessing $item): array => $item($prevValue, $form, $this->event),
+                  $values
+              );*/
 
-        if (isset($values['person'])) {
-            $this->holder->data += (array)$values['person'];
+            $eventParticipant = $this->eventParticipantService->storeModel(
+                array_merge($values, [
+                    'event_id' => $this->event->event_id,
+                ]),
+                $this->model
+            );
+
+            if (!isset($this->model)) {
+                $holder = $this->machine->createHolder($eventParticipant);
+                $transition = $this->machine->getImplicitTransition($holder);
+                $this->machine->execute2($transition, $holder);
+            }
+            $this->eventParticipantService->explorer->commit();
+            $this->getPresenter()->flashMessage(
+                isset($this->model)
+                    ? _('Application has been updated')
+                    : _('Application has been created'),
+                Message::LVL_SUCCESS
+            );
+            $this->getPresenter()->redirect('detail', ['id' => $eventParticipant->event_participant_id]);
+        } catch (AbortException $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            $this->eventParticipantService->explorer->rollBack();
+            throw $exception;
         }
-
-        if (!isset($this->model)) {
-            $transition = $this->machine->getImplicitTransition($this->holder);
-            $this->machine->execute2($transition, $this->holder);
-        }
-
-        $this->eventParticipantService->storeModel(array_merge($values, [
-            'event_id' => $this->holder->event->event_id,
-            'person_id' => $this->model->person->person_id
-        ]));
-
-        $this->holder->saveModel();
-        $this->eventParticipantService->explorer->commit();
     }
-
 }

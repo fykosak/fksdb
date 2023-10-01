@@ -1,14 +1,9 @@
 {block outerContent}
     <div class="container">
         {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-        {varType FKSDB\Models\ORM\Models\EventModel $event}
         {ifset $model}
             {control columnTable ['event_participant.status'], $model,1024}<br>
         {/ifset}
-        {if $event->event_type_id == 2}
-            {control dsefApplication}
-        {else}
-            {control application:form}
-        {/if}
+        {control application:form}
     </div>
 {/block}
