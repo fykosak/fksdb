@@ -16,21 +16,23 @@
         </div>
     </div>
 
+    {varType array $fields}
     {foreach $groups as $groupName=>$fieldDef}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{$groupName}</h2>
-                {var $curentFields = []}
-                {foreach $fieldDef as $field}
-                    {varType array $fields}
-                    {if array_key_exists($field,$fields)}
-                        {php $curentFields[] = 'event_participant.' . $field}
-                    {/if}
-                {/foreach}
-                {control columnTable $curentFields,$model,1024}
-                {php $curentFields=[]}
+        {if count(array_intersect($fieldDef, array_keys($fields))) > 0}
+            <div class="panel color-auto">
+                <div class="container">
+                    <h2>{$groupName}</h2>
+                    {var $currentFields = []}
+                    {foreach $fieldDef as $field}
+                        {if array_key_exists($field,$fields)}
+                            {php $currentFields[] = 'event_participant.' . $field}
+                        {/if}
+                    {/foreach}
+                    {control columnTable $currentFields,$model,1024}
+                    {php $currentFields = []}
+                </div>
             </div>
-        </div>
+        {/if}
     {/foreach}
 
     {if $hasSchedule}

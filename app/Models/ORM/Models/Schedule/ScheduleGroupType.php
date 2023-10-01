@@ -158,6 +158,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::DSEF_AFTERNOON:
             case self::DSEF_MORNING:
+            case self::DSEF_ALL_DAY:
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;

@@ -107,6 +107,10 @@ final class ApplicationPresenter extends BasePresenter
             );
     }
 
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create application'), 'fas fa-plus');
+    }
 
     /**
      * @throws EventNotFoundException
@@ -128,6 +132,7 @@ final class ApplicationPresenter extends BasePresenter
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],
             _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
             _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
+            _('Food') => ['lunch_count'],
         ];
     }
 
