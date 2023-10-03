@@ -1,0 +1,10 @@
+{layout ../@layout.latte}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
+
+{block content}
+    <p class="alert-info alert">{_'Transition will be processed automatically on of: '}
+        {foreach $transitions as $transition}
+            {$transition->source->badge()}->{$transition->target->badge()}
+        {/foreach}</p>
+    {control formControl}
+{/block}

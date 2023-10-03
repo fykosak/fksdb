@@ -116,15 +116,14 @@ abstract class Machine
     }
     /**
      * @phpstan-param Enum $target
-     * @phpstan-return Transition<THolder>
+     * @phpstan-return Transition<THolder>[]
      */
-    public function getTransitionByTarget(EnumColumn $target): Transition
+    public function getTransitionsByTarget(EnumColumn $target): array
     {
-        $transitions = \array_filter(
+        return \array_filter(
             $this->transitions,
-            fn(Transition $transition): bool =>$target->value === $transition->target->value
+            fn(Transition $transition): bool => $target->value === $transition->target->value
         );
-        return $this->selectTransition($transitions);
     }
 
     /**

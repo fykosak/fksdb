@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Attendance;
 
+use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Components\MachineCode\FormComponent;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -33,9 +33,12 @@ abstract class AttendanceFormComponent extends FormComponent
     /**
      * @throws \Exception
      */
-    protected function innerHandleSuccess(MachineCode $code, Form $form): void
+    protected function handleSuccess(Form $form): void
     {
+        /** @phpstan-var array{code:string,only_check:bool} $values */
+        $values = $form->getValues('array');
         try {
+            $code = MachineCode::createFromCode($this->container, $values['code'], 'default');
             if ($code->type !== 'PE') {
                 throw new BadRequestException(_('Bod code type'));
             }
@@ -93,8 +96,9 @@ abstract class AttendanceFormComponent extends FormComponent
 
     abstract protected function getPersonSchedule(PersonModel $person): ?PersonScheduleModel;
 
-    protected function innerConfigureForm(Form $form): void
+    protected function configureForm(Form $form): void
     {
+        $form->addText('code', _('Code'));
         $form->addCheckbox('only_check', _('Only check state'));
     }
 }

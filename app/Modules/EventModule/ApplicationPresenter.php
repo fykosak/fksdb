@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Transition\AttendanceComponent;
+use FKSDB\Components\Controls\Transition\CodeComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
@@ -17,7 +17,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -27,6 +26,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 
 final class ApplicationPresenter extends BasePresenter
 {
@@ -88,14 +88,14 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedAttendance(): bool
+    public function authorizedCode(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function titleAttendance(): PageTitle
+    public function titleCode(): PageTitle
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+        return new PageTitle(null, _('Code'), 'fas fa-user-check');
     }
 
     public function authorizedCreate(): bool
@@ -190,20 +190,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedFastEdit(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
     public function authorizedImport(): bool
     {
         return $this->traitIsAuthorized($this->getModelResource(), 'import');
@@ -246,8 +232,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
-     * @throws EventNotFoundException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     private function getHolder(): BaseHolder
     {
@@ -273,33 +259,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function createComponentImport(): ImportComponent
-    {
-        return new ImportComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return AttendanceComponent<BaseHolder>
-     */
-    protected function createComponentFastTransition(): AttendanceComponent
-    {
-        return new AttendanceComponent(
-            $this->getContext(),
-            $this->getEvent(),
-            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine(),
-        );
-    }
-
-    /**
-     * @throws NotImplementedException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): DsefFormComponent
     {
@@ -307,13 +268,12 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws NotImplementedException
      * @throws \ReflectionException
-     * @throws BadTypeException
      */
     protected function createComponentEditForm(): DsefFormComponent
     {
@@ -321,9 +281,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws NotImplementedException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     private function createForm(?EventParticipantModel $model): DsefFormComponent
     {
@@ -338,7 +297,22 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getLoggedPerson()
                 );
         }
-        throw new NotImplementedException();
+        throw new InvalidStateException(_('Event type is not supported'));
+    }
+
+    /**
+     * @phpstan-return CodeComponent<BaseHolder>
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    protected function createComponentCode(): CodeComponent
+    {
+        return new CodeComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(),
+        );
     }
 
     /**
@@ -368,6 +342,15 @@ final class ApplicationPresenter extends BasePresenter
     protected function createComponentMassTransitions(): MassTransitionsComponent
     {
         return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function createComponentImport(): ImportComponent
+    {
+        return new ImportComponent($this->getContext(), $this->getEvent());
     }
 
 

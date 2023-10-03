@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\FastEditComponent;
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transition\AttendanceComponent;
+use FKSDB\Components\Controls\Transition\CodeComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\SingleTestComponent;
@@ -80,14 +79,14 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedAttendance(): bool
+    public function authorizedCode(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function titleAttendance(): PageTitle
+    public function titleCode(): PageTitle
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+        return new PageTitle(null, _('Code'), 'fas fa-pen');
     }
 
     public function authorizedCreate(): bool
@@ -189,20 +188,6 @@ final class TeamApplicationPresenter extends BasePresenter
         return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedFastEdit(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
-    }
-
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
@@ -246,27 +231,17 @@ final class TeamApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentGrid(): TeamGrid
     {
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            [$this->getEntity()],
-            $this->getContext()
-        );
+        return new TeamGrid($this->getEvent(), $this->getContext());
     }
-
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentSchoolCheck(): SchoolCheckComponent
+    protected function createComponentList(): TeamList
     {
-        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+        return new TeamList($this->getEvent(), $this->getContext());
     }
 
     /**
@@ -275,7 +250,7 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     protected function createComponentCreateForm(): TeamFormComponent
     {
-        return $this->createTeamForm(null);
+        return $this->createForm(null);
     }
 
     /**
@@ -288,14 +263,14 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     protected function createComponentEditForm(): TeamFormComponent
     {
-        return $this->createTeamForm($this->getEntity());
+        return $this->createForm($this->getEntity());
     }
 
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function createTeamForm(?TeamModel2 $model): TeamFormComponent
+    private function createForm(?TeamModel2 $model): TeamFormComponent
     {
         switch ($this->getEvent()->event_type_id) {
             case 1:
@@ -317,44 +292,18 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
+     * @phpstan-return CodeComponent<TeamHolder>
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
-    protected function createComponentGrid(): TeamGrid
+    protected function createComponentCode(): CodeComponent
     {
-        return new TeamGrid($this->getEvent(), $this->getContext());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentList(): TeamList
-    {
-        return new TeamList($this->getEvent(), $this->getContext());
-    }
-
-    protected function createComponentTeamRestsControl(): TeamRestsComponent
-    {
-        return new TeamRestsComponent($this->getContext());
-    }
-
-
-    /**
-     * @phpstan-return AttendanceComponent<TeamHolder>
-     * @throws EventNotFoundException|BadTypeException
-     */
-    protected function createComponentFastTransition(): AttendanceComponent
-    {
-        return new AttendanceComponent(
+        return new CodeComponent(
             $this->getContext(),
             $this->getEvent(),
             TeamState::from(TeamState::PARTICIPATED),
             $this->getMachine()
         );
-    }
-
-    protected function createComponentFastEdit(): FastEditComponent
-    {
-        return new FastEditComponent($this->getContext());
     }
 
     /**
@@ -364,8 +313,8 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
-     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent
     {
@@ -386,6 +335,11 @@ final class TeamApplicationPresenter extends BasePresenter
         return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
 
+    protected function createComponentTeamRestsControl(): TeamRestsComponent
+    {
+        return new TeamRestsComponent($this->getContext());
+    }
+
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
@@ -397,5 +351,30 @@ final class TeamApplicationPresenter extends BasePresenter
     protected function createComponentStudySchoolTest(): SingleTestComponent
     {
         return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
+     */
+    protected function createComponentSeating(): ProviderComponent
+    {
+        return new ProviderComponent(
+            new PageComponent($this->getContext()),
+            [$this->getEntity()],
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentSchoolCheck(): SchoolCheckComponent
+    {
+        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
     }
 }
