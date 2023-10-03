@@ -29,26 +29,20 @@ class AttendanceComponent extends FormComponent
     /** @phpstan-var Machine<THolder> */
     protected Machine $machine;
     private EventModel $event;
-
-    /** @var EnumColumn&FakeStringEnum */
-    private FakeStringEnum $fromState;
     /** @var EnumColumn&FakeStringEnum */
     private FakeStringEnum $toState;
 
     /**
-     * @param EnumColumn&FakeStringEnum $fromState
      * @param EnumColumn&FakeStringEnum $toState
      * @phpstan-param Machine<THolder> $machine
      */
     public function __construct(
         Container $container,
         EventModel $event,
-        FakeStringEnum $fromState,
         FakeStringEnum $toState,
         Machine $machine
     ) {
         parent::__construct($container);
-        $this->fromState = $fromState;
         $this->toState = $toState;
         $this->event = $event;
         $this->machine = $machine;
@@ -70,7 +64,7 @@ class AttendanceComponent extends FormComponent
      */
     private function getTransition(): Transition
     {
-        return $this->machine->getTransitionByStates($this->fromState, $this->toState);
+        return $this->machine->getTransitionByTarget($this->toState);
     }
 
     protected function innerHandleSuccess(MachineCode $code, Form $form): void

@@ -346,7 +346,6 @@ final class TeamApplicationPresenter extends BasePresenter
         return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
-            TeamState::from(TeamState::APPROVED),
             TeamState::from(TeamState::PARTICIPATED),
             $this->getMachine()
         );

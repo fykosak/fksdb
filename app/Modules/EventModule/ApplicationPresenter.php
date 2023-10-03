@@ -178,16 +178,6 @@ final class ApplicationPresenter extends BasePresenter
         return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
 
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function createComponentImport(): ImportComponent
-    {
-        return new ImportComponent($this->getContext(), $this->getEvent());
-    }
-
     protected function getORMService(): EventParticipantService
     {
         return $this->eventParticipantService;
@@ -215,6 +205,15 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function createComponentImport(): ImportComponent
+    {
+        return new ImportComponent($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
      * @phpstan-return AttendanceComponent<BaseHolder>
      */
     protected function createComponentFastTransition(): AttendanceComponent
@@ -222,7 +221,6 @@ final class ApplicationPresenter extends BasePresenter
         return new AttendanceComponent(
             $this->getContext(),
             $this->getEvent(),
-            EventParticipantStatus::from(EventParticipantStatus::PAID),
             EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
             $this->getMachine(),
         );

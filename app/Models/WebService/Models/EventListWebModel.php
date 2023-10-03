@@ -60,7 +60,7 @@ class EventListWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'eventTypes' => Expect::listOf(Expect::scalar()->castTo('int')),
+            'eventTypes' => Expect::listOf(Expect::int()),
             'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int')),
         ]);
     }

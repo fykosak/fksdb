@@ -6,52 +6,38 @@ namespace FKSDB\Components\MachineCode;
 
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 final class MachineCode
 {
+    public const CIP_ALGO = 'aes-256-cbc-hmac-sha1';
     /** @phpstan-var 'PE'|'TE'|'EP' */
     public string $type;
     public int $id;
     public string $control;
-    private Container $container;
 
     /**
      * @phpstan-param 'PE'|'TE'|'EP' $type
      */
-    public function __construct(Container $container, string $type, int $id, string $control)
+    private function __construct(string $type, int $id)
     {
-        $this->control = $control;
         $this->type = $type;
         $this->id = $id;
         // $container->callInjects($this);
-        $this->container = $container;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    public static function createFromCode(Container $container, string $code): self
+    public static function createFromCode(Container $container, string $code, string $saltOffset): self
     {
-        if (!preg_match('/([A-Z]{2})([0-9]+)C([A-Z0-9]{2})/', $code, $matches)) {
+        $salt = $container->getParameters()['salt'][$saltOffset];
+        $data = openssl_decrypt($code, self::CIP_ALGO, $salt);
+        Debugger::log($data);
+        if (!preg_match('/([A-Z]{2})([0-9]+)/', $data, $matches)) {
             throw new ForbiddenRequestException(_('Wrong format'));
         }
-        [, $type, $id, $control] = $matches;
-        return new self($container, $type, (int)$id, $control);// @phpstan-ignore-line
-    }
-
-    public function isValid(string $saltOffset = 'default'): bool
-    {
-        $salt = $this->container->getParameters()['salt'][$saltOffset];
-        return substr(sha1($this->type . $this->id . $salt), 0, 2) !== $this->control;
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     */
-    public function check(string $saltOffset = 'default'): void
-    {
-        if (!$this->isValid($saltOffset)) {
-            throw new ForbiddenRequestException(_('Wrong checksum'));
-        }
+        [, $type, $id] = $matches;
+        return new self($type, (int)$id);// @phpstan-ignore-line
     }
 }
