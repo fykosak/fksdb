@@ -18,7 +18,7 @@
                        href="{plink ':Event:TeamApplication:create' ,'eventId'=>$event->event_id}">{_'Register team!'}</a>
                 {else}
                     <a class="btn btn-{$event->event_type->getSymbol()}"
-                       href="{plink ':Public:Application:default','eventId'=>$event->event_id}">{_'Register!'}</a>
+                       href="{plink ':Event:Application:create','eventId'=>$event->event_id}">{_'Register!'}</a>
                 {/if}
             </div>
         </div>

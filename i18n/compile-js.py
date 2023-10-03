@@ -30,8 +30,8 @@ def parse_record(record):
     if 'msgid_plural' in attributes:
         res = []
         for index in range(0,3):
-            if (f'msgstr[{index}]' in attributes):
-                res.append(attributes[f'msgstr[{index}]'])
+            if ('msgstr[{}]'.format(index) in attributes):
+                res.append(attributes['msgstr[{}]'.format(index)])
         return attributes['msgid'], res
 
     return attributes['msgid'], [attributes['msgstr']]

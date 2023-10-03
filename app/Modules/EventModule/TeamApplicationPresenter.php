@@ -44,28 +44,9 @@ final class TeamApplicationPresenter extends BasePresenter
 
     private TeamService2 $teamService;
 
-    public function injectServiceFyziklaniTeam(TeamService2 $teamService): void
+    public function injectServiceService(TeamService2 $service): void
     {
-        $this->teamService = $teamService;
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedFastEdit(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+        $this->teamService = $service;
     }
 
     /**
@@ -77,9 +58,22 @@ final class TeamApplicationPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    public function titleAttendance(): PageTitle
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+        return $this->getEvent()->isTeamEvent();
+    }
+
+    public function requiresLogin(): bool
+    {
+        return $this->getAction() !== 'create';
+    }
+
+    protected function getORMService(): TeamService2
+    {
+        return $this->teamService;
     }
 
     /**
@@ -91,40 +85,9 @@ final class TeamApplicationPresenter extends BasePresenter
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function titleMass(): PageTitle
+    public function titleAttendance(): PageTitle
     {
-        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedMass(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws \Throwable
-     */
-    public function titleDetail(): PageTitle
-    {
-        $entity = $this->getEntity();
-        return new PageTitle(
-            null,
-            sprintf(_('Application detail "%s"'), $entity->name),
-            'fas fa-user'
-        );
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
     }
 
     public function authorizedCreate(): bool
@@ -137,70 +100,9 @@ final class TeamApplicationPresenter extends BasePresenter
             );
     }
 
-    public function titleDetailedList(): PageTitle
+    public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDetailedList(): bool
-    {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
-    }
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    public function titleEdit(): PageTitle
-    {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    public function authorizedEdit(): bool
-    {
-        $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
-    }
-
-    public function requiresLogin(): bool
-    {
-        return $this->getAction() !== 'create';
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     */
-    public function getHolder(): TeamHolder
-    {
-        return $this->getMachine()->createHolder($this->getEntity());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws BadTypeException
-     */
-    protected function getMachine(): TeamMachine
-    {
-        return $this->eventDispatchFactory->getTeamMachine($this->getEvent());
+        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
     }
 
     /**
@@ -233,10 +135,113 @@ final class TeamApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws \Throwable
      */
-    protected function isEnabled(): bool
+    public function titleDetail(): PageTitle
     {
-        return $this->getEvent()->isTeamEvent();
+        $entity = $this->getEntity();
+        return new PageTitle(
+            null,
+            sprintf(_('Application detail "%s"'), $entity->name),
+            'fas fa-user'
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetailedList(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+    }
+
+    public function titleDetailedList(): PageTitle
+    {
+        return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedEdit(): bool
+    {
+        $event = $this->getEvent();
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedFastEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+    }
+
+    public function titleFastEdit(): PageTitle
+    {
+        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedMass(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+    }
+
+    public function titleMass(): PageTitle
+    {
+        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    private function getHolder(): TeamHolder
+    {
+        return $this->getMachine()->createHolder($this->getEntity());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    private function getMachine(): TeamMachine
+    {
+        return $this->eventDispatchFactory->getTeamMachine($this->getEvent());
     }
 
     /**
@@ -332,10 +337,6 @@ final class TeamApplicationPresenter extends BasePresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function getORMService(): TeamService2
-    {
-        return $this->teamService;
-    }
 
     /**
      * @phpstan-return AttendanceComponent<TeamHolder>

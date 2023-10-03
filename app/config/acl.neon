@@ -141,10 +141,9 @@ acl:
 
 
 ## NEW APPLICATIONS
-    - allow(guest, fyziklani.team, create)
-    - allow([event.fyziklani.teacher,event.fyziklani.member], fyziklani.team, [detail,edit], @ownApplicationAssertion)
-    - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
-    - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))# +organizer
+    - allow(guest, [fyziklani.team,event.participant], create)
+    - allow([event.fyziklani.teacher,event.fyziklani.member,event.participant], [fyziklani.team,event.participant], [detail,edit], @ownApplicationAssertion)
+    - allow(eventManager,[fyziklani.team,event.participant], ::constant(Nette\Security\Permission::ALL))# +organizer
 ## EVENT MODULE
     - allow(event.organizer, event.participant, [list, detail])
     - allow(eventManager, event.organizer, ::constant(Nette\Security\Permission::ALL))

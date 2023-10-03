@@ -6,31 +6,36 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
-            {control columnTable [
+            {control columnTable $isOrganizer?[
             'person.person_link',
             'event_participant.event_participant_id',
             'event_participant.status',
-            'event_participant.price',
+            'event_participant.created'
+            ]:[
+            'person.full_name',
+            'event_participant.status',
             'event_participant.created'
             ],$model,1024}
         </div>
     </div>
 
+    {varType string[] $fields}
     {foreach $groups as $groupName=>$fieldDef}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{$groupName}</h2>
-                {var $curentFields = []}
-                {foreach $fieldDef as $field}
-                    {varType array $fields}
-                    {if array_key_exists($field,$fields)}
-                        {php $curentFields[] = 'event_participant.' . $field}
-                    {/if}
-                {/foreach}
-                {control columnTable $curentFields,$model,1024}
-                {php $curentFields=[]}
+        {if count(array_intersect($fieldDef, $fields)) > 0}
+            <div class="panel color-auto">
+                <div class="container">
+                    <h2>{$groupName}</h2>
+                    {var $currentFields = []}
+                    {foreach $fieldDef as $field}
+                        {if in_array($field,$fields)}
+                            {php $currentFields[] = 'event_participant.' . $field}
+                        {/if}
+                    {/foreach}
+                    {control columnTable $currentFields,$model,1024}
+                    {php $currentFields = []}
+                </div>
             </div>
-        </div>
+        {/if}
     {/foreach}
 
     {if $hasSchedule}

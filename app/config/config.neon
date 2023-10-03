@@ -154,4 +154,6 @@ includes:
     - stalking.neon
     #- payment.neon
     - payments/common.neon
-    - fyziklani/default.neon
+    - applications/fof.neon
+    - applications/fol.neon
+    - applications/dsef.neon

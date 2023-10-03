@@ -24,6 +24,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 
     public const DSEF_MORNING = 'dsef_morning';
     public const DSEF_AFTERNOON = 'dsef_afternoon';
+    public const DSEF_ALL_DAY = 'dsef_all_day';
 
     public const APPAREL = 'apparel';
 
@@ -46,6 +47,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             new self(self::WEEKEND),
             new self(self::DSEF_MORNING),
             new self(self::DSEF_AFTERNOON),
+            new self(self::DSEF_ALL_DAY),
             new self(self::APPAREL),
             new self(self::TRANSPORT),
             new self(self::TICKET),
@@ -83,6 +85,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 break;
             case self::DSEF_AFTERNOON:
             case self::DSEF_MORNING:
+            case self::DSEF_ALL_DAY:
                 $badge = 'badge bg-color-8';
                 break;
             case self::APPAREL:
@@ -122,6 +125,8 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return _('DSEF morning');
             case self::DSEF_AFTERNOON:
                 return _('DSEF afternoon');
+            case self::DSEF_ALL_DAY:
+                return _('DSEF all day');
             case self::APPAREL:
                 return _('Apparel');
             case self::TRANSPORT:
@@ -153,6 +158,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::DSEF_AFTERNOON:
             case self::DSEF_MORNING:
+            case self::DSEF_ALL_DAY:
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;

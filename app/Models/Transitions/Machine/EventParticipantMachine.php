@@ -8,6 +8,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
@@ -21,11 +22,16 @@ use Nette\Database\Explorer;
 final class EventParticipantMachine extends Machine
 {
     private EventDispatchFactory $eventDispatchFactory;
+    private EventParticipantService $eventParticipantService;
 
-    public function __construct(EventDispatchFactory $eventDispatchFactory, Explorer $explorer)
-    {
+    public function __construct(
+        EventDispatchFactory $eventDispatchFactory,
+        Explorer $explorer,
+        EventParticipantService $eventParticipantService
+    ) {
         parent::__construct($explorer);
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
@@ -58,6 +64,14 @@ final class EventParticipantMachine extends Machine
      */
     public function createHolder(Model $model): BaseHolder
     {
+        switch ($model->event->event_type_id) {
+            case 2:
+            case 14:
+                $holder = new BaseHolder($this->eventParticipantService);
+                $holder->setModel($model);
+                $holder->setEvent($model->event);
+                return $holder;
+        }
         $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
         $holder->setModel($model);
         return $holder;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -14,6 +13,7 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Model;
+use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
@@ -77,7 +77,7 @@ final class SingleReflectionFormFactory
      * @phpstan-param EvaluatedFieldMetaData $metaData
      */
     public function addToContainer(
-        ContainerWithOptions $container,
+        IContainer $container,
         string $table,
         string $field,
         array $metaData = [],

@@ -9,9 +9,7 @@ use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
@@ -57,18 +55,7 @@ class NewApplicationsGrid extends BaseGrid
                 ? [':Event:TeamApplication:create', ['eventId' => $event->event_id]]
                 : [':Public:Application:default', ['eventId' => $event->event_id]],
             null,
-            function (EventModel $modelEvent): bool {
-                try {
-                    return (bool)count(
-                        $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
-                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::from(Machine::STATE_INIT)
-                        )
-                    );
-                } catch (\Throwable $exception) {
-                    return true;
-                }
-            }
+            fn(EventModel $modelEvent): bool => $modelEvent->isRegistrationOpened()
         );
         $this->addTableButton($button, 'create');
     }
