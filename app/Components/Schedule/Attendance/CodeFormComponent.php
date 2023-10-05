@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -19,14 +18,12 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-abstract class AttendanceFormComponent extends FormComponent
+abstract class CodeFormComponent extends FormComponent
 {
-    private PersonService $personService;
     private PersonScheduleService $personScheduleService;
 
-    public function inject(PersonService $personService, PersonScheduleService $personScheduleService): void
+    public function inject(PersonScheduleService $personScheduleService): void
     {
-        $this->personService = $personService;
         $this->personScheduleService = $personScheduleService;
     }
 
@@ -35,18 +32,19 @@ abstract class AttendanceFormComponent extends FormComponent
      */
     protected function handleSuccess(Form $form): void
     {
-        /** @phpstan-var array{code:string,only_check:bool} $values */
+        /** @phpstan-var array{code:string,action:string} $values */
         $values = $form->getValues('array');
         try {
             $code = MachineCode::createFromCode($this->container, $values['code'], 'default');
-            if ($code->type !== 'PE') {
+            if ($code->type === MachineCode::TYPE_PERSON) {
+                $person = $code->model;
+            } elseif ($code->type === MachineCode::TYPE_PARTICIPANT) {
+                $person = $code->model->person;
+            } else {
                 throw new BadRequestException(_('Bod code type'));
             }
-            $person = $this->personService->findByPrimary($code->id);
-            if (!$person) {
-                throw new BadRequestException(_('Person not found'));
-            }
             $personSchedule = $this->getPersonSchedule($person);
+
             if (!$personSchedule) {
                 throw new BadRequestException(_('Person not applied in this schedule'));
             }
@@ -99,6 +97,10 @@ abstract class AttendanceFormComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $form->addText('code', _('Code'));
-        $form->addCheckbox('only_check', _('Only check state'));
+        $form->addSelect('action', _('Action'), [
+            'attendance' => _('Attendance'),
+            'check' => _('Check'),
+            //  'detail'=>_('Detail'),
+        ]);
     }
 }

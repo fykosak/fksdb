@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Schedule\Attendance\ItemAttendanceFormComponent;
+use FKSDB\Components\Schedule\Attendance\ItemCodeFormComponent;
 use FKSDB\Components\Schedule\PersonsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -158,9 +158,9 @@ final class ItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentAttendance(): ItemAttendanceFormComponent
+    protected function createComponentAttendance(): ItemCodeFormComponent
     {
-        return new ItemAttendanceFormComponent($this->getContext(), $this->getEntity());
+        return new ItemCodeFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ScheduleItemService

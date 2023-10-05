@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\DI\Container;
 
-class GroupAttendanceFormComponent extends AttendanceFormComponent
+class GroupCodeFormComponent extends CodeFormComponent
 {
     protected ScheduleGroupModel $group;
 

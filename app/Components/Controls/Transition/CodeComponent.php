@@ -6,7 +6,6 @@ namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -19,6 +18,7 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -26,6 +26,7 @@ use Tracy\Debugger;
 
 /**
  * @phpstan-template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
+ * @phpstan-type TActions 'edit'|'transition'|'detail'
  */
 final class CodeComponent extends FormComponent
 {
@@ -34,7 +35,10 @@ final class CodeComponent extends FormComponent
     private EventModel $event;
     /** @var EnumColumn&FakeStringEnum */
     private FakeStringEnum $toState;
-    /** @persistent */
+    /**
+     * @persistent
+     * @phpstan-var TActions
+     */
     public ?string $action = null;
 
     /**
@@ -109,32 +113,31 @@ final class CodeComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
-        /** @phpstan-var array{code:string,action:string} $values */
+        /** @phpstan-var array{code:string,action:TActions} $values */
         $values = $form->getValues('array');
         $this->action = $values['action'];
         try {
             $code = MachineCode::createFromCode($this->container, $values['code'], 'default');
-            if ($this->event->isTeamEvent() && $code->type === 'TE') {
-                /** @var TeamModel2|null $model */
-                $model = $this->event->getTeams()->where('fyziklani_team_id', $code->id)->fetch();
-            } elseif ($code->type === 'EP' && !$this->event->isTeamEvent()) {
-                /** @var EventParticipantModel|null $model */
-                $model = $this->event->getParticipants()->where('event_participant_id', $code->id)->fetch();
+            if ($this->event->isTeamEvent() && $code->type === MachineCode::TYPE_TEAM) {
+                if ($code->model->event_id !== $this->event->event_id) {
+                    throw new ForbiddenRequestException();
+                }
+            } elseif (!$this->event->isTeamEvent() && $code->type === MachineCode::TYPE_PARTICIPANT) {
+                if ($code->model->event_id !== $this->event->event_id) {
+                    throw new ForbiddenRequestException();
+                }
             } else {
                 throw new BadRequestException(_('Wrong type of code.'));
             }
-            if (!$model) {
-                throw new NotFoundException();
-            }
             switch ($values['action']) {
                 case 'edit':
-                    $this->getPresenter()->redirect('edit', ['id' => $model->getPrimary()]);
+                    $this->getPresenter()->redirect('edit', ['id' => $code->model->getPrimary()]);
                     break;
                 case 'detail':
-                    $this->getPresenter()->redirect('detail', ['id' => $model->getPrimary()]);
+                    $this->getPresenter()->redirect('detail', ['id' => $code->model->getPrimary()]);
                     break;
                 case 'transition':
-                    $this->innerHandleTransition($model);
+                    $this->innerHandleTransition($code->model);
             }
         } catch (AbortException $exception) {
             throw $exception;
