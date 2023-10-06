@@ -54,7 +54,7 @@ export class Translator<Lang extends string = 'cs' | 'en'> {
     }
 
     public getLocalizedText(msgId: string, locale: Lang): string {
-        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId]) {
+        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId] && this.data[locale][msgId][0]) {
             return this.data[locale][msgId][0];
         }
         return msgId;
