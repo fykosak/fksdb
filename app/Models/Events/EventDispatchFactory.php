@@ -59,9 +59,19 @@ class EventDispatchFactory
     /**
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
+     * @throws BadTypeException
      */
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
+        switch ($event->event_type_id) {
+            case 2:
+            case 14:
+                $machine = $this->container->getService('transitions.dsef.machine');
+                if (!$machine instanceof EventParticipantMachine) {
+                    throw new BadTypeException(EventParticipantMachine::class, $machine);
+                }
+                return $machine;
+        }
         $definition = $this->findDefinition($event);
         /** @var EventParticipantMachine $machine */
         $machine = $this->container->getService($definition['machineName']);

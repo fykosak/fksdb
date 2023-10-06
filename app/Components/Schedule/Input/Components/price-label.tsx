@@ -1,5 +1,5 @@
 import { Price } from 'FKSDB/Models/Payment/price';
-import PricePrinter from 'FKSDB/Models/ValuePrinters/price-printer';
+import PricePrinter from 'FKSDB/Models/UI/price-printer';
 import * as React from 'react';
 import { Translator } from '@translator/translator';
 

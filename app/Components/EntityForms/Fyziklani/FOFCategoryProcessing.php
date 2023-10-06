@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 
 class FOFCategoryProcessing extends FormProcessing
@@ -16,7 +15,6 @@ class FOFCategoryProcessing extends FormProcessing
     /**
      * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
      * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
-     * @throws BadRequestException
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
@@ -38,20 +36,19 @@ class FOFCategoryProcessing extends FormProcessing
         $olds = 0;
         $years = [
             'P' => 0,
-            StudyYear::H_1 => 0,
-            StudyYear::H_2 => 0,
-            StudyYear::H_3 => 0,
-            StudyYear::H_4 => 0,
+            StudyYear::High1 => 0,
+            StudyYear::High2 => 0,
+            StudyYear::High3 => 0,
+            StudyYear::High4 => 0,
         ];
 
         // calculate stats
         foreach ($members as $member) {
             $history = $member->getHistoryByContestYear($event->getContestYear());
-            $studyYear = $history->getStudyYear();
+            $studyYear = $history->study_year_new;
             if (
-                is_null($studyYear)
-                || $studyYear->value === StudyYear::NONE
-                || $studyYear->value === StudyYear::U_ALL
+                $studyYear->value === StudyYear::None
+                || $studyYear->value === StudyYear::UniversityAll
             ) {
                 $olds += 1;
             } elseif ($studyYear->isHighSchool()) {
@@ -72,22 +69,22 @@ class FOFCategoryProcessing extends FormProcessing
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @phpstan-param PersonModel[] $members
      * @throws NoMemberException
-     * @throws BadRequestException
+     * @throws OldMemberException
      * @phpstan-param array{team:array{force_a:bool}} $values
      */
     protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
     {
         [$olds, $years] = self::getTeamMembersYears($members, $event);
         if ($olds > 0) {
-            throw new BadRequestException(_('Found old member'));
+            throw new OldMemberException();
         }
         if ($values['team']['force_a']) {
             return TeamCategory::from(TeamCategory::A);
         }
         $avg = $this->getCoefficientAvg($members, $event);
-        if ($avg <= 2 && $years[StudyYear::H_4] == 0 && $years[StudyYear::H_3] <= 2) {
+        if ($avg <= 2 && $years[StudyYear::High4] == 0 && $years[StudyYear::High3] <= 2) {
             return TeamCategory::from(TeamCategory::C);
-        } elseif ($avg <= 3 && $years[StudyYear::H_4] <= 2) {
+        } elseif ($avg <= 3 && $years[StudyYear::High4] <= 2) {
             return TeamCategory::from(TeamCategory::B);
         } else {
             return TeamCategory::from(TeamCategory::A);

@@ -9,12 +9,14 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -26,8 +28,8 @@ use Tester\Assert;
 class Authorization extends FyziklaniTestCase
 {
     private PersonModel $perPerson;
-    private PersonModel $perOrg;
-    private PersonModel $perOrgOther;
+    private PersonModel $perOrganizer;
+    private PersonModel $perOrganizerOther;
     private PersonModel $perContestant;
     private SubmitModel $submit;
 
@@ -40,20 +42,20 @@ class Authorization extends FyziklaniTestCase
             'born' => DateTime::from('2000-01-01'),
         ], []);
 
-        $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
+        $this->perOrganizer = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->container->getByType(OrgService::class)->storeModel(
-            ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
+        $this->container->getByType(OrganizerService::class)->storeModel(
+            ['person_id' => $this->perOrganizer, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
-        $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
+        $this->perOrganizerOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->container->getByType(OrgService::class)->storeModel(
-            ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
+        $this->container->getByType(OrganizerService::class)->storeModel(
+            ['person_id' => $this->perOrganizerOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
@@ -65,12 +67,13 @@ class Authorization extends FyziklaniTestCase
         );
 
         $this->event = $this->createEvent([]);
+        /** @var TaskModel $task */
         $task = $this->container->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
-
+        /** @var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
@@ -91,8 +94,8 @@ class Authorization extends FyziklaniTestCase
         return [
             [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
             [fn() => $this->perPerson, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perOrg, 'Game:Submit', ['create', 'list'], true], # TODO 'edit',
-            [fn() => $this->perOrgOther, 'Game:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perOrganizer, 'Game:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrganizerOther, 'Game:Submit', ['create', 'edit', 'list'], false],
             [fn() => $this->perContestant, 'Game:Submit', ['create', 'edit', 'list'], false],
         ];
     }

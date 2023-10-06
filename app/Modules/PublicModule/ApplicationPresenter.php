@@ -10,6 +10,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -29,7 +30,6 @@ use Nette\InvalidArgumentException;
 
 final class ApplicationPresenter extends BasePresenter
 {
-
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
     private EventService $eventService;
@@ -130,6 +130,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
@@ -195,6 +196,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -207,6 +209,19 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function startup(): void
     {
+        if (in_array($this->getEvent()->event_type_id, [2, 14])) {
+            if ($this->getEventApplication()) {
+                $this->redirect(
+                    ':Event:Application:edit',
+                    [
+                        'eventId' => $this->getEvent()->event_id,
+                        'id' => $this->getEventApplication()->event_participant_id,
+                    ]
+                );
+            } else {
+                $this->redirect(':Event:Application:create', ['eventId' => $this->getEvent()->event_id, 'id' => null]);
+            }
+        }
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
@@ -287,10 +302,11 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentApplication(): ApplicationComponent
     {
-        return new ApplicationComponent($this->getContext(), $this->getHolder());
+        return new ApplicationComponent($this->getContext(), $this->getHolder(), $this->getMachine());
     }
 
     protected function beforeRender(): void

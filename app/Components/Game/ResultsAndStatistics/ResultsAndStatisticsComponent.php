@@ -59,7 +59,7 @@ class ResultsAndStatisticsComponent extends AjaxComponent
      *      visible:bool,
      *  },
      *  lastUpdated:string,
-     *  isOrg:bool,
+     *  isOrganizer:bool,
      *  refreshDelay:int,
      *  tasksOnBoard:int,
      *  teams:mixed,
@@ -88,7 +88,7 @@ class ResultsAndStatisticsComponent extends AjaxComponent
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
-            'isOrg' => true,
+            'isOrganizer' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
         ];

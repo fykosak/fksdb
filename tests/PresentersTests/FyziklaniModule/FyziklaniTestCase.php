@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
-use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Utils\DateTime;
 
@@ -35,7 +35,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
     }
@@ -66,6 +66,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['registration_end'])) {
             $data['registration_end'] = '2017-01-01';
         }
+        /** @var EventModel $event */
         $event = $this->container->getByType(EventService::class)->storeModel($data);
         $this->container->getByType(GameSetupService::class)->storeModel([
             'event_id' => $event->event_id,

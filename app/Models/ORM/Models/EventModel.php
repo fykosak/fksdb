@@ -123,11 +123,6 @@ final class EventModel extends Model implements Resource, NodeCreator
         }
     }
 
-    public function getSymbol(): string
-    {
-        return $this->event_type->getSymbol();
-    }
-
     public function isTeamEvent(): bool
     {
         return in_array($this->event_type_id, EventModel::TEAM_EVENTS);
@@ -207,12 +202,12 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<EventOrgModel>
+     * @phpstan-return TypedGroupedSelection<EventOrganizerModel>
      */
-    public function getEventOrgs(): TypedGroupedSelection
+    public function getEventOrganizers(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<EventOrgModel> $selection */
-        $selection = $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+        /** @phpstan-var TypedGroupedSelection<EventOrganizerModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_ORGANIZER, 'event_id');
         return $selection;
     }
 

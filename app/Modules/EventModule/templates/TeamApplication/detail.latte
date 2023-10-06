@@ -2,9 +2,8 @@
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $rankVisible}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
-{varType string $field}
 {varType int $counter}
-{varType bool $isOrg}
+{varType bool $isOrganizer}
 
 {define personSchedule}
     {varType FKSDB\Models\ORM\Models\PersonModel $person}
@@ -66,7 +65,7 @@
             </div>
         </div>
     {/if}
-    {if $isOrg}
+    {if $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 {control schoolCheck $model}
@@ -94,8 +93,11 @@
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
                 <h2>{_'Parcipant'} #{$counter}</h2>
-                {control columnTable ['person.person_link','person_history.study_year','school.school'],$member,1024}
+                {control columnTable ['person.person_link','person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
                 {include personSchedule, person => $member->person,event=>$model->event}
+                {if $isOrganizer}
+                    {control studySchoolTest $member->getPersonHistory()}
+                {/if}
             </div>
         </div>
     {/foreach}
@@ -113,7 +115,7 @@
             {control applicationTransitions}
         </div>
     </div>
-    {if $event->event_type_id === 1 && $isOrg}
+    {if $event->event_type_id === 1 && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Seating'}</h2>

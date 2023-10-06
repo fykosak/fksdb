@@ -7,11 +7,13 @@ import './bar-histogram.scss';
 
 export interface BarItemDatum<XValue extends number | Date> {
     xValue: XValue;
-    items: Array<{
-        yValue: number;
-        label: string;
-        color: string;
-    }>;
+    items: Array<BarItemItemsDatum>;
+}
+
+export interface BarItemItemsDatum {
+    yValue: number;
+    label: string;
+    color: string;
 }
 
 interface OwnProps<XValue extends number | Date> {

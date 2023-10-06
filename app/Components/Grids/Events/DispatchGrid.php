@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -16,11 +16,11 @@ use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<EventModel,array{
+ * @phpstan-extends BaseGrid<EventModel,array{
  *     event_type?:int,
  * }>
  */
-class DispatchGrid extends FilterGrid
+final class DispatchGrid extends BaseGrid
 {
     private EventService $service;
     private EventTypeService $eventTypeService;
@@ -55,11 +55,13 @@ class DispatchGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->filtered = true;
         $this->paginate = true;
-        $this->addColumns([
-            'event.event_id',
+        $this->counter = false;
+        $this->addSimpleReferencedColumns([
+            '@event.event_id',
         ]);
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(EventModel $model) => $model->getName()->getText($this->translator->lang), //@phpstan-ignore-line
@@ -67,10 +69,10 @@ class DispatchGrid extends FilterGrid
             ),
             'event_name'
         );
-        $this->addColumns([
-            'contest.contest',
-            'event.year',
-            'event.role',
+        $this->addSimpleReferencedColumns([
+            '@contest.contest',
+            '@event.year',
+            '@event.role',
         ]);
         $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }

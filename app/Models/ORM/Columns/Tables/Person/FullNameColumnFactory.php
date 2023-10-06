@@ -4,33 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\StringPrinter;
 use Fykosak\NetteORM\Model;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PersonModel,never>
+ * @phpstan-extends AbstractColumnFactory<PersonModel,never>
  */
-class FullNameColumnFactory extends ColumnFactory
+class FullNameColumnFactory extends AbstractColumnFactory
 {
-
-    /**
-     * @throws AbstractColumnException
-     */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new AbstractColumnException();
-    }
-
     /**
      * @param PersonModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->getFullName());
+        return StringPrinter::getHtml($model->getFullName());
     }
 }

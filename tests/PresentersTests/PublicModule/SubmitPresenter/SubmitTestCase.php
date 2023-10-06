@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestantService;
@@ -83,7 +84,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->person->person_id,
-            'contest_category_id' => $this->getCategory(),
+            'contest_category_id' => StudyYear::from($this->getStudyYear())->numeric(),
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
@@ -91,7 +92,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         $this->fakeProtection(self::TOKEN);
     }
 
-    abstract protected function getCategory(): int;
+    abstract protected function getStudyYear(): string;
 
     protected function tearDown(): void
     {

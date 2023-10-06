@@ -12,7 +12,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ScheduleItemModel>
+ * @phpstan-extends BaseGrid<ScheduleItemModel,array{}>
  */
 class ItemsGrid extends BaseGrid
 {
@@ -38,13 +38,13 @@ class ItemsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'schedule_item.schedule_item_id',
-            'schedule_item.name',
-            'schedule_item.price_czk',
-            'schedule_item.price_eur',
-            'schedule_item.capacity',
-            'schedule_item.used_capacity',
+        $this->addSimpleReferencedColumns([
+            '@schedule_item.schedule_item_id',
+            '@schedule_item.name',
+            '@schedule_item.price_czk',
+            '@schedule_item.price_eur',
+            '@schedule_item.capacity',
+            '@schedule_item.used_capacity',
         ]);
         $this->paginate = false;
         $this->addPresenterButton(':Schedule:Item:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);

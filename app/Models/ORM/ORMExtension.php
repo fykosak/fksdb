@@ -32,6 +32,17 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
+/**
+ * @phpstan-type TCommonParams array{
+ *     permission: string,
+ *     accessKey?:string,
+ *     omitInputField:bool,
+ *     required:bool,
+ *     description?:string,
+ *     writeOnly:bool,
+ *     title:string,
+ * }
+ */
 class ORMExtension extends Extension
 {
 
@@ -483,15 +494,7 @@ class ORMExtension extends Extension
     }
 
     /**
-     * @phpstan-param array{
-     *     permission: string,
-     *     accessKey?:string,
-     *     omitInputField:bool,
-     *     required:bool,
-     *     description?:string,
-     *     writeOnly:bool,
-     *     title:string,
-     * } $field
+     * @phpstan-param TCommonParams $field
      * @phpstan-template M of \Fykosak\NetteORM\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */

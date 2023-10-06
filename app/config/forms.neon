@@ -13,8 +13,9 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
                 class:
                   required: false
             post_contact_p:
@@ -38,8 +39,9 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
                 class:
                   required: false
             post_contact_p:
@@ -67,8 +69,8 @@ parameters:
                     required: false
                 agreed:
                     required: true
-        adminOrg: %forms.adminPerson%
-        adminEventOrg: %forms.adminPerson%
+        adminOrganizer: %forms.adminPerson%
+        adminEventOrganizer: %forms.adminPerson%
         adminTeacher: %forms.adminPerson%
         adminContestant:
             person:
@@ -104,8 +106,9 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
             post_contact_d:
                 required: false
             post_contact_p:
@@ -153,7 +156,7 @@ parameters:
                   required: false
                 citizenship:
                   required: false
-                # required to ORG
+                # required to organizer
                 uk_login:
                   required: false
                 isic_number:

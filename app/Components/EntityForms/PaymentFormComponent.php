@@ -10,10 +10,10 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Submits\StorageException;
@@ -33,7 +33,7 @@ class PaymentFormComponent extends EntityFormComponent
 {
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
-    private bool $isOrg;
+    private bool $isOrganizer;
     private PaymentMachine $machine;
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
@@ -45,13 +45,13 @@ class PaymentFormComponent extends EntityFormComponent
         Container $container,
         EventModel $event,
         PersonModel $loggedPerson,
-        bool $isOrg,
+        bool $isOrganizer,
         PaymentMachine $machine,
         ?PaymentModel $model
     ) {
         parent::__construct($container, $model);
         $this->machine = $machine;
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->event = $event;
         $this->loggedPerson = $loggedPerson;
     }
@@ -83,7 +83,7 @@ class PaymentFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        if ($this->isOrg) {
+        if ($this->isOrganizer) {
             $form->addComponent(
                 $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
                 'person_id'
@@ -99,7 +99,7 @@ class PaymentFormComponent extends EntityFormComponent
                 $this->getContext(),
                 $this->event,
                 $this->loggedPerson,
-                $this->isOrg,
+                $this->isOrganizer,
                 $this->model
             ),
             'items'
@@ -123,7 +123,7 @@ class PaymentFormComponent extends EntityFormComponent
                 [
                     'event_id' => $this->event->event_id,
                     'currency' => $values['currency'],
-                    'person_id' => $this->isOrg ? $values['person_id'] : $this->loggedPerson->person_id,
+                    'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
                 ],
                 $this->model
             );

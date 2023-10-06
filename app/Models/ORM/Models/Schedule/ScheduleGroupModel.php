@@ -40,7 +40,7 @@ use Nette\Security\Resource;
  */
 final class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
-    public const RESOURCE_ID = 'event.scheduleGroup';
+    public const RESOURCE_ID = 'event.schedule.group';
 
     /**
      * @phpstan-return TypedGroupedSelection<ScheduleItemModel>

@@ -1,0 +1,44 @@
+{layout './layout.latte'}
+{varType Fykosak\NetteORM\Model[] $models}
+{varType int $userPermission}
+
+{varType bool $counter}
+{varType array $flashes}
+{varType bool $filtered}
+
+{var \Nette\ComponentModel\Container $buttons = $control->getComponent('buttons')}
+{var \Nette\ComponentModel\Container $rows = $control->getComponent('rows')}
+
+{varType callable $classNameCallback}
+
+{block head}
+    {if $filtered || count($flashes) || $counter}
+        <div class="panel color-auto">
+            <div class="container">
+                {include parent}
+            </div>
+        </div>
+    {/if}
+{/block}
+{block innerContent}
+    {if count($models)}
+        {foreach $models as $model}
+            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+            <div class="panel color-auto {$className}">
+                <div class="container">
+                    {if $control->getComponent('title',false)}
+                        <h2>{control title $model,$userPermission}</h2>
+                    {/if}
+                    {include rows from 'list.common.latte', $model,$userPermission,container:$rows}
+                    {include buttonGroup from './Button/group.latte',$model, $userPermission,$buttons->getComponents()}
+                </div>
+            </div>
+        {/foreach}
+    {else}
+        <div class="panel color-auto">
+            <div class="container">
+                {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+            </div>
+        </div>
+    {/if}
+{/block}

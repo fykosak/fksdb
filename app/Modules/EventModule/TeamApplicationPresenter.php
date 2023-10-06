@@ -9,12 +9,14 @@ use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
+use FKSDB\Components\DataTest\SingleTestComponent;
+use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\Grids\Application\TeamListComponent;
+use FKSDB\Components\Grids\Application\TeamGrid;
+use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Components\Schedule\PersonGrid;
@@ -25,6 +27,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -41,28 +44,9 @@ final class TeamApplicationPresenter extends BasePresenter
 
     private TeamService2 $teamService;
 
-    public function injectServiceFyziklaniTeam(TeamService2 $teamService): void
+    public function injectServiceService(TeamService2 $service): void
     {
-        $this->teamService = $teamService;
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedFastEdit(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        $this->teamService = $service;
     }
 
     /**
@@ -74,9 +58,22 @@ final class TeamApplicationPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    public function titleAttendance(): PageTitle
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+        return $this->getEvent()->isTeamEvent();
+    }
+
+    public function requiresLogin(): bool
+    {
+        return $this->getAction() !== 'create';
+    }
+
+    protected function getORMService(): TeamService2
+    {
+        return $this->teamService;
     }
 
     /**
@@ -85,27 +82,55 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function authorizedAttendance(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function titleMass(): PageTitle
+    public function titleAttendance(): PageTitle
     {
-        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
+        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+    }
+
+    public function authorizedCreate(): bool
+    {
+        $event = $this->getEvent();
+        return
+            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+            );
+    }
+
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
-    public function authorizedMass(): bool
+    public function renderDetail(): void
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'org-edit', $this->getEvent());
-    }
-
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
+        try {
+            $setup = $this->getEvent()->getGameSetup();
+            $rankVisible = $setup->result_hard_display;
+        } catch (NotSetGameParametersException $exception) {
+            $rankVisible = false;
+        }
+        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
+            $this->getEntity(),
+            'org-detail',
+            $this->getEvent()
+        );
+        $this->template->rankVisible = $rankVisible;
+        $this->template->model = $this->getEntity();
     }
 
     /**
@@ -124,14 +149,12 @@ final class TeamApplicationPresenter extends BasePresenter
         );
     }
 
-    public function authorizedCreate(): bool
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetailedList(): bool
     {
-        $event = $this->getEvent();
-        return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'org-create', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
-            );
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
     }
 
     public function titleDetailedList(): PageTitle
@@ -141,11 +164,19 @@ final class TeamApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
-    public function authorizedDetailedList(): bool
+    public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        $event = $this->getEvent();
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
+                $event->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
     }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -160,22 +191,35 @@ final class TeamApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
-    public function authorizedEdit(): bool
+    public function authorizedFastEdit(): bool
     {
-        $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'org-edit', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function requiresLogin(): bool
+    public function titleFastEdit(): PageTitle
     {
-        return $this->getAction() !== 'create';
+        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedMass(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+    }
+
+    public function titleMass(): PageTitle
+    {
+        return new PageTitle(null, _('Mass transitions'), 'fas fa-exchange-alt');
     }
 
     /**
@@ -186,7 +230,7 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    public function getHolder(): TeamHolder
+    private function getHolder(): TeamHolder
     {
         return $this->getMachine()->createHolder($this->getEntity());
     }
@@ -195,45 +239,9 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function getMachine(): TeamMachine
+    private function getMachine(): TeamMachine
     {
         return $this->eventDispatchFactory->getTeamMachine($this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function renderDetail(): void
-    {
-        $this->template->event = $this->getEvent();
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrg = $this->isAllowed('event.application', 'default');
-        try {
-            $setup = $this->getEvent()->getGameSetup();
-            $rankVisible = $setup->result_hard_display;
-        } catch (NotSetGameParametersException $exception) {
-            $rankVisible = false;
-        }
-        $this->template->isOrg = $this->eventAuthorizator->isAllowed(
-            $this->getEntity(),
-            'org-detail',
-            $this->getEvent()
-        );
-        $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->getEntity();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function isEnabled(): bool
-    {
-        return $this->getEvent()->isTeamEvent();
     }
 
     /**
@@ -311,17 +319,17 @@ final class TeamApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): TeamApplicationsGrid
+    protected function createComponentGrid(): TeamGrid
     {
-        return new TeamApplicationsGrid($this->getEvent(), $this->getContext());
+        return new TeamGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentList(): TeamListComponent
+    protected function createComponentList(): TeamList
     {
-        return new TeamListComponent($this->getEvent(), $this->getContext());
+        return new TeamList($this->getEvent(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent
@@ -329,10 +337,6 @@ final class TeamApplicationPresenter extends BasePresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function getORMService(): TeamService2
-    {
-        return $this->teamService;
-    }
 
     /**
      * @phpstan-return AttendanceComponent<TeamHolder>
@@ -386,5 +390,13 @@ final class TeamApplicationPresenter extends BasePresenter
     protected function createComponentPersonScheduleGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
+    }
+
+    /**
+     * @phpstan-return SingleTestComponent<PersonHistoryModel>
+     */
+    protected function createComponentStudySchoolTest(): SingleTestComponent
+    {
+        return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
     }
 }

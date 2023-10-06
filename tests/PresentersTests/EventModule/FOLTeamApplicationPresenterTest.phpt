@@ -90,7 +90,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::type(RedirectResponse::class, $response);
     }
 
-    public function testCreateOrg(): void
+    public function testCreateOrganizer(): void
     {
         $this->loginUser(5);
         $data = [
@@ -160,7 +160,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
 
-    public function testCreateOrgOutDate(): void
+    public function testCreateOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);
@@ -260,7 +260,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrg(): void
+    public function testEditOrganizer(): void
     {
         $this->loginUser(5);
         $team = $this->createTeam('Original', [$this->personA]);
@@ -315,7 +315,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrgOutDate(): void
+    public function testEditOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);
@@ -362,6 +362,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
         Assert::type(RedirectResponse::class, $response);
+        /** @phpstan-var TeamModel2|null $newTeam */
         $newTeam = $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
         Assert::same(1, $newTeam->getMembers()->count('*'));
         Assert::same($this->personB->person_id, $newTeam->getMembers()->fetch()->person_id);
@@ -434,14 +435,17 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::same($before, $after);
     }
 
+    /**
+     * @phpstan-param PersonModel[] $persons
+     */
     protected function createTeam(string $name, array $persons): TeamModel2
     {
+        /** @phpstan-var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'name' => $name,
             'category' => 'B',
             'event_id' => $this->event->event_id,
         ]);
-        /** @var PersonModel $person */
         foreach ($persons as $person) {
             $this->container->getByType(TeamMemberService::class)->storeModel([
                 'person_id' => $person->person_id,

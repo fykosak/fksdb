@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use FKSDB\Models\UI\FlagBadge;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends FilterGrid<SchoolModel,array{
+ * @phpstan-extends BaseGrid<SchoolModel,array{
  *     term?:string,
  * }>
  */
-class SchoolsGrid extends FilterGrid
+final class SchoolsGrid extends BaseGrid
 {
     private SchoolService $service;
 
@@ -54,31 +55,79 @@ class SchoolsGrid extends FilterGrid
      */
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->filtered = true;
+        $this->paginate = true;
+        $this->counter = true;
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $model) => $model->name,
-                new Title(null, _('School name'))
+                fn(SchoolModel $school) => $school->name_full ?? $school->name,
+                new Title(null, _('Full name'))
             ),
-            'name'
+            'full_name'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $school): string => $school->address->city,
+                fn(SchoolModel $school): Html => Html::el('span')
+                    ->addText($school->address->city . ' (' . $school->address->country->name . ')')
+                    ->addHtml(FlagBadge::getHtml($school->address->country)),
                 new Title(null, _('City'))
             ),
             'city'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(SchoolModel $row): Html => Html::el('span')
-                    ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
-                    ->addText(($row->active)),
+                fn(SchoolModel $school): Html => Html::el('span')
+                    ->addAttributes(['class' => ('badge ' . ($school->active ? 'bg-success' : 'bg-danger'))])
+                    ->addText($school->active),
                 new Title(null, _('Active'))
             ),
             'active'
+        );
+        $this->addTableColumn(
+            new RendererItem(
+                $this->container,
+                function (SchoolModel $school): Html {
+                    $container = Html::el('span');
+                    $has = false;
+                    if ($school->study_p) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-primary'])
+                                ->addText(_('Primary'))
+                        );
+                    }
+                    if ($school->study_h) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-success'])
+                                ->addText(_('High'))
+                        );
+                    }
+                    if ($school->study_u) {
+                        $has = true;
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-warning'])
+                                ->addText(_('University'))
+                        );
+                    }
+                    if (!$has) {
+                        $container->addHtml(
+                            Html::el('span')
+                                ->addAttributes(['class' => 'badge bg-danger'])
+                                ->addText(_('No study year'))
+                        );
+                    }
+                    return $container;
+                },
+                new Title(null, _('Study'))
+            ),
+            'study'
         );
 
         $this->addORMLink('school.edit');

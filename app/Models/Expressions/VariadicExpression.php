@@ -10,7 +10,7 @@ namespace FKSDB\Models\Expressions;
  */
 abstract class VariadicExpression extends EvaluatedExpression
 {
-    /** @phpstan-var array<int,callable(ArgType):bool> */
+    /** @phpstan-var array<callable(ArgType):bool> */
     protected array $arguments;
 
     /**

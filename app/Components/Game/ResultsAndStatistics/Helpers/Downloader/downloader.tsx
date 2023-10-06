@@ -39,7 +39,7 @@ export default function Downloader() {
 }
 
 export interface ResponseData {
-    availablePoints: number[];
+    availablePoints: Array<5 | 3 | 2 | 1>;
     basePath: string;
     gameStart: string;
     gameEnd: string;
@@ -49,7 +49,7 @@ export interface ResponseData {
         visible: boolean;
     };
     lastUpdated: string;
-    isOrg: boolean;
+    isOrganizer: boolean;
     refreshDelay: number;
     tasksOnBoard: number;
 

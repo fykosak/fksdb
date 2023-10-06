@@ -39,9 +39,9 @@ class FOLCategoryProcessing extends FormProcessing
             return TeamCategory::from(TeamCategory::O);
         } else {
             $avg = FOFCategoryProcessing::getCoefficientAvg($members, $event);
-            if ($avg <= 2 && $years[StudyYear::H_4] === 0 && $years[StudyYear::H_3] <= 2) {
+            if ($avg <= 2 && $years[StudyYear::High4] === 0 && $years[StudyYear::High3] <= 2) {
                 return TeamCategory::from(TeamCategory::C);
-            } elseif ($avg <= 3 && $years[StudyYear::H_4] <= 2) {
+            } elseif ($avg <= 3 && $years[StudyYear::High4] <= 2) {
                 return TeamCategory::from(TeamCategory::B);
             } else {
                 return TeamCategory::from(TeamCategory::A);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
@@ -38,16 +38,16 @@ class SignaturesWebModel extends WebModel
         $doc = new \DOMDocument();
 
         $rootNode = $doc->createElement('signatures');
-        $organisers = $contest->getOrganisers();
-        /** @var OrgModel $org */
-        foreach ($organisers as $org) {
-            $orgNode = $doc->createElement('org');
+        $organizers = $contest->getOrganizers();
+        /** @var OrganizerModel $organizer */
+        foreach ($organizers as $organizer) {
+            $organizerNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->person->getFullName(),
-                'texSignature' => $org->tex_signature,
-                'domainAlias' => $org->domain_alias,
-            ], $doc, $orgNode);
-            $rootNode->appendChild($orgNode);
+                'name' => $organizer->person->getFullName(),
+                'texSignature' => $organizer->tex_signature,
+                'domainAlias' => $organizer->domain_alias,
+            ], $doc, $organizerNode);
+            $rootNode->appendChild($organizerNode);
         }
         $doc->appendChild($rootNode);
         $doc->formatOutput = true;

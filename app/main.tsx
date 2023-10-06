@@ -23,6 +23,7 @@ import ScheduleField from 'FKSDB/Components/Schedule/Input/schedule-field';
 import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
+import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 
 const translator = new Translator();
 
@@ -81,6 +82,8 @@ renderer.hashMapLoader.registerDataComponent('chart.events.bar-progress', BarPro
 renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeProgress, {translator});
 
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
+
+renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -159,27 +162,15 @@ window.addEventListener('DOMContentLoaded', () => {
 // @ts-ignore
     $.widget('fks.referencedContainer', {
 // default options
-        options: {
-            refId: null,
-            valuePromise: '__promise',
-            clearMask: '__clear',
-            submitSearchMask: '__search',
-            searchMask: '_c_search',
-            compactValueMask: '_c_compact',
-        },
+        options: {},
         _create: function () {
             const container = this.element as JQuery<HTMLElement>;
-            this.transformContainer(container, document.getElementById(container.attr('data-referenced-id')));
-        },
-        transformContainer: function (container: JQuery<HTMLElement>, refId: HTMLElement) {
-            const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
-            const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
-            const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
-            let compacted = null;
+            const $searchInput = container.find('input[name*=\'_c_search\'][type!=\'hidden\']');
+            const $compactValueInput = container.find('input[name*=\'_c_compact\']');
+            const $clearButton = container.find('input[type=\'submit\'][name*=\'__clear\']');
+            let compacted: JQuery<HTMLDivElement> | null = null;
+
             //  const options = this.options;
-            if (refId) {
-                this.options.refId = $(refId);
-            }
 
             function decompactifyContainer(): void {
                 if (compacted !== null) {
@@ -188,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 container.show();
             }
 
-            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLElement> {
+            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLDivElement> {
                 const compactGroup = document.createElement('div');
                 const ReEl = () => {
                     return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
@@ -200,7 +191,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             <div className="input-group-append">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-secondary"
+                                    className="btn btn-outline-secondary me-1"
                                     title={translator.getText('Edit')}
                                     onClick={() => {
                                         decompactifyContainer();
@@ -228,7 +219,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
 
-            function compactifyContainer() {
+            function compactifyContainer(): void {
 
                 if (compacted === null) {
                     const label = container.find('> fieldset > h4').text();
@@ -260,35 +251,17 @@ window.addEventListener('DOMContentLoaded', () => {
     // @ts-ignore
     $('[data-referenced]').referencedContainer();
 
-    /*   document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
-           el.addEventListener('click', (event) => {
-               if (window.confirm('O RLY?')) {
-                   // @ts-ignore
-                   el.trigger('click');
-                   return;
-               }
-               event.preventDefault();
-           })
-       });*/
-
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
-// default options
-        options: {
-            metaSuffix: '__meta',
-        },
+        options: {},
         _create: function () {
-            const split = (val) => {
-                return val.split(/,\s*/);
+            const extractLast = (term: string): string => {
+                return term.split(/,\s*/).pop();
             }
 
-            const extractLast = (term) => {
-                return split(term).pop();
-            }
-
-            const multiSelect = this.element.data('ac-multiselect');
-            const defaultValue = this.element.val();
-            const defaultText = this.element.data('ac-default-value');
+            const multiSelect: boolean = this.element.data('ac-multiselect');
+            const defaultValue: number = this.element.val();
+            const defaultText: string | string[] = this.element.data('ac-default-value');
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
@@ -299,9 +272,9 @@ window.addEventListener('DOMContentLoaded', () => {
             this.element.data('uiElement', el);
 
             // element to detect enabled JavaScript
-            const metaEl = $('<input type="hidden" value="JS" />');
+            const metaEl = $('<input type="hidden" value="JS"/>');
             // this should work both for array and scalar names
-            const metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');
+            const metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2__meta$3');
             metaEl.attr('name', metaName);
             metaEl.insertAfter(el);
 
@@ -313,14 +286,13 @@ window.addEventListener('DOMContentLoaded', () => {
                     el.val(defaultText.join(', '));
                 }
             }
+            type TData = Array<{ value: number; label?: string | string[] }>
 
-            const cache = {}; //TODO move in better scope
-            const labelCache = {};
-            let termFunction = (arg) => {
-                return arg;
-            };
+            const cache: { [key: string]: TData } = {};
+            const labelCache: Record<string, string> = {};
+            let termFunction = (arg: string): string => arg;
             // ensures default value is always suggested (needed for AJAX)
-            const conservationFunction = (data) => {
+            const conservationFunction = (data: TData): TData => {
                 if (!defaultText) {
                     return data;
                 }
@@ -346,7 +318,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
-                options.source = (request, response) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const term = termFunction(request.term);
                     if (term in cache) {
                         response(cache[term]);
@@ -356,9 +328,9 @@ window.addEventListener('DOMContentLoaded', () => {
                             body: JSON.stringify({acQ: term}),
                             method: 'POST',
                         },
-                    ).then((response) => {
+                    ).then((response): Promise<TData> => {
                         return response.json();
-                    }).then((jsonData) => {
+                    }).then((jsonData: TData) => {
                         const data = conservationFunction(jsonData);
                         cache[term] = data;
                         response(data);
@@ -367,7 +339,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 options.minLength = 3;
             } else {
                 const items = this.element.data('ac-items');
-                options.source = (request, response) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
                     response($.ui.autocomplete.filter(items, s));
@@ -376,7 +348,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             if (multiSelect) {
-                options.select = (event, ui) => {
+                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
                     labelCache[ui.item.value] = ui.item.label;
                     if (this.element.val()) {
                         this.element.val(this.element.val() + ',' + ui.item.value);
@@ -390,13 +362,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 };
                 options.focus = () => false;
             } else {
-                options.select = (e, ui) => {
+                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     this.element.change();
                     return false;
                 };
-                options.focus = (e, ui) => {
+                options.focus = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     return false;
@@ -408,22 +380,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const renderMethod = this.element.data('ac-render-method');
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = (ul, item) => {
+                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: { label: string, description?: string, place?: string, value: number }): JQuery => {
                     switch (renderMethod) {
                         case 'tags':
                             return $('<li>')
                                 .append('<a>' + item.label + '<br>' + item.description + '</a>')
                                 .appendTo(ul);
+                        case 'person':
+                            return $('<li>')
+                                .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>')
+                                .appendTo(ul);
                         default:
                             return eval(renderMethod);
                     }
-
                 };
             }
         },
-    })
-
+    });
     $('input[data-ac]')['autocomplete-select']();
-
     renderer.run();
 });

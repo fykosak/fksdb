@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -19,11 +18,6 @@ final class DispatchPresenter extends \FKSDB\Modules\Core\BasePresenter
     public function authorizedDefault(): bool
     {
         return true;
-    }
-
-    protected function createComponentContestBadge(): ContestBadge
-    {
-        return new ContestBadge($this->getContext());
     }
 
     protected function createComponentDispatchGrid(): DispatchGrid

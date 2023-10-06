@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -16,20 +15,18 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<EventParticipantModel,array{
+ * @phpstan-extends BaseGrid<EventParticipantModel,array{
  *     status?:string,
  * }>
  */
-class SingleApplicationsGrid extends FilterGrid
+class SingleApplicationsGrid extends BaseGrid
 {
     protected EventModel $event;
-    private BaseHolder $holder;
 
-    public function __construct(EventModel $event, BaseHolder $holder, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
-        $this->holder = $holder;
     }
 
     /**
@@ -37,6 +34,11 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function getHoldersColumns(): array
     {
+        switch ($this->event->event_type_id) {
+            case 2:
+            case 14:
+                return ['lunch_count'];
+        }
         return [
             'price',
             'lunch_count',
@@ -63,14 +65,11 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function addHolderColumns(): void
     {
-        $holderFields = $this->holder->getFields();
         $fields = [];
-        foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
-            }
+        foreach ($this->getHoldersColumns() as $name) {
+            $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
         }
-        $this->addColumns($fields);
+        $this->addSimpleReferencedColumns($fields);
     }
 
     /**
@@ -97,10 +96,11 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->filtered = true;
         $this->paginate = false;
-        $this->addColumns([
-            'person.full_name',
-            'event_participant.status',
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@event_participant.status',
         ]);
         $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         // $this->addCSVDownloadButton();
