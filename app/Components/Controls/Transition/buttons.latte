@@ -6,7 +6,7 @@
     {if count($transitions)}
         <div class="btn-group">
         {foreach $transitions as $transition}
-                {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
+                {var string $className = 'btn btn-outline-' . $transition->behaviorType->value}
                 {if $transition->isCreating()}
                     <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
                        class="{$className}">{$transition->getLabel()}</a>

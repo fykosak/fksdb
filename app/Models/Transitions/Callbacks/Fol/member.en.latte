@@ -1,8 +1,8 @@
 {varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var $team = $holder->getModel()}
-{var $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
-{var $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+{var string $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
 <p>
     Hello,<br/>

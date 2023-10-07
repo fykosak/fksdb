@@ -3,7 +3,7 @@
 {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[][] $rests}
 {block headline}
     ({$team->fyziklani_team_id}) {$team->name}
-    {var $teamSeat = $team->getTeamSeat()}
+    {var FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel|null $teamSeat = $team->getTeamSeat()}
     {if $teamSeat}
         {switch $teamSeat->fyziklani_seat->sector}
             {case 'A'}

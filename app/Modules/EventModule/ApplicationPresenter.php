@@ -10,7 +10,7 @@ use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Components\Schedule\PersonGrid;
+use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -354,8 +354,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
 
-    protected function createComponentPersonScheduleGrid(): PersonGrid
+    protected function createComponentPersonScheduleGrid(): PersonScheduleGrid
     {
-        return new PersonGrid($this->getContext());
+        return new PersonScheduleGrid($this->getContext());
     }
 }

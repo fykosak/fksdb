@@ -4,7 +4,7 @@
 <p>
     Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
     aplikace FKSDB po přihlášení, nebo pomocí odkazu<br/>
-    {var $link = $control->link('//:Public:Application:',
+    {var string $link = $control->link('//:Public:Application:',
     ['eventId'=> $holder->event->event_id,
     'contestId'=>$holder->event->event_type->contest_id,
     'at'=>$token->token,

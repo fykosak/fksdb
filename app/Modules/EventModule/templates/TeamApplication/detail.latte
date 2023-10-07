@@ -22,7 +22,7 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
-            {var $fields = []}
+            {var array $fields = []}
     {switch $event->event_type_id}
                 {case 1}
                 {php $fields = [
@@ -73,7 +73,7 @@
         </div>
     {/if}
     {if $event->event_type_id === 1}
-        {var $teacherCounter = 0;}
+        {var int $teacherCounter = 0;}
         {foreach $model->getTeachers() as $teacher}
             <div class="panel color-auto">
                 <div class="container">
@@ -86,7 +86,7 @@
             </div>
         {/foreach}
     {/if}
-    {var $counter = 0;}
+    {var int $counter = 0;}
     {foreach $model->getMembers() as $member}
         <div class="panel color-auto">
             <div class="container">

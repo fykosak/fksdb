@@ -93,7 +93,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
             $items[$group->schedule_group_id] = $group->name->getText($this->translator->lang)
                 . '(' . $group->schedule_group_type->value . ')';
         }
-        $container->addSelect('schedule_group_id', _('Schedule group Id'), $items);
+        $container->addSelect('schedule_group_id', _('Group'), $items);
         $form->addComponent($container, self::CONTAINER);
     }
 }

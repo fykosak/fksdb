@@ -19,10 +19,10 @@
     {block seats}
         {foreach $room->getSeats() as $seat}
             {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
-            {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
+            {var string $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
             <g transform="{$cor}">
                 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $selectedTeam = null}
-                {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
+                {var FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel|null $occuiedTeamSeat = $seat->getTeamSeat($event)}
                 {if $team}
                     {if $occuiedTeamSeat && $occuiedTeamSeat->fyziklani_team->fyziklani_team_id === $team->fyziklani_team_id}
                         {do $selectedTeam = $team}
@@ -31,7 +31,7 @@
                     {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->fyziklani_team:null}
                 {/if}
 
-                {var $className = $selectedTeam?' occupied':' free'}
+                {var string $className = $selectedTeam?' occupied':' free'}
                 {if $showTeamCategory && $selectedTeam}
                     {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
                 {/if}

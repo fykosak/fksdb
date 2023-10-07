@@ -13,7 +13,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-type TPersonSchedule = array{person:array{name:string,personId:int,email:string|null},scheduleItemId:int}
+ * @phpstan-type TPersonSchedule array{person:array{name:string,personId:int,email:string|null},scheduleItemId:int}
  * @phpstan-extends WebModel<array{itemId:int},TPersonSchedule[]>
  */
 class PersonListWebModel extends WebModel

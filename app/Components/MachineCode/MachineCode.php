@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\MachineCode;
 
-use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\Model;
-use Nette\Application\ForbiddenRequestException;
+use Fykosak\NetteORM\Service;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 
@@ -32,7 +31,7 @@ final class MachineCode
 
     /**
      * @phpstan-param self::TYPE_* $type
-     * @throws NotFoundException
+     * @throws MachineCodeException
      */
     private function __construct(Container $container, string $type, int $id)
     {
@@ -51,28 +50,28 @@ final class MachineCode
             default:
                 throw new InvalidStateException();
         }
+        /** @phpstan-var Service<TModel> $service */
         $service = $container->getByType($className);
         $model = $service->findByPrimary($id);
         if (!$model) {
-            throw new NotFoundException();
+            throw new MachineCodeException(_('Model not found'));
         }
         $this->model = $model;
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
-     * @phpstan-return self<Model>
+     * @throws MachineCodeException
+     * @phpstan-return self<TModel>
      */
     public static function createFromCode(Container $container, string $code, string $saltOffset): self
     {
         $salt = $container->getParameters()['salt'][$saltOffset];
         $data = openssl_decrypt($code, self::CIP_ALGO, $salt);
         if ($data === false) {
-            throw new ForbiddenRequestException(_('Cannot decrypt code'));
+            throw new MachineCodeException(_('Cannot decrypt code'));
         }
         if (!preg_match('/([A-Z]{2})([0-9]+)/', $data, $matches)) {
-            throw new ForbiddenRequestException(_('Wrong format'));
+            throw new MachineCodeException(_('Wrong format'));
         }
         [, $type, $id] = $matches;
         return new self($container, $type, (int)$id);// @phpstan-ignore-line

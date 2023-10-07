@@ -6,10 +6,12 @@ namespace FKSDB\Components\Controls\Transition;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
@@ -18,7 +20,6 @@ use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -82,7 +83,6 @@ final class CodeComponent extends FormComponent
      */
     private function innerHandleTransition(Model $model): void
     {
-
         $holder = $this->machine->createHolder($model);
         $transitions = $this->machine->getAvailableTransitions($holder);
         $executed = false;
@@ -117,27 +117,21 @@ final class CodeComponent extends FormComponent
         $values = $form->getValues('array');
         $this->action = $values['action'];
         try {
-            $code = MachineCode::createFromCode($this->container, $values['code'], 'default');
-            if ($this->event->isTeamEvent() && $code->type === MachineCode::TYPE_TEAM) {
-                if ($code->model->event_id !== $this->event->event_id) {
-                    throw new ForbiddenRequestException();
-                }
-            } elseif (!$this->event->isTeamEvent() && $code->type === MachineCode::TYPE_PARTICIPANT) {
-                if ($code->model->event_id !== $this->event->event_id) {
-                    throw new ForbiddenRequestException();
-                }
-            } else {
-                throw new BadRequestException(_('Wrong type of code.'));
+            $application = $this->resolveApplication(
+                MachineCode::createFromCode($this->container, $values['code'], 'default')
+            );
+            if ($application->event_id !== $this->event->event_id) {
+                throw new BadRequestException(_('Application belongs to another event.'));
             }
             switch ($values['action']) {
                 case 'edit':
-                    $this->getPresenter()->redirect('edit', ['id' => $code->model->getPrimary()]);
+                    $this->getPresenter()->redirect('edit', ['id' => $application->getPrimary()]);
                     break;
                 case 'detail':
-                    $this->getPresenter()->redirect('detail', ['id' => $code->model->getPrimary()]);
+                    $this->getPresenter()->redirect('detail', ['id' => $application->getPrimary()]);
                     break;
                 case 'transition':
-                    $this->innerHandleTransition($code->model);
+                    $this->innerHandleTransition($application);
             }
         } catch (AbortException $exception) {
             throw $exception;
@@ -145,6 +139,29 @@ final class CodeComponent extends FormComponent
             $this->getPresenter()->flashMessage(_('Error: ') . $exception->getMessage(), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');
+    }
+
+    /**
+     * @return TeamModel2|EventParticipantModel
+     * @throws BadRequestException
+     * @throws NotFoundException
+     */
+    private function resolveApplication(MachineCode $code): Model
+    {
+        switch ($code->type) {
+            case MachineCode::TYPE_PARTICIPANT:
+                /** @var EventParticipantModel $application */
+                return $code->model;
+            case MachineCode::TYPE_TEAM:
+                /** @var TeamModel2 $application */
+                return $code->model;
+            case MachineCode::TYPE_PERSON:
+                /** @var PersonModel $person */
+                $person = $code->model;
+                return $person->getApplication($this->event);
+            default:
+                throw new BadRequestException(_('Wrong type of code.'));
+        }
     }
 
     protected function configureForm(Form $form): void

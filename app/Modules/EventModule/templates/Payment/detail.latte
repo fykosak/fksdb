@@ -4,7 +4,7 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{control printer:templateString '@payment.state', $model, 1024}</h2>
-            {var $progress = 0}
+            {var int $progress = 0}
             {switch $model->state->value}
                 {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
                 {php $progress = 1}

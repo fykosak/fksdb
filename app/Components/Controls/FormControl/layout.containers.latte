@@ -2,11 +2,11 @@
     {varType Nette\Forms\Container|FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
     {varType int $level}
     {if $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
-        {var $attrs = array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY)}
+        {var array $attrs = array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY)}
         {if $container->getOption('visible', true)}
             {snippet 'group-' . $container->getOption('id')}
                 <div n:attr="(expand) $attrs">
-                    {var $className = $container->getOption('label')?'col-12 bd-callout bd-callout-priamry':''}
+                    {var string $className = $container->getOption('label')?'col-12 bd-callout bd-callout-priamry':''}
                     <fieldset class="{$className}" data-level={$level}>
                         {if $container->getOption('label')}
                             <h4 class="mb-3">{$container->getOption('label')}</h4>
@@ -31,7 +31,7 @@
 {define subComponents}
     {varType FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
     {varType int $level}
-    {var $controls = []}
+    {var array $controls = []}
     {foreach $container->getComponents() as $component}
         {if $component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
             {if $controls}

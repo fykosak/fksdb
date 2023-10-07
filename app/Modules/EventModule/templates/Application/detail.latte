@@ -25,7 +25,7 @@
             <div class="panel color-auto">
                 <div class="container">
                     <h2>{$groupName}</h2>
-                    {var $currentFields = []}
+                    {var string[] $currentFields = []}
                     {foreach $fieldDef as $field}
                         {if in_array($field,$fields)}
                             {php $currentFields[] = 'event_participant.' . $field}

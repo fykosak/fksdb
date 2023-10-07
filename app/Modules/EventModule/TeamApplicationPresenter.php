@@ -18,7 +18,7 @@ use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
-use FKSDB\Components\Schedule\PersonGrid;
+use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -340,9 +340,9 @@ final class TeamApplicationPresenter extends BasePresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function createComponentPersonScheduleGrid(): PersonGrid
+    protected function createComponentPersonScheduleGrid(): PersonScheduleGrid
     {
-        return new PersonGrid($this->getContext());
+        return new PersonScheduleGrid($this->getContext());
     }
 
     /**
