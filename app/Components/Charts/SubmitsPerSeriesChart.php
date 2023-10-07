@@ -62,7 +62,7 @@ class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
         /** @var SubmitModel $submit */
         foreach ($query as $submit) {
             $data['submits'][] = [
-                'submitted_on' => $submit->submitted_on->format('c'),
+                'submittedOn' => $submit->submitted_on->format('c'),
                 'series' => $submit->task->series
             ];
         }

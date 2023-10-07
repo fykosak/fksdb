@@ -12,7 +12,7 @@ interface Data {
         [series: number]: string;
     };
     submits: Array<{
-        submitted_on: string;
+        submittedOn: string;
         series: number;
     }>;
 }
@@ -37,8 +37,8 @@ export default function SubmitsPerSeries({data, translator}: OwnProps) {
 
     let minTime = 0;
 
-    data['submits'].forEach((submit: {submitted_on: string; series: number;}) => {
-        const delta = (new Date(submit.submitted_on).getTime() - new Date(data['deadlines'][submit.series]).getTime()) / (1000 * 3600 * 24);
+    data['submits'].forEach((submit: {submittedOn: string; series: number;}) => {
+        const delta = (new Date(submit.submittedOn).getTime() - new Date(data['deadlines'][submit.series]).getTime()) / (1000 * 3600 * 24);
         minTime = minTime < delta ? minTime : delta;
         submitCounts[submit.series] += 1;
         submitsInSeries[submit.series].push({
