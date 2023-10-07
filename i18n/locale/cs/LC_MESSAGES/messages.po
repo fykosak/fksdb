@@ -5141,7 +5141,7 @@ msgstr "Upravit přihlášku"
 
 #: i18n/../app/config/orm.neon.neon2php:286
 msgid "login Id"
-msgstr "Login ID"
+msgstr "Login Id"
 
 #: i18n/../app/config/orm.neon.neon2php:294
 msgid "Last logged"
