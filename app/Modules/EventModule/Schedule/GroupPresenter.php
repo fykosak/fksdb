@@ -61,8 +61,8 @@ final class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Code input for group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-user-check'
+            \sprintf(_('Scan 2D code for group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            'fas fa-qrcode'
         );
     }
 

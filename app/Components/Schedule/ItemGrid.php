@@ -102,7 +102,7 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('2D code')), // TODO!!!
+                new Title(null, _('Scan 2D code!')), // TODO!!!
                 fn(ScheduleItemModel $model) => [':Schedule:Item:code', ['id' => $model->schedule_item_id]]
             ),
             'code'

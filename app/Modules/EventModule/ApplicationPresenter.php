@@ -95,7 +95,7 @@ final class ApplicationPresenter extends BasePresenter
 
     public function titleCode(): PageTitle
     {
-        return new PageTitle(null, _('Code'), 'fas fa-user-check');
+        return new PageTitle(null, _('Scan 2D code'), 'fas fa-qrcode');
     }
 
     public function authorizedCreate(): bool

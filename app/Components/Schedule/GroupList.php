@@ -100,7 +100,7 @@ final class GroupList extends BaseList
         $this->addPresenterButton(
             ':Schedule:Group:code',
             'code',
-            _('Code input'),
+            _('Scan 2D code!'),
             false,
             ['id' => 'schedule_group_id']
         );
