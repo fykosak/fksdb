@@ -7,7 +7,8 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\WebService\Models\{ContestsModel,
+use FKSDB\Models\WebService\Models\{AuthWebModel,
+    ContestsModel,
     EventListWebModel,
     EventWebModel,
     ExportWebModel,
@@ -53,6 +54,7 @@ class WebServiceModel
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
+        'auth' => AuthWebModel::class,
     ];
 
     public function __construct(
