@@ -1,0 +1,18 @@
+transitions:
+    setkani:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        transitions:
+            __init->applied:
+                label: _('Přihlásit účastníka')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Setkani\ParticipantMailCallback()
+            applied->participated:
+                label: _('Prezentovat')
+            applied->missed:
+                label: _('Nepřijel')
+                behaviorType: danger
+            applied->cancelled:
+                label: _('Zrušit přihlášku')
+                behaviorType: danger
+

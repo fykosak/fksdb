@@ -9,6 +9,8 @@ use FKSDB\Components\Controls\Transition\AttendanceComponent;
 use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
+use FKSDB\Components\EntityForms\Dsef\SetkaniFormComponent;
+use FKSDB\Components\EntityForms\Dsef\SingleFormComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -74,7 +76,7 @@ final class ApplicationPresenter extends BasePresenter
     protected function startup(): void
     {
         if (in_array($this->getAction(), ['create', 'edit'])) {
-            if (!in_array($this->getEvent()->event_type_id, [2, 14])) {
+            if (!in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
                 $this->redirect(
                     ':Public:Application:default',
                     array_merge(['eventId' => $this->eventId], $this->getParameters())
@@ -126,7 +128,18 @@ final class ApplicationPresenter extends BasePresenter
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
-        $this->template->fields = ['lunch_count']; // TODO per event
+        switch ($this->getEvent()->event_type_id) {
+            case 2:
+            case 14:
+                $this->template->fields = ['lunch_count'];
+                break;
+            case 11:
+            case 12:
+                $this->template->fields = ['diet', 'health_restrictions', 'note'];
+                break;
+            default:
+                $this->template->fields = [];
+        }
         $this->template->model = $this->getEntity();
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
@@ -302,7 +315,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function createComponentCreateForm(): DsefFormComponent
+    protected function createComponentCreateForm(): SingleFormComponent
     {
         return $this->createForm(null);
     }
@@ -316,7 +329,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createComponentEditForm(): DsefFormComponent
+    protected function createComponentEditForm(): SingleFormComponent
     {
         return $this->createForm($this->getEntity());
     }
@@ -326,12 +339,21 @@ final class ApplicationPresenter extends BasePresenter
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    private function createForm(?EventParticipantModel $model): DsefFormComponent
+    private function createForm(?EventParticipantModel $model): SingleFormComponent
     {
         switch ($this->getEvent()->event_type_id) {
             case 2:
             case 14:
                 return new DsefFormComponent(
+                    $this->getContext(),
+                    $model,
+                    $this->getEvent(),
+                    $this->getMachine(),
+                    $this->getLoggedPerson()
+                );
+            case 11:
+            case 12:
+                return new SetkaniFormComponent(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
