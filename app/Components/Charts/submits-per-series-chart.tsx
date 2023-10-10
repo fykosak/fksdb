@@ -8,7 +8,7 @@ import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 import {getSeriesColor, getSeriesLabel} from './Contestants/contestants-data';
 
 interface Data {
-	deadlines: {
+    deadlines: {
         [series: number]: string;
     };
     submits: Array<{

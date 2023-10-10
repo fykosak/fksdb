@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Charts;
 
+use DateTime;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -34,7 +35,7 @@ class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
     }
 
     /**
-     * @phpstan-return array<int,array{submitted_on:string,series:int}>
+     * @phpstan-return array{deadlines: array<int,string>, submits: array<int, array{submittedOn:string, series:int}>}
      */
     public function getData(): array
     {
@@ -50,6 +51,7 @@ class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
             ->group('series')
             ->order('series');
 
+        /** @var object{series:int, deadline: DateTime} $task*/
         foreach ($deadlineQuery as $task) {
             $data['deadlines'][$task->series] = $task->deadline->format('c');
         }
