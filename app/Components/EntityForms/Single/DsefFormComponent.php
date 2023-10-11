@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Dsef;
+namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -36,10 +36,13 @@ final class DsefFormComponent extends SingleFormComponent
         $personContainer = $form->getComponent('person_id');
 
         /** @var ScheduleContainer $dsefMorning */
+        // @phpstan-ignore-next-line
         $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
         /** @var ScheduleContainer $dsefAfternoon */
+        // @phpstan-ignore-next-line
         $dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
         /** @var ScheduleContainer $dsefAllDay */
+        // @phpstan-ignore-next-line
         $dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
         $halfDayComponents = [];
         foreach ($dsefMorning->getComponents() as $morningSelect) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Dsef;
+namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Modules\Core\BasePresenter;
@@ -21,7 +21,7 @@ final class SetkaniFormComponent extends SingleFormComponent
     final protected function getPersonFieldsDefinition(): array
     {
         return [
-            'person'=> [
+            'person' => [
                 'other_name' => ['required' => true],
                 'family_name' => ['required' => true]
             ],
@@ -41,7 +41,7 @@ final class SetkaniFormComponent extends SingleFormComponent
             ],
             'person_schedule' => [
                 'apparel' => ['required' => true],
-                'transport' => ['required'=> true],
+                'transport' => ['required' => true],
                 'ticket' => ['required' => true]
             ]
         ];

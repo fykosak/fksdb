@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Dsef;
+namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
@@ -111,7 +111,6 @@ abstract class SingleFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws Exception
      * @phpstan-return EvaluatedFieldsDefinition
      */
     abstract protected function getPersonFieldsDefinition(): array;

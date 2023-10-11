@@ -5,14 +5,18 @@ transitions:
         transitions:
             __init->applied:
                 label: _('Přihlásit účastníka')
+                condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Setkani\ParticipantMailCallback()
             applied->participated:
                 label: _('Prezentovat')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
             applied->missed:
                 label: _('Nepřijel')
                 behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
             applied->cancelled:
                 label: _('Zrušit přihlášku')
                 behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
 
