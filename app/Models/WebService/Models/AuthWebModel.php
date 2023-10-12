@@ -39,7 +39,7 @@ class AuthWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int')->required(),
+            'contestId' => Expect::int()->required(),
             'app' => Expect::anyOf('wiki', 'pm')->required(),
         ]);
     }

@@ -169,7 +169,7 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
-     * @param string|Resource $resource
+     * @param string|Resource|null $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
