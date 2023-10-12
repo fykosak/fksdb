@@ -23,7 +23,7 @@ export class Translator<Lang extends string = 'cs' | 'en'> {
     }
 
     public getText(msgId: string): string {
-        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId]) {
+        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId] && this.data[this.currentLocale][msgId][0]) {
             return this.data[this.currentLocale][msgId][0];
         }
         return msgId;
@@ -42,7 +42,7 @@ export class Translator<Lang extends string = 'cs' | 'en'> {
     public nGetText(msgId: string, msgIdPlural: string, count: number): string {
         const formId: number = this.getPluralFormId(count);
         if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId] &&
-            this.data[this.currentLocale][msgId].length <= formId && this.data[this.currentLocale][msgId][formId]) {
+            this.data[this.currentLocale][msgId].length > formId && this.data[this.currentLocale][msgId][formId]) {
             return this.data[this.currentLocale][msgId][formId];
         }
 
@@ -54,7 +54,7 @@ export class Translator<Lang extends string = 'cs' | 'en'> {
     }
 
     public getLocalizedText(msgId: string, locale: Lang): string {
-        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId]) {
+        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId] && this.data[locale][msgId][0]) {
             return this.data[locale][msgId][0];
         }
         return msgId;
