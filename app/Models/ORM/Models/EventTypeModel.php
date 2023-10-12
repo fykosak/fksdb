@@ -59,8 +59,7 @@ final class EventTypeModel extends Model
             case 2:
             case 14:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vercah@fykos.cz'),
-                    'notifyFrom' => Expect::string('Den s experimentální fyzikou <dsef@fykos.cz>'),
+                    'hashSalt' => Expect::string(),
                 ])->castTo('array');
             case 16:
                 return Expect::structure([

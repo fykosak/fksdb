@@ -8,12 +8,14 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
@@ -37,7 +39,11 @@ abstract class CodeForm extends FormComponent
         $values = $form->getValues('array');
         try {
             $personSchedule = $this->resolvePersonSchedule(
-                MachineCode::createFromCode($this->container, $values['code'], 'default')
+                MachineCode::parseHash(
+                    $this->container,
+                    $values['code'],
+                    MachineCode::getSaltForEvent($this->event)
+                )
             );
 
             switch ($values['action']) {
@@ -91,12 +97,12 @@ abstract class CodeForm extends FormComponent
      * @throws BadRequestException
      * @throws MachineCodeException
      */
-    private function resolvePersonSchedule(MachineCode $code): PersonScheduleModel
+    private function resolvePersonSchedule(Model $model): PersonScheduleModel
     {
-        if ($code->type === MachineCode::TYPE_PERSON) {
-            $person = $code->model;
-        } elseif ($code->type === MachineCode::TYPE_PARTICIPANT) {
-            $person = $code->model->person;
+        if ($model instanceof PersonModel) {
+            $person = $model;
+        } elseif ($model instanceof EventParticipantModel) {
+            $person = $model->person;
         } else {
             throw new MachineCodeException(_('Unsupported code type'));
         }

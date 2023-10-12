@@ -4,76 +4,91 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\MachineCode;
 
-use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
-/**
- * @template TModel of \FKSDB\Models\ORM\Models\PersonModel|\FKSDB\Models\ORM\Models\EventParticipantModel|\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
- */
 final class MachineCode
 {
-    public const TYPE_PERSON = 'PE';
-    public const TYPE_PARTICIPANT = 'EP';
-    public const TYPE_TEAM = 'TE';
-
     public const CIP_ALGO = 'aes-256-cbc-hmac-sha1';
-    /** @phpstan-var self::TYPE_* */
-    public string $type;
-    public int $id;
-    /** @phpstan-var TModel  */
-    public Model $model;
-
 
     /**
-     * @phpstan-param self::TYPE_* $type
+     * @param PersonModel|EventParticipantModel|TeamModel2 $model
+     * @throws MachineCodeException
+     * @throws NotImplementedException
+     * @throws BadRequestException
+     */
+    public static function createHash(Model $model, string $salt): string
+    {
+        $code = openssl_encrypt(self::createCode($model), self::CIP_ALGO, $salt);
+        if ($code === false) {
+            throw new MachineCodeException(_('Cannot encrypt code'));
+        }
+        return $code;
+    }
+
+    /**
+     * @param PersonModel|EventParticipantModel|TeamModel2 $model
+     * @throws MachineCodeException
+     * @throws NotImplementedException
+     * @throws BadRequestException
+     */
+    private static function createCode(Model $model): string
+    {
+        $type = MachineCodeType::tryFromModel($model);
+        return $type->value . $model->getPrimary();
+    }
+
+    /**
+     * @return PersonModel|EventParticipantModel|TeamModel2
      * @throws MachineCodeException
      */
-    private function __construct(Container $container, string $type, int $id)
+    private static function parseCode(Container $container, string $code): Model
     {
-        $this->type = $type;
-        $this->id = $id;
-        switch ($type) {
-            case self::TYPE_PERSON:
-                $className = PersonService::class;
-                break;
-            case self::TYPE_PARTICIPANT:
-                $className = EventParticipantService::class;
-                break;
-            case self::TYPE_TEAM:
-                $className = TeamService2::class;
-                break;
-            default:
-                throw new InvalidStateException();
+        if (!preg_match('/([A-Z]{2})([0-9]+)/', $code, $matches)) {
+            throw new MachineCodeException(_('Wrong format'));
         }
-        /** @phpstan-var Service<TModel> $service */
-        $service = $container->getByType($className);
+        [, $type, $id] = $matches;
+        $type = MachineCodeType::from($type);
+        /** @var Service<PersonModel|EventParticipantModel|TeamModel2> $service */
+        $service = $container->getByType($type->getServiceClassName());
         $model = $service->findByPrimary($id);
         if (!$model) {
             throw new MachineCodeException(_('Model not found'));
         }
-        $this->model = $model;
+        return $model;
     }
 
     /**
+     * @return PersonModel|EventParticipantModel|TeamModel2
      * @throws MachineCodeException
-     * @phpstan-return self<TModel>
      */
-    public static function createFromCode(Container $container, string $code, string $saltOffset): self
+    public static function parseHash(Container $container, string $code, string $salt): Model
     {
-        $salt = $container->getParameters()['salt'][$saltOffset];
         $data = openssl_decrypt($code, self::CIP_ALGO, $salt);
         if ($data === false) {
             throw new MachineCodeException(_('Cannot decrypt code'));
         }
-        if (!preg_match('/([A-Z]{2})([0-9]+)/', $data, $matches)) {
-            throw new MachineCodeException(_('Wrong format'));
+        return self::parseCode($container, $code);
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public static function getSaltForEvent(EventModel $event): string
+    {
+        switch ($event->event_type_id) {
+            case 2:
+            case 14:
+                return $event->getParameter('hashSalt');
+            default:
+                throw new NotImplementedException();
         }
-        [, $type, $id] = $matches;
-        return new self($container, $type, (int)$id);// @phpstan-ignore-line
     }
 }

@@ -118,7 +118,11 @@ final class CodeComponent extends FormComponent
         $this->action = $values['action'];
         try {
             $application = $this->resolveApplication(
-                MachineCode::createFromCode($this->container, $values['code'], 'default')
+                MachineCode::parseHash(
+                    $this->container,
+                    $values['code'],
+                    MachineCode::getSaltForEvent($this->event)
+                )
             );
             if ($application->event_id !== $this->event->event_id) {
                 throw new BadRequestException(_('Application belongs to another event.'));
@@ -146,22 +150,16 @@ final class CodeComponent extends FormComponent
      * @throws BadRequestException
      * @throws NotFoundException
      */
-    private function resolveApplication(MachineCode $code): Model
+    private function resolveApplication(Model $model): Model
     {
-        switch ($code->type) {
-            case MachineCode::TYPE_PARTICIPANT:
-                /** @var EventParticipantModel $application */
-                return $code->model;
-            case MachineCode::TYPE_TEAM:
-                /** @var TeamModel2 $application */
-                return $code->model;
-            case MachineCode::TYPE_PERSON:
-                /** @var PersonModel $person */
-                $person = $code->model;
-                return $person->getApplication($this->event);
-            default:
-                throw new BadRequestException(_('Wrong type of code.'));
+        if ($model instanceof EventParticipantModel) {
+            return $model;
+        } elseif ($model instanceof TeamModel2) {
+            return $model;
+        } elseif ($model instanceof PersonModel) {
+            return $model->getApplication($this->event);
         }
+        throw new BadRequestException(_('Wrong type of code.'));
     }
 
     protected function configureForm(Form $form): void
