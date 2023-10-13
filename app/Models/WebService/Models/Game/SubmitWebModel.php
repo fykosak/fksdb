@@ -6,6 +6,7 @@ namespace FKSDB\Models\WebService\Models\Game;
 
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
@@ -43,11 +44,13 @@ class SubmitWebModel extends WebModel
 
     /**
      * @phpstan-return Message[]
+     * @throws GoneException
      */
     public function getJsonResponse(array $params): array
     {
-        try {
-            /** @var EventModel|null $event */
+        throw new GoneException();
+        /* try {
+            /** @var EventModel|null $event
             $event = $this->eventService->findByPrimary($params['eventId']);
             if (!$event) {
                 throw new BadRequestException();
@@ -94,6 +97,6 @@ class SubmitWebModel extends WebModel
             return [
                 new Message(_('Undefined error'), Message::LVL_ERROR),
             ];
-        }
+        }*/
     }
 }
