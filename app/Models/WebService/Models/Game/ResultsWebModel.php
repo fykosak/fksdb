@@ -15,7 +15,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{event_id:int,last_update?:string|null},array<string,mixed>>
+ * @phpstan-extends WebModel<array{eventId:int,lastUpdate?:string|null},array<string,mixed>>
  */
 class ResultsWebModel extends WebModel
 {
@@ -33,7 +33,7 @@ class ResultsWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $event = $this->eventService->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($params['eventId']);
         $gameSetup = $event->getGameSetup();
 
         $result = [
@@ -65,8 +65,8 @@ class ResultsWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_id' => Expect::scalar()->castTo('int')->required(),
-            'last_update' => Expect::string()->nullable(),
+            'eventId' => Expect::scalar()->castTo('int')->required(),
+            'lastUpdate' => Expect::string()->nullable(),
         ]);
     }
 }

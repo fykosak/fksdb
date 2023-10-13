@@ -37,4 +37,24 @@ final class SchoolModel extends Model implements Resource
     {
         return in_array($this->address->country->alpha_2, ['CZ', 'SK']);
     }
+
+    /**
+     * @phpstan-return array{
+     *     schoolId:int,
+     *     nameFull:string|null,
+     *     name:string,
+     *     nameAbbrev:string,
+     *     countryISO:string,
+     * }
+     */
+    public function __toArray(): array
+    {
+        return [
+            'schoolId' => $this->school_id,
+            'nameFull' => $this->name_full,
+            'name' => $this->name,
+            'nameAbbrev' => $this->name_abbrev,
+            'countryISO' => $this->address->country->alpha_2,
+        ];
+    }
 }

@@ -30,6 +30,7 @@ use Nette\Security\Resource;
  * @property-read string|null $display_name
  * @property-read PersonGender $gender
  * @property-read \DateTimeInterface $created
+ * @phpstan-type TSimplePersonArray array{personId:int,name:string,email:string|null}
  */
 final class PersonModel extends Model implements Resource
 {
@@ -450,5 +451,17 @@ final class PersonModel extends Model implements Resource
             $selection->where('type', $type->value);
         }
         return $selection;
+    }
+
+    /**
+     * @phpstan-return TSimplePersonArray
+     */
+    public function __toArray(): array
+    {
+        return [
+            'name' => $this->getFullName(),
+            'personId' => $this->person_id,
+            'email' => $this->getInfo()->email,
+        ];
     }
 }
