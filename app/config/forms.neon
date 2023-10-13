@@ -69,8 +69,8 @@ parameters:
                     required: false
                 agreed:
                     required: true
-        adminOrg: %forms.adminPerson%
-        adminEventOrg: %forms.adminPerson%
+        adminOrganizer: %forms.adminPerson%
+        adminEventOrganizer: %forms.adminPerson%
         adminTeacher: %forms.adminPerson%
         adminContestant:
             person:
@@ -156,7 +156,7 @@ parameters:
                   required: false
                 citizenship:
                   required: false
-                # required to ORG
+                # required to organizer
                 uk_login:
                   required: false
                 isic_number:

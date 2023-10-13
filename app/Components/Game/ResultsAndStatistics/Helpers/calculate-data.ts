@@ -1,24 +1,21 @@
 import { SubmitModel, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 
-export interface Item {
+export interface Item<AvailablePoints extends number> {
     team: TeamModel;
     submits: {
         [taskId: number]: SubmitModel;
     };
     points: number;
     groups: {
-        1: number;
-        2: number;
-        3: number;
-        5: number;
+        [points in AvailablePoints]: number;
     };
     count: number;
 }
 
-export const calculate = (submits: Submits, teams: TeamModel[] = []): { [teamId: number]: Item } => {
+export const calculate = (submits: Submits, teams: TeamModel[] = []): { [teamId: number]: Item<5 | 3 | 2 | 1> } => {
     const submitsForTeams: {
-        [teamId: number]: Item;
+        [teamId: number]: Item<5 | 3 | 2 | 1>;
     } = {};
     teams.forEach((team) => {
         submitsForTeams[team.teamId] = {

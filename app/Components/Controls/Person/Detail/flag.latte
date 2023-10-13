@@ -25,7 +25,7 @@
                         <div class="row">
                             <span class="col-5">{_'Contest'}</span>
                             <div class="col-7">
-                                {control contestBadge, $flag->contest_id}
+                                {FKSDB\Models\UI\ContestBadge::getHtml($flag->contest)}
                             </div>
                         </div>
                     </li>
@@ -47,7 +47,7 @@
         {/foreach}
     {else}
         <div class="card-body">
-            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+            {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
         </div>
     {/if}
 {/block}

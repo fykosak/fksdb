@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<TeamModel2>
+ * @phpstan-extends BaseGrid<TeamModel2,array{}>
  */
 class ResultsCategoryGrid extends BaseGrid
 {
@@ -34,11 +34,10 @@ class ResultsCategoryGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-
-        $this->addColumns([
-            'fyziklani_team.fyziklani_team_id',
-            'fyziklani_team.name',
-            'fyziklani_team.rank_category',
+        $this->addSimpleReferencedColumns([
+            '@fyziklani_team.fyziklani_team_id',
+            '@fyziklani_team.name',
+            '@fyziklani_team.rank_category',
         ]);
     }
 

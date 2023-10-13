@@ -91,7 +91,7 @@ parameters:
             table: task_contribution
             links: []
             rows:
-                - task.name_cs
+                - task.name
                 - task_contribution.type
                 - contest.contest
                 - task.year

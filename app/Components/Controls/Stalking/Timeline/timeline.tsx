@@ -26,9 +26,9 @@ interface Contestant extends State {
     };
 }
 
-interface Org extends State {
+interface Organizer extends State {
     model: {
-        orgId: number;
+        organizerId: number;
         contestId: 1 | 2;
     };
 }
@@ -36,7 +36,7 @@ interface Org extends State {
 interface Props {
     data: {
         events: {
-            eventOrgs: Array<{
+            eventOrganizers: Array<{
                 event: Event;
                 model: null;
             }>;
@@ -55,7 +55,7 @@ interface Props {
         };
         states: {
             contestants: Contestant[];
-            orgs: Org[];
+            organizers: Organizer[];
         };
     };
     translator: Translator;
@@ -142,26 +142,26 @@ export default function Timeline(props: Props) {
 
     rowNumber = 0;
     const {
-        events: {eventOrgs, eventParticipants, eventTeachers},
-        states: {orgs, contestants},
+        events: {eventOrganizers, eventParticipants, eventTeachers},
+        states: {organizers, contestants},
         scale: {max, min},
     } = props.data;
     const scale = createTimeXScale(new Date(min), new Date(max));
     const content = <g transform="translate(0,15)">
-        {createEvents(eventOrgs, 'Event org')}
+        {createEvents(eventOrganizers, 'Event organizer')}
         {createEvents(eventParticipants, 'Event participant')}
         {createEvents(eventTeachers, 'Event teacher')}
 
-        {orgs.length && orgs.map((org, index) => {
+        {organizers.length && organizers.map((organizer, index) => {
             rowNumber += 1;
             const y = (rowNumber * lineHeight);
             return <g transform={'translate(0,' + y + ')'} key={index}>
                 {createRect(
                     index,
-                    org.model.contestId,
-                    'Org #' + org.model.orgId,
-                    org.since,
-                    org.until,
+                    organizer.model.contestId,
+                    'Organizer #' + organizer.model.organizerId,
+                    organizer.since,
+                    organizer.until,
                 )}
             </g>;
         })}

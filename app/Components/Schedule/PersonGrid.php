@@ -14,7 +14,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends BaseGrid<PersonScheduleModel>
+ * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
 class PersonGrid extends BaseGrid
 {
@@ -48,7 +48,7 @@ class PersonGrid extends BaseGrid
         $this->paginate = false;
         $this->counter = false;
 
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
@@ -56,12 +56,12 @@ class PersonGrid extends BaseGrid
             ),
             'person_schedule_id'
         );
-        $this->addColumns([
-            'schedule_group.name',
-            'schedule_item.name',
-            'schedule_item.price_czk',
-            'schedule_item.price_eur',
-            'payment.payment',
+        $this->addSimpleReferencedColumns([
+            '@schedule_group.name',
+            '@schedule_item.name',
+            '@schedule_item.price_czk',
+            '@schedule_item.price_eur',
+            '@payment.payment',
         ]);
     }
 

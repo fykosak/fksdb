@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     `event_id`              INT(11)       NOT NULL,
     `person_id`             INT(11)       NOT NULL,
     `note`                  TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
-    `status`                VARCHAR(20)   NOT NULL,
+    `status`                VARCHAR(20)   NOT NULL DEFAULT '__init',
     `created`               TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
     `accomodation`          TINYINT(1)    NULL     DEFAULT NULL,
     `diet`                  TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',
@@ -273,6 +273,9 @@ CREATE TABLE IF NOT EXISTS `school`
     `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
     `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
     `note`        VARCHAR(255) NULL     DEFAULT NULL,
+    `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
+    `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
+    `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -1094,6 +1097,7 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
+        'dsef_all_day',
         'apparal',
         'transport'
         )                              NOT NULL,
@@ -1202,6 +1206,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
     `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME     NULL                                              DEFAULT NULL,
+    `priority`            BOOLEAN      NOT NULL                                          DEFAULT FALSE,
     INDEX `idx_email_message__person` (`recipient_person_id` ASC),
     CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
     CONSTRAINT `fk_email_message__person`

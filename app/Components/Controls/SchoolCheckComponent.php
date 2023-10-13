@@ -14,7 +14,6 @@ use Nette\DI\Container;
 
 class SchoolCheckComponent extends BaseComponent
 {
-
     private EventModel $event;
 
     public function __construct(EventModel $event, Container $container)

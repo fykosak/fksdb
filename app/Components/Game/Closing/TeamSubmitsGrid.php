@@ -13,7 +13,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<SubmitModel>
+ * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
 class TeamSubmitsGrid extends BaseGrid
 {
@@ -46,13 +46,12 @@ class TeamSubmitsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-
-        $this->addColumns([
-            'fyziklani_team.name',
-            'fyziklani_task.label',
-            'fyziklani_submit.points',
-            'fyziklani_submit.created',
-            'fyziklani_submit.state',
+        $this->addSimpleReferencedColumns([
+            '@fyziklani_team.name',
+            '@fyziklani_task.label',
+            '@fyziklani_submit.points',
+            '@fyziklani_submit.created',
+            '@fyziklani_submit.state',
         ]);
         if ($this->team->event->event_type_id === 1) {
             $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);

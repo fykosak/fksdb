@@ -12,7 +12,7 @@ use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use FKSDB\Modules\OrgModule\BasePresenter;
+use FKSDB\Modules\OrganizerModule\BasePresenter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 

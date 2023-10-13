@@ -5,38 +5,26 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<PaymentModel|ItemModel,never>
+ * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel,never>
  */
-class PaymentColumnFactory extends ColumnFactory
+class PaymentColumnFactory extends AbstractColumnFactory
 {
     private ORMFactory $reflectionFactory;
 
-    public function __construct(ORMFactory $reflectionFactory, MetaDataFactory $metaDataFactory)
+    public function injectFactory(ORMFactory $reflectionFactory): void
     {
-        parent::__construct($metaDataFactory);
         $this->reflectionFactory = $reflectionFactory;
-    }
-
-    /**
-     * @throws AbstractColumnException
-     */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new AbstractColumnException();
     }
 
     /**

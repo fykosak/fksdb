@@ -4,20 +4,27 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\StringPrinter;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @deprecated
  */
-class TShirtSizeColumnFactory extends ColumnFactory
+class TShirtSizeColumnFactory extends AbstractColumnFactory
 {
 
     public const SIZE_MAP = [
-        'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL',
+        'XS',
+        'S',
+        'M',
+        'L',
+        'XL',
+        'XXL',
+        'XXXL',
     ];
     public const GENDER_MAP = [
         'M' => 'male',
@@ -29,6 +36,6 @@ class TShirtSizeColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->tshirt_size);
+        return StringPrinter::getHtml($model->tshirt_size);
     }
 }

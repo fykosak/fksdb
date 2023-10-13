@@ -6,10 +6,10 @@ namespace FKSDB\Components\Controls\Stalking\Timeline;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
@@ -18,15 +18,15 @@ use Nette\DI\Container;
 /**
  * @phpstan-import-type SerializedEventModel from EventModel
  * @phpstan-type EventContribution array{
- *     eventOrgs:array<int,array{event:SerializedEventModel,model:null}>,
+ *     eventOrganizers:array<int,array{event:SerializedEventModel,model:null}>,
  *     eventParticipants:array<int,array{event:SerializedEventModel,model:null}>,
  *     eventTeachers:array<int,array{event:SerializedEventModel,model:null}>,
  * }
  * @phpstan-type StateContribution array{
- *     orgs:array<int,array{
+ *     organizers:array<int,array{
  *          since:string,
  *          until:string,
- *          model:array{orgId:int,contestId:int}
+ *          model:array{organizerId:int,contestId:int}
  * }>,
  *     contestants:array<int,array{
  *          since:string,
@@ -61,28 +61,29 @@ class TimelineComponent extends FrontEndComponent
             'since' => [],
             'until' => [],
         ];
-        $organisers = [];
-        /** @var OrgModel $org */
-        foreach ($this->person->getOrganisers() as $org) {
+        $organizers = [];
+        /** @var OrganizerModel $organizer */
+        foreach ($this->person->getOrganizers() as $organizer) {
             $since = new \DateTime(
-                $org->contest->getContestYear($org->since)->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
+                $organizer->contest->getContestYear($organizer->since)->ac_year . '-' .
+                ContestYearService::FIRST_AC_MONTH . '-1'
             );
             $until = new \DateTime();
-            if ($org->until) {
+            if ($organizer->until) {
                 $until = new \DateTime(
-                    $org->contest->getContestYear(
-                        $org->until
+                    $organizer->contest->getContestYear(
+                        $organizer->until
                     )->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
                 );
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
-            $organisers[] = [
+            $organizers[] = [
                 'since' => $since->format('c'),
                 'until' => $until->format('c'),
                 'model' => [
-                    'orgId' => $org->org_id,
-                    'contestId' => $org->contest_id,
+                    'organizerId' => $organizer->org_id,
+                    'contestId' => $organizer->contest_id,
                 ],
             ];
         }
@@ -107,7 +108,7 @@ class TimelineComponent extends FrontEndComponent
         return [
             $dates,
             [
-                'orgs' => $organisers,
+                'organizers' => $organizers,
                 'contestants' => $contestants,
             ],
         ];
@@ -125,11 +126,11 @@ class TimelineComponent extends FrontEndComponent
             $events[] = $participant->event;
             $eventParticipants[] = ['event' => $participant->event->__toArray(), 'model' => null];
         }
-        $eventOrganisers = [];
-        /** @var EventOrgModel $eventOrg */
-        foreach ($this->person->getEventOrgs() as $eventOrg) {
-            $events[] = $eventOrg->event;
-            $eventOrganisers[] = ['event' => $eventOrg->event->__toArray(), 'model' => null];
+        $eventOrganizers = [];
+        /** @var EventOrganizerModel $eventOrganizer */
+        foreach ($this->person->getEventOrganizers() as $eventOrganizer) {
+            $events[] = $eventOrganizer->event;
+            $eventOrganizers[] = ['event' => $eventOrganizer->event->__toArray(), 'model' => null];
         }
         $eventTeachers = [];
         /** @var TeamTeacherModel $teacher */
@@ -143,7 +144,7 @@ class TimelineComponent extends FrontEndComponent
         return [
             $events,
             [
-                'eventOrgs' => $eventOrganisers,
+                'eventOrganizers' => $eventOrganizers,
                 'eventParticipants' => $eventParticipants,
                 'eventTeachers' => $eventTeachers,
             ],

@@ -130,7 +130,7 @@ application:
     mapping:
         Game: FKSDB\Modules\EventModule\Game\*Presenter
         Schedule: FKSDB\Modules\EventModule\Schedule\*Presenter
-        Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
+        Warehouse: FKSDB\Modules\OrganizerModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days
@@ -154,4 +154,6 @@ includes:
     - stalking.neon
     #- payment.neon
     - payments/common.neon
-    - fyziklani/default.neon
+    - applications/fof.neon
+    - applications/fol.neon
+    - applications/dsef.neon

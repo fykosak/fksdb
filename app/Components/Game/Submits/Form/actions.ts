@@ -9,7 +9,7 @@ export interface SubmitFormRequest {
     points: number;
 }
 
-export const submitStart = async (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest>> => {
+export const submitStart = async (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url: string): Promise<DataResponse<SubmitFormRequest>> => {
     const data = {
         ...values,
         code: values.code,

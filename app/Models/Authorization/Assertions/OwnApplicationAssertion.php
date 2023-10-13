@@ -20,7 +20,7 @@ class OwnApplicationAssertion implements Assertion
         $queriedRole = $acl->getQueriedRole();
         $application = $acl->getQueriedResource();
         if ($application instanceof TeamModel2) {
-            return $this->isTeamMember($queriedRole, $application) &&
+            return $this->isPartOfTeam($queriedRole, $application) &&
                 $application->state->value !== TeamState::DISQUALIFIED;
         } elseif ($application instanceof EventParticipantModel) {
             if ($queriedRole instanceof ParticipantRole) {
@@ -30,7 +30,7 @@ class OwnApplicationAssertion implements Assertion
         return false;
     }
 
-    private function isTeamMember(Role $role, TeamModel2 $application): bool
+    private function isPartOfTeam(Role $role, TeamModel2 $application): bool
     {
         if ($role instanceof FyziklaniTeamTeacherRole) {
             foreach ($role->teams as $team) {

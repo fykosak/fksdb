@@ -32,12 +32,12 @@ final class ContestModel extends Model
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<OrgModel>
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
      */
-    public function getOrganisers(): TypedGroupedSelection
+    public function getOrganizers(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<OrgModel> $selection */
-        $selection = $this->related(DbNames::TAB_ORG, 'contest_id');
+        /** @phpstan-var TypedGroupedSelection<OrganizerModel> $selection */
+        $selection = $this->related(DbNames::TAB_ORGANIZER, 'contest_id');
         return $selection;
     }
 

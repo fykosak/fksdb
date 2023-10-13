@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;

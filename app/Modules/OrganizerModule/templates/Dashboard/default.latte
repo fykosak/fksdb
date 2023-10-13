@@ -1,0 +1,32 @@
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Series'}</h2>
+            {control navigationChooser:board 'Organizer.Dashboard.inbox'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Tasks'}</h2>
+            {control navigationChooser:board 'Organizer.Dashboard.task'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Persons'}</h2>
+            {control navigationChooser:board 'Organizer.Dashboard.person'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Entities'}</h2>
+            {control navigationChooser:board 'Organizer.Dashboard.entity'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Others'}</h2>
+            {control navigationChooser:board 'Organizer.Dashboard.others'}
+        </div>
+    </div>
+{/block}
