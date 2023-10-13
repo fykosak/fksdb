@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events;
+namespace FKSDB\Components\Event\Import;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -17,7 +17,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 
-class ImportComponent extends BaseComponent
+final class ImportComponent extends BaseComponent
 {
     private EventModel $event;
     private EventParticipantService $eventParticipantService;
@@ -56,7 +56,7 @@ class ImportComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'import.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR);
     }
 
     /**

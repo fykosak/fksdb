@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Controls\Transition\CodeComponent;
-use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\SingleTestComponent;
 use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
@@ -328,11 +328,11 @@ final class TeamApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return MassTransitionsComponent<TeamMachine>
+     * @phpstan-return MassTransitionComponent<TeamMachine>
      */
-    protected function createComponentMassTransitions(): MassTransitionsComponent
+    protected function createComponentMassTransitions(): MassTransitionComponent
     {
-        return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent

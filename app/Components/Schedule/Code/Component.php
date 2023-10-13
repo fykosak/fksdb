@@ -21,7 +21,7 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-abstract class CodeForm extends FormComponent
+abstract class Component extends FormComponent
 {
     private PersonScheduleService $personScheduleService;
 
@@ -42,7 +42,7 @@ abstract class CodeForm extends FormComponent
                 MachineCode::parseHash(
                     $this->container,
                     $values['code'],
-                    MachineCode::getSaltForEvent($this->event)
+                    MachineCode::getSaltForEvent($this->getEvent())
                 )
             );
 

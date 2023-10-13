@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Transition\CodeComponent;
-use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
+use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\Schedule\PersonScheduleGrid;
@@ -347,11 +347,11 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return MassTransitionsComponent<EventParticipantMachine>
+     * @phpstan-return MassTransitionComponent<EventParticipantMachine>
      */
-    protected function createComponentMassTransitions(): MassTransitionsComponent
+    protected function createComponentMassTransitions(): MassTransitionComponent
     {
-        return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
 
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Transition;
+namespace FKSDB\Components\Event\MassTransition;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -14,7 +14,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-template TMachine of Machine
  */
-class MassTransitionsComponent extends BaseComponent
+final class MassTransitionComponent extends BaseComponent
 {
     /** @phpstan-var TMachine */
     protected Machine $machine;
@@ -32,7 +32,7 @@ class MassTransitionsComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'mass.latte', [
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
             'transitions' => $this->machine->getTransitions(),
         ]);
     }

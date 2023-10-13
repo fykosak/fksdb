@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Transition;
+namespace FKSDB\Components\Event\Code;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\MachineCode\MachineCode;
@@ -65,7 +65,7 @@ final class CodeComponent extends FormComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'code.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
     /**
