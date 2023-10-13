@@ -245,11 +245,6 @@ final class PersonModel extends Model implements Resource
         return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
     }
 
-    public function __toString(): string
-    {
-        return $this->getFullName();
-    }
-
     /**
      * @phpstan-return OrganizerModel[] indexed by contest_id
      */

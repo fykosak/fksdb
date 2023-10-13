@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
+use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -123,7 +124,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->event = $this->getEvent();
+        $this->template->machineCode = $this->createMachineCode();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
         $this->template->fields = ['lunch_count']; // TODO per event
@@ -247,6 +248,15 @@ final class ApplicationPresenter extends BasePresenter
     private function getMachine(): EventParticipantMachine
     {
         return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
+    }
+
+    private function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this->getEntity(), MachineCode::getSaltForEvent($this->getEvent()));
+        } catch (\Throwable $exception) {
+            return null;
+        }
     }
 
     /**

@@ -23,7 +23,6 @@ use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @phpstan-template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
@@ -164,9 +163,6 @@ final class CodeComponent extends FormComponent
 
     protected function configureForm(Form $form): void
     {
-        Debugger::barDump(
-            openssl_encrypt('EP32198', MachineCode::CIP_ALGO, $this->container->getParameters()['salt']['default'])
-        );
         $form->addText('code', _('Code'));
         $form->addSelect(
             'action',

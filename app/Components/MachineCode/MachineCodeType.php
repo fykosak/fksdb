@@ -32,7 +32,7 @@ final class MachineCodeType extends FakeStringEnum
     }
 
     /**
-     * @return class-string<Service<Model>>
+     * @phpstan-return class-string<Service<Model>>
      */
     public function getServiceClassName(): string
     {
@@ -51,7 +51,7 @@ final class MachineCodeType extends FakeStringEnum
     /**
      * @throws BadRequestException
      */
-    public static function tryFromModel(Model $model): self
+    public static function fromModel(Model $model): self
     {
         if ($model instanceof EventParticipantModel) {
             return new self(self::Participant);

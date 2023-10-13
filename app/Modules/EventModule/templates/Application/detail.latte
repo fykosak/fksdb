@@ -3,6 +3,7 @@
     {varType array $groups}
     {varType bool $hasSchedule}
     {varType bool $isOrganizer}
+    {varType string|null $machineCode}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
@@ -58,6 +59,14 @@
             <div class="container">
                 <h2>{_'Transitions'}</h2>
                 {control applicationTransitions}
+            </div>
+        </div>
+    {/if}
+    {if $isOrganizer && $machineCode}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Application code'}</h2>
+                <input class="form-control" value="{$machineCode}"/>
             </div>
         </div>
     {/if}

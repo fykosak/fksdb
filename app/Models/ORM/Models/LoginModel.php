@@ -24,7 +24,7 @@ final class LoginModel extends Model implements IIdentity
 {
     public function __toString(): string
     {
-        return $this->person ? $this->person->__toString() : ($this->login ?? 'NAMELESS LOGIN');
+        return $this->person ? $this->person->getFullName() : ($this->login ?? 'NAMELESS LOGIN');
     }
 
     /**

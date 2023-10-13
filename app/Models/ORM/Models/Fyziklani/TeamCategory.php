@@ -94,13 +94,4 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
         // TODO
         return Html::el('span')->addText($this->label());
     }
-
-    /**
-     * @internal
-     * Protection for applications
-     */
-    public function __toString(): string
-    {
-        return $this->value;
-    }
 }

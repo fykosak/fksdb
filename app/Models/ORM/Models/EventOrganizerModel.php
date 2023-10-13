@@ -24,9 +24,4 @@ final class EventOrganizerModel extends Model implements Resource
     {
         return self::RESOURCE_ID;
     }
-
-    public function __toString(): string
-    {
-        return $this->person->__toString();
-    }
 }
