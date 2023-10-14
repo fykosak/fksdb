@@ -18,9 +18,11 @@ use Nette\InvalidStateException;
 
 final class MachineCodeType extends FakeStringEnum
 {
+    // phpcs:disable
     public const Person = 'PE';
     public const Participant = 'EP';
     public const Team = 'TE';
+    // phpcs:enable
 
     public static function cases(): array
     {

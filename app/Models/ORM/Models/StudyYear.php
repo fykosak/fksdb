@@ -11,6 +11,7 @@ use Nette\Utils\Strings;
 
 final class StudyYear extends FakeStringEnum implements EnumColumn
 {
+    // phpcs:disable
     public const Primary5 = 'P_5';
     public const Primary6 = 'P_6';
     public const Primary7 = 'P_7';
@@ -25,6 +26,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     public const UniversityAll = 'U_ALL';
 
     public const None = 'NONE';
+    // phpcs:enable
 
     public function badge(): Html
     {
