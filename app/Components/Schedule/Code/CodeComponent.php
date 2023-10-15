@@ -144,7 +144,7 @@ abstract class CodeComponent extends FormComponent
         $form->addSelect('action', _('Action'), [
             'attendance' => _('Attendance'),
             'check' => _('Check'),
-            'detail' => _('Detail'),
+            'detail' => _('button.detail'),
             'application' => _('Show application!'),
         ]);
     }

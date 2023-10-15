@@ -85,7 +85,7 @@ final class GroupList extends BaseList
         $this->addPresenterButton(
             ':Schedule:Group:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'schedule_group_id']
         );
@@ -93,7 +93,7 @@ final class GroupList extends BaseList
         $this->addPresenterButton(
             ':Schedule:Group:edit',
             'edit',
-            _('Edit'),
+            _('button.edit'),
             false,
             ['id' => 'schedule_group_id']
         );
@@ -101,7 +101,7 @@ final class GroupList extends BaseList
         $this->addPresenterButton(
             ':Schedule:Group:code',
             'code',
-            _('Scan 2D code!'),
+            _('button.scan2d'),
             false,
             ['id' => 'schedule_group_id']
         );

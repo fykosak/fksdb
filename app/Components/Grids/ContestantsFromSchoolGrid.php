@@ -55,14 +55,14 @@ final class ContestantsFromSchoolGrid extends BaseGrid
         $this->addPresenterButton(
             ':Organizer:Contestant:edit',
             'edit',
-            _('Edit'),
+            _('button.edit'),
             false,
             ['id' => 'contestant_id']
         );
         $this->addPresenterButton(
             ':Organizer:Contestant:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'contestant_id']
         );

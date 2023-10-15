@@ -168,9 +168,9 @@ final class CodeComponent extends FormComponent
             'action',
             _('Action'),
             [
-                'edit' => _('Edit!'),
+                'edit' => _('button.edit'),
                 'transition' => _('Transition!'),
-                'detail' => _('Detail!'),
+                'detail' => _('button.detail'),
             ]
         )->setDefaultValue($this->action);
     }

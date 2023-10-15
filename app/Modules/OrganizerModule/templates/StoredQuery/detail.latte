@@ -41,7 +41,7 @@
                    title="{_'Execute query'}">{_'Execute'}</a>
                 {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
                     <a href="{plink edit,'id' => $model->getPrimary()}"
-                       class="btn btn-outline-secondary" title="{_'Edit query'}">{_'Edit'}</a>
+                       class="btn btn-outline-secondary" title="{_'Edit query'}">{_'button.edit'}</a>
                 {/if}
             </div>
         </div>

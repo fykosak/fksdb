@@ -113,7 +113,7 @@ final class TeamList extends BaseList
         $this->addPresenterButton(
             ':Event:TeamApplication:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'fyziklani_team_id']
         );

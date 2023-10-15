@@ -84,7 +84,7 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('Edit')),
+                new Title(null, _('button.edit')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->schedule_item_id]]
             ),
             'edit'
@@ -93,7 +93,7 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('Detail')),
+                new Title(null, _('button.detail')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
             ),
             'detail'
@@ -102,7 +102,7 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('Scan 2D code!')), // TODO!!!
+                new Title(null, _('button.scan2d')), // TODO!!!
                 fn(ScheduleItemModel $model) => [':Schedule:Item:code', ['id' => $model->schedule_item_id]]
             ),
             'code'

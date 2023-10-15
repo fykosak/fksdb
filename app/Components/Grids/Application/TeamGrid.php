@@ -43,6 +43,6 @@ final class TeamGrid extends BaseGrid
             '@fyziklani_team.force_a',
             '@fyziklani_team.phone',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_team_id']);
+        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'fyziklani_team_id']);
     }
 }
