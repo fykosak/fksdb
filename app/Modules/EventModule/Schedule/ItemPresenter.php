@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Schedule\Code\ItemCodeComponent;
+use FKSDB\Components\Schedule\Code\ItemComponent;
 use FKSDB\Components\Schedule\ItemPersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -182,8 +182,8 @@ final class ItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentCode(): ItemCodeComponent
+    protected function createComponentCode(): ItemComponent
     {
-        return new ItemCodeComponent($this->getContext(), $this->getEntity());
+        return new ItemComponent($this->getContext(), $this->getEntity());
     }
 }

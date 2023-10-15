@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\DI\Container;
 
-class GroupCodeComponent extends CodeComponent
+class GroupComponent extends CodeComponent
 {
     protected ScheduleGroupModel $group;
 

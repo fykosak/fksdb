@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\DI\Container;
 
-class ItemCodeComponent extends CodeComponent
+class ItemComponent extends CodeComponent
 {
     protected ScheduleItemModel $item;
 
