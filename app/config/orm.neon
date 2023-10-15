@@ -331,6 +331,14 @@ orm:
             role:
                 type: string
                 title: _('Role')
+            allow_wiki:
+                type: bool
+                title: _('Allow wiki login')
+                description: _('Allow login in to internal wiki before or after period of active orgnize')
+            allow_pm:
+                type: bool
+                title: _('Allow PM login')
+                description: _('Allow login in to Problem manager before or after period of active orgnize')
         links:
             detail:
                 destination: :Organizer:Organizer:detail

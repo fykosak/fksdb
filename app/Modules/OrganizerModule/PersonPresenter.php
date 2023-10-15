@@ -299,8 +299,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string $resource
-     * all auth method is overwritten
+     * @param Resource|string|null $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

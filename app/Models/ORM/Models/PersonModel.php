@@ -232,8 +232,7 @@ final class PersonModel extends Model implements Resource
         $result = [];
         /** @var OrganizerModel $organizer */
         foreach ($this->getOrganizers() as $organizer) {
-            $year = $organizer->contest->getCurrentContestYear()->year;
-            if ($organizer->since <= $year && ($organizer->until === null || $organizer->until >= $year)) {
+            if ($organizer->isActive($organizer->contest->getCurrentContestYear())) {
                 $result[$organizer->contest_id] = $organizer;
             }
         }

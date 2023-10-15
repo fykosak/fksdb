@@ -103,9 +103,4 @@ final class TeacherPresenter extends BasePresenter
     {
         return $this->teacherService;
     }
-
-    protected function getModelResource(): string
-    {
-        return TeacherModel::RESOURCE_ID;
-    }
 }
