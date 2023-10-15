@@ -40,11 +40,11 @@ final class MachineCodeType extends FakeStringEnum
     {
         switch ($this->value) {
             case self::Person:
-                return PersonService::class;
+                return PersonService::class;// @phpstan-ignore-line
             case self::Participant:
-                return EventParticipantService::class;
+                return EventParticipantService::class;// @phpstan-ignore-line
             case self::Team:
-                return TeamService2::class;
+                return TeamService2::class;// @phpstan-ignore-line
             default:
                 throw new InvalidStateException();
         }
