@@ -3,6 +3,7 @@
     {varType array $groups}
     {varType bool $hasSchedule}
     {varType bool $isOrganizer}
+    {varType string|null $machineCode}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
@@ -25,7 +26,7 @@
             <div class="panel color-auto">
                 <div class="container">
                     <h2>{$groupName}</h2>
-                    {var $currentFields = []}
+                    {var string[] $currentFields = []}
                     {foreach $fieldDef as $field}
                         {if in_array($field,$fields)}
                             {php $currentFields[] = 'event_participant.' . $field}
@@ -50,7 +51,7 @@
         <div class="container">
             <h2>{_'Actions'}</h2>
             <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
+               class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
         </div>
     </div>
     {if $isOrganizer}
@@ -58,6 +59,14 @@
             <div class="container">
                 <h2>{_'Transitions'}</h2>
                 {control applicationTransitions}
+            </div>
+        </div>
+    {/if}
+    {if $isOrganizer && $machineCode}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Application code'}</h2>
+                <input class="form-control" value="{$machineCode}"/>
             </div>
         </div>
     {/if}

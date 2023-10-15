@@ -16,7 +16,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
-class PersonsGrid extends BaseGrid
+final class ItemPersonGrid extends BaseGrid
 {
     private ScheduleItemModel $item;
 

@@ -55,6 +55,7 @@ abstract class BaseList extends BaseComponent
      */
     public function addRow(BaseItem $component, string $name): BaseItem
     {
+        /** @phpstan-ignore-next-line */
         $this->getComponent('rows')->addComponent($component, $name);
         return $component;
     }
@@ -62,7 +63,9 @@ abstract class BaseList extends BaseComponent
     public function createRow(): \Nette\ComponentModel\Container
     {
         $component = new \Nette\ComponentModel\Container();
+        /** @phpstan-ignore-next-line */
         $length = count($this->getComponent('rows')->getComponents());
+        /** @phpstan-ignore-next-line */
         $this->getComponent('rows')->addComponent($component, 'row' . $length);
         return $component;
     }
@@ -74,6 +77,7 @@ abstract class BaseList extends BaseComponent
      */
     public function addButton(BaseItem $component, string $name): BaseItem
     {
+        /** @phpstan-ignore-next-line */
         $this->getComponent('buttons')->addComponent($component, $name);
         return $component;
     }
