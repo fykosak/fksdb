@@ -72,7 +72,7 @@ abstract class CodeComponent extends FormComponent
                     break;
                 case 'detail':
                     $this->getPresenter()->redirect(':Schedule:Person:detail', ['id' => $personSchedule->person_id]);
-                    break;
+                    break;// @phpstan-ignore-line
                 case 'application':
                     $this->getPresenter()->redirect(
                         $this->getEvent()->isTeamEvent()
@@ -84,7 +84,7 @@ abstract class CodeComponent extends FormComponent
                             )->getPrimary(),
                         ]
                     );
-                    break;
+                    break;// @phpstan-ignore-line
             }
             $this->getPresenter()->redirect('this');
         } catch (BadRequestException | ModelException | MachineCodeException $exception) {
