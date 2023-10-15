@@ -301,6 +301,8 @@ CREATE TABLE IF NOT EXISTS `org`
     `contribution`  TEXT         NULL DEFAULT NULL,
     `tex_signature` VARCHAR(32)  NULL DEFAULT NULL COMMENT 'zkratka používaná v TeXových vzorácích',
     `domain_alias`  VARCHAR(32)  NULL DEFAULT NULL COMMENT 'alias v doméně fykos.cz',
+    `allow_wiki`    BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do internej wiki aj po doorgovaní',
+    `allow_pm`      BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do PM aj po doorgovaní',
     UNIQUE INDEX `uq_org__contest_id` (`contest_id` ASC, `person_id` ASC),
     UNIQUE INDEX `uq_org__domain_alias` (`contest_id` ASC, `domain_alias` ASC),
     UNIQUE INDEX `uq_org__tex_signature` (`contest_id` ASC, `tex_signature` ASC),
