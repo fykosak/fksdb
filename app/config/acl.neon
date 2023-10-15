@@ -103,7 +103,7 @@ acl:
     - allow(organizer, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(organizer, person, stalk.full, @selfAssertion)
     - allow(organizer, chart, ::constant(Nette\Security\Permission::ALL))
-    - allow(organizer, webService, ::constant(Nette\Security\Permission::ALL))
+    - allow(organizer, webService, default)
 
     - allow(inboxManager, export, execute)
     - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))

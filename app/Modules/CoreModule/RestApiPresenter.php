@@ -44,7 +44,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'api');
             throw $exception;
         }
     }
