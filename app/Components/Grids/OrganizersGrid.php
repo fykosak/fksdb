@@ -66,6 +66,8 @@ final class OrganizersGrid extends BaseGrid
             '@org.since',
             '@org.until',
             '@org.role',
+            '@org.allow_wiki',
+            '@org.allow_pm',
         ]);
 
         $this->addORMLink('org.edit', true);

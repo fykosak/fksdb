@@ -35,13 +35,16 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     final protected function beforeRender(): void
     {
+        if ($this->getHttpRequest()->getHeader('content-type') === 'application/json') {
+            $params = json_decode($this->getHttpRequest()->getRawBody(), true);
+        }
         try {
-            $response = $this->server->getJsonResponse($this->webServiceName, $this->getParameters());
+            $response = $this->server->getJsonResponse($this->webServiceName, $params ?? $this->getParameters());
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'api');
             throw $exception;
         }
     }

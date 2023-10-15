@@ -36,6 +36,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
+use Nette\Security\Resource;
 
 final class TeamApplicationPresenter extends BasePresenter
 {
@@ -50,7 +51,7 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param TeamModel2|string|null $resource
+     * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

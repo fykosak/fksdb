@@ -85,11 +85,6 @@ final class OrganizerPresenter extends BasePresenter
         return $this->service;
     }
 
-    protected function getModelResource(): string
-    {
-        return OrganizerModel::RESOURCE_ID;
-    }
-
     /**
      * @throws NoContestYearAvailable
      * @throws NoContestAvailable

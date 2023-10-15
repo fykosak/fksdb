@@ -73,11 +73,6 @@ final class ContestantPresenter extends BasePresenter
         return $this->contestantService;
     }
 
-    protected function getModelResource(): string
-    {
-        return ContestantModel::RESOURCE_ID;
-    }
-
     /**
      * @throws BadRequestException
      */
@@ -99,7 +94,7 @@ final class ContestantPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string $resource
+     * @param Resource|string|null $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
