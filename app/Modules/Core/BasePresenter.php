@@ -214,12 +214,13 @@ abstract class BasePresenter extends Presenter
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
+            /** @phpstan-ignore-next-line */
             $testedPresenter = $this->presenterBuilder->preparePresenter(
                 $presenter,
                 $action,
                 $args,
                 $baseParams
-            );// @phpstan-ignore-line
+            );
 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
