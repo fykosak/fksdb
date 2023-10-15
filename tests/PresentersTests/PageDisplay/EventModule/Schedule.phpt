@@ -75,17 +75,17 @@ class Schedule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Schedule:PersonSchedule', 'list'],
-            //['Schedule:PersonSchedule', 'default'],
+            ['Schedule:Person', 'list'],
+           // ['Schedule:Person', 'default'],
             ['Schedule:Item', 'create'],
             ['Schedule:Item', 'edit'],
             ['Schedule:Item', 'detail'],
-            ['Schedule:Item', 'attendance'],
+            ['Schedule:Item', 'code'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
             ['Schedule:Group', 'edit'],
             ['Schedule:Group', 'detail'],
-            ['Schedule:Group', 'attendance'],
+            ['Schedule:Group', 'code'],
         ];
     }
 }

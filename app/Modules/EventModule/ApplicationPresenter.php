@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\ImportComponent;
-use FKSDB\Components\Controls\Transition\AttendanceComponent;
-use FKSDB\Components\Controls\Transition\MassTransitionsComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
+use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Components\Schedule\PersonGrid;
+use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -27,6 +27,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 use Nette\Security\Resource;
 
 final class ApplicationPresenter extends BasePresenter
@@ -89,14 +90,14 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedAttendance(): bool
+    public function authorizedCode(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
     }
 
-    public function titleAttendance(): PageTitle
+    public function titleCode(): PageTitle
     {
-        return new PageTitle(null, _('Fast attendance'), 'fas fa-user-check');
+        return new PageTitle(null, _('Scan 2D code'), 'fas fa-qrcode');
     }
 
     public function authorizedCreate(): bool
@@ -124,7 +125,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->event = $this->getEvent();
+        $this->template->machineCode = $this->createMachineCode();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
         $this->template->fields = ['lunch_count']; // TODO per event
@@ -191,20 +192,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws GoneException
      */
-    public function authorizedFastEdit(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-    public function titleFastEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Fast edit'), 'fas fa-pen');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
     public function authorizedImport(): bool
     {
         return $this->traitIsAuthorized($this->getModelResource(), 'import');
@@ -247,8 +234,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
-     * @throws EventNotFoundException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     private function getHolder(): BaseHolder
     {
@@ -264,6 +251,15 @@ final class ApplicationPresenter extends BasePresenter
         return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
     }
 
+    private function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this->getEntity(), MachineCode::getSaltForEvent($this->getEvent()));
+        } catch (\Throwable $exception) {
+            return null;
+        }
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
@@ -274,34 +270,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function createComponentImport(): ImportComponent
-    {
-        return new ImportComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return AttendanceComponent<BaseHolder>
-     */
-    protected function createComponentFastTransition(): AttendanceComponent
-    {
-        return new AttendanceComponent(
-            $this->getContext(),
-            $this->getEvent(),
-            EventParticipantStatus::from(EventParticipantStatus::PAID),
-            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine(),
-        );
-    }
-
-    /**
-     * @throws NotImplementedException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): DsefFormComponent
     {
@@ -309,13 +279,12 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
+     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws NotImplementedException
      * @throws \ReflectionException
-     * @throws BadTypeException
      */
     protected function createComponentEditForm(): DsefFormComponent
     {
@@ -323,9 +292,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws NotImplementedException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     private function createForm(?EventParticipantModel $model): DsefFormComponent
     {
@@ -340,7 +308,22 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getLoggedPerson()
                 );
         }
-        throw new NotImplementedException();
+        throw new InvalidStateException(_('Event type is not supported'));
+    }
+
+    /**
+     * @phpstan-return CodeComponent<BaseHolder>
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    protected function createComponentCode(): CodeComponent
+    {
+        return new CodeComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(),
+        );
     }
 
     /**
@@ -365,16 +348,25 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return MassTransitionsComponent<EventParticipantMachine>
+     * @phpstan-return MassTransitionComponent<EventParticipantMachine>
      */
-    protected function createComponentMassTransitions(): MassTransitionsComponent
+    protected function createComponentMassTransitions(): MassTransitionComponent
     {
-        return new MassTransitionsComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function createComponentImport(): ImportComponent
+    {
+        return new ImportComponent($this->getContext(), $this->getEvent());
     }
 
 
-    protected function createComponentPersonScheduleGrid(): PersonGrid
+    protected function createComponentPersonScheduleGrid(): PersonScheduleGrid
     {
-        return new PersonGrid($this->getContext());
+        return new PersonScheduleGrid($this->getContext());
     }
 }
