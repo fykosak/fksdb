@@ -80,6 +80,7 @@ final class GroupList extends BaseList
             ),
             'items'
         );
+        /** @phpstan-ignore-next-line */
         ItemGrid::addColumns($table, $this->container, $this->getPresenter());
         $this->addPresenterButton(
             ':Schedule:Group:detail',

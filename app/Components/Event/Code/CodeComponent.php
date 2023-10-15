@@ -129,10 +129,10 @@ final class CodeComponent extends FormComponent
             switch ($values['action']) {
                 case 'edit':
                     $this->getPresenter()->redirect('edit', ['id' => $application->getPrimary()]);
-                    break;
+                    break;// @phpstan-ignore-line
                 case 'detail':
                     $this->getPresenter()->redirect('detail', ['id' => $application->getPrimary()]);
-                    break;
+                    break;// @phpstan-ignore-line
                 case 'transition':
                     $this->innerHandleTransition($application);
             }
