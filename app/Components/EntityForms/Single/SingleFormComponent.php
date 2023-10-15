@@ -35,13 +35,13 @@ use Nette\Neon\Exception;
  */
 abstract class SingleFormComponent extends EntityFormComponent
 {
-    private ReferencedPersonFactory $referencedPersonFactory;
-    private SingleReflectionFormFactory $reflectionFormFactory;
-    private EventParticipantService $eventParticipantService;
+    protected ReferencedPersonFactory $referencedPersonFactory;
+    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected EventParticipantService $eventParticipantService;
 
-    private EventParticipantMachine $machine;
-    private ?PersonModel $loggedPerson;
-    private EventModel $event;
+    protected EventParticipantMachine $machine;
+    protected ?PersonModel $loggedPerson;
+    protected EventModel $event;
 
     public function __construct(
         Container $container,
@@ -132,7 +132,7 @@ abstract class SingleFormComponent extends EntityFormComponent
     /**
      * @throws \Throwable
      */
-    final protected function handleFormSuccess(Form $form): void
+    protected function handleFormSuccess(Form $form): void
     {
         /** @phpstan-var array<mixed> $values */
         $values = $form->getValues('array');

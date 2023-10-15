@@ -85,7 +85,23 @@ final class DsefFormComponent extends SingleFormComponent
      */
     final protected function getPersonFieldsDefinition(): array
     {
-        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'dsef.person.neon');
+        return [
+            'person' => [
+                'other_name' => ['required' => true],
+                'family_name' => ['required' => true]
+            ],
+            'person_info' => [
+                'email' => ['required' => true],
+                'born' => ['required' => true],
+                'id_number' => ['required' => true]
+            ],
+            'person_schedule' => [
+                'dsef_morning' => ['required' => true],
+                'dsef_afternoon' => ['required' => true],
+                'dsef_all_day' => ['required' => true],
+                'accommodation' => ['required' => true]
+            ]
+        ];
     }
 
     /**
