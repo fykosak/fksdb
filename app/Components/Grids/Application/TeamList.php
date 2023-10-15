@@ -75,7 +75,7 @@ final class TeamList extends BaseList
                 $this->container,
                 /**
                  * @phpstan-return PersonHistoryModel[]
-                 * @phpstan-ignore-mext-line
+                 * @phpstan-ignore-next-line
                  */
                 function (TeamModel2 $team): array {
                     $members = [];
@@ -113,7 +113,7 @@ final class TeamList extends BaseList
         $this->addPresenterButton(
             ':Event:TeamApplication:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'fyziklani_team_id']
         );

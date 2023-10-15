@@ -76,6 +76,7 @@ acl:
     - addResource(event.chart)       # list, chart
     - addResource(event.schedule.group) # create, edit, list, detail, delete
     - addResource(event.schedule.item) # create, edit, list, detail, delete
+    - addResource(event.schedule.person) # list, detail
 
     # warehouse
     - addResource(warehouse.producer)
@@ -151,6 +152,7 @@ acl:
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.schedule.group, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
     - allow(eventManager, event.schedule.item, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.schedule.person, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
 ## FYZIKLANI MODULE
     #base for organizer
 

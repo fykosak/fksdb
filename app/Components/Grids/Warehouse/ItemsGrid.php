@@ -48,6 +48,6 @@ class ItemsGrid extends BaseGrid
             '@warehouse_item.purchase_price',
             '@warehouse_item.purchase_currency',
         ]);
-        $this->addPresenterButton(':Warehouse:Item:edit', 'edit', _('Edit'), false, ['id' => 'item_id']);
+        $this->addPresenterButton(':Warehouse:Item:edit', 'edit', _('button.edit'), false, ['id' => 'item_id']);
     }
 }

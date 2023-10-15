@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseList;
-use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
@@ -22,7 +21,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseList<ScheduleGroupModel,array{}>
  */
-final class GroupListComponent extends BaseList
+final class GroupList extends BaseList
 {
     private EventModel $event;
 
@@ -71,8 +70,8 @@ final class GroupListComponent extends BaseList
             ),
             'duration'
         );
-        /** @phpstan-var RelatedTable<ScheduleGroupModel,ScheduleItemModel> $itemsRow */
-        $itemsRow = $this->addRow(
+        /** @phpstan-var RelatedTable<ScheduleGroupModel,ScheduleItemModel> $table */
+        $table = $this->addRow(
             new RelatedTable(
                 $this->container,
                 fn(ScheduleGroupModel $model) => $model->getItems(), //@phpstan-ignore-line
@@ -81,62 +80,12 @@ final class GroupListComponent extends BaseList
             ),
             'items'
         );
-        $itemsRow->addTableColumn(// @phpstan-ignore-line
-            new TemplateItem( // @phpstan-ignore-line
-                $this->container,
-                '@schedule_item.name:value (@schedule_item.schedule_item_id:value)',
-                '@schedule_item.name:title'
-            ),
-            'title'
-        );
-        $itemsRow->addTableColumn(// @phpstan-ignore-line
-            new TemplateItem( // @phpstan-ignore-line
-                $this->container,
-                '@schedule_item.price_czk / @schedule_item.price_eur',
-                _('Price')
-            ),
-            'price'
-        );
-        $itemsRow->addTableColumn(// @phpstan-ignore-line
-            new TemplateItem( // @phpstan-ignore-line
-                $this->container,
-                '@schedule_item.used_capacity / @schedule_item.free_capacity / @schedule_item.capacity',
-                _('Used / Free / Total')
-            ),
-            'capacity'
-        );
-
-        $itemsRow->addTableButton(// @phpstan-ignore-line
-            new Button(// @phpstan-ignore-line
-                $this->container,
-                $this->getPresenter(),
-                new Title(null, _('Edit')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->schedule_item_id]]
-            ),
-            'edit'
-        );
-        $itemsRow->addTableButton(// @phpstan-ignore-line
-            new Button(// @phpstan-ignore-line
-                $this->container,
-                $this->getPresenter(),
-                new Title(null, _('Detail')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
-            ),
-            'detail'
-        );
-        $itemsRow->addTableButton(// @phpstan-ignore-line
-            new Button(// @phpstan-ignore-line
-                $this->container,
-                $this->getPresenter(),
-                new Title(null, _('Attendance')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:attendance', ['id' => $model->schedule_item_id]]
-            ),
-            'attendance'
-        );
+        /** @phpstan-ignore-next-line */
+        ItemGrid::addColumns($table, $this->container, $this->getPresenter());
         $this->addPresenterButton(
             ':Schedule:Group:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'schedule_group_id']
         );
@@ -144,15 +93,15 @@ final class GroupListComponent extends BaseList
         $this->addPresenterButton(
             ':Schedule:Group:edit',
             'edit',
-            _('Edit'),
+            _('button.edit'),
             false,
             ['id' => 'schedule_group_id']
         );
 
         $this->addPresenterButton(
-            ':Schedule:Group:attendance',
-            'attendance',
-            _('Attendance'),
+            ':Schedule:Group:code',
+            'code',
+            _('button.scan2d'),
             false,
             ['id' => 'schedule_group_id']
         );

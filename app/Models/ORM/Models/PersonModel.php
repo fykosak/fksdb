@@ -11,8 +11,10 @@ use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
     FyziklaniTeamTeacherRole,
     ParticipantRole
 };
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
@@ -30,6 +32,7 @@ use Nette\Security\Resource;
  * @property-read string|null $display_name
  * @property-read PersonGender $gender
  * @property-read \DateTimeInterface $created
+ * @phpstan-type TSimplePersonArray array{personId:int,name:string,email:string|null}
  */
 final class PersonModel extends Model implements Resource
 {
@@ -186,7 +189,7 @@ final class PersonModel extends Model implements Resource
     /**
      * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
      */
-    public function getFyziklaniTeachers(): TypedGroupedSelection
+    public function getTeamTeachers(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
         $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
@@ -204,6 +207,30 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
+     * @return TeamModel2|EventParticipantModel
+     * @throws NotFoundException
+     */
+    public function getApplication(EventModel $event): Model
+    {
+        /** @var TeamMemberModel|null $member */
+        $member = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
+        if ($member) {
+            return $member->fyziklani_team;
+        }
+        /** @var TeamTeacherModel|null $teacher */
+        $teacher = $this->getTeamTeachers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
+        if ($teacher) {
+            return $teacher->fyziklani_team;
+        }
+        /** @var EventParticipantModel|null $participant */
+        $participant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
+        if ($participant) {
+            return $participant;
+        }
+        throw new NotFoundException();
+    }
+
+    /**
      * @phpstan-return TypedGroupedSelection<EventOrganizerModel>
      */
     public function getEventOrganizers(): TypedGroupedSelection
@@ -216,11 +243,6 @@ final class PersonModel extends Model implements Resource
     public function getFullName(): string
     {
         return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getFullName();
     }
 
     /**
@@ -406,7 +428,7 @@ final class PersonModel extends Model implements Resource
     public function getEventRoles(EventModel $event): array
     {
         $roles = [];
-        $teachers = $this->getFyziklaniTeachers()->where('fyziklani_team.event_id', $event->event_id);
+        $teachers = $this->getTeamTeachers()->where('fyziklani_team.event_id', $event->event_id);
         if ($teachers->count('*')) {
             $teams = [];
             /** @var TeamTeacherModel $row */
@@ -449,5 +471,17 @@ final class PersonModel extends Model implements Resource
             $selection->where('type', $type->value);
         }
         return $selection;
+    }
+
+    /**
+     * @phpstan-return TSimplePersonArray
+     */
+    public function __toArray(): array
+    {
+        return [
+            'name' => $this->getFullName(),
+            'personId' => $this->person_id,
+            'email' => $this->getInfo()->email,
+        ];
     }
 }

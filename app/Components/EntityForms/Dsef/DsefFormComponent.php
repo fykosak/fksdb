@@ -103,11 +103,20 @@ final class DsefFormComponent extends EntityFormComponent
             new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
         );
 
-        /** @var ScheduleContainer $dsefMorning */
+        /**
+         * @var ScheduleContainer $dsefMorning
+         * @phpstan-ignore-next-line
+         */
         $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
-        /** @var ScheduleContainer $dsefAfternoon */
+        /**
+         * @var ScheduleContainer $dsefMorning
+         * @phpstan-ignore-next-line
+         */
         $dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
-        /** @var ScheduleContainer $dsefAllDay */
+        /**
+         * @var ScheduleContainer $dsefMorning
+         * @phpstan-ignore-next-line
+         */
         $dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
         $halfDayComponents = [];
         foreach ($dsefMorning->getComponents() as $morningSelect) {

@@ -70,7 +70,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:edit',
             'edit',
-            _('Edit'),
+            _('button.edit'),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-primary'
@@ -78,7 +78,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:detail',
             'detail',
-            _('Detail'),
+            _('button.detail'),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-info'

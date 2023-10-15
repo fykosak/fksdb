@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
-class PersonGrid extends BaseGrid
+final class PersonScheduleGrid extends BaseGrid
 {
     private EventModel $event;
     private PersonModel $person;
@@ -63,9 +63,5 @@ class PersonGrid extends BaseGrid
             '@schedule_item.price_eur',
             '@payment.payment',
         ]);
-    }
-
-    protected function getData(): void
-    {
     }
 }

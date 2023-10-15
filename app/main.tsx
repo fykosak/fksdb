@@ -194,12 +194,12 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <button
                                     type="button"
                                     className="btn btn-outline-secondary me-1"
-                                    title={translator.getText('Edit')}
+                                    title={translator.getText('button.edit')}
                                     onClick={() => {
                                         decompactifyContainer();
                                     }}>
                                     <span className="fas fa-pen me-3"/>
-                                    {translator.getText('Edit')}
+                                    {translator.getText('button.edit')}
                                 </button>
                                 <button
                                     type="button"

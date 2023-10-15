@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Schedule\Attendance;
+namespace FKSDB\Components\Schedule\Code;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\DI\Container;
 
-class GroupAttendanceFormComponent extends AttendanceFormComponent
+class GroupComponent extends CodeComponent
 {
     protected ScheduleGroupModel $group;
 
@@ -22,5 +23,10 @@ class GroupAttendanceFormComponent extends AttendanceFormComponent
     protected function getPersonSchedule(PersonModel $person): ?PersonScheduleModel
     {
         return $person->getScheduleByGroup($this->group);
+    }
+
+    protected function getEvent(): EventModel
+    {
+        return $this->group->event;
     }
 }
