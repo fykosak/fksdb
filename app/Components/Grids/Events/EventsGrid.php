@@ -56,7 +56,13 @@ class EventsGrid extends BaseGrid
             '@event.year',
             '@event.event_year',
         ]);
-        $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('button.detail'), true, ['eventId' => 'event_id']);
+        $this->addPresenterButton(
+            ':Event:Dashboard:default',
+            'detail',
+            _('button.detail'),
+            true,
+            ['eventId' => 'event_id']
+        );
         $this->addPresenterButton('edit', 'edit', _('button.edit'), true, ['id' => 'event_id']);
 
         // $this->addORMLink('event.application.list');
