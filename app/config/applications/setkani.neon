@@ -3,19 +3,31 @@ transitions:
         machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
         stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
         transitions:
-            __init->applied:
+            __init->pending:
                 label: _('Přihlásit účastníka')
-                condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'))
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Setkani\ParticipantMailCallback()
+            pending->applied:
+                behaviorType: success
+                label: _('Schválit účast')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
+            pending->spare:
+                behaviorType: warning
+                label: _('Potvrdit jako náhradníka')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+            spare->applied:
+                behaviorType: success
+                label: _('Schválit účast')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
             applied->participated:
                 label: _('Prezentovat')
-                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
             applied->missed:
                 label: _('Nepřijel')
                 behaviorType: danger
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
-            applied->cancelled:
+            pending|applied|spare->cancelled:
                 label: _('Zrušit přihlášku')
                 behaviorType: danger
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
