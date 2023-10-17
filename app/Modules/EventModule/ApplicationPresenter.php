@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Dsef\DsefFormComponent;
 use FKSDB\Components\Event\Code\CodeComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -18,6 +17,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -125,7 +125,6 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->machineCode = $this->createMachineCode();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
         $this->template->fields = ['lunch_count']; // TODO per event
@@ -249,15 +248,6 @@ final class ApplicationPresenter extends BasePresenter
     private function getMachine(): EventParticipantMachine
     {
         return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
-    }
-
-    private function createMachineCode(): ?string
-    {
-        try {
-            return MachineCode::createHash($this->getEntity(), MachineCode::getSaltForEvent($this->getEvent()));
-        } catch (\Throwable $exception) {
-            return null;
-        }
     }
 
     /**

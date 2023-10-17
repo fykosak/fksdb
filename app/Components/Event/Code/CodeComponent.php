@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Event\Code;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;

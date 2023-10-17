@@ -3,7 +3,6 @@
     {varType array $groups}
     {varType bool $hasSchedule}
     {varType bool $isOrganizer}
-    {varType string|null $machineCode}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
@@ -62,6 +61,7 @@
             </div>
         </div>
     {/if}
+    {var string|null $machineCode = $model->createMachineCode()}
     {if $isOrganizer && $machineCode}
         <div class="panel color-auto">
             <div class="container">

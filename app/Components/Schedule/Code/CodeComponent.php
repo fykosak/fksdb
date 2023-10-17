@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Code;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Components\MachineCode\MachineCodeException;
+use FKSDB\Models\MachineCode\{MachineCode, MachineCodeException};
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PaymentState;

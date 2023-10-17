@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
@@ -41,6 +42,7 @@ use Nette\Security\Resource;
  * @phpstan-type SerializedEventParticipantModel array{
  *      participantId:int,
  *      eventId:int,
+ *      code:string|null,
  *      personId:int,
  *      status:string,
  *      created:string,
@@ -59,7 +61,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
 
     public function __toString(): string
     {
-        return $this->person->__toString();
+        return $this->person->getFullName();
     }
 
     /**
@@ -82,6 +84,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     {
         return [
             'participantId' => $this->event_participant_id,
+            'code' => $this->createMachineCode(),
             'eventId' => $this->event_id,
             'personId' => $this->person_id,
             'status' => $this->status->value,
@@ -103,6 +106,15 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
                 break;
         }
         return $value;
+    }
+
+    public function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this, MachineCode::getSaltForEvent($this->event));
+        } catch (\Throwable $exception) {
+            return null;
+        }
     }
 
     /**
