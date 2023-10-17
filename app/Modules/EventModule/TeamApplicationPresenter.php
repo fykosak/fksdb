@@ -302,7 +302,7 @@ final class TeamApplicationPresenter extends BasePresenter
         return new CodeComponent(
             $this->getContext(),
             $this->getEvent(),
-            TeamState::from(TeamState::PARTICIPATED),
+            TeamState::from(TeamState::Participated),
             $this->getMachine()
         );
     }

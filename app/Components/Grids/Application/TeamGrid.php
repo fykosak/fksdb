@@ -34,15 +34,23 @@ final class TeamGrid extends BaseGrid
         $this->filtered = true;
         $this->paginate = false;
         $this->counter = true;
-        $this->addSimpleReferencedColumns([
-            '@fyziklani_team.fyziklani_team_id',
-            '@fyziklani_team.name',
-            '@fyziklani_team.state',
-            '@fyziklani_team.game_lang',
-            '@fyziklani_team.category',
-            '@fyziklani_team.force_a',
-            '@fyziklani_team.phone',
-        ]);
+        $this->addSimpleReferencedColumns(
+            $this->event->event_type_id === 9
+                ? [
+                '@fyziklani_team.fyziklani_team_id',
+                '@fyziklani_team.name',
+                '@fyziklani_team.state',
+                '@fyziklani_team.category',
+            ]
+                : [
+                '@fyziklani_team.fyziklani_team_id',
+                '@fyziklani_team.name',
+                '@fyziklani_team.state',
+                '@fyziklani_team.game_lang',
+                '@fyziklani_team.category',
+                '@fyziklani_team.phone',
+            ]
+        );
         $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'fyziklani_team_id']);
     }
 }

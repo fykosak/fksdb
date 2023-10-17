@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
+use FKSDB\Components\EntityForms\Fyziklani\Processing\FOFCategoryProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeamProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueNameProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\StateStrategy\Logger;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -17,7 +22,6 @@ use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Neon\Exception;
-use Nette\Neon\Neon;
 
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
@@ -34,21 +38,69 @@ class FOFTeamFormComponent extends TeamFormComponent
     }
 
     /**
-     * @throws Exception
      * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getMemberFieldsDefinition(): array
     {
-        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'fof.member.neon');
+        return [
+            'person' => [
+                'other_name' => ['required' => true],
+                'family_name' => ['required' => true],
+                'gender' => ['required' => false],
+            ],
+            'person_info' => [
+                'email' => ['required' => true],
+                'born' => ['required' => false],
+                'id_number' => ['required' => false],
+            ],
+            'person_history' => [
+                'school_id' => ['required' => true],
+                'study_year_new' => [
+                    'required' => true,
+                    'flag' => 'ALL',
+                ],
+            ],
+            'person_has_flag' => [
+                'spam_mff' => ['required' => true],
+            ],
+            'person_schedule' => [
+                'accommodation' => ['required' => false],
+                'accommodation_gender' => ['required' => false],
+                'visa' => ['required' => false],
+                'weekend' => ['required' => false],
+            ],
+        ];
     }
 
     /**
-     * @throws Exception
      * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getTeacherFieldsDefinition(): array
     {
-        return Neon::decodeFile(__DIR__ . DIRECTORY_SEPARATOR . 'fof.teacher.neon');
+        return [
+            'person' => [
+                'other_name' => ['required' => true],
+                'family_name' => ['required' => true],
+                'gender' => ['required' => false],
+            ],
+            'person_info' => [
+                'email' => ['required' => true],
+                'born' => ['required' => false],
+                'id_number' => ['required' => false],
+                'academic_degree_prefix' => ['required' => false],
+                'academic_degree_suffix' => ['required' => false],
+            ],
+            'person_has_flag' => [
+                'spam_mff' => ['required' => true],
+            ],
+            'person_schedule' => [
+                'accommodation' => ['required' => false],
+                'accommodation_teacher' => ['required' => false],
+                'visa' => ['required' => false],
+                'teacher_present' => ['required' => false],
+                'weekend' => ['required' => false],
+            ],
+        ];
     }
 
     /**
@@ -91,12 +143,13 @@ class FOFTeamFormComponent extends TeamFormComponent
     protected function getProcessing(): array
     {
         return [
+            new UniqueNameProcessing($this->container),
             new FOFCategoryProcessing($this->container),
             new SchoolsPerTeamProcessing($this->container),
         ];
     }
 
-    private function saveTeachers(TeamModel2 $team, Form $form): void
+    private function saveTeachers(TeamModel2 $team, Form $form, Logger $logger): void
     {
         $persons = self::getTeacherFromForm($form);
 
@@ -106,11 +159,13 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
         /** @var TeamTeacherModel $oldTeacher */
         foreach ($oldMemberQuery as $oldTeacher) {
+            $logger->teacherRemoved = true;
             $this->teacherService->disposeModel($oldTeacher);
         }
         foreach ($persons as $person) {
             $oldTeacher = $team->getTeachers()->where('person_id', $person->person_id)->fetch();
             if (!$oldTeacher) {
+                $logger->teacherAdded = true;
                 $this->teacherService->storeModel([
                     'person_id' => $person->getPrimary(),
                     'fyziklani_team_id' => $team->fyziklani_team_id,
@@ -119,10 +174,10 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
-    protected function savePersons(TeamModel2 $team, Form $form): void
+    protected function savePersons(TeamModel2 $team, Form $form, Logger $logger): void
     {
-        $this->saveTeachers($team, $form);
-        $this->saveMembers($team, $form);
+        $this->saveTeachers($team, $form, $logger);
+        $this->saveMembers($team, $form, $logger);
     }
 
     /**
@@ -157,7 +212,6 @@ class FOFTeamFormComponent extends TeamFormComponent
      *     name:EvaluatedFieldMetaData,
      *     game_lang:EvaluatedFieldMetaData,
      *     phone:EvaluatedFieldMetaData,
-     *     force_a:EvaluatedFieldMetaData,
      * }
      */
     protected function getTeamFieldsDefinition(): array
@@ -166,7 +220,6 @@ class FOFTeamFormComponent extends TeamFormComponent
             'name' => ['required' => true],
             'game_lang' => ['required' => true],
             'phone' => ['required' => true],
-            'force_a' => ['required' => false],
         ];
     }
 

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\DuplicateTeamNameException;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\TooManySchoolsException;
+use FKSDB\Components\EntityForms\Fyziklani\StateStrategy\Logger;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -97,7 +101,7 @@ abstract class TeamFormComponent extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
-        /** @phpstan-var array{team:array{category:string,force_a:bool,name:string}} $values */
+        /** @phpstan-var array{team:array{category:string,name:string}} $values */
         $values = $form->getValues('array');
         $this->teamService->explorer->beginTransaction();
         try {
@@ -117,7 +121,8 @@ abstract class TeamFormComponent extends EntityFormComponent
                 ]),
                 $this->model
             );
-            $this->savePersons($team, $form);
+            $logger = new Logger(false, !isset($this->model));//TODO
+            $this->savePersons($team, $form, $logger);
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
@@ -143,9 +148,9 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
-    protected function savePersons(TeamModel2 $team, Form $form): void
+    protected function savePersons(TeamModel2 $team, Form $form, Logger $logger): void
     {
-        $this->saveMembers($team, $form);
+        $this->saveMembers($team, $form, $logger);
     }
 
     protected function setDefaults(Form $form): void
@@ -163,15 +168,16 @@ abstract class TeamFormComponent extends EntityFormComponent
         }
     }
 
-    protected function saveMembers(TeamModel2 $team, Form $form): void
+    protected function saveMembers(TeamModel2 $team, Form $form, Logger $logger): void
     {
-        $persons = self::getMembersFromForm($form);
+        $persons = self::getFormMembers($form);
         if (!count($persons)) {
             throw new NoMemberException();
         }
         /** @var TeamMemberModel $oldMember */
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
             $this->teamMemberService->disposeModel($oldMember);
+            $logger->memberAdded = true;
         }
         foreach ($persons as $person) {
             $oldMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
@@ -181,6 +187,7 @@ abstract class TeamFormComponent extends EntityFormComponent
                     'person_id' => $person->getPrimary(),
                     'fyziklani_team_id' => $team->fyziklani_team_id,
                 ]);
+                $logger->memberRemoved = true;
             }
         }
     }
@@ -249,7 +256,7 @@ abstract class TeamFormComponent extends EntityFormComponent
     /**
      * @phpstan-return PersonModel[]
      */
-    public static function getMembersFromForm(Form $form): array
+    public static function getFormMembers(Form $form): array
     {
         $persons = [];
         for ($member = 0; $member < 5; $member++) {

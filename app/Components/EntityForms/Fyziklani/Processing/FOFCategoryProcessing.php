@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
 
+use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -13,13 +15,13 @@ use Nette\Forms\Form;
 class FOFCategoryProcessing extends FormProcessing
 {
     /**
-     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
-     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
+     * @phpstan-param array{team:array{category:string,name:string}} $values
+     * @phpstan-return array{team:array{category:string,name:string}}
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
-        $members = TeamFormComponent::getMembersFromForm($form);
-        $values['team']['category'] = $this->getCategory($members, $event, $values)->value;
+        $members = TeamFormComponent::getFormMembers($form);
+        $values['team']['category'] = $this->getCategory($members, $event)->value;
         return $values;
     }
 
@@ -70,16 +72,12 @@ class FOFCategoryProcessing extends FormProcessing
      * @phpstan-param PersonModel[] $members
      * @throws NoMemberException
      * @throws OldMemberException
-     * @phpstan-param array{team:array{force_a:bool}} $values
      */
-    protected function getCategory(array $members, EventModel $event, array $values): TeamCategory
+    protected function getCategory(array $members, EventModel $event): TeamCategory
     {
         [$olds, $years] = self::getTeamMembersYears($members, $event);
         if ($olds > 0) {
             throw new OldMemberException();
-        }
-        if ($values['team']['force_a']) {
-            return TeamCategory::from(TeamCategory::A);
         }
         $avg = $this->getCoefficientAvg($members, $event);
         if ($avg <= 2 && $years[StudyYear::High4] == 0 && $years[StudyYear::High3] <= 2) {

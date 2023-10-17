@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
 
+use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use Nette\Forms\Form;
 
 class FOLSchoolCheckProcessing extends FormProcessing
 {
-
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
-        $members = TeamFormComponent::getMembersFromForm($form);
+        $members = TeamFormComponent::getFormMembers($form);
         if (!count($members)) {
             throw new NoMemberException();
         }

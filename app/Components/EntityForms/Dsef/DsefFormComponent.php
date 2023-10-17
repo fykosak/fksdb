@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Dsef;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;

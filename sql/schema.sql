@@ -592,6 +592,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
+        'arrived',
         'pending',
         'approved',
         'spare',
@@ -604,6 +605,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
     `note`              TEXT                       NULL     DEFAULT NULL,
+    `internal_note`     TEXT                       NULL     DEFAULT NULL,
     `password`          CHAR(40)                   NULL     DEFAULT NULL,
     `points`            INT(11)                    NULL     DEFAULT NULL,
     `rank_category`     INT(11)                    NULL     DEFAULT NULL,

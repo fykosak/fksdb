@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
@@ -19,8 +19,8 @@ abstract class FormProcessing
     }
 
     /**
-     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
-     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
+     * @phpstan-param array{team:array{category:string,name:string}} $values
+     * @phpstan-return array{team:array{category:string,name:string}}
      */
     abstract public function __invoke(array $values, Form $form, EventModel $event): array;
 }

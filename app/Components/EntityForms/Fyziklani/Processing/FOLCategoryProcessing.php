@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
 
+use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -13,12 +14,12 @@ use Nette\Forms\Form;
 class FOLCategoryProcessing extends FormProcessing
 {
     /**
-     * @phpstan-param array{team:array{category:string,force_a:bool,name:string}} $values
-     * @phpstan-return array{team:array{category:string,force_a:bool,name:string}}
+     * @phpstan-param array{team:array{category:string,name:string}} $values
+     * @phpstan-return array{team:array{category:string,name:string}}
      */
     public function __invoke(array $values, Form $form, EventModel $event): array
     {
-        $members = TeamFormComponent::getMembersFromForm($form);
+        $members = TeamFormComponent::getFormMembers($form);
         $values['team']['category'] = $this->getCategory($members, $event)->value;
         return $values;
     }
