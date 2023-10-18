@@ -1,12 +1,13 @@
 {varType string $lang}
-{define item, FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item, bool $selected = false,bool $displayTime = true}
-    <div class="{$selected?'card bg-success text-white':'card opacity-25'}">
+{define item, FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item, bool $displayTime = true}
+    {var string $className = 'card border-' . $item->schedule_group->event->event_type->getSymbol()}
+    <div class="{$className}">
         <div class="card-body">
-            <h5 class="card-title">
+            <h4 class="card-title">
                 {$item->name->getText($lang)}
-            </h5>
-            {if $displayTime}
-                <small class="{$selected ?'card-subtitle':'text-fof card-subtitle'}">
+            </h4>
+            {if $displayTime && ($item->begin || $item->end)}
+                <small class="card-subtitle">
                     {$item->getBegin()->format(_('__time'))} - {$item->getEnd()->format(_('__time'))}
                 </small>
             {/if}
@@ -18,35 +19,46 @@
 {/define}
 {define group, FKSDB\Models\ORM\Models\PersonModel $person,FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group,bool$displayTime = true}
     {var FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel|null $personSchedule = $person->getScheduleByGroup($group)}
-    <div class="{($personSchedule?'':'opacity-25 ') . 'd-flex align-items-center my-2'}">
-        <h3 class="me-3">
+    <div>
+        <h3 class="{($personSchedule?'':'text-secondary') . ' me-3 d-flex align-items-center my-3'}">
+            <span class="me-3">
             {$group->name->getText($lang)}
-        </h3>
-        {if $displayTime}
-            {if $group->hasEnded()}
-                <div class="badge bg-secondary">{_'Block ended'}</div>
-            {elseif $group->hasStarted()}
-                <div class="badge bg-success">{_'Block is ongoing'}</div>
-            {else}
-            {var int $toStart = $group->start->getTimestamp()-time()}
-                <div class="badge bg-warning">
-                    {if $toStart < 60 * 60}
-                        {var int $minutesUntilStart = floor($toStart / 60)}
-                        {_'Block starts in'} {sprintf(ngettext('%d minute', '%d minutes', $minutesUntilStart), $minutesUntilStart)}
+            </span>
+            <small>
+                {control printer:templateString '@schedule_group.schedule_group_type',$group,1024}
+            </small>
+            {if $displayTime}
+                <small>
+                    {*if $group->hasEnded()}
+                        <span class="badge bg-secondary">{_'Block ended'}</span>
+                    {elseif $group->hasStarted()}
+                        <span class="badge bg-success">{_'Block is ongoing'}</span>
                     {else}
-                        {_'Block has not started yet'}
-                    {/if}
-                </div>
+                    {var int $toStart = $group->start->getTimestamp()-time()}
+                        <span class="badge bg-warning">
+                        {if $toStart < 60 * 60}
+                            {var int $minutesUntilStart = floor($toStart / 60)}
+                            {_'Block starts in'} {sprintf(ngettext('%d minute', '%d minutes', $minutesUntilStart), $minutesUntilStart)}
+                        {else}
+                            {_'Block has not started yet'}
+                        {/if}
+                    </span>
+                    {/if*}
+                </small>
+                <small class="text-fof ms-auto">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</small>
             {/if}
-            <span class="text-fof ms-auto">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</span>
+        </h3>
+        {if $personSchedule}
+            {foreach $group->getItems() as $item}
+                {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item}
+                {if $personSchedule->schedule_item_id === $item->schedule_item_id}
+                    <div class="col my-2">
+                        {include item item:$item,displayTime:$displayTime}
+                    </div>
+                {/if}
+            {/foreach}
+        {else}
+            <p class="alert alert-secondary">{_'Not applied in this block'}</p>
         {/if}
-    </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
-        {foreach $group->getItems() as $item}
-            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $item}
-            <div class="col my-2">
-                {include item item:$item,selected: $personSchedule && $personSchedule->schedule_item_id === $item->schedule_item_id,displayTime:$displayTime}
-            </div>
-        {/foreach}
     </div>
 {/define}

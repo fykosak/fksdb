@@ -1,6 +1,5 @@
 {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
 {varType FKSDB\Models\ORM\Models\PersonModel $person}
-{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
 {block outerContent}
     {foreach $schedule as $dateData}
         <div class="panel color-auto">
@@ -17,6 +16,9 @@
                         </h2>
                     {/if}
                     {include group from './blocks.latte' person:$person,group:$group,displayTime:true}
+                    {if !$iterator->isLast()}
+                        <hr/>
+                    {/if}
                 {/foreach}
             </div>
         </div>

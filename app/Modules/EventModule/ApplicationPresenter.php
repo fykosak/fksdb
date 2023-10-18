@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
 use FKSDB\Components\Event\Code\CodeComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\Schedule\PersonScheduleGrid;
@@ -21,7 +21,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -334,18 +333,11 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeComponent<BaseHolder>
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCode(): CodeComponent
     {
-        return new CodeComponent(
-            $this->getContext(),
-            $this->getEvent(),
-            EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine(),
-        );
+        return new CodeComponent($this->getContext(), $this->getEvent());
     }
 
     /**

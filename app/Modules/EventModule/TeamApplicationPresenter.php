@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\SchoolCheckComponent;
-use FKSDB\Components\Event\Code\CodeComponent;
-use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\SingleTestComponent;
 use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
+use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
@@ -25,7 +25,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
@@ -293,18 +292,11 @@ final class TeamApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeComponent<TeamHolder>
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCode(): CodeComponent
     {
-        return new CodeComponent(
-            $this->getContext(),
-            $this->getEvent(),
-            TeamState::from(TeamState::PARTICIPATED),
-            $this->getMachine()
-        );
+        return new CodeComponent($this->getContext(), $this->getEvent());
     }
 
     /**
