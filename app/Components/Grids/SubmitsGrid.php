@@ -121,7 +121,7 @@ final class SubmitsGrid extends BaseGrid
             new Button(
                 $this->container,
                 $this->getPresenter(),
-                new Title(null, _('Detail')),
+                new Title(null, _('button.detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
                 null,
                 fn(SubmitModel $submit): bool => $submit->isQuiz()

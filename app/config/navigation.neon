@@ -83,14 +83,12 @@ navigation:
             #team
             Event.TeamApplication.detailedList: []
             Event.TeamApplication.list: []
-            Event.TeamApplication.attendance: []
-            Event.TeamApplication.fastEdit: []
+            Event.TeamApplication.code: []
             Event.TeamApplication.mass: []
             Event.TeamApplication.create: []
             #single
             Event.Application.list: []
-            Event.Application.attendance: []
-            Event.Application.fastEdit: []
+            Event.Application.code: []
             Event.Application.mass: []
             Event.Application.import: []
         Event.Dashboard.default#other:

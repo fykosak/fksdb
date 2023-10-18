@@ -66,12 +66,12 @@ final class ApplicationPresenter extends BasePresenter
                 \sprintf(
                     _('Application for %s: %s'),
                     $this->getEvent()->name,
-                    $this->getEventApplication()->__toString()
+                    $this->getEventApplication()->person->getFullName()
                 ),
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle(null, $this->getEvent()->__toString(), 'fas fa-calendar-plus');
+            return new PageTitle(null, $this->getEvent()->name, 'fas fa-calendar-plus');
         }
     }
 
@@ -209,7 +209,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function startup(): void
     {
-        if (in_array($this->getEvent()->event_type_id, [2, 14])) {
+        if (in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
             if ($this->getEventApplication()) {
                 $this->redirect(
                     ':Event:Application:edit',

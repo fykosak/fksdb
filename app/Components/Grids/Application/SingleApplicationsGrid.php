@@ -102,7 +102,7 @@ class SingleApplicationsGrid extends BaseGrid
             '@person.full_name',
             '@event_participant.status',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'event_participant_id']);
         // $this->addCSVDownloadButton();
         $this->addHolderColumns();
     }

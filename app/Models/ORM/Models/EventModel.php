@@ -79,54 +79,6 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->event_type->contest->getContestYear($this->year);
     }
 
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
-    }
-
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @phpstan-return LocalizedString<'cs'|'en'>
-     */
-    public function getName(): LocalizedString
-    {
-        switch ($this->event_type_id) {
-            case 1:
-                return new LocalizedString([
-                    'cs' => 'Fyziklání ' . $this->begin->format('Y'),
-                    'en' => 'Fyziklani ' . $this->begin->format('Y'),
-                ]);
-            case 2:
-            case 14:
-                return new LocalizedString([
-                    'cs' => 'DSEF ' .
-                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'jaro' : 'podzim') . ' ' .
-                        $this->begin->format('Y'),
-                    'en' => 'DSEF ' .
-                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'spring' : 'autumn') . ' ' .
-                        $this->begin->format('Y'),
-                ]);
-            case 9:
-                return new LocalizedString([
-                    'cs' => 'Fyziklání Online ' . $this->begin->format('Y'),
-                    'en' => 'Physics Brawl Online ' . $this->begin->format('Y'),
-                ]);
-            default:
-                return new LocalizedString([
-                    'cs' => $this->name,
-                    'en' => $this->name,
-                ]);
-        }
-    }
-
-    public function isTeamEvent(): bool
-    {
-        return in_array($this->event_type_id, EventModel::TEAM_EVENTS);
-    }
 
     /**
      * @throws NotSetGameParametersException
@@ -256,6 +208,50 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $value;
     }
 
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
+    }
+
+    /**
+     * @phpstan-return LocalizedString<'cs'|'en'>
+     */
+    public function getName(): LocalizedString
+    {
+        switch ($this->event_type_id) {
+            case 1:
+                return new LocalizedString([
+                    'cs' => 'Fyziklání ' . $this->begin->format('Y'),
+                    'en' => 'Fyziklani ' . $this->begin->format('Y'),
+                ]);
+            case 2:
+            case 14:
+                return new LocalizedString([
+                    'cs' => 'DSEF ' .
+                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'jaro' : 'podzim') . ' ' .
+                        $this->begin->format('Y'),
+                    'en' => 'DSEF ' .
+                        ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'spring' : 'autumn') . ' ' .
+                        $this->begin->format('Y'),
+                ]);
+            case 9:
+                return new LocalizedString([
+                    'cs' => 'Fyziklání Online ' . $this->begin->format('Y'),
+                    'en' => 'Physics Brawl Online ' . $this->begin->format('Y'),
+                ]);
+            default:
+                return new LocalizedString([
+                    'cs' => $this->name,
+                    'en' => $this->name,
+                ]);
+        }
+    }
+
+    public function isTeamEvent(): bool
+    {
+        return in_array($this->event_type_id, self::TEAM_EVENTS);
+    }
+
     /**
      * @phpstan-return SerializedEventModel
      */
@@ -308,22 +304,14 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @phpstan-return array<string,mixed>
-     */
-    private function getParameters(): array
-    {
-        $parameters = $this->parameters ? Neon::decode($this->parameters) : [];
-        $processor = new Processor();
-        return $processor->process($this->event_type->getParamSchema(), $parameters);
-    }
-
-    /**
      * @return mixed
      */
     public function getParameter(string $name)
     {
         try {
-            return $this->getParameters()[$name] ?? null;
+            $parameters = $this->parameters ? Neon::decode($this->parameters) : [];
+            $processor = new Processor();
+            return $processor->process($this->event_type->getParamSchema(), $parameters)[$name] ?? null;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException(
                 sprintf('No parameter "%s" for event %s.', $name, $this->name),

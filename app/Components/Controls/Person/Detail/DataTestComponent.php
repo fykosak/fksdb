@@ -19,6 +19,7 @@ class DataTestComponent extends BaseComponent
     final public function render(): void
     {
         if ($this->beforeRender()) {
+            /** @phpstan-ignore-next-line */
             $logs = DataTestFactory::runForModel($this->person, $this->factory->getTests('person'));
             $this->template->render(
                 __DIR__ . DIRECTORY_SEPARATOR . 'dataTest.latte',

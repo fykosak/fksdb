@@ -1,0 +1,21 @@
+{layout ../../Controls/@layout.latte}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
+
+{block content}
+    {foreach $transitions as $transition}
+        {continueIf $transition->isCreating()}
+        {var string $class = 'text-' . $transition->behaviorType->value}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2 class="{$class}">{$transition->getLabel()}</h2>
+                <p>
+                    <small class="text-muted">{$transition->source->badge()} --> {$transition->target->badge()}</small>
+                </p>
+                <p>
+                    {var string $className = 'btn btn-outline-' . $transition->behaviorType->value}
+                    <a class="{$className}" href="{link transition! $transition->getId()}">{_'Evalute'}</a>
+                </p>
+            </div>
+        </div>
+    {/foreach}
+{/block}

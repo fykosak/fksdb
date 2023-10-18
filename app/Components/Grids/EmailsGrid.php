@@ -46,6 +46,6 @@ final class EmailsGrid extends BaseGrid
             '@email_message.subject',
             '@email_message.state',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'email_message_id']);
     }
 }
