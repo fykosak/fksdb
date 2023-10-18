@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-15 23:31+0200\n"
+"POT-Creation-Date: 2023-10-18 09:55+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -77,9 +77,8 @@ msgid "Participant acquaintance"
 msgstr "Známosti účastníků"
 
 #: i18n/../app/Components/Charts/SubmitsPerSeriesChart.php:76
-#, fuzzy
 msgid "Submits per series"
-msgstr "Účastníci po sériích"
+msgstr "Odevzdané úlohy po sériích"
 
 #: i18n/../app/Components/Charts/SubmitsPerSeriesChart.php:81
 msgid ""
@@ -323,17 +322,6 @@ msgstr "XML soubor"
 #: i18n/../data/events/council/councilDefault.neon.neon2php:51
 #: i18n/../data/events/fov/fov.neon.neon2php:55
 #: i18n/../data/events/fov/fov34.neon.neon2php:40
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:49
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:68
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:67
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:43
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:72
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:59
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:65
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:73
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:29
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:29
-#: i18n/../data/events/setkani/setkani.neon.neon2php:89
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:160
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:151
 #: i18n/../data/events/soustredeni/sous35j.neon.neon2php:165
@@ -378,12 +366,12 @@ msgstr "Ročník soutěže @contestant.year"
 #: i18n/../app/Components/Controls/Person/Detail/EventOrganizerListComponent.php:56
 #: i18n/../app/Components/Controls/Person/Detail/OrganizerListComponent.php:65
 #: i18n/../app/Components/Event/Code/CodeComponent.php:171
-#: i18n/../app/Components/Game/Closing/TeamSubmitsGrid.php:57
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:78
+#: i18n/../app/Components/Game/Closing/TeamSubmitsGrid.php:60
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:81
 #: i18n/../app/Components/Grids/ContestantsFromSchoolGrid.php:58
 #: i18n/../app/Components/Grids/ContestantsGrid.php:72
 #: i18n/../app/Components/Grids/EventOrganizer/EventOrganizersGrid.php:48
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:60
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:66
 #: i18n/../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:73
 #: i18n/../app/Components/Grids/Warehouse/ItemsGrid.php:51
 #: i18n/../app/Components/Grids/Warehouse/ProductsGrid.php:46
@@ -414,7 +402,7 @@ msgstr "Upravit"
 #: i18n/../app/Components/Grids/EmailsGrid.php:49
 #: i18n/../app/Components/Grids/EventOrganizer/EventOrganizersGrid.php:49
 #: i18n/../app/Components/Grids/Events/DispatchGrid.php:77
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:59
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:62
 #: i18n/../app/Components/Grids/Payment/PaymentList.php:132
 #: i18n/../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:81
 #: i18n/../app/Components/Grids/SubmitsGrid.php:124
@@ -442,7 +430,7 @@ msgid "Event organizers"
 msgstr "Organizátoři akce"
 
 #: i18n/../app/Components/Controls/Person/Detail/OrganizerListComponent.php:35
-#: i18n/../app/Components/Grids/Events/EventsGrid.php:67
+#: i18n/../app/Components/Grids/Events/EventsGrid.php:73
 #: i18n/../app/Modules/OrganizerModule/OrganizerPresenter.php:69
 msgid "Organizers"
 msgstr "Organizátoři"
@@ -674,7 +662,7 @@ msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
 #: i18n/../app/Components/Controls/Upload/AjaxSubmit/Components/States/file-state.tsx.tsx2php:19
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:84
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:90
 msgid "Revoke"
 msgstr "Odvolat"
 
@@ -791,8 +779,8 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
 msgid ""
-"Organization and participation in year %d (%d) of the contest %s \"%s\"<->"
-"\"%s\"."
+"Organization and participation in year %d (%d) of the contest %s \"%s\"<-"
+">\"%s\"."
 msgstr "Organizování a účasti ve stejném roce %d v soutěži s ID %d %s<->%s."
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:22
@@ -926,33 +914,6 @@ msgstr "Soutěžící byl vytvořen"
 msgid "Contestant has been updated"
 msgstr "Data soutěžícího byla úspěšně upravena"
 
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:94
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:95
-#: i18n/../app/Models/Events/Model/Holder/BaseHolder.php:140
-msgid "Participant"
-msgstr "Účastník"
-
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:135
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:140
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:145
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:150
-msgid ""
-"You must register both morning and afternoon groups or only the all day "
-"group."
-msgstr ""
-"Musíte si zaregistrovat ranní a odpolední skupiny, nebo pouze celodenní "
-"skupinu."
-
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:212
-#: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:130
-msgid "Application has been updated"
-msgstr "Přihláška byla úspěšně upravena"
-
-#: i18n/../app/Components/EntityForms/Dsef/DsefFormComponent.php:213
-#: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:131
-msgid "Application has been created"
-msgstr "Přihláška byla vytvořena"
-
 #: i18n/../app/Components/EntityForms/EntityFormComponent.php:60
 #, php-format
 msgid "Error in the form: %s"
@@ -1069,6 +1030,16 @@ msgstr "Škola je vyžadována pro osobu  \"%s\" a \"%s\" ročník ."
 msgid "You have to agree with the privacy policy before submitting."
 msgstr "Před vložením musíte souhlasit s podmínkami ochrany osobních údajů"
 
+#: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:130
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:156
+msgid "Application has been updated"
+msgstr "Přihláška byla úspěšně upravena"
+
+#: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:131
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:157
+msgid "Application has been created"
+msgstr "Přihláška byla vytvořena"
+
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:228
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamFormComponent.php:229
 #, php-format
@@ -1178,6 +1149,46 @@ msgstr "Škola byla vytvořena."
 #: i18n/../app/Components/EntityForms/SchoolFormComponent.php:67
 msgid "School has been updated"
 msgstr "Škola byla aktualizována."
+
+#: i18n/../app/Components/EntityForms/Single/DsefFormComponent.php:61
+#: i18n/../app/Components/EntityForms/Single/DsefFormComponent.php:66
+#: i18n/../app/Components/EntityForms/Single/DsefFormComponent.php:71
+#: i18n/../app/Components/EntityForms/Single/DsefFormComponent.php:76
+msgid ""
+"You must register both morning and afternoon groups or only the all day "
+"group."
+msgstr ""
+"Musíte si zaregistrovat ranní a odpolední skupiny, nebo pouze celodenní "
+"skupinu."
+
+#: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:34
+msgid "Číslo OP/pasu, pokud máš"
+msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:56
+msgid ""
+"Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
+"…?\n"
+"                Pokud ano, máš zájem o speciální stravu nebo si (zejména v "
+"případě veganů) dovezeš jídlo vlastní?"
+msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:61
+msgid ""
+"Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
+"setkání?\n"
+"                Například různé alergie (a jejich projevy), cukrovka, "
+"epilepsie, dlouhodobější obtíže, … Bereš\n"
+"                nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké "
+"to jsou? Jsou nějaké další informace\n"
+"                ohledně tvého zdravotního stavu, co bychom měli vědět?"
+msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:90
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:91
+#: i18n/../app/Models/Events/Model/Holder/BaseHolder.php:140
+msgid "Participant"
+msgstr "Účastník"
 
 #: i18n/../app/Components/EntityForms/StoredQueryFormComponent.php:86
 msgid "Query has been created"
@@ -1316,14 +1327,12 @@ msgid "Transition successful for application: %s"
 msgstr "Přechod úspěšný pro přihlášku: %s"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:127
-#, fuzzy
 msgid "Application belongs to another event."
-msgstr "Přihláška \"%s\" uložena"
+msgstr "Přihláška patří k jiné akci"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:142
-#, fuzzy
 msgid "Error: "
-msgstr "Chyba"
+msgstr "Chyba: "
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:161
 #: i18n/../app/Components/MachineCode/MachineCodeType.php:65
@@ -1331,7 +1340,7 @@ msgid "Wrong type of code."
 msgstr "Špatný typ kódu"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:166
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:187
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 #: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx.tsx2php:52
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:143
 msgid "Code"
@@ -1339,21 +1348,18 @@ msgstr "Kód"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:169
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:144
-#, fuzzy
 msgid "Action"
 msgstr "Akce"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:172
-#, fuzzy
 msgid "Transition!"
-msgstr "Přechody"
+msgstr "Přechody!"
 
 #: i18n/../app/Components/Event/Code/CodeComponent.php:180
 msgid "Do!"
-msgstr ""
+msgstr "Udělej!"
 
 #: i18n/../app/Components/Event/Code/layout.latte.latte2php:5
-#, fuzzy
 msgid "Transition will be processed automatically one of: "
 msgstr "Přechod se provede automaticky: "
 
@@ -1673,7 +1679,7 @@ msgid "Close submitting!"
 msgstr "Uzavřít bodování!"
 
 #: i18n/../app/Components/Game/Closing/CodeCloseForm.php:78
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:187
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 msgid "Task code"
 msgstr "Kód úlohy"
 
@@ -1693,7 +1699,7 @@ msgid "Team %s has unchecked submits"
 msgstr "Tým %s má nezkontrolovaná odevzdání"
 
 #: i18n/../app/Components/Game/Closing/TeamListComponent.php:60
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:123
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:129
 msgid "Wrong task code"
 msgstr "Špatný kód úlohy"
 
@@ -1837,7 +1843,7 @@ msgid "Correlation "
 msgstr "Korelace "
 
 #: i18n/../app/Components/Game/ResultsAndStatistics/Statistics/CorrelationStatitics/table.tsx.tsx2php:60
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:186
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:192
 #: i18n/../app/Components/Game/Submits/Form/Components/preview.tsx.tsx2php:30
 #: i18n/../app/Components/Grids/Submits/QuizAnswersGrid.php:53
 #: i18n/../app/Components/Grids/SubmitsGrid.php:63
@@ -1926,28 +1932,28 @@ msgstr "Výsledky"
 msgid "Category"
 msgstr "Kategorie"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:151
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:157
 msgid "Submit does not exists."
 msgstr "Odevzdání neexistuje."
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:185
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:191
 msgid "--Select team--"
 msgstr "--Vyber tým--"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:185
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:191
 #: i18n/../app/Components/Game/Submits/Form/Components/preview.tsx.tsx2php:26
 msgid "Team"
 msgstr "Tým"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:186
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:192
 msgid "--Select task--"
 msgstr "--Vyber úlohu--"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:188
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:194
 msgid "--Select state--"
 msgstr "-- Vyber stav --"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:188
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:194
 #: i18n/../app/Components/Grids/Application/TeamTrait.php:72
 #: i18n/../app/config/orm.neon.neon2php:76
 #: i18n/../app/config/orm.neon.neon2php:200
@@ -1959,15 +1965,15 @@ msgstr "-- Vyber stav --"
 msgid "State"
 msgstr "Stav"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:189
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:195
 msgid "Only not revoked submits"
 msgstr "Pouze neodvolané submity"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:190
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:196
 msgid "Show warnings"
 msgstr "Ukázat varování"
 
-#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:191
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:197
 msgid "Show unchecked submits inserted more that 10 minutes ago."
 msgstr "Ukázat nezkontrolovaná odevzdání vložená dříve než před 10 minutami"
 
@@ -2061,7 +2067,7 @@ msgid "--select role--"
 msgstr "--vyber roli--"
 
 #: i18n/../app/Components/Grids/Application/Person/NewApplicationsGrid.php:53
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:115
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:117
 msgid "Create application"
 msgstr "Vytvořit přihlášku"
 
@@ -2209,7 +2215,7 @@ msgstr "Pro"
 #: i18n/../app/Components/Schedule/ItemGrid.php:71
 #: i18n/../app/Components/Schedule/PersonScheduleList.php:96
 #: i18n/../app/Models/Transitions/Callbacks/Payment/items.latte.latte2php:27
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:139
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:152
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:63
 #: i18n/../app/config/orm.neon.neon2php:211
 #: i18n/../app/config/orm.neon.neon2php:393
@@ -2292,9 +2298,8 @@ msgid "There was an error during the deletion of task %s."
 msgstr "Během mazání úlohy %s došlo k chybě."
 
 #: i18n/../app/Components/MachineCode/MachineCode.php:31
-#, fuzzy
 msgid "Cannot encrypt code"
-msgstr "Nelze vyhodnotit zemi"
+msgstr "Nelze encryptovat kód"
 
 #: i18n/../app/Components/MachineCode/MachineCode.php:57
 msgid "Wrong format"
@@ -2306,9 +2311,8 @@ msgid "Model not found"
 msgstr "Model nenalezen"
 
 #: i18n/../app/Components/MachineCode/MachineCode.php:78
-#, fuzzy
 msgid "Cannot decrypt code"
-msgstr "Nelze vyhodnotit zemi"
+msgstr "Nelze decryptovat kód"
 
 #: i18n/../app/Components/PDFGenerators/Providers/AbstractPageComponent.php:38
 msgid "A5 landscape"
@@ -2395,7 +2399,6 @@ msgid "Person %s applied in %s."
 msgstr "Osoba %s přihlášena na %s."
 
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:107
-#, fuzzy
 msgid "Unsupported code type"
 msgstr "Nepodporovaný formát"
 
@@ -2417,14 +2420,12 @@ msgid "Attendance"
 msgstr "Prezence"
 
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:146
-#, fuzzy
 msgid "Check"
-msgstr "Provést kontrolu souborů"
+msgstr "Zkontrolovat"
 
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:148
-#, fuzzy
 msgid "Show application!"
-msgstr "Nová přihláška"
+msgstr "Ukaž přihlášku!"
 
 #: i18n/../app/Components/Schedule/GroupList.php:58
 msgid "@schedule_group.name_en (@schedule_group.schedule_group_id)"
@@ -3918,31 +3919,28 @@ msgstr "Učitel"
 msgid "year-fykos"
 msgstr "Ročník"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:100
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:102
 #: i18n/../app/Modules/EventModule/TeamApplicationPresenter.php:90
-#, fuzzy
 msgid "Scan 2D code"
-msgstr "Oskenovat QR-kód"
+msgstr "Oskenovat 2D kód"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:134
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:147
 msgid "Health & food"
 msgstr "Zdraví a potravinová omezení"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:135
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:148
 msgid "T-shirt"
 msgstr "Triko"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:136
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:149
 msgid "Arrival"
 msgstr "Příjezd"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:137
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:150
 msgid "Departure"
 msgstr "Odjezd"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:138
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:73
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:101
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:151
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:166
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:157
 #: i18n/../data/events/soustredeni/sous35j.neon.neon2php:171
@@ -3954,32 +3952,32 @@ msgstr "Odjezd"
 msgid "Food"
 msgstr "Jídlo"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:154
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:167
 #: i18n/../app/Modules/EventModule/TeamApplicationPresenter.php:147
 #, php-format
 msgid "Application detail \"%s\""
 msgstr "Detail přihlášky \"%s\""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:186
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:199
 #, php-format
 msgid "Edit application \"%s\""
 msgstr "Upravit přihlášku \"%s\""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:202
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:215
 msgid "Application import"
 msgstr "Import přihlášky"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:215
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:228
 msgid "List of applications"
 msgstr "Seznam přihlášek"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:229
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:242
 #: i18n/../app/Modules/EventModule/TeamApplicationPresenter.php:208
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/detailedList.latte.latte2php:5
 msgid "Mass transitions"
 msgstr "Hromadné přechody"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:311
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:333
 #: i18n/../app/Modules/EventModule/TeamApplicationPresenter.php:292
 msgid "Event type is not supported"
 msgstr "Vybraný typ akce není podporován"
@@ -4195,19 +4193,19 @@ msgid "Detailed list of payments"
 msgstr "Podrobný seznam plateb"
 
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:64
-#, fuzzy, php-format
+#, php-format
 msgid "Scan 2D code for group \"%s\""
-msgstr "Prezence pro skupinu \"%s\""
+msgstr "Skenovat 2D kód pro skupinu \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:94
-#, fuzzy, php-format
+#, php-format
 msgid "Group \"%s\""
-msgstr "Jméno skupiny"
+msgstr "Skupina \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:111
-#, fuzzy, php-format
+#, php-format
 msgid "Edit group \"%s\""
-msgstr "Upravit skupinu"
+msgstr "Upravit skupinu \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:124
 msgid "Create group"
@@ -4218,9 +4216,9 @@ msgid "All persons"
 msgstr "Všechny osoby programu"
 
 #: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:63
-#, fuzzy, php-format
+#, php-format
 msgid "Scan 2D code for item \"%s\""
-msgstr "Prezence pro bod programu \"%s\""
+msgstr "Skenovat 2D kód pro bod programu \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:70
 #: i18n/../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:9
@@ -4229,23 +4227,23 @@ msgid "Create item"
 msgstr "Vytvořit položku"
 
 #: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:98
-#, fuzzy, php-format
+#, php-format
 msgid "Item \"%s\""
-msgstr "Položky"
+msgstr "Položka \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/ItemPresenter.php:115
-#, fuzzy, php-format
+#, php-format
 msgid "Edit item \"%s\""
-msgstr "Upravit tým \"%s\""
+msgstr "Upravit položku \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/PersonPresenter.php:63
 msgid "My schedule"
 msgstr "Můj program"
 
 #: i18n/../app/Modules/EventModule/Schedule/PersonPresenter.php:86
-#, fuzzy, php-format
+#,  php-format
 msgid "Schedule of %s"
-msgstr "Položka programu \"%s\""
+msgstr "Program osoby \"%s\""
 
 #: i18n/../app/Modules/EventModule/Schedule/templates/Group/detail.latte.latte2php:8
 msgid "List of groups"
@@ -4270,9 +4268,8 @@ msgstr "Upravit skupinu"
 
 #: i18n/../app/Modules/EventModule/Schedule/templates/Item/group.detail.latte.latte2php:19
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/detailedList.latte.latte2php:6
-#, fuzzy
 msgid "Scan 2D code!"
-msgstr "Oskenovat QR-kód"
+msgstr "Oskenovat 2D kód!"
 
 #: i18n/../app/Modules/EventModule/Schedule/templates/Person/blocks.latte.latte2php:27
 msgid "Block ended"
@@ -4304,9 +4301,8 @@ msgid "Today"
 msgstr "Dnes"
 
 #: i18n/../app/Modules/EventModule/Schedule/templates/Person/detail.latte.latte2php:26
-#, fuzzy
 msgid "Others group"
-msgstr "Vytvořit skupinu programu"
+msgstr "Ostatní skupiny"
 
 #: i18n/../app/Modules/EventModule/TeamApplicationPresenter.php:105
 msgid "Create team"
@@ -4339,9 +4335,8 @@ msgid "Transitions"
 msgstr "Přechody"
 
 #: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:68
-#, fuzzy
 msgid "Application code"
-msgstr "Přihlášky"
+msgstr "Kód přihlášky"
 
 #: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:7
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/detailedList.latte.latte2php:4
@@ -4858,18 +4853,8 @@ msgstr "Nahraná řešení"
 #: i18n/../app/config/applications/dsef.neon.neon2php:13
 #: i18n/../app/config/applications/fof.neon.neon2php:22
 #: i18n/../app/config/applications/fol.neon.neon2php:21
+#: i18n/../app/config/applications/setkani.neon.neon2php:30
 #: i18n/../data/events/council/councilDefault.neon.neon2php:38
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:37
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:56
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:54
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:31
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:60
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:47
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:53
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:61
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:17
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:17
-#: i18n/../data/events/setkani/setkani.neon.neon2php:77
 #: i18n/../data/events/tsaf/tsaf8.neon.neon2php:82
 #: i18n/../data/events/vaf/vaf.neon.neon2php:47
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:57
@@ -4879,18 +4864,8 @@ msgstr ""
 #: i18n/../app/config/applications/dsef.neon.neon2php:16
 #: i18n/../app/config/applications/fof.neon.neon2php:25
 #: i18n/../app/config/applications/fol.neon.neon2php:24
+#: i18n/../app/config/applications/setkani.neon.neon2php:33
 #: i18n/../data/events/council/councilDefault.neon.neon2php:41
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:40
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:59
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:57
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:34
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:63
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:50
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:56
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:64
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:20
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:20
-#: i18n/../data/events/setkani/setkani.neon.neon2php:80
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:117
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:72
 #: i18n/../data/events/tabor/tabor12.neon.neon2php:147
@@ -4904,18 +4879,9 @@ msgid "Nepřijel"
 msgstr ""
 
 #: i18n/../app/config/applications/dsef.neon.neon2php:20
+#: i18n/../app/config/applications/setkani.neon.neon2php:37
+#: i18n/../app/config/applications/setkani.neon.neon2php:40
 #: i18n/../data/events/council/councilDefault.neon.neon2php:45
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:44
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:63
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:61
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:38
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:67
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:54
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:60
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:68
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:24
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:24
-#: i18n/../data/events/setkani/setkani.neon.neon2php:84
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:120
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:76
 #: i18n/../data/events/tabor/tabor12.neon.neon2php:151
@@ -4936,17 +4902,26 @@ msgstr "Přihlásit tým"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:15
 #: i18n/../app/config/applications/fol.neon.neon2php:14
+#: i18n/../app/config/applications/setkani.neon.neon2php:13
+#: i18n/../app/config/applications/setkani.neon.neon2php:25
 msgid "Schválit účast"
 msgstr ""
 
 #: i18n/../app/config/applications/fof.neon.neon2php:19
 #: i18n/../app/config/applications/fol.neon.neon2php:18
+#: i18n/../app/config/applications/setkani.neon.neon2php:19
 msgid "Potvrdit jako náhradníka"
 msgstr ""
 
 #: i18n/../app/config/applications/fof.neon.neon2php:28
 #: i18n/../app/config/applications/fol.neon.neon2php:27
 msgid "Zrušit tým"
+msgstr ""
+
+#: i18n/../app/config/applications/setkani.neon.neon2php:7
+#: i18n/../data/events/council/councilDefault.neon.neon2php:33
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:66
+msgid "Přihlásit účastníka"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:17
@@ -5098,8 +5073,6 @@ msgid "Diet"
 msgstr "Stravovací omezení"
 
 #: i18n/../app/config/orm.neon.neon2php:217
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:76
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:104
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:169
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:160
 #: i18n/../data/events/soustredeni/sous35j.neon.neon2php:174
@@ -5612,34 +5585,7 @@ msgstr "Odstranit"
 
 #: i18n/../data/events/council/council1.neon.neon2php:14
 #: i18n/../data/events/council/councilDefault.neon.neon2php:57
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:55
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:104
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:81
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:78
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:107
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:65
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:99
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:107
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:63
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:63
-#: i18n/../data/events/setkani/setkani.neon.neon2php:123
 msgid "Další poznámky"
-msgstr ""
-
-#: i18n/../data/events/council/councilDefault.neon.neon2php:33
-#: i18n/../data/events/setkani/jaro/setkani10.neon.neon2php:32
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:51
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:49
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:26
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:55
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:42
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:48
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:56
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:12
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:12
-#: i18n/../data/events/setkani/setkani.neon.neon2php:72
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:66
-msgid "Přihlásit účastníka"
 msgstr ""
 
 #: i18n/../data/events/fov/fov.neon.neon2php:28
@@ -5707,176 +5653,6 @@ msgstr "Odmítnout účast"
 #: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:138
 msgid "Cancel application"
 msgstr "Zrušit přihlášku"
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:28
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:21
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:31
-#: i18n/../data/events/setkani/podzim/setkani10.neon.neon2php:20
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:20
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:20
-#: i18n/../data/events/setkani/setkani.neon.neon2php:23
-msgid "Číslo OP/pasu, pokud máš"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:74
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:49
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:78
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:93
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:57
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:57
-#: i18n/../data/events/setkani/setkani.neon.neon2php:117
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:130
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:88
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:163
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:89
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:86
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:88
-#: i18n/../data/events/vaf/vaf.neon.neon2php:65
-#: i18n/../data/events/vaf/vaf3.neon.neon2php:79
-msgid "Jídlo"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:75
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:50
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:79
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:58
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:58
-#: i18n/../data/events/vaf/vaf3.neon.neon2php:80
-msgid ""
-"Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
-"…? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě "
-"veganů) dovezeš jídlo vlastní?"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:77
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:52
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:81
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:96
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:60
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:60
-#: i18n/../data/events/setkani/setkani.neon.neon2php:120
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:133
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:91
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:166
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:92
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:89
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:91
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:117
-#: i18n/../data/events/vaf/vaf.neon.neon2php:68
-#: i18n/../data/events/vaf/vaf3.neon.neon2php:82
-msgid "Zdravotní omezení"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:78
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:53
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:82
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:61
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:61
-msgid ""
-"Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
-"soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
-"náročných nebo nočních her? Například různé alergie (a jejich projevy), "
-"cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
-"pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace "
-"ohledně tvého zdravotního stavu, co bychom měli vědět?"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:80
-#: i18n/../data/events/setkani/jaro/setkani12.neon.neon2php:79
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:55
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:84
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:136
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:94
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:169
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:95
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:92
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:94
-msgid "Užívané léky"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:83
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:58
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:87
-msgid "Místo, ze kterého chci cestovat"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:87
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:62
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:91
-msgid "Mám zájem o společnou jízdenku cestou na setkání"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:89
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:64
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:93
-msgid "Místo, na které chci cestovat"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:93
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:68
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:97
-msgid "Mám zájem o společnou jízdenku ze setkání"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:95
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:70
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:99
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:49
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:49
-#: i18n/../data/events/setkani/setkani.neon.neon2php:109
-msgid "Jaké tričko nosíš?"
-msgstr ""
-
-#: i18n/../data/events/setkani/jaro/setkani11.neon.neon2php:99
-#: i18n/../data/events/setkani/jaro/setkani8.neon.neon2php:74
-#: i18n/../data/events/setkani/jaro/setkani9.neon.neon2php:103
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:53
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:53
-#: i18n/../data/events/setkani/setkani.neon.neon2php:113
-msgid "Jakou barvu trička bys chtěl?"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:71
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:79
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:35
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:35
-#: i18n/../data/events/setkani/setkani.neon.neon2php:95
-msgid "Předpokládaný příjezd"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:74
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:82
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:38
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:38
-#: i18n/../data/events/setkani/setkani.neon.neon2php:98
-msgid "Na jaké místo přijedeš?"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:78
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:86
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:42
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:42
-#: i18n/../data/events/setkani/setkani.neon.neon2php:102
-msgid "Předpokládaný odjezd"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani11.neon.neon2php:81
-#: i18n/../data/events/setkani/podzim/setkani12.neon.neon2php:89
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:45
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:45
-#: i18n/../data/events/setkani/setkani.neon.neon2php:105
-msgid "Z jakého místa chceš odjíždět?"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:36
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:36
-msgid "Čas příjezdu"
-msgstr ""
-
-#: i18n/../data/events/setkani/podzim/setkani8.neon.neon2php:43
-#: i18n/../data/events/setkani/podzim/setkani9.neon.neon2php:43
-msgid "Čas odjezdu"
-msgstr ""
 
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:22
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:27
@@ -6489,6 +6265,38 @@ msgstr ""
 msgid "Zúčastnil se"
 msgstr ""
 
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:130
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:88
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:163
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:89
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:86
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:88
+#: i18n/../data/events/vaf/vaf.neon.neon2php:65
+#: i18n/../data/events/vaf/vaf3.neon.neon2php:79
+msgid "Jídlo"
+msgstr ""
+
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:133
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:91
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:166
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:92
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:89
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:91
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:117
+#: i18n/../data/events/vaf/vaf.neon.neon2php:68
+#: i18n/../data/events/vaf/vaf3.neon.neon2php:82
+msgid "Zdravotní omezení"
+msgstr ""
+
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:136
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:94
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:169
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:95
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:92
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:94
+msgid "Užívané léky"
+msgstr ""
+
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:138
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:96
 #: i18n/../data/events/tabor/tabor7.neon.neon2php:97
@@ -6595,6 +6403,13 @@ msgstr ""
 msgid "Zvolit velikost"
 msgstr ""
 
+#: i18n/../data/events/vaf/vaf3.neon.neon2php:80
+msgid ""
+"Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
+"…? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě "
+"veganů) dovezeš jídlo vlastní?"
+msgstr ""
+
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:83
 msgid ""
 "Máš nějaká zdravotní omezení, která by tě mohla omezovat během akce? "
@@ -6608,281 +6423,30 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#, fuzzy
-#~ msgid "Edit!"
-#~ msgstr "Upravit"
+#~ msgid "#"
+#~ msgstr "#"
 
-#~ msgid "solutions"
-#~ msgstr "řešení"
+#~ msgid "%s is valid"
+#~ msgstr "Pole \"%s\" je platné"
 
-#~ msgid "solution"
-#~ msgstr "řešení"
-
-#~ msgid "points"
-#~ msgstr "Bodů"
-
-#~ msgid "active"
-#~ msgstr "aktivní"
-
-#~ msgid "Wrong task number."
-#~ msgstr "Špatné číslo úlohy."
-
-#~ msgid "Validation"
-#~ msgstr "Validace"
-
-#~ msgid "User"
-#~ msgstr "Uživatel"
-
-#~ msgid "Total"
-#~ msgstr "Celkově"
-
-#~ msgid "To %s"
-#~ msgstr "Do %s"
-
-#~ msgid "To"
-#~ msgstr "Do"
-
-#~ msgid "Timestamp"
-#~ msgstr "Časová známka"
-
-#~ msgid "This option is only available to secondary school students."
-#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
-
-#~ msgid "This option is only available to Czech and Slovak students."
-#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
-
-#~ msgid ""
-#~ "There is not a transition from state \"%s\" of machine \"%s\" to state "
-#~ "\"%s\"."
-#~ msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
-
-#~ msgid "Teams per country"
-#~ msgstr "Týmy dle zemí."
-
-#~ msgid "Team member"
-#~ msgstr "Člen týmu"
-
-#~ msgid "Team applications time progress"
-#~ msgstr "Počet přihlášených týmů v čase"
-
-#~ msgid "Teaches until"
-#~ msgstr "Učitelem do"
-
-#~ msgid "Teaches since"
-#~ msgstr "Učitelem od"
-
-#~ msgid "Task was given."
-#~ msgstr "Úloha byla vydána."
-
-#~ msgid "Task given and validated."
-#~ msgstr "Úloha zadána a ověřena."
-
-#~ msgid "Stop import and rollback."
-#~ msgstr "Zastavit import a rollbackovat"
-
-#~ msgid "Stateless applications."
-#~ msgstr "Přihlláška bez stavu."
-
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Stav přihlášky \"%s\" změněn"
-
-#~ msgid "Skip the application and continue."
-#~ msgstr "Přeskočit přihlášku a pokračovat."
-
-#~ msgid "Similarity"
-#~ msgstr "Podobnost"
-
-#~ msgid "Settings"
-#~ msgstr "Nastavení"
-
-#~ msgid "Set new game password."
-#~ msgstr "Nastavit nové herní heslo"
-
-#~ msgid "Select test"
-#~ msgstr "Vybrat test"
-
-#~ msgid "Select contest"
-#~ msgstr "Vyberte soutěž"
-
-#~ msgid "Sector"
-#~ msgstr "Sektor"
-
-#~ msgid "Sealing of the scoring"
-#~ msgstr "Uzavření bodování"
-
-#, fuzzy
-#~ msgid "School study"
-#~ msgstr "Školy"
-
-#~ msgid "SQL query"
-#~ msgstr "SQL dotaz"
-
-#~ msgid "Require Id number"
-#~ msgstr "Číslo občanského průkazu je vyžadováno"
-
-#~ msgid "Register to Výfuk"
-#~ msgstr "Zaregistrovat se do Výfuku"
-
-#~ msgid "Register into competition"
-#~ msgstr "Zaregistrovat se do soutěže"
-
-#~ msgid "Register for the next year"
-#~ msgstr "Zaregistrovat se do dalšího ročníku"
-
-#~ msgid "Rank"
-#~ msgstr "Pořadí"
-
-#~ msgid "Person_id attribute"
-#~ msgstr "Políčko person_id"
-
-#~ msgid "Person info is not set"
-#~ msgstr "Person info není nastaveno"
-
-#~ msgid "Participate events"
-#~ msgstr "Účasti na akcích"
-
-#~ msgid "Participants per team"
-#~ msgstr "Účastníci dle týmů."
-
-#~ msgid "Output"
-#~ msgstr "Výstup"
-
-#~ msgid "Org Id"
-#~ msgstr "ID organizátora"
-
-#~ msgid "Only CSV files are accepted."
-#~ msgstr "Pouze CSV soubory jsou přijímány."
-
-#~ msgid "Number of brochures/propagation items, that he wants to send."
-#~ msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
-
-#~ msgid "Number of brochures"
-#~ msgstr "# brožurek"
-
-#~ msgid "Next year"
-#~ msgstr "Příští rok"
-
-#~ msgid "Method of handing"
-#~ msgstr "Metoda řešení"
-
-#~ msgid "Level"
-#~ msgstr "Úroveň"
-
-#~ msgid "Language"
-#~ msgstr "Jazyk"
-
-#~ msgid "Keep original state."
-#~ msgstr "Ponechat původní stav"
-
-#~ msgid "Invalid team"
-#~ msgstr "Neplatný tým"
-
-#~ msgid "Invalid task"
-#~ msgstr "Neplatná úloha"
-
-#~ msgid "Import of applications"
-#~ msgstr "Import přihlášek"
-
-#~ msgid "Ignore."
-#~ msgstr "Ignorovat"
-
-#~ msgid "Id"
-#~ msgstr "Id"
-
-#, fuzzy
-#~ msgid "Hight"
-#~ msgstr "Světlý"
-
-#~ msgid "Group transitions"
-#~ msgstr "Skupinové přechody"
-
-#~ msgid "Global statistics"
-#~ msgstr "Globální statistiky"
-
-#~ msgid "Global results"
-#~ msgstr "Celkové výsledky"
-
-#~ msgid "From %s"
-#~ msgstr "Od %s"
-
-#~ msgid "From"
-#~ msgstr "Od"
-
-#~ msgid "Format"
-#~ msgstr "Formát"
-
-#~ msgid "Event web-site"
-#~ msgstr "Web akce"
-
-#~ msgid "Event orgs"
-#~ msgstr "Organizátor akcí"
-
-#~ msgid "Event org Id"
-#~ msgstr "Id organizátora akce"
-
-#~ msgid "Event org"
-#~ msgstr "Organizátor akce"
-
-#~ msgid "Error mode"
-#~ msgstr "Cování při chybě."
-
-#~ msgid "Envelopes for person generator"
-#~ msgstr "Generátor obálek pro osoby"
-
-#~ msgid "Edit personal information"
-#~ msgstr "Upravit osobní informace"
-
-#~ msgid "Detail of the submit #%d"
-#~ msgstr "Podrobnosti odevzdání #%d"
-
-#~ msgid "Data validation"
-#~ msgstr "Validace údajů"
-
-#~ msgid "Cooperation status"
-#~ msgstr "Stav spolupráce"
-
-#~ msgid "Check submit"
-#~ msgstr "Ověřit submit"
-
-#~ msgid "Cannot set variant"
-#~ msgstr "Nelze nastavit variantu"
-
-#~ msgid "Cannot delete variant"
-#~ msgstr "Nelze smazat variantu"
-
-#~ msgid "Calculate quiz points."
-#~ msgstr "Spočítat body kvízových úloh."
-
-#~ msgid "CSV does not contain correct heading."
-#~ msgstr "CSV neobsahuje správné nadpisy"
-
-#~ msgid "Born ID is not set"
-#~ msgstr "Rodné číslo není nastaveno"
-
-#~ msgid "Birthday is required field."
-#~ msgstr "Pole narození je povinné"
-
-#~ msgid "All tests"
-#~ msgstr "Všechny testy"
-
-#~ msgid "Active?"
-#~ msgstr "Platný záznam?"
+#~ msgid "...reading code..."
+#~ msgstr "...čtu kód..."
 
 #~ msgid "@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)"
 #~ msgstr ""
 #~ "@schedule_item.name_cs:value (@schedule_item.schedule_item_id:value)"
 
-#~ msgid "...reading code..."
-#~ msgstr "...čtu kód..."
+#~ msgid "Active?"
+#~ msgstr "Platný záznam?"
 
-#~ msgid "%s is valid"
-#~ msgstr "Pole \"%s\" je platné"
+#~ msgid "All tests"
+#~ msgstr "Všechny testy"
 
-#~ msgid "#"
-#~ msgstr "#"
+#~ msgid "Already participated"
+#~ msgstr "Už prezentován"
 
-#~ msgid "Transitions by IDs"
-#~ msgstr "Přechody pomocí ID"
+#~ msgid "Application not found"
+#~ msgstr "Přihláška nenalezena"
 
 #~ msgid "Attendance for group"
 #~ msgstr "Prezence pro skupinu"
@@ -6890,57 +6454,308 @@ msgstr ""
 #~ msgid "Attendance for item"
 #~ msgstr "Prezence pro položku programu"
 
+#~ msgid "Birthday is required field."
+#~ msgstr "Pole narození je povinné"
+
+#~ msgid "Born ID is not set"
+#~ msgstr "Rodné číslo není nastaveno"
+
+#~ msgid "Bypass checksum"
+#~ msgstr "Obejít kontrolní součet"
+
+#~ msgid "CSV does not contain correct heading."
+#~ msgstr "CSV neobsahuje správné nadpisy"
+
+#~ msgid "Calculate quiz points."
+#~ msgstr "Spočítat body kvízových úloh."
+
+#~ msgid "Cannot delete variant"
+#~ msgstr "Nelze smazat variantu"
+
+#~ msgid "Cannot set variant"
+#~ msgstr "Nelze nastavit variantu"
+
+#~ msgid "Check submit"
+#~ msgstr "Ověřit submit"
+
+#~ msgid "Choose the team which you want to edit, it will open in the new tab."
+#~ msgstr "Vyberte tým, který chcete upravovat, tým se otevře v nové záložce."
+
+#~ msgid "Cooperation status"
+#~ msgstr "Stav spolupráce"
+
+#~ msgid "Create schedule item"
+#~ msgstr "Vytvořit položku programu"
+
+#~ msgid "Data validation"
+#~ msgstr "Validace údajů"
+
+#~ msgid "Detail"
+#~ msgstr "Detail"
+
+#~ msgid "Detail of the submit #%d"
+#~ msgstr "Podrobnosti odevzdání #%d"
+
+#, fuzzy
+#~ msgid "Detail!"
+#~ msgstr "Detail"
+
+#~ msgid "Edit"
+#~ msgstr "Upravit"
+
+#~ msgid "Edit personal information"
+#~ msgstr "Upravit osobní informace"
+
+#~ msgid "Edit schedule group \"%s\""
+#~ msgstr "Upravit bod programu \"%s\""
+
+#~ msgid "Edit schedule item \"%s\""
+#~ msgstr "Upravit bod programu \"%s\""
+
+#, fuzzy
+#~ msgid "Edit!"
+#~ msgstr "Upravit"
+
+#~ msgid "Envelopes for person generator"
+#~ msgstr "Generátor obálek pro osoby"
+
+#~ msgid "Error mode"
+#~ msgstr "Cování při chybě."
+
+#~ msgid "Event org"
+#~ msgstr "Organizátor akce"
+
+#~ msgid "Event org Id"
+#~ msgstr "Id organizátora akce"
+
+#~ msgid "Event orgs"
+#~ msgstr "Organizátor akcí"
+
+#~ msgid "Event web-site"
+#~ msgstr "Web akce"
+
+#~ msgid "Fast attendance"
+#~ msgstr "Rychlá prezence"
+
+#~ msgid "Fast edit"
+#~ msgstr "Rychlé změny"
+
+#~ msgid "Format"
+#~ msgstr "Formát"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "From %s"
+#~ msgstr "Od %s"
+
+#~ msgid "Global results"
+#~ msgstr "Celkové výsledky"
+
+#~ msgid "Global statistics"
+#~ msgstr "Globální statistiky"
+
+#~ msgid "Group transitions"
+#~ msgstr "Skupinové přechody"
+
+#, fuzzy
+#~ msgid "Hight"
+#~ msgstr "Světlý"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Ignore."
+#~ msgstr "Ignorovat"
+
+#~ msgid "Import of applications"
+#~ msgstr "Import přihlášek"
+
+#~ msgid "Invalid task"
+#~ msgstr "Neplatná úloha"
+
+#~ msgid "Invalid team"
+#~ msgstr "Neplatný tým"
+
+#~ msgid "Keep original state."
+#~ msgstr "Ponechat původní stav"
+
+#~ msgid "Language"
+#~ msgstr "Jazyk"
+
+#~ msgid "Level"
+#~ msgstr "Úroveň"
+
+#~ msgid "Method of handing"
+#~ msgstr "Metoda řešení"
+
+#~ msgid "Next year"
+#~ msgstr "Příští rok"
+
+#~ msgid "Number of brochures"
+#~ msgstr "# brožurek"
+
+#~ msgid "Number of brochures/propagation items, that he wants to send."
+#~ msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
+
+#~ msgid "Only CSV files are accepted."
+#~ msgstr "Pouze CSV soubory jsou přijímány."
+
+#~ msgid "Only check state"
+#~ msgstr "Pouze zkontrolovat stav"
+
+#~ msgid "Org Id"
+#~ msgstr "ID organizátora"
+
+#~ msgid "Output"
+#~ msgstr "Výstup"
+
+#~ msgid "Participants per team"
+#~ msgstr "Účastníci dle týmů."
+
+#~ msgid "Participate events"
+#~ msgstr "Účasti na akcích"
+
+#~ msgid "Person info is not set"
+#~ msgstr "Person info není nastaveno"
+
+#~ msgid "Person not found"
+#~ msgstr "Osoba nenalezena"
+
+#~ msgid "Person_id attribute"
+#~ msgstr "Políčko person_id"
+
+#~ msgid "Rank"
+#~ msgstr "Pořadí"
+
+#~ msgid "Register for the next year"
+#~ msgstr "Zaregistrovat se do dalšího ročníku"
+
+#~ msgid "Register into competition"
+#~ msgstr "Zaregistrovat se do soutěže"
+
+#~ msgid "Register to Výfuk"
+#~ msgstr "Zaregistrovat se do Výfuku"
+
+#~ msgid "Require Id number"
+#~ msgstr "Číslo občanského průkazu je vyžadováno"
+
+#~ msgid "SQL query"
+#~ msgstr "SQL dotaz"
+
 #~ msgid "Schedule item"
+#~ msgstr "Položka programu"
+
+#~ msgid "Schedule items"
 #~ msgstr "Položka programu"
 
 #~ msgid "Schedule per person"
 #~ msgstr "Program osob"
 
-#~ msgid "Create schedule item"
-#~ msgstr "Vytvořit položku programu"
+#, fuzzy
+#~ msgid "School study"
+#~ msgstr "Školy"
 
-#~ msgid "Edit schedule item \"%s\""
-#~ msgstr "Upravit bod programu \"%s\""
+#~ msgid "Sealing of the scoring"
+#~ msgstr "Uzavření bodování"
 
-#~ msgid "Edit schedule group \"%s\""
-#~ msgstr "Upravit bod programu \"%s\""
+#~ msgid "Sector"
+#~ msgstr "Sektor"
 
-#~ msgid "Schedule items"
-#~ msgstr "Položka programu"
+#~ msgid "Select contest"
+#~ msgstr "Vyberte soutěž"
 
-#~ msgid "Fast edit"
-#~ msgstr "Rychlé změny"
+#~ msgid "Select test"
+#~ msgstr "Vybrat test"
 
-#~ msgid "Fast attendance"
-#~ msgstr "Rychlá prezence"
+#~ msgid "Set new game password."
+#~ msgstr "Nastavit nové herní heslo"
 
-#~ msgid "Only check state"
-#~ msgstr "Pouze zkontrolovat stav"
+#~ msgid "Settings"
+#~ msgstr "Nastavení"
 
-#~ msgid "Already participated"
-#~ msgstr "Už prezentován"
+#~ msgid "Similarity"
+#~ msgstr "Podobnost"
 
-#~ msgid "Person not found"
-#~ msgstr "Osoba nenalezena"
+#~ msgid "Skip the application and continue."
+#~ msgstr "Přeskočit přihlášku a pokračovat."
+
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Stav přihlášky \"%s\" změněn"
+
+#~ msgid "Stateless applications."
+#~ msgstr "Přihlláška bez stavu."
+
+#~ msgid "Stop import and rollback."
+#~ msgstr "Zastavit import a rollbackovat"
+
+#~ msgid "Task given and validated."
+#~ msgstr "Úloha zadána a ověřena."
+
+#~ msgid "Task was given."
+#~ msgstr "Úloha byla vydána."
+
+#~ msgid "Teaches since"
+#~ msgstr "Učitelem od"
+
+#~ msgid "Teaches until"
+#~ msgstr "Učitelem do"
+
+#~ msgid "Team applications time progress"
+#~ msgstr "Počet přihlášených týmů v čase"
+
+#~ msgid "Team member"
+#~ msgstr "Člen týmu"
+
+#~ msgid "Teams per country"
+#~ msgstr "Týmy dle zemí."
+
+#~ msgid ""
+#~ "There is not a transition from state \"%s\" of machine \"%s\" to state "
+#~ "\"%s\"."
+#~ msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
+
+#~ msgid "This option is only available to Czech and Slovak students."
+#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
+
+#~ msgid "This option is only available to secondary school students."
+#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
+
+#~ msgid "Timestamp"
+#~ msgstr "Časová známka"
+
+#~ msgid "To"
+#~ msgstr "Do"
+
+#~ msgid "To %s"
+#~ msgstr "Do %s"
+
+#~ msgid "Total"
+#~ msgstr "Celkově"
+
+#~ msgid "Transitions by IDs"
+#~ msgstr "Přechody pomocí ID"
+
+#~ msgid "User"
+#~ msgstr "Uživatel"
+
+#~ msgid "Validation"
+#~ msgstr "Validace"
 
 #~ msgid "Wrong checksum"
 #~ msgstr "Špatný kontrolní součet"
 
-#~ msgid "Bypass checksum"
-#~ msgstr "Obejít kontrolní součet"
+#~ msgid "Wrong task number."
+#~ msgstr "Špatné číslo úlohy."
 
-#~ msgid "Application not found"
-#~ msgstr "Přihláška nenalezena"
+#~ msgid "active"
+#~ msgstr "aktivní"
 
-#~ msgid "Choose the team which you want to edit, it will open in the new tab."
-#~ msgstr "Vyberte tým, který chcete upravovat, tým se otevře v nové záložce."
+#~ msgid "points"
+#~ msgstr "Bodů"
 
-#~ msgid "Edit"
-#~ msgstr "Upravit"
+#~ msgid "solution"
+#~ msgstr "řešení"
 
-#~ msgid "Detail"
-#~ msgstr "Detail"
-
-#, fuzzy
-#~ msgid "Detail!"
-#~ msgstr "Detail"
+#~ msgid "solutions"
+#~ msgstr "řešení"
