@@ -6,15 +6,18 @@ namespace FKSDB\Models\Transitions\Callbacks\Fof;
 
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
-class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
+class MemberMail extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
     /**
      * @param TeamHolder $holder
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'member.' .
+            $transition->source->value . '.' .
+            $transition->target->value . '.latte';
     }
 
     /**
@@ -25,7 +28,7 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
             $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;

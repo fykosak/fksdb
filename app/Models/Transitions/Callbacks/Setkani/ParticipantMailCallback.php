@@ -7,13 +7,14 @@ namespace FKSDB\Models\Transitions\Callbacks\Setkani;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
 class ParticipantMailCallback extends EventParticipantCallback
 {
     /**
      * @param BaseHolder $holder
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'confirmation.latte';
     }
@@ -26,7 +27,7 @@ class ParticipantMailCallback extends EventParticipantCallback
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
             'subject' => 'Výfučí setkání',

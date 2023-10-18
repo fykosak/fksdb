@@ -12,11 +12,12 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
  * @phpstan-extends MailCallback<TeamHolder>
  */
-class TeamTeacherMailCallback extends MailCallback
+class TeacherMail extends MailCallback
 {
     /**
      * @param TeamHolder $holder
@@ -56,9 +57,11 @@ class TeamTeacherMailCallback extends MailCallback
     /**
      * @param TeamHolder $holder
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' .
+            $transition->source->value . '.' .
+            $transition->target->value . '.latte';
     }
 
     /**
@@ -69,7 +72,7 @@ class TeamTeacherMailCallback extends MailCallback
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
             $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;

@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model;
@@ -96,7 +97,7 @@ class MailSender extends MailCallback
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
     {
         $token = $this->createToken($person, $holder);
         return $this->mailTemplateFactory->renderWithParameters(

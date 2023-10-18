@@ -6,13 +6,14 @@ namespace FKSDB\Models\Transitions\Callbacks\Fol;
 
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
 class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
 {
     /**
      * @param TeamHolder $holder
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'member';
     }
@@ -25,7 +26,7 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
             'subject' => _('Physics Brawl Online Team Registration'),

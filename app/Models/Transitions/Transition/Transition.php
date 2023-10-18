@@ -31,9 +31,9 @@ class Transition
     protected $condition;
     public BehaviorType $behaviorType;
     private string $label;
-    /** @phpstan-var (callable(THolder):void)[] */
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
-    /** @phpstan-var (callable(THolder):void)[] */
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
 
     protected bool $validation;
@@ -121,7 +121,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(THolder):void) $callBack
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
      */
     public function addBeforeExecute(callable $callBack): void
     {
@@ -129,7 +129,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(THolder):void) $callBack
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
      */
     public function addAfterExecute(callable $callBack): void
     {
@@ -142,7 +142,7 @@ class Transition
     final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder);
+            $callback($holder, $this);
         }
     }
 
@@ -153,7 +153,7 @@ class Transition
     {
         try {
             foreach ($this->afterExecute as $callback) {
-                $callback($holder);
+                $callback($holder, $this);
             }
         } catch (\Throwable $exception) {
             throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);
