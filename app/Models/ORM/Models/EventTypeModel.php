@@ -52,8 +52,8 @@ final class EventTypeModel extends Model
                 return Expect::null();
             case 15:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.mff.cuni.cz>'),
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.org>'),
                     'capacity' => Expect::int(0),
                 ])->castTo('array');
             case 2:
@@ -75,9 +75,9 @@ final class EventTypeModel extends Model
             case 11:
             case 12:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string('Setkáni řešitelů Výfuku <vyfuk@vyfuk.mff.cuni.cz>'),
-                    'capacity' => Expect::int(30),
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string('Setkáni řešitelů Výfuku <vyfuk@vyfuk.org>'),
+                    'capacity' => Expect::int(50),
                 ])->castTo('array');
             case 3:
                 return Expect::structure([
@@ -98,8 +98,8 @@ final class EventTypeModel extends Model
                 ])->castTo('array');
             case 10:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>'),
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.org>'),
                     'capacity' => Expect::int(29),
                     'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),

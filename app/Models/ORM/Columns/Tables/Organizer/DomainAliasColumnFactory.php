@@ -28,7 +28,7 @@ class DomainAliasColumnFactory extends StringColumnFactory
             case ContestModel::ID_FYKOS:
                 return EmailPrinter::getHtml($model->domain_alias . '@fykos.cz');
             case ContestModel::ID_VYFUK:
-                return EmailPrinter::getHtml($model->domain_alias . '@vyfuk.mff.cuni.cz');
+                return EmailPrinter::getHtml($model->domain_alias . '@vyfuk.org');
             default:
                 throw new \InvalidArgumentException(
                     sprintf(_('Contest %d not found'), $model->contest_id),

@@ -71,6 +71,13 @@ class EventDispatchFactory
                     throw new BadTypeException(EventParticipantMachine::class, $machine);
                 }
                 return $machine;
+            case 11:
+            case 12:
+                $machine = $this->container->getService('transitions.setkani.machine');
+                if (!$machine instanceof EventParticipantMachine) {
+                    throw new BadTypeException(EventParticipantMachine::class, $machine);
+                }
+                return $machine;
         }
         $definition = $this->findDefinition($event);
         /** @var EventParticipantMachine $machine */

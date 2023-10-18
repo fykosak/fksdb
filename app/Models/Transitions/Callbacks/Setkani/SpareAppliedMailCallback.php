@@ -8,14 +8,14 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-class ParticipantMailCallback extends EventParticipantCallback
+class SpareAppliedMailCallback extends EventParticipantCallback
 {
     /**
      * @param BaseHolder $holder
      */
     protected function getTemplatePath(ModelHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'confirmation.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'spareApplied.latte';
     }
 
     /**
@@ -30,8 +30,8 @@ class ParticipantMailCallback extends EventParticipantCallback
     {
         return [
             'subject' => 'Výfučí setkání',
-            'blind_carbon_copy' => 'Výfučí setkání <vyfuk@vyfuk.mff.cuni.cz>',
-            'sender' => 'Výfučí setkání <vyfuk@vyfuk.mff.cuni.cz>',
+            'blind_carbon_copy' => 'Výfučí setkání <vyfuk@vyfuk.org',
+            'sender' => 'Výfučí setkání <vyfuk@vyfuk.org>',
         ];
     }
 }
