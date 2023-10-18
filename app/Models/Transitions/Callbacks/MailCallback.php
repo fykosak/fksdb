@@ -20,7 +20,7 @@ use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
- * @implements Statement<void,THolder>
+ * @implements Statement<void,THolder|Transition<THolder>>
  */
 abstract class MailCallback implements Statement
 {
@@ -45,7 +45,6 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @phpstan-param THolder|Transition<THolder> $args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -67,6 +66,7 @@ abstract class MailCallback implements Statement
     /**
      * @throws BadTypeException
      * @phpstan-param THolder $holder
+     * @phpstan-param Transition<THolder> $transition
      */
     protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
     {

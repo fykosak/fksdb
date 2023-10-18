@@ -82,7 +82,7 @@ class MailSender extends MailCallback
      *     reply_to:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
             'blind_carbon_copy' => $holder->event->getParameter('notifyBcc') ?? null,

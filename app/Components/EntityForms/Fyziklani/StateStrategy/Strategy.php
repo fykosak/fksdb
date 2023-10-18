@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani\StateStrategy;
 
-use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use FKSDB\Models\Utils\FakeStringEnum;
 
 class Strategy
 {
-    /**
-     * @return FakeStringEnum&EnumColumn
-     */
     public static function getNewState(EventModel $event, Logger $logger): ?TeamState
     {
         switch ($event->event_type_id) {
