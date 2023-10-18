@@ -14,12 +14,12 @@ class SingleEvent extends EventModuleTestCase
     protected function getEventData(): array
     {
         return [
-            'event_type_id' => 7,
+            'event_type_id' => 2,
             'year' => 1,
             'event_year' => 1,
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
-            'name' => 'TEST TSAF',
+            'name' => 'TEST DSEF',
             'registration_begin' => new \DateTime(),
             'registration_end' => new \DateTime(),
         ];
@@ -28,15 +28,17 @@ class SingleEvent extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Event:Application', 'list'],
-            ['Event:Application', 'import'],
-            ['Event:Application', 'mass'],
-           // ['Event:Application', 'attendance'],
             ['Event:Chart', 'list'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrganizer', 'list'],
             ['Event:EventOrganizer', 'create'],
+
+            ['Event:Application', 'list'],
+            ['Event:Application', 'create'],
+            ['Event:Application', 'code'],
+            ['Event:Application', 'import'],
+            ['Event:Application', 'mass'],
         ];
     }
 }

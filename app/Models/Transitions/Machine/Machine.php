@@ -114,6 +114,17 @@ abstract class Machine
         );
         return $this->selectTransition($transitions);
     }
+    /**
+     * @phpstan-param Enum $target
+     * @phpstan-return Transition<THolder>[]
+     */
+    public function getTransitionsByTarget(EnumColumn $target): array
+    {
+        return \array_filter(
+            $this->transitions,
+            fn(Transition $transition): bool => $target->value === $transition->target->value
+        );
+    }
 
     /**
      * @phpstan-param THolder $holder

@@ -28,7 +28,7 @@ trait TableTrait
      */
     public function addTableColumn(BaseItem $component, string $name): BaseItem
     {
-        $this->table->addColumn($component, $name);
+        $this->table->addColumn($component, $name);// @phpstan-ignore-line
         return $component;
     }
 
@@ -39,7 +39,7 @@ trait TableTrait
      */
     public function addTableButton(BaseItem $component, string $name): BaseItem
     {
-        $this->table->addButton($component, $name);
+        $this->table->addButton($component, $name);// @phpstan-ignore-line
         return $component;
     }
 }

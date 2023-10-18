@@ -45,8 +45,8 @@ final class EventOrganizersGrid extends BaseGrid
             '@person.full_name',
             '@event_org.note',
         ]);
-        $this->addPresenterButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('edit', 'edit', _('button.edit'), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 }

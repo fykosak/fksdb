@@ -71,6 +71,7 @@ class PersonTestComponent extends BaseComponent
             $this->tests = [];
             foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
+                    /** @phpstan-ignore-next-line */
                     $this->tests[$testId] = $this->dataTestFactory->getTests('person')[$testId];
                 }
             }

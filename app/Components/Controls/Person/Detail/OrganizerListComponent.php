@@ -62,14 +62,14 @@ class OrganizerListComponent extends DetailComponent
             $this->addPresenterButton(
                 ':Organizer:Organizer:edit',
                 'edit',
-                _('Edit'),
+                _('button.edit'),
                 false,
                 ['contestId' => 'contest_id', 'id' => 'org_id']
             );
             $this->addPresenterButton(
                 ':Organizer:Organizer:detail',
                 'detail',
-                _('Detail'),
+                _('button.detail'),
                 false,
                 ['contestId' => 'contest_id', 'id' => 'org_id']
             );

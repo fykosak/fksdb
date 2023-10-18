@@ -43,6 +43,6 @@ class ProductsGrid extends BaseGrid
             '@warehouse_product.category',
             '@warehouse_producer.name',
         ]);
-        $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
+        $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('button.edit'), false, ['id' => 'product_id']);
     }
 }

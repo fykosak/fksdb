@@ -24,6 +24,7 @@ import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo'
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
+import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
 
 const translator = new Translator();
 
@@ -69,6 +70,7 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainCom
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.submits.per-series', SubmitsPerSeries, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Timeline, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
@@ -192,12 +194,12 @@ window.addEventListener('DOMContentLoaded', () => {
                                 <button
                                     type="button"
                                     className="btn btn-outline-secondary me-1"
-                                    title={translator.getText('Edit')}
+                                    title={translator.getText('button.edit')}
                                     onClick={() => {
                                         decompactifyContainer();
                                     }}>
                                     <span className="fas fa-pen me-3"/>
-                                    {translator.getText('Edit')}
+                                    {translator.getText('button.edit')}
                                 </button>
                                 <button
                                     type="button"

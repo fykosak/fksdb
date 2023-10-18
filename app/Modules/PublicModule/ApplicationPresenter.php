@@ -66,12 +66,12 @@ final class ApplicationPresenter extends BasePresenter
                 \sprintf(
                     _('Application for %s: %s'),
                     $this->getEvent()->name,
-                    $this->getEventApplication()->__toString()
+                    $this->getEventApplication()->person->getFullName()
                 ),
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle(null, $this->getEvent()->__toString(), 'fas fa-calendar-plus');
+            return new PageTitle(null, $this->getEvent()->name, 'fas fa-calendar-plus');
         }
     }
 
