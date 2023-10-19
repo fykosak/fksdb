@@ -47,18 +47,22 @@
             </div>
         </div>
     {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
+    {if $model->event->isRegistrationOpened() || $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Actions'}</h2>
+                <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
+                   class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
+            </div>
         </div>
-    </div>
+    {/if}
     {if $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Transitions'}</h2>
-                {control applicationTransitions}
+                {control codeTransition}
+                <hr/>
+                {control buttonTransition}
             </div>
         </div>
     {/if}

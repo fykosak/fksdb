@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
-final class PersonScheduleGrid extends BaseGrid
+final class SinglePersonGrid extends BaseGrid
 {
     private EventModel $event;
     private PersonModel $person;

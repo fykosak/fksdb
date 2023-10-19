@@ -39,8 +39,14 @@ class ApplicationComponent extends BaseComponent
     private BaseHolder $holder;
     private Connection $connection;
     private EventDispatchFactory $eventDispatchFactory;
+    /**
+     * @phpstan-var EventParticipantMachine<BaseHolder> $machine
+     */
     private EventParticipantMachine $machine;
 
+    /**
+     * @phpstan-param EventParticipantMachine<BaseHolder> $machine
+     */
     public function __construct(Container $container, BaseHolder $holder, EventParticipantMachine $machine)
     {
         parent::__construct($container);
@@ -86,7 +92,7 @@ class ApplicationComponent extends BaseComponent
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Save'));
+            $saveSubmit = $form->addSubmit('save', _('button.save'));
             $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
 
@@ -118,7 +124,7 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create cancel button
          */
-        $cancelSubmit = $form->addSubmit('cancel', _('Cancel'));
+        $cancelSubmit = $form->addSubmit('cancel', _('button.cancel'));
         $cancelSubmit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-warning']);
         $cancelSubmit->setValidationScope([]);
         $cancelSubmit->onClick[] = fn() => $this->finalRedirect();

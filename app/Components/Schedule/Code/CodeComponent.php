@@ -4,57 +4,37 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Code;
 
-use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\MachineCode\MachineCodeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
-use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-abstract class CodeComponent extends FormComponent
+abstract class CodeComponent extends CodeForm
 {
     /**
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws MachineCodeException
      */
-    protected function handleSuccess(Form $form): void
+    protected function innerHandleSuccess(Model $model): void
     {
-        /** @phpstan-var array{code:string} $values
-         */
-        $values = $form->getValues('array');
-        try {
-            $personSchedule = $this->resolvePersonSchedule(
-                MachineCode::parseHash(
-                    $this->container,
-                    $values['code'],
-                    MachineCode::getSaltForEvent($this->getEvent())
-                )
-            );
+        $personSchedule = $this->resolvePersonSchedule($model);
+        $this->getPresenter()->redirect(
+            ':Schedule:Person:detail',
+            ['id' => $personSchedule->person_schedule_id]
+        );
+    }
 
-            $this->getPresenter()->redirect(
-                ':Schedule:Person:detail',
-                ['id' => $personSchedule->person_schedule_id]
-            );
-            /* $this->getPresenter()->redirect(
-                 $this->getEvent()->isTeamEvent()
-                     ? ':Event:TeamApplication:detail'
-                     : ':Event:Application:detail',
-                 [
-                     'id' => $personSchedule->person->getApplication(
-                         $personSchedule->schedule_item->schedule_group->event
-                     )->getPrimary(),
-                 ]
-             );*/
-        } catch (BadRequestException | ModelException | MachineCodeException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $this->getPresenter()->redirect('this');
-        }
+    protected function configureForm(Form $form): void
+    {
+        $form->elementPrototype->target = '_blank';
+        parent::configureForm($form);
     }
 
     /**
@@ -78,14 +58,12 @@ abstract class CodeComponent extends FormComponent
         return $personSchedule;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getSalt(): string
     {
-        return $form->addSubmit('submit', _('Submit!'));
-    }
-
-    protected function configureForm(Form $form): void
-    {
-        $form->addText('code', _('Code'));
+        return MachineCode::getSaltForEvent($this->getEvent());
     }
 
     abstract protected function getPersonSchedule(PersonModel $person): ?PersonScheduleModel;

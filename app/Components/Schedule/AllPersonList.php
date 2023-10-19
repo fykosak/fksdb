@@ -22,7 +22,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseList<PersonModel,array{}>
  */
-final class PersonScheduleList extends BaseList
+final class AllPersonList extends BaseList
 {
     private PersonService $personService;
     private EventModel $event;

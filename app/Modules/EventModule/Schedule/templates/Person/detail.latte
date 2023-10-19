@@ -55,5 +55,15 @@
         </div>
     </div>
 {/block}
+{* $this->getPresenter()->redirect(
+$this->getEvent()->isTeamEvent()
+? ':Event:TeamApplication:detail'
+: ':Event:Application:detail',
+[
+'id' => $personSchedule->person->getApplication(
+$personSchedule->schedule_item->schedule_group->event
+)->getPrimary(),
+]
+);*}
 
 

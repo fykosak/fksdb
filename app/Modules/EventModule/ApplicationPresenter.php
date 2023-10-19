@@ -9,11 +9,12 @@ use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
 use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Components\Schedule\PersonScheduleGrid;
+use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -21,7 +22,10 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -242,14 +246,15 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @return BaseHolder|ParticipantHolder
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
-    private function getHolder(): BaseHolder
+    private function getHolder(): ModelHolder
     {
         return $this->getMachine()->createHolder($this->getEntity());
     }
@@ -257,6 +262,7 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -316,7 +322,7 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
+                    $this->getMachine(), // @phpstan-ignore-line
                     $this->getLoggedPerson()
                 );
             case 11:
@@ -325,7 +331,7 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
+                    $this->getMachine(), // @phpstan-ignore-line
                     $this->getLoggedPerson()
                 );
         }
@@ -341,7 +347,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<BaseHolder>
+     * @phpstan-return TransitionButtonsComponent<BaseHolder|ParticipantHolder>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -350,21 +356,41 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(),
+            $this->getMachine(), // @phpstan-ignore-line
             $this->getHolder()
+        );
+    }
+
+    /**
+     * @phpstan-return CodeTransitionComponent<ParticipantHolder>
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    protected function createComponentCodeTransition(): CodeTransitionComponent
+    {
+        return new CodeTransitionComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(), // @phpstan-ignore-line
         );
     }
 
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return MassTransitionComponent<EventParticipantMachine>
+     * @phpstan-return MassTransitionComponent<EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>>
      */
-    protected function createComponentMassTransitions(): MassTransitionComponent
+    protected function createComponentMassTransition(): MassTransitionComponent
     {
         return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
@@ -379,8 +405,8 @@ final class ApplicationPresenter extends BasePresenter
     }
 
 
-    protected function createComponentPersonScheduleGrid(): PersonScheduleGrid
+    protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
-        return new PersonScheduleGrid($this->getContext());
+        return new SinglePersonGrid($this->getContext());
     }
 }

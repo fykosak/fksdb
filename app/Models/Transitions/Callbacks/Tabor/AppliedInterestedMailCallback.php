@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 
 class AppliedInterestedMailCallback extends EventParticipantCallback
 {
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      */
     protected function getTemplatePath(ModelHolder $holder): string
     {

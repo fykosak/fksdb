@@ -101,20 +101,25 @@
             </div>
         </div>
     {/foreach}
-
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            <a href="{plink edit id => $model->getPrimary()}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
+    {if $model->event->isRegistrationOpened() || $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Actions'}</h2>
+                <a href="{plink edit id => $model->getPrimary()}"
+                   class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
+            </div>
         </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Transitions'}</h2>
-            {control applicationTransitions}
+    {/if}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Transitions'}</h2>
+                {control codeTransition}
+                <hr/>
+                {control buttonTransition}
+            </div>
         </div>
-    </div>
+    {/if}
     {if $event->event_type_id === 1 && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">

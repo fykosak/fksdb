@@ -7,11 +7,12 @@ namespace FKSDB\Models\Transitions\Callbacks\Setkani;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 
 class PendingSpareMailCallback extends EventParticipantCallback
 {
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      */
     protected function getTemplatePath(ModelHolder $holder): string
     {
@@ -19,7 +20,7 @@ class PendingSpareMailCallback extends EventParticipantCallback
     }
 
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,

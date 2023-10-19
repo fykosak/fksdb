@@ -12,21 +12,24 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
 use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
-use FKSDB\Components\Schedule\PersonScheduleGrid;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -309,12 +312,32 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
             $this->getMachine(),
             $this->getHolder()
+        );
+    }
+
+    /**
+     * @phpstan-return CodeTransitionComponent<ParticipantHolder>
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    protected function createComponentCodeTransition(): CodeTransitionComponent
+    {
+        return new CodeTransitionComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            TeamState::tryFrom(TeamState::PARTICIPATED), // TODO
+            $this->getMachine(), // @phpstan-ignore-line
         );
     }
 
@@ -333,9 +356,9 @@ final class TeamApplicationPresenter extends BasePresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function createComponentPersonScheduleGrid(): PersonScheduleGrid
+    protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
-        return new PersonScheduleGrid($this->getContext());
+        return new SinglePersonGrid($this->getContext());
     }
 
     /**

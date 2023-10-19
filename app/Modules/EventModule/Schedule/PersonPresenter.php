@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
+use FKSDB\Components\Schedule\AllPersonList;
 use FKSDB\Components\Schedule\Attendance\AttendanceComponent;
-use FKSDB\Components\Schedule\PersonScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\EventModule\BasePresenter;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -126,25 +122,6 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws NotFoundException
-     * @throws BadRequestException
-     */
-    public function handleAttendance(): void
-    {
-        $personSchedule = $this->getEntity();
-        $personSchedule->checkPayment();
-        $this->service->makeAttendance($personSchedule);
-        $this->getPresenter()->flashMessage(
-            sprintf(
-                _('Person %s successfully showed up in %s.'),
-                $personSchedule->person->getFullName(),
-                $personSchedule->getLabel(Language::from($this->translator->lang))
-            ),
-            Message::LVL_SUCCESS
-        );
-    }
-
-    /**
      * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
@@ -170,9 +147,9 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): PersonScheduleList
+    protected function createComponentGrid(): AllPersonList
     {
-        return new PersonScheduleList($this->getContext(), $this->getEvent());
+        return new AllPersonList($this->getContext(), $this->getEvent());
     }
 
     protected function createComponentCreateForm(): Control
