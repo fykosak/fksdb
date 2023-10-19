@@ -2,7 +2,7 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 <p>
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    potvrzujeme tvé přijetí na akci <em>{$holder->event}</em>,
+	potvrzujeme tvé přijetí na akci <em>{$holder->event->getName()->getText('cs')}</em>,
     která se koná
     {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
         {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'}.
