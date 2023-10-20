@@ -96,10 +96,10 @@ final class DsefFormComponent extends SingleFormComponent
                 'id_number' => ['required' => true]
             ],
             'person_schedule' => [
-                'dsef_morning' => ['required' => true],
-                'dsef_afternoon' => ['required' => true],
-                'dsef_all_day' => ['required' => true],
-                'accommodation' => ['required' => true]
+                'dsef_morning' => ['required' => false],
+                'dsef_afternoon' => ['required' => false],
+                'dsef_all_day' => ['required' => false],
+                'accommodation' => ['required' => false]
             ]
         ];
     }
