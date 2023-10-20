@@ -91,20 +91,6 @@ final class ApplicationPresenter extends BasePresenter
         parent::startup();
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedCode(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-    public function titleCode(): PageTitle
-    {
-        return new PageTitle(null, _('Scan 2D code'), 'fas fa-qrcode');
-    }
-
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
@@ -228,7 +214,7 @@ final class ApplicationPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
+        return new PageTitle(null, _('Applications'), 'fas fa-address-book');
     }
 
     /**
@@ -374,6 +360,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws BadTypeException
+     * @phpstan-ignore-next-line
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {

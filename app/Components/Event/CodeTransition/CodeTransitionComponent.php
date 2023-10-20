@@ -13,21 +13,21 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
 
-/**
- * @phpstan-template THolder of \FKSDB\Models\Transitions\Holder\ParticipantHolder|\FKSDB\Models\Transitions\Holder\TeamHolder
- */
 class CodeTransitionComponent extends CodeForm
 {
-    /** @phpstan-var Machine<THolder> */
+    /** @var TeamMachine|EventParticipantMachine<ParticipantHolder> */
     protected Machine $machine;
     /** @var TeamModel2|EventParticipantModel */
     private Model $model;
@@ -37,7 +37,7 @@ class CodeTransitionComponent extends CodeForm
 
     /**
      * @param TeamState|EventParticipantStatus $targetState
-     * @phpstan-param Machine<THolder> $machine
+     * @param TeamMachine|EventParticipantMachine<ParticipantHolder> $machine
      * @param TeamModel2|EventParticipantModel $model
      */
     public function __construct(
@@ -52,23 +52,17 @@ class CodeTransitionComponent extends CodeForm
         $this->machine = $machine;
     }
 
-    final public function render(): void
-    {
-        $this->template->transitions = $this->getTransitions();
-        parent::render();
-    }
-
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
-    /**
-     * @phpstan-return Transition<THolder>[]
-     */
-    private function getTransitions(): array
+    public function render(): void
     {
-        return $this->machine->getTransitionsByTarget($this->targetState);
+        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        $holder = $this->machine->createHolder($this->model);
+        $this->template->available = (bool)count(Machine::filterAvailable($transitions, $holder));
+        parent::render();
     }
 
     /**
@@ -80,27 +74,23 @@ class CodeTransitionComponent extends CodeForm
     {
         $application = $this->resolveApplication($model);
         if ($model->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú'));
+            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
         }
-        $holder = $this->machine->createHolder($application);
-        $transitions = $this->machine->getAvailableTransitions($holder);
-        $executed = false;
-        foreach ($transitions as $transition) {
-            if ($transition->target->value === $this->targetState->value) {
-                $this->machine->execute($transition, $holder);
-                $executed = true;
-            }
-        }
-        if (!$executed) {
-            throw new UnavailableTransitionsException();
-        }
-
+        $holder = $this->machine->createHolder($this->model);
+        $transition = Machine::selectTransition(
+            Machine::filterAvailable(
+                Machine::filterByTarget($this->machine->transitions, $this->targetState),
+                $holder
+            )
+        );
+        $this->machine->execute($transition, $holder);
         $this->getPresenter()->flashMessage(
             $application instanceof TeamModel2
                 ? sprintf(_('Transition successful for: %s'), $application->name)
                 : sprintf(_('Transition successful for: %s'), $application->person->getFullName()),
             Message::LVL_SUCCESS
         );
+        $this->getPresenter()->redirect('this');
     }
 
     /**
@@ -117,6 +107,18 @@ class CodeTransitionComponent extends CodeForm
         } else {
             throw new BadRequestException(_('Wrong type of code.'));
         }
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        parent::configureForm($form);
+        $el = Html::el('span');
+        $el->addText(_('Processed: '));
+        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        foreach ($transitions as $transition) {
+            $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
+        }
+        $form['code']->setOption('description', $el);
     }
 
     /**

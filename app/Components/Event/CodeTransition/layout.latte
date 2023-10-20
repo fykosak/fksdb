@@ -1,10 +1,13 @@
 {layout ../../Controls/@layout.latte}
-{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
-
 {block content}
-    <p class="alert-info alert">{_'Transition will be processed automatically one of: '}
-        {foreach $transitions as $transition}
-            {$transition->source->badge()}->{$transition->target->badge()}
-        {/foreach}</p>
-    {control formControl}
+    {if $available}
+        {*form $control['formControl']['form']}
+            <div class="input-group flex-nowrap">
+                <label class="input-group-text">{$control['formControl']['form']['code']->getOption('description')}</label>
+                {input $control['formControl']['form']['code'] placeholder: _('application code'), class: 'form-control ' . $control['formControl']['form']['code']->getControlPrototype()->class, 'required'=>null}
+            {input $control['formControl']['form']['submit'] class:'btn btn-outline-secondary'}
+            </div>
+        {/form*}
+        {control formControl}
+    {/if}
 {/block}

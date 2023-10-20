@@ -1,0 +1,16 @@
+{define code-dropdown bool $isOrganizer,?string $machineCode}
+    {if $isOrganizer && $machineCode}
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-code me-2"></i>
+                {_'Code'}
+            </button>
+            <div class="dropdown-menu">
+                <div class="px-4 py-3">
+                    <label class="form-label">{_'Application code'}</label>
+                    <input type="text" class="form-control-sm form-control" value="{$machineCode}"/>
+                </div>
+            </div>
+        </div>
+    {/if}
+{/define}

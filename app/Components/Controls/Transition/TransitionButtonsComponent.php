@@ -35,10 +35,11 @@ class TransitionButtonsComponent extends BaseComponent
         $this->machine = $machine;
     }
 
-    final public function render(): void
+    final public function render(bool $showInfo = true): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte', [
-            'transitions' => $this->machine->getAvailableTransitions($this->holder),
+            'showInfo' => $showInfo,
+            'transitions' => Machine::filterAvailable($this->machine->transitions, $this->holder),
             'holder' => $this->holder,
         ]);
     }

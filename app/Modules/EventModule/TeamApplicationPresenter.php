@@ -78,20 +78,6 @@ final class TeamApplicationPresenter extends BasePresenter
         return $this->teamService;
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws GoneException
-     */
-    public function authorizedCode(): bool
-    {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
-    }
-
-    public function titleCode(): PageTitle
-    {
-        return new PageTitle(null, _('Scan 2D code'), 'fas fa-qrcode');
-    }
-
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
@@ -330,6 +316,7 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws BadTypeException
+     * @phpstan-ignore-next-line
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {
@@ -337,7 +324,7 @@ final class TeamApplicationPresenter extends BasePresenter
             $this->getContext(),
             $this->getEntity(),
             TeamState::tryFrom(TeamState::PARTICIPATED), // TODO
-            $this->getMachine(), // @phpstan-ignore-line
+            $this->getMachine()
         );
     }
 

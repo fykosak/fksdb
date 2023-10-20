@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
@@ -149,7 +150,7 @@ abstract class SingleFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($eventParticipant);
-                $transition = $this->machine->getImplicitTransition($holder);
+                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             }
             $this->eventParticipantService->explorer->commit();

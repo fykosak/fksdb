@@ -39,7 +39,7 @@ abstract class CodeForm extends FormComponent
 
     protected function configureForm(Form $form): void
     {
-        $form->addText('code', _('Code'));
+        $form->addText('code', _('Code'))->setRequired(true);
     }
 
     abstract protected function innerHandleSuccess(Model $model): void;

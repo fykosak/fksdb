@@ -36,7 +36,6 @@ class TeamEvent extends EventModuleTestCase
 
             ['Event:TeamApplication', 'list'],
             ['Event:TeamApplication', 'create'],
-            ['Event:TeamApplication', 'code'],
             ['Event:TeamApplication', 'detailedList'],
             ['Event:TeamApplication', 'mass'],
         ];

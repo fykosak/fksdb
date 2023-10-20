@@ -5,6 +5,31 @@
 {varType int $counter}
 {varType bool $isOrganizer}
 
+{block titleBody}
+    <div class="page-header">
+        <h1>{$pageTitle->toHtml(false)} <small>{$model->state->badge()}</small></h1>
+        <span class="subtitle">{$pageTitle->subTitle}</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        {if $model->event->isRegistrationOpened() || $isOrganizer}
+            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
+               class="btn btn-outline-primary">
+                <i class="fas fa-pencil me-2"></i>
+                {_'button.edit'}
+            </a>
+        {/if}
+        {if $isOrganizer}
+            {control buttonTransition false}
+        {/if}
+        {include code-dropdown from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer,machineCode:$machineCode}
+    </div>
+    {if $isOrganizer}
+        <div class="mt-3">
+            {control codeTransition}
+        </div>
+    {/if}
+{/block}
+
 {define personSchedule}
     {varType FKSDB\Models\ORM\Models\PersonModel $person}
     {if $hasSchedule}
@@ -101,25 +126,6 @@
             </div>
         </div>
     {/foreach}
-    {if $model->event->isRegistrationOpened() || $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Actions'}</h2>
-                <a href="{plink edit id => $model->getPrimary()}"
-                   class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
-            </div>
-        </div>
-    {/if}
-    {if $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Transitions'}</h2>
-                {control codeTransition}
-                <hr/>
-                {control buttonTransition}
-            </div>
-        </div>
-    {/if}
     {if $event->event_type_id === 1 && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">

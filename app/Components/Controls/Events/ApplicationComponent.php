@@ -168,7 +168,12 @@ class ApplicationComponent extends BaseComponent
 
                     if ($transition) {
                         $state = $this->holder->getModelState();
-                        $transition = $this->machine->getTransitionByStates($state, $transition->target);
+                        $transition = Machine::selectTransition(
+                            Machine::filterByTarget(
+                                Machine::filterBySource($this->machine->transitions, $state),
+                                $transition->target
+                            )
+                        );
                     }
                     if (isset($values['participant'])) {
                         $this->holder->data += (array)$values['participant'];

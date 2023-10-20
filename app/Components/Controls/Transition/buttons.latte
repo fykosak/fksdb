@@ -4,18 +4,16 @@
 
 {block content}
     {if count($transitions)}
-        <div class="btn-group">
         {foreach $transitions as $transition}
-                {var $className = 'btn me-2 btn-outline-' . $transition->behaviorType->value}
-                {if $transition->isCreating()}
-                    <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
-                       class="{$className}">{$transition->getLabel()}</a>
-                {else}
-                    <a n:href="transition! $transition->getId()" class="{$className}">{$transition->getLabel()}</a>
-                {/if}
-            {/foreach}
-        </div>
-    {else}
-        <div>{FKSDB\Models\UI\NoTransitionBadge::getHtml()}</div>
+            {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
+            {if $transition->isCreating()}
+                <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
+                   class="{$className}">{$transition->getLabel()}</a>
+            {else}
+                <a n:href="transition! $transition->getId()" class="{$className}">{$transition->getLabel()}</a>
+            {/if}
+        {/foreach}
+    {elseif $showInfo}
+        {FKSDB\Models\UI\NoTransitionBadge::getHtml()}
     {/if}
 {/block}
