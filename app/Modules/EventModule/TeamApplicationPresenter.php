@@ -333,7 +333,7 @@ final class TeamApplicationPresenter extends BasePresenter
      * @throws BadTypeException
      * @phpstan-return MassTransitionComponent<TeamMachine>
      */
-    protected function createComponentMassTransitions(): MassTransitionComponent
+    protected function createComponentMassTransition(): MassTransitionComponent
     {
         return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
