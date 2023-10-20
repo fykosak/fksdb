@@ -67,6 +67,8 @@ final class EventParticipantMachine extends Machine
         switch ($model->event->event_type_id) {
             case 2:
             case 14:
+            case 11:
+            case 12:
                 $holder = new BaseHolder($this->eventParticipantService);
                 $holder->setModel($model);
                 $holder->setEvent($model->event);
