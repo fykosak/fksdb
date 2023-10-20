@@ -31,7 +31,7 @@ class PendingSpareMailCallback extends EventParticipantCallback
     {
         return [
             'subject' => 'Výfučí setkání',
-            'blind_carbon_copy' => 'Výfučí setkání <vyfuk@vyfuk.org',
+            'blind_carbon_copy' => 'Výfučí setkání <vyfuk@vyfuk.org>',
             'sender' => 'Výfučí setkání <vyfuk@vyfuk.org>',
         ];
     }

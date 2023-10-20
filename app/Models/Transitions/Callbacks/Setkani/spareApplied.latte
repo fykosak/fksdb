@@ -1,8 +1,7 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
-{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 <p>
-    {if $holder->getModel()->person)->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    jelikož se na akci akci <em>{$holder->getModel()->event}</em> uvolnilo místo a ty jsi
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+    jelikož se na akci <em>{$holder->getModel()->event->getName()->getText('cs')}</em> uvolnilo místo a ty jsi
     {if $holder->getModel()->person->gender->value == 'F'}projevila{else}projevil{/if}
     zájem o účast, přijali jsme tě mezi účastníky.
 </p>

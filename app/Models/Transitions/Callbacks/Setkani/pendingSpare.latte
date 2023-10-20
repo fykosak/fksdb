@@ -1,8 +1,7 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
-{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 <p>
     {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    kvůli plné kapacitě akce <em>{$holder->getModel()->event}</em> jsi se
+    kvůli plné kapacitě akce <em>{$holder->getModel()->event->getName()->getText('cs')}</em> jsi se
     {if $holder->getModel()->person->gender->value == 'F'}stala{else}stal{/if}
     náhradníkem. V případě uvolnění místa tě budeme kontaktovat.
 </p>
