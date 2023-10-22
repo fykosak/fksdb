@@ -32,7 +32,7 @@ services:
     - FKSDB\Components\DataTest\DataTestFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
-    - FKSDB\Models\ORM\ORMFactory
+    - FKSDB\Models\ORM\ReflectionFactory
     # Events
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha

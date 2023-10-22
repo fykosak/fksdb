@@ -55,7 +55,7 @@ final class PersonRelatedGrid extends BaseGrid
         $this->filtered = false;
         $this->addSimpleReferencedColumns(array_map(fn($value) => '@' . $value, $this->definition['rows']));
         foreach ($this->definition['links'] as $link) {
-            $this->addORMLink($link);
+            $this->addLink($link);
         }
         // $this->addCSVDownloadButton();
     }

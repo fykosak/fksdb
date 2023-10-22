@@ -103,7 +103,6 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         try {
@@ -323,7 +322,7 @@ final class TeamApplicationPresenter extends BasePresenter
         return new CodeTransitionComponent(
             $this->getContext(),
             $this->getEntity(),
-            TeamState::tryFrom(TeamState::PARTICIPATED), // TODO
+            TeamState::tryFrom(TeamState::Participated), // TODO
             $this->getMachine()
         );
     }
@@ -338,9 +337,16 @@ final class TeamApplicationPresenter extends BasePresenter
         return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
     }
 
-    protected function createComponentTeamRestsControl(): TeamRestsComponent
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentRests(): TeamRestsComponent
     {
-        return new TeamRestsComponent($this->getContext());
+        return new TeamRestsComponent($this->getContext(), $this->getEntity());
     }
 
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid

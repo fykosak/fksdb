@@ -14,3 +14,14 @@
         </div>
     {/if}
 {/define}
+
+{define rests bool $isOrganizer}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rests'}</h2>
+                {control rests}
+            </div>
+        </div>
+    {/if}
+{/define}

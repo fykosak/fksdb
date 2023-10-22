@@ -65,8 +65,6 @@ class EventsGrid extends BaseGrid
         );
         $this->addPresenterButton('edit', 'edit', _('button.edit'), true, ['id' => 'event_id']);
 
-        // $this->addORMLink('event.application.list');
-
         $this->addPresenterButton(
             ':Event:EventOrganizer:list',
             'org',

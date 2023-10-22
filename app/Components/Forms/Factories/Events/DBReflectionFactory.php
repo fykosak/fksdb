@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
@@ -35,11 +35,11 @@ class DBReflectionFactory extends AbstractFactory
     private Connection $connection;
     /** @phpstan-var array<string,MetaItem> */
     private array $columns;
-    private ORMFactory $tableReflectionFactory;
+    private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(
         Connection $connection,
-        ORMFactory $tableReflectionFactory
+        ReflectionFactory $tableReflectionFactory
     ) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;

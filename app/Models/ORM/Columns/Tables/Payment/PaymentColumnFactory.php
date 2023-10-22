@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
@@ -20,9 +20,9 @@ use Nette\Utils\Html;
  */
 class PaymentColumnFactory extends AbstractColumnFactory
 {
-    private ORMFactory $reflectionFactory;
+    private ReflectionFactory $reflectionFactory;
 
-    public function injectFactory(ORMFactory $reflectionFactory): void
+    public function injectFactory(ReflectionFactory $reflectionFactory): void
     {
         $this->reflectionFactory = $reflectionFactory;
     }

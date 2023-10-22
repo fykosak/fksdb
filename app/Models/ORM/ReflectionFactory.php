@@ -6,13 +6,13 @@ namespace FKSDB\Models\ORM;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Links\LinkFactory;
+use FKSDB\Models\ORM\Links\Link;
 use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 
-final class ORMFactory
+final class ReflectionFactory
 {
     use SmartObject;
 
@@ -40,13 +40,13 @@ final class ORMFactory
     /**
      * @throws BadTypeException
      * @throws MissingServiceException
-     * @phpstan-return LinkFactory<Model>
+     * @phpstan-return Link<Model>
      */
-    public function loadLinkFactory(string $tableName, string $linkId): LinkFactory
+    public function loadLinkFactory(string $tableName, string $linkId): Link
     {
         $service = $this->container->getService('orm.' . $tableName . '.link.' . $linkId);
-        if (!$service instanceof LinkFactory) {
-            throw new BadTypeException(LinkFactory::class, $service);
+        if (!$service instanceof Link) {
+            throw new BadTypeException(Link::class, $service);
         }
         return $service;
     }

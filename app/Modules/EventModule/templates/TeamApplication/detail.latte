@@ -1,9 +1,10 @@
-{varType bool $hasSchedule}
-{varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType bool $rankVisible}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType bool $hasSchedule}
+{varType string|null $machineCode}
+{varType bool $rankVisible}
 {varType int $counter}
 {varType bool $isOrganizer}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
 
 {block titleBody}
     <div class="page-header">
@@ -12,7 +13,7 @@
     </div>
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}
-            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
+            <a href="{plink create id => $model->getPrimary()}"
                class="btn btn-outline-primary">
                 <i class="fas fa-pencil me-2"></i>
                 {_'button.edit'}
@@ -39,16 +40,12 @@
 {/define}
 
 {block outerContent}
-    <div class="panel color-auto">
-        <div class="container">
-            {control teamRestsControl $model}
-        </div>
-    </div>
+    {include rests from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
             {var $fields = []}
-    {switch $event->event_type_id}
+    {switch $model->event->event_type_id}
                 {case 1}
                 {php $fields = [
                 'fyziklani_team.fyziklani_team_id',
@@ -82,7 +79,7 @@
     </div>
 
 
-    {if $rankVisible}
+    {if $rankVisible || $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Rank & points'}</h2>
@@ -97,28 +94,31 @@
             </div>
         </div>
     {/if}
-    {if $event->event_type_id === 1}
-        {var $teacherCounter = 0;}
-        {foreach $model->getTeachers() as $teacher}
-            <div class="panel color-auto">
-                <div class="container">
-                    {php $teacherCounter++}
-                    <h2>{_'Teacher'} #{$teacherCounter}</h2>
-                    {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
-                    {control columnTable ['person.person_link'], $teacher,1024}
-                    {include personSchedule, person => $teacher->person,event=> $model->event}
-                </div>
+    {var $teacherCounter = 0;}
+    {foreach $model->getTeachers() as $teacher}
+        <div class="panel color-auto">
+            <div class="container">
+                {php $teacherCounter++}
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+                <h2>{_'Teacher'} {$teacherCounter}: {control printer:templateString '@person.full_name',$teacher,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $teacher}
+                {/if}
+                {include personSchedule, person => $teacher->person,event=> $model->event}
             </div>
-        {/foreach}
-    {/if}
+        </div>
+    {/foreach}
     {var $counter = 0;}
     {foreach $model->getMembers() as $member}
         <div class="panel color-auto">
             <div class="container">
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
-                <h2>{_'Parcipant'} #{$counter}</h2>
-                {control columnTable ['person.person_link','person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+                <h2>{_'Parcipant'} {$counter}: {control printer:templateString '@person.full_name',$member,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $member}
+                {/if}
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
                 {include personSchedule, person => $member->person,event=>$model->event}
                 {if $isOrganizer}
                     {control studySchoolTest $member->getPersonHistory()}
@@ -126,7 +126,7 @@
             </div>
         </div>
     {/foreach}
-    {if $event->event_type_id === 1 && $isOrganizer}
+    {if $model->event->event_type_id === 1 && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Seating'}</h2>

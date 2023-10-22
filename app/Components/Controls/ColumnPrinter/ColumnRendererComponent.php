@@ -6,18 +6,19 @@ namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Nette\Application\UI\InvalidLinkException;
 
 class ColumnRendererComponent extends BaseComponent
 {
-    private ORMFactory $tableReflectionFactory;
+    private ReflectionFactory $reflectionFactory;
 
-    final public function injectTableReflectionFactory(ORMFactory $tableReflectionFactory): void
+    final public function injectTableReflectionFactory(ReflectionFactory $reflectionFactory): void
     {
-        $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     /**
@@ -42,7 +43,7 @@ class ColumnRendererComponent extends BaseComponent
             '/@([a-z_]+)\.([a-z_]+)(:([a-zA-Z]+))?/',
             function (array $match) use ($model, $userPermission) {
                 [, $table, $field, , $render] = $match;
-                $factory = $this->tableReflectionFactory->loadColumnFactory($table, $field);
+                $factory = $this->reflectionFactory->loadColumnFactory($table, $field);
                 switch ($render) {
                     default:
                     case 'value':
@@ -74,5 +75,22 @@ class ColumnRendererComponent extends BaseComponent
             'userPermission' => $userPermission,
             'name' => $field,
         ]);
+    }
+    /**
+     * @throws BadTypeException
+     * @throws CannotAccessModelException
+     * @throws InvalidLinkException
+     * @throws \ReflectionException
+     */
+    final public function renderButton(string $linkId, Model $model): void
+    {
+        $factory = $this->reflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte',
+            [
+                'title' => $factory->getTitle(),
+                'link' => $factory->create($this->getPresenter(), $model),
+            ]
+        );
     }
 }

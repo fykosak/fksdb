@@ -410,10 +410,6 @@ orm:
         service: FKSDB\Models\ORM\Services\PersonService
         model: FKSDB\Models\ORM\Models\PersonModel
         columns:
-            person_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkColumnFactory
-                title: _('Person')
             full_name:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameColumnFactory
@@ -448,6 +444,13 @@ orm:
                 type: string
                 title: _('Other name')
                 permission: BASIC
+        links:
+            detail:
+                destination: :Organizer:Person:detail
+                params:
+                    id: person_id
+                title: _('Person detail')
+                icon: 'fas fa-user'
     person_has_flag:
         service: FKSDB\Models\ORM\Services\PersonHasFlagService
         model: FKSDB\Models\ORM\Models\PersonHasFlagModel

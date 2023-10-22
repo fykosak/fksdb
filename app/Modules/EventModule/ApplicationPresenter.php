@@ -14,6 +14,7 @@ use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -380,6 +381,18 @@ final class ApplicationPresenter extends BasePresenter
     protected function createComponentMassTransition(): MassTransitionComponent
     {
         return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentRests(): PersonRestComponent
+    {
+        return new PersonRestComponent($this->getContext(), $this->getEntity());
     }
 
     /**

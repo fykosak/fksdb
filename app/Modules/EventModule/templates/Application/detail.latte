@@ -1,8 +1,10 @@
 {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-{varType array $groups}
 {varType bool $hasSchedule}
 {varType bool $isOrganizer}
+{varType array $groups}
 {varType string|null $machineCode}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+
 {block titleBody}
     <div class="page-header">
         <h1>{$pageTitle->toHtml(false)} <small>{$model->status->badge()}</small></h1>
@@ -16,7 +18,7 @@
                 {_'button.edit'}
             </a>
         {/if}
-            {if $isOrganizer}
+        {if $isOrganizer}
             {control buttonTransition false}
         {/if}
         {include code-dropdown from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer,machineCode:$machineCode}
@@ -29,12 +31,12 @@
 {/block}
 
 {block outerContent}
-
+    {include rests from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
             {control columnTable $isOrganizer?[
-            'person.person_link',
+            'person.full_name',
             'event_participant.event_participant_id',
             'event_participant.status',
             'event_participant.created'
@@ -43,6 +45,9 @@
             'event_participant.status',
             'event_participant.created'
             ],$model,1024}
+            {if $isOrganizer}
+                {control printer:button 'person.detail', $model}
+            {/if}
         </div>
     </div>
 

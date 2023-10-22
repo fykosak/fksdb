@@ -1,10 +1,14 @@
 {block content}
-    {varType FKSDB\Models\ORM\Models\PersonModel[] $persons}
-    {varType FKSDB\Models\ORM\Models\EventModel $event}
-    <h2>{_'Rests'}</h2>
-    {foreach $persons as $person}
-        <div class="my-3">
-            {control singleRestControl $person,$event}
-        </div>
+    {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team}
+    {var $hasRest = false}
+    {foreach $team->getPersons() as $person}
+        {var array $rests = $person->getScheduleRests($team->event)}
+        {if count($rests)}
+            {php $hasRest = true}
+            {include content from './person.latte' rests:$rests,person:$person}
+        {/if}
     {/foreach}
+    {if !$hasRest}
+        <span class="badge bg-success"><i class="fas fa-check me-1"></i>{_'No rests found'}</span>
+    {/if}
 {/block}
