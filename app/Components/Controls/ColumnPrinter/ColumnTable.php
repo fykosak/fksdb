@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 
-class ColumnTableComponent extends BaseComponent
+class ColumnTable extends BaseComponent
 {
     protected function createComponentPrinter(): ColumnRendererComponent
     {

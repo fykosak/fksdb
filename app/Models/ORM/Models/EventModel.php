@@ -140,7 +140,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
-        $selection = $this->getTeams()->where('state', TeamState::PARTICIPATED);
+        $selection = $this->getTeams()->where('state', TeamState::Participated);
         return $selection;
     }
 

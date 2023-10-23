@@ -31,11 +31,10 @@
     {/if}
 {/block}
 
-{define personSchedule}
-    {varType FKSDB\Models\ORM\Models\PersonModel $person}
+{define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
     {if $hasSchedule}
         <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
-        {control personScheduleGrid $person,$event}
+        {control 'personSchedule' . $person->person_id}
     {/if}
 {/define}
 
@@ -45,7 +44,7 @@
         <div class="container">
             <h2>{_'Info'}</h2>
             {var $fields = []}
-    {switch $model->event->event_type_id}
+            {switch $model->event->event_type_id}
                 {case 1}
                 {php $fields = [
                 'fyziklani_team.fyziklani_team_id',
@@ -78,7 +77,6 @@
         </div>
     </div>
 
-
     {if $rankVisible || $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
@@ -104,7 +102,7 @@
                 {if $isOrganizer}
                     {control printer:button 'person.detail', $teacher}
                 {/if}
-                {include personSchedule, person => $teacher->person,event=> $model->event}
+                {include personSchedule, person => $teacher->person}
             </div>
         </div>
     {/foreach}
@@ -119,7 +117,7 @@
                     {control printer:button 'person.detail', $member}
                 {/if}
                 {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
-                {include personSchedule, person => $member->person,event=>$model->event}
+                {include personSchedule, person => $member->person}
                 {if $isOrganizer}
                     {control studySchoolTest $member->getPersonHistory()}
                 {/if}

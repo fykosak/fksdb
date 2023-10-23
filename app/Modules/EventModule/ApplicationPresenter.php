@@ -407,6 +407,6 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
-        return new SinglePersonGrid($this->getContext());
+        return new SinglePersonGrid($this->getContext(), $this->getEntity()->person, $this->getEvent());
     }
 }

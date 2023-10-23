@@ -59,7 +59,7 @@ class CodeTransitionComponent extends CodeForm
 
     public function render(): void
     {
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState); //@phpstan-ignore-line
         $holder = $this->machine->createHolder($this->model);
         $this->template->available = (bool)count(Machine::filterAvailable($transitions, $holder));
         parent::render();
@@ -79,11 +79,11 @@ class CodeTransitionComponent extends CodeForm
         $holder = $this->machine->createHolder($this->model);
         $transition = Machine::selectTransition(
             Machine::filterAvailable(
-                Machine::filterByTarget($this->machine->transitions, $this->targetState),
+                Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
                 $holder
             )
         );
-        $this->machine->execute($transition, $holder);
+        $this->machine->execute($transition, $holder);//@phpstan-ignore-line
         $this->getPresenter()->flashMessage(
             $application instanceof TeamModel2
                 ? sprintf(_('Transition successful for: %s'), $application->name)
@@ -114,11 +114,11 @@ class CodeTransitionComponent extends CodeForm
         parent::configureForm($form);
         $el = Html::el('span');
         $el->addText(_('Processed: '));
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);//@phpstan-ignore-line
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
         }
-        $form['code']->setOption('description', $el);
+        $form['code']->setOption('description', $el);//@phpstan-ignore-line
     }
 
     /**

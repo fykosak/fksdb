@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
+use Nette\DI\Container;
 
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
@@ -21,14 +22,11 @@ final class SinglePersonGrid extends BaseGrid
     private EventModel $event;
     private PersonModel $person;
 
-    /**
-     * @throws \InvalidArgumentException
-     */
-    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
+    public function __construct(Container $container, PersonModel $person, EventModel $event)
     {
+        parent::__construct($container);
         $this->event = $event;
         $this->person = $person;
-        parent::render();
     }
 
     /**

@@ -103,6 +103,13 @@ final class TeamApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
+        foreach ($this->getEntity()->getPersons() as $person) {
+            $this->addComponent(
+                new SinglePersonGrid($this->getContext(), $person, $this->getEvent()),
+                'personSchedule' . $person->person_id
+            );
+        }
+
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         try {
@@ -322,7 +329,7 @@ final class TeamApplicationPresenter extends BasePresenter
         return new CodeTransitionComponent(
             $this->getContext(),
             $this->getEntity(),
-            TeamState::tryFrom(TeamState::Participated), // TODO
+            TeamState::tryFrom(TeamState::Arrived), // TODO
             $this->getMachine()
         );
     }
@@ -347,11 +354,6 @@ final class TeamApplicationPresenter extends BasePresenter
     protected function createComponentRests(): TeamRestsComponent
     {
         return new TeamRestsComponent($this->getContext(), $this->getEntity());
-    }
-
-    protected function createComponentPersonScheduleGrid(): SinglePersonGrid
-    {
-        return new SinglePersonGrid($this->getContext());
     }
 
     /**

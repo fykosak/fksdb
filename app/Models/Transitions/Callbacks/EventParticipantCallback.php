@@ -10,12 +10,13 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 
 /**
- * @phpstan-extends MailCallback<BaseHolder|ParticipantHolder>
+ * @phpstan-template THolder of BaseHolder|ParticipantHolder
+ * @phpstan-extends MailCallback<THolder>
  */
 abstract class EventParticipantCallback extends MailCallback
 {
     /**
-     * @param BaseHolder|ParticipantHolder $holder
+     * @param THolder $holder
      * @phpstan-return PersonModel[]
      */
     final protected function getPersonsFromHolder(ModelHolder $holder): array

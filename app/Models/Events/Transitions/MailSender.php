@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model;
@@ -74,6 +75,7 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
+     * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,
@@ -81,7 +83,7 @@ class MailSender extends MailCallback
      *     reply_to:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
             'blind_carbon_copy' => $holder->getModel()->event->getParameter('notifyBcc') ?? null,
@@ -93,14 +95,15 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
+     * @phpstan-param Transition<ParticipantHolder> $transition
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
     {
         $token = $this->createToken($person, $holder);
         return $this->mailTemplateFactory->renderWithParameters(
-            $this->getTemplatePath($holder),
+            $this->getTemplatePath($holder, $transition),
             Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
@@ -140,8 +143,9 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
+     * @phpstan-param Transition<ParticipantHolder> $transition
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return $this->templateFile;
     }
