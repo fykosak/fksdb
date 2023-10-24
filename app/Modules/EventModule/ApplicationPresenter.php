@@ -154,7 +154,7 @@ final class ApplicationPresenter extends BasePresenter
         $entity = $this->getEntity();
         return new PageTitle(
             null,
-            sprintf(_('Application detail "%s"'), $entity->person->getFullName()),
+            sprintf(_('Application: %s'), $entity->person->getFullName()),
             'fas fa-user'
         );
     }

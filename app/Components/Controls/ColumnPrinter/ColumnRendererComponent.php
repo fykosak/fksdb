@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
@@ -60,22 +59,6 @@ class ColumnRendererComponent extends BaseComponent
             $templateString
         );
     }
-
-    /**
-     * @throws CannotAccessModelException
-     * @deprecated
-     */
-    final public function renderListItem(
-        string $field,
-        Model $model,
-        int $userPermission = FieldLevelPermission::ALLOW_FULL
-    ): void {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte', [
-            'model' => $model,
-            'userPermission' => $userPermission,
-            'name' => $field,
-        ]);
-    }
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException
@@ -86,7 +69,7 @@ class ColumnRendererComponent extends BaseComponent
     {
         $factory = $this->reflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->render(
-            __DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte',
+            __DIR__ . DIRECTORY_SEPARATOR . 'link.latte',
             [
                 'title' => $factory->getTitle(),
                 'link' => $factory->create($this->getPresenter(), $model),

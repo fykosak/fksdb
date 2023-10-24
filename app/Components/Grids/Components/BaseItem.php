@@ -20,5 +20,7 @@ abstract class BaseItem extends BaseComponent
      */
     abstract public function render(Model $model, int $userPermission): void;
 
-    abstract public function getTitle(): ?Title;
+    public function renderTitle(): void
+    {
+    }
 }

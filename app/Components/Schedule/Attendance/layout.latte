@@ -1,11 +1,10 @@
+{layout '../../Controls/@layout.latte'}
+
 {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $model}
-{if $model->state}
-    {switch $model->state->value}
-        {case FKSDB\Models\ORM\Models\Schedule\PersonScheduleState::PARTICIPATED}
-        <span class="badge bg-success">{_'Participated'}</span>
-        {case FKSDB\Models\ORM\Models\Schedule\PersonScheduleState::MISSED}
-        <span class="badge bg-danger">{_'Missed'}</span>
-    {/switch}
-{else}
-    <a class="btn btn-success" href="{link attendance!}">{_'Attendance'}</a>
-{/if}
+{block content}
+    {if $model->state}
+        <p class="alert alert-info">{_'No transition available'}</p>
+    {else}
+        <a class="btn btn-success" href="{link attendance!}">{_'Attendance'}</a>
+    {/if}
+{/block}

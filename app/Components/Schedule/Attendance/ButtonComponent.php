@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Attendance;
 
-use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
-class AttendanceComponent extends BaseComponent
+class ButtonComponent extends BaseComponent
 {
     private PersonScheduleModel $model;
     private PersonScheduleService $service;
@@ -34,19 +32,18 @@ class AttendanceComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
-    /**
-     * @throws NotFoundException
-     * @throws BadRequestException
-     */
     public function handleAttendance(): void
     {
-        if ($this->model->state) {
-            $this->getPresenter()->flashMessage(_('Transition is not available'), Message::LVL_ERROR);
+        try {
+            $this->service->makeAttendance($this->model);
+        } catch (\Throwable $exception) {
+            $this->flashMessage(_('error: ') . $exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
-        $this->model->checkPayment();
-        $this->service->makeAttendance($this->model);
-        $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+        $this->flashMessage(
+            sprintf(_('Transition successful for %s'), $this->model->person->getFullName()),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('this');
     }
 }

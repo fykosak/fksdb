@@ -70,7 +70,7 @@ class CodeTransitionComponent extends CodeForm
      * @throws NotFoundException
      * @throws \Throwable
      */
-    protected function innerHandleSuccess(Model $model): void
+    protected function innerHandleSuccess(Model $model, Form $form): void
     {
         $application = $this->resolveApplication($model);
         if ($model->getPrimary() !== $this->model->getPrimary()) {

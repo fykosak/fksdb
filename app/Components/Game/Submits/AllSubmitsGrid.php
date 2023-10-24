@@ -78,7 +78,7 @@ class AllSubmitsGrid extends BaseGrid
             $this->addPresenterButton(
                 ':Game:Submit:edit',
                 'edit',
-                _('button.edit'),
+                new Title(null, _('button.edit')),
                 false,
                 ['id' => 'fyziklani_submit_id']
             );

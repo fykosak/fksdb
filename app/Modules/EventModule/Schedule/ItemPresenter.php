@@ -6,8 +6,9 @@ namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Schedule\Attendance\CodeComponent;
 use FKSDB\Components\Schedule\Code\ItemComponent;
-use FKSDB\Components\Schedule\ItemPersonGrid;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -95,7 +96,11 @@ final class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(
+                _('%s of %s '),
+                $this->getEntity()->name->getText($this->translator->lang),
+                $this->getEntity()->schedule_group->name->getText($this->translator->lang)
+            ),
             'fas fa-clipboard'
         );
     }
@@ -170,9 +175,9 @@ final class ItemPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentPersonsGrid(): ItemPersonGrid
+    protected function createComponentPersonsGrid(): PersonGrid
     {
-        return new ItemPersonGrid($this->getContext(), $this->getEntity());
+        return new PersonGrid($this->getContext(), $this->getEntity());
     }
 
     /**
@@ -182,8 +187,8 @@ final class ItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentCode(): ItemComponent
+    protected function createComponentCode(): CodeComponent
     {
-        return new ItemComponent($this->getContext(), $this->getEntity());
+        return new CodeComponent($this->getContext(), $this->getEntity());
     }
 }

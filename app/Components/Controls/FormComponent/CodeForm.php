@@ -23,7 +23,7 @@ abstract class CodeForm extends FormComponent
                 $values['code'],
                 $this->getSalt()
             );
-            $this->innerHandleSuccess($model);
+            $this->innerHandleSuccess($model, $form);
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
@@ -42,7 +42,7 @@ abstract class CodeForm extends FormComponent
         $form->addText('code', _('Code'))->setRequired(true);
     }
 
-    abstract protected function innerHandleSuccess(Model $model): void;
+    abstract protected function innerHandleSuccess(Model $model, Form $form): void;
 
     abstract protected function getSalt(): string;
 }

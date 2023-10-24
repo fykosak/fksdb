@@ -2,12 +2,6 @@
     {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
     <div class="panel color-auto">
         <div class="container">
-            {include group from './group.detail.latte' group=>$model->schedule_group}
-        </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Item'}</h2>
             {control columnTable [
             'schedule_item.schedule_item_id',
             'schedule_item.price_eur',
@@ -18,8 +12,15 @@
             'schedule_item.used_capacity',
             'schedule_item.free_capacity',
             ],$model,1024}
-            <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:edit}">{_'Edit item'}</a>
-            <a class="btn btn-outline-secondary btn-sm" href="{plink :Schedule:Item:code}">{_'button.scan2d'}</a>
+            {control printer:button 'schedule_group.detail', $model}
+            {control printer:button 'schedule_item.edit', $model}
+            <a class="btn btn-outline-secondary" href="{plink :Schedule:Item:code}">{_'button.scan2d'}</a>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Attendance'}</h2>
+            {control code}
         </div>
     </div>
     <div class="panel color-auto">

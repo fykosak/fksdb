@@ -16,7 +16,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
-final class ItemPersonGrid extends BaseGrid
+final class PersonGrid extends BaseGrid
 {
     private ScheduleItemModel $item;
 
@@ -54,6 +54,9 @@ final class ItemPersonGrid extends BaseGrid
             '@event.role',
             '@payment.payment',
             '@person_schedule.state',
+        ]);
+        $this->addPresenterButton(':Schedule:Person:detail', 'detail', new Title(null, _('Detail')), false, [
+            'id' => 'person_schedule_id',
         ]);
     }
 }

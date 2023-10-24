@@ -130,7 +130,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     protected function addPresenterButton(
         string $destination,
         string $name,
-        string $label,
+        Title $label,
         bool $checkACL = true,
         array $params = [],
         ?string $className = null
@@ -148,7 +148,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             new Button(
                 $this->container,
                 $this->getPresenter(),
-                new Title(null, _($label)),
+                $label,
                 fn(Model $model): array => [$destination, $paramMapCallback($model)],
                 $className,
                 fn(Model $model): bool => $checkACL ? $this->getPresenter()->authorized(

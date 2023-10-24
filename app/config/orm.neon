@@ -931,6 +931,17 @@ orm:
             modification_end:
                 type: dateTime
                 title: _('Modification end')
+        links:
+            detail:
+                destination: :Schedule:Group:detail
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.detail')
+            edit:
+                destination: :Schedule:Group:edit
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.edit')
     schedule_item:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleItemService
         model: FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel
@@ -976,6 +987,17 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                 title: _('Used capacity')
+        links:
+            detail:
+                destination: :Schedule:Item:detail
+                params:
+                    id: schedule_item_id
+                title: _('button.scheduleItem.detail')
+            edit:
+                destination: :Schedule:Item:edit
+                params:
+                    id: schedule_item_id
+                title: _('button.scheduleItem.edit')
     schedule_payment:
         service: FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService
         model: FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel

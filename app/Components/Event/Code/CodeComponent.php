@@ -36,7 +36,7 @@ final class CodeComponent extends CodeForm
      * @throws BadRequestException
      * @throws NotFoundException
      */
-    protected function innerHandleSuccess(Model $model): void
+    protected function innerHandleSuccess(Model $model, Form $form): void
     {
         $application = $this->resolveApplication($model);
         if ($application->event_id !== $this->event->event_id) {

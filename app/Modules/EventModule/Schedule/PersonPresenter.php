@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Schedule\AllPersonList;
-use FKSDB\Components\Schedule\Attendance\AttendanceComponent;
+use FKSDB\Components\Schedule\Attendance\ButtonComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -44,7 +44,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): bool
+    public function authorizedMySchedule(): bool
     {
         $person = $this->getLoggedPerson();
         return $person && count($person->getEventRoles($this->getEvent()));
@@ -53,13 +53,13 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void
+    public function renderMySchedule(): void
     {
         $this->template->schedule = $this->prepareSchedule();
         $this->template->person = $this->getLoggedPerson();
     }
 
-    public function titleDefault(): PageTitle
+    public function titleMySchedule(): PageTitle
     {
         return new PageTitle(null, _('My schedule'), 'fas fa-list');
     }
@@ -139,9 +139,9 @@ final class PersonPresenter extends BasePresenter
      * @throws GoneException
      * @throws ModelNotFoundException
      */
-    protected function createComponentAttendance(): AttendanceComponent
+    protected function createComponentAttendance(): ButtonComponent
     {
-        return new AttendanceComponent($this->getContext(), $this->getEntity());
+        return new ButtonComponent($this->getContext(), $this->getEntity());
     }
 
     /**

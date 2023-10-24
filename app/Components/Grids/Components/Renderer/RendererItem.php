@@ -45,8 +45,13 @@ class RendererItem extends BaseItem
         );
     }
 
-    public function getTitle(): ?Title
+    public function renderTitle(): void
     {
-        return $this->title;
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . '../html.latte',
+            [
+                'html' => $this->title->toHtml(),
+            ]
+        );
     }
 }

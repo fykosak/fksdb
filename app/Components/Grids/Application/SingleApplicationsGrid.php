@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -102,7 +103,13 @@ class SingleApplicationsGrid extends BaseGrid
             '@person.full_name',
             '@event_participant.status',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'event_participant_id']);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'event_participant_id']
+        );
         // $this->addCSVDownloadButton();
         $this->addHolderColumns();
     }

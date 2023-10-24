@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -51,6 +52,12 @@ final class TeamGrid extends BaseGrid
                 '@fyziklani_team.phone',
             ]
         );
-        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'fyziklani_team_id']);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
     }
 }
