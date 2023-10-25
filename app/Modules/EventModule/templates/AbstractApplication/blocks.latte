@@ -11,8 +11,7 @@
 
 {define title-buttons
     FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
-    bool $isOrganizer,
-    string|null $machineCode
+    bool $isOrganizer
 }
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}
@@ -25,6 +24,7 @@
         {if $isOrganizer}
             {control buttonTransition false}
         {/if}
+        {var $machineCode = $model->createMachineCode()}
         {if $isOrganizer && $machineCode}
             <div class="dropdown">
                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">

@@ -2,7 +2,6 @@
 {varType bool $hasSchedule}
 {varType bool $isOrganizer}
 {varType array $groups}
-{varType string|null $machineCode}
 {varType Fykosak\Utils\UI\PageTitle $pageTitle}
 
 {block titleBody}
@@ -10,11 +9,12 @@
         <h1>{$pageTitle->toHtml(false)} <small>{$model->status->badge()}</small></h1>
         <span class="subtitle">{$pageTitle->subTitle}</span>
     </div>
-    {include title-buttons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer,machineCode:$machineCode}
+    {include title-buttons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
 {/block}
 
 {block outerContent}
     {include rests from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer}
+
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>

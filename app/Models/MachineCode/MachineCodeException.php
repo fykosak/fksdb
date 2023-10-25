@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\MachineCode;
+namespace FKSDB\Models\MachineCode;
 
 use Nette\Application\BadRequestException;
 

@@ -6,6 +6,7 @@ namespace FKSDB\Models\WebService\Models\Game;
 
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
@@ -15,7 +16,12 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ * @phpstan-extends WebModel<array{
+ *     method:string,
+ *     eventId:int,
+ *     code:string,
+ *     points:int,
+ * },array<mixed>>
  */
 class SubmitWebModel extends WebModel
 {
@@ -30,26 +36,22 @@ class SubmitWebModel extends WebModel
     {
         return Expect::structure([
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
-            'event_id' => Expect::scalar()->castTo('int')->required(),
+            'eventId' => Expect::scalar()->castTo('int')->required(),
             'code' => Expect::string()->pattern('^[0-9]{4,6}[a-hA-H]{2}[0-9]$')->required(),
             'points' => Expect::scalar()->castTo('int'),
         ]);
     }
 
     /**
-     * @phpstan-param array{
-     *     method:string,
-     *     event_id:int,
-     *     code:string,
-     *     points:int,
-     * } $params
      * @phpstan-return Message[]
+     * @throws GoneException
      */
     public function getJsonResponse(array $params): array
     {
-        try {
-            /** @var EventModel|null $event */
-            $event = $this->eventService->findByPrimary($params['event_id']);
+        throw new GoneException();
+        /* try {
+            /** @var EventModel|null $event
+            $event = $this->eventService->findByPrimary($params['eventId']);
             if (!$event) {
                 throw new BadRequestException();
             }
@@ -95,6 +97,6 @@ class SubmitWebModel extends WebModel
             return [
                 new Message(_('Undefined error'), Message::LVL_ERROR),
             ];
-        }
+        }*/
     }
 }

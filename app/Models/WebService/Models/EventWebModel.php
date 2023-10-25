@@ -68,11 +68,7 @@ class EventWebModel extends WebModel
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             $data[] = [
-                'person' => [
-                    'name' => $model->person->getFullName(),
-                    'personId' => $model->person_id,
-                    'email' => $model->person->getInfo()->email,
-                ],
+                'person' => $model->person->__toArray(),
                 'scheduleItemId' => $model->schedule_item_id,
             ];
         }
@@ -139,11 +135,7 @@ class EventWebModel extends WebModel
             ];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
-                $teamData['teachers'][] = [
-                    'name' => $teacher->person->getFullName(),
-                    'personId' => $teacher->person->person_id,
-                    'email' => $teacher->person->getInfo()->email,
-                ];
+                $teamData['teachers'][] = $teacher->person->__toArray();
             }
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {

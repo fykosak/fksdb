@@ -20,6 +20,12 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     StatsWebModel,
     WebModel
 };
+use FKSDB\Models\WebService\Models\Event\{ParticipantListWebModel,
+    Schedule\GroupListWebModel,
+    Schedule\ItemListWebModel,
+    Schedule\PersonListWebModel,
+    TeamListWebModel,
+};
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
@@ -40,7 +46,6 @@ class WebServiceModel
 
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
-        'game/results' => Game\ResultsWebModel::class,
         // 'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
@@ -53,6 +58,19 @@ class WebServiceModel
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
+        // events
+        'events' => EventListWebModel::class,
+        'event/schedule/groups' => GroupListWebModel::class,
+        'event/schedule/items' => ItemListWebModel::class,
+        'event/schedule/persons' => PersonListWebModel::class,
+        'event/teams' => TeamListWebModel::class,
+        'event/participants' => ParticipantListWebModel::class,
+        // game
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
+        // contest
+        'contest/organizers' => OrganizersWebModel::class,
+        'contest/stats' => StatsWebModel::class,
     ];
 
     public function __construct(
@@ -142,7 +160,7 @@ class WebServiceModel
 
     /**
      * @throws \ReflectionException
-     * @phpstan-return WebModel<array<string,mixed>,array<string,mixed>>
+     * @phpstan-return WebModel<array<mixed>,array<mixed>>
      */
     private function getWebModel(string $name): ?WebModel
     {
@@ -152,7 +170,7 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
             $model = $reflection->newInstance($this->container);
             $model->setUser($this->user);
             return $model;
@@ -161,8 +179,9 @@ class WebServiceModel
     }
 
     /**
+     * @phpstan-template TParams of array
      * @throws BadRequestException
-     * @phpstan-param array<string,mixed> $arguments
+     * @phpstan-param TParams $arguments
      */
     public function getJsonResponse(?WebModel $webModel, array $arguments): JsonResponse
     {

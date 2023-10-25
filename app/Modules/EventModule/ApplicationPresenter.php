@@ -13,7 +13,6 @@ use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -22,6 +21,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -117,7 +117,6 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->machineCode = $this->createMachineCode();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
         switch ($this->getEvent()->event_type_id) {
@@ -254,15 +253,6 @@ final class ApplicationPresenter extends BasePresenter
     private function getMachine(): EventParticipantMachine
     {
         return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
-    }
-
-    private function createMachineCode(): ?string
-    {
-        try {
-            return MachineCode::createHash($this->getEntity(), MachineCode::getSaltForEvent($this->getEvent()));
-        } catch (\Throwable $exception) {
-            return null;
-        }
     }
 
     /**

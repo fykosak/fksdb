@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\MachineCode;
+namespace FKSDB\Models\MachineCode;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -81,16 +81,21 @@ final class MachineCode
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws MachineCodeException
      */
     public static function getSaltForEvent(EventModel $event): string
     {
         switch ($event->event_type_id) {
             case 2:
             case 14:
-                return $event->getParameter('hashSalt');
+                $salt = $event->getParameter('hashSalt');
+                break;
             default:
-                throw new NotImplementedException();
+                throw new MachineCodeException(_('Not implemented'));
         }
+        if (!$salt) {
+            throw new MachineCodeException(_('Empty salt'));
+        }
+        return (string)$salt;
     }
 }
