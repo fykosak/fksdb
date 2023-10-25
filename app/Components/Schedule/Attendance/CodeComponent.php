@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
-use FKSDB\Components\MachineCode\MachineCode;
-use FKSDB\Components\MachineCode\MachineCodeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -74,7 +73,7 @@ class CodeComponent extends CodeForm
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws MachineCodeException
      */
     protected function getSalt(): string
     {

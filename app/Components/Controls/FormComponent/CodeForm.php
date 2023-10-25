@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\FormComponent;
 
-use FKSDB\Components\MachineCode\MachineCode;
+use FKSDB\Models\MachineCode\MachineCode;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;

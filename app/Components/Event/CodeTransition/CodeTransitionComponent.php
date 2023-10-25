@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Event\CodeTransition;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
-use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -122,7 +122,7 @@ class CodeTransitionComponent extends CodeForm
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws MachineCodeException
      */
     protected function getSalt(): string
     {

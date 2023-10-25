@@ -10,8 +10,8 @@ use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
-use FKSDB\Components\MachineCode\MachineCode;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -108,6 +108,7 @@ final class AllPersonList extends BaseList
             'role'
         );
         $row1 = $this->createRow();
+        /** @phpstan-var RelatedTable<PersonModel,PersonScheduleModel> $relatedTable */
         $relatedTable = new RelatedTable(
             $this->container,
             fn(PersonModel $person) => $person->getScheduleForEvent($this->event),  //@phpstan-ignore-line
@@ -144,7 +145,9 @@ final class AllPersonList extends BaseList
             new SimpleItem($this->container, '@person_schedule.state'),
             'state'
         );
+        /** @phpstan-ignore-next-line */
         $relatedTable->addTableButton(
+        /** @phpstan-ignore-next-line */
             new Button(
                 $this->container,
                 $this->getPresenter(),
