@@ -78,15 +78,6 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('button.scheduleItem.edit')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->schedule_item_id]]
-            ),
-            'edit'
-        );
-        $component->addTableButton(
-            new Button(
-                $container,
-                $presenter,
                 new Title(null, _('button.scheduleItem.detail')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
             ),

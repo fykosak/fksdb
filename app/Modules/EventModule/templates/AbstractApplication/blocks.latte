@@ -1,12 +1,10 @@
-{define rests bool $isOrganizer}
-    {if $isOrganizer}
+{define rests}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Rests'}</h2>
                 {control rests}
             </div>
         </div>
-    {/if}
 {/define}
 
 {define title-buttons
@@ -31,8 +29,8 @@
                     <i class="fas fa-code me-2"></i>
                     {_'Code'}
                 </button>
-                <div class="dropdown-menu">
-                    <div class="px-4 py-3">
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 20rem">
+                    <div class="px-3 py-2">
                         <label class="form-label">{_'Application code'}</label>
                         <input type="text" class="form-control-sm form-control" value="{$machineCode}"/>
                     </div>
@@ -40,9 +38,4 @@
             </div>
         {/if}
     </div>
-    {if $isOrganizer}
-        <div class="mt-3">
-            {control codeTransition}
-        </div>
-    {/if}
 {/define}

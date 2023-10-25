@@ -10,6 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model
@@ -61,7 +62,7 @@ class TemplateItem extends BaseItem
 
     public function renderTitle(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', [
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'title.latte', [
             'titleString' => $this->titleString,
         ]);
     }

@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Components\Container;
 
 use FKSDB\Components\Grids\Components\BaseItem;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model
@@ -23,5 +22,9 @@ class RowContainer extends BaseItem
                 'userPermission' => $userPermission,
             ]
         );
+    }
+
+    public function renderTitle(): void
+    {
     }
 }

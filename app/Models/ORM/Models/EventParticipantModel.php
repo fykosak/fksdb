@@ -12,6 +12,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Tracy\Debugger;
 
 /**
  * @property-read int $event_participant_id
@@ -113,6 +114,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
         try {
             return MachineCode::createHash($this, MachineCode::getSaltForEvent($this->event));
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             return null;
         }
     }

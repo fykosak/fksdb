@@ -104,7 +104,7 @@ class ApplicationComponent extends BaseComponent
         foreach (
             $this->machine->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition
         ) {
-            $submit = $form->addSubmit($transition->getId(), $transition->getLabel());
+            $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
 
             if (!$transition->getValidation()) {
                 $submit->setValidationScope([]);

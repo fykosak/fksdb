@@ -74,7 +74,7 @@ class Router
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
         $service->addRoute('<presenter settings>/<action=default>[/<id>]', ['module' => 'Core']);
         $service->addRoute(
-            '<module event|game|schedule>/[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
+            '<module event|game|schedule>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard']
         );
         $service->addRoute(

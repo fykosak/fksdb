@@ -72,12 +72,12 @@ final class AllPersonList extends BaseList
                     MachineCode::getSaltForEvent($this->event)
                 );
                 if ($model instanceof EventParticipantModel) {
-                    $query->where('person_id', $model->person_id);
+                    $query->where('person.person_id', $model->person_id);
                 } elseif ($model instanceof PersonModel) {
-                    $query->where('person_id', $model->person_id);
+                    $query->where('person.person_id', $model->person_id);
                 } elseif ($model instanceof TeamModel2) {
                     $query->where(
-                        'person_id',
+                        'person.person_id',
                         array_map(fn(PersonModel $person) => $person->person_id, $model->getPersons())
                     );
                 }

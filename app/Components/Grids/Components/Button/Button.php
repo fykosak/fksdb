@@ -63,4 +63,8 @@ class Button extends BaseItem
         }
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', ['html' => $html]);
     }
+
+    public function renderTitle(): void
+    {
+    }
 }

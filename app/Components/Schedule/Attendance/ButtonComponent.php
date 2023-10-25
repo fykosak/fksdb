@@ -37,11 +37,11 @@ class ButtonComponent extends BaseComponent
         try {
             $this->service->makeAttendance($this->model);
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('error: ') . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(_('Error: ') . $exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
         $this->flashMessage(
-            sprintf(_('Transition successful for %s'), $this->model->person->getFullName()),
+            sprintf(_('Transition successful for: %s'), $this->model->person->getFullName()),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

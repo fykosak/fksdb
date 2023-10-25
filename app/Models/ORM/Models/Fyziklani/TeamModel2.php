@@ -17,6 +17,7 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
+use Tracy\Debugger;
 
 /**
  * @property-read int $fyziklani_team_id

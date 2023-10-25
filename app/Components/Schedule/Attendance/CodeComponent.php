@@ -40,12 +40,12 @@ class CodeComponent extends CodeForm
             $personSchedule = $this->resolvePersonSchedule($model);
             $this->service->makeAttendance($personSchedule);
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('error: ') . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(_('Error: ') . $exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
 
         $this->flashMessage(
-            sprintf(_('Transition successful for %s'), $personSchedule->person->getFullName()),
+            sprintf(_('Transition successful for: %s'), $personSchedule->person->getFullName()),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');
