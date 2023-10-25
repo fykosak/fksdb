@@ -14,7 +14,7 @@ services:
         factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
-    - FKSDB\Models\Router::createRouter
+    - FKSDB\Models\Router\Router::createRouter
     ## Anonymous
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)

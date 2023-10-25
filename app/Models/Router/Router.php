@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models;
+namespace FKSDB\Models\Router;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
@@ -11,7 +11,9 @@ use Nette\Application\Routers\RouteList;
 class Router
 {
     private const CONTESTS = ['fykos' => ContestModel::ID_FYKOS, 'vyfuk' => ContestModel::ID_VYFUK];
-
+    // constestModules: organizer|public|warehouse
+    // eventModules: event|game|schedule
+    // rootPresenters: settings
     public static function createRouter(): RouteList
     {
         $service = new RouteList();

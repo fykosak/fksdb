@@ -145,7 +145,7 @@ extensions:
     orm: FKSDB\Models\ORM\ORMExtension
 
 includes:
-    #- router.neon
+    - router.neon
     - acl.neon
     - orm.neon
     - services.neon

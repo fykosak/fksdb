@@ -8,13 +8,3 @@ parameters:
         # (Language) domains
         cz: fykos.cz
         org: fykos.org
-
-    # Pipe-separated list of presenters w/out module
-    rootPresenters: settings
-
-    # Pipe-separated list of modules
-    constestModules: organizer|public|warehouse
-    eventModules: event|game|schedule
-
-    # Pipe-separated list of contest names
-    contests: fykos|vyfuk
