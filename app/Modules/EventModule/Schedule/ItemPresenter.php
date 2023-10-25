@@ -7,7 +7,6 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\CodeComponent;
-use FKSDB\Components\Schedule\Code\ItemComponent;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -16,8 +15,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
-use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
@@ -34,36 +31,6 @@ final class ItemPresenter extends BasePresenter
     final public function injectService(ScheduleItemService $service): void
     {
         $this->service = $service;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     * @throws \ReflectionException
-     */
-    public function authorizedCode(): bool
-    {
-        return $this->authorizedEdit();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    public function titleCode(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            \sprintf(_('Scan 2D code for item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-qrcode'
-        );
     }
 
     public function titleCreate(): PageTitle

@@ -874,7 +874,7 @@ orm:
                 title: _('Submit opened?')
         links:
             detail:
-                destination: :Event:TeamApplication:detail
+                destination: :Event:Team:detail
                 params:
                     eventId: event_id
                     id: fyziklani_team_id

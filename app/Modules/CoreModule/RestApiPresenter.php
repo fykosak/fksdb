@@ -4,18 +4,46 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Models\WebService\Models\ContestsModel;
+use FKSDB\Models\WebService\Models\EventListWebModel;
+use FKSDB\Models\WebService\Models\EventWebModel;
+use FKSDB\Models\WebService\Models\ExportWebModel;
+use FKSDB\Models\WebService\Models\OrganizersWebModel;
+use FKSDB\Models\WebService\Models\PaymentListWebModel;
+use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SeriesResultsWebModel;
+use FKSDB\Models\WebService\Models\SignaturesWebModel;
+use FKSDB\Models\WebService\Models\StatsWebModel;
+use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Models\WebService\WebServiceModel;
 use FKSDB\Modules\Core\AuthMethod;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\Routers\RouteList;
 use Tracy\Debugger;
 
 final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
-
+    private const ROUTER = ['module' => 'Core', 'presenter' => 'RestApi', 'action' => 'default'];
+    public const WEB_MODELS = [
+        'GetFyziklaniResults' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
+        'game/results' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
+        // 'game/submit' => Game\SubmitWebModel::class,
+        'contest.organizers' => OrganizersWebModel::class,
+        'GetOrganizers' => OrganizersWebModel::class,
+        'GetEventList' => EventListWebModel::class,
+        'GetEvent' => EventWebModel::class,
+        'GetExport' => ExportWebModel::class,
+        'GetSignatures' => SignaturesWebModel::class,
+        'GetResults' => ResultsWebModel::class,
+        'GetStats' => StatsWebModel::class,
+        'GetPaymentList' => PaymentListWebModel::class,
+        'GetSeriesResults' => SeriesResultsWebModel::class,
+        'GetContests' => ContestsModel::class,
+    ];
     private WebServiceModel $server;
     /** @persistent */
-    public string $webServiceName;
+    public string $model;
 
     final public function injectSoapServer(WebServiceModel $server): void
     {
@@ -35,11 +63,15 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     final protected function beforeRender(): void
     {
+        $params = [];
         if ($this->getHttpRequest()->getHeader('content-type') === 'application/json') {
             $params = json_decode($this->getHttpRequest()->getRawBody(), true);
         }
         try {
-            $response = $this->server->getJsonResponse($this->webServiceName, $params ?? $this->getParameters());
+            $response = $this->server->getJsonResponse(
+                $this->getWebModel(),
+                array_merge($params, $this->getParameters())
+            );
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
@@ -64,5 +96,62 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function getHttpRealm(): ?string
     {
         return 'JSON';
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @phpstan-return WebModel<array<string,mixed>,array<string,mixed>>
+     */
+    private function getWebModel(): ?WebModel
+    {
+        Debugger::barDump($this->model);
+        $webModelClass = class_exists($this->model)
+            ? $this->model
+            : (self::WEB_MODELS[$this->model] ?? self::WEB_MODELS[ucfirst($this->model)] ?? null);
+        if ($webModelClass) {
+            $reflection = new \ReflectionClass($webModelClass);
+            if (!$reflection->isSubclassOf(WebModel::class)) {
+                return null;
+            }
+            /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
+            $model = $reflection->newInstance($this->getContext());
+            $model->setUser($this->getUser());
+            return $model;
+        }
+        return null;
+    }
+
+    public static function createRouter(RouteList $list): void
+    {
+        $list->addRoute(
+            'event/',
+            array_merge(self::ROUTER, [
+                'model' => EventListWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            'event/<eventId [0-9]+>/',
+            array_merge(self::ROUTER, [
+                'model' => EventWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            'contest/',
+            array_merge(self::ROUTER, [
+                'model' => ContestsModel::class,
+            ])
+        );
+        $list->addRoute(
+            'contest/<contestId [0-9]+>/organizer',
+            array_merge(self::ROUTER, [
+                'model' => OrganizersWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            '<model [a-zA-Z\./]+>',
+            array_merge(self::ROUTER, [
+                'model' => OrganizersWebModel::class,
+            ])
+        );
     }
 }

@@ -39,7 +39,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 
-final class TeamApplicationPresenter extends BasePresenter
+final class TeamPresenter extends BasePresenter
 {
     /** @use EventEntityPresenterTrait<TeamModel2> */
     use EventEntityPresenterTrait;
@@ -183,9 +183,17 @@ final class TeamApplicationPresenter extends BasePresenter
         return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
     }
 
-    public function titleList(): PageTitle
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): bool
     {
-        return new PageTitle(null, _('List of teams'), 'fas fa-address-book');
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Teams'), 'fas fa-address-book');
     }
 
     /**

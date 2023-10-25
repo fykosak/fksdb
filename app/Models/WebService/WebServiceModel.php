@@ -41,7 +41,7 @@ class WebServiceModel
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
         'game/results' => Game\ResultsWebModel::class,
-        'game/submit' => Game\SubmitWebModel::class,
+        // 'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
@@ -66,6 +66,7 @@ class WebServiceModel
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $user;
     }
+
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
@@ -160,13 +161,11 @@ class WebServiceModel
     }
 
     /**
-     * @throws \ReflectionException
      * @throws BadRequestException
      * @phpstan-param array<string,mixed> $arguments
      */
-    public function getJsonResponse(string $name, array $arguments): JsonResponse
+    public function getJsonResponse(?WebModel $webModel, array $arguments): JsonResponse
     {
-        $webModel = $this->getWebModel($name);
         if (!$webModel) {
             throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
         }
