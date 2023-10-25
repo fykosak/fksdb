@@ -9,10 +9,10 @@ transitions:
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Dsef\ParticipantMailCallback()
             applied->participated:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
                 label: _('Prezentovat')
             applied->missed:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
                 label: _('Nepřijel')
                 behaviorType: danger
             applied->cancelled:

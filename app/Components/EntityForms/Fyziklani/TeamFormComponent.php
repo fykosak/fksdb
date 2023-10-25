@@ -24,6 +24,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
@@ -126,7 +127,7 @@ abstract class TeamFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($team);
-                $transition = $this->machine->getImplicitTransition($holder);
+                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             }
             $this->teamService->explorer->commit();

@@ -66,17 +66,20 @@
 <main>
     <div class="panel color-auto">
         <div class="container">
+            {block flashes}
+                {foreach $flashes as $flash}
+                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                {/foreach}
+            {/block}
             {block titleBody}
                 <div class="page-header">
                     <h1>{$pageTitle->toHtml(false)}</h1>
                     <span class="subtitle">{$pageTitle->subTitle}</span>
                 </div>
             {/block}
-            {block flashes}
-                {foreach $flashes as $flash}
-                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
-                {/foreach}
-            {/block}
+            {ifset buttons}
+                {include buttons}
+            {/ifset}
         </div>
     </div>
     {include outerContent}
@@ -94,7 +97,7 @@
         <div>
             <a href="//fykos.cz/" title="{_'Physics correspondence seminar of MFF UK'}">FYKOS</a>
             <span>| </span>
-            <a href="//vyfuk.mff.cuni.cz/"
+            <a href="//vyfuk.org/"
                title="{_'Physics correspondence seminar of MFF UK for the students of elementary schools.'}">Výfuk</a>
             <span>| </span>
             <a href="//fyziklani.cz/">Fyziklání</a>

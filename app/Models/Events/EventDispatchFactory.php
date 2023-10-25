@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -60,6 +61,7 @@ class EventDispatchFactory
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
      */
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
@@ -71,9 +73,16 @@ class EventDispatchFactory
                     throw new BadTypeException(EventParticipantMachine::class, $machine);
                 }
                 return $machine;
+            case 11:
+            case 12:
+                $machine = $this->container->getService('transitions.setkani.machine');
+                if (!$machine instanceof EventParticipantMachine) {
+                    throw new BadTypeException(EventParticipantMachine::class, $machine);
+                }
+                return $machine;
         }
         $definition = $this->findDefinition($event);
-        /** @var EventParticipantMachine $machine */
+        /** @var EventParticipantMachine<BaseHolder> $machine */
         $machine = $this->container->getService($definition['machineName']);
         return $machine;
     }
@@ -123,7 +132,7 @@ class EventDispatchFactory
 
     /**
      * @throws BadTypeException
-     * @phpstan-return EventParticipantMachine|TeamMachine
+     * @phpstan-return EventParticipantMachine<ParticipantHolder>|TeamMachine|EventParticipantMachine<BaseHolder>
      */
     public function getEventMachine(EventModel $event): Machine
     {

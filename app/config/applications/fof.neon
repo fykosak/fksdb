@@ -7,15 +7,10 @@ transitions:
             init->applied:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
-                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
-            init->spare:
-                label: _('Register team')
-                afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
-                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
-            spare->applied:
-                behaviorType: warning
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamMemberMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamTeacherMailCallback()
+            pending->applied:
+                behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()

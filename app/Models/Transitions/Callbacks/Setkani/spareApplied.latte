@@ -1,0 +1,21 @@
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+<p>
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+    jelikož se na akci <em>{$holder->getModel()->event->getName()->getText('cs')}</em> uvolnilo místo a ty jsi
+    {if $holder->getModel()->person->gender->value == 'F'}projevila{else}projevil{/if}
+    zájem o účast, přijali jsme tě mezi účastníky.
+</p>
+<p>
+    Případné změny v přihlášce lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
+    v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
+    či na odkazu
+    {var $link = $control->link('//:Event:Application:Detail',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a>.
+    V případě jakéhokoliv dotazu se na nás můžeš obrátit na adrese <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
+</p>
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

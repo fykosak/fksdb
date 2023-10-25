@@ -1,21 +1,34 @@
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType bool $hasSchedule}
+{varType bool $isOrganizer}
+{varType array $groups}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+
+{block titleBody}
+    <div class="page-header">
+        <h1>{$pageTitle->toHtml(false)} <small>{$model->status->badge()}</small></h1>
+        <span class="subtitle">{$pageTitle->subTitle}</span>
+    </div>
+    {include title-buttons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+{/block}
+
 {block outerContent}
-    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-    {varType array $groups}
-    {varType bool $hasSchedule}
-    {varType bool $isOrganizer}
+    {include rests from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer}
+
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Base info'}</h2>
             {control columnTable $isOrganizer?[
-            'person.person_link',
+            'person.full_name',
             'event_participant.event_participant_id',
-            'event_participant.status',
             'event_participant.created'
             ]:[
             'person.full_name',
-            'event_participant.status',
             'event_participant.created'
             ],$model,1024}
+            {if $isOrganizer}
+                {control printer:button 'person.detail', $model}
+            {/if}
         </div>
     </div>
 
@@ -42,31 +55,7 @@
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Schedule'}</h2>
-                {control personScheduleGrid $model->person,$model->event}
-            </div>
-        </div>
-    {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'button.edit'}</a>
-        </div>
-    </div>
-    {if $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Transitions'}</h2>
-                {control applicationTransitions}
-            </div>
-        </div>
-    {/if}
-    {var string|null $machineCode = $model->createMachineCode()}
-    {if $isOrganizer && $machineCode}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Application code'}</h2>
-                <input class="form-control" value="{$machineCode}"/>
+                {control personScheduleGrid}
             </div>
         </div>
     {/if}

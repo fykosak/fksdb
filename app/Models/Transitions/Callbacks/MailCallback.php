@@ -45,6 +45,7 @@ abstract class MailCallback implements Statement
 
 
     /**
+     * @phpstan-param THolder|Transition<THolder> $args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -64,6 +65,7 @@ abstract class MailCallback implements Statement
     }
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @throws BadTypeException
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
@@ -111,12 +113,14 @@ abstract class MailCallback implements Statement
     }
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
      */
     abstract protected function getTemplatePath(ModelHolder $holder, Transition $transition): string;
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
      * @phpstan-return array{

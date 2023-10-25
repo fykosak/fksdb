@@ -34,7 +34,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     {
         $edges = [];
         $nodes = [];
-        foreach ($this->machine->getTransitions() as $transition) {
+        foreach ($this->machine->transitions as $transition) {
             if (!isset($nodes[$transition->source->value])) {
                 $nodes[$transition->source->value] = [
                     'label' => $transition->source->label(),

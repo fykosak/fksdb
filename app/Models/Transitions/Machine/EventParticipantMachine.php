@@ -8,16 +8,18 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Explorer;
 
 /**
- * @phpstan-extends Machine<BaseHolder>
+ * @phpstan-template THolder of BaseHolder|ParticipantHolder
+ * @phpstan-extends Machine<THolder>
  */
 final class EventParticipantMachine extends Machine
 {
@@ -35,9 +37,9 @@ final class EventParticipantMachine extends Machine
     }
 
     /**
-     * @param BaseHolder $holder
-     * @phpstan-return Transition<BaseHolder>[]
-     * @phpstan-param (EnumColumn&FakeStringEnum)|null $sourceState
+     * @phpstan-param THolder $holder
+     * @phpstan-return Transition<THolder>[]
+     * @phpstan-param EventParticipantStatus|null $sourceState
      */
     public function getAvailableTransitions(ModelHolder $holder, ?EnumColumn $sourceState = null): array
     {
@@ -48,10 +50,9 @@ final class EventParticipantMachine extends Machine
     }
 
     /**
-     * @phpstan-param FakeStringEnum&EnumColumn $sourceState
-     * @phpstan-return Transition<BaseHolder>[]
+     * @phpstan-return Transition<THolder>[]
      */
-    private function getMatchingTransitions(EnumColumn $sourceState): array
+    private function getMatchingTransitions(EventParticipantStatus $sourceState): array
     {
         return array_filter(
             $this->transitions,
@@ -62,15 +63,14 @@ final class EventParticipantMachine extends Machine
     /**
      * @param EventParticipantModel $model
      */
-    public function createHolder(Model $model): BaseHolder
+    public function createHolder(Model $model): ModelHolder
     {
         switch ($model->event->event_type_id) {
             case 2:
             case 14:
-                $holder = new BaseHolder($this->eventParticipantService);
-                $holder->setModel($model);
-                $holder->setEvent($model->event);
-                return $holder;
+            case 11:
+            case 12:
+                return new ParticipantHolder($model, $this->eventParticipantService);
         }
         $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
         $holder->setModel($model);

@@ -39,10 +39,6 @@ final class ItemGrid extends BaseGrid
         return $this->group->getItems();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
@@ -51,8 +47,6 @@ final class ItemGrid extends BaseGrid
 
     /**
      * @param BaseGrid<ScheduleItemModel,array{}>|RelatedTable<Model,ScheduleItemModel> $component
-     * @throws BadTypeException
-     * @throws \ReflectionException
      */
     public static function addColumns(Component $component, Container $container, Presenter $presenter): void
     {
@@ -84,7 +78,7 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('button.edit')),
+                new Title(null, _('button.scheduleItem.edit')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:edit', ['id' => $model->schedule_item_id]]
             ),
             'edit'
@@ -93,19 +87,10 @@ final class ItemGrid extends BaseGrid
             new Button(
                 $container,
                 $presenter,
-                new Title(null, _('button.detail')),
+                new Title(null, _('button.scheduleItem.detail')),
                 fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
             ),
             'detail'
-        );
-        $component->addTableButton(
-            new Button(
-                $container,
-                $presenter,
-                new Title(null, _('button.scan2d')), // TODO!!!
-                fn(ScheduleItemModel $model) => [':Schedule:Item:code', ['id' => $model->schedule_item_id]]
-            ),
-            'code'
         );
     }
 }

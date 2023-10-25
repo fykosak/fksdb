@@ -6,9 +6,12 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
+use Nette\Application\BadRequestException;
+use Nette\Security\Resource;
 
 /**
  * @property-read PersonModel $person
@@ -18,8 +21,10 @@ use Fykosak\NetteORM\Model;
  * @property-read int $person_schedule_id
  * @property-read PersonScheduleState|null $state
  */
-final class PersonScheduleModel extends Model
+final class PersonScheduleModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'event.schedule.person';
+
     public function getPayment(): ?PaymentModel
     {
         /** @var SchedulePaymentModel|null $schedulePayment */
@@ -35,6 +40,20 @@ final class PersonScheduleModel extends Model
     }
 
     /**
+     * @throws BadRequestException
+     * @throws \Exception
+     */
+    public function checkPayment(): void
+    {
+        if (
+            $this->schedule_item->isPayable() &&
+            (!$this->getPayment() || $this->getPayment()->state->value !== PaymentState::RECEIVED)
+        ) {
+            throw new BadRequestException(_('Payment not found'));
+        }
+    }
+
+    /**
      * @return PersonScheduleState|mixed|null
      * @throws \ReflectionException
      */
@@ -47,5 +66,10 @@ final class PersonScheduleModel extends Model
                 break;
         }
         return $value;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
     }
 }

@@ -1,0 +1,114 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType bool $hasSchedule}
+{varType string|null $machineCode}
+{varType bool $rankVisible}
+{varType int $counter}
+{varType bool $isOrganizer}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+
+{block titleBody}
+    <div class="page-header">
+        <h1>{$pageTitle->toHtml(false)} <small>{$model->state->badge()}</small></h1>
+        <span class="subtitle">{$pageTitle->subTitle}</span>
+    </div>
+    {include title-buttons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer,machineCode:$machineCode}
+{/block}
+
+{define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
+    {if $hasSchedule}
+        <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
+        {control 'personSchedule' . $person->person_id}
+    {/if}
+{/define}
+
+{block outerContent}
+    {include rests from '../AbstractApplication/blocks.latte' isOrganizer:$isOrganizer}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {var $fields = []}
+            {switch $model->event->event_type_id}
+                {case 1}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.phone',
+                'fyziklani_team.note',
+                'fyziklani_team.password',
+                'fyziklani_team.category',
+                'fyziklani_team.created',
+                'fyziklani_team.game_lang',
+                ]}
+                {case 9}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                'fyziklani_team.category',
+                'fyziklani_team.created',
+                ]}
+                {case 17}
+                {php $fields = [
+                'fyziklani_team.fyziklani_team_id',
+                'fyziklani_team.name',
+                ]}
+            {/switch}
+            {control columnTable $fields,$model,1024}
+        </div>
+    </div>
+
+    {if $rankVisible || $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rank & points'}</h2>
+                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
+            </div>
+        </div>
+    {/if}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                {control schoolCheck $model}
+            </div>
+        </div>
+    {/if}
+    {var $teacherCounter = 0;}
+    {foreach $model->getTeachers() as $teacher}
+        <div class="panel color-auto">
+            <div class="container">
+                {php $teacherCounter++}
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+                <h2>{_'Teacher'} {$teacherCounter}: {control printer:templateString '@person.full_name',$teacher,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $teacher}
+                {/if}
+                {include personSchedule, person => $teacher->person}
+            </div>
+        </div>
+    {/foreach}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        <div class="panel color-auto">
+            <div class="container">
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+                {php $counter++}
+                <h2>{_'Parcipant'} {$counter}: {control printer:templateString '@person.full_name',$member,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $member}
+                {/if}
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+                {include personSchedule, person => $member->person}
+                {if $isOrganizer}
+                    {control studySchoolTest $member->getPersonHistory()}
+                {/if}
+            </div>
+        </div>
+    {/foreach}
+    {if $model->event->event_type_id === 1 && $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Seating'}</h2>
+                {control seating:preview}
+            </div>
+        </div>
+    {/if}
+{/block}

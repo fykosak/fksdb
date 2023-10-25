@@ -3,10 +3,22 @@
         <div class="container">
             {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
             <div class="mb-3">
-                {include group from '../Item/group.detail.latte' group=>$model}
+                {control columnTable [
+                    'schedule_group.schedule_group_id',
+                    'schedule_group.name',
+                    'schedule_group.schedule_group_type',
+                    'schedule_group.start',
+                    'schedule_group.end',
+                    'schedule_group.registration_begin',
+                    'schedule_group.registration_end',
+                    'schedule_group.modification_end',
+                    ], $model,1024}
             </div>
-            <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Group:list}">{_'List of groups'}</a>
-            <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
+            {control printer:button 'schedule_group.detail', $model}
+            {control printer:button 'schedule_group.edit', $model}
+            <a class="btn btn-outline-secondary"
+               href="{plink :Schedule:Group:code id=>$model->getPrimary()}">{_'Scan 2D code!'}</a>
+            <a class="btn btn-outline-primary" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
         </div>
     </div>
     <div class="panel color-auto">

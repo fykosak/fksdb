@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\Schedule\PersonScheduleList;
+use FKSDB\Components\Schedule\AllPersonList;
+use FKSDB\Components\Schedule\Attendance\ButtonComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
@@ -21,7 +22,7 @@ use Nette\Security\Resource;
 
 final class PersonPresenter extends BasePresenter
 {
-    /** @phpstan-use EntityPresenterTrait<PersonModel> */
+    /** @phpstan-use EntityPresenterTrait<PersonScheduleModel> */
     use EntityPresenterTrait;
 
     private const FILTERED_TYPES = [
@@ -33,17 +34,17 @@ final class PersonPresenter extends BasePresenter
         ScheduleGroupType::TICKET,
     ];
 
-    private PersonService $personService;
+    private PersonScheduleService $service;
 
-    public function inject(PersonService $personService): void
+    public function inject(PersonScheduleService $service): void
     {
-        $this->personService = $personService;
+        $this->service = $service;
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): bool
+    public function authorizedMySchedule(): bool
     {
         $person = $this->getLoggedPerson();
         return $person && count($person->getEventRoles($this->getEvent()));
@@ -52,29 +53,29 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void
+    public function renderMySchedule(): void
     {
         $this->template->schedule = $this->prepareSchedule();
         $this->template->person = $this->getLoggedPerson();
     }
 
-    public function titleDefault(): PageTitle
+    public function titleMySchedule(): PageTitle
     {
         return new PageTitle(null, _('My schedule'), 'fas fa-list');
     }
 
     /**
-     * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws EventNotFoundException
      */
     public function renderDetail(): void
     {
         $this->template->schedule = $this->prepareSchedule();
-        $this->template->person = $this->getEntity();
         $this->template->otherSchedule = $this->getEvent()
             ->getScheduleGroups()
             ->where('schedule_group_type', self::FILTERED_TYPES);
+        $this->template->model = $this->getEntity();
     }
 
     /**
@@ -83,7 +84,17 @@ final class PersonPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Schedule of %s'), $this->getEntity()->getFullName()), 'fas fa-list');
+        $model = $this->getEntity();
+        return new PageTitle(
+            null,
+            sprintf(
+                _('%s@%s: %s'),
+                $model->schedule_item->name->getText($this->translator->lang),
+                $model->schedule_item->schedule_group->name->getText($this->translator->lang),
+                $model->person->getFullName()
+            ),
+            'fas fa-list'
+        );
     }
 
     public function titleList(): PageTitle
@@ -99,7 +110,7 @@ final class PersonPresenter extends BasePresenter
     {
         $dates = [];
         /** @var ScheduleGroupModel $group $group */
-        foreach ($this->getEvent()->getScheduleGroups() as $group) {
+        foreach ($this->getEvent()->getScheduleGroups()->order('schedule_group.start') as $group) {
             if (in_array($group->schedule_group_type->value, self::FILTERED_TYPES)) {
                 continue;
             }
@@ -119,17 +130,26 @@ final class PersonPresenter extends BasePresenter
         return $this->eventAuthorizator->isAllowed('event.schedule.person', $privilege, $this->getEvent());
     }
 
-    protected function getORMService(): PersonService
+    protected function getORMService(): PersonScheduleService
     {
-        return $this->personService;
+        return $this->service;
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentAttendance(): ButtonComponent
+    {
+        return new ButtonComponent($this->getContext(), $this->getEntity());
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): PersonScheduleList
+    protected function createComponentGrid(): AllPersonList
     {
-        return new PersonScheduleList($this->getContext(), $this->getEvent());
+        return new AllPersonList($this->getContext(), $this->getEvent());
     }
 
     protected function createComponentCreateForm(): Control

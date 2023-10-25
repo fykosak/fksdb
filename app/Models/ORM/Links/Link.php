@@ -4,40 +4,82 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Links;
 
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
+use Fykosak\Utils\UI\Title;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 
 /**
  * @phpstan-template TModel of Model
- * @phpstan-extends LinkFactory<TModel>
  */
-class Link extends LinkFactory
+final class Link
 {
+    /** @phpstan-var class-string<TModel> */
+    protected string $modelClassName;
     private string $destination;
     /** @phpstan-var array<string,string> */
     private array $params;
-    private string $title;
+    private Title $title;
 
     /**
      * @phpstan-param class-string<TModel> $modelClassName
      * @phpstan-param array<string,string> $params
      */
-    public function __construct(string $destination, array $params, string $title, string $modelClassName)
+    public function __construct(string $destination, array $params, Title $title, string $modelClassName)
     {
-        parent::__construct($modelClassName);
+        $this->modelClassName = $modelClassName;
         $this->destination = $destination;
         $this->params = $params;
         $this->title = $title;
     }
 
-    public function getText(): string
+    /**
+     * @throws InvalidLinkException
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     */
+    public function create(Presenter $presenter, Model $model): string
     {
-        return _($this->title);
+        return $presenter->link(...$this->createLinkParameters($model));
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     * @phpstan-return TModel
+     */
+    protected function getModel(Model $modelSingle): ?Model
+    {
+        return $modelSingle->getReferencedModel($this->modelClassName);
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws InvalidLinkException
+     * @throws \ReflectionException
+     * @phpstan-return array{string,array<string,scalar>}
+     */
+    public function createLinkParameters(Model $model): array
+    {
+        $model = $this->getModel($model);
+        if (is_null($model)) {
+            throw new InvalidLinkException();
+        }
+        return [
+            $this->getDestination($model),
+            $this->prepareParams($model),
+        ];
+    }
+    public function getTitle(): Title
+    {
+        return $this->title;
     }
 
     /**
      * @phpstan-param TModel $model
      */
-    protected function getDestination(Model $model): string
+    private function getDestination(Model $model): string
     {
         return $this->destination;
     }
@@ -46,7 +88,7 @@ class Link extends LinkFactory
      * @phpstan-param TModel $model
      * @phpstan-return array<string,scalar>
      */
-    protected function prepareParams(Model $model): array
+    private function prepareParams(Model $model): array
     {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {

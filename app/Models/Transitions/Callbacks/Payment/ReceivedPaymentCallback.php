@@ -16,6 +16,7 @@ class ReceivedPaymentCallback extends MailCallback
 {
     /**
      * @param PaymentHolder $holder
+     * @phpstan-param Transition<PaymentHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,
@@ -40,6 +41,7 @@ class ReceivedPaymentCallback extends MailCallback
 
     /**
      * @param PaymentHolder $holder
+     * @phpstan-param Transition<PaymentHolder> $transition
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {

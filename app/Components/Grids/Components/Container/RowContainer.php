@@ -24,9 +24,4 @@ class RowContainer extends BaseItem
             ]
         );
     }
-
-    public function getTitle(): ?Title
-    {
-        return null;
-    }
 }

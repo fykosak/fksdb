@@ -16,7 +16,7 @@ use Nette\DI\Container;
 
 final class MachineCode
 {
-    private const CIP_ALGO = 'aes-256-cbc-hmac-sha1';
+    private const CIP_ALGO = 'aes-256-ebc';
 
     /**
      * @param PersonModel|EventParticipantModel|TeamModel2 $model

@@ -82,28 +82,7 @@ final class GroupList extends BaseList
         );
         /** @phpstan-ignore-next-line */
         ItemGrid::addColumns($table, $this->container, $this->getPresenter());
-        $this->addPresenterButton(
-            ':Schedule:Group:detail',
-            'detail',
-            _('button.detail'),
-            false,
-            ['id' => 'schedule_group_id']
-        );
-
-        $this->addPresenterButton(
-            ':Schedule:Group:edit',
-            'edit',
-            _('button.edit'),
-            false,
-            ['id' => 'schedule_group_id']
-        );
-
-        $this->addPresenterButton(
-            ':Schedule:Group:code',
-            'code',
-            _('button.scan2d'),
-            false,
-            ['id' => 'schedule_group_id']
-        );
+        $this->addLink('schedule_group.detail');
+        $this->addLink('schedule_group.edit');
     }
 }

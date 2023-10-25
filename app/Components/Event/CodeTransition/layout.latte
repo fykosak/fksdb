@@ -1,0 +1,13 @@
+{layout ../../Controls/@layout.latte}
+{block content}
+    {if $available}
+        {*form $control['formControl']['form']}
+            <div class="input-group flex-nowrap">
+                <label class="input-group-text">{$control['formControl']['form']['code']->getOption('description')}</label>
+                {input $control['formControl']['form']['code'] placeholder: _('application code'), class: 'form-control ' . $control['formControl']['form']['code']->getControlPrototype()->class, 'required'=>null}
+            {input $control['formControl']['form']['submit'] class:'btn btn-outline-secondary'}
+            </div>
+        {/form*}
+        {control formControl}
+    {/if}
+{/block}

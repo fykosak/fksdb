@@ -56,6 +56,7 @@ class TeacherMail extends MailCallback
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
@@ -66,6 +67,7 @@ class TeacherMail extends MailCallback
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,

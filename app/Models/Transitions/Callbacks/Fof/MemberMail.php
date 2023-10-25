@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Callbacks\Fof;
 
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
@@ -12,6 +13,7 @@ class MemberMail extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallb
 {
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
@@ -22,6 +24,7 @@ class MemberMail extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallb
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,

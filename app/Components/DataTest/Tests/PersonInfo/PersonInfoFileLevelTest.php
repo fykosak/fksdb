@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
@@ -22,7 +22,7 @@ use Nette\DI\Container;
 class PersonInfoFileLevelTest extends Test
 {
     private string $fieldName;
-    private ORMFactory $tableReflectionFactory;
+    private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(string $fieldName, Container $container)
     {
@@ -30,7 +30,7 @@ class PersonInfoFileLevelTest extends Test
         $this->fieldName = $fieldName;
     }
 
-    public function inject(ORMFactory $tableReflectionFactory): void
+    public function inject(ReflectionFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
