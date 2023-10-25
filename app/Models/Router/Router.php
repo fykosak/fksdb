@@ -85,10 +85,12 @@ class Router
             'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',
             ['module' => 'Event', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
         );
+        // phpcs:disable
         $service->addRoute(
             '<module organizer|public|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>/[series<series [0-9]+>/]]]<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'contestId' => ['filterTable' => self::CONTESTS]]
         );
+        // phpcs:enable
         return $service;
     }
 }
