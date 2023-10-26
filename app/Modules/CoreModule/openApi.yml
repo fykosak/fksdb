@@ -7,17 +7,17 @@ jsonSchemaDialect: https://spec.openapis.org/oas/3.1/dialect/base
 servers:
   - url: http://db.fykos.local/api/
 paths:
-  /event:
+  /events:
     get: { }
-  /event/{eventId}:
+  /events/{eventId}:
     get: { }
-  /event/{eventId}/team:
+  /events/{eventId}/teams:
     get: { }
-  /event/{eventId}/participant:
+  /events/{eventId}/participants:
     get: { }
-  /contest:
+  /contests:
     get: { }
-  /contest/{contstId}/organizer:
+  /contests/{contstId}/organizers:
     get: { }
-  /contest/{contstId}/year/{year}/stats:
+  /contests/{contstId}/years/{year}/stats:
     get: { }

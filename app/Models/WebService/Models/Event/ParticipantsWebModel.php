@@ -15,7 +15,7 @@ use Nette\Schema\Expect;
 /**
  * @phpstan-extends WebModel<array{eventId:int},array<mixed>>
  */
-class ParticipantListWebModel extends WebModel
+class ParticipantsWebModel extends WebModel
 {
     private EventService $eventService;
 
