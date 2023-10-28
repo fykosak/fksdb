@@ -102,7 +102,7 @@ class Router
         );
         $service->addRoute(
             'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',
-            ['module' => 'Event', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
+            ['module' => 'Events', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
         );
         // phpcs:disable
         $service->addRoute(
