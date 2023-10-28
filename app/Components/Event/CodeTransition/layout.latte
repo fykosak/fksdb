@@ -1,13 +1,28 @@
 {layout ../../Controls/@layout.latte}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
+{varType FKSDB\Models\Transitions\Transition\Transition[] $available}
 {block content}
-    {if $available}
-        {*form $control['formControl']['form']}
-            <div class="input-group flex-nowrap">
-                <label class="input-group-text">{$control['formControl']['form']['code']->getOption('description')}</label>
-                {input $control['formControl']['form']['code'] placeholder: _('application code'), class: 'form-control ' . $control['formControl']['form']['code']->getControlPrototype()->class, 'required'=>null}
-            {input $control['formControl']['form']['submit'] class:'btn btn-outline-secondary'}
+    {if count($available)}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Attendance'}</h2>
+                {*<p class="d-inline-flex gap-1">
+                    <button class="btn btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#codeDescription"><i class="fas fa-info me-2"></i>{_'Info'}</button>
+                </p>
+                <div class="collapse" id="codeDescription">
+                    <div class="card card-body">
+                        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                    </div>
+                </div>*}
+                {*form $control['formControl']['form']}
+                    <div class="input-group flex-nowrap">
+                        <label class="input-group-text">{$control['formControl']['form']['code']->getOption('description')}</label>
+                        {input $control['formControl']['form']['code'] placeholder: _('application code'), class: 'form-control ' . $control['formControl']['form']['code']->getControlPrototype()->class, 'required'=>null}
+                    {input $control['formControl']['form']['submit'] class:'btn btn-outline-secondary'}
+                    </div>
+                {/form*}
+            {control formControl}
             </div>
-        {/form*}
-        {control formControl}
+        </div>
     {/if}
 {/block}

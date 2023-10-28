@@ -22,8 +22,8 @@ class Button extends BaseItem
     private $linkCallback;
     /** @phpstan-var (callable(TModel,int):bool)|null */
     private $showCallback;
-    private ?string $buttonClassName;
-    private Title $buttonLabel;
+    private ?string $className;
+    private Title $label;
     private Control $control;
 
     /**
@@ -33,16 +33,16 @@ class Button extends BaseItem
     public function __construct(
         Container $container,
         Control $control,
-        Title $buttonLabel,
+        Title $label,
         callable $linkCallback,
-        ?string $buttonClassName = null,
+        ?string $className = null,
         ?callable $showCallback = null
     ) {
         parent::__construct($container);
         $this->linkCallback = $linkCallback;
-        $this->buttonClassName = $buttonClassName;
+        $this->className = $className;
         $this->showCallback = $showCallback;
-        $this->buttonLabel = $buttonLabel;
+        $this->label = $label;
         $this->control = $control;
     }
 
@@ -57,9 +57,9 @@ class Button extends BaseItem
         if (!isset($this->showCallback) || ($this->showCallback)($model, $userPermission)) {
             $html->addAttributes([
                 'href' => $this->control->link($destination, $params),
-                'class' => $this->buttonClassName ?? 'btn btn-sm me-1 btn-outline-secondary',
+                'class' => $this->className ?? 'btn btn-sm me-1 btn-outline-secondary',
             ]);
-            $html->setHtml($this->buttonLabel->toHtml());
+            $html->setHtml($this->label->toHtml());
         }
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', ['html' => $html]);
     }

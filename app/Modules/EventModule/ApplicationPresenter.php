@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
-use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
@@ -24,6 +24,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
@@ -207,12 +208,12 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function renderList(): void
+    public function renderDefault(): void
     {
         $this->template->event = $this->getEvent();
     }
 
-    public function titleList(): PageTitle
+    public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Applications'), 'fas fa-address-book');
     }
@@ -318,9 +319,9 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCode(): CodeComponent
+    protected function createComponentCode(): CodeRedirectComponent
     {
-        return new CodeComponent($this->getContext(), $this->getEvent());
+        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -343,7 +344,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<ParticipantHolder>
+     * @phpstan-return CodeTransitionComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -351,7 +352,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-ignore-next-line
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {

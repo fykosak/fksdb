@@ -11,7 +11,7 @@ use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
-use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
@@ -297,9 +297,9 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCode(): CodeComponent
+    protected function createComponentCode(): CodeRedirectComponent
     {
-        return new CodeComponent($this->getContext(), $this->getEvent());
+        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -322,7 +322,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<ParticipantHolder>
+     * @phpstan-return CodeTransitionComponent<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -330,7 +330,6 @@ final class TeamPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-ignore-next-line
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {

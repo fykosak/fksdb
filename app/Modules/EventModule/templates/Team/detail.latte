@@ -23,12 +23,7 @@
 
 {block outerContent}
     {if $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Attendance'}</h2>
-                {control codeTransition}
-            </div>
-        </div>
+        {control codeTransition}
     {/if}
     {if $isOrganizer}
         {include rests from '../AbstractApplication/blocks.latte'}
