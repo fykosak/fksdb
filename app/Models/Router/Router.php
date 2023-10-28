@@ -83,7 +83,7 @@ class Router
             ]
         )->addRoute(
             '[<eventId [0-9]+>/]<module game|schedule>/<presenter>/<action=default>[/<id>]',
-            ['presenter' => 'Dashboard']
+            []
         )->addRoute(
             '<eventId [0-9]+>/<presenter>/<action=default>[/<id>]',
             [
@@ -99,11 +99,11 @@ class Router
                 'flag' => [\Nette\Routing\Router::ONE_WAY],
                 'module' => 'Events',
             ]
-        );
+        );// TODO remove after FOL
         $service->addRoute(
             'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',
             ['module' => 'Events', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
-        );
+        );// TODO remove after FOL
         // phpcs:disable
         $service->addRoute(
             '<module organizer|public|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>/[series<series [0-9]+>/]]]<presenter>/<action=default>[/<id>]',
