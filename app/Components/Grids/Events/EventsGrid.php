@@ -58,7 +58,7 @@ class EventsGrid extends BaseGrid
             '@event.event_year',
         ]);
         $this->addPresenterButton(
-            ':Event:Dashboard:default',
+            ':Events:Dashboard:default',
             'detail',
             new Title(null, _('button.detail')),
             true,
@@ -67,7 +67,7 @@ class EventsGrid extends BaseGrid
         $this->addPresenterButton('edit', 'edit', new Title(null, _('button.edit')), true, ['id' => 'event_id']);
 
         $this->addPresenterButton(
-            ':Event:EventOrganizer:list',
+            ':Events:EventOrganizer:list',
             'org',
             new Title(null, _('Organizers')),
             true,

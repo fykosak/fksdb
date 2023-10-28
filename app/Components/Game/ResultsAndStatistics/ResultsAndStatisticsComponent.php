@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Modules\EventModule\Game\BasePresenter;
+use FKSDB\Modules\EventsModule\Game\BasePresenter;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

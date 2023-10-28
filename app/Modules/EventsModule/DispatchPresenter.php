@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule;
+namespace FKSDB\Modules\EventsModule;
 
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use Fykosak\Utils\UI\PageTitle;

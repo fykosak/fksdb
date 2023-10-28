@@ -180,13 +180,13 @@ orm:
                 title: _('Note')
         links:
             edit:
-                destination: :Event:EventOrganizer:edit
+                destination: :Events:EventOrganizer:edit
                 params:
                     eventId: event_id
                     id: e_org_id
                 title: _('button.eventOrg.edit')
             detail:
-                destination: :Event:EventOrganizer:detail
+                destination: :Events:EventOrganizer:detail
                 params:
                     eventId: event_id
                     id: e_org_id
@@ -257,7 +257,7 @@ orm:
                 title: _('Number of baguettes for lunch')
         links:
             detail:
-                destination: :Event:Application:detail
+                destination: :Events:Application:detail
                 params:
                     eventId: event_id
                     id: event_participant_id
@@ -401,7 +401,7 @@ orm:
                 class: FKSDB\Models\ORM\Models\PaymentState
         links:
             detail:
-                destination: :Event:Payment:detail
+                destination: :Events:Payment:detail
                 params:
                       eventId: event_id
                       id: payment_id
@@ -874,7 +874,7 @@ orm:
                 title: _('Submit opened?')
         links:
             detail:
-                destination: :Event:Team:detail
+                destination: :Events:Team:detail
                 params:
                     eventId: event_id
                     id: fyziklani_team_id
@@ -938,7 +938,7 @@ orm:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.detail')
             edit:
-                destination: :Schedule:Group:edit
+                destination: :Schedule:Groups:edit
                 params:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.edit')

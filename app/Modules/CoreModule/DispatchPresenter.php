@@ -89,7 +89,7 @@ final class DispatchPresenter extends BasePresenter
         }
         $results[] = new NavItem(
             new Title(null, _('Events'), 'fas fa-calendar-days'),
-            ':Event:Dispatch:default'
+            ':Events:Dispatch:default'
         );
         return $results;
     }

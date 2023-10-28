@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Game;
+namespace FKSDB\Modules\EventsModule\Game;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
+use FKSDB\Modules\EventsModule\BasePresenter as EventBasePresenter;
 
 abstract class BasePresenter extends EventBasePresenter
 {

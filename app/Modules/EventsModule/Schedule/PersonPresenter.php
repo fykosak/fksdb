@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Schedule;
+namespace FKSDB\Modules\EventsModule\Schedule;
 
 use FKSDB\Components\Schedule\AllPersonList;
 use FKSDB\Components\Schedule\Attendance\ButtonComponent;
@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
+use FKSDB\Modules\EventsModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;

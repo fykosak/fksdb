@@ -2,53 +2,51 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule;
+namespace FKSDB\Modules\EventsModule;
 
-use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\DataTest\SingleTestComponent;
-use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
-use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
+use FKSDB\Components\EntityForms\Single\DsefFormComponent;
+use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
+use FKSDB\Components\EntityForms\Single\SingleFormComponent;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
+use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
-use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamGrid;
-use FKSDB\Components\Grids\Application\TeamList;
-use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
-use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
+use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 
-final class TeamPresenter extends BasePresenter
+final class ApplicationPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<TeamModel2> */
+    /** @use EventEntityPresenterTrait<EventParticipantModel> */
     use EventEntityPresenterTrait;
 
-    private TeamService2 $teamService;
+    protected EventParticipantService $eventParticipantService;
 
-    public function injectServiceService(TeamService2 $service): void
+    public function injectServiceService(EventParticipantService $service): void
     {
-        $this->teamService = $service;
+        $this->eventParticipantService = $service;
     }
 
     /**
@@ -65,7 +63,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function isEnabled(): bool
     {
-        return $this->getEvent()->isTeamEvent();
+        return !$this->getEvent()->isTeamEvent();
     }
 
     public function requiresLogin(): bool
@@ -73,24 +71,41 @@ final class TeamPresenter extends BasePresenter
         return $this->getAction() !== 'create';
     }
 
-    protected function getORMService(): TeamService2
+    protected function getORMService(): EventParticipantService
     {
-        return $this->teamService;
+        return $this->eventParticipantService;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws UnsupportedLanguageException
+     */
+    protected function startup(): void
+    {
+        if (in_array($this->getAction(), ['create', 'edit'])) {
+            if (!in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
+                $this->redirect(
+                    ':Public:Application:default',
+                    array_merge(['eventId' => $this->eventId], $this->getParameters())
+                );
+            }
+        }
+        parent::startup();
     }
 
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
         return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
+            $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event) || (
                 $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+                && $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'create', $event)
             );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
+        return new PageTitle(null, _('Create application'), 'fas fa-plus');
     }
 
     /**
@@ -103,28 +118,29 @@ final class TeamPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        foreach ($this->getEntity()->getPersons() as $person) {
-            $this->addComponent(
-                new SinglePersonGrid($this->getContext(), $person, $this->getEvent()),
-                'personSchedule' . $person->person_id
-            );
-        }
-
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
-        try {
-            $setup = $this->getEvent()->getGameSetup();
-            $rankVisible = $setup->result_hard_display;
-        } catch (NotSetGameParametersException $exception) {
-            $rankVisible = false;
+        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
+        switch ($this->getEvent()->event_type_id) {
+            case 2:
+            case 14:
+                $this->template->fields = ['lunch_count'];
+                break;
+            case 11:
+            case 12:
+                $this->template->fields = ['diet', 'health_restrictions', 'note'];
+                break;
+            default:
+                $this->template->fields = [];
         }
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getEntity(),
-            'org-detail',
-            $this->getEvent()
-        );
-        $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
+        $this->template->groups = [
+            _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
+            _('T-shirt') => ['tshirt_size', 'tshirt_color'],
+            _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
+            _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
+            _('Food') => ['lunch_count'],
+            _('Price') => ['price'],
+        ];
     }
 
     /**
@@ -138,23 +154,11 @@ final class TeamPresenter extends BasePresenter
         $entity = $this->getEntity();
         return new PageTitle(
             null,
-            sprintf(_('Application detail "%s"'), $entity->name),
+            sprintf(_('Application: %s'), $entity->person->getFullName()),
             'fas fa-user'
         );
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDetailedList(): bool
-    {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
-    }
-
-    public function titleDetailedList(): PageTitle
-    {
-        return new PageTitle(null, _('Detailed list of teams'), 'fas fa-address-book');
-    }
 
     /**
      * @throws EventNotFoundException
@@ -180,20 +184,38 @@ final class TeamPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
+        return new PageTitle(
+            null,
+            sprintf(_('Edit application "%s"'), $this->getEntity()->person->getFullName()),
+            'fas fa-edit'
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     */
+    public function authorizedImport(): bool
+    {
+        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+    }
+
+    public function titleImport(): PageTitle
+    {
+        return new PageTitle(null, _('Application import'), 'fas fa-download');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): bool
+    public function renderDefault(): void
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        $this->template->event = $this->getEvent();
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Teams'), 'fas fa-address-book');
+        return new PageTitle(null, _('Applications'), 'fas fa-address-book');
     }
 
     /**
@@ -211,14 +233,15 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @return BaseHolder|ParticipantHolder
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
-    private function getHolder(): TeamHolder
+    private function getHolder(): ModelHolder
     {
         return $this->getMachine()->createHolder($this->getEntity());
     }
@@ -226,32 +249,27 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
      */
-    private function getMachine(): TeamMachine
+    private function getMachine(): EventParticipantMachine
     {
-        return $this->eventDispatchFactory->getTeamMachine($this->getEvent());
+        return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
      */
-    protected function createComponentGrid(): TeamGrid
+    protected function createComponentGrid(): SingleApplicationsGrid
     {
-        return new TeamGrid($this->getEvent(), $this->getContext());
-    }
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentList(): TeamList
-    {
-        return new TeamList($this->getEvent(), $this->getContext());
+        return new SingleApplicationsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): TeamFormComponent
+    protected function createComponentCreateForm(): SingleFormComponent
     {
         return $this->createForm(null);
     }
@@ -264,7 +282,7 @@ final class TeamPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): TeamFormComponent
+    protected function createComponentEditForm(): SingleFormComponent
     {
         return $this->createForm($this->getEntity());
     }
@@ -273,22 +291,26 @@ final class TeamPresenter extends BasePresenter
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    private function createForm(?TeamModel2 $model): TeamFormComponent
+    private function createForm(?EventParticipantModel $model): SingleFormComponent
     {
         switch ($this->getEvent()->event_type_id) {
-            case 1:
-                return new FOFTeamFormComponent(
-                    $this->getMachine(),
-                    $this->getEvent(),
+            case 2:
+            case 14:
+                return new DsefFormComponent(
                     $this->getContext(),
-                    $model
+                    $model,
+                    $this->getEvent(),
+                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getLoggedPerson()
                 );
-            case 9:
-                return new FOLTeamFormComponent(
-                    $this->getMachine(),
-                    $this->getEvent(),
+            case 11:
+            case 12:
+                return new SetkaniFormComponent(
                     $this->getContext(),
-                    $model
+                    $model,
+                    $this->getEvent(),
+                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getLoggedPerson()
                 );
         }
         throw new InvalidStateException(_('Event type is not supported'));
@@ -303,7 +325,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<TeamHolder>
+     * @phpstan-return TransitionButtonsComponent<BaseHolder|ParticipantHolder>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -316,13 +338,13 @@ final class TeamPresenter extends BasePresenter
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(),
+            $this->getMachine(), // @phpstan-ignore-line
             $this->getHolder()
         );
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<TeamModel2>
+     * @phpstan-return CodeTransitionComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -336,15 +358,15 @@ final class TeamPresenter extends BasePresenter
         return new CodeTransitionComponent(
             $this->getContext(),
             $this->getEntity(),
-            TeamState::tryFrom(TeamState::Arrived), // TODO
-            $this->getMachine()
+            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
+            $this->getMachine(), // @phpstan-ignore-line
         );
     }
 
     /**
      * @throws EventNotFoundException
      * @throws BadTypeException
-     * @phpstan-return MassTransitionComponent<TeamMachine>
+     * @phpstan-return MassTransitionComponent<EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
@@ -358,41 +380,23 @@ final class TeamPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentRests(): TeamRestsComponent
+    protected function createComponentRests(): PersonRestComponent
     {
-        return new TeamRestsComponent($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @phpstan-return SingleTestComponent<PersonHistoryModel>
-     */
-    protected function createComponentStudySchoolTest(): SingleTestComponent
-    {
-        return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
+        return new PersonRestComponent($this->getContext(), $this->getEntity());
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
+     * @throws ConfigurationNotFoundException
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentImport(): ImportComponent
     {
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            [$this->getEntity()],
-            $this->getContext()
-        );
+        return new ImportComponent($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentSchoolCheck(): SchoolCheckComponent
+
+    protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
-        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+        return new SinglePersonGrid($this->getContext(), $this->getEntity()->person, $this->getEvent());
     }
 }

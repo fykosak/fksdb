@@ -1,7 +1,7 @@
 navigation:
         #AK hotlinks
         Core.Dispatch.default:
-            Event.Payment.create:
+            Events.Payment.create:
                 eventId: 173
             #Schedule:PersonSchedule:default:
             #    params:
@@ -79,29 +79,29 @@ navigation:
             Game.Statistics.correlation: []
             Game.Statistics.table: []
 
-        Event.Dashboard.default#application:
+        Events.Dashboard.default#application:
             #team
-            Event.Team.detailedList: []
-            Event.Team.default: []
-            Event.Team.code: []
-            Event.Team.mass: []
-            Event.Team.create: []
+            Events.Team.detailedList: []
+            Events.Team.default: []
+            Events.Team.code: []
+            Events.Team.mass: []
+            Events.Team.create: []
             #single
-            Event.Application.default: []
-            Event.Application.code: []
-            Event.Application.mass: []
-            Event.Application.import: []
-        Event.Dashboard.default#other:
+            Events.Application.default: []
+            Events.Application.code: []
+            Events.Application.mass: []
+            Events.Application.import: []
+        Events.Dashboard.default#other:
             #others
-            Event.EventOrganizer.list: []
-            Event.Payment.create: []
-            Event.Payment.detailedList: []
-            Event.Payment.list: []
+            Events.EventOrganizer.list: []
+            Events.Payment.create: []
+            Events.Payment.detailedList: []
+            Events.Payment.list: []
             Game.Dashboard.default: []
-            Schedule.Group.list: []
-            Event.Chart.list: []
-            Event.Dispatch.default: []
-            Event.Dashboard.default: []
+            Schedule.Groups.default: []
+            Events.Chart.list: []
+            Events.Dispatch.default: []
+            Events.Dashboard.default: []
         Warehouse.Dashboard.default:
             Warehouse.Producer.list: []
             Warehouse.Product.list: []

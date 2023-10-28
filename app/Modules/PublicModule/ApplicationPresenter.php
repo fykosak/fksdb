@@ -213,14 +213,14 @@ final class ApplicationPresenter extends BasePresenter
         if (in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
             if ($this->getEventApplication()) {
                 $this->redirect(
-                    ':Event:Application:edit',
+                    ':Events:Application:edit',
                     [
                         'eventId' => $this->getEvent()->event_id,
                         'id' => $this->getEventApplication()->event_participant_id,
                     ]
                 );
             } else {
-                $this->redirect(':Event:Application:create', ['eventId' => $this->getEvent()->event_id, 'id' => null]);
+                $this->redirect(':Events:Application:create', ['eventId' => $this->getEvent()->event_id, 'id' => null]);
             }
         }
         switch ($this->getAction()) {

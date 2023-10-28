@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Schedule;
+namespace FKSDB\Modules\EventsModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
 use FKSDB\Components\Schedule\GroupList;
@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use FKSDB\Modules\EventModule\BasePresenter;
+use FKSDB\Modules\EventsModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
@@ -23,7 +23,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-final class GroupPresenter extends BasePresenter
+final class GroupsPresenter extends BasePresenter
 {
     /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
     use EventEntityPresenterTrait;
@@ -82,12 +82,12 @@ final class GroupPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
+    public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Schedule'), 'fas fa-list');
     }
 
-    public function renderList(): void
+    public function renderDefault(): void
     {
         $this->template->items = [
             new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),

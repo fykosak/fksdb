@@ -75,8 +75,8 @@ abstract class CodeComponent extends FormComponent
                 case 'application':
                     $this->getPresenter()->redirect(
                         $this->getEvent()->isTeamEvent()
-                            ? ':Event:TeamApplication:detail'
-                            : ':Event:Application:detail',
+                            ? ':Events:TeamApplication:detail'
+                            : ':Events:Application:detail',
                         [
                             'id' => $personSchedule->person->getApplication(
                                 $personSchedule->schedule_item->schedule_group->event

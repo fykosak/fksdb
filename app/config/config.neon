@@ -128,8 +128,8 @@ database:
 application:
     errorPresenter: Core:Error
     mapping:
-        Game: FKSDB\Modules\EventModule\Game\*Presenter
-        Schedule: FKSDB\Modules\EventModule\Schedule\*Presenter
+        Game: FKSDB\Modules\EventsModule\Game\*Presenter
+        Schedule: FKSDB\Modules\EventsModule\Schedule\*Presenter
         Warehouse: FKSDB\Modules\OrganizerModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:

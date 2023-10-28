@@ -52,7 +52,7 @@ class NewApplicationsGrid extends BaseGrid
             $this->getPresenter(),
             new Title(null, _('Create application')),
             fn(EventModel $event): array => $event->isTeamEvent()
-                ? [':Event:Team:create', ['eventId' => $event->event_id]]
+                ? [':Events:Team:create', ['eventId' => $event->event_id]]
                 : [':Public:Application:default', ['eventId' => $event->event_id]],
             null,
             fn(EventModel $modelEvent): bool => $modelEvent->isRegistrationOpened()

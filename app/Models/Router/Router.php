@@ -73,13 +73,32 @@ class Router
         );
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
         $service->addRoute('<presenter settings>/<action=default>[/<id>]', ['module' => 'Core']);
-        $service->addRoute(
-            '<module event|game|schedule>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+
+        // EVENTS
+        $service->withPath('events/')->addRoute(
+            '<action=default>',
+            [
+                'module' => 'Events',
+                'presenter' => 'Dispatch',
+            ]
+        )->addRoute(
+            '[<eventId [0-9]+>/]<module game|schedule>/<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard']
+        )->addRoute(
+            '<eventId [0-9]+>/<presenter>/<action=default>[/<id>]',
+            [
+                'module' => 'Events',
+                'presenter' => 'Dashboard',
+            ]
         );
+
         $service->addRoute(
-            '<module event|game|schedule>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
-            ['presenter' => 'Dashboard', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
+            'event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
+            [
+                'presenter' => 'Dashboard',
+                'flag' => [\Nette\Routing\Router::ONE_WAY],
+                'module' => 'Events',
+            ]
         );
         $service->addRoute(
             'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',

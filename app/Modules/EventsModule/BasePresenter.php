@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule;
+namespace FKSDB\Modules\EventsModule;
 
 use FKSDB\Components\Controls\Choosers\EventChooserComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -98,6 +98,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     protected function getNavRoots(): array
     {
-        return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
+        return ['Events.Dashboard.default#application', 'Events.Dashboard.default#other'];
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule\Game;
+namespace FKSDB\Modules\EventsModule\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
