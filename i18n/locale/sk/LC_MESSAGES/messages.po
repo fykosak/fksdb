@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-27 16:53+0200\n"
+"POT-Creation-Date: 2023-10-29 02:41+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -117,12 +117,6 @@ msgstr ""
 msgid "Person Id"
 msgstr ""
 
-#: i18n/../app/Components/Controls/Choosers/EventChooserComponent.php:38
-#: i18n/../app/config/orm.neon.neon2php:90
-#: i18n/../app/config/orm.neon.neon2php:168
-msgid "Event"
-msgstr ""
-
 #: i18n/../app/Components/Controls/Choosers/SeriesChooserComponent.php:33
 #: i18n/../app/Components/Controls/Choosers/SeriesChooserComponent.php:40
 #, php-format
@@ -179,11 +173,12 @@ msgid "button.submit"
 msgstr ""
 
 #: i18n/../app/Components/Controls/FormComponent/CodeForm.php:42
+#: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:43
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 #: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx.tsx2php:52
 #: i18n/../app/Components/Schedule/AllPersonList.php:55
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:142
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:30
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:40
 msgid "Code"
 msgstr ""
 
@@ -377,6 +372,7 @@ msgstr "Registrácia"
 #: i18n/../app/Components/Controls/Person/Detail/ContestantListComponent.php:50
 #: i18n/../app/Components/Controls/Person/Detail/EventOrganizerListComponent.php:56
 #: i18n/../app/Components/Controls/Person/Detail/OrganizerListComponent.php:65
+#: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:46
 #: i18n/../app/Components/Game/Closing/TeamSubmitsGrid.php:61
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:81
 #: i18n/../app/Components/Grids/ContestantsFromSchoolGrid.php:59
@@ -386,7 +382,7 @@ msgstr "Registrácia"
 #: i18n/../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:74
 #: i18n/../app/Components/Grids/Warehouse/ItemsGrid.php:55
 #: i18n/../app/Components/Grids/Warehouse/ProductsGrid.php:50
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:19
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:29
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:183
 #: i18n/../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:44
 #: i18n/../app/main.tsx.tsx2php:197 i18n/../app/main.tsx.tsx2php:202
@@ -397,6 +393,7 @@ msgstr ""
 #: i18n/../app/Components/Controls/Person/Detail/ContestantListComponent.php:71
 #: i18n/../app/Components/Controls/Person/Detail/EventOrganizerListComponent.php:63
 #: i18n/../app/Components/Controls/Person/Detail/OrganizerListComponent.php:72
+#: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:44
 #: i18n/../app/Components/Grids/Application/SingleApplicationsGrid.php:109
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:58
 #: i18n/../app/Components/Grids/Application/TeamList.php:116
@@ -573,8 +570,8 @@ msgstr "Zvoliť typ"
 #: i18n/../app/Components/Controls/Stalking/container.latte.latte2php:78
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:87
 #: i18n/../app/Modules/EventModule/Schedule/PersonPresenter.php:102
-#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:67
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:19
+#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:28
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:9
 msgid "Schedule"
 msgstr ""
 
@@ -1338,13 +1335,13 @@ msgstr ""
 msgid "Remove delivery address"
 msgstr ""
 
-#: i18n/../app/Components/Event/Code/CodeComponent.php:44
+#: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:63
 #, fuzzy
 msgid "Application belongs to another event."
 msgstr "Časový vývoj prihlášiek"
 
-#: i18n/../app/Components/Event/Code/CodeComponent.php:67
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:108
+#: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:86
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:111
 #: i18n/../app/Models/MachineCode/MachineCodeType.php:65
 msgid "Wrong type of code."
 msgstr ""
@@ -1353,23 +1350,31 @@ msgstr ""
 msgid "Automaticly redirect to detail"
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:77
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:80
 msgid "Modely sa nezhodujú"
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:89
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:90
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:92
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:93
 #: i18n/../app/Components/Schedule/Attendance/ButtonComponent.php:44
 #: i18n/../app/Components/Schedule/Attendance/CodeComponent.php:48
 #, php-format
 msgid "Transition successful for: %s"
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:116
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:119
 msgid "Processed: "
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/layout.latte.latte2php:7
+#: i18n/../app/Components/Event/CodeTransition/layout.latte.latte2php:4
+#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:10
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:12
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fol.latte.latte2php:8
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:58
+msgid "Info"
+msgstr ""
+
+#: i18n/../app/Components/Event/CodeTransition/layout.latte.latte2php:14
 #, fuzzy
 msgid "application code"
 msgstr "Zoznam platieb"
@@ -2075,7 +2080,7 @@ msgid "Code is too short"
 msgstr ""
 
 #: i18n/../app/Components/Grids/AclGrid.php:59
-msgid "Person/login"
+msgid "Person/Login"
 msgstr ""
 
 #: i18n/../app/Components/Grids/AclGrid.php:74
@@ -2092,7 +2097,7 @@ msgid "--select role--"
 msgstr "Zvoliť typ"
 
 #: i18n/../app/Components/Grids/Application/Person/NewApplicationsGrid.php:53
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:107
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:106
 #, fuzzy
 msgid "Create application"
 msgstr "Zoznam platieb"
@@ -2248,7 +2253,7 @@ msgstr ""
 #: i18n/../app/Components/Schedule/Input/Components/price-label.tsx.tsx2php:13
 #: i18n/../app/Components/Schedule/ItemGrid.php:65
 #: i18n/../app/Models/Transitions/Callbacks/Payment/items.latte.latte2php:27
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:141
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:136
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:63
 #: i18n/../app/config/orm.neon.neon2php:211
 #: i18n/../app/config/orm.neon.neon2php:393
@@ -2455,8 +2460,7 @@ msgstr ""
 #: i18n/../app/Components/Schedule/Code/CodeComponent.php:144
 #: i18n/../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:21
 #: i18n/../app/Modules/EventModule/Schedule/templates/Person/detail.latte.latte2php:19
-#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:20
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:28
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:14
 msgid "Attendance"
 msgstr ""
 
@@ -3716,11 +3720,12 @@ msgid "Edit an entity"
 msgstr "Uprava platby #%s"
 
 #: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:110
+#: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:125
 #, fuzzy
 msgid "List of entities"
 msgstr "Zoznam akcií"
 
-#: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:148
+#: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
 #, fuzzy
 msgid "Model does not exists"
 msgstr "Ubytnovanie neexistuje"
@@ -4051,7 +4056,7 @@ msgid "Events with open registration"
 msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Register/default.latte.latte2php:73
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:91
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:40
 #: i18n/../app/Modules/OrganizerModule/TeacherPresenter.php:51
 msgid "Teacher"
 msgstr ""
@@ -4060,23 +4065,24 @@ msgstr ""
 msgid "year-fykos"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:136
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:131
 msgid "Health & food"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:137
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:132
 msgid "T-shirt"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:138
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:133
 msgid "Arrival"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:139
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:134
 msgid "Departure"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:140
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:135
+#: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:25
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:166
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:157
 #: i18n/../data/events/soustredeni/sous35j.neon.neon2php:171
@@ -4088,42 +4094,47 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:156
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:151
 #, fuzzy, php-format
 msgid "Application: %s"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:188
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:183
 #, fuzzy, php-format
-msgid "Edit application \"%s\""
+msgid "Edit application: %s"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:204
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:199
 #, fuzzy
 msgid "Application import"
 msgstr "Časový vývoj prihlášiek"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:217
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:204
 #, fuzzy
 msgid "Applications"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:231
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:210
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:218
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:204
 #: i18n/../app/Modules/EventModule/templates/Team/detailedList.latte.latte2php:5
 msgid "Mass transitions"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:315
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:294
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:302
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:288
 #, fuzzy
 msgid "Event type is not supported"
 msgstr "Zvoliť typ"
 
-#: i18n/../app/Modules/EventModule/DashboardPresenter.php:18
+#: i18n/../app/Modules/EventModule/DashboardPresenter.php:21
 #, php-format
 msgid "Event %s"
 msgstr ""
+
+#: i18n/../app/Modules/EventModule/DashboardPresenter.php:41
+#, fuzzy
+msgid "My application"
+msgstr "Zoznam platieb"
 
 #: i18n/../app/Modules/EventModule/DispatchPresenter.php:15
 msgid "List of events"
@@ -4424,27 +4435,27 @@ msgstr ""
 msgid "Others group"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:93
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:92
 #, fuzzy
 msgid "Create team"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:141
-#, fuzzy, php-format
-msgid "Application detail \"%s\""
-msgstr "Časový vývoj prihlášiek"
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:135
+#, php-format
+msgid "Team: %s"
+msgstr ""
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:156
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:150
 #, fuzzy
 msgid "Detailed list of teams"
 msgstr "Zoznam akcií"
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:183
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:177
 #, fuzzy, php-format
-msgid "Edit team \"%s\""
+msgid "Edit team: %s"
 msgstr "Uprava platby #%s"
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:196
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:190
 msgid "Teams"
 msgstr ""
 
@@ -4453,49 +4464,54 @@ msgstr ""
 msgid "Rests"
 msgstr "Zvoliť typ"
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:34
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:44
 #, fuzzy
 msgid "Application code"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:30
-#: i18n/../app/Modules/OrganizerModule/templates/Person/edit.latte.latte2php:4
-#, fuzzy
-msgid "Base info"
-msgstr "Nová platba"
-
-#: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:5
+#: i18n/../app/Modules/EventModule/templates/Application/default.latte.latte2php:5
 #: i18n/../app/Modules/EventModule/templates/Team/detailedList.latte.latte2php:4
 #, fuzzy
 msgid "New application"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:11
+#: i18n/../app/Modules/EventModule/templates/Application/default.latte.latte2php:11
 #: i18n/../app/Modules/EventModule/templates/Team/default.latte.latte2php:4
 msgid "Find by code"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:17
+#: i18n/../app/Modules/EventModule/templates/Application/default.latte.latte2php:17
 #, fuzzy
 msgid "title.application.list"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:6
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:38
-msgid "Info"
-msgstr ""
+#: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:11
+#, fuzzy
+msgid "Is contestatant"
+msgstr "Registrácia"
 
-#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:18
+#: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:13
+#, fuzzy
+msgid "Is not contestant"
+msgstr "Registrácia"
+
+#: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:13
+#: i18n/../app/Modules/OrganizerModule/templates/Person/edit.latte.latte2php:4
+#, fuzzy
+msgid "Base info"
+msgstr "Nová platba"
+
+#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:22
 #, fuzzy
 msgid "Edit event"
 msgstr "Uprava platby #%s"
 
-#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:24
+#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:28
 #, fuzzy
 msgid "Application"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:30
+#: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:39
 #: i18n/../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:89
 msgid "Actions"
 msgstr ""
@@ -4536,17 +4552,17 @@ msgstr ""
 msgid "Edit items"
 msgstr "Uprava platby #%s"
 
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:73
-msgid "Rank & points"
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:52
+msgid "Seating"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:105
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:20
 #, fuzzy
 msgid "Parcipant"
 msgstr "Registrácia"
 
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:120
-msgid "Seating"
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:40
+msgid "Rank & points"
 msgstr ""
 
 #: i18n/../app/Modules/OrganizerModule/AclPresenter.php:23
@@ -5153,6 +5169,11 @@ msgstr ""
 #: i18n/../app/config/orm.neon.neon2php:763
 #: i18n/../app/config/orm.neon.neon2php:842
 msgid "Created"
+msgstr ""
+
+#: i18n/../app/config/orm.neon.neon2php:90
+#: i18n/../app/config/orm.neon.neon2php:168
+msgid "Event"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:95
@@ -6705,215 +6726,11 @@ msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
-#~ msgid "Transition!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "List of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Scan 2D code for group \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Item \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Schedule of %s"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "List of groups"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Detail of group"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Edit group"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Applications detail"
+#~ msgid "{plink import}"
 #~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
-#~ msgid "Edit application"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "#nav-contests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "#nav-validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "//:Core:MyApplications:default"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid ":Public:Register:"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "<?php _('Execute query') ?>"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "<?php _('Remove parameter') ?>"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Accommodation for %s from %s to %s"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "All tests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Already participated"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Application not found"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Check submit"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Content-Type"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Cooperation status"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Edit schedule group \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Event org Id"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org: %s"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event orgs"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event web-site"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Game lang"
-#~ msgstr "Meno"
-
-#, fuzzy
-#~ msgid "Import of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Number of brochures"
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Only check state"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Payment UId"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Person info is not set"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Person not found"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Register for the next year"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register into competition"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to %s!"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to Výfuk"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Schedule item"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Select test"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Skip the application and continue."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Team applications time progress"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "badge bg-info"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "events"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "navigation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "recalculateAll!"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "sectors"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solution"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solutions"
+#~ msgid "validate!"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
@@ -6921,9 +6738,217 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "validate!"
+#~ msgid "solutions"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "{plink import}"
+#~ msgid "solution"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "sectors"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Team applications time progress"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Skip the application and continue."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Select test"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Schedule item"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Register to Výfuk"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to %s!"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register into competition"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register for the next year"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Person not found"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Person info is not set"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Payment UId"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Only check state"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Number of brochures"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Import of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Game lang"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event orgs"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event org: %s"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event org Id"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Edit schedule group \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Cooperation status"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Check submit"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Application not found"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Already participated"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "All tests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Accommodation for %s from %s to %s"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "#nav-validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "#nav-contests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Edit application"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Applications detail"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Edit group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Detail of group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "List of groups"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Schedule of %s"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Item \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Scan 2D code for group \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "List of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Transition!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Application detail \"%s\""
 #~ msgstr "Časový vývoj prihlášiek"

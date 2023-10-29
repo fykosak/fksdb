@@ -132,7 +132,7 @@ final class TeamPresenter extends BasePresenter
         $entity = $this->getEntity();
         return new PageTitle(
             null,
-            sprintf(_('Application detail "%s"'), $entity->name),
+            sprintf(_('Team: %s'), $entity->name),
             'fas fa-user'
         );
     }
@@ -174,7 +174,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
+        return new PageTitle(null, sprintf(_('Edit team: %s'), $this->getEntity()->name), 'fas fa-edit');
     }
 
     /**

@@ -180,7 +180,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit application "%s"'), $this->getEntity()->person->getFullName()),
+            sprintf(_('Edit application: %s'), $this->getEntity()->person->getFullName()),
             'fas fa-edit'
         );
     }
