@@ -1,6 +1,7 @@
 {varType string $lang}
 {varType bool $isOrganizer}
 {varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType Fykosak\Utils\UI\Navigation\NavItem|null $applicationNav}
 {block outerContent}
 
     {if $isOrganizer}
@@ -25,7 +26,12 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Application'}</h2>
-            {control navigationChooser:board 'Event.Dashboard.default#application'}
+
+            {if $applicationNav}
+                {control navigationChooser:boardInline [$applicationNav]}
+            {else}
+                {control navigationChooser:board 'Event.Dashboard.default#application'}
+            {/if}
         </div>
     </div>
     <div class="panel color-auto">
