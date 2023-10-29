@@ -75,7 +75,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         try {
             $response = $this->server->getJsonResponse(
                 $this->getWebModel(),
-                array_merge($params ?? [], $this->getParameters())
+                array_merge($params, $this->getParameters())
             );
             $this->sendResponse($response);
         } catch (AbortException $exception) {
