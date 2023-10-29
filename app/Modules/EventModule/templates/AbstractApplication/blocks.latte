@@ -1,16 +1,26 @@
 {define rests}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests'}</h2>
+            {control rests}
+        </div>
+    </div>
+{/define}
+
+{define codeTransition, bool $isOrganizer}
+    {if $control->getComponent('codeTransition')->available() && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{_'Rests'}</h2>
-                {control rests}
+                <h2>{_'Attendance'}</h2>
+                {control codeTransition}
             </div>
         </div>
+    {/if}
 {/define}
 
 {define title-buttons
-    FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
-    bool $isOrganizer
-}
+FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
+bool $isOrganizer}
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}
             <a href="{plink edit id => $model->getPrimary()}"
@@ -36,6 +46,9 @@
                     </div>
                 </div>
             </div>
+        {/if}
+        {if $model instanceof FKSDB\Models\ORM\Models\EventParticipantModel && $isOrganizer}
+            {control printer:button 'person.detail', $model}
         {/if}
     </div>
 {/define}

@@ -29,7 +29,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -118,11 +117,6 @@ final class TeamPresenter extends BasePresenter
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
         }
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getEntity(),
-            'org-detail',
-            $this->getEvent()
-        );
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
     }

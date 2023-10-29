@@ -1,8 +1,36 @@
+{layout '../@layout.latte'}
+
 {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-{varType bool $hasSchedule}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $isOrganizer}
 {varType array $groups}
 {varType Fykosak\Utils\UI\PageTitle $pageTitle}
+
+{define baseInfo, FKSDB\Models\ORM\Models\EventParticipantModel $model}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Base info'}</h2>
+                {control columnTable [
+                'person.full_name',
+                'event_participant.event_participant_id',
+                'event_participant.created'
+                ],$model,1024}
+            </div>
+        </div>
+    {/if}
+{/define}
+
+{define schedule}
+    {if $event->getScheduleGroups()->count()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid}
+            </div>
+        </div>
+    {/if}
+{/define}
 
 {block titleBody}
     <div class="page-header">
@@ -10,42 +38,14 @@
         <span class="subtitle">{$pageTitle->subTitle}</span>
     </div>
     {include title-buttons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
-    {if $isOrganizer}
-        {var FKSDB\Models\ORM\Models\ContestantModel|null $contestant = $model->person->getContestantByContestYear($model->event->getContestYear())}
-        {if $contestant}
-            <span class="badge bg-success mt-3">{_'Is contestatant'}</span>
-        {else}
-            <span class="badge bg-danger mt-3">{_'Is not contestant'}</span>
-        {/if}
-    {/if}
 {/block}
 
 {block outerContent}
-    {var $machineCode = $model->createMachineCode()}
-    {if $isOrganizer && $machineCode}
-        {control codeTransition}
-    {/if}
+    {include codeTransition from '../AbstractApplication/blocks.latte',isOrganizer:$isOrganizer}
     {if $isOrganizer}
         {include rests from '../AbstractApplication/blocks.latte'}
     {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Base info'}</h2>
-            {if $isOrganizer}
-                {control columnTable [
-                'person.full_name',
-                'event_participant.event_participant_id',
-                'event_participant.created'
-                ],$model,1024}
-                {control printer:button 'person.detail', $model}
-            {else}
-                {control columnTable [
-                'person.full_name',
-                'event_participant.created'
-                ],$model,1024}
-            {/if}
-        </div>
-    </div>
+    {include baseInfo,model:$model}
 
     {varType string[] $fields}
     {foreach $groups as $groupName=>$fieldDef}
@@ -65,13 +65,5 @@
             </div>
         {/if}
     {/foreach}
-
-    {if $hasSchedule}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Schedule'}</h2>
-                {control personScheduleGrid}
-            </div>
-        </div>
-    {/if}
+    {include schedule}
 {/block}

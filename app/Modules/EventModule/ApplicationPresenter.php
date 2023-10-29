@@ -21,10 +21,8 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
@@ -119,12 +117,8 @@ final class ApplicationPresenter extends BasePresenter
     public function renderDetail(): void
     {
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'default');
+        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         switch ($this->getEvent()->event_type_id) {
-            case 2:
-            case 14:
-                $this->template->fields = ['lunch_count'];
-                break;
             case 11:
             case 12:
                 $this->template->fields = ['diet', 'health_restrictions', 'note'];
@@ -203,14 +197,6 @@ final class ApplicationPresenter extends BasePresenter
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Application import'), 'fas fa-download');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function renderDefault(): void
-    {
-        $this->template->event = $this->getEvent();
     }
 
     public function titleDefault(): PageTitle
@@ -394,7 +380,13 @@ final class ApplicationPresenter extends BasePresenter
         return new ImportComponent($this->getContext(), $this->getEvent());
     }
 
-
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
         return new SinglePersonGrid($this->getContext(), $this->getEntity()->person, $this->getEvent());

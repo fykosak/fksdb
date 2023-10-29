@@ -61,13 +61,11 @@ final class CodeTransitionComponent extends CodeForm
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
-    public function render(): void
+    public function available(): bool
     {
         $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState); //@phpstan-ignore-line
         $holder = $this->machine->createHolder($this->model);
-        $this->template->available = Machine::filterAvailable($transitions, $holder);
-        $this->template->transitions = $transitions;
-        parent::render();
+        return count(Machine::filterAvailable($transitions, $holder)) && $this->model->createMachineCode();
     }
 
     /**
