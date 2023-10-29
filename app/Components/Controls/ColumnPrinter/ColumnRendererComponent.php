@@ -71,7 +71,7 @@ class ColumnRendererComponent extends BaseComponent
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'link.latte',
             [
-                'title' => $factory->getTitle(),
+                'title' => $factory->title(),
                 'link' => $factory->create($this->getPresenter(), $model),
             ]
         );

@@ -46,6 +46,7 @@ class ParticipantsWebModel extends WebModel
             $history = $participant->getPersonHistory();
             $school = $history->school;
             $data[] = array_merge($participant->person->__toArray(), [
+                'eventParticipantId' => $participant->event_participant_id,
                 'code' => $participant->createMachineCode(),
                 'school' => $school ? $school->__toArray() : null,
                 'studyYear' => $history ? $history->study_year_new->value : null,

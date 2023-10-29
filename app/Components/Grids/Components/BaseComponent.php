@@ -172,7 +172,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         $button = new Button(
             $this->container,
             $this->getPresenter(),
-            $factory->getTitle(),
+            $factory->title(),
             fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,
             fn(?Model $model): bool => $checkACL

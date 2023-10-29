@@ -49,7 +49,7 @@
         <h1>{$pageTitle->toHtml(false)} <small>{$model->state->badge()}</small></h1>
         <span class="subtitle">{$pageTitle->subTitle}</span>
     </div>
-    {include title-buttons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
 {/block}
 
 {block outerContent}

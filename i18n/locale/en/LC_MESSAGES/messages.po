@@ -5294,7 +5294,7 @@ msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:452
 msgid "button.person.detail"
-msgstr "Detail"
+msgstr "Person detail"
 
 #: i18n/../app/config/orm.neon.neon2php:467
 msgid "Academic year"

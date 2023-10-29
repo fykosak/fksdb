@@ -202,7 +202,7 @@ final class PaymentPresenter extends BasePresenter
      * @throws \ReflectionException
      * @phpstan-return TransitionButtonsComponent<PaymentHolder>
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsComponent
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
