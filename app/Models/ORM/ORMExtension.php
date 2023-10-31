@@ -495,7 +495,6 @@ class ORMExtension extends Extension
      */
     private function translate($value): string
     {
-        Debugger::barDump($value);
         if ($value instanceof Statement) {
             return ($value->entity)(...$value->arguments);// @phpstan-ignore-line
         }
