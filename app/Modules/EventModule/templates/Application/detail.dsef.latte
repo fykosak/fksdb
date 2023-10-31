@@ -8,7 +8,7 @@
     {if $isOrganizer}
         {var FKSDB\Models\ORM\Models\ContestantModel|null $contestant = $model->person->getContestantByContestYear($model->event->getContestYear())}
         {if $contestant}
-            <span class="badge bg-success mt-3">{_'Is contestatant'}</span>
+            <span class="badge bg-success mt-3">{_'Is contestant'}</span>
         {else}
             <span class="badge bg-danger mt-3">{_'Is not contestant'}</span>
         {/if}

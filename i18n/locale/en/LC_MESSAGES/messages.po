@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-29 02:41+0100\n"
+"POT-Creation-Date: 2023-11-01 00:18+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -763,8 +763,8 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
 msgid ""
-"Organization and participation in year %d (%d) of the contest %s \"%s\"<->"
-"\"%s\"."
+"Organization and participation in year %d (%d) of the contest %s \"%s\"<-"
+">\"%s\"."
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:22
@@ -4346,7 +4346,7 @@ msgid "title.application.list"
 msgstr "Applications"
 
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:11
-msgid "Is contestatant"
+msgid "Is contestant"
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:13
@@ -6507,83 +6507,11 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Chosen person is already registered to the event."
 
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
 
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
-#, fuzzy
-#~ msgid "záznamy"
-#~ msgstr "records"
-
-#, fuzzy
-#~ msgid "záznam"
-#~ msgstr "records"
-
-#, fuzzy
-#~ msgid "date"
-#~ msgstr "jS \\of M Y"
-
-#, fuzzy
-#~ msgid "card-body"
-#~ msgstr "points"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Login"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-#~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
-
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
 #~ msgid ""
 #~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
@@ -6599,8 +6527,80 @@ msgstr "Chosen person is already registered to the event."
 #~ "they? Are there any other information about your health condition, what "
 #~ "should we know?"
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgstr ""
+#~ "To calculate category. Leave empty if you are not a high school student."
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Login"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#, fuzzy
+#~ msgid "card-body"
+#~ msgstr "points"
+
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "jS \\of M Y"
+
+#, fuzzy
+#~ msgid "záznam"
+#~ msgstr "records"
+
+#, fuzzy
+#~ msgid "záznamy"
+#~ msgstr "records"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitelů"
+#~ msgstr "contestants"

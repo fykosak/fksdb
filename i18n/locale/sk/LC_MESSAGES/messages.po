@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-29 02:41+0100\n"
+"POT-Creation-Date: 2023-11-01 00:18+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -783,8 +783,8 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
 msgid ""
-"Organization and participation in year %d (%d) of the contest %s \"%s\"<->"
-"\"%s\"."
+"Organization and participation in year %d (%d) of the contest %s \"%s\"<-"
+">\"%s\"."
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:22
@@ -4487,7 +4487,7 @@ msgstr "Zoznam platieb"
 
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:11
 #, fuzzy
-msgid "Is contestatant"
+msgid "Is contestant"
 msgstr "Registrácia"
 
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:13
@@ -6726,199 +6726,63 @@ msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
-#~ msgid "{plink import}"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "validate!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "team"
+#~ msgid "#nav-contests"
 #~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "solutions"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solution"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "sectors"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "recalculateAll!"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "navigation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "events"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "badge bg-info"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Team applications time progress"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Skip the application and continue."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Select test"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Schedule item"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Register to Výfuk"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to %s!"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register into competition"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register for the next year"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Person not found"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Person info is not set"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Payment UId"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Only check state"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Number of brochures"
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Import of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Game lang"
-#~ msgstr "Meno"
-
-#, fuzzy
-#~ msgid "Event web-site"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event orgs"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org: %s"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org Id"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Edit schedule group \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Cooperation status"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Content-Type"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Check submit"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Application not found"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Already participated"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "All tests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Accommodation for %s from %s to %s"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "<?php _('Remove parameter') ?>"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "<?php _('Execute query') ?>"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid ":Public:Register:"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "//:Core:MyApplications:default"
-#~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
 #~ msgid "#nav-validation"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "#nav-contests"
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Accommodation for %s from %s to %s"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "All tests"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Edit application"
-#~ msgstr "Zoznam platieb"
+#~ msgid "Already participated"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Application detail \"%s\""
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Application not found"
+#~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
 #~ msgid "Applications detail"
 #~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
-#~ msgid "Edit group"
+#~ msgid "Check submit"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Cooperation status"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
@@ -6926,19 +6790,43 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "List of groups"
+#~ msgid "Edit application"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "Schedule of %s"
+#~ msgid "Edit group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Edit schedule group \"%s\""
 #~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Event org Id"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event org: %s"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event orgs"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Game lang"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Import of applications"
+#~ msgstr "Zoznam platieb"
 
 #, fuzzy
 #~ msgid "Item \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Scan 2D code for group \"%s\""
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
@@ -6946,9 +6834,121 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
+#~ msgid "List of groups"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Number of brochures"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Only check state"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Payment UId"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Person info is not set"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Person not found"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Register for the next year"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register into competition"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to %s!"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to Výfuk"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Scan 2D code for group \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Schedule item"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Schedule of %s"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Select test"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Skip the application and continue."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Team applications time progress"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
 #~ msgid "Transition!"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "Application detail \"%s\""
+#~ msgid "Validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "sectors"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solution"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solutions"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "team"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "validate!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "{plink import}"
 #~ msgstr "Časový vývoj prihlášiek"
