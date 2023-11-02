@@ -4,7 +4,6 @@
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $isOrganizer}
 {varType array $groups}
-{varType Fykosak\Utils\UI\PageTitle $pageTitle}
 
 {define baseInfo, FKSDB\Models\ORM\Models\EventParticipantModel $model}
     {if $isOrganizer}
@@ -33,10 +32,7 @@
 {/define}
 
 {block titleBody}
-    <div class="page-header">
-        <h1>{$pageTitle->toHtml(false)} <small>{$model->status->badge()}</small></h1>
-        <span class="subtitle">{$pageTitle->subTitle}</span>
-    </div>
+    {include parent}
     {include titleButtons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
 {/block}
 

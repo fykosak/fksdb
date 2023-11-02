@@ -46,7 +46,8 @@
                     {/if*}
                 </small>
                 {* TODO add date for schedule arcross middnight*}
-                <small class="text-fof ms-auto">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</small>
+                {var string $className = 'text-'.$group->event->event_type->getSymbol().' ms-auto'}
+                <small class="{$className}">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</small>
             {/if}
         </h3>
         {if $personSchedule}

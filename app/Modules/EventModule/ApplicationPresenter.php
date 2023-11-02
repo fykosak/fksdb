@@ -34,6 +34,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
+use Nette\Utils\Html;
 
 final class ApplicationPresenter extends BasePresenter
 {
@@ -148,7 +149,9 @@ final class ApplicationPresenter extends BasePresenter
         $entity = $this->getEntity();
         return new PageTitle(
             null,
-            sprintf(_('Application: %s'), $entity->person->getFullName()),
+            Html::el('span')
+                ->addText(sprintf(_('Application: %s'), $entity->person->getFullName()))
+                ->addHtml(Html::el('small')->addAttributes(['class'=>'ms-2'])->addHtml($entity->status->badge())),
             'fas fa-user'
         );
     }
