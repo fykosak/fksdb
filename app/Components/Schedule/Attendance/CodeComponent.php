@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -21,7 +23,7 @@ use Nette\Forms\Form;
 class CodeComponent extends CodeForm
 {
     protected ScheduleItemModel $item;
-    private PersonScheduleService $service;
+    private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(Container $container, ScheduleItemModel $item)
     {
@@ -29,16 +31,24 @@ class CodeComponent extends CodeForm
         $this->item = $item;
     }
 
-    public function inject(PersonScheduleService $service): void
+    public function inject(EventDispatchFactory $eventDispatchFactory): void
     {
-        $this->service = $service;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     protected function innerHandleSuccess(Model $model, Form $form): void
     {
         try {
+            $machine = $this->eventDispatchFactory->getPersonScheduleMachine();
             $personSchedule = $this->resolvePersonSchedule($model);
-            $this->service->makeAttendance($personSchedule);
+            $holder = $machine->createHolder($personSchedule);
+            $transition = Machine::selectTransition(
+                Machine::filterByTarget(
+                    Machine::filterAvailable($machine->transitions, $holder),
+                    PersonScheduleState::from(PersonScheduleState::Participated)
+                )
+            );
+            $machine->execute($transition, $holder);
         } catch (\Throwable $exception) {
             $this->flashMessage(_('Error: ') . $exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');

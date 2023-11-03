@@ -63,9 +63,14 @@ final class CodeTransitionComponent extends CodeForm
 
     public function available(): bool
     {
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState); //@phpstan-ignore-line
+
         $holder = $this->machine->createHolder($this->model);
-        return count(Machine::filterAvailable($transitions, $holder)) && $this->model->createMachineCode();
+        return count(
+                Machine::filterAvailable(
+                    Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
+                    $holder
+                )
+            ) && $this->model->createMachineCode();
     }
 
     /**

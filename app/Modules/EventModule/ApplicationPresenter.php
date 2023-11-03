@@ -222,22 +222,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return BaseHolder|ParticipantHolder
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     */
-    private function getHolder(): ModelHolder
-    {
-        return $this->getMachine()->createHolder($this->getEntity());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
      */
     private function getMachine(): EventParticipantMachine
@@ -277,7 +262,6 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     private function createForm(?EventParticipantModel $model): SingleFormComponent
@@ -314,21 +298,20 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<BaseHolder|ParticipantHolder>
+     * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
-            $this->getHolder()
+            $this->getEntity()
         );
     }
 
@@ -340,7 +323,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {
@@ -354,7 +336,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return MassTransitionComponent<EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>>
      */
     protected function createComponentMassTransition(): MassTransitionComponent

@@ -12,6 +12,7 @@ use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -60,7 +61,6 @@ class EventDispatchFactory
     /**
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
-     * @throws BadTypeException
      * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
      */
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
@@ -68,18 +68,10 @@ class EventDispatchFactory
         switch ($event->event_type_id) {
             case 2:
             case 14:
-                $machine = $this->container->getService('transitions.dsef.machine');
-                if (!$machine instanceof EventParticipantMachine) {
-                    throw new BadTypeException(EventParticipantMachine::class, $machine);
-                }
-                return $machine;
+                return $this->container->getService('transitions.dsef.machine'); //@phpstan-ignore-line
             case 11:
             case 12:
-                $machine = $this->container->getService('transitions.setkani.machine');
-                if (!$machine instanceof EventParticipantMachine) {
-                    throw new BadTypeException(EventParticipantMachine::class, $machine);
-                }
-                return $machine;
+                return $this->container->getService('transitions.setkani.machine'); //@phpstan-ignore-line
         }
         $definition = $this->findDefinition($event);
         /** @var EventParticipantMachine<BaseHolder> $machine */
@@ -87,18 +79,14 @@ class EventDispatchFactory
         return $machine;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function getPaymentMachine(EventModel $event): PaymentMachine
     {
-        $machine = $this->container->getService(
-            $this->getPaymentFactoryName($event) . '.machine'
-        );
-        if (!$machine instanceof PaymentMachine) {
-            throw new BadTypeException(PaymentMachine::class, $machine);
-        }
-        return $machine;
+        return $this->container->getService($this->getPaymentFactoryName($event) . '.machine'); //@phpstan-ignore-line
+    }
+
+    public function getPersonScheduleMachine(): PersonScheduleMachine
+    {
+        return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
     }
 
     public function getPaymentFactoryName(EventModel $event): ?string

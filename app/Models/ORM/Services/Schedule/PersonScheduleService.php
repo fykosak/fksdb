@@ -19,10 +19,15 @@ final class PersonScheduleService extends Service
      */
     public function makeAttendance(PersonScheduleModel $personSchedule): void
     {
-        if (in_array($personSchedule->state->value, [PersonScheduleState::PARTICIPATED, PersonScheduleState::MISSED])) {
+        if (
+            in_array(
+                $personSchedule->state->value,
+                [PersonScheduleState::Participated, PersonScheduleState::Missed, PersonScheduleState::Cancelled]
+            )
+        ) {
             throw new \InvalidArgumentException(_('Transition unavailable'));
         }
         $personSchedule->checkPayment();
-        $this->storeModel(['state' => PersonScheduleState::PARTICIPATED], $personSchedule);
+        $this->storeModel(['state' => PersonScheduleState::Participated], $personSchedule);
     }
 }

@@ -1,0 +1,15 @@
+transitions:
+    personSchedule:
+        machine: FKSDB\Models\Transitions\Machine\PersonScheduleMachine
+        stateEnum: FKSDB\Models\ORM\Models\Schedule\PersonScheduleState
+        decorator: null
+        transitions:
+            missed|participated|applied->cancelled:
+                label: _('Cancel')
+            cancelled|participated|applied->missed:
+                label: _('Missed')
+            cancelled|missed|applied->participated:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\IsPayable()
+                label: _('Participated')
+
+

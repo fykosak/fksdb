@@ -29,7 +29,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -207,19 +206,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     */
-    private function getHolder(): TeamHolder
-    {
-        return $this->getMachine()->createHolder($this->getEntity());
-    }
-
-    /**
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
@@ -299,7 +285,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<TeamHolder>
+     * @phpstan-return TransitionButtonsComponent<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -313,7 +299,7 @@ final class TeamPresenter extends BasePresenter
         return new TransitionButtonsComponent(
             $this->getContext(),
             $this->getMachine(),
-            $this->getHolder()
+            $this->getEntity()
         );
     }
 
