@@ -19,7 +19,7 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read int $schedule_item_id
  * @property-read int $person_schedule_id
- * @property-read PersonScheduleState|null $state
+ * @property-read PersonScheduleState $state
  */
 final class PersonScheduleModel extends Model implements Resource
 {
@@ -62,7 +62,7 @@ final class PersonScheduleModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = PersonScheduleState::tryFrom($value);
+                $value = PersonScheduleState::from($value ?? PersonScheduleState::Applied);
                 break;
         }
         return $value;

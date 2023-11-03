@@ -38,6 +38,6 @@ class PersonScheduleHolder implements ModelHolder
 
     public function getState(): PersonScheduleState
     {
-        return $this->model->state ?? PersonScheduleState::from(PersonScheduleState::Applied);
+        return $this->model->state;
     }
 }
