@@ -19,12 +19,10 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -151,7 +149,7 @@ final class ApplicationPresenter extends BasePresenter
             null,
             Html::el('span')
                 ->addText(sprintf(_('Application: %s'), $entity->person->getFullName()))
-                ->addHtml(Html::el('small')->addAttributes(['class'=>'ms-2'])->addHtml($entity->status->badge())),
+                ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->status->badge())),
             'fas fa-user'
         );
     }
@@ -240,7 +238,6 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): SingleFormComponent
@@ -249,7 +246,6 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException

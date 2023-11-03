@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Model;

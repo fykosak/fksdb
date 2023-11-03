@@ -15,8 +15,6 @@ use Nette\DI\Container;
 class SimpleItem extends TemplateItem
 {
     /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
      * @phpstan-param (callable(TModel):TModelHelper)|null $modelAccessorHelper
      */
     public function __construct(

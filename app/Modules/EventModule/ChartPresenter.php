@@ -30,7 +30,6 @@ final class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException
      * @throws NoContestAvailable
@@ -45,7 +44,6 @@ final class ChartPresenter extends BasePresenter
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function getCharts(): array
     {

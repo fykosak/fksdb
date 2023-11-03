@@ -23,7 +23,6 @@ use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
@@ -207,7 +206,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     private function getMachine(): TeamMachine
     {
@@ -230,7 +228,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): TeamFormComponent
@@ -239,7 +236,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
@@ -252,7 +248,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     private function createForm(?TeamModel2 $model): TeamFormComponent
@@ -292,7 +287,6 @@ final class TeamPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -311,7 +305,6 @@ final class TeamPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {
@@ -325,7 +318,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return MassTransitionComponent<TeamMachine>
      */
     protected function createComponentMassTransition(): MassTransitionComponent

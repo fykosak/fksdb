@@ -196,7 +196,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return EventParticipantMachine<BaseHolder>
      */
     private function getMachine(): EventParticipantMachine

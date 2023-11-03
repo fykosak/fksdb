@@ -10,7 +10,6 @@ use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
@@ -167,7 +166,6 @@ final class PaymentPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws  BadTypeException
      */
     private function getMachine(): PaymentMachine
     {
@@ -193,7 +191,6 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
@@ -227,7 +224,6 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
@@ -243,7 +239,6 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException

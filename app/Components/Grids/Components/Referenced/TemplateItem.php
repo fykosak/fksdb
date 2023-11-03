@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model

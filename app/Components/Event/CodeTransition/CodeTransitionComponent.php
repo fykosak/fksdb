@@ -65,12 +65,12 @@ final class CodeTransitionComponent extends CodeForm
     {
 
         $holder = $this->machine->createHolder($this->model);
-        return count(
+        return $this->model->createMachineCode() && count(
                 Machine::filterAvailable(
                     Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
                     $holder
                 )
-            ) && $this->model->createMachineCode();
+            );
     }
 
     /**

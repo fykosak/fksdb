@@ -6,7 +6,6 @@ namespace FKSDB\Models\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -97,9 +96,6 @@ class EventDispatchFactory
         return null;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function getTeamMachine(EventModel $event): TeamMachine
     {
         switch ($event->event_type_id) {
@@ -112,14 +108,10 @@ class EventDispatchFactory
             default:
                 throw new InvalidStateException();
         }
-        if (!$machine instanceof TeamMachine) {
-            throw new BadTypeException(TeamMachine::class, $machine);
-        }
-        return $machine;
+        return $machine; //@phpstan-ignore-line
     }
 
     /**
-     * @throws BadTypeException
      * @phpstan-return EventParticipantMachine<ParticipantHolder>|TeamMachine|EventParticipantMachine<BaseHolder>
      */
     public function getEventMachine(EventModel $event): Machine

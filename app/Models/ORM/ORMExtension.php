@@ -31,7 +31,6 @@ use Nette\Schema\Elements\AnyOf;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use Tracy\Debugger;
 
 /**
  * @phpstan-type TCommonParams array{
