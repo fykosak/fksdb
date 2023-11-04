@@ -48,6 +48,7 @@ class ParticipantsWebModel extends WebModel
             $school = $history->school;
             $data[] = array_merge($participant->person->__toArray(), [
                 'eventParticipantId' => $participant->event_participant_id,
+                'status' => $participant->status->value,
                 'lunchCount' => $participant->lunch_count ?? 0,
                 'code' => $participant->createMachineCode(),
                 'school' => $school ? $school->__toArray() : null,
