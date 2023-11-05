@@ -56,7 +56,7 @@ final class CodeRedirectComponent extends BaseComponent
             $model = MachineCode::parseHash(
                 $this->container,
                 $values['code'],
-                MachineCode::getSaltForEvent($this->event)
+                $this->event->getSalt()
             );
             $application = $this->resolveApplication($model);
             if ($application->event_id !== $this->event->event_id) {

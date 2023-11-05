@@ -6,7 +6,6 @@ namespace FKSDB\Components\Event\CodeTransition;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -63,7 +62,6 @@ final class CodeTransitionComponent extends CodeForm
 
     public function available(): bool
     {
-
         $holder = $this->machine->createHolder($this->model);
         $hasTransition = count(
             Machine::filterAvailable(
@@ -135,6 +133,6 @@ final class CodeTransitionComponent extends CodeForm
      */
     protected function getSalt(): string
     {
-        return MachineCode::getSaltForEvent($this->model->event);
+        return $this->model->event->getSalt();
     }
 }

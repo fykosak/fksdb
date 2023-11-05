@@ -69,7 +69,7 @@ final class AllPersonList extends BaseList
                 $model = MachineCode::parseHash(
                     $this->container,
                     $this->filterParams['code'],
-                    MachineCode::getSaltForEvent($this->event)
+                    $this->event->getSalt()
                 );
                 if ($model instanceof EventParticipantModel) {
                     $query->where('person.person_id', $model->person_id);
