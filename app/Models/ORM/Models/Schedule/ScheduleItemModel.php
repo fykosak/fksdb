@@ -88,7 +88,8 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     public function getUsedCapacity(): int
     {
-        return $this->getInterested()->where('state !=', PersonScheduleState::Cancelled)->count();
+        //->where('state !=', PersonScheduleState::Cancelled)
+        return $this->getInterested()->count();
     }
 
     public function hasFreeCapacity(): bool
