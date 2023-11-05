@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 
@@ -16,4 +17,12 @@ use Fykosak\NetteORM\Model;
  */
 final class TeamTeacherModel extends Model
 {
+    public function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this, $this->fyziklani_team->event->getSalt());
+        } catch (\Throwable $exception) {
+            return null;
+        }
+    }
 }

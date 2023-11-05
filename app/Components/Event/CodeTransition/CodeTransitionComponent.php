@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Event\CodeTransition;
 
-use FKSDB\Components\Controls\FormComponent\CodeForm;
-use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Components\Transitions\Code\CodeTransition;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -28,15 +27,10 @@ use Nette\Utils\Html;
  *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
  *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
  */
-final class CodeTransitionComponent extends CodeForm
+final class CodeTransitionComponent extends CodeTransition
 {
-    /** @phpstan-var TMachine */
-    protected Machine $machine;
     /** @phpstan-var TModel */
     private Model $model;
-
-    /** @phpstan-var TState */
-    private FakeStringEnum $targetState;
 
     /**
      * @phpstan-param TState $targetState
@@ -49,10 +43,8 @@ final class CodeTransitionComponent extends CodeForm
         FakeStringEnum $targetState,
         Machine $machine
     ) {
-        parent::__construct($container);
-        $this->targetState = $targetState;
+        parent::__construct($container, $targetState, $machine);
         $this->model = $model;
-        $this->machine = $machine;
     }
 
     protected function getTemplatePath(): string
@@ -65,55 +57,11 @@ final class CodeTransitionComponent extends CodeForm
         $holder = $this->machine->createHolder($this->model);
         $hasTransition = count(
             Machine::filterAvailable(
-                Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
+                $this->getTransitions(),
                 $holder
             )
         );
         return $hasTransition && $this->model->createMachineCode();
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws NotFoundException
-     * @throws \Throwable
-     */
-    protected function innerHandleSuccess(Model $model, Form $form): void
-    {
-        $application = $this->resolveApplication($model);
-        if ($model->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
-        }
-        $holder = $this->machine->createHolder($this->model);
-        $transition = Machine::selectTransition(
-            Machine::filterAvailable(
-                Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
-                $holder
-            )
-        );
-        $this->machine->execute($transition, $holder);//@phpstan-ignore-line
-        $this->getPresenter()->flashMessage(
-            $application instanceof TeamModel2
-                ? sprintf(_('Transition successful for: %s'), $application->name)
-                : sprintf(_('Transition successful for: %s'), $application->person->getFullName()),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('this');
-    }
-
-    /**
-     * @return TeamModel2|EventParticipantModel
-     * @throws BadRequestException
-     * @throws NotFoundException
-     */
-    private function resolveApplication(Model $model): Model
-    {
-        if ($model instanceof PersonModel) {
-            return $model->getApplication($this->model->event);
-        } elseif ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
-            return $model;
-        } else {
-            throw new BadRequestException(_('Wrong type of code.'));
-        }
     }
 
     protected function configureForm(Form $form): void
@@ -134,5 +82,23 @@ final class CodeTransitionComponent extends CodeForm
     protected function getSalt(): string
     {
         return $this->model->event->getSalt();
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    protected function resolveModel(Model $model): Model
+    {
+        if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
+            $application = $model->fyziklani_team;
+        } elseif ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
+            $application = $model;
+        } else {
+            throw new BadRequestException(_('Wrong type of code.'));
+        }
+        if ($application->getPrimary() !== $this->model->getPrimary()) {
+            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
+        }
+        return $application;
     }
 }

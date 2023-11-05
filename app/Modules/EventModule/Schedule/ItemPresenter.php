@@ -156,6 +156,6 @@ final class ItemPresenter extends BasePresenter
      */
     protected function createComponentCode(): CodeComponent
     {
-        return new CodeComponent($this->getContext(), $this->getEntity());
+        return new CodeComponent($this->getContext(), $this->getEntity(),$this->eventDispatchFactory->getPersonScheduleMachine());
     }
 }

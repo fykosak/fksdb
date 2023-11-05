@@ -10,12 +10,13 @@ use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -71,9 +72,11 @@ final class AllPersonList extends BaseList
                     $this->filterParams['code'],
                     $this->event->getSalt()
                 );
-                if ($model instanceof EventParticipantModel) {
-                    $query->where('person.person_id', $model->person_id);
-                } elseif ($model instanceof PersonModel) {
+                if (
+                    $model instanceof EventParticipantModel
+                    || $model instanceof TeamTeacherModel
+                    || $model instanceof TeamMemberModel
+                ) {
                     $query->where('person.person_id', $model->person_id);
                 } elseif ($model instanceof TeamModel2) {
                     $query->where(
@@ -89,10 +92,6 @@ final class AllPersonList extends BaseList
         return $query;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = true;

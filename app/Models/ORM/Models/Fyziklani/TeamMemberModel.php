@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
@@ -33,8 +34,9 @@ final class TeamMemberModel extends Model
     public function __toArray(): array
     {
         return [
-            'participantId' => $this->fyziklani_team_member_id,
+            'memberId' => $this->fyziklani_team_member_id,
             'personId' => $this->person_id,
+            'code' => $this->createMachineCode(),
         ];
     }
 
@@ -47,5 +49,14 @@ final class TeamMemberModel extends Model
         $node->setAttribute('eventParticipantId', (string)$this->fyziklani_team_member_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
+    }
+
+    public function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this, $this->fyziklani_team->event->getSalt());
+        } catch (\Throwable $exception) {
+            return null;
+        }
     }
 }
