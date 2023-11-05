@@ -33,7 +33,7 @@ class PersonScheduleHolder implements ModelHolder
      */
     public function updateState(EnumColumn $newState): void
     {
-        $this->service->storeModel(['status' => $newState->value], $this->model);
+        $this->service->storeModel(['state' => $newState->value], $this->model);
     }
 
     public function getState(): PersonScheduleState
