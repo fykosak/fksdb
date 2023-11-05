@@ -41,7 +41,7 @@ class PaymentColumnFactory extends AbstractColumnFactory
             if (!$originalModel->schedule_item->payable) {
                 return Html::el('span')
                     ->addAttributes(['class' => 'badge bg-info'])
-                    ->addText(_('Payment on the spot'));
+                    ->addText(_('Onsite payment'));
             }
         }
         return null;
