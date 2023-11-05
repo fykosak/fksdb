@@ -6,11 +6,9 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model;
-use Nette\Application\BadRequestException;
 use Nette\Security\Resource;
 
 /**
@@ -37,20 +35,6 @@ final class PersonScheduleModel extends Model implements Resource
         return $this->person->getFullName() . ': '
             . $this->schedule_item->schedule_group->name->getText($lang->value) . ' - '
             . $this->schedule_item->name->getText($lang->value);
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws \Exception
-     */
-    public function checkPayment(): void
-    {
-        if (
-            $this->schedule_item->isPayable() &&
-            (!$this->getPayment() || $this->getPayment()->state->value !== PaymentState::RECEIVED)
-        ) {
-            throw new BadRequestException(_('Payment not found'));
-        }
     }
 
     /**

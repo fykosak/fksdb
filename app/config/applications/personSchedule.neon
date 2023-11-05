@@ -4,12 +4,12 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\Schedule\PersonScheduleState
         decorator: null
         transitions:
-            missed|participated|applied->cancelled:
+            applied->cancelled:
                 label: _('Cancel')
-            cancelled|participated|applied->missed:
+            applied->missed:
                 label: _('Missed')
-            cancelled|missed|applied->participated:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\IsPayable()
+            applied->participated:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\IsPaid()
                 label: _('Participated')
 
 

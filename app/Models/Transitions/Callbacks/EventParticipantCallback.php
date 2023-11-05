@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 /**
- * @phpstan-template THolder of BaseHolder|ParticipantHolder
+ * @phpstan-template THolder of \FKSDB\Models\Events\Model\Holder\BaseHolder|\FKSDB\Models\Transitions\Holder\ParticipantHolder
  * @phpstan-extends MailCallback<THolder>
  */
 abstract class EventParticipantCallback extends MailCallback

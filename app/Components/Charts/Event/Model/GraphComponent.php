@@ -9,6 +9,7 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-template TMachine of Machine
@@ -28,7 +29,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string}>}
+     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string|Html}>}
      */
     final public function getData(): array
     {
