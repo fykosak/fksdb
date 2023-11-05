@@ -202,7 +202,7 @@ final class PaymentPresenter extends BasePresenter
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(),
+            $this->getMachine(), // @phpstan-ignore-line
             $this->getEntity()
         );
     }

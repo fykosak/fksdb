@@ -146,7 +146,7 @@ final class PersonPresenter extends BasePresenter
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->eventDispatchFactory->getPersonScheduleMachine(),
+            $this->eventDispatchFactory->getPersonScheduleMachine(), // @phpstan-ignore-line
             $this->getEntity()
         );
     }
