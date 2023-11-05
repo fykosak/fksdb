@@ -77,14 +77,6 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @throws \Exception
-     */
-    public function isPayable(): bool
-    {
-        return $this->payable && count($this->getPrice()->getPrices());
-    }
-
-    /**
      * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
      */
     public function getInterested(): TypedGroupedSelection
