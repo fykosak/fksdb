@@ -129,7 +129,7 @@ final class PaymentList extends BaseList
         $this->addPresenterButton(
             ':Event:Payment:detail',
             'detail',
-            _('button.detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'payment_id']
         );

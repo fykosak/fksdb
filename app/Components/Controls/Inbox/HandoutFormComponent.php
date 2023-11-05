@@ -114,7 +114,7 @@ final class HandoutFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('save', _('Save'));
+        return $form->addSubmit('save', _('button.save'));
     }
 
     protected function configureForm(Form $form): void

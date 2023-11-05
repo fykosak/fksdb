@@ -14,8 +14,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
-use Nette\Neon\Exception;
-use Nette\Neon\Neon;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -24,7 +22,6 @@ use Nette\Neon\Neon;
 final class DsefFormComponent extends SingleFormComponent
 {
     /**
-     * @throws Exception
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -80,7 +77,6 @@ final class DsefFormComponent extends SingleFormComponent
     }
 
     /**
-     * @throws Exception
      * @phpstan-return EvaluatedFieldsDefinition
      */
     final protected function getPersonFieldsDefinition(): array

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Schedule\Code\GroupComponent;
 use FKSDB\Components\Schedule\GroupList;
 use FKSDB\Components\Schedule\ItemGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -14,8 +13,6 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
-use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\Navigation\NavItem;
@@ -34,36 +31,6 @@ final class GroupPresenter extends BasePresenter
     final public function injectService(ScheduleGroupService $service): void
     {
         $this->service = $service;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     * @throws \ReflectionException
-     */
-    public function authorizedCode(): bool
-    {
-        return $this->authorizedEdit();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    public function titleCode(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            \sprintf(_('Scan 2D code for group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-qrcode'
-        );
     }
 
     /**
@@ -91,7 +58,7 @@ final class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            sprintf(_('Group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-clipboard-list'
         );
     }
@@ -108,7 +75,7 @@ final class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit group "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(_('Edit group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
     }
@@ -180,17 +147,5 @@ final class GroupPresenter extends BasePresenter
     protected function createComponentItemsGrid(): ItemGrid
     {
         return new ItemGrid($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     */
-    protected function createComponentCode(): GroupComponent
-    {
-        return new GroupComponent($this->getContext(), $this->getEntity());
     }
 }

@@ -66,17 +66,20 @@
 <main>
     <div class="panel color-auto">
         <div class="container">
+            {block flashes}
+                {foreach $flashes as $flash}
+                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                {/foreach}
+            {/block}
             {block titleBody}
                 <div class="page-header">
                     <h1>{$pageTitle->toHtml(false)}</h1>
                     <span class="subtitle">{$pageTitle->subTitle}</span>
                 </div>
             {/block}
-            {block flashes}
-                {foreach $flashes as $flash}
-                    <div class="alert alert-{$flash->type}">{$flash->message}</div>
-                {/foreach}
-            {/block}
+            {ifset buttons}
+                {include buttons}
+            {/ifset}
         </div>
     </div>
     {include outerContent}

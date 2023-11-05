@@ -16,7 +16,6 @@ final class SetkaniFormComponent extends SingleFormComponent
 {
 
     /**
-     * @throws Exception
      * @phpstan-return EvaluatedFieldsDefinition
      */
     protected function getPersonFieldsDefinition(): array

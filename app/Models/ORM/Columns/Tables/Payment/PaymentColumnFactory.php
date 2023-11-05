@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
@@ -20,9 +20,9 @@ use Nette\Utils\Html;
  */
 class PaymentColumnFactory extends AbstractColumnFactory
 {
-    private ORMFactory $reflectionFactory;
+    private ReflectionFactory $reflectionFactory;
 
-    public function injectFactory(ORMFactory $reflectionFactory): void
+    public function injectFactory(ReflectionFactory $reflectionFactory): void
     {
         $this->reflectionFactory = $reflectionFactory;
     }
@@ -32,10 +32,17 @@ class PaymentColumnFactory extends AbstractColumnFactory
      */
     protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
-        if ($originalModel instanceof PersonScheduleModel && !$originalModel->schedule_item->isPayable()) {
-            return Html::el('span')
-                ->addAttributes(['class' => 'badge bg-info'])
-                ->addText(_('Not payable'));
+        if ($originalModel instanceof PersonScheduleModel) {
+            if (!count($originalModel->schedule_item->getPrice()->getPrices())) {
+                return Html::el('span')
+                    ->addAttributes(['class' => 'badge bg-success'])
+                    ->addText(_('For free'));
+            }
+            if (!$originalModel->schedule_item->payable) {
+                return Html::el('span')
+                    ->addAttributes(['class' => 'badge bg-info'])
+                    ->addText(_('Onsite payment'));
+            }
         }
         return null;
     }

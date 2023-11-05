@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends BaseGrid<EmailMessageModel,array{}>
@@ -46,6 +47,12 @@ final class EmailsGrid extends BaseGrid
             '@email_message.subject',
             '@email_message.state',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'email_message_id']);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'email_message_id']
+        );
     }
 }

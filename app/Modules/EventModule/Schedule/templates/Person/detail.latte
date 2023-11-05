@@ -1,7 +1,25 @@
-{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $model}
 {varType Fykosak\NetteORM\TypedGroupedSelection $otherSchedule}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
 {block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'schedule_item.name',
+            'schedule_group.name',
+            'schedule_item.price_czk',
+            'schedule_item.price_eur',
+            'payment.payment',
+            'person_schedule.state'
+            ], $model,1024}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Attendance'}</h2>
+            {control buttonTransition}
+        </div>
+    </div>
     {foreach $schedule as $dateData}
         <div class="panel color-auto">
             <div class="container">
@@ -16,7 +34,10 @@
                             {/if}
                         </h2>
                     {/if}
-                    {include group from './blocks.latte', person:$person,group:$group,displayTime:true}
+                {include group from './blocks.latte', person:$model->person,group:$group,displayTime:true}
+                    {if !$iterator->isLast()}
+                        <hr/>
+                    {/if}
                 {/foreach}
             </div>
         </div>
@@ -26,10 +47,8 @@
             <h2>{_'Others group'}</h2>
             {foreach $otherSchedule as $group}
                 {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
-                {include group from './blocks.latte', person:$person,group:$group,displayTime:false}
+                {include group from './blocks.latte', person:$model->person,group:$group,displayTime:false}
             {/foreach}
         </div>
     </div>
 {/block}
-
-

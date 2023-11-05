@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
-use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -24,8 +23,8 @@ class PriceCZKColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        if (!$model->price_czk) {
-            return NotSetBadge::getHtml();
+        if (!$model->price_eur) {
+            return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('For free'));
         }
         return Html::el('span')->addText($model->getPrice()->czk->__toString());// @phpstan-ignore-line
     }

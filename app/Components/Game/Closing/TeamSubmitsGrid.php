@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -57,7 +58,7 @@ class TeamSubmitsGrid extends BaseGrid
             $this->addPresenterButton(
                 ':Game:Submit:edit',
                 'edit',
-                _('button.edit'),
+                new Title(null, _('button.edit')),
                 false,
                 ['id' => 'fyziklani_submit_id']
             );

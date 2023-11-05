@@ -34,9 +34,8 @@ class SingleEvent extends EventModuleTestCase
             ['Event:EventOrganizer', 'list'],
             ['Event:EventOrganizer', 'create'],
 
-            ['Event:Application', 'list'],
+            ['Event:Application', 'default'],
             ['Event:Application', 'create'],
-            ['Event:Application', 'code'],
             ['Event:Application', 'import'],
             ['Event:Application', 'mass'],
         ];

@@ -6,12 +6,12 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Nette\DI\Container;
 
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
-    protected ORMFactory $tableReflectionFactory;
+    protected ReflectionFactory $tableReflectionFactory;
     protected PersonModel $person;
     protected int $userPermissions;
 
@@ -22,7 +22,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         $this->userPermissions = $userPermissions;
     }
 
-    final public function injectPrimary(ORMFactory $tableReflectionFactory): void
+    final public function injectPrimary(ReflectionFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }

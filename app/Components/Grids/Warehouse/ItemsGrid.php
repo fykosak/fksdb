@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -48,6 +49,12 @@ class ItemsGrid extends BaseGrid
             '@warehouse_item.purchase_price',
             '@warehouse_item.purchase_currency',
         ]);
-        $this->addPresenterButton(':Warehouse:Item:edit', 'edit', _('button.edit'), false, ['id' => 'item_id']);
+        $this->addPresenterButton(
+            ':Warehouse:Item:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'item_id']
+        );
     }
 }

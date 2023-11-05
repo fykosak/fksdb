@@ -10,7 +10,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{contest_id:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
+ * @phpstan-extends WebModel<array{contest_id?:int,contestId?:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
  * @phpstan-import-type SerializedTaskModel from TaskModel
  * @phpstan-import-type TaskStatsType from TaskModel
  */
@@ -26,14 +26,18 @@ class StatsWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contest_id' => Expect::scalar()->castTo('int')->required(),
+            'contestId' => Expect::scalar()->castTo('int'),
+            'contest_id' => Expect::scalar()->castTo('int'),
             'year' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
 
     public function getJsonResponse(array $params): array
     {
-        $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
         $contestYear->getTasks();
         $result = [];
         /** @var TaskModel $task */

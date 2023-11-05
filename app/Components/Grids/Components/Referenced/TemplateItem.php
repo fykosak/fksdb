@@ -22,12 +22,9 @@ class TemplateItem extends BaseItem
     protected ?string $titleString;
     /** @phpstan-var (callable(TModel):TModelHelper)|null */
     protected $modelAccessorHelper = null;
-    protected ColumnRendererComponent $printer;
     public ?Title $title;
 
     /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
      * @phpstan-param (callable(TModel):TModelHelper)|null $modelAccessorHelper
      */
     public function __construct(
@@ -36,9 +33,8 @@ class TemplateItem extends BaseItem
         ?string $titleString = null,
         ?callable $modelAccessorHelper = null
     ) {
-        $this->printer = new ColumnRendererComponent($container);
         parent::__construct($container);
-        $this->title = $titleString ? new Title(null, $this->printer->renderToString($titleString, null, null)) : null;
+        $this->titleString = $titleString;
         $this->templateString = $templateString;
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
@@ -51,8 +47,10 @@ class TemplateItem extends BaseItem
     public function render(Model $model, int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', [
-            'html' => $this->printer->renderToString($this->templateString, $model, $userPermission),
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'templateString' => $this->templateString,
         ]);
     }
 
@@ -61,8 +59,10 @@ class TemplateItem extends BaseItem
         return new ColumnRendererComponent($this->getContext());
     }
 
-    public function getTitle(): ?Title
+    public function renderTitle(): void
     {
-        return $this->title;
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'title.latte', [
+            'titleString' => $this->titleString,
+        ]);
     }
 }

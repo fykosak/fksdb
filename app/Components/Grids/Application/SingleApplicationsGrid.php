@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -41,16 +42,16 @@ class SingleApplicationsGrid extends BaseGrid
         }
         return [
             'price',
-            'lunch_count',
-            'tshirt_color',
-            'tshirt_size',
+            //'lunch_count',
+            //'tshirt_color',
+            //'tshirt_size',
             //'jumper_size',
-            'arrival_ticket',
-            'arrival_time',
-            'arrival_destination',
-            'departure_time',
-            'departure_ticket',
-            'departure_destination',
+            //'arrival_ticket',
+            //'arrival_time',
+            //'arrival_destination',
+            //'departure_time',
+            //'departure_ticket',
+            //'departure_destination',
             'health_restrictions',
             'diet',
             'used_drugs',
@@ -102,7 +103,13 @@ class SingleApplicationsGrid extends BaseGrid
             '@person.full_name',
             '@event_participant.status',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('button.detail'), false, ['id' => 'event_participant_id']);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'event_participant_id']
+        );
         // $this->addCSVDownloadButton();
         $this->addHolderColumns();
     }
