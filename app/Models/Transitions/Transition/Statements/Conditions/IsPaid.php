@@ -21,7 +21,7 @@ class IsPaid implements Statement
         /** @var PersonScheduleHolder $holder */
         [$holder] = $args;
         $model = $holder->getModel();
-        if ($model->schedule_item->payable) {
+        if (!$model->schedule_item->payable) {
             return true; // ak sa nedá zaplatiť je zaplatená
         }
         $payment = $model->getPayment();
