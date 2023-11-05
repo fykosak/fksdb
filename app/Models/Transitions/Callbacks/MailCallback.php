@@ -14,12 +14,13 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
- * @implements Statement<void,THolder>
+ * @implements Statement<void,THolder|Transition<THolder>>
  */
 abstract class MailCallback implements Statement
 {
@@ -44,29 +45,34 @@ abstract class MailCallback implements Statement
 
 
     /**
-     * @phpstan-param THolder $args
+     * @phpstan-param THolder|Transition<THolder> $args
      * @throws \ReflectionException
      * @throws BadTypeException
      */
     public function __invoke(...$args): void
     {
-        [$holder] = $args;
+        /**
+         * @var Transition<THolder> $transition
+         * @var THolder $holder
+         */
+        [$holder, $transition] = $args;
         foreach ($this->getPersonsFromHolder($holder) as $person) {
-            $data = $this->getData($holder);
+            $data = $this->getData($holder, $transition);
             $data['recipient_person_id'] = $person->person_id;
-            $data['text'] = $this->createMessageText($holder, $person);
+            $data['text'] = $this->createMessageText($holder, $transition, $person);
             $this->emailMessageService->addMessageToSend($data);
         }
     }
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @throws BadTypeException
      * @phpstan-param THolder $holder
      */
-    protected function createMessageText(ModelHolder $holder, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
     {
         return $this->mailTemplateFactory->renderWithParameters(
-            $this->getTemplatePath($holder),
+            $this->getTemplatePath($holder, $transition),
             Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
@@ -106,11 +112,13 @@ abstract class MailCallback implements Statement
     }
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
      */
-    abstract protected function getTemplatePath(ModelHolder $holder): string;
+    abstract protected function getTemplatePath(ModelHolder $holder, Transition $transition): string;
 
     /**
+     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
@@ -119,5 +127,5 @@ abstract class MailCallback implements Statement
      *     reply_to?:string,
      * }
      */
-    abstract protected function getData(ModelHolder $holder): array;
+    abstract protected function getData(ModelHolder $holder, Transition $transition): array;
 }

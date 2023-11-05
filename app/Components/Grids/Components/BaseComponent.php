@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Components;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
@@ -32,7 +32,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     protected int $userPermission;
     protected bool $paginate = true;
     protected bool $counter = true;
-    protected ORMFactory $tableReflectionFactory;
+    protected ReflectionFactory $tableReflectionFactory;
     /**
      * @persistent
      * @phpstan-var TFilterParams
@@ -46,7 +46,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         $this->monitor(Presenter::class, fn() => $this->configure());
     }
 
-    final public function injectBase(ORMFactory $tableReflectionFactory): void
+    final public function injectBase(ReflectionFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -130,7 +130,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     protected function addPresenterButton(
         string $destination,
         string $name,
-        string $label,
+        Title $label,
         bool $checkACL = true,
         array $params = [],
         ?string $className = null
@@ -148,7 +148,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             new Button(
                 $this->container,
                 $this->getPresenter(),
-                new Title(null, _($label)),
+                $label,
                 fn(Model $model): array => [$destination, $paramMapCallback($model)],
                 $className,
                 fn(Model $model): bool => $checkACL ? $this->getPresenter()->authorized(
@@ -165,14 +165,14 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
      * @throws BadTypeException
      * @deprecated
      */
-    protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): Button
+    protected function addLink(string $linkId, bool $checkACL = false, ?string $className = null): Button
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         /** @phpstan-var Button<TModel> $button */
         $button = new Button(
             $this->container,
             $this->getPresenter(),
-            new Title(null, $factory->getText()),
+            $factory->title(),
             fn(?Model $model): array => $factory->createLinkParameters($model),
             $className,
             fn(?Model $model): bool => $checkACL

@@ -33,7 +33,7 @@ final class MassTransitionComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'transitions' => $this->machine->getTransitions(),
+            'transitions' => $this->machine->transitions,
         ]);
     }
 

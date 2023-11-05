@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
  * @phpstan-extends MailCallback<TeamHolder>
@@ -55,21 +56,23 @@ class TeamTeacherMailCallback extends MailCallback
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.latte';
     }
 
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
             $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;

@@ -1,0 +1,64 @@
+{layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $rankVisible}
+{varType bool $isOrganizer}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+
+{define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
+    <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
+    {control 'personSchedule' . $person->person_id}
+{/define}
+
+{define members, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        <div class="panel color-auto">
+            <div class="container">
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+                {php $counter++}
+                <h2>{_'Parcipant'} {$counter}: {control printer:templateString '@person.full_name',$member,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $member}
+                {/if}
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+                {if $event->getScheduleGroups()->count()}
+                    {include personSchedule, person => $member->person}
+                {/if}
+                {if $isOrganizer}
+                    {control studySchoolTest $member->getPersonHistory()}
+                {/if}
+            </div>
+        </div>
+    {/foreach}
+{/define}
+
+{define rank, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {if $rankVisible || $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rank & points'}</h2>
+                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
+            </div>
+        </div>
+    {/if}
+{/define}
+
+{block titleBody}
+    {include parent}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+{/block}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            ],$model,1024}
+        </div>
+    </div>
+    {include rank, model:$model}
+    {include members, model:$model}
+{/block}

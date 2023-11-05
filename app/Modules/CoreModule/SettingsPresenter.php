@@ -96,7 +96,7 @@ final class SettingsPresenter extends BasePresenter
         }
 
         $form->setCurrentGroup();
-        $form->addSubmit('send', _('Save'));
+        $form->addSubmit('send', _('button.save'));
         $form->onSuccess[] = fn(Form $form) => $this->handleSettingsFormSuccess($form);
         return $control;
     }

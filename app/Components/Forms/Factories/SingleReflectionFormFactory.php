@@ -11,7 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Model;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
@@ -23,10 +23,10 @@ use Nette\Forms\Controls\BaseControl;
  */
 final class SingleReflectionFormFactory
 {
-    private ORMFactory $tableReflectionFactory;
+    private ReflectionFactory $tableReflectionFactory;
     private Container $container;
 
-    public function __construct(ORMFactory $tableReflectionFactory, Container $container)
+    public function __construct(ReflectionFactory $tableReflectionFactory, Container $container)
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->container = $container;

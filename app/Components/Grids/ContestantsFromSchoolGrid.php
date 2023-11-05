@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -55,14 +56,14 @@ final class ContestantsFromSchoolGrid extends BaseGrid
         $this->addPresenterButton(
             ':Organizer:Contestant:edit',
             'edit',
-            _('button.edit'),
+            new Title(null, _('button.edit')),
             false,
             ['id' => 'contestant_id']
         );
         $this->addPresenterButton(
             ':Organizer:Contestant:detail',
             'detail',
-            _('button.detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'contestant_id']
         );

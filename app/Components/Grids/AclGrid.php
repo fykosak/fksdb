@@ -56,7 +56,7 @@ final class AclGrid extends BaseList
                 $this->container,
                 fn(LoginModel $login): string => $login->person ? $login->person->getFullName()
                     : ($login->login ?? ''),
-                new Title(null, _('Person/login'))
+                new Title(null, _('Person/Login'))
             )
         );
         $row1 = $this->createRow();

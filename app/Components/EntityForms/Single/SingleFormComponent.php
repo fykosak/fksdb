@@ -6,7 +6,6 @@ namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FormProcessing;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -18,7 +17,9 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model;
@@ -26,7 +27,6 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Neon\Exception;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -38,11 +38,16 @@ abstract class SingleFormComponent extends EntityFormComponent
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected SingleReflectionFormFactory $reflectionFormFactory;
     protected EventParticipantService $eventParticipantService;
-
+    /**
+     * @phpstan-var EventParticipantMachine<ParticipantHolder> $machine
+     */
     protected EventParticipantMachine $machine;
     protected ?PersonModel $loggedPerson;
     protected EventModel $event;
 
+    /**
+     * @phpstan-param EventParticipantMachine<ParticipantHolder> $machine
+     */
     public function __construct(
         Container $container,
         ?Model $model,
@@ -67,13 +72,11 @@ abstract class SingleFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws Exception
      * @throws BadTypeException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void
     {
-        $container = new ContainerWithOptions($this->container);
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getPersonFieldsDefinition(),
             $this->event->getContestYear(),
@@ -147,7 +150,7 @@ abstract class SingleFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($eventParticipant);
-                $transition = $this->machine->getImplicitTransition($holder);
+                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             }
             $this->eventParticipantService->explorer->commit();

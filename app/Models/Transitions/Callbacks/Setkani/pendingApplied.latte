@@ -1,21 +1,20 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-	potvrzujeme tvé přijetí na akci <em>{$holder->event->getName()->getText('cs')}</em>,
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+	potvrzujeme tvé přijetí na akci <em>{$holder->getModel()->event->getName()->getText('cs')}</em>,
     která se koná
-    {if $holder->event->end && $holder->event->end->getTimestamp() !== $holder->event->begin->getTimestamp()}
-        {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'}.
+    {if $holder->getModel()->event->end && $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
+        {$holder->getModel()->event->begin|date:'j.n. Y'}–{$holder->getModel()->event->end|date:'j.n. Y'}.
     {else}
-        {$holder->event->begin|date:'j.n. Y'}.
+        {$holder->getModel()->event->begin|date:'j.n. Y'}.
     {/if}
 </p>
 <p>
-    Případné změny v přihlášce lze provádět až do {$holder->event->registration_end|date:'j. n. Y, H:i'}
+    Případné změny v přihlášce lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
     v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
     či na odkazu
     {var $link = $control->link('//:Event:Application:Detail',
-    ['eventId'=> $holder->event->event_id,
+    ['eventId'=> $holder->getModel()->event->event_id,
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.
     V případě jakéhokoliv dotazu se na nás můžeš obrátit na adrese <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.

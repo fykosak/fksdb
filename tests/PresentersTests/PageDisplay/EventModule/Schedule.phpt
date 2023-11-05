@@ -80,12 +80,10 @@ class Schedule extends EventModuleTestCase
             ['Schedule:Item', 'create'],
             ['Schedule:Item', 'edit'],
             ['Schedule:Item', 'detail'],
-            ['Schedule:Item', 'code'],
             ['Schedule:Group', 'list'],
             ['Schedule:Group', 'create'],
             ['Schedule:Group', 'edit'],
             ['Schedule:Group', 'detail'],
-            ['Schedule:Group', 'code'],
         ];
     }
 }

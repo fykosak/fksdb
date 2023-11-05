@@ -81,14 +81,12 @@ navigation:
 
         Event.Dashboard.default#application:
             #team
-            Event.TeamApplication.detailedList: []
-            Event.TeamApplication.list: []
-            Event.TeamApplication.code: []
-            Event.TeamApplication.mass: []
-            Event.TeamApplication.create: []
+            Event.Team.detailedList: []
+            Event.Team.default: []
+            Event.Team.mass: []
+            Event.Team.create: []
             #single
-            Event.Application.list: []
-            Event.Application.code: []
+            Event.Application.default: []
             Event.Application.mass: []
             Event.Application.import: []
         Event.Dashboard.default#other:

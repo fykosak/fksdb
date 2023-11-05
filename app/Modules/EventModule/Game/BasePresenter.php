@@ -25,15 +25,6 @@ abstract class BasePresenter extends EventBasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function beforeRender(): void
-    {
-        $this->template->event = $this->getEvent();
-        parent::beforeRender();
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
     protected function isEnabled(): bool
     {
         return in_array($this->getEvent()->event_type_id, self::GAME_EVENTS);

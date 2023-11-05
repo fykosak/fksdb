@@ -10,11 +10,9 @@ use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -168,7 +166,6 @@ final class PaymentPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws  BadTypeException
      */
     private function getMachine(): PaymentMachine
     {
@@ -194,20 +191,19 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
      * @throws \ReflectionException
-     * @phpstan-return TransitionButtonsComponent<PaymentHolder>
+     * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsComponent
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(),
-            $this->getMachine()->createHolder($this->getEntity())
+            $this->getMachine(), // @phpstan-ignore-line
+            $this->getEntity()
         );
     }
 
@@ -228,7 +224,6 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
@@ -244,7 +239,6 @@ final class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException

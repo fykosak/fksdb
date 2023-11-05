@@ -24,6 +24,7 @@ use Nette\Schema\Schema;
  * @phpstan-type TransitionType array{
  *      condition:\Nette\DI\Definitions\Statement|bool|null,
  *      label:\Nette\DI\Definitions\Statement|string|null,
+ *      icon: string,
  *      validation:\Nette\DI\Definitions\Statement|bool|null,
  *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
  *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
@@ -47,6 +48,7 @@ class TransitionsExtension extends CompilerExtension
                 Expect::structure([
                     'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'label' => Helpers::createExpressionSchemaType(),
+                    'icon' => Expect::string('')->required(false),
                     'validation' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
@@ -92,7 +94,13 @@ class TransitionsExtension extends CompilerExtension
                     ->addSetup('setCondition', [$transitionConfig['condition']])
                     ->addSetup('setSourceStateEnum', [$source])
                     ->addSetup('setTargetStateEnum', [$target])
-                    ->addSetup('setLabel', [Helpers::resolveMixedExpression($transitionConfig['label'])])
+                    ->addSetup(
+                        'setLabel',
+                        [
+                            Helpers::resolveMixedExpression($transitionConfig['label']),
+                            $transitionConfig['icon'],
+                        ]
+                    )
                     ->addSetup(
                         'setBehaviorType',
                         [

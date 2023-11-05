@@ -1,10 +1,5 @@
 {layout ../../Controls/@layout.latte}
-{varType FKSDB\Models\Transitions\Transition\Transition[] $transitions}
-
 {block content}
-    <p class="alert-info alert">{_'Transition will be processed automatically one of: '}
-        {foreach $transitions as $transition}
-            {$transition->source->badge()}->{$transition->target->badge()}
-        {/foreach}</p>
+    <p class="alert-info alert">{_'Automaticly redirect to detail'}</p>
     {control formControl}
 {/block}

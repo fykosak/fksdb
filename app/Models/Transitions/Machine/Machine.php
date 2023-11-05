@@ -22,7 +22,7 @@ abstract class Machine
     public const STATE_ANY = '*';
 
     /** @phpstan-var Transition<THolder>[] */
-    protected array $transitions = [];
+    public array $transitions = [];
     protected Explorer $explorer;
 
     public function __construct(Explorer $explorer)
@@ -33,49 +33,9 @@ abstract class Machine
     /**
      * @phpstan-param Transition<THolder> $transition
      */
-    public function addTransition(Transition $transition): void
+    final public function addTransition(Transition $transition): void
     {
         $this->transitions[] = $transition;
-    }
-
-    /**
-     * @phpstan-return Transition<THolder>[]
-     */
-    public function getTransitions(): array
-    {
-        return $this->transitions;
-    }
-
-    /**
-     * @throws UnavailableTransitionsException
-     * @phpstan-return Transition<THolder>
-     */
-    public function getTransitionById(string $id): Transition
-    {
-        $transitions = \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $transition->getId() === $id
-        );
-        return $this->selectTransition($transitions);
-    }
-
-    /**
-     * @phpstan-param Transition<THolder>[] $transitions
-     * @phpstan-return Transition<THolder>
-     * Protect more that one transition between nodes
-     * @throws UnavailableTransitionsException
-     * @throws \LogicException
-     */
-    protected function selectTransition(array $transitions): Transition
-    {
-        $length = \count($transitions);
-        if ($length > 1) {
-            throw new UnavailableTransitionsException();
-        }
-        if (!$length) {
-            throw new UnavailableTransitionsException();
-        }
-        return \array_values($transitions)[0];
     }
 
     /**
@@ -89,62 +49,17 @@ abstract class Machine
     }
 
     /**
-     * @phpstan-param THolder $holder
-     * @phpstan-return Transition<THolder>[]
-     */
-    public function getAvailableTransitions(ModelHolder $holder): array
-    {
-        return \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
-        );
-    }
-
-    /**
-     * @phpstan-param Enum $source
-     * @phpstan-param Enum $target
+     * @throws UnavailableTransitionsException
      * @phpstan-return Transition<THolder>
      */
-    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): Transition
+    final public function getTransitionById(string $id): Transition
     {
-        $transitions = \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => ($source->value === $transition->source->value) &&
-                ($target->value === $transition->target->value)
+        return self::selectTransition(
+            \array_filter(
+                $this->transitions,
+                fn(Transition $transition): bool => $transition->getId() === $id
+            )
         );
-        return $this->selectTransition($transitions);
-    }
-    /**
-     * @phpstan-param Enum $target
-     * @phpstan-return Transition<THolder>[]
-     */
-    public function getTransitionsByTarget(EnumColumn $target): array
-    {
-        return \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $target->value === $transition->target->value
-        );
-    }
-
-    /**
-     * @phpstan-param THolder $holder
-     * @phpstan-return Transition<THolder>
-     */
-    final public function getImplicitTransition(ModelHolder $holder): Transition
-    {
-        return $this->selectTransition($this->getAvailableTransitions($holder));
-    }
-
-    /**
-     * @phpstan-param THolder $holder
-     * @phpstan-param Transition<THolder> $transition
-     */
-    protected function isAvailable(Transition $transition, ModelHolder $holder): bool
-    {
-        if ($transition->source->value !== $holder->getState()->value) {
-            return false;
-        }
-        return $transition->canExecute($holder);
     }
 
     /**
@@ -182,4 +97,79 @@ abstract class Machine
      * @phpstan-return THolder
      */
     abstract public function createHolder(Model $model): ModelHolder;
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-return Transition<SHolder>
+     * Protect more that one transition between nodes
+     * @throws UnavailableTransitionsException
+     * @throws \LogicException
+     */
+    public static function selectTransition(array $transitions): Transition
+    {
+        $length = \count($transitions);
+        if ($length > 1) {
+            throw new UnavailableTransitionsException();
+        }
+        if (!$length) {
+            throw new UnavailableTransitionsException();
+        }
+        return \array_values($transitions)[0];
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param SHolder $holder
+     * @phpstan-param Transition<SHolder> $transition
+     */
+    protected static function isAvailable(Transition $transition, ModelHolder $holder): bool
+    {
+        if ($transition->source->value !== $holder->getState()->value) {
+            return false;
+        }
+        return $transition->canExecute($holder);
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param Enum $target
+     * @phpstan-return Transition<SHolder>[]
+     */
+    public static function filterByTarget(array $transitions, EnumColumn $target): array
+    {
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => $target->value === $transition->target->value
+        );
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param Enum $source
+     * @phpstan-return Transition<SHolder>[]
+     */
+    public static function filterBySource(array $transitions, EnumColumn $source): array
+    {
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => $source->value === $transition->source->value
+        );
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param SHolder $holder
+     * @phpstan-return Transition<SHolder>[]
+     */
+    public static function filterAvailable(array $transitions, ModelHolder $holder): array
+    {
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => self::isAvailable($transition, $holder)
+        );
+    }
 }

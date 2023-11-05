@@ -46,7 +46,7 @@ final class TeachersGrid extends BaseGrid
             '@teacher.role',
             '@teacher.active',
         ]);
-        $this->addORMLink('teacher.edit');
-        $this->addORMLink('teacher.detail');
+        $this->addLink('teacher.edit');
+        $this->addLink('teacher.detail');
     }
 }
