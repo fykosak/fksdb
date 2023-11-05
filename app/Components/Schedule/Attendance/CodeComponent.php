@@ -87,6 +87,6 @@ class CodeComponent extends CodeForm
      */
     protected function getSalt(): string
     {
-        return MachineCode::getSaltForEvent($this->item->schedule_group->event);
+        return $this->item->schedule_group->event->getSalt();
     }
 }

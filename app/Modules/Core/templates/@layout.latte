@@ -10,7 +10,8 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="robots" content="{$robots}" n:ifset="$robots"/>
-    <title>{$pageTitle->title} | FKSDB</title>
+    <title>{$pageTitle->title instanceof Nette\Utils\Html ? $pageTitle->title->getText(): $pageTitle->title} |
+        FKSDB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
