@@ -19,6 +19,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import { Translator } from '@translator/translator';
 import Timeline from 'FKSDB/Components/Controls/Stalking/Timeline/timeline';
+import ScheduleTimeline from 'FKSDB/Components/Schedule/Timeline/main';
 import ScheduleField from 'FKSDB/Components/Schedule/Input/schedule-field';
 import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
@@ -86,6 +87,7 @@ renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeP
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
+renderer.hashMapLoader.registerDataComponent('schedule.timeline', ScheduleTimeline);
 
 
 window.addEventListener('DOMContentLoaded', () => {
