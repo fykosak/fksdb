@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\MachineCode;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -16,7 +15,7 @@ use Nette\DI\Container;
 
 final class MachineCode
 {
-    private const CIP_ALGO = 'aes-256-ebc';
+    private const CIP_ALGO = 'aes-256-cbc';
 
     /**
      * @param PersonModel|EventParticipantModel|TeamModel2 $model
@@ -78,24 +77,5 @@ final class MachineCode
             throw new MachineCodeException(_('Cannot decrypt code'));
         }
         return self::parseCode($container, $data);
-    }
-
-    /**
-     * @throws MachineCodeException
-     */
-    public static function getSaltForEvent(EventModel $event): string
-    {
-        switch ($event->event_type_id) {
-            case 2:
-            case 14:
-                $salt = $event->getParameter('hashSalt');
-                break;
-            default:
-                throw new MachineCodeException(_('Not implemented'));
-        }
-        if (!$salt) {
-            throw new MachineCodeException(_('Empty salt'));
-        }
-        return (string)$salt;
     }
 }

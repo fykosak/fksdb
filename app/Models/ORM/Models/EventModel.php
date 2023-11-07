@@ -9,6 +9,7 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
+use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -291,6 +292,25 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         return ($this->registration_begin->getTimestamp() <= time())
             && ($this->registration_end->getTimestamp() >= time());
+    }
+
+    /**
+     * @throws MachineCodeException
+     */
+    public function getSalt(): string
+    {
+        switch ($this->event_type_id) {
+            case 2:
+            case 14:
+                $salt = $this->getParameter('hashSalt');
+                break;
+            default:
+                throw new MachineCodeException(_('Not implemented'));
+        }
+        if (!$salt) {
+            throw new MachineCodeException(_('Empty salt'));
+        }
+        return (string)$salt;
     }
 
     public function createGameHandler(Container $container): Handler

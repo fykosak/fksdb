@@ -50,12 +50,7 @@ final class EventTypeModel extends Model
         switch ($this->event_type_id) {
             default:
                 return Expect::null();
-            case 15:
-                return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
-                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.org>'),
-                    'capacity' => Expect::int(0),
-                ])->castTo('array');
+            case 1:
             case 2:
             case 14:
                 return Expect::structure([
@@ -71,13 +66,6 @@ final class EventTypeModel extends Model
                     'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterResolutionTime' => Expect::string('až naprší a uschne'),
-                ])->castTo('array');
-            case 11:
-            case 12:
-                return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
-                    'notifyFrom' => Expect::string('Setkáni řešitelů Výfuku <vyfuk@vyfuk.org>'),
-                    'capacity' => Expect::int(50),
                 ])->castTo('array');
             case 3:
                 return Expect::structure([
@@ -103,6 +91,17 @@ final class EventTypeModel extends Model
                     'capacity' => Expect::int(29),
                     'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
+                ])->castTo('array');
+            case 11:
+            case 12:
+                return Expect::structure([
+                    'capacity' => Expect::int(0),
+                ])->castTo('array');
+            case 15:
+                return Expect::structure([
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.org>'),
+                    'capacity' => Expect::int(0),
                 ])->castTo('array');
         }
     }

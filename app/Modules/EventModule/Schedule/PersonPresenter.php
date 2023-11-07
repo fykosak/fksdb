@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\AllPersonList;
-use FKSDB\Components\Schedule\Attendance\ButtonComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\EventModule\BasePresenter;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -136,12 +137,18 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws GoneException
+     * @phpstan-return TransitionButtonsComponent<PersonScheduleModel>
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
      */
-    protected function createComponentAttendance(): ButtonComponent
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
-        return new ButtonComponent($this->getContext(), $this->getEntity());
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            $this->eventDispatchFactory->getPersonScheduleMachine(), // @phpstan-ignore-line
+            $this->getEntity()
+        );
     }
 
     /**

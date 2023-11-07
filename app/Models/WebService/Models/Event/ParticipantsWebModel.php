@@ -13,9 +13,9 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId:int},array<mixed>>
+ * @phpstan-extends WebModel<array{eventId?:int,event_id?:int},array<mixed>>
  */
-class ParticipantListWebModel extends WebModel
+class ParticipantsWebModel extends WebModel
 {
     private EventService $eventService;
 
@@ -27,7 +27,8 @@ class ParticipantListWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
+            'eventId' => Expect::scalar()->castTo('int'),
+            'event_id' => Expect::scalar()->castTo('int'),
         ]);
     }
 
@@ -36,7 +37,7 @@ class ParticipantListWebModel extends WebModel
      */
     protected function getJsonResponse(array $params): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
+        $event = $this->eventService->findByPrimary($params['eventId'] ?? $params['event_id']);
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
@@ -46,6 +47,10 @@ class ParticipantListWebModel extends WebModel
             $history = $participant->getPersonHistory();
             $school = $history->school;
             $data[] = array_merge($participant->person->__toArray(), [
+                'eventParticipantId' => $participant->event_participant_id,
+                'status' => $participant->status->value,
+                'lunchCount' => $participant->lunch_count ?? 0,
+                'code' => $participant->createMachineCode(),
                 'school' => $school ? $school->__toArray() : null,
                 'studyYear' => $history ? $history->study_year_new->value : null,
             ]);

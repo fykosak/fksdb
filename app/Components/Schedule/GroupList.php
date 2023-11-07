@@ -83,6 +83,5 @@ final class GroupList extends BaseList
         /** @phpstan-ignore-next-line */
         ItemGrid::addColumns($table, $this->container, $this->getPresenter());
         $this->addLink('schedule_group.detail');
-        $this->addLink('schedule_group.edit');
     }
 }

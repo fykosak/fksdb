@@ -9,9 +9,8 @@ use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-final class EventChooserComponent extends ChooserComponent
+final class EventChooser extends ChooserComponent
 {
-
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event)
@@ -28,13 +27,21 @@ final class EventChooserComponent extends ChooserComponent
         /** @var EventModel $event */
         foreach ($query as $event) {
             $items[] = new NavItem(
-                new Title(null, $event->name),
+                new Title(null, $event->getName()->getText($this->translator->lang)), // @phpstan-ignore-line
                 'this',
                 ['eventId' => $event->event_id],
                 [],
                 $event->event_id === $this->event->event_id
             );
         }
-        return new NavItem(new Title(null, _('Event')), '#', [], $items);
+        return new NavItem(
+            new Title(
+                null,
+                $this->event->getName()->getText($this->translator->lang)// @phpstan-ignore-line
+            ),
+            '#',
+            [],
+            $items
+        );
     }
 }

@@ -6,17 +6,11 @@ namespace FKSDB\Components\Event\CodeTransition;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Message;
@@ -25,20 +19,29 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class CodeTransitionComponent extends CodeForm
+/**
+ * @phpstan-template TModel of TeamModel2|EventParticipantModel
+ * @phpstan-type TState (TModel is TeamModel2
+ *     ?\FKSDB\Models\ORM\Models\Fyziklani\TeamState
+ *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
+ * @phpstan-type TMachine (TModel is TeamModel2
+ *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
+ *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+ */
+final class CodeTransitionComponent extends CodeForm
 {
-    /** @var TeamMachine|EventParticipantMachine<ParticipantHolder> */
+    /** @phpstan-var TMachine */
     protected Machine $machine;
-    /** @var TeamModel2|EventParticipantModel */
+    /** @phpstan-var TModel */
     private Model $model;
 
-    /** @var TeamState|EventParticipantStatus */
+    /** @phpstan-var TState */
     private FakeStringEnum $targetState;
 
     /**
-     * @param TeamState|EventParticipantStatus $targetState
-     * @param TeamMachine|EventParticipantMachine<ParticipantHolder> $machine
-     * @param TeamModel2|EventParticipantModel $model
+     * @phpstan-param TState $targetState
+     * @phpstan-param TMachine $machine
+     * @phpstan-param TModel $model
      */
     public function __construct(
         Container $container,
@@ -57,12 +60,16 @@ class CodeTransitionComponent extends CodeForm
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
-    public function render(): void
+    public function available(): bool
     {
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState); //@phpstan-ignore-line
         $holder = $this->machine->createHolder($this->model);
-        $this->template->available = (bool)count(Machine::filterAvailable($transitions, $holder));
-        parent::render();
+        $hasTransition = count(
+            Machine::filterAvailable(
+                Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
+                $holder
+            )
+        );
+        return $hasTransition && $this->model->createMachineCode();
     }
 
     /**
@@ -126,6 +133,6 @@ class CodeTransitionComponent extends CodeForm
      */
     protected function getSalt(): string
     {
-        return MachineCode::getSaltForEvent($this->model->event);
+        return $this->model->event->getSalt();
     }
 }

@@ -24,7 +24,7 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderTemplateString(string $templateString, Model $model, ?int $userPermission): void
+    final public function renderTemplateString(string $templateString, ?Model $model, ?int $userPermission): void
     {
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'string.latte',
@@ -71,7 +71,7 @@ class ColumnRendererComponent extends BaseComponent
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'link.latte',
             [
-                'title' => $factory->getTitle(),
+                'title' => $factory->title(),
                 'link' => $factory->create($this->getPresenter(), $model),
             ]
         );

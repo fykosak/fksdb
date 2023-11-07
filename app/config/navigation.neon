@@ -83,12 +83,10 @@ navigation:
             #team
             Event.Team.detailedList: []
             Event.Team.default: []
-            Event.Team.code: []
             Event.Team.mass: []
             Event.Team.create: []
             #single
-            Event.Application.list: []
-            Event.Application.code: []
+            Event.Application.default: []
             Event.Application.mass: []
             Event.Application.import: []
         Event.Dashboard.default#other:

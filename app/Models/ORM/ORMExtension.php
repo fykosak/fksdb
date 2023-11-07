@@ -25,7 +25,6 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
 use FKSDB\Models\ORM\Links\Link;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Extension;
-use Fykosak\Utils\UI\Title;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\Schema\Elements\AnyOf;
@@ -149,7 +148,8 @@ class ORMExtension extends Extension
             [
                 $def['destination'],
                 $def['params'],
-                new Title(null, $this->translate($def['title']), $def['icon'] ?? ''),
+                $this->translate($def['title']),
+                $def['icon'] ?? '',
                 $modelClassName,
             ]
         );

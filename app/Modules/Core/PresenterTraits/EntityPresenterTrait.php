@@ -111,6 +111,21 @@ trait EntityPresenterTrait
     }
 
     /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->traitIsAuthorized($this->getModelResource(), 'list');
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('List of entities'), 'fas fa-table');
+    }
+
+    /**
      * @throws GoneException
      */
     protected function getModelResource(): string

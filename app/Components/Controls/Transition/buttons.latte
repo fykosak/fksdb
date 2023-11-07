@@ -8,9 +8,9 @@
             {var $className = 'btn btn-outline-' . $transition->behaviorType->value}
             {if $transition->isCreating()}
                 <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
-                   class="{$className}">{$transition->getLabel()}</a>
+                   class="{$className}">{$transition->label()->toHtml()}</a>
             {else}
-                <a n:href="transition! $transition->getId()" class="{$className}">{$transition->getLabel()}</a>
+                <a n:href="transition! $transition->getId()" class="{$className}">{$transition->label()->toHtml()}</a>
             {/if}
         {/foreach}
     {elseif $showInfo}

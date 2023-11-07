@@ -26,12 +26,12 @@ final class Link
      * @phpstan-param class-string<TModel> $modelClassName
      * @phpstan-param array<string,string> $params
      */
-    public function __construct(string $destination, array $params, Title $title, string $modelClassName)
+    public function __construct(string $destination, array $params, string $label, string $icon, string $modelClassName)
     {
         $this->modelClassName = $modelClassName;
         $this->destination = $destination;
         $this->params = $params;
-        $this->title = $title;
+        $this->title = new Title(null, _($label), $icon);
     }
 
     /**
@@ -67,21 +67,14 @@ final class Link
             throw new InvalidLinkException();
         }
         return [
-            $this->getDestination($model),
+            $this->destination,
             $this->prepareParams($model),
         ];
     }
-    public function getTitle(): Title
+
+    public function title(): Title
     {
         return $this->title;
-    }
-
-    /**
-     * @phpstan-param TModel $model
-     */
-    private function getDestination(Model $model): string
-    {
-        return $this->destination;
     }
 
     /**

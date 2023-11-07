@@ -32,10 +32,17 @@ class PaymentColumnFactory extends AbstractColumnFactory
      */
     protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
-        if ($originalModel instanceof PersonScheduleModel && !$originalModel->schedule_item->isPayable()) {
-            return Html::el('span')
-                ->addAttributes(['class' => 'badge bg-info'])
-                ->addText(_('Not payable'));
+        if ($originalModel instanceof PersonScheduleModel) {
+            if (!count($originalModel->schedule_item->getPrice()->getPrices())) {
+                return Html::el('span')
+                    ->addAttributes(['class' => 'badge bg-success'])
+                    ->addText(_('For free'));
+            }
+            if (!$originalModel->schedule_item->payable) {
+                return Html::el('span')
+                    ->addAttributes(['class' => 'badge bg-info'])
+                    ->addText(_('Onsite payment'));
+            }
         }
         return null;
     }

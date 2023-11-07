@@ -7,7 +7,6 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -17,15 +16,8 @@ use Tracy\Debugger;
 /**
  * @phpstan-implements TransitionsDecorator<PaymentHolder>
  */
-class PaymentTransitions implements TransitionsDecorator
+final class PaymentTransitions implements TransitionsDecorator
 {
-    protected PersonScheduleService $personScheduleService;
-
-    public function __construct(PersonScheduleService $personScheduleService)
-    {
-        $this->personScheduleService = $personScheduleService;
-    }
-
     /**
      * @param PaymentMachine $machine
      * @throws \Exception

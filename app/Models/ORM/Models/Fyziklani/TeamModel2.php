@@ -196,7 +196,7 @@ final class TeamModel2 extends Model implements Resource
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, MachineCode::getSaltForEvent($this->event));
+            return MachineCode::createHash($this, $this->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }

@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Game;
 
-use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 

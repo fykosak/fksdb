@@ -11,7 +11,7 @@ use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
-use FKSDB\Components\Event\Code\CodeComponent;
+use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
@@ -23,14 +23,11 @@ use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -38,6 +35,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
+use Nette\Utils\Html;
 
 final class TeamPresenter extends BasePresenter
 {
@@ -118,15 +116,9 @@ final class TeamPresenter extends BasePresenter
         } catch (NotSetGameParametersException $exception) {
             $rankVisible = false;
         }
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getEntity(),
-            'org-detail',
-            $this->getEvent()
-        );
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
     }
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -138,7 +130,9 @@ final class TeamPresenter extends BasePresenter
         $entity = $this->getEntity();
         return new PageTitle(
             null,
-            sprintf(_('Application detail "%s"'), $entity->name),
+            Html::el('span')
+                ->addText(sprintf(_('Team: %s'), $entity->name))
+                ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->state->badge())),
             'fas fa-user'
         );
     }
@@ -180,7 +174,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit team "%s"'), $this->getEntity()->name), 'fas fa-edit');
+        return new PageTitle(null, sprintf(_('Edit team: %s'), $this->getEntity()->name), 'fas fa-edit');
     }
 
     /**
@@ -211,21 +205,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
-     * @throws BadTypeException
      * @throws EventNotFoundException
-     */
-    private function getHolder(): TeamHolder
-    {
-        return $this->getMachine()->createHolder($this->getEntity());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     private function getMachine(): TeamMachine
     {
@@ -248,7 +228,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): TeamFormComponent
@@ -257,7 +236,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
@@ -270,7 +248,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     private function createForm(?TeamModel2 $model): TeamFormComponent
@@ -297,40 +274,37 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCode(): CodeComponent
+    protected function createComponentCode(): CodeRedirectComponent
     {
-        return new CodeComponent($this->getContext(), $this->getEvent());
+        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<TeamHolder>
+     * @phpstan-return TransitionButtonsComponent<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(),
-            $this->getHolder()
+            $this->getMachine(), // @phpstan-ignore-line
+            $this->getEntity()
         );
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<ParticipantHolder>
+     * @phpstan-return CodeTransitionComponent<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
-     * @throws BadTypeException
-     * @phpstan-ignore-next-line
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {
@@ -344,7 +318,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
      * @phpstan-return MassTransitionComponent<TeamMachine>
      */
     protected function createComponentMassTransition(): MassTransitionComponent

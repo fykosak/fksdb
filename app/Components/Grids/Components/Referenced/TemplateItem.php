@@ -61,7 +61,7 @@ class TemplateItem extends BaseItem
 
     public function renderTitle(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../html.latte', [
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'title.latte', [
             'titleString' => $this->titleString,
         ]);
     }

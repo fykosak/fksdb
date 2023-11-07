@@ -18,7 +18,7 @@ use Nette\Schema\Expect;
  * @phpstan-import-type SerializedTeamModel from TeamModel2
  * @phpstan-extends WebModel<array{eventId:int},(SerializedTeamModel)[]>
  */
-class TeamListWebModel extends WebModel
+class TeamsWebModel extends WebModel
 {
     private EventService $eventService;
 

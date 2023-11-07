@@ -20,11 +20,11 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     StatsWebModel,
     WebModel
 };
-use FKSDB\Models\WebService\Models\Event\{ParticipantListWebModel,
+use FKSDB\Models\WebService\Models\Event\{ParticipantsWebModel,
     Schedule\GroupListWebModel,
     Schedule\ItemListWebModel,
     Schedule\PersonListWebModel,
-    TeamListWebModel,
+    TeamsWebModel,
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -63,8 +63,8 @@ class WebServiceModel
         'event/schedule/groups' => GroupListWebModel::class,
         'event/schedule/items' => ItemListWebModel::class,
         'event/schedule/persons' => PersonListWebModel::class,
-        'event/teams' => TeamListWebModel::class,
-        'event/participants' => ParticipantListWebModel::class,
+        'event/teams' => TeamsWebModel::class,
+        'event/participants' => ParticipantsWebModel::class,
         // game
         'game/results' => Game\ResultsWebModel::class,
         'game/submit' => Game\SubmitWebModel::class,

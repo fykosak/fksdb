@@ -158,3 +158,4 @@ includes:
     - applications/fol.neon
     - applications/dsef.neon
     - applications/setkani.neon
+    - applications/personSchedule.neon

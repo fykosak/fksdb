@@ -10,24 +10,34 @@ use Nette\Utils\Html;
 
 final class PersonScheduleState extends FakeStringEnum implements EnumColumn
 {
-    public const PARTICIPATED = 'participated';
-    public const MISSED = 'missed';
+    // phpcs:disable
+    public const Participated = 'participated';
+    public const Missed = 'missed';
+    public const Cancelled = 'cancelled';
+    public const Applied = 'applied';
 
+    // phpcs:enable
     public static function cases(): array
     {
         return [
-            new self(self::PARTICIPATED),
-            new self(self::MISSED),
+            new self(self::Participated),
+            new self(self::Missed),
+            new self(self::Cancelled),
+            new self(self::Applied),
         ];
     }
 
     public function badge(): Html
     {
         switch ($this->value) {
-            case self::PARTICIPATED:
+            case self::Participated:
                 return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText($this->label());
-            case self::MISSED:
+            case self::Missed:
                 return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($this->label());
+            case self::Cancelled:
+                return Html::el('span')->addAttributes(['class' => 'badge bg-secondary'])->addText($this->label());
+            case self::Applied:
+                return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
         }
         return Html::el('span')->addText($this->label());
     }
@@ -35,10 +45,14 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
-            case self::PARTICIPATED:
+            case self::Participated:
                 return _('Participated');
-            case self::MISSED:
+            case self::Missed:
                 return _('Missed');
+            case self::Cancelled:
+                return _('Cancelled');
+            case self::Applied:
+                return _('Applied');
         }
         return '';
     }

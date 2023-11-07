@@ -1,18 +1,26 @@
-{define rests bool $isOrganizer}
-    {if $isOrganizer}
+{define rests}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests'}</h2>
+            {control rests}
+        </div>
+    </div>
+{/define}
+
+{define codeTransition, bool $isOrganizer}
+    {if $control->getComponent('codeTransition')->available() && $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{_'Rests'}</h2>
-                {control rests}
+                <h2>{_'Attendance'}</h2>
+                {control codeTransition}
             </div>
         </div>
     {/if}
 {/define}
 
-{define title-buttons
-    FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
-    bool $isOrganizer
-}
+{define titleButtons
+FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
+bool $isOrganizer}
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}
             <a href="{plink edit id => $model->getPrimary()}"
@@ -31,18 +39,16 @@
                     <i class="fas fa-code me-2"></i>
                     {_'Code'}
                 </button>
-                <div class="dropdown-menu">
-                    <div class="px-4 py-3">
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 20rem">
+                    <div class="px-3 py-2">
                         <label class="form-label">{_'Application code'}</label>
                         <input type="text" class="form-control-sm form-control" value="{$machineCode}"/>
                     </div>
                 </div>
             </div>
         {/if}
+        {if $model instanceof FKSDB\Models\ORM\Models\EventParticipantModel && $isOrganizer}
+            {control printer:button 'person.detail', $model}
+        {/if}
     </div>
-    {if $isOrganizer}
-        <div class="mt-3">
-            {control codeTransition}
-        </div>
-    {/if}
 {/define}
